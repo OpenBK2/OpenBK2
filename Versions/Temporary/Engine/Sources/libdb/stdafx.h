@@ -15,7 +15,7 @@
 
 #define _WIN32_WINNT 0x400
 #include <windows.h>
-#include <typeinfo.h>
+#include <typeinfo>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
