@@ -1,0 +1,942 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{54ac1bf2-178f-4a11-8378-63ad0835f149}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{eca15b5b-1ed3-4548-b9f8-0455a1f6d168}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps">
+      <UniqueIdentifier>{d268d8a6-d984-4524-a35a-b0a168c95e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps\Types">
+      <UniqueIdentifier>{7981a0e2-62da-4aeb-8553-e493060583a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps\Toolbars">
+      <UniqueIdentifier>{591b058b-f61d-488c-8c57-7b68f49bf861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps\Headers">
+      <UniqueIdentifier>{a43080eb-f0b3-4c1d-b27d-57cb67435818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Icons">
+      <UniqueIdentifier>{a1a1d946-0c65-4a5b-b1a9-f774859f5712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Cursors">
+      <UniqueIdentifier>{b3e4b69b-a4e7-4edb-8b9e-f4fbb556f160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Manifest">
+      <UniqueIdentifier>{a3693e62-3c1a-4803-8b2f-c7d9c25cd2dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{c0809e8b-03a6-4b11-b968-59d036c32dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Defines">
+      <UniqueIdentifier>{cfa8df02-af7d-4897-81e5-31dbe086c6b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MapEditorApp">
+      <UniqueIdentifier>{f4a6ab36-22e2-4616-8893-dc4d2756d4db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MapEditorApp\MapEditorSingleton">
+      <UniqueIdentifier>{19ed3857-98b1-4f71-9a21-87f6aff3ba28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MainFrame">
+      <UniqueIdentifier>{23a8460e-ac7f-4d58-9865-32381fd8be8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MainFrame\MainFrame Params">
+      <UniqueIdentifier>{a4084abe-5248-4de5-8ffa-41b59afebe0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MainFrame\DefaultChildFrame">
+      <UniqueIdentifier>{fc2bcaba-47c0-4f4c-82c1-d7a7d366bb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MainFrame\DefaultDockingWindow">
+      <UniqueIdentifier>{fdcf1d3f-6d15-4d74-9533-e29c44e9f604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows">
+      <UniqueIdentifier>{98851a07-2a9b-4763-a247-ea5800e32c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser">
+      <UniqueIdentifier>{b9322dfb-41c8-415e-aa23-247c5d5c5717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Select Tables Dialog">
+      <UniqueIdentifier>{dfd8aff1-3547-4781-bd8b-b60941c4519a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers">
+      <UniqueIdentifier>{da34c7f9-fe8e-4a26-a264-d212fec00550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDBLink Browser">
+      <UniqueIdentifier>{774c18f9-8c27-40f4-9872-d62df1e9ba0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDB Browser">
+      <UniqueIdentifier>{b80425a9-96b1-4eab-8bbf-e801fea85e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\SearchObject Dialog">
+      <UniqueIdentifier>{6813d9fa-c5fb-4745-9fdb-d296134506bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers">
+      <UniqueIdentifier>{f09e181c-cbb8-4278-8654-40559cae1b60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Empty">
+      <UniqueIdentifier>{8edfac16-56e9-4f14-a630-56ca249e8b4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Combo Box">
+      <UniqueIdentifier>{18cb18d2-efa7-4e81-a35b-4110ea811ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\Property Browser">
+      <UniqueIdentifier>{7c690816-5fbe-44ba-8b98-bd6ed9e7e8f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\Layer Browser">
+      <UniqueIdentifier>{acd94f26-3fcb-4a53-9853-876688685ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\Log Window">
+      <UniqueIdentifier>{970ed576-2775-490a-be36-66d7acef1252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Docking Windows\Log Window\Log Window">
+      <UniqueIdentifier>{3e18c05f-5460-4764-bab4-9e06afd0500d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons">
+      <UniqueIdentifier>{c873024c-d06a-44ce-82b0-df565d748a09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ControllerContainer">
+      <UniqueIdentifier>{9f1ed658-e607-43a4-aa68-c70c3452cfaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ControllerContainer\MDD LDialog">
+      <UniqueIdentifier>{52bf30e8-8142-4cbe-9cc6-99aa04dda1fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\CommandHandlerContainer">
+      <UniqueIdentifier>{7d4452c3-db00-4e69-835a-d6094f3b9908}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ViewContainer">
+      <UniqueIdentifier>{dd35bd3a-65a6-4389-a870-746291033d34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\EditorContainer">
+      <UniqueIdentifier>{ee547c18-aed5-481f-b28f-afa3ae2f108b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\UserDataContainer">
+      <UniqueIdentifier>{b732bb41-a51b-4732-900d-4a323cd078e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\BuilderContainer">
+      <UniqueIdentifier>{9cac8460-0cf5-4563-9ab9-7b3427d72382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\BuilderContainer\NewObjectDialog">
+      <UniqueIdentifier>{863df9f7-033c-45a2-ad22-39e720685f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ExporterContainer">
+      <UniqueIdentifier>{200f2ae3-aaf4-4ca3-ac7c-9eab83af8f1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ChildFrameContainer">
+      <UniqueIdentifier>{da48be0a-3668-456d-80ce-84b5bb6cc54b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\MainFrameContainer">
+      <UniqueIdentifier>{9b309240-7fb6-4131-8624-48d10c8a3954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\FolderCallback">
+      <UniqueIdentifier>{9ad5f56f-3a42-4340-aa2e-3cdb5c70c00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ObjectCollector">
+      <UniqueIdentifier>{5b690859-cdbc-46a5-8b71-e277c51d0774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\ProgressHook">
+      <UniqueIdentifier>{f63fcd90-b693-4c53-a04e-0d3a6a68e570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\MODContainer">
+      <UniqueIdentifier>{efd1c60f-2596-45d8-980c-518cb8c5da8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\MODContainer\CreateMODDialog">
+      <UniqueIdentifier>{9ab9fead-8d79-4ae1-8f02-cb55862f6180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Singletons\MODContainer\OpenMODDialog">
+      <UniqueIdentifier>{296f349c-47cb-4345-a791-01e6111f7a29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls">
+      <UniqueIdentifier>{3d033a80-c315-433d-95b7-1221065118bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control">
+      <UniqueIdentifier>{01599cb2-f11e-4203-a923-7755f800b2c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors">
+      <UniqueIdentifier>{bdd01b03-6653-49b2-bec7-a523e5dbd471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Item Editor">
+      <UniqueIdentifier>{a6d90037-d421-444c-a40b-c76e6260fc58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors">
+      <UniqueIdentifier>{cc492ff9-2320-453d-81c9-d86736e3a6d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\IntInputEditor">
+      <UniqueIdentifier>{ba2355de-9bcd-4233-97b3-3397b1506ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\FloatInputEditor">
+      <UniqueIdentifier>{48f55b1a-9701-4dfd-baa9-46cdf862b928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringInputEditors">
+      <UniqueIdentifier>{ccd5343a-a81c-4fdf-8488-aad17c0ce7ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors">
+      <UniqueIdentifier>{e8aedf60-ca49-4bcd-a022-9c9096c44d24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_IntComboEditor">
+      <UniqueIdentifier>{a1afeca5-7993-4efc-a17e-09e2730a4b9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_FloatComboEditor">
+      <UniqueIdentifier>{4f7bda9c-c384-4cbb-8878-29a2b5bf982d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_BoolComboEditor">
+      <UniqueIdentifier>{ce0711f0-5c8a-49be-823a-65b167284c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_StringComboRefEditor">
+      <UniqueIdentifier>{7de5532e-b8bb-4a8f-9b5c-559b005c8583}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolSwitcherEditor">
+      <UniqueIdentifier>{c88476b2-6a4f-4795-805c-c8c146b73725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolCheckBoxEditor">
+      <UniqueIdentifier>{01348452-ff12-47c5-8b4e-5264458ce005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors">
+      <UniqueIdentifier>{c9fa5c5b-f938-4e2f-959d-4f966d8e4b81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_IntSliderEditor">
+      <UniqueIdentifier>{b367d7b9-9d45-457e-91b6-b7c4a4a09a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_FloatSliderEditor">
+      <UniqueIdentifier>{8e56681c-8e19-417d-b837-49ee27698a22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\GUIDEditor">
+      <UniqueIdentifier>{4ebddbbd-9d4b-43a6-8746-df65236ab366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor">
+      <UniqueIdentifier>{b65edd12-df6f-4c55-b689-cdc94792b0f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors">
+      <UniqueIdentifier>{cde0c767-edc1-4b95-b41e-555bf11b384b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringRefEditor">
+      <UniqueIdentifier>{7f96c531-01d8-4f92-be71-2fcf20f4c468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringFileRefEditor">
+      <UniqueIdentifier>{7b9258e7-d9b9-4678-9060-48fa57b27fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringDirRefEditor">
+      <UniqueIdentifier>{8769aef6-fd79-4868-9c7a-5729facda886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\IntColorEditor">
+      <UniqueIdentifier>{82092a09-ef66-4e98-8a02-ef090fdceb1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringBigInputEditor">
+      <UniqueIdentifier>{5a069436-493b-4303-9970-cf353ce5ab96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField">
+      <UniqueIdentifier>{2a15871b-522b-41dc-8900-502bc56d7fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField\BinaryBitFieldDialog">
+      <UniqueIdentifier>{13fe6a1c-ef40-4285-ad3d-cd87436c6b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\Vec3ColorEditor">
+      <UniqueIdentifier>{5acf512c-f6fb-4863-8878-578cddd1ee54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors">
+      <UniqueIdentifier>{1c604950-26f6-4272-a33d-1e6b4956e845}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\StringNewRefEditor">
+      <UniqueIdentifier>{8cce1c53-d7de-48a5-84be-ea2763f9c3fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\TextFileEditor">
+      <UniqueIdentifier>{fc63150f-9ffc-403b-afe1-d43c8fed1a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor">
+      <UniqueIdentifier>{da8bcc84-c353-44a2-903b-fd11a4e2873a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor\ExTextFileEditor">
+      <UniqueIdentifier>{b28baaa5-4bc4-4a8c-98b5-e93f49496faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Additional Editors">
+      <UniqueIdentifier>{af95f904-1e1e-4f1b-8d8a-7da2fc6e0fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorButton">
+      <UniqueIdentifier>{800caed7-53cd-481f-81d8-1107e27931f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorSlider">
+      <UniqueIdentifier>{960d0c6d-8388-45aa-8c1c-50bd54d3bff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_MultilineStringEditor">
+      <UniqueIdentifier>{f97e336d-0f0c-4049-8524-36fa755a8401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\MainTreeControl">
+      <UniqueIdentifier>{437acbe8-8c7a-433f-8468-663f42802c9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\PC_Dialogs">
+      <UniqueIdentifier>{81e4ea2b-a368-4736-98f9-b7a273957452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\PC_Dialogs\PC_Dialog">
+      <UniqueIdentifier>{cfa0e0a5-98ae-48b7-bb57-4386461ea933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\PC_Dialogs\PC_DBLinkDialog">
+      <UniqueIdentifier>{0e6792c5-efb0-411b-b44f-93dc396b6ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\Property Control\PC_Dialogs\PC_BuildDataDialog">
+      <UniqueIdentifier>{1d4b0b0a-5931-4888-8b08-4f3412ddca37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\About Dialog">
+      <UniqueIdentifier>{cff55019-d4b6-49a0-84d9-7d5d84a98b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\SortTree Control">
+      <UniqueIdentifier>{1230c071-f85f-4e23-b27c-154325381c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\TextEditor Dialog">
+      <UniqueIdentifier>{67a38de6-e281-42fd-9edd-a78394a99daa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\RefList Dialog">
+      <UniqueIdentifier>{8d7a272f-2040-4b75-9e6c-4a3bb6821261}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\RefList Dialog\RefListWaiter Dialog">
+      <UniqueIdentifier>{aef58701-4db1-4bad-a498-2afd0f65b638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\ScriptEditor Dialog">
+      <UniqueIdentifier>{f2f3ddf6-fa41-413a-93c9-0b7df0273bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\%28Not Used%29Progress Dialog">
+      <UniqueIdentifier>{c735a16a-b4e2-4c12-8092-1124dd3deda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Specific Controls\ProgressDialog">
+      <UniqueIdentifier>{f8da024b-1935-40fa-830d-6bad44e6a486}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlerDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolBarButtonsMap.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="WMDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEditorApp.h">
+      <Filter>Sources\MapEditorApp</Filter>
+    </ClInclude>
+    <ClInclude Include="RegisterEditors.h">
+      <Filter>Sources\MapEditorApp</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEditorSingleton.h">
+      <Filter>Sources\MapEditorApp\MapEditorSingleton</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Sources\MainFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrameParams.h">
+      <Filter>Sources\MainFrame\MainFrame Params</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultChildFrame.h">
+      <Filter>Sources\MainFrame\DefaultChildFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultDockingWindow.h">
+      <Filter>Sources\MainFrame\DefaultDockingWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="DW_GDBBrowser.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectTablesDialog.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Select Tables Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree_GDBBrowser_InputState.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree_GDBBrowserBase.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree_GDBBrowserBase_Constants.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree_GDBLinkBrowser.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDBLink Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree_GDBBrowser.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDB Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchObjectDialog.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\SearchObject Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Empty_GDBBrowser.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Empty</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboBox_GDBBrowser.h">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Combo Box</Filter>
+    </ClInclude>
+    <ClInclude Include="DW_PropertyBrowser.h">
+      <Filter>Sources\Docking Windows\Property Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="DW_LayerBrowser.h">
+      <Filter>Sources\Docking Windows\Layer Browser</Filter>
+    </ClInclude>
+    <ClInclude Include="DW_Log.h">
+      <Filter>Sources\Docking Windows\Log Window</Filter>
+    </ClInclude>
+    <ClInclude Include="LogWindow.h">
+      <Filter>Sources\Docking Windows\Log Window\Log Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerContainer.h">
+      <Filter>Sources\Singletons\ControllerContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="MDDLDialog.h">
+      <Filter>Sources\Singletons\ControllerContainer\MDD LDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlerContainer.h">
+      <Filter>Sources\Singletons\CommandHandlerContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewContainer.h">
+      <Filter>Sources\Singletons\ViewContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorContainer.h">
+      <Filter>Sources\Singletons\EditorContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="UserDataContainer.h">
+      <Filter>Sources\Singletons\UserDataContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="BuilderContainer.h">
+      <Filter>Sources\Singletons\BuilderContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="NewObjectDialog.h">
+      <Filter>Sources\Singletons\BuilderContainer\NewObjectDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ExporterContainer.h">
+      <Filter>Sources\Singletons\ExporterContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrameContainer.h">
+      <Filter>Sources\Singletons\ChildFrameContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrameContainer.h">
+      <Filter>Sources\Singletons\MainFrameContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="FolderCallback.h">
+      <Filter>Sources\Singletons\FolderCallback</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCollector.h">
+      <Filter>Sources\Singletons\ObjectCollector</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressHook.h">
+      <Filter>Sources\Singletons\ProgressHook</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressThread.h">
+      <Filter>Sources\Singletons\ProgressHook</Filter>
+    </ClInclude>
+    <ClInclude Include="MODContainer.h">
+      <Filter>Sources\Singletons\MODContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateMODDialog.h">
+      <Filter>Sources\Singletons\MODContainer\CreateMODDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenMODDialog.h">
+      <Filter>Sources\Singletons\MODContainer\OpenMODDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_Constants.h">
+      <Filter>Sources\Specific Controls\Property Control</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_ItemEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Item Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringComboEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_IntComboEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_IntComboEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_FloatComboEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_FloatComboEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BoolComboEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_BoolComboEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringComboRefEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_StringComboRefEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BoolSwitcherEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolSwitcherEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BoolCheckBoxEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolCheckBoxEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringSliderEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_IntSliderEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_IntSliderEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_FloatSliderEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_FloatSliderEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_GUIDEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\GUIDEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringMultibuttonEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BinaryBitFieldEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryBitFieldDialog.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField\BinaryBitFieldDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_Vec3ColorEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\Vec3ColorEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringNewBrowseEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_StringNewRefEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\StringNewRefEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_TextFileEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\TextFileEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_String3ButtonEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_ExTextFileEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor\ExTextFileEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_EditorSlider.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorSlider</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_MultilineStringEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_MultilineStringEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_MainTreeControl.h">
+      <Filter>Sources\Specific Controls\Property Control\MainTreeControl</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BaseDialog.h">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_Dialog.h">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_DBLinkDialog.h">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_DBLinkDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="PC_BuildDataDialog.h">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_BuildDataDialog</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutDialog.h">
+      <Filter>Sources\Specific Controls\About Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="SortTreeControl.h">
+      <Filter>Sources\Specific Controls\SortTree Control</Filter>
+    </ClInclude>
+    <ClInclude Include="TextEditorDialog.h">
+      <Filter>Sources\Specific Controls\TextEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="RefListDialog.h">
+      <Filter>Sources\Specific Controls\RefList Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="RefListWaitDialog.h">
+      <Filter>Sources\Specific Controls\RefList Dialog\RefListWaiter Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="FindTextDlg.h">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaEditor.h">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplaceTextDlg.h">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptDictionary.hpp">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditor.h">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressDlg.h">
+      <Filter>Sources\Specific Controls\%28Not Used%29Progress Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressDialog.h">
+      <Filter>Sources\Specific Controls\ProgressDialog</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialization.cpp">
+      <Filter>Sources\MapEditorApp</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditorApp.cpp">
+      <Filter>Sources\MapEditorApp</Filter>
+    </ClCompile>
+    <ClCompile Include="RegisterEditors.cpp">
+      <Filter>Sources\MapEditorApp</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditorSingleton.cpp">
+      <Filter>Sources\MapEditorApp\MapEditorSingleton</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Sources\MainFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame_Consts.cpp">
+      <Filter>Sources\MainFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrameParams.cpp">
+      <Filter>Sources\MainFrame\MainFrame Params</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultChildFrame.cpp">
+      <Filter>Sources\MainFrame\DefaultChildFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultDockingWindow.cpp">
+      <Filter>Sources\MainFrame\DefaultDockingWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="DW_GDBBrowser.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectTablesDialog.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Select Tables Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree_GDBBrowser_InputState.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree_GDBBrowserBase.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree_GDBLinkBrowser.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDBLink Browser</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree_GDBBrowser.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\Tree GDB Browser</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchObjectDialog.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Tree GDB Browsers\SearchObject Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Empty_GDBBrowser.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Empty</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboBox_GDBBrowser.cpp">
+      <Filter>Sources\Docking Windows\GameDataBase Browser\Table GDB Browsers\Combo Box</Filter>
+    </ClCompile>
+    <ClCompile Include="DW_PropertyBrowser.cpp">
+      <Filter>Sources\Docking Windows\Property Browser</Filter>
+    </ClCompile>
+    <ClCompile Include="DW_LayerBrowser.cpp">
+      <Filter>Sources\Docking Windows\Layer Browser</Filter>
+    </ClCompile>
+    <ClCompile Include="DW_Log.cpp">
+      <Filter>Sources\Docking Windows\Log Window</Filter>
+    </ClCompile>
+    <ClCompile Include="LogWindow.cpp">
+      <Filter>Sources\Docking Windows\Log Window\Log Window</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerContainer.cpp">
+      <Filter>Sources\Singletons\ControllerContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="MDDLDialog.cpp">
+      <Filter>Sources\Singletons\ControllerContainer\MDD LDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandHandlerContainer.cpp">
+      <Filter>Sources\Singletons\CommandHandlerContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewContainer.cpp">
+      <Filter>Sources\Singletons\ViewContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorContainer.cpp">
+      <Filter>Sources\Singletons\EditorContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="UserDataContainer.cpp">
+      <Filter>Sources\Singletons\UserDataContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="BuilderContainer.cpp">
+      <Filter>Sources\Singletons\BuilderContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="NewObjectDialog.cpp">
+      <Filter>Sources\Singletons\BuilderContainer\NewObjectDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ExporterContainer.cpp">
+      <Filter>Sources\Singletons\ExporterContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrameContainer.cpp">
+      <Filter>Sources\Singletons\ChildFrameContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrameContainer.cpp">
+      <Filter>Sources\Singletons\MainFrameContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="FolderCallback.cpp">
+      <Filter>Sources\Singletons\FolderCallback</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCollector.cpp">
+      <Filter>Sources\Singletons\ObjectCollector</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressHook.cpp">
+      <Filter>Sources\Singletons\ProgressHook</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressThread.cpp">
+      <Filter>Sources\Singletons\ProgressHook</Filter>
+    </ClCompile>
+    <ClCompile Include="MODContainer.cpp">
+      <Filter>Sources\Singletons\MODContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateMODDialog.cpp">
+      <Filter>Sources\Singletons\MODContainer\CreateMODDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenMODDialog.cpp">
+      <Filter>Sources\Singletons\MODContainer\OpenMODDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_ItemEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Item Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_IntInputEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\IntInputEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_FloatInputEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\FloatInputEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringInputEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringInputEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringComboEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_IntComboEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_IntComboEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_FloatComboEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_FloatComboEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BoolComboEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_BoolComboEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringComboRefEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringComboEditors\PC_StringComboRefEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BoolSwitcherEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolSwitcherEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BoolCheckBoxEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\BoolCheckBoxEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringSliderEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_IntSliderEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_IntSliderEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_FloatSliderEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringSliderEditors\PC_FloatSliderEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_GUIDEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\GUIDEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringMultibuttonEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringBrowseEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringRefEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringRefEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringFileRefEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringFileRefEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringDirRefEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringDirRefEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_IntColorEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\IntColorEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringBigInputEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringBigInputEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BinaryBitFieldEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryBitFieldDialog.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\BinaryBitField\BinaryBitFieldDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_Vec3ColorEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\Vec3ColorEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringNewBrowseEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_StringNewRefEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\StringNewRefEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_TextFileEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringNewBrowseEditors\TextFileEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_String3ButtonEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_ExTextFileEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\String3ButtonEditor\ExTextFileEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_EditorButton.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorButton</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_EditorSlider.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorSlider</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_MultilineStringEditor.cpp">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_MultilineStringEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_MainTreeControl.cpp">
+      <Filter>Sources\Specific Controls\Property Control\MainTreeControl</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BaseDialog.cpp">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_Dialog.cpp">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_DBLinkDialog.cpp">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_DBLinkDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="PC_BuildDataDialog.cpp">
+      <Filter>Sources\Specific Controls\Property Control\PC_Dialogs\PC_BuildDataDialog</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutDialog.cpp">
+      <Filter>Sources\Specific Controls\About Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="SortTreeControl.cpp">
+      <Filter>Sources\Specific Controls\SortTree Control</Filter>
+    </ClCompile>
+    <ClCompile Include="TextEditorDialog.cpp">
+      <Filter>Sources\Specific Controls\TextEditor Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="RefListDialog.cpp">
+      <Filter>Sources\Specific Controls\RefList Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="RefListWaitDialog.cpp">
+      <Filter>Sources\Specific Controls\RefList Dialog\RefListWaiter Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="FindTextDlg.cpp">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaEditor.cpp">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplaceTextDlg.cpp">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditor.cpp">
+      <Filter>Sources\Specific Controls\ScriptEditor Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressDlg.cpp">
+      <Filter>Sources\Specific Controls\%28Not Used%29Progress Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressDialog.cpp">
+      <Filter>Sources\Specific Controls\ProgressDialog</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MapEditor.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\normal_object.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\small_object.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\startup.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\pc_types.bmp">
+      <Filter>Resource Files\Bitmaps\Types</Filter>
+    </Image>
+    <Image Include="res\tree_types.bmp">
+      <Filter>Resource Files\Bitmaps\Types</Filter>
+    </Image>
+    <Image Include="res\toolbar_main.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_object.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_pc.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_selection.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_te.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_uo.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_view.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\pc_header.bmp">
+      <Filter>Resource Files\Bitmaps\Headers</Filter>
+    </Image>
+    <Image Include="res\tree_header.bmp">
+      <Filter>Resource Files\Bitmaps\Headers</Filter>
+    </Image>
+    <Image Include="res\editor.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+    <Image Include="res\main_frame.ico">
+      <Filter>Resource Files\Icons</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\DragAndDropCopy.cur">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+    <None Include="res\DragAndDropMove.cur">
+      <Filter>Resource Files\Cursors</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="res\MapEditor.manifest">
+      <Filter>Resource Files\Manifest</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="PC_IntInputEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\IntInputEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_FloatInputEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\FloatInputEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringInputEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringInputEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringBrowseEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringRefEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringRefEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringFileRefEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringFileRefEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringDirRefEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringDirRefEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_IntColorEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\IntColorEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_StringBigInputEditor.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Specific Editors\StringMultibuttonEditor\StringBrowseEditors\StringBigInputEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PC_EditorButton.h">
+      <Filter>Sources\Specific Controls\Property Control\Editors\Additional Editors\PC_EditorButton</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

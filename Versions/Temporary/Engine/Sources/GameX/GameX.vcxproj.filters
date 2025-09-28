@@ -1,0 +1,924 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{d77ef258-5ffb-431a-8424-180fd61076e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{56132a8e-8743-435c-9784-6ebd0d127bf6}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="GameX">
+      <UniqueIdentifier>{05b1c771-16f5-43a7-b7be-90a42b0b381c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Base">
+      <UniqueIdentifier>{b5bbde15-969f-4379-858b-c006e5967a54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\PlayMovie">
+      <UniqueIdentifier>{55308b2f-53a7-42c6-9609-b10c21685d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission">
+      <UniqueIdentifier>{e30cbc0e-dcf8-44cd-84f3-5e849e29ac8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\World">
+      <UniqueIdentifier>{f18e696b-39f2-49da-b323-b10a46769ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\CameraMovement">
+      <UniqueIdentifier>{646caafe-b483-4d2b-aae9-f3ef1826a083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\Objectives">
+      <UniqueIdentifier>{1d26290e-a991-41f4-b9a7-a18b35356003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\InterfaceNotifications">
+      <UniqueIdentifier>{3ef14917-b728-4d29-b5df-1d9bd19312f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\MovieBorder">
+      <UniqueIdentifier>{a7d31328-642c-4381-b9fe-9205b895ef2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\Reinforcements">
+      <UniqueIdentifier>{086ae0b0-4d5a-45cc-a338-aaabd7a65853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\UnitFullInfo">
+      <UniqueIdentifier>{19f5a44e-fb87-4697-b231-8363042d35b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Mission\SuperWeapon">
+      <UniqueIdentifier>{451b3ecb-f3d7-4211-a885-56dcbb750667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\DummyInterface">
+      <UniqueIdentifier>{89580e67-e984-4541-ae57-536128deea12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu">
+      <UniqueIdentifier>{d07f6935-31b1-4eed-8cf4-db21b5ca20a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\MainMenu">
+      <UniqueIdentifier>{4c95427a-4b17-4476-aaae-c265d1289ad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\EscMenu">
+      <UniqueIdentifier>{d9ee1f49-41bd-4111-b399-bd6e29c9805a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\OptionsMenu">
+      <UniqueIdentifier>{d1b363ae-0c73-49e5-9def-f637fa283955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\CampaignSelection">
+      <UniqueIdentifier>{fecb9101-8725-43ed-b8cd-dbf790e0ab3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\ChapterMap">
+      <UniqueIdentifier>{78e6771c-8d06-4c28-862f-f1b5acb8c06f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\SaveLoad">
+      <UniqueIdentifier>{86886352-369d-4ea4-9981-b634d46f0c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\ProfileManager">
+      <UniqueIdentifier>{16e868b9-0a5c-495d-af59-7f54b41d6899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\WinLoose">
+      <UniqueIdentifier>{e31dfaf3-3bc2-4d2f-afed-50e0620d41f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\LoadingSingle">
+      <UniqueIdentifier>{5b9e6859-294e-4ec7-9061-d8d8ba13b6ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer">
+      <UniqueIdentifier>{c09016aa-cf8b-4316-b493-b24767ba2d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPLadderGame">
+      <UniqueIdentifier>{f354d0a6-8036-4fbe-8341-6d20f4bf82c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPWaitPlayers">
+      <UniqueIdentifier>{ccf0569f-50ca-4063-a13e-c56efde99ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\NivalNet">
+      <UniqueIdentifier>{14e219fb-fac4-48b0-94a7-8b6b9bed19b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPGameLobby">
+      <UniqueIdentifier>{b8854cfe-520f-46f4-87c5-5a3df1fcc7e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPGameRoom">
+      <UniqueIdentifier>{87f49c9e-699b-4607-bdea-db281ceb9d51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPStatistics">
+      <UniqueIdentifier>{8c1b41fb-c5b2-4933-9742-abf880be435b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPLoading">
+      <UniqueIdentifier>{c325d85a-e4fd-42f4-8951-f2c36de5a743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPCreateCustomGame">
+      <UniqueIdentifier>{9267aaed-b367-4e00-bd50-e88183165959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPCustomGame">
+      <UniqueIdentifier>{0b499996-c1de-445a-a33d-a65d07bb45a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\ChatControl">
+      <UniqueIdentifier>{c9a2e258-31c2-4786-b3ad-fa8cc693040a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\MPLadderStatistics">
+      <UniqueIdentifier>{68b977d9-b838-49f2-a1f1-b11decf1897b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Multiplayer\ReplaySaveLoad">
+      <UniqueIdentifier>{5814eafa-16ed-49af-b263-334bc34e67e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\CustomMissions">
+      <UniqueIdentifier>{387213ff-ada3-45e2-86c9-65f420bee192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Encyclopedia">
+      <UniqueIdentifier>{c9cb1185-3e0d-4f1f-8470-b448f1d681d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\SingleStatistic">
+      <UniqueIdentifier>{421042f9-9a5c-4546-bc69-6b3140aa62ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\Credits">
+      <UniqueIdentifier>{20edd748-bd37-4466-850f-3e255ca3fa87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\ArmyScreen">
+      <UniqueIdentifier>{86f0b48e-6a56-4c53-b3a9-ddcc57075005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\PlayerStats">
+      <UniqueIdentifier>{182f378c-b00c-48c8-96fa-96f16aaea223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\SelectTutorial">
+      <UniqueIdentifier>{7fdd8cd1-43af-40b3-8062-d00d45b900b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\CustomCampaign">
+      <UniqueIdentifier>{e9247867-2612-4397-8c4e-bbfc5db53bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\LoadMod">
+      <UniqueIdentifier>{c568d30c-1672-47a9-8694-4eeeac4794d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\MissionBriefing">
+      <UniqueIdentifier>{b3ca2fea-0327-468c-b6a2-118d8a1f6278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Menu\HallOfFame">
+      <UniqueIdentifier>{bd447251-d438-4837-ae2b-a04a14b971f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Misc">
+      <UniqueIdentifier>{b032afac-9fb1-4c02-a1ee-3ff79ab25f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Help">
+      <UniqueIdentifier>{025e6f2a-f991-4e26-9560-f07ab7d70216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Transceiver">
+      <UniqueIdentifier>{679452e2-46fe-442f-9d75-cb25fd72eea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\AICommands">
+      <UniqueIdentifier>{8ed01c09-81c8-42eb-ab1d-649ca5f1ed59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\ScenarioTracker">
+      <UniqueIdentifier>{561e1068-c356-4b38-850c-6e033eafe575}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\TestScreen">
+      <UniqueIdentifier>{4ab9df47-45f4-460f-b7d9-4888af44f2e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\DBWrap">
+      <UniqueIdentifier>{06b5e7ac-cd1c-474b-8128-aff08f3c4ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Utils">
+      <UniqueIdentifier>{752ec934-77b8-41e2-ae73-32f5428b2860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer">
+      <UniqueIdentifier>{d3153a75-13cd-4bc9-8085-407bebe64d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer\Transciever">
+      <UniqueIdentifier>{ce480fb4-6ce0-44cc-8612-ae954954bcda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer\MPUILayer">
+      <UniqueIdentifier>{96207cf8-35b7-471a-a61f-74ec2505fecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer\MPUILayer\NetModes">
+      <UniqueIdentifier>{0cabb44a-a026-4ffa-b3c1-ebf5dd958c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer\MPUILayer\NetModes\LAN">
+      <UniqueIdentifier>{3d2bdf75-7f0d-4681-a179-53b2c86a5cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Multiplayer\MPUILayer\NetModes\NivalNet">
+      <UniqueIdentifier>{f614b5cf-8eb3-4409-aa0f-7232f0241f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameX\Demo">
+      <UniqueIdentifier>{9b562245-003c-4165-9bc0-d81f058a2725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{d30d7cfb-d62c-49f2-a179-810bb1b242f2}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{a4335406-9efa-4a07-834c-6d0ce75fcfb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\MPConsts">
+      <UniqueIdentifier>{0e225f1a-b5bf-4845-a13b-65d6c1837d83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\DBScenario">
+      <UniqueIdentifier>{c1c5abfb-872e-4024-a8dc-f1e2f71eb9b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InterfaceState">
+      <UniqueIdentifier>{3ef10416-a73c-4e9e-a372-8340e0207fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom Missions &amp; Campaigns">
+      <UniqueIdentifier>{d8c8d476-62a5-4c0e-b1f8-206471e91a39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MODs">
+      <UniqueIdentifier>{e0cfc374-7fb7-4a0c-bde5-a56fd48e0b41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FontGen">
+      <UniqueIdentifier>{f384b6fd-7a70-4ce7-8bf9-ed5fcccce01c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameXClassIDs.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceState.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerCommandManager.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceScreenBase.h">
+      <Filter>GameX\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PreprogrammedReactionsAndChecks.h">
+      <Filter>GameX\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayMovieInterface.h">
+      <Filter>GameX\PlayMovie</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionBackground.h">
+      <Filter>GameX\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionBase.h">
+      <Filter>GameX\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionInternal.h">
+      <Filter>GameX\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionWarFog.h">
+      <Filter>GameX\Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseTranslator.h">
+      <Filter>GameX\Mission\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Selector.h">
+      <Filter>GameX\Mission\World</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldClient.h">
+      <Filter>GameX\Mission\World</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMovement.h">
+      <Filter>GameX\Mission\CameraMovement</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionObjectives.h">
+      <Filter>GameX\Mission\Objectives</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceArmyBranchDlg.h">
+      <Filter>GameX\Mission\InterfaceNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceNotifications.h">
+      <Filter>GameX\Mission\InterfaceNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionMovieBorder.h">
+      <Filter>GameX\Mission\MovieBorder</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionReinforcements.h">
+      <Filter>GameX\Mission\Reinforcements</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionUnitFullInfo.h">
+      <Filter>GameX\Mission\UnitFullInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperWeapon.h">
+      <Filter>GameX\Mission\SuperWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperWeapon.hpp">
+      <Filter>GameX\Mission\SuperWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="DummyInterface.h">
+      <Filter>GameX\DummyInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMainMenu.h">
+      <Filter>GameX\Menu\MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceEscMenu.h">
+      <Filter>GameX\Menu\EscMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="dbgameoptions.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="include_OptionCategory.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="include_OptionEntry.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="include_OptionEntryState.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="include_OptionSystem.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceOptionsMenu.h">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="CampaignSelectionMenu.h">
+      <Filter>GameX\Menu\CampaignSelection</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceChapterMapMenu.h">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceChapterMapMenuDialogs.h">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceChapterMapMenuHelper.h">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceSaveLoadMenu.h">
+      <Filter>GameX\Menu\SaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfileManagerMenu.h">
+      <Filter>GameX\Menu\ProfileManager</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceWinLoose.h">
+      <Filter>GameX\Menu\WinLoose</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceLoadingSingle.h">
+      <Filter>GameX\Menu\LoadingSingle</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPBase.h">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMultiplayer.h">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MapSizeSorter.h">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPLadderGame.h">
+      <Filter>GameX\Menu\Multiplayer\MPLadderGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPWaitPlayers.h">
+      <Filter>GameX\Menu\Multiplayer\MPWaitPlayers</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceNivalNet.h">
+      <Filter>GameX\Menu\Multiplayer\NivalNet</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPLobby.h">
+      <Filter>GameX\Menu\Multiplayer\MPGameLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="MPLobbyData.h">
+      <Filter>GameX\Menu\Multiplayer\MPGameLobby</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRoomData.h">
+      <Filter>GameX\Menu\Multiplayer\MPGameRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPGameRoom.h">
+      <Filter>GameX\Menu\Multiplayer\MPGameRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPStatistics.h">
+      <Filter>GameX\Menu\Multiplayer\MPStatistics</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPLoading.h">
+      <Filter>GameX\Menu\Multiplayer\MPLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPCreateCustomGame.h">
+      <Filter>GameX\Menu\Multiplayer\MPCreateCustomGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPCustomGame.h">
+      <Filter>GameX\Menu\Multiplayer\MPCustomGame</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatControl.h">
+      <Filter>GameX\Menu\Multiplayer\ChatControl</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMPLadderStatistics.h">
+      <Filter>GameX\Menu\Multiplayer\MPLadderStatistics</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceReplaySaveLoad.h">
+      <Filter>GameX\Menu\Multiplayer\ReplaySaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceCustomMissions.h">
+      <Filter>GameX\Menu\CustomMissions</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceEncyclopedia.h">
+      <Filter>GameX\Menu\Encyclopedia</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceSingleStatistic.h">
+      <Filter>GameX\Menu\SingleStatistic</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceCredits.h">
+      <Filter>GameX\Menu\Credits</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceArmyScreen.h">
+      <Filter>GameX\Menu\ArmyScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfacePlayerStats.h">
+      <Filter>GameX\Menu\PlayerStats</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceSelectTutorial.h">
+      <Filter>GameX\Menu\SelectTutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceCustomCampaign.h">
+      <Filter>GameX\Menu\CustomCampaign</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceLoadMod.h">
+      <Filter>GameX\Menu\LoadMod</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMissionBriefing.h">
+      <Filter>GameX\Menu\MissionBriefing</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceHallOfFame.h">
+      <Filter>GameX\Menu\HallOfFame</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceMisc.h">
+      <Filter>GameX\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveLoadHelper.h">
+      <Filter>GameX\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElementsHelper.h">
+      <Filter>GameX\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitFullInfoHelper.h">
+      <Filter>GameX\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceHelp.h">
+      <Filter>GameX\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandsHistory.h">
+      <Filter>GameX\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCommands.h">
+      <Filter>GameX\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="SinglePlayerTransceiver.h">
+      <Filter>GameX\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="Transceiver.h">
+      <Filter>GameX\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="AICmdsAutoMagic.h">
+      <Filter>GameX\AICommands</Filter>
+    </ClInclude>
+    <ClInclude Include="AILogicCommandInternal.h">
+      <Filter>GameX\AICommands</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandsSender.h">
+      <Filter>GameX\AICommands</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenarioTracker.h">
+      <Filter>GameX\ScenarioTracker</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenarioTracker.hpp">
+      <Filter>GameX\ScenarioTracker</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenarioTrackerTypes.h">
+      <Filter>GameX\ScenarioTracker</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceTestScreen.h">
+      <Filter>GameX\TestScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="DBWrapReinf.h">
+      <Filter>GameX\DBWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>GameX\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MPInterfaceData.h">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerCommandProcessor.h">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerNetPackets.h">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerTestNet.h">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MPTransceiver.h">
+      <Filter>GameX\Multiplayer\Transciever</Filter>
+    </ClInclude>
+    <ClInclude Include="MPLANTest.h">
+      <Filter>GameX\Multiplayer\MPUILayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MPManager.h">
+      <Filter>GameX\Multiplayer\MPUILayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MPManagerMode.h">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClInclude>
+    <ClInclude Include="MPManagerModeNoNet.hpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClInclude>
+    <ClInclude Include="MPManagerModeLAN.hpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes\LAN</Filter>
+    </ClInclude>
+    <ClInclude Include="MPManagerModeNivalNet.hpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes\NivalNet</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceDemo.h">
+      <Filter>GameX\Demo</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConsts.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBGameRoot.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_GameRoot.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMPConsts.h">
+      <Filter>DB\MPConsts</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MultiplayerSide.h">
+      <Filter>DB\MPConsts</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MultiplayerTechLevel.h">
+      <Filter>DB\MPConsts</Filter>
+    </ClInclude>
+    <ClInclude Include="DBScenario.h">
+      <Filter>DB\DBScenario</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Campaign.h">
+      <Filter>DB\DBScenario</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Chapter.h">
+      <Filter>DB\DBScenario</Filter>
+    </ClInclude>
+    <ClInclude Include="include_LeaderExpLevel.h">
+      <Filter>DB\DBScenario</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Medal.h">
+      <Filter>DB\DBScenario</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceStateInternal.h">
+      <Filter>InterfaceState</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomMissions.h">
+      <Filter>Custom Missions &amp; Campaigns</Filter>
+    </ClInclude>
+    <ClInclude Include="FontChars.h">
+      <Filter>FontGen</Filter>
+    </ClInclude>
+    <ClInclude Include="FontData.h">
+      <Filter>FontGen</Filter>
+    </ClInclude>
+    <ClInclude Include="FontInfo.h">
+      <Filter>FontGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CClientGameConsts.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GetConsts.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceScreenBase.cpp">
+      <Filter>GameX\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayMovieInterface.cpp">
+      <Filter>GameX\PlayMovie</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionBackground.cpp">
+      <Filter>GameX\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionBase.cpp">
+      <Filter>GameX\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionInternal.cpp">
+      <Filter>GameX\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="MissionWarFog.cpp">
+      <Filter>GameX\Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseTranslator.cpp">
+      <Filter>GameX\Mission\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Selector.cpp">
+      <Filter>GameX\Mission\World</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldClient.cpp">
+      <Filter>GameX\Mission\World</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldClientActions.cpp">
+      <Filter>GameX\Mission\World</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMovement.cpp">
+      <Filter>GameX\Mission\CameraMovement</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionObjectives.cpp">
+      <Filter>GameX\Mission\Objectives</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceArmyBranchDlg.cpp">
+      <Filter>GameX\Mission\InterfaceNotifications</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceNotifications.cpp">
+      <Filter>GameX\Mission\InterfaceNotifications</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionMovieBorder.cpp">
+      <Filter>GameX\Mission\MovieBorder</Filter>
+    </ClCompile>
+    <ClCompile Include="MissionReinforcements.cpp">
+      <Filter>GameX\Mission\Reinforcements</Filter>
+    </ClCompile>
+    <ClCompile Include="MissionUnitFullInfo.cpp">
+      <Filter>GameX\Mission\UnitFullInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperWeapon.cpp">
+      <Filter>GameX\Mission\SuperWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="DummyInterface.cpp">
+      <Filter>GameX\DummyInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMainMenu.cpp">
+      <Filter>GameX\Menu\MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceEscMenu.cpp">
+      <Filter>GameX\Menu\EscMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="dbgameoptions.cpp">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceOptionsMenu.cpp">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="CampaignSelectionMenu.cpp">
+      <Filter>GameX\Menu\CampaignSelection</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceChapterMapMenu.cpp">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceChapterMapMenuDialogs.cpp">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceChapterMapMenuHelper.cpp">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceChapterMapMenuInit.cpp">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceChapterMapMenuReinfDesc.cpp">
+      <Filter>GameX\Menu\ChapterMap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceSaveLoadMenu.cpp">
+      <Filter>GameX\Menu\SaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileManagerMenu.cpp">
+      <Filter>GameX\Menu\ProfileManager</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceWinLoose.cpp">
+      <Filter>GameX\Menu\WinLoose</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceLoadingSingle.cpp">
+      <Filter>GameX\Menu\LoadingSingle</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPBase.cpp">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMultiplayer.cpp">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MapSizeSorter.cpp">
+      <Filter>GameX\Menu\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPLadderGame.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPLadderGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPWaitPlayers.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPWaitPlayers</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceNivalNet.cpp">
+      <Filter>GameX\Menu\Multiplayer\NivalNet</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPLobby.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPGameLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPLobbyChat.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPGameLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="MPLobbyData.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPGameLobby</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRoomData.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPGameRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPGameRoom.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPGameRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPStatistics.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPStatistics</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPLoading.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPCreateCustomGame.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPCreateCustomGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPCustomGame.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPCustomGame</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatControl.cpp">
+      <Filter>GameX\Menu\Multiplayer\ChatControl</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMPLadderStatistics.cpp">
+      <Filter>GameX\Menu\Multiplayer\MPLadderStatistics</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceReplaySaveLoad.cpp">
+      <Filter>GameX\Menu\Multiplayer\ReplaySaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceCustomMissions.cpp">
+      <Filter>GameX\Menu\CustomMissions</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceEncyclopedia.cpp">
+      <Filter>GameX\Menu\Encyclopedia</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceSingleStatistic.cpp">
+      <Filter>GameX\Menu\SingleStatistic</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceCredits.cpp">
+      <Filter>GameX\Menu\Credits</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceArmyScreen.cpp">
+      <Filter>GameX\Menu\ArmyScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfacePlayerStats.cpp">
+      <Filter>GameX\Menu\PlayerStats</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceSelectTutorial.cpp">
+      <Filter>GameX\Menu\SelectTutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceCustomCampaign.cpp">
+      <Filter>GameX\Menu\CustomCampaign</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceLoadMod.cpp">
+      <Filter>GameX\Menu\LoadMod</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMissionBriefing.cpp">
+      <Filter>GameX\Menu\MissionBriefing</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceHallOfFame.cpp">
+      <Filter>GameX\Menu\HallOfFame</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceMisc.cpp">
+      <Filter>GameX\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveLoadHelper.cpp">
+      <Filter>GameX\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElementsHelper.cpp">
+      <Filter>GameX\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitFullInfoHelper.cpp">
+      <Filter>GameX\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceHelp.cpp">
+      <Filter>GameX\Help</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsHistory.cpp">
+      <Filter>GameX\Transceiver</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonCommands.cpp">
+      <Filter>GameX\Transceiver</Filter>
+    </ClCompile>
+    <ClCompile Include="SinglePlayerTransceiver.cpp">
+      <Filter>GameX\Transceiver</Filter>
+    </ClCompile>
+    <ClCompile Include="AICmdsAutoMagic.cpp">
+      <Filter>GameX\AICommands</Filter>
+    </ClCompile>
+    <ClCompile Include="AILogicCommandInternal.cpp">
+      <Filter>GameX\AICommands</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsSender.cpp">
+      <Filter>GameX\AICommands</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenarioTracker.cpp">
+      <Filter>GameX\ScenarioTracker</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenarioTrackerMP.cpp">
+      <Filter>GameX\ScenarioTracker</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceTestScreen.cpp">
+      <Filter>GameX\TestScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="DBWrapReinf.cpp">
+      <Filter>GameX\DBWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>GameX\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MPInterfaceData.cpp">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiplayerCommandProcessor.cpp">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiplayerNetPackets.cpp">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiplayerTestNet.cpp">
+      <Filter>GameX\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MPTransceiver.cpp">
+      <Filter>GameX\Multiplayer\Transciever</Filter>
+    </ClCompile>
+    <ClCompile Include="MPLANTest.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManager.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerMode.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeClients.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeGameControl.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeMessages.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModePackets.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeLAN.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes\LAN</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeNivalNet.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes\NivalNet</Filter>
+    </ClCompile>
+    <ClCompile Include="MPManagerModeNivalNetChat.cpp">
+      <Filter>GameX\Multiplayer\MPUILayer\NetModes\NivalNet</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceDemo.cpp">
+      <Filter>GameX\Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="DBConsts.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBGameRoot.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMPConsts.cpp">
+      <Filter>DB\MPConsts</Filter>
+    </ClCompile>
+    <ClCompile Include="DBScenario.cpp">
+      <Filter>DB\DBScenario</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceStateInternal.cpp">
+      <Filter>InterfaceState</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomMissions.cpp">
+      <Filter>Custom Missions &amp; Campaigns</Filter>
+    </ClCompile>
+    <ClCompile Include="MODSetup.cpp">
+      <Filter>MODs</Filter>
+    </ClCompile>
+    <ClCompile Include="FontChars.cpp">
+      <Filter>FontGen</Filter>
+    </ClCompile>
+    <ClCompile Include="FontData.cpp">
+      <Filter>FontGen</Filter>
+    </ClCompile>
+    <ClCompile Include="FontInfo.cpp">
+      <Filter>FontGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CClientGameConsts.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialization.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbgameoptions.cll">
+      <Filter>GameX\Menu\OptionsMenu</Filter>
+    </None>
+    <None Include="dbconsts.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbgameroot.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbmpconsts.cll">
+      <Filter>DB\MPConsts</Filter>
+    </None>
+    <None Include="dbscenario.cll">
+      <Filter>DB\DBScenario</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameX.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

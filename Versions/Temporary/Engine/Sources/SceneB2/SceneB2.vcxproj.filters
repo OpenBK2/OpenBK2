@@ -1,0 +1,529 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{8849e714-c12d-4030-a941-54fc270c65ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene">
+      <UniqueIdentifier>{fedd62c3-63c3-47d4-a94c-893c4f5d14f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera">
+      <UniqueIdentifier>{342e20ff-c35f-4024-8bb8-254035480133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera\Script mutators">
+      <UniqueIdentifier>{360aa21b-0612-41d3-8283-46ce118ca25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Camera\Mouse mutators">
+      <UniqueIdentifier>{12e90f6b-30af-4921-ac6d-5dc625691d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Cursor">
+      <UniqueIdentifier>{80ed8add-2559-4a67-bd1f-90f8f1225512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\AnimMutators">
+      <UniqueIdentifier>{6e387f4e-2a6a-43f6-8bd3-8aa2da6ebd91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Terrain &amp; Water">
+      <UniqueIdentifier>{7c1ffd9a-6c65-45ac-a5d5-955a7d41c0e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TerraGen">
+      <UniqueIdentifier>{c442726b-2d9c-4f53-8cc8-5022c4519b66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TerraGen\Noise">
+      <UniqueIdentifier>{331d146c-fb85-4021-b1c9-92929d44ed0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TerraGen\VSO">
+      <UniqueIdentifier>{e23b80e1-88c3-42bf-a71b-8e1dbfa1c631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\TerraGen\Legacy">
+      <UniqueIdentifier>{25f23299-3092-4567-ba88-c5ebf2976686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\StatsSystem">
+      <UniqueIdentifier>{ae395eb5-0a81-4791-9eab-17f4bee6e51c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\MeshCreators">
+      <UniqueIdentifier>{08c7b1e6-5b57-476d-b27e-2acde07a10f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\AIDebugInfo">
+      <UniqueIdentifier>{a3245528-a07e-4213-acf5-fbc4aab215b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\DB">
+      <UniqueIdentifier>{5a613d62-7753-4136-bc27-1a694014695c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\HoldQueue">
+      <UniqueIdentifier>{1fec6986-7a60-4a01-8d2b-248203ddfc6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Weather">
+      <UniqueIdentifier>{c1a9fb02-6ebe-4eb1-85ec-655853ac7b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Shot Traces">
+      <UniqueIdentifier>{762ac111-7780-4e16-8879-59fbafbf7b13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\LaserMark">
+      <UniqueIdentifier>{b780016a-afb8-42a0-845f-82fbe904e220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AnimMutators.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugInfoManager.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneB2.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneTypes.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="StatSystem.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraGen.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachedObj.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachedObj.hpp">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="FullScreenFader.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageTools.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneInternal.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneUIVisitor.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneVisObjs.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="VisObjDesc.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="VisObjIcons.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="VisObjIconsManager.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="VisObjSelection.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraInternal.h">
+      <Filter>Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMapIterator.h">
+      <Filter>Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScriptMutators.h">
+      <Filter>Scene\Camera\Script mutators</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraBasicMouseMutator.h">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraGameMouseMutator.h">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMayaMouseMutator.h">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClInclude>
+    <ClInclude Include="CursorInternal.h">
+      <Filter>Scene\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="MechUnitJoggingMutator.h">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeFallingMutator.h">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeWindMutator.h">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClInclude>
+    <ClInclude Include="WindController.h">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClInclude>
+    <ClInclude Include="WingScaleMutator.h">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicDebrisManager.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfController.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainAIInfo.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainGfxInfo.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainInfo.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainManager.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraTools.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterController.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterStuff.h">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionsManager.h">
+      <Filter>Scene\TerraGen</Filter>
+    </ClInclude>
+    <ClInclude Include="GenTerrain.h">
+      <Filter>Scene\TerraGen</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadImage.h">
+      <Filter>Scene\TerraGen</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraHeight.h">
+      <Filter>Scene\TerraGen</Filter>
+    </ClInclude>
+    <ClInclude Include="NoiseManager.h">
+      <Filter>Scene\TerraGen\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Scene\TerraGen\Noise</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOConsts.h">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraConverters.h">
+      <Filter>Scene\TerraGen\Legacy</Filter>
+    </ClInclude>
+    <ClInclude Include="StatsSystemInternal.h">
+      <Filter>Scene\StatsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="LineMesh.h">
+      <Filter>Scene\MeshCreators</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootAreaMesh.h">
+      <Filter>Scene\MeshCreators</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDebugInfo.h">
+      <Filter>Scene\AIDebugInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugInfoManagerInternal.h">
+      <Filter>Scene\AIDebugInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="DBSceneConsts.h">
+      <Filter>Scene\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneHoldQueue.h">
+      <Filter>Scene\HoldQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="WeatherVisual.h">
+      <Filter>Scene\Weather</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotTrace.h">
+      <Filter>Scene\Shot Traces</Filter>
+    </ClInclude>
+    <ClInclude Include="LaserMark.h">
+      <Filter>Scene\LaserMark</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionInfo.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionM1.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AIVisSubInfo.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachedObj.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="FullScreenFader.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageTools.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneAttachedObjects.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneData.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDebugInfo.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneEffects.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneIcons.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneInternal.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenePick.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ScenePolylines.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneStuff.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneVisObjs.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainGrid.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjDesc.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjFade.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjIcons.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjIconsManager.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjSelection.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraInternal.cpp">
+      <Filter>Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMapIterator.cpp">
+      <Filter>Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScriptMutators.cpp">
+      <Filter>Scene\Camera\Script mutators</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraBasicMouseMutator.cpp">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraGameMouseMutator.cpp">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMayaMouseMutator.cpp">
+      <Filter>Scene\Camera\Mouse mutators</Filter>
+    </ClCompile>
+    <ClCompile Include="CursorInternal.cpp">
+      <Filter>Scene\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="MechUnitJoggingMutator.cpp">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeFallingMutator.cpp">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeWindMutator.cpp">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClCompile>
+    <ClCompile Include="WindController.cpp">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClCompile>
+    <ClCompile Include="WingScaleMutator.cpp">
+      <Filter>Scene\AnimMutators</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicDebrisManager.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfController.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainGfxObserver.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainInfo.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainManager.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraTools.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterController.cpp">
+      <Filter>Scene\Terrain &amp; Water</Filter>
+    </ClCompile>
+    <ClCompile Include="BridgesTerraFormer.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="DebrisBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicDebrisBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionsManager.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="GenTerrain.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadImage.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectsTerraFormer.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraAIConnector.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraGeomBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraGeomModifier.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraGFXConnector.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraHeight.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraObjectsBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraSelection.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraSpotBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMasks.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="TrackBuilder.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterModifier.cpp">
+      <Filter>Scene\TerraGen</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseManager.cpp">
+      <Filter>Scene\TerraGen\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Scene\TerraGen\Noise</Filter>
+    </ClCompile>
+    <ClCompile Include="CragsBuilder.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="FootsCreator.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="HolesBuilder.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="PeaksCreator.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="PrecipicesManager.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="PrecipicesRender.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="RiversBuilder.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadsBuilder.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOMethods.cpp">
+      <Filter>Scene\TerraGen\VSO</Filter>
+    </ClCompile>
+    <ClCompile Include="StatsSystemInternal.cpp">
+      <Filter>Scene\StatsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="LineMesh.cpp">
+      <Filter>Scene\MeshCreators</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootAreaMesh.cpp">
+      <Filter>Scene\MeshCreators</Filter>
+    </ClCompile>
+    <ClCompile Include="AIDebugInfo.cpp">
+      <Filter>Scene\AIDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugInfoManagerInternal.cpp">
+      <Filter>Scene\AIDebugInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="DBSceneConsts.cpp">
+      <Filter>Scene\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneHoldQueue.cpp">
+      <Filter>Scene\HoldQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="WeatherVisual.cpp">
+      <Filter>Scene\Weather</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotTrace.cpp">
+      <Filter>Scene\Shot Traces</Filter>
+    </ClCompile>
+    <ClCompile Include="LaserMark.cpp">
+      <Filter>Scene\LaserMark</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbsceneconsts.cll">
+      <Filter>Scene\DB</Filter>
+    </None>
+  </ItemGroup>
+</Project>

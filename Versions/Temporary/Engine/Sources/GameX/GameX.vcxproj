@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="BetaRelease|Win32">
+      <Configuration>BetaRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="FastDebug|Win32">
+      <Configuration>FastDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{7FD892BA-9616-47BB-8F0D-F88FFB2B9868}</ProjectGuid>
+    <RootNamespace>GameX</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36518.2</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm500 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NIVAL_DLL;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul
+</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;FAST_DEBUG;NIVAL_DLL;_FASTDEBUG;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul
+</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NIVAL_DLL;_BETARELEASE;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul
+</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_FINALRELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>FastCall</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/list &gt;nul %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook13
+"$(VCInstallDir)bin\lib" /NOLOGO /OUT:$(OutDir)$(ProjectName).lib *.obj
+</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AICmdsAutoMagic.h" />
+    <ClInclude Include="AILogicCommandInternal.h" />
+    <ClInclude Include="CameraMovement.h" />
+    <ClInclude Include="CampaignSelectionMenu.h" />
+    <ClInclude Include="CClientGameConsts.h" />
+    <ClInclude Include="ChatControl.h" />
+    <ClInclude Include="CommandsHistory.h" />
+    <ClInclude Include="CommandsSender.h" />
+    <ClInclude Include="CommonCommands.h" />
+    <ClInclude Include="CustomMissions.h" />
+    <ClInclude Include="DBConsts.h" />
+    <ClInclude Include="dbgameoptions.h" />
+    <ClInclude Include="DBGameRoot.h" />
+    <ClInclude Include="DBMPConsts.h" />
+    <ClInclude Include="DBScenario.h" />
+    <ClInclude Include="DBWrapReinf.h" />
+    <ClInclude Include="DummyInterface.h" />
+    <ClInclude Include="FontChars.h" />
+    <ClInclude Include="FontData.h" />
+    <ClInclude Include="FontInfo.h" />
+    <ClInclude Include="GameRoomData.h" />
+    <ClInclude Include="GameXClassIDs.h" />
+    <ClInclude Include="GetConsts.h" />
+    <ClInclude Include="include_Campaign.h" />
+    <ClInclude Include="include_Chapter.h" />
+    <ClInclude Include="include_GameRoot.h" />
+    <ClInclude Include="include_LeaderExpLevel.h" />
+    <ClInclude Include="include_Medal.h" />
+    <ClInclude Include="include_MultiplayerSide.h" />
+    <ClInclude Include="include_MultiplayerTechLevel.h" />
+    <ClInclude Include="include_OptionCategory.h" />
+    <ClInclude Include="include_OptionEntry.h" />
+    <ClInclude Include="include_OptionEntryState.h" />
+    <ClInclude Include="include_OptionSystem.h" />
+    <ClInclude Include="InterfaceArmyBranchDlg.h" />
+    <ClInclude Include="InterfaceArmyScreen.h" />
+    <ClInclude Include="InterfaceChapterMapMenu.h" />
+    <ClInclude Include="InterfaceChapterMapMenuDialogs.h" />
+    <ClInclude Include="InterfaceChapterMapMenuHelper.h" />
+    <ClInclude Include="InterfaceCredits.h" />
+    <ClInclude Include="InterfaceCustomCampaign.h" />
+    <ClInclude Include="InterfaceCustomMissions.h" />
+    <ClInclude Include="InterfaceDemo.h" />
+    <ClInclude Include="InterfaceEncyclopedia.h" />
+    <ClInclude Include="InterfaceEscMenu.h" />
+    <ClInclude Include="InterfaceHallOfFame.h" />
+    <ClInclude Include="InterfaceHelp.h" />
+    <ClInclude Include="InterfaceLoadingSingle.h" />
+    <ClInclude Include="InterfaceLoadMod.h" />
+    <ClInclude Include="InterfaceMainMenu.h" />
+    <ClInclude Include="InterfaceMisc.h" />
+    <ClInclude Include="InterfaceMissionBackground.h" />
+    <ClInclude Include="InterfaceMissionBase.h" />
+    <ClInclude Include="InterfaceMissionBriefing.h" />
+    <ClInclude Include="InterfaceMissionInternal.h" />
+    <ClInclude Include="InterfaceMissionMovieBorder.h" />
+    <ClInclude Include="InterfaceMissionObjectives.h" />
+    <ClInclude Include="InterfaceMPBase.h" />
+    <ClInclude Include="InterfaceMPCreateCustomGame.h" />
+    <ClInclude Include="InterfaceMPCustomGame.h" />
+    <ClInclude Include="InterfaceMPGameRoom.h" />
+    <ClInclude Include="InterfaceMPLadderGame.h" />
+    <ClInclude Include="InterfaceMPLadderStatistics.h" />
+    <ClInclude Include="InterfaceMPLoading.h" />
+    <ClInclude Include="InterfaceMPLobby.h" />
+    <ClInclude Include="InterfaceMPStatistics.h" />
+    <ClInclude Include="InterfaceMPWaitPlayers.h" />
+    <ClInclude Include="InterfaceMultiplayer.h" />
+    <ClInclude Include="InterfaceNivalNet.h" />
+    <ClInclude Include="InterfaceNotifications.h" />
+    <ClInclude Include="InterfaceOptionsMenu.h" />
+    <ClInclude Include="InterfacePlayerStats.h" />
+    <ClInclude Include="InterfaceReplaySaveLoad.h" />
+    <ClInclude Include="InterfaceSaveLoadMenu.h" />
+    <ClInclude Include="InterfaceScreenBase.h" />
+    <ClInclude Include="InterfaceSelectTutorial.h" />
+    <ClInclude Include="InterfaceSingleStatistic.h" />
+    <ClInclude Include="InterfaceState.h" />
+    <ClInclude Include="InterfaceStateInternal.h" />
+    <ClInclude Include="InterfaceTestScreen.h" />
+    <ClInclude Include="InterfaceWinLoose.h" />
+    <ClInclude Include="MapSizeSorter.h" />
+    <ClInclude Include="MissionReinforcements.h" />
+    <ClInclude Include="MissionUnitFullInfo.h" />
+    <ClInclude Include="MissionWarFog.h" />
+    <ClInclude Include="MouseTranslator.h" />
+    <ClInclude Include="MPInterfaceData.h" />
+    <ClInclude Include="MPLANTest.h" />
+    <ClInclude Include="MPLobbyData.h" />
+    <ClInclude Include="MPManager.h" />
+    <ClInclude Include="MPManagerMode.h" />
+    <ClInclude Include="MPManagerModeLAN.hpp" />
+    <ClInclude Include="MPManagerModeNivalNet.hpp" />
+    <ClInclude Include="MPManagerModeNoNet.hpp" />
+    <ClInclude Include="MPTransceiver.h" />
+    <ClInclude Include="MultiplayerCommandManager.h" />
+    <ClInclude Include="MultiplayerCommandProcessor.h" />
+    <ClInclude Include="MultiplayerNetPackets.h" />
+    <ClInclude Include="MultiplayerTestNet.h" />
+    <ClInclude Include="PlayMovieInterface.h" />
+    <ClInclude Include="PreprogrammedReactionsAndChecks.h" />
+    <ClInclude Include="ProfileManagerMenu.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SaveLoadHelper.h" />
+    <ClInclude Include="ScenarioTracker.h" />
+    <ClInclude Include="ScenarioTracker.hpp" />
+    <ClInclude Include="ScenarioTrackerTypes.h" />
+    <ClInclude Include="Selector.h" />
+    <ClInclude Include="SinglePlayerTransceiver.h" />
+    <ClInclude Include="Specific.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SuperWeapon.h" />
+    <ClInclude Include="SuperWeapon.hpp" />
+    <ClInclude Include="Transceiver.h" />
+    <ClInclude Include="UIElementsHelper.h" />
+    <ClInclude Include="UnitFullInfoHelper.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="WorldClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AICmdsAutoMagic.cpp" />
+    <ClCompile Include="AILogicCommandInternal.cpp" />
+    <ClCompile Include="CameraMovement.cpp" />
+    <ClCompile Include="CampaignSelectionMenu.cpp" />
+    <ClCompile Include="CClientGameConsts.cpp" />
+    <ClCompile Include="ChatControl.cpp" />
+    <ClCompile Include="CommandsHistory.cpp" />
+    <ClCompile Include="CommandsSender.cpp" />
+    <ClCompile Include="CommonCommands.cpp" />
+    <ClCompile Include="CustomMissions.cpp" />
+    <ClCompile Include="DBConsts.cpp" />
+    <ClCompile Include="dbgameoptions.cpp" />
+    <ClCompile Include="DBGameRoot.cpp" />
+    <ClCompile Include="DBMPConsts.cpp" />
+    <ClCompile Include="DBScenario.cpp" />
+    <ClCompile Include="DBWrapReinf.cpp" />
+    <ClCompile Include="DummyInterface.cpp" />
+    <ClCompile Include="FontChars.cpp" />
+    <ClCompile Include="FontData.cpp" />
+    <ClCompile Include="FontInfo.cpp" />
+    <ClCompile Include="GameRoomData.cpp" />
+    <ClCompile Include="Initialization.cpp" />
+    <ClCompile Include="InterfaceArmyBranchDlg.cpp" />
+    <ClCompile Include="InterfaceArmyScreen.cpp" />
+    <ClCompile Include="InterfaceChapterMapMenu.cpp" />
+    <ClCompile Include="InterfaceChapterMapMenuDialogs.cpp" />
+    <ClCompile Include="InterfaceChapterMapMenuHelper.cpp" />
+    <ClCompile Include="InterfaceChapterMapMenuInit.cpp" />
+    <ClCompile Include="InterfaceChapterMapMenuReinfDesc.cpp" />
+    <ClCompile Include="InterfaceCredits.cpp" />
+    <ClCompile Include="InterfaceCustomCampaign.cpp" />
+    <ClCompile Include="InterfaceCustomMissions.cpp" />
+    <ClCompile Include="InterfaceDemo.cpp" />
+    <ClCompile Include="InterfaceEncyclopedia.cpp" />
+    <ClCompile Include="InterfaceEscMenu.cpp" />
+    <ClCompile Include="InterfaceHallOfFame.cpp" />
+    <ClCompile Include="InterfaceHelp.cpp" />
+    <ClCompile Include="InterfaceLoadingSingle.cpp" />
+    <ClCompile Include="InterfaceLoadMod.cpp" />
+    <ClCompile Include="InterfaceMainMenu.cpp" />
+    <ClCompile Include="InterfaceMisc.cpp" />
+    <ClCompile Include="InterfaceMissionBackground.cpp" />
+    <ClCompile Include="InterfaceMissionBase.cpp" />
+    <ClCompile Include="InterfaceMissionBriefing.cpp" />
+    <ClCompile Include="InterfaceMissionInternal.cpp" />
+    <ClCompile Include="InterfaceMissionMovieBorder.cpp" />
+    <ClCompile Include="InterfaceMissionObjectives.cpp" />
+    <ClCompile Include="InterfaceMPBase.cpp" />
+    <ClCompile Include="InterfaceMPCreateCustomGame.cpp" />
+    <ClCompile Include="InterfaceMPCustomGame.cpp" />
+    <ClCompile Include="InterfaceMPGameRoom.cpp" />
+    <ClCompile Include="InterfaceMPLadderGame.cpp" />
+    <ClCompile Include="InterfaceMPLadderStatistics.cpp" />
+    <ClCompile Include="InterfaceMPLoading.cpp" />
+    <ClCompile Include="InterfaceMPLobby.cpp" />
+    <ClCompile Include="InterfaceMPLobbyChat.cpp" />
+    <ClCompile Include="InterfaceMPStatistics.cpp" />
+    <ClCompile Include="InterfaceMPWaitPlayers.cpp" />
+    <ClCompile Include="InterfaceMultiplayer.cpp" />
+    <ClCompile Include="InterfaceNivalNet.cpp" />
+    <ClCompile Include="InterfaceNotifications.cpp" />
+    <ClCompile Include="InterfaceOptionsMenu.cpp" />
+    <ClCompile Include="InterfacePlayerStats.cpp" />
+    <ClCompile Include="InterfaceReplaySaveLoad.cpp" />
+    <ClCompile Include="InterfaceSaveLoadMenu.cpp" />
+    <ClCompile Include="InterfaceScreenBase.cpp" />
+    <ClCompile Include="InterfaceSelectTutorial.cpp" />
+    <ClCompile Include="InterfaceSingleStatistic.cpp" />
+    <ClCompile Include="InterfaceStateInternal.cpp" />
+    <ClCompile Include="InterfaceTestScreen.cpp" />
+    <ClCompile Include="InterfaceWinLoose.cpp" />
+    <ClCompile Include="MapSizeSorter.cpp" />
+    <ClCompile Include="MissionReinforcements.cpp" />
+    <ClCompile Include="MissionUnitFullInfo.cpp" />
+    <ClCompile Include="MissionWarFog.cpp" />
+    <ClCompile Include="MODSetup.cpp" />
+    <ClCompile Include="MouseTranslator.cpp" />
+    <ClCompile Include="MPInterfaceData.cpp" />
+    <ClCompile Include="MPLANTest.cpp" />
+    <ClCompile Include="MPLobbyData.cpp" />
+    <ClCompile Include="MPManager.cpp" />
+    <ClCompile Include="MPManagerMode.cpp" />
+    <ClCompile Include="MPManagerModeClients.cpp" />
+    <ClCompile Include="MPManagerModeGameControl.cpp" />
+    <ClCompile Include="MPManagerModeLAN.cpp" />
+    <ClCompile Include="MPManagerModeMessages.cpp" />
+    <ClCompile Include="MPManagerModeNivalNet.cpp" />
+    <ClCompile Include="MPManagerModeNivalNetChat.cpp" />
+    <ClCompile Include="MPManagerModePackets.cpp" />
+    <ClCompile Include="MPTransceiver.cpp" />
+    <ClCompile Include="MultiplayerCommandProcessor.cpp" />
+    <ClCompile Include="MultiplayerNetPackets.cpp" />
+    <ClCompile Include="MultiplayerTestNet.cpp" />
+    <ClCompile Include="PlayMovieInterface.cpp" />
+    <ClCompile Include="ProfileManagerMenu.cpp" />
+    <ClCompile Include="SaveLoadHelper.cpp" />
+    <ClCompile Include="ScenarioTracker.cpp" />
+    <ClCompile Include="ScenarioTrackerMP.cpp" />
+    <ClCompile Include="Selector.cpp" />
+    <ClCompile Include="SinglePlayerTransceiver.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SuperWeapon.cpp" />
+    <ClCompile Include="UIElementsHelper.cpp" />
+    <ClCompile Include="UnitFullInfoHelper.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WorldClient.cpp" />
+    <ClCompile Include="WorldClientActions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbconsts.cll" />
+    <None Include="dbgameoptions.cll" />
+    <None Include="dbgameroot.cll" />
+    <None Include="dbmpconsts.cll" />
+    <None Include="dbscenario.cll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameX.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3Dmotor\3Dmotor.vcxproj">
+      <Project>{553f00b2-7f78-4245-89eb-6b736b3b086a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\AILogic\AILogic.vcxproj">
+      <Project>{265c642f-2327-457a-93bb-58a3769ccd7c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\B2_M1_World\B2_M1_World.vcxproj">
+      <Project>{fb0729c8-3096-4832-a772-7fbabc397939}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Client\Client.vcxproj">
+      <Project>{ab234a85-0c4a-497c-a9c4-f29ad3aff5c1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Common_RTS_AI\Common_RTS_AI.vcxproj">
+      <Project>{284db713-adb5-4373-b61b-891e84a7e46d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\DebugTools\DebugTools.vcxproj">
+      <Project>{f926f770-d672-42cc-a284-f504472a5a48}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Image\Image.vcxproj">
+      <Project>{1c54f453-87d3-4640-8555-6ff75e8aada8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.vcxproj">
+      <Project>{8b3425aa-bc43-465c-bf85-936b1363ec24}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libdb\libdb.vcxproj">
+      <Project>{0295967b-b4ed-4f85-bb3a-c56f3769e59f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Main\Main.vcxproj">
+      <Project>{6a300c13-711d-477f-871c-947bf27cb754}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MemoryLib\MemoryLib.vcxproj">
+      <Project>{968793be-412e-45b0-a801-e54c6307e49e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Misc\Misc.vcxproj">
+      <Project>{1e0b6a39-dc95-48cb-9061-3679d40ad8c9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Net\Net.vcxproj">
+      <Project>{1e7b7a7a-43ec-485c-8698-26c3363cf99e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\SceneB2\SceneB2.vcxproj">
+      <Project>{a13e7256-3617-44c4-9016-ff4a050be84c}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Script\Script.vcxproj">
+      <Project>{a3198bd3-ad46-49c7-84ff-2377c7ac50cd}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Server_Client_Common\Server_Client_Common.vcxproj">
+      <Project>{41056dfd-a6a3-4bc9-9397-de395784ee03}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Sound\Sound.vcxproj">
+      <Project>{67421fb6-2fe9-41f4-afd5-072ab34c42f4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Stats_B2_M1\Stats_B2_M1.vcxproj">
+      <Project>{f7183ab4-4aff-4052-86ac-95f55b009239}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\System\System.vcxproj">
+      <Project>{2a5f6c9e-08a5-4091-b46c-e65ec7bd94fa}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\UISpecificB2\UISpecificB2.vcxproj">
+      <Project>{10867661-5ddd-4a6c-a2aa-120ff15d7e17}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\UI\UI.vcxproj">
+      <Project>{1a770486-c2cd-41c8-bade-1f1969e8baa5}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{ee1243ac-35bc-4293-8599-3f9acd425039}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="BetaRelease|Win32">
+      <Configuration>BetaRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="FastDebug|Win32">
+      <Configuration>FastDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{5B10A18E-C5C9-4D32-96BC-E8439853D0A1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36518.2</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm500 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NIVAL_DLL;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;FAST_DEBUG;NIVAL_DLL;_FASTDEBUG;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NIVAL_DLL;_BETARELEASE;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_FINALRELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>FastCall</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/list &gt;nul %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook4
+"$(VCInstallDir)bin\lib" /NOLOGO /OUT:$(OutDir)$(ProjectName).lib *.obj</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="DBPreLight.h" />
+    <ClInclude Include="DBTerrain.h" />
+    <ClInclude Include="DBTerrainSpot.h" />
+    <ClInclude Include="DBVSO.h" />
+    <ClInclude Include="DBWater.h" />
+    <ClInclude Include="fmtVSO.h" />
+    <ClInclude Include="include_AnimatedTexture.h" />
+    <ClInclude Include="include_PreLight.h" />
+    <ClInclude Include="include_TwoSidedLight.h" />
+    <ClInclude Include="include_Water.h" />
+    <ClInclude Include="include_WaterWaveType.h" />
+    <ClInclude Include="PatchHolder.h" />
+    <ClInclude Include="Specific.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TerraAIObserver.h" />
+    <ClInclude Include="TerraConsts.h" />
+    <ClInclude Include="TerrUtils.h" />
+    <ClInclude Include="TracksManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DBPreLight.cpp" />
+    <ClCompile Include="DBTerrain.cpp" />
+    <ClCompile Include="DBTerrainSpot.cpp" />
+    <ClCompile Include="DBVSO.cpp" />
+    <ClCompile Include="DBWater.cpp" />
+    <ClCompile Include="fmtVSO.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="TerraAIObserver.cpp" />
+    <ClCompile Include="TerrUtils.cpp" />
+    <ClCompile Include="TracksManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbprelight.cll" />
+    <None Include="dbterrain.cll" />
+    <None Include="dbterrainspot.cll" />
+    <None Include="dbvso.cll" />
+    <None Include="dbwater.cll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3DLib\3DLib.vcxproj">
+      <Project>{99936c39-2730-4c56-910d-a7f1028ab5b1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\3Dmotor\3Dmotor.vcxproj">
+      <Project>{553f00b2-7f78-4245-89eb-6b736b3b086a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libdb\libdb.vcxproj">
+      <Project>{0295967b-b4ed-4f85-bb3a-c56f3769e59f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MemoryLib\MemoryLib.vcxproj">
+      <Project>{968793be-412e-45b0-a801-e54c6307e49e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Misc\Misc.vcxproj">
+      <Project>{1e0b6a39-dc95-48cb-9061-3679d40ad8c9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Sound\Sound.vcxproj">
+      <Project>{67421fb6-2fe9-41f4-afd5-072ab34c42f4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\System\System.vcxproj">
+      <Project>{2a5f6c9e-08a5-4091-b46c-e65ec7bd94fa}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{ee1243ac-35bc-4293-8599-3f9acd425039}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

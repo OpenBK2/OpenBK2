@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{f8e60077-3143-44be-8ea7-a3abdc817d0e}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{cca4ef9e-9177-460b-8aba-e9d337499c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basic">
+      <UniqueIdentifier>{6bd91497-ff87-4499-93a8-076c0d3d5f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NL STL">
+      <UniqueIdentifier>{2e80b07d-234f-4eee-914b-b1a729c9754e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BugSlayer">
+      <UniqueIdentifier>{3150edab-10f4-47a0-bb3f-ea8e91e246a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BugSlayer\BSU">
+      <UniqueIdentifier>{0fde1510-b5be-474d-9dda-35d2a65e5b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BugSlayer\Resources">
+      <UniqueIdentifier>{50ffb55b-eb83-4c3a-ab8e-b7016110aa4f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="2Darray.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="2DArrayRLEWrapper.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="AreaMap.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="BiMap.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="BitData.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Bresenham.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Checker.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="EulTools.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Geom.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="GeomMisc.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="HashFuncs.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="HPTimer.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneGeometry.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Pool.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Progress.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Spline.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StrProc.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Sync.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Time64.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeConvertor.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Helper.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32Random.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="helpdebugmacroses.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="iterator.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nalgobase.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nalgoritm.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nhash_fun.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nhash_map.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nhash_set.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nhash_table.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nheap.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nhelpdebug.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nlist.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="npair.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nqueue.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nset.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nstring.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="ntree.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nuninitialized.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="nvector.h">
+      <Filter>NL STL</Filter>
+    </ClInclude>
+    <ClInclude Include="Asserts.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="BSAssertDialog.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="BSDialogFunctions.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="BSExceptionDialog.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="BSUInit.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="BSUtil.h">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>BugSlayer\Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Geom.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="HPTimer.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneGeometry.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Progress.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Spline.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="StrProc.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32Random.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ntree.cpp">
+      <Filter>NL STL</Filter>
+    </ClCompile>
+    <ClCompile Include="Asserts.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+    <ClCompile Include="BSAssertDialog.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+    <ClCompile Include="BSDialogFunctions.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+    <ClCompile Include="BSExceptionDialog.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+    <ClCompile Include="BSUInit.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+    <ClCompile Include="BSUtil.cpp">
+      <Filter>BugSlayer\BSU</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="error.ico">
+      <Filter>BugSlayer\Resources</Filter>
+    </Image>
+    <Image Include="exclamation.ico">
+      <Filter>BugSlayer\Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Misc.rc">
+      <Filter>BugSlayer\Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{e6fcdeae-3e3a-4bb9-aa7b-c46d1a5408be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{470d94a7-dd77-427f-a355-33fe6ac570d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\B2_MapEditor">
+      <UniqueIdentifier>{c52de966-1477-4b53-a2e3-08d79eccba32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\DbObserver">
+      <UniqueIdentifier>{475f28f7-e69b-4b71-a063-544fc6999866}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="revision.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolBarButtonsMapSpecific.h">
+      <Filter>Sources\B2_MapEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="VFSDbObserver.h">
+      <Filter>Sources\DbObserver</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Sources\B2_MapEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHook.cpp">
+      <Filter>Sources\B2_MapEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="VFSDbObserver.cpp">
+      <Filter>Sources\DbObserver</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="b2_res.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

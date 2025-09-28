@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{32e6b3e8-2cd5-4514-b043-34c556e8f114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIMap">
+      <UniqueIdentifier>{44e54d92-e788-4386-9af4-7fd72544b453}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder">
+      <UniqueIdentifier>{074d769d-a62b-45ef-a099-a7e5b8952c8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Interface">
+      <UniqueIdentifier>{602606b6-e47f-4935-bb30-c7d5822ddb58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Movers">
+      <UniqueIdentifier>{aac6deec-3c26-4d02-933b-2c212d153593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Units">
+      <UniqueIdentifier>{55bb63b8-e3d4-447b-9e23-1190580edc2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Paths">
+      <UniqueIdentifier>{648749f4-3d61-4444-93f5-b5ad84ce87ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Paths\StaticPath">
+      <UniqueIdentifier>{171e7a73-fba0-498a-9fe6-766030618d2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Paths\StandartPath">
+      <UniqueIdentifier>{2292de32-d660-4344-8834-915cc7f2779c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Paths\SmoothPath">
+      <UniqueIdentifier>{650269c2-21c9-4e05-8ae9-ed3f9698f8ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Tools">
+      <UniqueIdentifier>{096e5c58-992e-4f00-a917-6c32326364b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Pathfinders">
+      <UniqueIdentifier>{f9761317-4790-41bd-8020-3d76586bba71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pathfinder\Collisions">
+      <UniqueIdentifier>{ab38e00c-880e-4a28-9bdc-46ec3b2aa956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{c739c8c7-4d01-4d0f-81c3-49d744f586ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CheckSums">
+      <UniqueIdentifier>{cedeae14-5168-4d65-851a-29d7128e8e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TerraAIObserver">
+      <UniqueIdentifier>{c38e1a59-4b79-40b6-b09e-448669734814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TerraAIObserver\PassMarkers">
+      <UniqueIdentifier>{23f47bf3-966c-41b5-8165-31a28af55019}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ImportedStruct.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AIClasses.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMap.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMap.hpp">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMapHeights.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>Pathfinder\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Pathfinders.h">
+      <Filter>Pathfinder\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="PointChecking.h">
+      <Filter>Pathfinder\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticPath.h">
+      <Filter>Pathfinder\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupMover.h">
+      <Filter>Pathfinder\Movers</Filter>
+    </ClInclude>
+    <ClInclude Include="BasePathUnit.h">
+      <Filter>Pathfinder\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticPathInternal.h">
+      <Filter>Pathfinder\Paths\StaticPath</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartDirectPath.h">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartDirPath.h">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartPath2.h">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupSmoothPath.h">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClInclude>
+    <ClInclude Include="InFormationPath.h">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClInclude>
+    <ClInclude Include="InGroupPath.h">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartSmoothMechPath.h">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClInclude>
+    <ClInclude Include="StandartSmoothPath.h">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClInclude>
+    <ClInclude Include="HungarianMethod.h">
+      <Filter>Pathfinder\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>Pathfinder\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonPathFinder.h">
+      <Filter>Pathfinder\Pathfinders</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinder.h">
+      <Filter>Pathfinder\Pathfinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Pathfinder\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionInternal2.h">
+      <Filter>Pathfinder\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="AIAngle.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="aiobjectbase.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckSums.h">
+      <Filter>CheckSums</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckSumSaver.h">
+      <Filter>CheckSums</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraAIObserver.h">
+      <Filter>TerraAIObserver</Filter>
+    </ClInclude>
+    <ClInclude Include="PassMarkers.h">
+      <Filter>TerraAIObserver\PassMarkers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AIMap.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMapHeights.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Pathfinders.cpp">
+      <Filter>Pathfinder\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="BasePathUnit.cpp">
+      <Filter>Pathfinder\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticPathInternal.cpp">
+      <Filter>Pathfinder\Paths\StaticPath</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartDirectPath.cpp">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartDirPath.cpp">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartPath2.cpp">
+      <Filter>Pathfinder\Paths\StandartPath</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupSmoothPath.cpp">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClCompile>
+    <ClCompile Include="InFormationPath.cpp">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClCompile>
+    <ClCompile Include="InGroupPath.cpp">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartSmoothMechPath.cpp">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClCompile>
+    <ClCompile Include="StandartSmoothPath.cpp">
+      <Filter>Pathfinder\Paths\SmoothPath</Filter>
+    </ClCompile>
+    <ClCompile Include="HungarianMethod.cpp">
+      <Filter>Pathfinder\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Pathfinder\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonPathFinder.cpp">
+      <Filter>Pathfinder\Pathfinders</Filter>
+    </ClCompile>
+    <ClCompile Include="PathSearchFuncs.cpp">
+      <Filter>Pathfinder\Pathfinders</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionInternal2.cpp">
+      <Filter>Pathfinder\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="AIAngle.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="AIObjectBase.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckSumSaver.cpp">
+      <Filter>CheckSums</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraAIObserver.cpp">
+      <Filter>TerraAIObserver</Filter>
+    </ClCompile>
+    <ClCompile Include="PassMarkers.cpp">
+      <Filter>TerraAIObserver\PassMarkers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Changes.log">
+      <Filter>Pathfinder</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

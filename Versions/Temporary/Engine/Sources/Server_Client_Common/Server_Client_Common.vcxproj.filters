@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{09a542de-7cd1-4957-b29e-0ed1d1d2e08f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{fcdb88d2-4d1d-426e-af69-939cd04030a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packets">
+      <UniqueIdentifier>{93fff035-1597-4935-af0f-8216e6197029}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PrimeNumbers">
+      <UniqueIdentifier>{166bdc67-6848-41f2-b32f-81224f7b1d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lobbies">
+      <UniqueIdentifier>{9066f871-bc38-48c9-9bc9-c2fb286e1832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ConsoleCommands">
+      <UniqueIdentifier>{64b74446-76d8-43e3-9d27-3b76f8ded749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{47fa3794-f574-4380-b059-c6f3bf4fa8d0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Net.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPacket.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="NetSaver.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatPackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonPackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomLobbyPackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="LadderLobbyPackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginPackets.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketProcessor.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="ZipPacket.h">
+      <Filter>Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimeNumbers.h">
+      <Filter>PrimeNumbers</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonClientState.h">
+      <Filter>Lobbies</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomLobbyClientInfo.h">
+      <Filter>Lobbies</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInfo.h">
+      <Filter>Lobbies</Filter>
+    </ClInclude>
+    <ClInclude Include="LadderStatistics.h">
+      <Filter>Lobbies</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbiesIDs.h">
+      <Filter>Lobbies</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands.h">
+      <Filter>ConsoleCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandsInterface.h">
+      <Filter>ConsoleCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="LogSaver.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="NetLogger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Net.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="NetPacket.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="NetSaver.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketProcessor.cpp">
+      <Filter>Packets</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketsRegistration.cpp">
+      <Filter>Packets</Filter>
+    </ClCompile>
+    <ClCompile Include="ZipPacket.cpp">
+      <Filter>Packets</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimeNumbers.cpp">
+      <Filter>PrimeNumbers</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands.cpp">
+      <Filter>ConsoleCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandsInterface.cpp">
+      <Filter>ConsoleCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSaver.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="NetLogger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

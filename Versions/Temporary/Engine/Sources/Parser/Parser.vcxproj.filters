@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{456cfe83-35e7-4987-9d16-70194ffcefe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Grammar">
+      <UniqueIdentifier>{704bf49c-142c-4a52-abfc-a0395388cfec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Grammar\Flex">
+      <UniqueIdentifier>{6656e6de-208c-478e-9cd4-371b1064e44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Grammar\Bison">
+      <UniqueIdentifier>{7ea751e1-0a8b-423d-b0be-ba0065ff27e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{930df658-5077-4b0f-9e11-8b1e2ee43d2e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorsAndMessages.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="FileNode.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="FileRead.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="LangNode.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="LangNodesDefinitions.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="LangToken.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="NodesList.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseOperations.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>Grammar</Filter>
+    </ClInclude>
+    <ClInclude Include="lang.tab.h">
+      <Filter>Grammar\Bison</Filter>
+    </ClInclude>
+    <ClInclude Include="StringNumbers.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorsAndMessages.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="FileNode.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="FileRead.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="LangNode.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="LangNodesDefinitions.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseOperations.cpp">
+      <Filter>Grammar</Filter>
+    </ClCompile>
+    <ClCompile Include="lex.yy.c">
+      <Filter>Grammar\Flex</Filter>
+    </ClCompile>
+    <ClCompile Include="lang.tab.c">
+      <Filter>Grammar\Bison</Filter>
+    </ClCompile>
+    <ClCompile Include="StringNumbers.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lang.l">
+      <Filter>Grammar\Flex</Filter>
+    </None>
+    <None Include="bison.hairy">
+      <Filter>Grammar\Bison</Filter>
+    </None>
+    <None Include="bison.simple">
+      <Filter>Grammar\Bison</Filter>
+    </None>
+    <None Include="lang.y">
+      <Filter>Grammar\Bison</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,816 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Interfaces\Animation">
+      <UniqueIdentifier>{f9d2f0b7-9b68-40e1-98cc-7b38d33eac50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{5c297e22-53f1-4b5a-8aa8-ee5b73ac7c8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Gfx">
+      <UniqueIdentifier>{fcfd0d2b-3246-4e6b-b4fd-a5db51212257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GScene">
+      <UniqueIdentifier>{10330057-cf74-452e-a5cf-ef7a23367058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GScene\RenderPaths">
+      <UniqueIdentifier>{bc2cc87b-3511-47d9-a99f-86aa8ff66f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GScene\Transform&amp;Light">
+      <UniqueIdentifier>{d540aae7-3027-4b6d-8fe8-4f8255dffa06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GScene\Lightmap">
+      <UniqueIdentifier>{70f2c31f-c4d8-4e51-9638-167164a29b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GView">
+      <UniqueIdentifier>{183e8e86-4996-4075-a4f5-fa5f298a7db2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Loaders">
+      <UniqueIdentifier>{6e925016-e7dc-450f-9349-b09fc42856e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\2D">
+      <UniqueIdentifier>{20e4dd21-718b-4997-90c8-412dc065027a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Particles">
+      <UniqueIdentifier>{dc822d75-2440-4455-a97c-b3d1016a6be1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\2DScene">
+      <UniqueIdentifier>{370d89c9-db59-4d6a-99d5-73e62ad8a786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Misc">
+      <UniqueIdentifier>{37eaa914-df0a-4655-a0d8-8019a4554301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Decals">
+      <UniqueIdentifier>{237fc717-7722-43d3-bd19-a51e824279e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Animation">
+      <UniqueIdentifier>{e975357f-7cd8-45ab-b82e-9a13ac180b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\PostEffects">
+      <UniqueIdentifier>{95a21cf7-9240-4a25-b0bb-e12f8274c637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{67c9d41c-45fc-44fe-bbef-ffa7778230c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIMap">
+      <UniqueIdentifier>{afc7e2ee-5fb4-46ce-8803-704a37a45607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{54a809f0-302c-4b2a-bdc7-cea845ae4fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{8e722190-770f-4460-9376-3c9e6ad165ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\GrannyMemoryMap">
+      <UniqueIdentifier>{c4d63b8a-d4cb-4946-9b3a-609443e31186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stuff">
+      <UniqueIdentifier>{e808f190-62b8-4a49-a769-300ee5d0ef00}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="3Dmotor.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscretePos.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="G2DView.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GAutoDetect.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GInit.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GPixelFormat.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderModes.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GRTInfo.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GSkeleton.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GView.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingCounter.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderNode.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimAnnotation.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedChannel.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GAnimation.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GAnimation.hpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GChannelAnimator.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="MixerChannel.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgrammableChannel.h">
+      <Filter>Interfaces\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxBenchmark.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxBuffers.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxBuffersInternal.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxCatchGPF.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxEffects.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxInternal.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxRender.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxShaders.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxShadersDescr.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxUtils.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GShaderFX.h">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GShaderFX.hpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="GMaterial.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GMaterial.hpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GMatShare.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GParticleInfo.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GPartParticles.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GParts.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GPostProcessors.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderCore.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderExecute.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderFactor.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderLight.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRTShare.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GScene.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GSceneInternal.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GSceneUtils.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GShadowMap.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GShadowVolume.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GTransparent.h">
+      <Filter>Graphics\GScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderClouds.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderPathFastest.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderPathLightmap.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderPathOverdraw.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderPathPolycount.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderPathTnl.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GRenderUtils.h">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="GCombiner.h">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClInclude>
+    <ClInclude Include="GLightPerVertex.h">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClInclude>
+    <ClInclude Include="GSSEtransform.h">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClInclude>
+    <ClInclude Include="GLightmap.h">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="GLightmapCalc.h">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="GLightmapLoader.h">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMLightState.h">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClInclude>
+    <ClInclude Include="GBind.h">
+      <Filter>Graphics\GView</Filter>
+    </ClInclude>
+    <ClInclude Include="GMesh.h">
+      <Filter>Graphics\GView</Filter>
+    </ClInclude>
+    <ClInclude Include="FontFormat.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GAnimFormat.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GAnimLight.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GFileSkin.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GObjectInfo.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GPolyline.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GTexture.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GTextureLoader.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenShot.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SWTexture.h">
+      <Filter>Graphics\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GFont.h">
+      <Filter>Graphics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GLocale.h">
+      <Filter>Graphics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GRects.h">
+      <Filter>Graphics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GText.h">
+      <Filter>Graphics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Locale.h">
+      <Filter>Graphics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="GParticleFilter.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GParticleFormat.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GParticles.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GParticlesRain.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GPointLightGlow.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GSceneParticles.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="GSprite.h">
+      <Filter>Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="2DScene.h">
+      <Filter>Graphics\2DScene</Filter>
+    </ClInclude>
+    <ClInclude Include="2DSceneSW.h">
+      <Filter>Graphics\2DScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SWRectLayout.h">
+      <Filter>Graphics\2DScene</Filter>
+    </ClInclude>
+    <ClInclude Include="4dCalcs.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Cache.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolate.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="OcTree.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RadixSort.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGen.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RectLayout.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperCollider.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeContainer.h">
+      <Filter>Graphics\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GDecal.h">
+      <Filter>Graphics\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="GDecalGeometry.h">
+      <Filter>Graphics\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="GDecalInfo.h">
+      <Filter>Graphics\Decals</Filter>
+    </ClInclude>
+    <ClInclude Include="GAnimUtils.h">
+      <Filter>Graphics\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="GPostEffects.h">
+      <Filter>Graphics\PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="dbscene.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AmbientLight.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AnimBase.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeometryFormat.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiInterval.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiMap.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiObject.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiObjectLoader.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiRender.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiTrace.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="aiVisitor.h">
+      <Filter>AIMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GrannyMemoryMap.hpp">
+      <Filter>Tools\GrannyMemoryMap</Filter>
+    </ClInclude>
+    <ClInclude Include="DecalFader.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthOfField.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Fader.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameTransition.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightFog.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFader.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyDome.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="WindDeformer.h">
+      <Filter>Stuff</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscretePos.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="G2DView.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="GAutoDetect.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="GInit.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="GSkeleton.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="GView.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderNode.cpp">
+      <Filter>Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimAnnotation.cpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedChannel.cpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="GAnimation.cpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="MixerChannel.cpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgrammableChannel.cpp">
+      <Filter>Interfaces\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxBenchmark.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxBuffers.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxCatchGPF.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxEffects.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxInternal.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxRender.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxShaders.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GfxUtils.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GShaderFX.cpp">
+      <Filter>Graphics\Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="GMaterial.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GMatShare.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GParticleInfo.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GPartParticles.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GParts.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GPostProcessors.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderCore.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderExecute.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderFactor.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderLight.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRTShare.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GSceneInternal.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GSceneUtils.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GShadowMap.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GShadowVolume.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GTransparent.cpp">
+      <Filter>Graphics\GScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderClouds.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderPathFastest.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderPathLightmap.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderPathOverdraw.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderPathPolycount.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderPathTnl.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GRenderUtils.cpp">
+      <Filter>Graphics\GScene\RenderPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="GCombiner.cpp">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClCompile>
+    <ClCompile Include="GLightPerVertex.cpp">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClCompile>
+    <ClCompile Include="GSSEtransform.cpp">
+      <Filter>Graphics\GScene\Transform&amp;Light</Filter>
+    </ClCompile>
+    <ClCompile Include="GLightmap.cpp">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="GLightmapCalc.cpp">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="GLightmapLoader.cpp">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMLightState.cpp">
+      <Filter>Graphics\GScene\Lightmap</Filter>
+    </ClCompile>
+    <ClCompile Include="GBind.cpp">
+      <Filter>Graphics\GView</Filter>
+    </ClCompile>
+    <ClCompile Include="GMesh.cpp">
+      <Filter>Graphics\GView</Filter>
+    </ClCompile>
+    <ClCompile Include="FontFormat.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GAnimFormat.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GAnimLight.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GObjectInfo.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GPolyline.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GTexture.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenShot.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SWTexture.cpp">
+      <Filter>Graphics\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GFont.cpp">
+      <Filter>Graphics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GLocale.cpp">
+      <Filter>Graphics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GRects.cpp">
+      <Filter>Graphics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GText.cpp">
+      <Filter>Graphics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Locale.cpp">
+      <Filter>Graphics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="GParticleFilter.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GParticleFormat.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GParticles.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GParticlesRain.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GPointLightGlow.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GSceneParticles.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="GSprite.cpp">
+      <Filter>Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="2DScene.cpp">
+      <Filter>Graphics\2DScene</Filter>
+    </ClCompile>
+    <ClCompile Include="2DSceneSW.cpp">
+      <Filter>Graphics\2DScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SWRectLayout.cpp">
+      <Filter>Graphics\2DScene</Filter>
+    </ClCompile>
+    <ClCompile Include="4dCalcs.cpp">
+      <Filter>Graphics\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Cache.cpp">
+      <Filter>Graphics\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomGen.cpp">
+      <Filter>Graphics\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperCollider.cpp">
+      <Filter>Graphics\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeContainer.cpp">
+      <Filter>Graphics\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GDecal.cpp">
+      <Filter>Graphics\Decals</Filter>
+    </ClCompile>
+    <ClCompile Include="GDecalGeometry.cpp">
+      <Filter>Graphics\Decals</Filter>
+    </ClCompile>
+    <ClCompile Include="GAnimUtils.cpp">
+      <Filter>Graphics\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="GPostEffects.cpp">
+      <Filter>Graphics\PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="dbscene.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="aiInterval.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiMap.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiObject.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiObjectLoader.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiRender.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiTrace.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="aiVisitor.cpp">
+      <Filter>AIMap</Filter>
+    </ClCompile>
+    <ClCompile Include="GrannyMemoryMap.cpp">
+      <Filter>Tools\GrannyMemoryMap</Filter>
+    </ClCompile>
+    <ClCompile Include="DecalFader.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthOfField.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="Fader.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameTransition.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightFog.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFader.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyDome.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="WindDeformer.cpp">
+      <Filter>Stuff</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="GfxMainPS.fx">
+      <Filter>Graphics\Gfx</Filter>
+    </FxCompile>
+    <FxCompile Include="GfxMainVS.fx">
+      <Filter>Graphics\Gfx</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbscene.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="AmbientLightColors.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="effect_fields_description.html">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="MaterialTextures.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="MemoryMap.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="TerrainBlend.htm">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="GfxShaders.txt">
+      <Filter>Graphics\Gfx</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

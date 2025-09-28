@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{835108c7-7e5a-4752-91a1-54a65f7c8e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent">
+      <UniqueIdentifier>{f265b93e-74a5-4cf1-94b0-00f544d1d841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Background">
+      <UniqueIdentifier>{d5481614-ad4b-4061-b874-c18b9b556106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Background\Tiled">
+      <UniqueIdentifier>{1fe6c878-12f8-4121-97d0-7bd8a4607fcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Background\SimpleScalling">
+      <UniqueIdentifier>{45f08e19-4b3d-4004-840a-8de4b1f41fd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Background\Simple">
+      <UniqueIdentifier>{de031ef1-c1d6-4161-b1ce-b5e6d8d8b45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Background\Mutable">
+      <UniqueIdentifier>{d2f02e9c-8024-4619-8e34-fea9f54c5389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Foreground">
+      <UniqueIdentifier>{5a7a7381-70f7-4cf1-a282-ea49d6ce6abe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Foreground\Text">
+      <UniqueIdentifier>{0575a145-095a-4eae-8bb3-9a05bf82b326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\WindowComponent\Bitmap">
+      <UniqueIdentifier>{cfa900e7-943b-4f3c-949d-8ead05045535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Consts">
+      <UniqueIdentifier>{f7a70399-8d39-4c1a-977e-47365fcf3bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\MessageReaction">
+      <UniqueIdentifier>{ac3a49ff-b843-4760-a030-3d495d1db280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\MessageReaction\AtomReactions">
+      <UniqueIdentifier>{3d7cef27-4487-4d2b-ad32-cfc83e7bb768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\MessageReaction\Checks">
+      <UniqueIdentifier>{ed49aa89-6477-4e1c-b73d-261f332a6b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects">
+      <UniqueIdentifier>{b7e2601a-18f3-4544-bb54-9a7cdbf40a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\MoveTo">
+      <UniqueIdentifier>{04c6b397-edf6-4dcd-843a-39ec7fa2a2c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\RunReaction">
+      <UniqueIdentifier>{2ad04896-599f-4d48-b691-fbcd892cf3b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\SendUIMessage">
+      <UniqueIdentifier>{a3784a8c-3b20-431b-b7e9-a24bcb2766de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\ConsoleBufferCommand">
+      <UniqueIdentifier>{481b11dd-7851-47ec-917e-acc576370c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\ButtonState">
+      <UniqueIdentifier>{81b6cc5f-2297-43b6-ad5d-25efb1709345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Effects\DirectRunReaction">
+      <UniqueIdentifier>{db73f1a2-b6b9-46d5-a5f4-9ecdd25fb0ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Tools">
+      <UniqueIdentifier>{ff50aaa6-6124-46c2-a716-85d3c41ea431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows">
+      <UniqueIdentifier>{5cc51da9-d3af-49a8-8829-8ff6cc5ef348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Screen">
+      <UniqueIdentifier>{57c663a4-06ef-4d04-a8f5-34e753c7d6db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Screen\States">
+      <UniqueIdentifier>{ff38f20a-7ff7-4f15-b697-23853c040710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Screen\Tooltips">
+      <UniqueIdentifier>{7eeca102-99b5-466d-ad81-77f861408a1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ScrollableContainer">
+      <UniqueIdentifier>{4fc500e3-5fc7-4cf7-8920-31d33e33c96d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ListCtrl">
+      <UniqueIdentifier>{83dd0423-b00a-47d9-ae3e-601b6aaa1cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ListCtrl\Sorters">
+      <UniqueIdentifier>{3f6140d9-6fde-4d1d-aa52-e9dbd088d7e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Simple">
+      <UniqueIdentifier>{35cc9dca-d75a-4388-b886-c749048a03a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Console">
+      <UniqueIdentifier>{7e00c797-25e5-4cb4-853a-d17d19d70749}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\EditLine">
+      <UniqueIdentifier>{7c6e05bf-30da-4865-a781-aa4dcf33adb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Button">
+      <UniqueIdentifier>{0db12920-e819-472b-9ea2-2279ccc34e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ScrollBar">
+      <UniqueIdentifier>{19c85493-07df-4319-9980-affe1362c31a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\1LvlTree">
+      <UniqueIdentifier>{28cafd5b-c05e-440a-8b35-7244910fa386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\TextView">
+      <UniqueIdentifier>{6eb6fa3d-4139-4ef0-8c26-6cb2562d6c3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Slider">
+      <UniqueIdentifier>{d1b09ea0-78fa-4cfe-9c22-25d686724ecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ProgressBar">
+      <UniqueIdentifier>{7b922f4a-494e-4265-8a58-4ab9cc0565fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\Tooltip">
+      <UniqueIdentifier>{aea4ba2b-06f0-4c1d-a5f1-4c22f7ca01e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\TabControl">
+      <UniqueIdentifier>{772c3c7c-b8c3-466b-89b0-d96f7b84dc8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ConsoleOutput">
+      <UniqueIdentifier>{9fe0b645-3863-4af1-88f7-38dd4982a47b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\VideoPlayer">
+      <UniqueIdentifier>{cd4a626b-c1ab-4944-8a47-7f982f13b333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\StatsSystem">
+      <UniqueIdentifier>{ea1a3190-e323-451e-a07b-f2894f794c40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Windows\ComboBox">
+      <UniqueIdentifier>{b8eee983-538a-4f3a-af99-408c86677f12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\IML">
+      <UniqueIdentifier>{9f1f6515-ad3d-4771-a044-789874a56c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\OutLine">
+      <UniqueIdentifier>{f883de15-2905-4077-b70f-ae50e50640fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{6918dfc6-0367-4910-9314-cc42b82a959f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\StateInclude">
+      <UniqueIdentifier>{2477b282-f156-48e9-a7ed-c519dd747b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\WindowInclude">
+      <UniqueIdentifier>{c2dce97e-0258-402d-8097-a6961409b1b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\WindowPartInclude">
+      <UniqueIdentifier>{4e002864-8408-4fd3-8352-36091d8697bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\ReactionsInclude">
+      <UniqueIdentifier>{a186f796-4dea-4028-9c9a-99d4a4a54751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{cf4dc38b-b6b1-4939-a399-7dc356d97b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{c19a475e-ab6e-4b3d-9aa6-44468f067445}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SceneClassIDs.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ObserverContainer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFactory.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInternal.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIVisitor.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>UI\WindowComponent\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundTiledTexture.h">
+      <Filter>UI\WindowComponent\Background\Tiled</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundSimpleScallingTexture.h">
+      <Filter>UI\WindowComponent\Background\SimpleScalling</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundSimpleTexture.h">
+      <Filter>UI\WindowComponent\Background\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundMutableTexture.h">
+      <Filter>UI\WindowComponent\Background\Mutable</Filter>
+    </ClInclude>
+    <ClInclude Include="ForegroundTextString.h">
+      <Filter>UI\WindowComponent\Foreground\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>UI\WindowComponent\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceConsts.h">
+      <Filter>UI\Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="IMessageReaction.h">
+      <Filter>UI\MessageReaction</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageReactions.h">
+      <Filter>UI\MessageReaction</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageReaction.h">
+      <Filter>UI\MessageReaction\AtomReactions</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCheck.h">
+      <Filter>UI\MessageReaction\Checks</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorMoveTo.h">
+      <Filter>UI\Effects\MoveTo</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorRunReaction.h">
+      <Filter>UI\Effects\RunReaction</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorSendUIMessage.h">
+      <Filter>UI\Effects\SendUIMessage</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorConsoleBufferCommand.h">
+      <Filter>UI\Effects\ConsoleBufferCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorButtonState.h">
+      <Filter>UI\Effects\ButtonState</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorDirectRunReaction.h">
+      <Filter>UI\Effects\DirectRunReaction</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools.h">
+      <Filter>UI\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMessageHandle.h">
+      <Filter>UI\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>UI\Windows\Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="UIStates.h">
+      <Filter>UI\Windows\Screen\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Tooltips.h">
+      <Filter>UI\Windows\Screen\Tooltips</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowScrollableContainer.h">
+      <Filter>UI\Windows\ScrollableContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowScrollableContainerBase.h">
+      <Filter>UI\Windows\ScrollableContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowListCtrl.h">
+      <Filter>UI\Windows\ListCtrl</Filter>
+    </ClInclude>
+    <ClInclude Include="ListControlSorters.h">
+      <Filter>UI\Windows\ListCtrl\Sorters</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSimple.h">
+      <Filter>UI\Windows\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowConsole.h">
+      <Filter>UI\Windows\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEditLine.h">
+      <Filter>UI\Windows\EditLine</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonGroup.h">
+      <Filter>UI\Windows\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMSButton.h">
+      <Filter>UI\Windows\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowScrollBar.h">
+      <Filter>UI\Windows\ScrollBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Window1LvlTreeControl.h">
+      <Filter>UI\Windows\1LvlTree</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowTextView.h">
+      <Filter>UI\Windows\TextView</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSlider.h">
+      <Filter>UI\Windows\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowProgressBar.h">
+      <Filter>UI\Windows\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowTooltip.h">
+      <Filter>UI\Windows\Tooltip</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowTabControl.h">
+      <Filter>UI\Windows\TabControl</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowConsoleOutput.h">
+      <Filter>UI\Windows\ConsoleOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="GBinkPlayer.h">
+      <Filter>UI\Windows\VideoPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowPlayer.h">
+      <Filter>UI\Windows\VideoPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowStatsSystem.h">
+      <Filter>UI\Windows\StatsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowComboBox.h">
+      <Filter>UI\Windows\ComboBox</Filter>
+    </ClInclude>
+    <ClInclude Include="mlHandlers.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="mlMain.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="mlObjects.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="mlReflow.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="mlVisObjects.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="UIML.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMLHandlers.h">
+      <Filter>UI\IML</Filter>
+    </ClInclude>
+    <ClInclude Include="IconOutline.h">
+      <Filter>UI\OutLine</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandParam.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBUIConsts.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBUserInterface.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UIConsoleCommand.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISButtonSubstate.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISDirectRunReaction.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISMoveTo.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISRunReaction.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISSendUIMessage.h">
+      <Filter>DB\StateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Screen.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Window.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Window1LvlTreeControl.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowComboBox.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowConsole.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowConsoleOutput.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowEditLine.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowListCtrl.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowListHeader.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowListItem.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowMSButton.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowMultiTextureProgressBar.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowPlayer.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowProgressBar.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowScrollableContainer.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowScrollBar.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowSimple.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowSlider.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowStatsSystem.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowTabControl.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowTextView.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowTooltip.h">
+      <Filter>DB\WindowInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BackgroundSimpleScallingTexture.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BackgroundSimpleTexture.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BackgroundTiledTexture.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ForegroundTextString.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ForegroundTextStringShared.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_TextFormat.h">
+      <Filter>DB\WindowPartInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARRemoveGlobalVar.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSendGameMessage.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSendUIMessage.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSetGlobalVar.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSwitchTab.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CheckIsTabActive.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CheckIsWindowEnabled.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CheckIsWindowVisible.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CheckPreprogrammed.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CheckRunScript.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MessageReactionComplex.h">
+      <Filter>DB\ReactionsInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponents.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFactory.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIInternal.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>UI\WindowComponent\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundTiledTexture.cpp">
+      <Filter>UI\WindowComponent\Background\Tiled</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundSimpleScallingTexture.cpp">
+      <Filter>UI\WindowComponent\Background\SimpleScalling</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundSimpleTexture.cpp">
+      <Filter>UI\WindowComponent\Background\Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundMutableTexture.cpp">
+      <Filter>UI\WindowComponent\Background\Mutable</Filter>
+    </ClCompile>
+    <ClCompile Include="ForegroundTextString.cpp">
+      <Filter>UI\WindowComponent\Foreground\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>UI\WindowComponent\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="InterfaceConsts.cpp">
+      <Filter>UI\Consts</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageReactions.cpp">
+      <Filter>UI\MessageReaction</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageReaction.cpp">
+      <Filter>UI\MessageReaction\AtomReactions</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCheck.cpp">
+      <Filter>UI\MessageReaction\Checks</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorMoveTo.cpp">
+      <Filter>UI\Effects\MoveTo</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorRunReaction.cpp">
+      <Filter>UI\Effects\RunReaction</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorSendUIMessage.cpp">
+      <Filter>UI\Effects\SendUIMessage</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorConsoleBufferCommand.cpp">
+      <Filter>UI\Effects\ConsoleBufferCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorButtonState.cpp">
+      <Filter>UI\Effects\ButtonState</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorDirectRunReaction.cpp">
+      <Filter>UI\Effects\DirectRunReaction</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>UI\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMessageHandle.cpp">
+      <Filter>UI\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreen.cpp">
+      <Filter>UI\Windows\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="UIStates.cpp">
+      <Filter>UI\Windows\Screen\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Tooltips.cpp">
+      <Filter>UI\Windows\Screen\Tooltips</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowScrollableContainer.cpp">
+      <Filter>UI\Windows\ScrollableContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowScrollableContainerBase.cpp">
+      <Filter>UI\Windows\ScrollableContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowListCtrl.cpp">
+      <Filter>UI\Windows\ListCtrl</Filter>
+    </ClCompile>
+    <ClCompile Include="ListControlSorters.cpp">
+      <Filter>UI\Windows\ListCtrl\Sorters</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSimple.cpp">
+      <Filter>UI\Windows\Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowConsole.cpp">
+      <Filter>UI\Windows\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowEditLine.cpp">
+      <Filter>UI\Windows\EditLine</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonGroup.cpp">
+      <Filter>UI\Windows\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMSButton.cpp">
+      <Filter>UI\Windows\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowScrollBar.cpp">
+      <Filter>UI\Windows\ScrollBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Window1LvlTreeControl.cpp">
+      <Filter>UI\Windows\1LvlTree</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowTextView.cpp">
+      <Filter>UI\Windows\TextView</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSlider.cpp">
+      <Filter>UI\Windows\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowProgressBar.cpp">
+      <Filter>UI\Windows\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowTooltip.cpp">
+      <Filter>UI\Windows\Tooltip</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowTabControl.cpp">
+      <Filter>UI\Windows\TabControl</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowConsoleOutput.cpp">
+      <Filter>UI\Windows\ConsoleOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="GBinkPlayer.cpp">
+      <Filter>UI\Windows\VideoPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowPlayer.cpp">
+      <Filter>UI\Windows\VideoPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowStatsSystem.cpp">
+      <Filter>UI\Windows\StatsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowComboBox.cpp">
+      <Filter>UI\Windows\ComboBox</Filter>
+    </ClCompile>
+    <ClCompile Include="mlHandlers.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="mlMain.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="mlObjects.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="mlReflow.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="mlVisObjects.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="UIML.cpp">
+      <Filter>UI\IML</Filter>
+    </ClCompile>
+    <ClCompile Include="IconOutline.cpp">
+      <Filter>UI\OutLine</Filter>
+    </ClCompile>
+    <ClCompile Include="DBUIConsts.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBUserInterface.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbuiconsts.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbuserinterface.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="MLCommonTags.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="UISystemSummary.htm">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

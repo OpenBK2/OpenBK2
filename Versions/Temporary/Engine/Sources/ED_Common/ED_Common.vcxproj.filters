@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{9da0c5e6-990e-4c06-b167-bca9a895472c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System">
+      <UniqueIdentifier>{201cdf16-35b4-4969-a67a-9e5b28f202fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\Texture">
+      <UniqueIdentifier>{c84017a7-ccef-4cc6-9533-5319235eb241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\AIGeometry">
+      <UniqueIdentifier>{5e673b45-b345-4d7c-b4db-32fc77ee9f88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\BasicSceneExporter">
+      <UniqueIdentifier>{ab4bf01d-0301-4e65-9aea-08aec67b4b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\Particle">
+      <UniqueIdentifier>{225ff3bb-7220-44d2-9767-640ded15a794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\Common Exporters">
+      <UniqueIdentifier>{0d015e8c-7ea8-4d24-a050-01f6362e6278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\Font">
+      <UniqueIdentifier>{2014d6b4-0de3-45b7-a01d-ae4ea30b997a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export System\TempAttributesTool">
+      <UniqueIdentifier>{2bf9bc94-44f6-4a12-86aa-9dad5d8cf807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{0e5200b5-50cc-404e-ae54-98ca23dff595}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\Granny">
+      <UniqueIdentifier>{0cfc13db-e3d7-4349-8d22-f626004c451d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System">
+      <UniqueIdentifier>{dfd87733-b967-493f-a78c-b3dd1ffe221e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors">
+      <UniqueIdentifier>{796ca56a-2024-4e3d-97b2-007cbe665dc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\WindowSimpleShared">
+      <UniqueIdentifier>{0129e5a3-eadd-480b-80a2-cd0497445636}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\WindowSimpleShared\States">
+      <UniqueIdentifier>{fabb432b-2733-4f89-8f09-db75b6ceff20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\WindowScreenShared">
+      <UniqueIdentifier>{0e3fbb0b-bc58-47cb-97bb-1e1c59a045b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\Texture">
+      <UniqueIdentifier>{a0e19e34-44cb-4095-b6b3-e571e1a08266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\Texture\States">
+      <UniqueIdentifier>{907ee937-f62f-4c2d-9d37-4d1e3d62dcdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\Editors\Texture\Interfaces">
+      <UniqueIdentifier>{15659edf-2460-45b4-b494-e28a957cfe03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Edit System\UIScene">
+      <UniqueIdentifier>{c3bde2ae-63b0-4594-9b4f-6bfc0b6f49a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChildFrame System">
+      <UniqueIdentifier>{1b6965bd-3f01-41c6-a045-cf3c1fbbb868}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChildFrame System\ChildFrameBase">
+      <UniqueIdentifier>{348480a6-e70c-4259-83fa-54ddf6dd7247}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChildFrame System\ProgressBar">
+      <UniqueIdentifier>{6f189b96-5821-4e71-b1b4-31da7158c56d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build System">
+      <UniqueIdentifier>{e03d00f9-18f6-4956-adfa-51eb91f3aa3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build System\Builders">
+      <UniqueIdentifier>{209421fb-9c58-4969-948f-4529bd3d4c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build System\Builders\UIBuilders">
+      <UniqueIdentifier>{b646261b-7c55-435a-b6cf-27001cec1933}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build System\Builders\UIBuilders\WindowSimpleShared">
+      <UniqueIdentifier>{ae843d51-2b84-4831-b1e4-93e54a448ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build System\Builders\UIBuilders\WindowMSButtonShared">
+      <UniqueIdentifier>{fddbb36f-511c-4423-901d-f6f7a09aab42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{ef2a0e10-2e5f-4d34-9212-258c0fdc12ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces\RunModeBase">
+      <UniqueIdentifier>{48ae3bc6-5689-4a3a-94db-2f127aeb043d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces\GameInputInterface">
+      <UniqueIdentifier>{ea745b11-c646-4767-a25a-396ee9c977de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces\InterfaceCommandDeclare">
+      <UniqueIdentifier>{2513edba-0668-4767-b4d8-ac97cade1b5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{4c23ce4a-4128-4bbc-8877-2034bf632538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DBTypes">
+      <UniqueIdentifier>{010bec6d-66c8-468c-a036-2b365a9bd82a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureExporter.h">
+      <Filter>Export System\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeometryExporter.h">
+      <Filter>Export System\AIGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicExporter.h">
+      <Filter>Export System\BasicSceneExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicSceneExporter.h">
+      <Filter>Export System\BasicSceneExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleExporter.h">
+      <Filter>Export System\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreObjectExporter.h">
+      <Filter>Export System\Common Exporters</Filter>
+    </ClInclude>
+    <ClInclude Include="FontExporter.h">
+      <Filter>Export System\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="TempAttributesTool.h">
+      <Filter>Export System\TempAttributesTool</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Granny.h">
+      <Filter>Tools\Granny</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSimpleSharedEditor.h">
+      <Filter>Edit System\Editors\WindowSimpleShared</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRunModeInterface.h">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRunModeState.h">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSimpleSharedState.h">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureEditor.h">
+      <Filter>Edit System\Editors\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureState.h">
+      <Filter>Edit System\Editors\Texture\States</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureInterface.h">
+      <Filter>Edit System\Editors\Texture\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScene.h">
+      <Filter>Edit System\UIScene</Filter>
+    </ClInclude>
+    <ClInclude Include="UIVisitor.hpp">
+      <Filter>Edit System\UIScene</Filter>
+    </ClInclude>
+    <ClInclude Include="UIWindow.h">
+      <Filter>Edit System\UIScene</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrameBase.h">
+      <Filter>ChildFrame System\ChildFrameBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrameWndBase.h">
+      <Filter>ChildFrame System\ChildFrameBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBar.h">
+      <Filter>ChildFrame System\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ProgressBarWindow.h">
+      <Filter>ChildFrame System\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseUIBuilder.h">
+      <Filter>Build System\Builders\UIBuilders</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultUIBuilder.h">
+      <Filter>Build System\Builders\UIBuilders</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSimpleSharedBuilder.h">
+      <Filter>Build System\Builders\UIBuilders\WindowSimpleShared</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMSButtonSharedBuilder.h">
+      <Filter>Build System\Builders\UIBuilders\WindowMSButtonShared</Filter>
+    </ClInclude>
+    <ClInclude Include="RunModeInterfaceBase.h">
+      <Filter>Interfaces\RunModeBase</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInputInterface.h">
+      <Filter>Interfaces\GameInputInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceCommandDeclare.h">
+      <Filter>Interfaces\InterfaceCommandDeclare</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="dbbulder.h">
+      <Filter>DBTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Initialize.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureExporter.cpp">
+      <Filter>Export System\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeometryExporter.cpp">
+      <Filter>Export System\AIGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicExporter.cpp">
+      <Filter>Export System\BasicSceneExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicSceneExporter.cpp">
+      <Filter>Export System\BasicSceneExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleExporter.cpp">
+      <Filter>Export System\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreObjectExporter.cpp">
+      <Filter>Export System\Common Exporters</Filter>
+    </ClCompile>
+    <ClCompile Include="FontExporter.cpp">
+      <Filter>Export System\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="TempAttributesTool.cpp">
+      <Filter>Export System\TempAttributesTool</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Granny.cpp">
+      <Filter>Tools\Granny</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSimpleSharedEditor.cpp">
+      <Filter>Edit System\Editors\WindowSimpleShared</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRunModeInterface.cpp">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRunModeState.cpp">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSimpleSharedState.cpp">
+      <Filter>Edit System\Editors\WindowSimpleShared\States</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowScreenSharedEditor.cpp">
+      <Filter>Edit System\Editors\WindowScreenShared</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureEditor.cpp">
+      <Filter>Edit System\Editors\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureState.cpp">
+      <Filter>Edit System\Editors\Texture\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureInterface.cpp">
+      <Filter>Edit System\Editors\Texture\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="UIWindow.cpp">
+      <Filter>Edit System\UIScene</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrameBase.cpp">
+      <Filter>ChildFrame System\ChildFrameBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrameWndBase.cpp">
+      <Filter>ChildFrame System\ChildFrameBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBar.cpp">
+      <Filter>ChildFrame System\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgressBarWindow.cpp">
+      <Filter>ChildFrame System\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseUIBuilder.cpp">
+      <Filter>Build System\Builders\UIBuilders</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultUIBuilder.cpp">
+      <Filter>Build System\Builders\UIBuilders</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSimpleSharedBuilder.cpp">
+      <Filter>Build System\Builders\UIBuilders\WindowSimpleShared</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMSButtonSharedBuilder.cpp">
+      <Filter>Build System\Builders\UIBuilders\WindowMSButtonShared</Filter>
+    </ClCompile>
+    <ClCompile Include="RunModeInterfaceBase.cpp">
+      <Filter>Interfaces\RunModeBase</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInputInterface.cpp">
+      <Filter>Interfaces\GameInputInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="dbbulder.cpp">
+      <Filter>DBTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialize.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ED_Common.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbbulder.cll">
+      <Filter>DBTypes</Filter>
+    </None>
+  </ItemGroup>
+</Project>

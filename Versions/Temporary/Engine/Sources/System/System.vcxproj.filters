@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{ef1283e5-0dbb-4ffa-a9b3-3803ddbe930b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8f585125-4fa8-4a7a-a907-1d12e66f9f05}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="I/O">
+      <UniqueIdentifier>{5742bcec-4030-4b21-a8fa-a6e39b15c46d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\Serialization">
+      <UniqueIdentifier>{7810ec58-f58e-4f7d-8a42-357f27d05050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\Serialization\Binary Saver">
+      <UniqueIdentifier>{491366ad-aa60-424c-be91-aab352261147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\Serialization\XML Saver">
+      <UniqueIdentifier>{2fb22291-c980-4dc4-a4d4-a6fbf46005e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\Serialization\Chunkless Saver">
+      <UniqueIdentifier>{f8948130-e1ee-4a60-bdfe-2f679b19511c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\VFS">
+      <UniqueIdentifier>{757a8cb9-ba59-4bf6-9d7f-284f246f3496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\VFS\WinVFS">
+      <UniqueIdentifier>{344f1163-5a6a-4c13-994f-7f71e325723f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\Streams">
+      <UniqueIdentifier>{4823241e-abd0-4d00-83c0-aed1bb6c0606}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="I/O\File Utils">
+      <UniqueIdentifier>{2b2deed6-60bd-49ad-8600-6c8158382d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singletons">
+      <UniqueIdentifier>{969bebcc-f9b3-49f2-8aa9-7620a7cfb8fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Random Generator">
+      <UniqueIdentifier>{2ac6ad8a-9b85-4d89-ad5a-47d9b4d4f742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc Utils">
+      <UniqueIdentifier>{682cce55-087a-467f-af46-49ee7ec8f1e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{ec418571-5d0a-4c34-96ce-cf9b89589540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DG">
+      <UniqueIdentifier>{84eaca91-37c1-48fb-badf-7953d832977b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DG\GResource">
+      <UniqueIdentifier>{3e9bb02f-3e26-4bf6-b46e-3adad4260fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinFrame">
+      <UniqueIdentifier>{0aebd051-7af4-4fa3-88df-7f910912b11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{d828012b-1681-4ffd-82c1-bbcc812765e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{91ff90d4-a768-4f8f-bf48-008c50abf4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{2238e874-8f53-451e-abe8-df111422820f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{3c3d3e9a-da5c-4642-acc3-90abc4f07d46}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BinSaver.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckSumLog.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DB.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DbRnd.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMath.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGen.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="XmlResource.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="XmlSaver.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WarningsOff.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WarningsOn.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WinCursor.h">
+      <Filter>I/O</Filter>
+    </ClInclude>
+    <ClInclude Include="BinChunkSaver.h">
+      <Filter>I/O\Serialization\Binary Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="Cruncher.h">
+      <Filter>I/O\Serialization\Binary Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="LightXML.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="LightXMLUtils.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLChunkSaver.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLReader.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLSAXParser.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="XmlUtils.h">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunklessSaver.h">
+      <Filter>I/O\Serialization\Chunkless Saver</Filter>
+    </ClInclude>
+    <ClInclude Include="CombinerVFS.h">
+      <Filter>I/O\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="VFS.h">
+      <Filter>I/O\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="VFSOperations.h">
+      <Filter>I/O\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="WinVFS.h">
+      <Filter>I/O\VFS\WinVFS</Filter>
+    </ClInclude>
+    <ClInclude Include="WinVFS.hpp">
+      <Filter>I/O\VFS\WinVFS</Filter>
+    </ClInclude>
+    <ClInclude Include="BitStreams.h">
+      <Filter>I/O\Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReaders.h">
+      <Filter>I/O\Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamIO.h">
+      <Filter>I/O\Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="Streams.h">
+      <Filter>I/O\Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="ZipArchieve.h">
+      <Filter>I/O\Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="FilePath.h">
+      <Filter>I/O\File Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FileTime.h">
+      <Filter>I/O\File Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtils.h">
+      <Filter>I/O\File Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomGenInternal.h">
+      <Filter>Random Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="Basic.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicShare.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdLine.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeIDs.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalVars.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaProg.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFactory.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="time.hpp">
+      <Filter>Misc Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Dg.h">
+      <Filter>DG</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryResources.h">
+      <Filter>DG\GResource</Filter>
+    </ClInclude>
+    <ClInclude Include="GResource.h">
+      <Filter>DG\GResource</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashScreen.h">
+      <Filter>WinFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="WinFrame.h">
+      <Filter>WinFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleBuffer.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleBufferInternal.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStream.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CheckSumLog.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WinCursor.cpp">
+      <Filter>I/O</Filter>
+    </ClCompile>
+    <ClCompile Include="BinChunkSaver.cpp">
+      <Filter>I/O\Serialization\Binary Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="Cruncher.cpp">
+      <Filter>I/O\Serialization\Binary Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="LightXML.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="LightXMLUtils.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLChunkSaver.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLReader.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLSAXPArser.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="XmlUtils.cpp">
+      <Filter>I/O\Serialization\XML Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunklessSaver.cpp">
+      <Filter>I/O\Serialization\Chunkless Saver</Filter>
+    </ClCompile>
+    <ClCompile Include="CombinerVFS.cpp">
+      <Filter>I/O\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="VFS.cpp">
+      <Filter>I/O\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="VFSOperations.cpp">
+      <Filter>I/O\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="WinVFS.cpp">
+      <Filter>I/O\VFS\WinVFS</Filter>
+    </ClCompile>
+    <ClCompile Include="BitStreams.cpp">
+      <Filter>I/O\Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReaders.cpp">
+      <Filter>I/O\Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="Streams.cpp">
+      <Filter>I/O\Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="ZipArchieve.cpp">
+      <Filter>I/O\Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="FilePath.cpp">
+      <Filter>I/O\File Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtils.cpp">
+      <Filter>I/O\File Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Serialize.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomGenInternal.cpp">
+      <Filter>Random Generator</Filter>
+    </ClCompile>
+    <ClCompile Include="Basic.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicShare.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FastMath.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Formatting.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeIDs.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalVars.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFactory.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Misc Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDB.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Dg.cpp">
+      <Filter>DG</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryResources.cpp">
+      <Filter>DG\GResource</Filter>
+    </ClCompile>
+    <ClCompile Include="GResource.cpp">
+      <Filter>DG\GResource</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashScreen.cpp">
+      <Filter>WinFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="WinFrame.cpp">
+      <Filter>WinFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleBufferInternal.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStream.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DG.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="Refcounting.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="Serialization.htm">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

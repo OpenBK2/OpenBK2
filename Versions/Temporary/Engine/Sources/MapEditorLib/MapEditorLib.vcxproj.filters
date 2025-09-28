@@ -1,0 +1,641 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{3a59ccc1-6703-4de9-9658-22e58b1e608c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{410e65b8-f022-4d9e-8d5f-8bbe924e0cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Defines">
+      <UniqueIdentifier>{9fd6149e-b5f2-4db0-a622-4a51e8761f11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Interfaces">
+      <UniqueIdentifier>{420a9d45-1b9f-42c9-8ec9-80ff94e5a839}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools">
+      <UniqueIdentifier>{ddbc9c7c-4544-43de-be8d-86dd4872ba7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Geometry">
+      <UniqueIdentifier>{26d79dba-e90f-431f-8f98-bad636eb6951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\SysCodes">
+      <UniqueIdentifier>{dd98da95-0c6b-4c0e-aa21-7a03021b2b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\MnemonicsCollector">
+      <UniqueIdentifier>{c284835f-2e87-490e-bedb-d8acf29d7b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Resources">
+      <UniqueIdentifier>{2f9f5359-01fa-4e38-a666-6c31dd69a35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\MainFolder">
+      <UniqueIdentifier>{8f7b746f-81b2-4312-ad5c-f380386fdaaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Registry">
+      <UniqueIdentifier>{f7df66bd-2b27-429a-bd8e-265f6e015ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\StringManager">
+      <UniqueIdentifier>{fa13da09-baf6-471d-b249-fd426c243ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\HashSet">
+      <UniqueIdentifier>{33e91223-d0ab-4d48-b307-a84af6c4233f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\ManipulatorManager">
+      <UniqueIdentifier>{1f474256-d5de-4000-9c98-0b8803840b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\IndexCollectior">
+      <UniqueIdentifier>{e90d2053-d34f-42a9-b5b8-210fe09a4f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Gradient">
+      <UniqueIdentifier>{c0e866cd-5d07-430b-96e5-f144ec9e1cb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\TextMapSettings">
+      <UniqueIdentifier>{db39a936-7e39-4cab-b583-c02bb3dc0ad1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\WeightVector">
+      <UniqueIdentifier>{e611051a-543b-4635-8850-773c55cc0a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\UniqueList">
+      <UniqueIdentifier>{70b67909-9d25-4708-8707-67b67b9b42b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\Image">
+      <UniqueIdentifier>{407561aa-b52b-45d6-ba3d-8eebc336efd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\ConfigFile">
+      <UniqueIdentifier>{8e4d5e73-b06a-4e25-907e-2754790ff0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\FreeIDCollector">
+      <UniqueIdentifier>{019a4e8a-deaf-48dd-b413-b69f85633fdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System">
+      <UniqueIdentifier>{6f0c4afc-ac37-4726-bca8-093ee0af6e77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\PCIEMnemonics">
+      <UniqueIdentifier>{75143182-8382-41df-8f83-00e49a632512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\DefaultView">
+      <UniqueIdentifier>{1d96dcb0-a4c4-4502-9a23-ac39f9a64e05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\DefaultInputState">
+      <UniqueIdentifier>{529531ef-992b-4caf-961c-55448c6329a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\StoreInputState">
+      <UniqueIdentifier>{9d8a03a6-3bfc-4ee3-bb6a-f7ea4776102b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\MultiInputState">
+      <UniqueIdentifier>{7d95c8da-3571-4d87-89af-d9034ab56e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Factory">
+      <UniqueIdentifier>{90c47756-4702-4ab5-a34a-da3f5d17b056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\CommonMethods">
+      <UniqueIdentifier>{54d18e8f-fcaa-4fbe-ac92-e10d728aa9bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\EditParamer">
+      <UniqueIdentifier>{9b26512e-57fa-456e-af7e-d880392855e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\EditorBase">
+      <UniqueIdentifier>{77655bf0-88c7-49c6-844e-5bc559c0b7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System">
+      <UniqueIdentifier>{75cc3abb-ef01-4409-a73e-e94247778f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\DefaultBuilder">
+      <UniqueIdentifier>{64c88e92-f783-41ee-8922-d752a5f3e61b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\BuildDataBuilder">
+      <UniqueIdentifier>{fab02722-ed12-4640-8e8b-4b17e323ab2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Factory">
+      <UniqueIdentifier>{8daee4c0-e2fa-4936-80b8-039b90189414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\BuilderBase">
+      <UniqueIdentifier>{708e94d9-120d-42fa-b2a0-e8901b06f242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\DefaultBuilderBase">
+      <UniqueIdentifier>{e07a096e-6256-4a54-9ef8-2cffc56dfdf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System">
+      <UniqueIdentifier>{95d7b104-e00f-4cff-a244-eeb4f3bbcfc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\ExporterBase">
+      <UniqueIdentifier>{fd07bf08-315f-42fd-9277-042122e70dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Factory">
+      <UniqueIdentifier>{7cc94a31-f3e0-4981-864c-401375a665ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\DefaultObjectExporter">
+      <UniqueIdentifier>{87f02880-a0ec-4c22-9e2b-a23a66183060}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\CommonMethods">
+      <UniqueIdentifier>{8eb76b5e-6b4d-470f-b7e8-889dd6ef2d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Manipulators">
+      <UniqueIdentifier>{095f79e0-1d65-4412-9799-0cf96eebadf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Manipulators\MaskManipulator">
+      <UniqueIdentifier>{b720caf6-fb0d-4444-84bb-1a54e886084c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Manipulators\MultiManipulator">
+      <UniqueIdentifier>{ed1663db-f4da-4ce0-83e4-22504f4c5633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controllers">
+      <UniqueIdentifier>{e887a170-e1fb-4e7e-a814-bf74937c158b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controllers\DefaultController">
+      <UniqueIdentifier>{effcb9d2-1431-4fbe-9ece-a5027733ae90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controllers\ObjectController">
+      <UniqueIdentifier>{d15c26a9-233e-4275-9501-792ca0b9b08a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controllers\FolderController">
+      <UniqueIdentifier>{719ca880-bbc8-4074-bab5-5ea803558ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controllers\ObjectBaseController">
+      <UniqueIdentifier>{e093669a-ea45-4b21-80c5-e17916451aa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls">
+      <UniqueIdentifier>{3a9a08f1-996e-4300-a030-c7d5da4c452f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\Resize Dialog">
+      <UniqueIdentifier>{cf945d5b-1b60-4400-aea4-5a35ad491fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\DefaultShortcutBar">
+      <UniqueIdentifier>{c66ad006-26ae-4231-ba74-be86d5e88290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\DefaultTabWindow">
+      <UniqueIdentifier>{20b6ad20-f8af-40fc-a74b-017bc0cb0888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\DefaultWindow">
+      <UniqueIdentifier>{0f10cbba-2bee-458d-bac9-687920689fc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\Scintilla Editor">
+      <UniqueIdentifier>{bc577a84-c2bd-4164-bf97-b05aae99ec1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\BaseTreeControl">
+      <UniqueIdentifier>{edaf177a-5c4f-45c6-b79f-ff817dced418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\BaseTreeControl\DataID">
+      <UniqueIdentifier>{4a31d084-b501-4b2e-99c0-6b17e29416e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\BaseTreeControl\ControlData">
+      <UniqueIdentifier>{697aa418-482c-4b2e-a606-46e05fa18379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\Algorithms">
+      <UniqueIdentifier>{b5cfb292-175f-4dcb-bb26-0377f8336b99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Controls\ControlSelection">
+      <UniqueIdentifier>{f3fd87de-6652-49e5-b32a-81468f675f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ChildFrame System">
+      <UniqueIdentifier>{cdf7c04c-04df-4ad5-a306-ec4b41866860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ChildFrame System\Factory">
+      <UniqueIdentifier>{d6b900ee-87db-4545-ad5f-151ce00796a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\DefaultFactory">
+      <UniqueIdentifier>{40e0d57e-a3da-4c6d-8b78-bffa9725c782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\MapEditorModule">
+      <UniqueIdentifier>{9aabec20-e4f8-4427-8df5-4f175507bf3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\InteractiveMaya">
+      <UniqueIdentifier>{67c06ea0-3dee-4d63-9bff-98b68fab73e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Logger">
+      <UniqueIdentifier>{6e4a1f89-2c50-407f-a377-bb3ab77725a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\BasicDataExtractor">
+      <UniqueIdentifier>{6fd3c9c1-7823-4477-a9bc-12a178d45545}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ObjectFilter">
+      <UniqueIdentifier>{7e78ff25-0062-4f20-9892-b26bc2809033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Progress">
+      <UniqueIdentifier>{15e410cb-d67e-4f8c-bac5-628ef4c5d7ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{bdb3582d-edc6-404e-baa5-21066dd34b2c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlerDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Builder.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_ChildFrame.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_CommandHandler.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Controller.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Editor.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_EditorAI.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Exporter.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_FolderCallback.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_InputState.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Logger.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_MainFrame.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_MOD.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_ObjectCollector.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_PCItemEditor.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_Progress.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_ProgressHook.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_UserData.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface_View.h">
+      <Filter>Sources\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Geometry.h">
+      <Filter>Sources\Tools\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_SysCodes.h">
+      <Filter>Sources\Tools\SysCodes</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_MnemonicsCollector.h">
+      <Filter>Sources\Tools\MnemonicsCollector</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Resources.h">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_MainFolder.h">
+      <Filter>Sources\Tools\MainFolder</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Registry.h">
+      <Filter>Sources\Tools\Registry</Filter>
+    </ClInclude>
+    <ClInclude Include="StringManager.h">
+      <Filter>Sources\Tools\StringManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_HashSet.h">
+      <Filter>Sources\Tools\HashSet</Filter>
+    </ClInclude>
+    <ClInclude Include="ManipulatorManager.h">
+      <Filter>Sources\Tools\ManipulatorManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_IndexCollector.h">
+      <Filter>Sources\Tools\IndexCollectior</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Gradient.h">
+      <Filter>Sources\Tools\Gradient</Filter>
+    </ClInclude>
+    <ClInclude Include="TextMapSettings.h">
+      <Filter>Sources\Tools\TextMapSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="WV_Types.h">
+      <Filter>Sources\Tools\WeightVector</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_UniqueList.h">
+      <Filter>Sources\Tools\UniqueList</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_Image.h">
+      <Filter>Sources\Tools\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigFile.h">
+      <Filter>Sources\Tools\ConfigFile</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_FreeIDCollector.h">
+      <Filter>Sources\Tools\FreeIDCollector</Filter>
+    </ClInclude>
+    <ClInclude Include="PCIEMnemonics.h">
+      <Filter>Sources\Edit System\PCIEMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultView.h">
+      <Filter>Sources\Edit System\DefaultView</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultInputState.h">
+      <Filter>Sources\Edit System\DefaultInputState</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreInputState.h">
+      <Filter>Sources\Edit System\StoreInputState</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiInputState.h">
+      <Filter>Sources\Edit System\MultiInputState</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorFactory.h">
+      <Filter>Sources\Edit System\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonEditorMethods.h">
+      <Filter>Sources\Edit System\CommonMethods</Filter>
+    </ClInclude>
+    <ClInclude Include="EditParameter.h">
+      <Filter>Sources\Edit System\EditParamer</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorBase.h">
+      <Filter>Sources\Edit System\EditorBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultBuilder.h">
+      <Filter>Sources\Build System\DefaultBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildDataBuilder.h">
+      <Filter>Sources\Build System\BuildDataBuilder</Filter>
+    </ClInclude>
+    <ClInclude Include="BuilderFactory.h">
+      <Filter>Sources\Build System\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="BuilderBase.h">
+      <Filter>Sources\Build System\BuilderBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultBuilderBase.h">
+      <Filter>Sources\Build System\DefaultBuilderBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ExporterBase.h">
+      <Filter>Sources\Export System\ExporterBase</Filter>
+    </ClInclude>
+    <ClInclude Include="ExporterFactory.h">
+      <Filter>Sources\Export System\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultExporter.h">
+      <Filter>Sources\Export System\DefaultObjectExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonExporterMethods.h">
+      <Filter>Sources\Export System\CommonMethods</Filter>
+    </ClInclude>
+    <ClInclude Include="MaskManipulator.h">
+      <Filter>Sources\Manipulators\MaskManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiManipulator.h">
+      <Filter>Sources\Manipulators\MultiManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultController.h">
+      <Filter>Sources\Controllers\DefaultController</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectController.h">
+      <Filter>Sources\Controllers\ObjectController</Filter>
+    </ClInclude>
+    <ClInclude Include="FolderController.h">
+      <Filter>Sources\Controllers\FolderController</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBaseController.h">
+      <Filter>Sources\Controllers\ObjectBaseController</Filter>
+    </ClInclude>
+    <ClInclude Include="ResizeDialog.h">
+      <Filter>Sources\Controls\Resize Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultShortcutBar.h">
+      <Filter>Sources\Controls\DefaultShortcutBar</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultTabWindow.h">
+      <Filter>Sources\Controls\DefaultTabWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultWindow.h">
+      <Filter>Sources\Controls\DefaultWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="ScintillaEditor.h">
+      <Filter>Sources\Controls\Scintilla Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTreeControl.h">
+      <Filter>Sources\Controls\BaseTreeControl</Filter>
+    </ClInclude>
+    <ClInclude Include="DataID.h">
+      <Filter>Sources\Controls\BaseTreeControl\DataID</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlConfig.h">
+      <Filter>Sources\Controls\BaseTreeControl\ControlData</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlData.h">
+      <Filter>Sources\Controls\BaseTreeControl\ControlData</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlAlgorithms.h">
+      <Filter>Sources\Controls\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlSelection.h">
+      <Filter>Sources\Controls\ControlSelection</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrameFactory.h">
+      <Filter>Sources\ChildFrame System\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultFactoryCpp.h">
+      <Filter>Sources\DefaultFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultFactoryHdr.h">
+      <Filter>Sources\DefaultFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="MapEditorModule.h">
+      <Filter>Sources\MapEditorModule</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveMaya.h">
+      <Filter>Sources\InteractiveMaya</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveMayaExportTool.h">
+      <Filter>Sources\InteractiveMaya</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveProcess.h">
+      <Filter>Sources\InteractiveMaya</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicDataExtractor.h">
+      <Filter>Sources\BasicDataExtractor</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFilter.h">
+      <Filter>Sources\ObjectFilter</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Geometry.cpp">
+      <Filter>Sources\Tools\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_SysCodes.cpp">
+      <Filter>Sources\Tools\SysCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Resources.cpp">
+      <Filter>Sources\Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_MainFolder.cpp">
+      <Filter>Sources\Tools\MainFolder</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Registry.cpp">
+      <Filter>Sources\Tools\Registry</Filter>
+    </ClCompile>
+    <ClCompile Include="StringManager.cpp">
+      <Filter>Sources\Tools\StringManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ManipulatorManager.cpp">
+      <Filter>Sources\Tools\ManipulatorManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_IndexCollector.cpp">
+      <Filter>Sources\Tools\IndexCollectior</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Gradient.cpp">
+      <Filter>Sources\Tools\Gradient</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_UniqueList.cpp">
+      <Filter>Sources\Tools\UniqueList</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_Image.cpp">
+      <Filter>Sources\Tools\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigFile.cpp">
+      <Filter>Sources\Tools\ConfigFile</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_FreeIDCollector.cpp">
+      <Filter>Sources\Tools\FreeIDCollector</Filter>
+    </ClCompile>
+    <ClCompile Include="PCIEMnemonics.cpp">
+      <Filter>Sources\Edit System\PCIEMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultView.cpp">
+      <Filter>Sources\Edit System\DefaultView</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultInputState.cpp">
+      <Filter>Sources\Edit System\DefaultInputState</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreInputState.cpp">
+      <Filter>Sources\Edit System\StoreInputState</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiInputState.cpp">
+      <Filter>Sources\Edit System\MultiInputState</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorFactory.cpp">
+      <Filter>Sources\Edit System\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonEditorMethods.cpp">
+      <Filter>Sources\Edit System\CommonMethods</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorBase.cpp">
+      <Filter>Sources\Edit System\EditorBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultBuilder.cpp">
+      <Filter>Sources\Build System\DefaultBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildDataBuilder.cpp">
+      <Filter>Sources\Build System\BuildDataBuilder</Filter>
+    </ClCompile>
+    <ClCompile Include="BuilderFactory.cpp">
+      <Filter>Sources\Build System\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="BuilderBase.cpp">
+      <Filter>Sources\Build System\BuilderBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultBuilderBase.cpp">
+      <Filter>Sources\Build System\DefaultBuilderBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ExporterBase.cpp">
+      <Filter>Sources\Export System\ExporterBase</Filter>
+    </ClCompile>
+    <ClCompile Include="ExporterFactory.cpp">
+      <Filter>Sources\Export System\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultExporter.cpp">
+      <Filter>Sources\Export System\DefaultObjectExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonExporterMethods.cpp">
+      <Filter>Sources\Export System\CommonMethods</Filter>
+    </ClCompile>
+    <ClCompile Include="MaskManipulator.cpp">
+      <Filter>Sources\Manipulators\MaskManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiManipulator.cpp">
+      <Filter>Sources\Manipulators\MultiManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultController.cpp">
+      <Filter>Sources\Controllers\DefaultController</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectController.cpp">
+      <Filter>Sources\Controllers\ObjectController</Filter>
+    </ClCompile>
+    <ClCompile Include="FolderController.cpp">
+      <Filter>Sources\Controllers\FolderController</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBaseController.cpp">
+      <Filter>Sources\Controllers\ObjectBaseController</Filter>
+    </ClCompile>
+    <ClCompile Include="ResizeDialog.cpp">
+      <Filter>Sources\Controls\Resize Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultShortcutBar.cpp">
+      <Filter>Sources\Controls\DefaultShortcutBar</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultTabWindow.cpp">
+      <Filter>Sources\Controls\DefaultTabWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultWindow.cpp">
+      <Filter>Sources\Controls\DefaultWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="ScintillaEditor.cpp">
+      <Filter>Sources\Controls\Scintilla Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTreeControl.cpp">
+      <Filter>Sources\Controls\BaseTreeControl</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlAlgorithms.cpp">
+      <Filter>Sources\Controls\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrameFactory.cpp">
+      <Filter>Sources\ChildFrame System\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditorModule.cpp">
+      <Filter>Sources\MapEditorModule</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveMaya.cpp">
+      <Filter>Sources\InteractiveMaya</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveProcess.cpp">
+      <Filter>Sources\InteractiveMaya</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Sources\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicDataExtractor.cpp">
+      <Filter>Sources\BasicDataExtractor</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFilter.cpp">
+      <Filter>Sources\ObjectFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="Progress.cpp">
+      <Filter>Sources\Progress</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AdditionalControls.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="ConfigFiles.htm">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="FileMenu.htm">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

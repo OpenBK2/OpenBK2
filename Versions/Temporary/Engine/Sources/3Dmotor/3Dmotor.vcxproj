@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="BetaRelease|Win32">
+      <Configuration>BetaRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="FastDebug|Win32">
+      <Configuration>FastDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{553F00B2-7F78-4245-89EB-6B736B3B086A}</ProjectGuid>
+    <RootNamespace>3Dmotor</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36518.2</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm500 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NIVAL_DLL;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;FAST_DEBUG;NIVAL_DLL;_FASTDEBUG;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NIVAL_DLL;_BETARELEASE;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_FINALRELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling />
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>FastCall</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/list &gt;nul %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook2
+"$(VCInstallDir)bin\lib" /NOLOGO /OUT:$(OutDir)$(ProjectName).lib *.obj</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="2DScene.h" />
+    <ClInclude Include="2DSceneSW.h" />
+    <ClInclude Include="3Dmotor.h" />
+    <ClInclude Include="4dCalcs.h" />
+    <ClInclude Include="AIGeometryFormat.h" />
+    <ClInclude Include="aiInterval.h" />
+    <ClInclude Include="aiMap.h" />
+    <ClInclude Include="aiObject.h" />
+    <ClInclude Include="aiObjectLoader.h" />
+    <ClInclude Include="aiRender.h" />
+    <ClInclude Include="aiTrace.h" />
+    <ClInclude Include="aiVisitor.h" />
+    <ClInclude Include="AnimAnnotation.h" />
+    <ClInclude Include="AnimatedChannel.h" />
+    <ClInclude Include="Cache.h" />
+    <ClInclude Include="dbscene.h" />
+    <ClInclude Include="DecalFader.h" />
+    <ClInclude Include="DepthOfField.h" />
+    <ClInclude Include="DiscretePos.h" />
+    <ClInclude Include="Fader.h" />
+    <ClInclude Include="FontFormat.h" />
+    <ClInclude Include="FrameTransition.h" />
+    <ClInclude Include="G2DView.h" />
+    <ClInclude Include="GAnimation.h" />
+    <ClInclude Include="GAnimation.hpp" />
+    <ClInclude Include="GAnimFormat.h" />
+    <ClInclude Include="GAnimLight.h" />
+    <ClInclude Include="GAnimUtils.h" />
+    <ClInclude Include="GAutoDetect.h" />
+    <ClInclude Include="GBind.h" />
+    <ClInclude Include="GChannelAnimator.h" />
+    <ClInclude Include="GCombiner.h" />
+    <ClInclude Include="GDecal.h" />
+    <ClInclude Include="GDecalGeometry.h" />
+    <ClInclude Include="GDecalInfo.h" />
+    <ClInclude Include="GFileSkin.h" />
+    <ClInclude Include="GFont.h" />
+    <ClInclude Include="Gfx.h" />
+    <ClInclude Include="GfxBenchmark.h" />
+    <ClInclude Include="GfxBuffers.h" />
+    <ClInclude Include="GfxBuffersInternal.h" />
+    <ClInclude Include="GfxCatchGPF.h" />
+    <ClInclude Include="GfxEffects.h" />
+    <ClInclude Include="GfxInternal.h" />
+    <ClInclude Include="GfxRender.h" />
+    <ClInclude Include="GfxShaders.h" />
+    <ClInclude Include="GfxShadersDescr.h" />
+    <ClInclude Include="GfxUtils.h" />
+    <ClInclude Include="GInit.h" />
+    <ClInclude Include="GLightmap.h" />
+    <ClInclude Include="GLightmapCalc.h" />
+    <ClInclude Include="GLightmapLoader.h" />
+    <ClInclude Include="GLightPerVertex.h" />
+    <ClInclude Include="GLMLightState.h" />
+    <ClInclude Include="GLocale.h" />
+    <ClInclude Include="GMaterial.h" />
+    <ClInclude Include="GMaterial.hpp" />
+    <ClInclude Include="GMatShare.h" />
+    <ClInclude Include="GMesh.h" />
+    <ClInclude Include="GObjectInfo.h" />
+    <ClInclude Include="GParticleFilter.h" />
+    <ClInclude Include="GParticleFormat.h" />
+    <ClInclude Include="GParticleInfo.h" />
+    <ClInclude Include="GParticles.h" />
+    <ClInclude Include="GParticlesRain.h" />
+    <ClInclude Include="GPartParticles.h" />
+    <ClInclude Include="GParts.h" />
+    <ClInclude Include="GPixelFormat.h" />
+    <ClInclude Include="GPointLightGlow.h" />
+    <ClInclude Include="GPolyline.h" />
+    <ClInclude Include="GPostEffects.h" />
+    <ClInclude Include="GPostProcessors.h" />
+    <ClInclude Include="GrannyMemoryMap.hpp" />
+    <ClInclude Include="GRects.h" />
+    <ClInclude Include="GRenderClouds.h" />
+    <ClInclude Include="GRenderCore.h" />
+    <ClInclude Include="GRenderExecute.h" />
+    <ClInclude Include="GRenderFactor.h" />
+    <ClInclude Include="GRenderLight.h" />
+    <ClInclude Include="GRenderModes.h" />
+    <ClInclude Include="GRenderPathFastest.h" />
+    <ClInclude Include="GRenderPathLightmap.h" />
+    <ClInclude Include="GRenderPathOverdraw.h" />
+    <ClInclude Include="GRenderPathPolycount.h" />
+    <ClInclude Include="GRenderPathTnl.h" />
+    <ClInclude Include="GRenderUtils.h" />
+    <ClInclude Include="GRTInfo.h" />
+    <ClInclude Include="GRTShare.h" />
+    <ClInclude Include="GScene.h" />
+    <ClInclude Include="GSceneInternal.h" />
+    <ClInclude Include="GSceneParticles.h" />
+    <ClInclude Include="GSceneUtils.h" />
+    <ClInclude Include="GShaderFX.h" />
+    <ClInclude Include="GShaderFX.hpp" />
+    <ClInclude Include="GShadowMap.h" />
+    <ClInclude Include="GShadowVolume.h" />
+    <ClInclude Include="GSkeleton.h" />
+    <ClInclude Include="GSprite.h" />
+    <ClInclude Include="GSSEtransform.h" />
+    <ClInclude Include="GText.h" />
+    <ClInclude Include="GTexture.h" />
+    <ClInclude Include="GTextureLoader.h" />
+    <ClInclude Include="GTransparent.h" />
+    <ClInclude Include="GView.h" />
+    <ClInclude Include="HeightFog.h" />
+    <ClInclude Include="include_AmbientLight.h" />
+    <ClInclude Include="include_AnimBase.h" />
+    <ClInclude Include="Interpolate.h" />
+    <ClInclude Include="LoadingCounter.h" />
+    <ClInclude Include="Locale.h" />
+    <ClInclude Include="MixerChannel.h" />
+    <ClInclude Include="ObjectFader.h" />
+    <ClInclude Include="OcTree.h" />
+    <ClInclude Include="ProgrammableChannel.h" />
+    <ClInclude Include="RadixSort.h" />
+    <ClInclude Include="RandomGen.h" />
+    <ClInclude Include="RectLayout.h" />
+    <ClInclude Include="Render.h" />
+    <ClInclude Include="RenderNode.h" />
+    <ClInclude Include="ScreenShot.h" />
+    <ClInclude Include="SkyDome.h" />
+    <ClInclude Include="Specific.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SuperCollider.h" />
+    <ClInclude Include="SWRectLayout.h" />
+    <ClInclude Include="SWTexture.h" />
+    <ClInclude Include="VolumeContainer.h" />
+    <ClInclude Include="WindDeformer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="2DScene.cpp" />
+    <ClCompile Include="2DSceneSW.cpp" />
+    <ClCompile Include="4dCalcs.cpp" />
+    <ClCompile Include="aiInterval.cpp" />
+    <ClCompile Include="aiMap.cpp" />
+    <ClCompile Include="aiObject.cpp" />
+    <ClCompile Include="aiObjectLoader.cpp" />
+    <ClCompile Include="aiRender.cpp" />
+    <ClCompile Include="aiTrace.cpp" />
+    <ClCompile Include="aiVisitor.cpp" />
+    <ClCompile Include="AnimAnnotation.cpp" />
+    <ClCompile Include="AnimatedChannel.cpp" />
+    <ClCompile Include="Cache.cpp" />
+    <ClCompile Include="dbscene.cpp" />
+    <ClCompile Include="DecalFader.cpp" />
+    <ClCompile Include="DepthOfField.cpp" />
+    <ClCompile Include="DiscretePos.cpp" />
+    <ClCompile Include="Fader.cpp" />
+    <ClCompile Include="FontFormat.cpp" />
+    <ClCompile Include="FrameTransition.cpp" />
+    <ClCompile Include="G2DView.cpp" />
+    <ClCompile Include="GAnimation.cpp" />
+    <ClCompile Include="GAnimFormat.cpp" />
+    <ClCompile Include="GAnimLight.cpp" />
+    <ClCompile Include="GAnimUtils.cpp" />
+    <ClCompile Include="GAutoDetect.cpp" />
+    <ClCompile Include="GBind.cpp" />
+    <ClCompile Include="GCombiner.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">NotSet</EnableEnhancedInstructionSet>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+      </AssemblerOutput>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotSet</EnableEnhancedInstructionSet>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </AssemblerOutput>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">NotSet</EnableEnhancedInstructionSet>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+      </AssemblerOutput>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotSet</EnableEnhancedInstructionSet>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="GDecal.cpp" />
+    <ClCompile Include="GDecalGeometry.cpp" />
+    <ClCompile Include="GFont.cpp" />
+    <ClCompile Include="Gfx.cpp" />
+    <ClCompile Include="GfxBenchmark.cpp" />
+    <ClCompile Include="GfxBuffers.cpp" />
+    <ClCompile Include="GfxCatchGPF.cpp" />
+    <ClCompile Include="GfxEffects.cpp" />
+    <ClCompile Include="GfxInternal.cpp" />
+    <ClCompile Include="GfxRender.cpp" />
+    <ClCompile Include="GfxShaders.cpp" />
+    <ClCompile Include="GfxUtils.cpp" />
+    <ClCompile Include="GInit.cpp" />
+    <ClCompile Include="GLightmap.cpp" />
+    <ClCompile Include="GLightmapCalc.cpp" />
+    <ClCompile Include="GLightmapLoader.cpp" />
+    <ClCompile Include="GLightPerVertex.cpp" />
+    <ClCompile Include="GLMLightState.cpp" />
+    <ClCompile Include="GLocale.cpp" />
+    <ClCompile Include="GMaterial.cpp" />
+    <ClCompile Include="GMatShare.cpp" />
+    <ClCompile Include="GMesh.cpp" />
+    <ClCompile Include="GObjectInfo.cpp" />
+    <ClCompile Include="GParticleFilter.cpp" />
+    <ClCompile Include="GParticleFormat.cpp" />
+    <ClCompile Include="GParticleInfo.cpp" />
+    <ClCompile Include="GParticles.cpp" />
+    <ClCompile Include="GParticlesRain.cpp" />
+    <ClCompile Include="GPartParticles.cpp" />
+    <ClCompile Include="GParts.cpp" />
+    <ClCompile Include="GPointLightGlow.cpp" />
+    <ClCompile Include="GPolyline.cpp" />
+    <ClCompile Include="GPostEffects.cpp" />
+    <ClCompile Include="GPostProcessors.cpp" />
+    <ClCompile Include="GrannyMemoryMap.cpp" />
+    <ClCompile Include="GRects.cpp" />
+    <ClCompile Include="GRenderClouds.cpp" />
+    <ClCompile Include="GRenderCore.cpp" />
+    <ClCompile Include="GRenderExecute.cpp" />
+    <ClCompile Include="GRenderFactor.cpp" />
+    <ClCompile Include="GRenderLight.cpp" />
+    <ClCompile Include="GRenderPathFastest.cpp" />
+    <ClCompile Include="GRenderPathLightmap.cpp" />
+    <ClCompile Include="GRenderPathOverdraw.cpp" />
+    <ClCompile Include="GRenderPathPolycount.cpp" />
+    <ClCompile Include="GRenderPathTnl.cpp" />
+    <ClCompile Include="GRenderUtils.cpp" />
+    <ClCompile Include="GRTShare.cpp" />
+    <ClCompile Include="GSceneInternal.cpp" />
+    <ClCompile Include="GSceneParticles.cpp" />
+    <ClCompile Include="GSceneUtils.cpp" />
+    <ClCompile Include="GShaderFX.cpp" />
+    <ClCompile Include="GShadowMap.cpp" />
+    <ClCompile Include="GShadowVolume.cpp" />
+    <ClCompile Include="GSkeleton.cpp" />
+    <ClCompile Include="GSprite.cpp" />
+    <ClCompile Include="GSSEtransform.cpp" />
+    <ClCompile Include="GText.cpp" />
+    <ClCompile Include="GTexture.cpp" />
+    <ClCompile Include="GTransparent.cpp" />
+    <ClCompile Include="GView.cpp" />
+    <ClCompile Include="HeightFog.cpp" />
+    <ClCompile Include="Locale.cpp" />
+    <ClCompile Include="MixerChannel.cpp" />
+    <ClCompile Include="ObjectFader.cpp" />
+    <ClCompile Include="ProgrammableChannel.cpp" />
+    <ClCompile Include="RandomGen.cpp" />
+    <ClCompile Include="RenderNode.cpp" />
+    <ClCompile Include="ScreenShot.cpp" />
+    <ClCompile Include="SkyDome.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SuperCollider.cpp" />
+    <ClCompile Include="SWRectLayout.cpp" />
+    <ClCompile Include="SWTexture.cpp" />
+    <ClCompile Include="VolumeContainer.cpp" />
+    <ClCompile Include="WindDeformer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="GfxMainPS.fx" />
+    <FxCompile Include="GfxMainVS.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="GfxShaders.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">N:\Dev\Soft\Utils\ShaderCompiler.exe "%(FullPath)" "%(Filename)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">%(FullPath)GfxShaders.h;%(FullPath)GfxShaders.cpp;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">N:\Dev\Soft\Utils\ShaderCompiler.exe "%(FullPath)" "%(Filename)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(FullPath)GfxShaders.h;%(FullPath)GfxShaders.cpp;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">N:\Dev\Soft\Utils\ShaderCompiler.exe "%(FullPath)" "%(Filename)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">%(FullPath)GfxShaders.h;%(FullPath)GfxShaders.cpp;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">N:\Dev\Soft\Utils\ShaderCompiler.exe "%(FullPath)" "%(Filename)"
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(FullPath)GfxShaders.h;%(FullPath)GfxShaders.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AmbientLightColors.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="dbscene.cll" />
+    <None Include="effect_fields_description.html" />
+    <None Include="MaterialTextures.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="MemoryMap.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="TerrainBlend.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3DLib\3DLib.vcxproj">
+      <Project>{99936c39-2730-4c56-910d-a7f1028ab5b1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Image\Image.vcxproj">
+      <Project>{1c54f453-87d3-4640-8555-6ff75e8aada8}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libdb\libdb.vcxproj">
+      <Project>{0295967b-b4ed-4f85-bb3a-c56f3769e59f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MemoryLib\MemoryLib.vcxproj">
+      <Project>{968793be-412e-45b0-a801-e54c6307e49e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Misc\Misc.vcxproj">
+      <Project>{1e0b6a39-dc95-48cb-9061-3679d40ad8c9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\System\System.vcxproj">
+      <Project>{2a5f6c9e-08a5-4091-b46c-e65ec7bd94fa}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{ee1243ac-35bc-4293-8599-3f9acd425039}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{7e23be88-f86d-47ee-a0de-0452c46be4e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UISpecificB2">
+      <UniqueIdentifier>{db1d7783-9893-4ee0-833e-28c2b66215d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{82e70ad4-dabd-4865-b9b6-594f5eaf8cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\AtomReactions">
+      <UniqueIdentifier>{07770b49-19e5-4d2a-ae6e-dbdf8f32ee1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\Windows">
+      <UniqueIdentifier>{aa015632-8174-412b-8259-df312967e6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB\Components">
+      <UniqueIdentifier>{3076187a-2344-4a17-8b8b-571b163268f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{dcf7640d-d44e-4e7a-ad4b-0f7e57656a1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\MiniMap">
+      <UniqueIdentifier>{2bfe8a5d-5e8e-4f39-b5d4-4dc6e1ad9918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\Selection">
+      <UniqueIdentifier>{c31de59a-a61f-460b-8cd3-9fcb4737cfd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\RoundProgressBar">
+      <UniqueIdentifier>{e0aa5508-3202-4dfe-9e82-1931580969b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\Window3DControl">
+      <UniqueIdentifier>{fbc33f8c-daf2-438e-a3de-5e15c549f815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\WindowFrameSequence">
+      <UniqueIdentifier>{5886c76e-0c58-44b7-954a-e1488d725117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows\WindowPotentialLines">
+      <UniqueIdentifier>{d7a26af6-1701-4793-b235-176f91826621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{6abd9761-d996-4f96-84f3-4baf661a3376}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\PlaySound">
+      <UniqueIdentifier>{745df990-1dc9-484c-9c8c-58daf7e01f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\B2Move">
+      <UniqueIdentifier>{980f066e-dd5b-4b09-ad3f-6cb4b407a3a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{c6eedc7b-c09d-4a2a-a543-940c88f41db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{a8c53599-7df2-4c0e-ac91-fc688e3155dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AtomicReactions.h">
+      <Filter>UISpecificB2</Filter>
+    </ClInclude>
+    <ClInclude Include="DBUISpecificB2.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBUISpecificCpp.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ActionButtonInfo.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_M1ActionButton.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MLTag.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MPLocalizedGameType.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UIConstsB2.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISB2Move.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UISPlaySound.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSetForcedAction.h">
+      <Filter>DB\AtomReactions</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ARSetSpecialAbility.h">
+      <Filter>DB\AtomReactions</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ActionButton.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Window3DControl.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowFrameSequence.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowMiniMap.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowPotentialLines.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowRoundProgressBar.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WindowSelection.h">
+      <Filter>DB\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BackgroundFrameSequence.h">
+      <Filter>DB\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowMiniMap.h">
+      <Filter>Windows\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowSelection.h">
+      <Filter>Windows\Selection</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowRoundProgressBar.h">
+      <Filter>Windows\RoundProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Window3DControl.h">
+      <Filter>Windows\Window3DControl</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowFrameSequence.h">
+      <Filter>Windows\WindowFrameSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowPotentialLines.h">
+      <Filter>Windows\WindowPotentialLines</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorPlaySound.h">
+      <Filter>Effects\PlaySound</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectorB2Move.h">
+      <Filter>Effects\B2Move</Filter>
+    </ClInclude>
+    <ClInclude Include="UISpecificB2.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundFrameSequence.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AtomicReactions.cpp">
+      <Filter>UISpecificB2</Filter>
+    </ClCompile>
+    <ClCompile Include="DBUISpecificB2.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowMiniMap.cpp">
+      <Filter>Windows\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowSelection.cpp">
+      <Filter>Windows\Selection</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowRoundProgressBar.cpp">
+      <Filter>Windows\RoundProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Window3DControl.cpp">
+      <Filter>Windows\Window3DControl</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowFrameSequence.cpp">
+      <Filter>Windows\WindowFrameSequence</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowPotentialLines.cpp">
+      <Filter>Windows\WindowPotentialLines</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorPlaySound.cpp">
+      <Filter>Effects\PlaySound</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectorB2Move.cpp">
+      <Filter>Effects\B2Move</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundFrameSequence.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbuispecificb2.cll">
+      <Filter>DB</Filter>
+    </None>
+  </ItemGroup>
+</Project>

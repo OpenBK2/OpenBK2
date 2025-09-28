@@ -1,0 +1,633 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6d1edf8a-29f3-480a-a04f-3e9aab5a3b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats">
+      <UniqueIdentifier>{daad5756-aae5-4faf-be62-2fc0babdadf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\CommonRPGStats">
+      <UniqueIdentifier>{87e3a32b-5b6a-4e6b-89b0-4370d9904ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\SquadRPGStats">
+      <UniqueIdentifier>{b9312b96-0606-446e-96ce-a07dd4b54330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\BridgeRPGStats">
+      <UniqueIdentifier>{5ed0054c-03f3-4372-b540-d531de9958ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\AIExpLevel">
+      <UniqueIdentifier>{7d148b54-fcaf-4c05-9835-71285530ed43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\AckRPGStats">
+      <UniqueIdentifier>{4ba0d660-822d-4118-8393-acacbf392f30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\FlashEffect">
+      <UniqueIdentifier>{c3e69284-889d-4fe3-9413-1ebaa85383f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\HPObjectRPGStats">
+      <UniqueIdentifier>{2d792729-d64c-4ec0-9b9a-d852f8a3551e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\StaticObjectRPGStats">
+      <UniqueIdentifier>{9af007e0-4351-402e-b598-d3c3ba1fcbd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\WeaponRPGStats">
+      <UniqueIdentifier>{c474be96-c3d7-404d-bee7-d0f480e238d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\ObjectBaseRPGStats">
+      <UniqueIdentifier>{7e6dd454-1660-477c-946a-f3fc06e7e7ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\TerraObjectRPGStats">
+      <UniqueIdentifier>{6cbea67b-ad60-43be-b9c1-13600f5bf45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\BuildingRPGStats">
+      <UniqueIdentifier>{7d7d795d-af28-4cbe-953b-431591bf6f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\UnitBaseRPGStats">
+      <UniqueIdentifier>{4c1a45de-7388-4ca9-857d-e013942c1f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\MechUnitRPGStats">
+      <UniqueIdentifier>{7cc44f03-7950-4ebb-8522-a0c013ce68eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\InfantryRPGStats">
+      <UniqueIdentifier>{61427733-3393-409c-94bf-f485bac9a067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\EntrenchmentRPGStats">
+      <UniqueIdentifier>{f240d988-b63e-4aeb-887d-f602257c8602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\FenceRPGStats">
+      <UniqueIdentifier>{e1741d5e-2758-47b3-8f1c-b243240791c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\BaseGunRPGStats">
+      <UniqueIdentifier>{363f5759-c72f-40b0-95a1-dd3f657b5f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\UnitSpecialAbility">
+      <UniqueIdentifier>{3a7d5106-ddb0-40b3-b3e3-b4af00a9f3b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\DBNotifications">
+      <UniqueIdentifier>{52c5822b-483b-442c-b3b2-ed52ceabf5db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\ComplexEffect">
+      <UniqueIdentifier>{7136f543-6c01-4e5a-9dc6-4f806828e38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RPGStats\UIEntries">
+      <UniqueIdentifier>{7dcafc46-328d-4ccc-9221-9ff3913cdd94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapInfo">
+      <UniqueIdentifier>{244f51fe-f138-4d1b-893a-3ffa79049259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapInfo\Addition">
+      <UniqueIdentifier>{8d32b5c2-d5da-435a-8b0d-664f319b39c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlaneManuvers">
+      <UniqueIdentifier>{400ff15f-ae7a-4aa8-8cec-28ffdeca5ecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actions">
+      <UniqueIdentifier>{e6d73790-d3be-4c5d-8b1e-09517693afed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Consts">
+      <UniqueIdentifier>{7db6dd60-994f-4b78-9d34-109af3659b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIStructs">
+      <UniqueIdentifier>{a6e585a7-b3fc-4722-8def-f0e01a8e579e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Constructor">
+      <UniqueIdentifier>{d227a4f0-eede-4dea-84d1-df42515ea78b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{4c30c71d-9a69-45bc-b9c9-64cfae4943d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CLL">
+      <UniqueIdentifier>{f2ca046c-db4f-4382-8ec4-2a844b74c042}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionsRemap.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="DBPassProfile.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="IconsSet.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_PlayerRank.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Reinforcement.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ReinforcementTypeInfo.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="M1UnitActions.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="M1UnitSpecific.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="M1UnitType.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="prefix_RPGStats.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="RPGStats.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecialAbilities.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTypes.h">
+      <Filter>RPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_CommonRPGStats.h">
+      <Filter>RPGStats\CommonRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_SquadRPGStats.h">
+      <Filter>RPGStats\SquadRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_SquadRPGStats_Formation.h">
+      <Filter>RPGStats\SquadRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_SquadRPGStats_Formation_Entry.h">
+      <Filter>RPGStats\SquadRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BridgeRPGStats.h">
+      <Filter>RPGStats\BridgeRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BridgeRPGStats_DirectionExplosion.h">
+      <Filter>RPGStats\BridgeRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BridgeRPGStats_FirePoint.h">
+      <Filter>RPGStats\BridgeRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BridgeRPGStats_SegmentRPGStats.h">
+      <Filter>RPGStats\BridgeRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AIExpLevel.h">
+      <Filter>RPGStats\AIExpLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitStatsModifier.h">
+      <Filter>RPGStats\AIExpLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitStatsModifier_ParameterModifier.h">
+      <Filter>RPGStats\AIExpLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AckTypes.h">
+      <Filter>RPGStats\AckRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AckSetRPGStats.h">
+      <Filter>RPGStats\AckRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_FlashEffect.h">
+      <Filter>RPGStats\FlashEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ByteArray2.h">
+      <Filter>RPGStats\HPObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_HPObjectRPGStats.h">
+      <Filter>RPGStats\HPObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_StaticObjectRPGStats.h">
+      <Filter>RPGStats\StaticObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WeaponRPGStats.h">
+      <Filter>RPGStats\WeaponRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WeaponRPGStats_Shell.h">
+      <Filter>RPGStats\WeaponRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ObjectBaseRPGStats.h">
+      <Filter>RPGStats\ObjectBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_TerraObjSetRPGStats.h">
+      <Filter>RPGStats\TerraObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_TerraObjSetRPGStats_Segment.h">
+      <Filter>RPGStats\TerraObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BuildingRPGStats.h">
+      <Filter>RPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BuildingRPGStats_DirectionExplosion.h">
+      <Filter>RPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BuildingRPGStats_Entrance.h">
+      <Filter>RPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BuildingRPGStats_FirePoint.h">
+      <Filter>RPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BuildingRPGStats_Slot.h">
+      <Filter>RPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitBaseRPGStats.h">
+      <Filter>RPGStats\UnitBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitBaseRPGStats_AABBDesc.h">
+      <Filter>RPGStats\UnitBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitBaseRPGStats_Actions.h">
+      <Filter>RPGStats\UnitBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitBaseRPGStats_cpp.h">
+      <Filter>RPGStats\UnitBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MechUnitRPGStats.h">
+      <Filter>RPGStats\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MechUnitRPGStats_Armor.h">
+      <Filter>RPGStats\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MechUnitRPGStats_Constraint.h">
+      <Filter>RPGStats\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MechUnitRPGStats_cpp.h">
+      <Filter>RPGStats\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MechUnitRPGStats_Platform.h">
+      <Filter>RPGStats\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_InfantryRPGStats.h">
+      <Filter>RPGStats\InfantryRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_InfantryRPGStats_cpp.h">
+      <Filter>RPGStats\InfantryRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_EntrenchmentRPGStats.h">
+      <Filter>RPGStats\EntrenchmentRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_EntrenchmentRPGStats_SegmentRPGStats.h">
+      <Filter>RPGStats\EntrenchmentRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_FenceRPGStats.h">
+      <Filter>RPGStats\FenceRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_FenceRPGStats_SegmentRPGStats.h">
+      <Filter>RPGStats\FenceRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_BaseGunRPGStats.h">
+      <Filter>RPGStats\BaseGunRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UnitSpecialAblityDesc.h">
+      <Filter>RPGStats\UnitSpecialAbility</Filter>
+    </ClInclude>
+    <ClInclude Include="DBNotifications.h">
+      <Filter>RPGStats\DBNotifications</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ComplexEffect.h">
+      <Filter>RPGStats\ComplexEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="include_TextEntry.h">
+      <Filter>RPGStats\UIEntries</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UIScreenEntry.h">
+      <Filter>RPGStats\UIEntries</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UITextEntry.h">
+      <Filter>RPGStats\UIEntries</Filter>
+    </ClInclude>
+    <ClInclude Include="UIEntries.h">
+      <Filter>RPGStats\UIEntries</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMapInfo.h">
+      <Filter>MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="dbreinforcements.h">
+      <Filter>MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="include_DifficultyLevel.h">
+      <Filter>MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="prefix_DBMapInfo.h">
+      <Filter>MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AIGeneralParcelInfo.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AIStartCommand.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MapInfo.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MapPlayerInfo.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MissionBonus.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_MissionObjective.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_PartyDependentInfo.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ReinforcementGroupInfo.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ReinforcePoint.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ScriptMovies.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ScriptMovieSequence.h">
+      <Filter>MapInfo\Addition</Filter>
+    </ClInclude>
+    <ClInclude Include="DBPlaneManuvers.h">
+      <Filter>PlaneManuvers</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ManuverDescriptor.h">
+      <Filter>PlaneManuvers</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionCommand.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionNotify.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="AdditionalActions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationType.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands_Actions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="include_UserActions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="M1Actions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="UserActions.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMapConsts.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="DBCameraConsts.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="DBClientConsts.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AckParameter.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ClientGameConsts.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="Vis2AI.h">
+      <Filter>Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="AbilityActions.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="AIAckTypes.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="AITypes.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="AIUnitCmd.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="AIUpdates.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationFromAction.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="FeedBackUpdates.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinfUpdates.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusUpdates.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperWeaponUpdates.h">
+      <Filter>AIStructs</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstructorInfo.h">
+      <Filter>Constructor</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConstructorProfile.h">
+      <Filter>Constructor</Filter>
+    </ClInclude>
+    <ClInclude Include="include_constructorinfo.h">
+      <Filter>Constructor</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimModes.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DBAnimB2.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DBAttachedModelVisObj.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DBVisObj.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneModes.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Notification.h">
+      <Filter>CLL</Filter>
+    </ClInclude>
+    <ClInclude Include="include_NotificationEvent.h">
+      <Filter>CLL</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRunTypes.h" />
+    <ClInclude Include="IClientGameConsts.h" />
+    <ClInclude Include="RPGStatsAutomagic.h" />
+    <ClInclude Include="Season.h" />
+    <ClInclude Include="TerraAIObserver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionsRemap.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="DBPassProfile.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="IconsSet.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="M1UnitActions.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="M1UnitSpecific.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="M1UnitType.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="RPGStats.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="RPGStatsAddIn.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTypes.cpp">
+      <Filter>RPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="AckTypes.cpp">
+      <Filter>RPGStats\AckRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="DBNotifications.cpp">
+      <Filter>RPGStats\DBNotifications</Filter>
+    </ClCompile>
+    <ClCompile Include="UIEntries.cpp">
+      <Filter>RPGStats\UIEntries</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMapInfo.cpp">
+      <Filter>MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="dbreinforcements.cpp">
+      <Filter>MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="DBPlaneManuvers.cpp">
+      <Filter>PlaneManuvers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationType.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands_Actions.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="M1Actions.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="UserActions.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="DBCameraConsts.cpp">
+      <Filter>Consts</Filter>
+    </ClCompile>
+    <ClCompile Include="DBClientConsts.cpp">
+      <Filter>Consts</Filter>
+    </ClCompile>
+    <ClCompile Include="AbilityActions.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="AIUpdates.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="FeedBackUpdates.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinfUpdates.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusUpdates.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperWeaponUpdates.cpp">
+      <Filter>AIStructs</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstructorInfo.cpp">
+      <Filter>Constructor</Filter>
+    </ClCompile>
+    <ClCompile Include="DBConstructorProfile.cpp">
+      <Filter>Constructor</Filter>
+    </ClCompile>
+    <ClCompile Include="DBAnimB2.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DBAttachedModelVisObj.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="DBVisObj.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RPGStatsAutomagic.cpp" />
+    <ClCompile Include="Season.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="m1actions.cll">
+      <Filter>RPGStats</Filter>
+    </None>
+    <None Include="m1unitactions.cll">
+      <Filter>RPGStats</Filter>
+    </None>
+    <None Include="m1unitspecific.cll">
+      <Filter>RPGStats</Filter>
+    </None>
+    <None Include="m1unittype.cll">
+      <Filter>RPGStats</Filter>
+    </None>
+    <None Include="rpgstats.cll">
+      <Filter>RPGStats</Filter>
+    </None>
+    <None Include="uientries.cll">
+      <Filter>RPGStats\UIEntries</Filter>
+    </None>
+    <None Include="dbmapinfo.cll">
+      <Filter>MapInfo</Filter>
+    </None>
+    <None Include="dbreinforcements.cll">
+      <Filter>MapInfo</Filter>
+    </None>
+    <None Include="dbclientconsts.cll">
+      <Filter>Consts</Filter>
+    </None>
+    <None Include="acktypes.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="animationtype.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbanimb2.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbattachedmodelvisobj.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbcameraconsts.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbconstructorprofile.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbnotifications.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbpassprofile.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbplanemanuvers.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="dbvisobj.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="iconsset.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="season.cll">
+      <Filter>CLL</Filter>
+    </None>
+    <None Include="useractions.cll">
+      <Filter>CLL</Filter>
+    </None>
+  </ItemGroup>
+</Project>

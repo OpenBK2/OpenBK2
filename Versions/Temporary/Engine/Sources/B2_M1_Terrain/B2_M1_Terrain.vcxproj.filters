@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Terrain">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="TracksManager">
+      <UniqueIdentifier>{78b73a38-8019-474e-aaae-b646366787bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{8827b6df-e48a-40e0-a0c7-6b4ad3c8797d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchHolder.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraConsts.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrUtils.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TracksManager.h">
+      <Filter>TracksManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DBPreLight.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBTerrain.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBTerrainSpot.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBVSO.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBWater.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_AnimatedTexture.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_PreLight.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_TwoSidedLight.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_Water.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_WaterWaveType.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="fmtVSO.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraAIObserver.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrUtils.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TracksManager.cpp">
+      <Filter>TracksManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DBPreLight.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBTerrain.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBTerrainSpot.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBVSO.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBWater.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="fmtVSO.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraAIObserver.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbprelight.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbterrain.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbterrainspot.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbvso.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbwater.cll">
+      <Filter>DB</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Sources\ED_B2DLL">
+      <UniqueIdentifier>{2abae62a-d18c-4b27-b1f6-193f7ef81c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types">
+      <UniqueIdentifier>{5df7cfa6-e522-4d98-b886-04029cdc4a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\EditorAI">
+      <UniqueIdentifier>{7f488c43-6fa4-4a4b-b0e7-2e3007a0029b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\EditorScene">
+      <UniqueIdentifier>{8a53a57a-2db5-4c59-b7c3-016ca16c23f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\EditSystem">
+      <UniqueIdentifier>{b4fb53eb-e2a9-47a4-8dbc-c273b2d8a6f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\EditSystem\States">
+      <UniqueIdentifier>{8f9ceadd-42ad-40a8-b1d5-08a9e1432ae1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\EditSystem\Interfaces">
+      <UniqueIdentifier>{d3212d0c-6351-42d3-aa5c-390a81e4ca52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ED_B2DLL.h">
+      <Filter>Sources\ED_B2DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorAI.h">
+      <Filter>Sources\Types\EditorAI</Filter>
+    </ClInclude>
+    <ClInclude Include="TerraAIObserver.h">
+      <Filter>Sources\Types\EditorAI</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorScene.h">
+      <Filter>Sources\Types\EditorScene</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterEditor.h">
+      <Filter>Sources\EditSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterState.h">
+      <Filter>Sources\EditSystem\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterInterface.h">
+      <Filter>Sources\EditSystem\Interfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ED_B2DLL.cpp">
+      <Filter>Sources\ED_B2DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorAI.cpp">
+      <Filter>Sources\Types\EditorAI</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraAIObserver.cpp">
+      <Filter>Sources\Types\EditorAI</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorScene.cpp">
+      <Filter>Sources\Types\EditorScene</Filter>
+    </ClCompile>
+    <ClCompile Include="ChapterEditor.cpp">
+      <Filter>Sources\EditSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ChapterState.cpp">
+      <Filter>Sources\EditSystem\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ChapterInterface.cpp">
+      <Filter>Sources\EditSystem\Interfaces</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

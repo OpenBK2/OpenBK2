@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{42b4cbbe-2299-46ef-bcbd-e95404f06e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ED_RTS">
+      <UniqueIdentifier>{d178612a-bcdd-40d4-aaac-3543755f2957}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolBarButtonsMap.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ED_RTSDll.h">
+      <Filter>Sources\ED_RTS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MapEditorModule.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ED_RTSDll.cpp">
+      <Filter>Sources\ED_RTS</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

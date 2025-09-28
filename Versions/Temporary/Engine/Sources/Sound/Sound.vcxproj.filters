@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SoundScene">
+      <UniqueIdentifier>{ef94745e-9092-4dad-bf07-d6c929fb7d6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\SFX">
+      <UniqueIdentifier>{99bee7b3-c9a0-4758-ac9f-747562206ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\SFX\Engine">
+      <UniqueIdentifier>{ed781b92-410d-43e0-bef5-3b56d8c97729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\SFX\SoundManager">
+      <UniqueIdentifier>{f8a9662f-1bfc-4a82-9479-cb37ef80ff71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\SFX\Sample">
+      <UniqueIdentifier>{1d075f6e-c3cf-4780-92d6-4d32e744f607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Sounds">
+      <UniqueIdentifier>{ff678930-25e6-4135-b101-900f1fbbd5e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Sounds\SubstSound">
+      <UniqueIdentifier>{75012552-5920-4985-85a8-fa7a4a783d2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Sounds\Sound">
+      <UniqueIdentifier>{881d7808-2393-4519-88c5-c572fa70fbde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Cell">
+      <UniqueIdentifier>{05030654-c454-405f-a598-22df6f2c03ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\PHSMap">
+      <UniqueIdentifier>{4358c3b9-53a6-4535-ad31-2548ddff2f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\TerrainSound">
+      <UniqueIdentifier>{9b5d1d6b-af7c-47a0-9829-f299295e95bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Consts">
+      <UniqueIdentifier>{a0882b2f-0417-483a-89b7-6dea1d67d647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\MapSounds">
+      <UniqueIdentifier>{80346637-c68b-4b52-abe8-211ec0745af9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundScene\Tools">
+      <UniqueIdentifier>{891d2059-9f77-4ea5-873f-6ff49a0b2a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{90d5dd9d-aa22-49d1-9524-2d3b20c71bb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Music">
+      <UniqueIdentifier>{c757a3f6-fa4a-4c5b-8dd1-c2407c0167d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Music\PlayList">
+      <UniqueIdentifier>{6473d3c8-63e3-4bbc-8f5b-7d006b32fe9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Music\PlayList\Elements">
+      <UniqueIdentifier>{4e818683-79cb-443e-8e66-e3213beb4206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{e41e7cdd-aeed-4064-a3d7-20a97a3d5a74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ITerrainSounds.h">
+      <Filter>SoundScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSceneInternal.h">
+      <Filter>SoundScene</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStructs.h">
+      <Filter>SoundScene\SFX</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEngine.h">
+      <Filter>SoundScene\SFX\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>SoundScene\SFX\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound2D.h">
+      <Filter>SoundScene\SFX\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSample.h">
+      <Filter>SoundScene\SFX\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="SubstSound.h">
+      <Filter>SoundScene\Sounds\SubstSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>SoundScene\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundCell.h">
+      <Filter>SoundScene\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="CellsConglomerateContainer.h">
+      <Filter>SoundScene\PHSMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainSoundDesc.h">
+      <Filter>SoundScene\TerrainSound</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainSounds.h">
+      <Filter>SoundScene\TerrainSound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSceneConsts.h">
+      <Filter>SoundScene\Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="MapSounds.h">
+      <Filter>SoundScene\MapSounds</Filter>
+    </ClInclude>
+    <ClInclude Include="IntPair.h">
+      <Filter>SoundScene\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSceneUtills.h">
+      <Filter>SoundScene\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicSystem.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SFX.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundScene.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMusicSystem.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBSound.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBSoundDesc.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="include_ComplexSoundDesc.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicSystem.hpp">
+      <Filter>Music</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayList.h">
+      <Filter>Music\PlayList</Filter>
+    </ClInclude>
+    <ClInclude Include="Fade.h">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayElement.h">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayTime.h">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Track.h">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SoundSceneInternal.cpp">
+      <Filter>SoundScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSceneSerialize.cpp">
+      <Filter>SoundScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEngine.cpp">
+      <Filter>SoundScene\SFX\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>SoundScene\SFX\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound2D.cpp">
+      <Filter>SoundScene\SFX\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSample.cpp">
+      <Filter>SoundScene\SFX\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="SubstSound.cpp">
+      <Filter>SoundScene\Sounds\SubstSound</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>SoundScene\Sounds\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSceneUtills.cpp">
+      <Filter>SoundScene\Sounds\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundCell.cpp">
+      <Filter>SoundScene\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="CellsConglomerateContainer.cpp">
+      <Filter>SoundScene\PHSMap</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainSounds.cpp">
+      <Filter>SoundScene\TerrainSound</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSceneConsts.cpp">
+      <Filter>SoundScene\Consts</Filter>
+    </ClCompile>
+    <ClCompile Include="MapSounds.cpp">
+      <Filter>SoundScene\MapSounds</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMusicSystem.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBSound.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBSoundDesc.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicSystem.cpp">
+      <Filter>Music</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayList.cpp">
+      <Filter>Music\PlayList</Filter>
+    </ClCompile>
+    <ClCompile Include="Fade.cpp">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause.cpp">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayTime.cpp">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Track.cpp">
+      <Filter>Music\PlayList\Elements</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbmusicsystem.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbsound.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="dbsounddesc.cll">
+      <Filter>DB</Filter>
+    </None>
+    <None Include="MemoryMap.htm">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+</Project>

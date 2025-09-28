@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="3D Lib">
+      <UniqueIdentifier>{ea5bd8ab-dc6d-4e68-a40f-a856157164b9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Bound.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpFader.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GGeometry.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GGeometryUtil.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLMGeometry.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GMemBuilder.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GMemFormat.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MemObject.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyUtils.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="RectPacker.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Ring.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>3D Lib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GGeometry.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GGeometryUtil.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLMGeometry.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GMemBuilder.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GMemFormat.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MemObject.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyUtils.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="RectPacker.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>3D Lib</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

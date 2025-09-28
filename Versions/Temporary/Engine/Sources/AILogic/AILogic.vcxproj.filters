@@ -1,0 +1,1618 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{81a7f920-6e94-4ea3-a3c2-55aeced7e886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{c8347bc9-38c3-4d62-b66c-5f47de4a3aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic">
+      <UniqueIdentifier>{926c3428-d0ad-4da4-b38a-f582766518e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\WarFog">
+      <UniqueIdentifier>{178b4a1c-386c-4f8b-abf9-603ea2acb500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding">
+      <UniqueIdentifier>{3b5154e4-b8df-453d-b427-bddd7e97a30e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Collisions">
+      <UniqueIdentifier>{73f628e4-7b54-407d-a038-d91e753ef82c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths">
+      <UniqueIdentifier>{586a36cd-1333-4182-9e78-873b47823587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths\PlanePath">
+      <UniqueIdentifier>{fff54c0a-13d1-44bf-b07e-41b31d6d8587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths\ArtilleryPaths">
+      <UniqueIdentifier>{55fd04b1-be17-4431-8921-bb53147fff18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths\ParatrooperPath">
+      <UniqueIdentifier>{a89a22c5-c01f-4c3a-8e7d-ae512b47221e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths\PresizePath">
+      <UniqueIdentifier>{5ed5b827-ba42-4146-b458-8a9ce14fdad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\Paths\TankPitPath">
+      <UniqueIdentifier>{95f2c263-6a00-4dbc-aa2b-160ef4fdd959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PathFinding\PathFinders">
+      <UniqueIdentifier>{cd274a38-f72b-4e18-940e-b0b80e9513b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Commands">
+      <UniqueIdentifier>{befbcd86-b395-4f0e-931f-f9c34a10cd16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Guns">
+      <UniqueIdentifier>{40354e1c-e3b2-4e79-8ed7-07103b304956}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\GroupLogic">
+      <UniqueIdentifier>{dfd3a22f-3630-4217-afa9-8a53339b8062}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units">
+      <UniqueIdentifier>{04b1ebc6-96db-4e85-8c60-1496c4e7dfb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units\Behaviour">
+      <UniqueIdentifier>{38fcaec9-7c17-4b41-9538-78fb31c522a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units\UnitTypes">
+      <UniqueIdentifier>{b51a0c56-8f35-4bdd-a058-c1b79c42fa12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units\AnimUnit">
+      <UniqueIdentifier>{1cc4c5ac-1d5c-473f-b601-513da503c471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units\UnitsContainer">
+      <UniqueIdentifier>{8fad7a53-2e6a-4542-ba08-d63ff5191901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Units\AviationUnit">
+      <UniqueIdentifier>{5b5ffc02-c153-4c02-a1ae-ad9bbef04075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\AILogicInternal">
+      <UniqueIdentifier>{e6c41f58-37d8-4ed0-b06e-27ca1e126131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\AITools">
+      <UniqueIdentifier>{cdaf2243-7444-4ce6-865e-2573d49267ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Scripts">
+      <UniqueIdentifier>{f1c25d81-2071-45a2-8ddc-366d811a053f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\LinkObjects">
+      <UniqueIdentifier>{4b04ef84-0a05-43e6-a89c-d3dd7841c324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Formation">
+      <UniqueIdentifier>{2ed02563-9c78-43a7-82ad-5038f8e67964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Diplomacy">
+      <UniqueIdentifier>{6023338b-4a47-405d-97c9-81a28eb02beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates">
+      <UniqueIdentifier>{ce97ea4c-dd05-41ec-94c1-920b29e08f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\SoldierStates">
+      <UniqueIdentifier>{0fa0ed2e-b3d1-432a-bf2c-0768f1bf523b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\PlaneStates">
+      <UniqueIdentifier>{2695bba5-a5b3-4d91-8ed0-1b1242db53b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\TankStates">
+      <UniqueIdentifier>{dcbd2681-be3c-4d34-b9b9-22c700aed6b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\TransportStates">
+      <UniqueIdentifier>{c1461055-2c96-447c-9e32-f25764e93518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\CommonStates">
+      <UniqueIdentifier>{4e20448e-cee3-4319-bc52-6ba7d438d1af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\FormationStates">
+      <UniqueIdentifier>{3d05a35f-c219-4a43-a159-32528ad19f16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\ArtilleryStates">
+      <UniqueIdentifier>{3ed4ae9d-9c6a-4848-baf6-14b43c72c091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\UnitsStates\PredictedAntiAviationFire">
+      <UniqueIdentifier>{ba4e20b0-66a6-4785-96d7-19853e259e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\ObjectsCreation">
+      <UniqueIdentifier>{fd7b5e4e-ebaa-4c27-b7d2-71545d05e477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\ObjectsCreation\LongObjects">
+      <UniqueIdentifier>{18aa549d-1f6c-43e9-83a3-438e74e18617}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\AntiArtillery">
+      <UniqueIdentifier>{8da2e3bf-0e38-4483-bc32-2358b6bede30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Acknowledgments">
+      <UniqueIdentifier>{1e12cc82-1c52-45ba-b93a-1cf9d0dde6aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Consts">
+      <UniqueIdentifier>{0c4a0520-f6a4-4335-828c-f6a40586c85b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\ShootEstimators">
+      <UniqueIdentifier>{9614e61d-9155-4fd6-8804-614c7e5da492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\CombatEstimator">
+      <UniqueIdentifier>{f200ce14-8b7c-4c19-affa-a828592bf1d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Statistics">
+      <UniqueIdentifier>{471d78bb-3694-4ceb-80b8-0fe121507538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\General">
+      <UniqueIdentifier>{61abe63a-5cb9-4095-a200-ed6caa06d37f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Obstacle">
+      <UniqueIdentifier>{8044eff9-2d38-4af8-99f3-eb32c4374701}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\StaticObjects">
+      <UniqueIdentifier>{0f5ea974-76aa-43f2-97ce-6bd51d1885f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\StaticObjects\StaticObjectsContainer">
+      <UniqueIdentifier>{168c16bf-7f90-4e6a-831c-3b10da3df32e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\StaticObjects\StaticObjectTypes">
+      <UniqueIdentifier>{72e384bd-6dd2-4d88-8d9b-9d1581faaa93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Weather">
+      <UniqueIdentifier>{d7904725-73e8-4fcc-85f7-d583dc829e29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Graveyard">
+      <UniqueIdentifier>{44947604-1c30-4bbf-8a75-1ac305ccbc05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Updater">
+      <UniqueIdentifier>{513c659f-4405-46f2-b912-c28aceb7ecc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers">
+      <UniqueIdentifier>{f72c12a5-2bc2-4bb1-b35f-364e859c02df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\Unitls">
+      <UniqueIdentifier>{b1ab292c-ce2e-4d7d-94c8-66e766c1f89b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\Manuver">
+      <UniqueIdentifier>{5690147b-da8e-47dc-81ce-2ff3ee084a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\DBData">
+      <UniqueIdentifier>{4b8e2c56-4e46-46ef-8bc4-1945946d59e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions">
+      <UniqueIdentifier>{b4c35b9e-8a98-49d9-978e-ba27f36eca9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex">
+      <UniqueIdentifier>{613558af-4b9e-4c9f-98b2-fa25d395ef6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\Arc3D">
+      <UniqueIdentifier>{f2de9d00-a6a4-403c-b738-455d04b4d0d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\Arc">
+      <UniqueIdentifier>{d479e71a-7a18-4999-adbb-cda9a1b7dc9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\ArcLine3D">
+      <UniqueIdentifier>{65fd025e-da54-4cf1-8864-4709351201ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc">
+      <UniqueIdentifier>{3e6d6a8a-69f2-4b9a-acd9-d18d4ec501c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc3D">
+      <UniqueIdentifier>{21fba496-23fe-4f6f-80c7-a8b715e8ced8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Complex\Composite">
+      <UniqueIdentifier>{b718bbcf-500e-4f6a-9de9-1ec7996ac267}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Simple">
+      <UniqueIdentifier>{4c80e17c-5fa0-44f0-9874-ed78595f7ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\PlaneManuvers\PathFractions\Simple\Line">
+      <UniqueIdentifier>{8c09c19d-9f48-4cda-8839-fa84c7ea8649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Resource">
+      <UniqueIdentifier>{04e90f08-39b5-4bcf-b14b-9dd23e33aa29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\AILogicCommands">
+      <UniqueIdentifier>{05e97b97-6572-47e5-9895-01ef5852ae4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\BonusSystem">
+      <UniqueIdentifier>{b60f1619-e5b9-485d-9519-259f094472a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Trains">
+      <UniqueIdentifier>{8f8e7126-9e71-4817-9556-ed46b02ad94b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\BalanceTest">
+      <UniqueIdentifier>{5c69d244-4078-4e5d-97b6-ec148eef0266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILogic\Reinforcement">
+      <UniqueIdentifier>{68df1400-69a0-4d75-96e8-6250ec05100d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors">
+      <UniqueIdentifier>{0bef434d-9fea-44ce-bcfd-635aca92245e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\Container">
+      <UniqueIdentifier>{d5e1dc2e-b945-41ea-860f-72258f7da994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\Events">
+      <UniqueIdentifier>{7eadae5e-fd18-412b-879a-8b9e2daddcb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors">
+      <UniqueIdentifier>{93e7a4d6-38dc-4c6f-aa39-8268d7c72c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\StaticObjects">
+      <UniqueIdentifier>{873c74b8-c51d-49e9-a7ef-9afe16808a5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\StaticObjects\TransparencyRestore">
+      <UniqueIdentifier>{6ff7d761-9a1a-4f1d-9f98-065febda06e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units">
+      <UniqueIdentifier>{0cb4ac75-fea2-4cba-83bd-f42360769762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Transport">
+      <UniqueIdentifier>{0cf5c201-3697-42ec-a62d-c98f9b2aa707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Sniper">
+      <UniqueIdentifier>{84871933-e9c5-4ad4-b5ba-83bba329ebd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\ThrowGrenade">
+      <UniqueIdentifier>{ed076e0d-10bb-4f92-9035-22bb8cde0a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\PlaceCharge">
+      <UniqueIdentifier>{180cea5c-f2e4-4103-af3a-0004a8c1e123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Soldier">
+      <UniqueIdentifier>{45d947e8-e609-4fc6-8761-cd1fc0263a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Ambush">
+      <UniqueIdentifier>{68d7f809-2ded-4530-bf93-8837b6ff55a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Caution">
+      <UniqueIdentifier>{98d57f7f-d4b7-4aba-a66b-fde0f6a55132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\AdrenalineRush">
+      <UniqueIdentifier>{896425d7-0ed6-4037-8c3c-6480b732875c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\CounterFire">
+      <UniqueIdentifier>{e064d6cd-9234-4664-9a82-d13464f6470b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\ExecutorExactShot">
+      <UniqueIdentifier>{c78c6f87-935a-47a0-8710-0915308c1308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Formation">
+      <UniqueIdentifier>{243bf28d-079c-43aa-9502-70509beaa10c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\GroupMove">
+      <UniqueIdentifier>{33396bf5-bb22-4223-a9f4-da4a15501844}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\NewCamo">
+      <UniqueIdentifier>{ec47cd86-fdc2-4bc7-ac4a-0facbbe1366c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\SmokeShots">
+      <UniqueIdentifier>{3f2ca25d-06b2-418b-a5f6-bd1a640ab732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\LinkedGrenades">
+      <UniqueIdentifier>{e9873c2f-5338-4cdd-b686-bd3f1cc8f61a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\TrackTargetting">
+      <UniqueIdentifier>{5c4cf4e6-f219-48d5-8688-4e2df570cf28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\Aviation">
+      <UniqueIdentifier>{72b7bdb5-4621-4309-bb18-2eb14038d160}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\Units\SpyMode">
+      <UniqueIdentifier>{3e6445c4-a0be-46ac-aa3a-138dbb0cb4f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\TimerCharge">
+      <UniqueIdentifier>{3111bac4-70f1-4902-b8ca-f49afb791dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\AttackGroup">
+      <UniqueIdentifier>{1f667c91-ab90-46c5-8309-3c11cd13fcb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executors\BasicExecutors\BurningFuel">
+      <UniqueIdentifier>{c2c1177d-3a4a-4011-994f-3ed53bbfb6a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{0730cdbc-0164-4e55-8d2f-c38f1f86a6f2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AIClassesID.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="AIDebugInfo.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="AILock.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="AILogicCommand.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="B2AI.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateAI.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="DifficultyLevel.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobeScriptHandler.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenarioTracker.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMap.h">
+      <Filter>AILogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalWarFog.h">
+      <Filter>AILogic\WarFog</Filter>
+    </ClInclude>
+    <ClInclude Include="Spiral.hpp">
+      <Filter>AILogic\WarFog</Filter>
+    </ClInclude>
+    <ClInclude Include="Tracer.hpp">
+      <Filter>AILogic\WarFog</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateUnitContainer.h">
+      <Filter>AILogic\WarFog</Filter>
+    </ClInclude>
+    <ClInclude Include="Visibility.hpp">
+      <Filter>AILogic\WarFog</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionInternal.h">
+      <Filter>AILogic\PathFinding\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanePath.h">
+      <Filter>AILogic\PathFinding\Paths\PlanePath</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtilleryPaths.h">
+      <Filter>AILogic\PathFinding\Paths\ArtilleryPaths</Filter>
+    </ClInclude>
+    <ClInclude Include="ParatrooperPath.h">
+      <Filter>AILogic\PathFinding\Paths\ParatrooperPath</Filter>
+    </ClInclude>
+    <ClInclude Include="PresizePath.h">
+      <Filter>AILogic\PathFinding\Paths\PresizePath</Filter>
+    </ClInclude>
+    <ClInclude Include="TankPitPath.h">
+      <Filter>AILogic\PathFinding\Paths\TankPitPath</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinder.h">
+      <Filter>AILogic\PathFinding\PathFinders</Filter>
+    </ClInclude>
+    <ClInclude Include="PointChecking.h">
+      <Filter>AILogic\PathFinding\PathFinders</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands.h">
+      <Filter>AILogic\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Guns.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="GunsInternal.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="HitsStore.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="MountedGun.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="Turret.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitGuns.h">
+      <Filter>AILogic\Guns</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandRegistratorForScript.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GridCreation.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupLogic.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupMover.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupMoverNew.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupUnit.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="SegmentedObjects.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitsSegments.h">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="AIUnit.h">
+      <Filter>AILogic\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="AIUnitInfoForGeneral.h">
+      <Filter>AILogic\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonUnit.h">
+      <Filter>AILogic\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueUnit.h">
+      <Filter>AILogic\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanLimiter.h">
+      <Filter>AILogic\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.h">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeFireManager.h">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="RndRunUpToEnemy.h">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="Artillery.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Aviation.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Soldier.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="SupportAAGun.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Technics.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTorpedo.h">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimUnit.h">
+      <Filter>AILogic\Units\AnimUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimUnitMech.h">
+      <Filter>AILogic\Units\AnimUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimUnitSoldier.h">
+      <Filter>AILogic\Units\AnimUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="Units.h">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitsIterators.h">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitsIterators2.h">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="AviationUnit.h">
+      <Filter>AILogic\Units\AviationUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanesFormation.h">
+      <Filter>AILogic\Units\AviationUnit</Filter>
+    </ClInclude>
+    <ClInclude Include="AILogicInternal.h">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClInclude>
+    <ClInclude Include="AITimer.h">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClInclude>
+    <ClInclude Include="Cheats.h">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalObjects.h">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMembers.h">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClInclude>
+    <ClInclude Include="AICellsTiles.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeometry.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="AITiles.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="CLockWithUnlockPossibilities.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="ListsSet.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryConsumeCheck.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="MPLog.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="Probability.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="Randomize.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveDBID.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="TempBuffer.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeCounter.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="ValidObjectCheck.h">
+      <Filter>AILogic\AITools</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts.h">
+      <Filter>AILogic\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkObject.h">
+      <Filter>AILogic\LinkObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Formation.h">
+      <Filter>AILogic\Formation</Filter>
+    </ClInclude>
+    <ClInclude Include="Diplomacy.h">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBonuses.h">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerResources.h">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinforcementPoints.h">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleReinforcement.h">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClInclude>
+    <ClInclude Include="StatesFactory.h">
+      <Filter>AILogic\UnitsStates</Filter>
+    </ClInclude>
+    <ClInclude Include="TechnicsStates.h">
+      <Filter>AILogic\UnitsStates</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitStates.h">
+      <Filter>AILogic\UnitsStates</Filter>
+    </ClInclude>
+    <ClInclude Include="InBuildingStates.h">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClInclude>
+    <ClInclude Include="InEntrenchmentStates.h">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClInclude>
+    <ClInclude Include="InTransportStates.h">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClInclude>
+    <ClInclude Include="SoldierStates.h">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneStates.h">
+      <Filter>AILogic\UnitsStates\PlaneStates</Filter>
+    </ClInclude>
+    <ClInclude Include="TankStates.h">
+      <Filter>AILogic\UnitsStates\TankStates</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportStates.h">
+      <Filter>AILogic\UnitsStates\TransportStates</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStates.h">
+      <Filter>AILogic\UnitsStates\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializeOwner.h">
+      <Filter>AILogic\UnitsStates\CommonStates</Filter>
+    </ClInclude>
+    <ClInclude Include="FormationStates.h">
+      <Filter>AILogic\UnitsStates\FormationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PredictedAntiAviationFire.h">
+      <Filter>AILogic\UnitsStates\FormationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtilleryStates.h">
+      <Filter>AILogic\UnitsStates\ArtilleryStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtRocketStates.h">
+      <Filter>AILogic\UnitsStates\ArtilleryStates</Filter>
+    </ClInclude>
+    <ClInclude Include="UnderConstructionObject.h">
+      <Filter>AILogic\ObjectsCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitCreation.h">
+      <Filter>AILogic\ObjectsCreation</Filter>
+    </ClInclude>
+    <ClInclude Include="BridgeCreation.h">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ComplexObstacleCreation.h">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="EntrenchmentCreation.h">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="FenceCreation.h">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="LongObjectCreation.h">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiArtillery.h">
+      <Filter>AILogic\AntiArtillery</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiArtilleryManager.h">
+      <Filter>AILogic\AntiArtillery</Filter>
+    </ClInclude>
+    <ClInclude Include="AckManager.h">
+      <Filter>AILogic\Acknowledgments</Filter>
+    </ClInclude>
+    <ClInclude Include="aiconsts.h">
+      <Filter>AILogic\Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="AIInternalConsts.h">
+      <Filter>AILogic\Consts</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageToEnemyUpdater.h">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootEstimator.h">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootEstimatorInternal.h">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatEstimator.h">
+      <Filter>AILogic\CombatEstimator</Filter>
+    </ClInclude>
+    <ClInclude Include="Statistics.h">
+      <Filter>AILogic\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="Commander.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyRememberer.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="General.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralAirForce.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralArtillery.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralConsts.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralHelper.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralIntendant.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralInternal.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralInternalInterfaces.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralTasks.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Resistance.h">
+      <Filter>AILogic\General</Filter>
+    </ClInclude>
+    <ClInclude Include="Obstacle.h">
+      <Filter>AILogic\Obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="ObstacleInternal.h">
+      <Filter>AILogic\Obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectProfile.h">
+      <Filter>AILogic\StaticObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObjectRotation.h">
+      <Filter>AILogic\StaticObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObjects.h">
+      <Filter>AILogic\StaticObjects\StaticObjectsContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObjectsIters.h">
+      <Filter>AILogic\StaticObjects\StaticObjectsContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="ArtilleryBulletStorage.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridge.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Entrenchment.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="FakeObjects.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Fence.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Mine.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatingFireplacesObject.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeScreen.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObject.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObjectSlotInfo.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="StormableObject.h">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Weather.h">
+      <Filter>AILogic\Weather</Filter>
+    </ClInclude>
+    <ClInclude Include="AllowFakeObjToCrushExecutor.h">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClInclude>
+    <ClInclude Include="Graveyard.h">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClInclude>
+    <ClInclude Include="KillCorpseExecutor.h">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClInclude>
+    <ClInclude Include="AAFeedBacks.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="FeedbackSystem.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobeUpdater.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUpdater.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusUpdatesHelper.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdatableObject.h">
+      <Filter>AILogic\Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="IPlane.h">
+      <Filter>AILogic\PlaneManuvers</Filter>
+    </ClInclude>
+    <ClInclude Include="ManuverBuilder.h">
+      <Filter>AILogic\PlaneManuvers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanePreferences.h">
+      <Filter>AILogic\PlaneManuvers</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanePathMath.h">
+      <Filter>AILogic\PlaneManuvers\Unitls</Filter>
+    </ClInclude>
+    <ClInclude Include="Manuver.h">
+      <Filter>AILogic\PlaneManuvers\Manuver</Filter>
+    </ClInclude>
+    <ClInclude Include="ManuverInternal.h">
+      <Filter>AILogic\PlaneManuvers\Manuver</Filter>
+    </ClInclude>
+    <ClInclude Include="ManuverStateDesc.h">
+      <Filter>AILogic\PlaneManuvers\DBData</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanePathFraction.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionComplex.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionArc3D.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Arc3D</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionArc.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Arc</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionArcLine3D.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLine3D</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionArcLineArc.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionArcLineArc3D.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc3D</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionComposite.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Composite</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFractionLine.h">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Simple\Line</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>AILogic\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="AILogicCommands.h">
+      <Filter>AILogic\AILogicCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyBuildingBonusSystem.h">
+      <Filter>AILogic\BonusSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerReinforcement.h">
+      <Filter>AILogic\BonusSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RailRoads.h">
+      <Filter>AILogic\Trains</Filter>
+    </ClInclude>
+    <ClInclude Include="Trains.h">
+      <Filter>AILogic\Trains</Filter>
+    </ClInclude>
+    <ClInclude Include="BalanceTest.h">
+      <Filter>AILogic\BalanceTest</Filter>
+    </ClInclude>
+    <ClInclude Include="Reinforcement.h">
+      <Filter>AILogic\Reinforcement</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorTiming.h">
+      <Filter>Executors</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorContainer.h">
+      <Filter>Executors\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorAttackGroupEvent.h">
+      <Filter>Executors\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSimpleEvent.h">
+      <Filter>Executors\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Executor.h">
+      <Filter>Executors\BasicExecutors</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorStaticObjectSegment.h">
+      <Filter>Executors\BasicExecutors\StaticObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorRestoreTransparencyQueue.h">
+      <Filter>Executors\BasicExecutors\StaticObjects\TransparencyRestore</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorUnitBase.h">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorUnitBonus.h">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorUnitCombatBonus.h">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSeaReinf.h">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorTransportHealInfantry.h">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorWatchForEnemyUnloadPassangers.h">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSniperCamouflage.h">
+      <Filter>Executors\BasicExecutors\Units\Sniper</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorThrowGrenade.h">
+      <Filter>Executors\BasicExecutors\Units\ThrowGrenade</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorPlaceCharge.h">
+      <Filter>Executors\BasicExecutors\Units\PlaceCharge</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSoldierEntrench.h">
+      <Filter>Executors\BasicExecutors\Units\Soldier</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorAmbush.h">
+      <Filter>Executors\BasicExecutors\Units\Ambush</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorCaution.h">
+      <Filter>Executors\BasicExecutors\Units\Caution</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorAdrenalineRush.h">
+      <Filter>Executors\BasicExecutors\Units\AdrenalineRush</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorCounterFire.h">
+      <Filter>Executors\BasicExecutors\Units\CounterFire</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorExactShot.h">
+      <Filter>Executors\BasicExecutors\Units\ExecutorExactShot</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorFormationFirstAid.h">
+      <Filter>Executors\BasicExecutors\Units\Formation</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupMoveExecutor.h">
+      <Filter>Executors\BasicExecutors\Units\GroupMove</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorCamouflage.h">
+      <Filter>Executors\BasicExecutors\Units\NewCamo</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSmokeShots.h">
+      <Filter>Executors\BasicExecutors\Units\SmokeShots</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorLinkedGrenades.h">
+      <Filter>Executors\BasicExecutors\Units\LinkedGrenades</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorTrackTargetting.h">
+      <Filter>Executors\BasicExecutors\Units\TrackTargetting</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorPlaneDropBombs.h">
+      <Filter>Executors\BasicExecutors\Units\Aviation</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorSpyMode.h">
+      <Filter>Executors\BasicExecutors\Units\SpyMode</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerChargeExecutor.h">
+      <Filter>Executors\BasicExecutors\TimerCharge</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorAttackGroup.h">
+      <Filter>Executors\BasicExecutors\AttackGroup</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutorBurningFuel.h">
+      <Filter>Executors\BasicExecutors\BurningFuel</Filter>
+    </ClInclude>
+    <ClInclude Include="DBAIConsts.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="Crap.h" />
+    <ClInclude Include="TerraAIObserver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AIDebugInfo.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="AILogicCommand.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="B2AI.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateAI.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="DifficultyLevel.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobeScriptHandler.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="AIMap.cpp">
+      <Filter>AILogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalWarFog.cpp">
+      <Filter>AILogic\WarFog</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateUnitContainer.cpp">
+      <Filter>AILogic\WarFog</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionInternal.cpp">
+      <Filter>AILogic\PathFinding\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="PathInternalSerialize.cpp">
+      <Filter>AILogic\PathFinding\Paths</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanePath.cpp">
+      <Filter>AILogic\PathFinding\Paths\PlanePath</Filter>
+    </ClCompile>
+    <ClCompile Include="ArtilleryPaths.cpp">
+      <Filter>AILogic\PathFinding\Paths\ArtilleryPaths</Filter>
+    </ClCompile>
+    <ClCompile Include="ParatrooperPath.cpp">
+      <Filter>AILogic\PathFinding\Paths\ParatrooperPath</Filter>
+    </ClCompile>
+    <ClCompile Include="PresizePath.cpp">
+      <Filter>AILogic\PathFinding\Paths\PresizePath</Filter>
+    </ClCompile>
+    <ClCompile Include="TankPitPath.cpp">
+      <Filter>AILogic\PathFinding\Paths\TankPitPath</Filter>
+    </ClCompile>
+    <ClCompile Include="PathSearchFuncs.cpp">
+      <Filter>AILogic\PathFinding\PathFinders</Filter>
+    </ClCompile>
+    <ClCompile Include="PointChecking.cpp">
+      <Filter>AILogic\PathFinding\PathFinders</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands.cpp">
+      <Filter>AILogic\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Guns.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="GunsSerialize.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="HitsStore.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="MountedGun.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="MountedGunsSerialize.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="ShellSerialize.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="Turret.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="TurretSerialize.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitGuns.cpp">
+      <Filter>AILogic\Guns</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandRegistratorForScript.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GridCreation.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupLogic.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupLogicSerialize.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupMover.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupMoverNew.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitsSegments.cpp">
+      <Filter>AILogic\GroupLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="AIUnit.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="AIUnitInfoForGeneral.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="AIUnitSerialize.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonUnit.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueUnit.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanLimiter.cpp">
+      <Filter>AILogic\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourSerialize.cpp">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeFireManager.cpp">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="RndRunUpToEnemy.cpp">
+      <Filter>AILogic\Units\Behaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="Artillery.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Aviation.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Soldier.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportAAGun.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Technics.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTorpedo.cpp">
+      <Filter>AILogic\Units\UnitTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimUnitMech.cpp">
+      <Filter>AILogic\Units\AnimUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimUnitSoldier.cpp">
+      <Filter>AILogic\Units\AnimUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="Units.cpp">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitsIterators.cpp">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitsSerialize.cpp">
+      <Filter>AILogic\Units\UnitsContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanesFormation.cpp">
+      <Filter>AILogic\Units\AviationUnit</Filter>
+    </ClCompile>
+    <ClCompile Include="AILogicInternal.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="AILogicSerialize.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="AITimer.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="Cheats.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalObjects.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMembers.cpp">
+      <Filter>AILogic\AILogicInternal</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeometry.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeometryDebug.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="CLockWithUnlockPossibilities.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="ListsSet.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryConsumeCheck.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="Probability.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="TempBuffer.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeCounter.cpp">
+      <Filter>AILogic\AITools</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts.cpp">
+      <Filter>AILogic\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptsSerialize.cpp">
+      <Filter>AILogic\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkObject.cpp">
+      <Filter>AILogic\LinkObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Formation.cpp">
+      <Filter>AILogic\Formation</Filter>
+    </ClCompile>
+    <ClCompile Include="Diplomacy.cpp">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBonuses.cpp">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerResources.cpp">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinforcementPoints.cpp">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleReinforcement.cpp">
+      <Filter>AILogic\Diplomacy</Filter>
+    </ClCompile>
+    <ClCompile Include="TechnicStates.cpp">
+      <Filter>AILogic\UnitsStates</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitStates.cpp">
+      <Filter>AILogic\UnitsStates</Filter>
+    </ClCompile>
+    <ClCompile Include="InBuildingStates.cpp">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClCompile>
+    <ClCompile Include="InEntrenchmentStates.cpp">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClCompile>
+    <ClCompile Include="InTransportStates.cpp">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClCompile>
+    <ClCompile Include="SoldierStates.cpp">
+      <Filter>AILogic\UnitsStates\SoldierStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneStates.cpp">
+      <Filter>AILogic\UnitsStates\PlaneStates</Filter>
+    </ClCompile>
+    <ClCompile Include="TankStates.cpp">
+      <Filter>AILogic\UnitsStates\TankStates</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportEngineerStates.cpp">
+      <Filter>AILogic\UnitsStates\TransportStates</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportStates.cpp">
+      <Filter>AILogic\UnitsStates\TransportStates</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonStates.cpp">
+      <Filter>AILogic\UnitsStates\CommonStates</Filter>
+    </ClCompile>
+    <ClCompile Include="FormationEngineerStates.cpp">
+      <Filter>AILogic\UnitsStates\FormationStates</Filter>
+    </ClCompile>
+    <ClCompile Include="FormationStates.cpp">
+      <Filter>AILogic\UnitsStates\FormationStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PredictedAntiAviationFire.cpp">
+      <Filter>AILogic\UnitsStates\FormationStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ArtilleryStates.cpp">
+      <Filter>AILogic\UnitsStates\ArtilleryStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ArtRocketStates.cpp">
+      <Filter>AILogic\UnitsStates\ArtilleryStates</Filter>
+    </ClCompile>
+    <ClCompile Include="UnderConstructionObject.cpp">
+      <Filter>AILogic\ObjectsCreation</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitCreation.cpp">
+      <Filter>AILogic\ObjectsCreation</Filter>
+    </ClCompile>
+    <ClCompile Include="BridgeCreation.cpp">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ComplexObstacleCreation.cpp">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="EntrenchmentCreation.cpp">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="FenceCreation.cpp">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="LongObjectCreation.cpp">
+      <Filter>AILogic\ObjectsCreation\LongObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="AntiArtillery.cpp">
+      <Filter>AILogic\AntiArtillery</Filter>
+    </ClCompile>
+    <ClCompile Include="AntiArtilleryManager.cpp">
+      <Filter>AILogic\AntiArtillery</Filter>
+    </ClCompile>
+    <ClCompile Include="AntiArtillerySerialize.cpp">
+      <Filter>AILogic\AntiArtillery</Filter>
+    </ClCompile>
+    <ClCompile Include="AckManager.cpp">
+      <Filter>AILogic\Acknowledgments</Filter>
+    </ClCompile>
+    <ClCompile Include="AIConsts.cpp">
+      <Filter>AILogic\Consts</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageToEnemyUpdater.cpp">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootEstimatorInternal.cpp">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootEstimatorSerialize.cpp">
+      <Filter>AILogic\ShootEstimators</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatEstimator.cpp">
+      <Filter>AILogic\CombatEstimator</Filter>
+    </ClCompile>
+    <ClCompile Include="Statistics.cpp">
+      <Filter>AILogic\Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Commander.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyRememberer.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralAirForce.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralArtillery.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralConsts.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralHelper.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralIntendant.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralInternal.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralRearManager.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralSerialize.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneralTasks.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="Resistance.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="SupremeBeing.cpp">
+      <Filter>AILogic\General</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstacleInternal.cpp">
+      <Filter>AILogic\Obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectProfile.cpp">
+      <Filter>AILogic\StaticObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObjectsSerialize.cpp">
+      <Filter>AILogic\StaticObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObjects.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectsContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObjectsIters.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectsContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="ArtilleryBulletStorage.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridge.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Entrenchment.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="FakeObjects.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Fence.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Mine.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="RotatingFireplacesObject.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeScreen.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObject.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="StormableObject.cpp">
+      <Filter>AILogic\StaticObjects\StaticObjectTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Weather.cpp">
+      <Filter>AILogic\Weather</Filter>
+    </ClCompile>
+    <ClCompile Include="AllowFakeObjToCrushExecutor.cpp">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClCompile>
+    <ClCompile Include="Graveyard.cpp">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClCompile>
+    <ClCompile Include="KillCorpseExecutor.cpp">
+      <Filter>AILogic\Graveyard</Filter>
+    </ClCompile>
+    <ClCompile Include="AAFeedBacks.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="FeedbackSystem.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobeUpdater.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUpdater.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUpdaterTransformers.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusUpdatesHelper.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdatableObject.cpp">
+      <Filter>AILogic\Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="ManuverBuilder.cpp">
+      <Filter>AILogic\PlaneManuvers</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanePreferences.cpp">
+      <Filter>AILogic\PlaneManuvers</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanePathMath.cpp">
+      <Filter>AILogic\PlaneManuvers\Unitls</Filter>
+    </ClCompile>
+    <ClCompile Include="ManuverInternal.cpp">
+      <Filter>AILogic\PlaneManuvers\Manuver</Filter>
+    </ClCompile>
+    <ClCompile Include="ManuverStateDesc.cpp">
+      <Filter>AILogic\PlaneManuvers\DBData</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionComplex.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionArc3D.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Arc3D</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionArc.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Arc</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionArcLine3D.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLine3D</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionArcLineArc.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionArcLineArc3D.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\ArcLineArc3D</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionComposite.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Complex\Composite</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFractionLine.cpp">
+      <Filter>AILogic\PlaneManuvers\PathFractions\Simple\Line</Filter>
+    </ClCompile>
+    <ClCompile Include="AILogicCommands.cpp">
+      <Filter>AILogic\AILogicCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyBuildingBonusSystem.cpp">
+      <Filter>AILogic\BonusSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerReinforcement.cpp">
+      <Filter>AILogic\BonusSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="RailRoads.cpp">
+      <Filter>AILogic\Trains</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainCar.cpp">
+      <Filter>AILogic\Trains</Filter>
+    </ClCompile>
+    <ClCompile Include="Trains.cpp">
+      <Filter>AILogic\Trains</Filter>
+    </ClCompile>
+    <ClCompile Include="BalanceTest.cpp">
+      <Filter>AILogic\BalanceTest</Filter>
+    </ClCompile>
+    <ClCompile Include="Reinforcement.cpp">
+      <Filter>AILogic\Reinforcement</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorTiming.cpp">
+      <Filter>Executors</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorContainer.cpp">
+      <Filter>Executors\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorAttackGroupEvent.cpp">
+      <Filter>Executors\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSimpleEvent.cpp">
+      <Filter>Executors\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Executor.cpp">
+      <Filter>Executors\BasicExecutors</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorStaticObjectSegment.cpp">
+      <Filter>Executors\BasicExecutors\StaticObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorRestoreTransparencyQueue.cpp">
+      <Filter>Executors\BasicExecutors\StaticObjects\TransparencyRestore</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorUnitBase.cpp">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorUnitBonus.cpp">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorUnitCombatBonus.cpp">
+      <Filter>Executors\BasicExecutors\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSeaReinf.cpp">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorTransportHealInfantry.cpp">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorWatchForEnemyUnloadPassangers.cpp">
+      <Filter>Executors\BasicExecutors\Units\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSniperCamouflage.cpp">
+      <Filter>Executors\BasicExecutors\Units\Sniper</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorThrowGrenade.cpp">
+      <Filter>Executors\BasicExecutors\Units\ThrowGrenade</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorPlaceCharge.cpp">
+      <Filter>Executors\BasicExecutors\Units\PlaceCharge</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSoldierEntrench.cpp">
+      <Filter>Executors\BasicExecutors\Units\Soldier</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorAmbush.cpp">
+      <Filter>Executors\BasicExecutors\Units\Ambush</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorCaution.cpp">
+      <Filter>Executors\BasicExecutors\Units\Caution</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorAdrenalineRush.cpp">
+      <Filter>Executors\BasicExecutors\Units\AdrenalineRush</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorCounterFire.cpp">
+      <Filter>Executors\BasicExecutors\Units\CounterFire</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorExactShot.cpp">
+      <Filter>Executors\BasicExecutors\Units\ExecutorExactShot</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorFormationFirstAid.cpp">
+      <Filter>Executors\BasicExecutors\Units\Formation</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupMoveExecutor.cpp">
+      <Filter>Executors\BasicExecutors\Units\GroupMove</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorCamouflage.cpp">
+      <Filter>Executors\BasicExecutors\Units\NewCamo</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSmokeShots.cpp">
+      <Filter>Executors\BasicExecutors\Units\SmokeShots</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorLinkedGrenades.cpp">
+      <Filter>Executors\BasicExecutors\Units\LinkedGrenades</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorTrackTargetting.cpp">
+      <Filter>Executors\BasicExecutors\Units\TrackTargetting</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorPlaneDropBombs.cpp">
+      <Filter>Executors\BasicExecutors\Units\Aviation</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorSpyMode.cpp">
+      <Filter>Executors\BasicExecutors\Units\SpyMode</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerChargeExecutor.cpp">
+      <Filter>Executors\BasicExecutors\TimerCharge</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorAttackGroup.cpp">
+      <Filter>Executors\BasicExecutors\AttackGroup</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutorBurningFuel.cpp">
+      <Filter>Executors\BasicExecutors\BurningFuel</Filter>
+    </ClCompile>
+    <ClCompile Include="DBAIConsts.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="TerraAIObserver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AILogic.rc">
+      <Filter>AILogic\Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbaiconsts.cll">
+      <Filter>DB</Filter>
+    </None>
+  </ItemGroup>
+</Project>

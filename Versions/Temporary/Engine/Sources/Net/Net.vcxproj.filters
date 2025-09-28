@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{dc32584c-f849-4522-a78a-84bc2c7e6638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetDriver">
+      <UniqueIdentifier>{3835936e-6b22-4c20-9aed-d4986a97b7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{a0693b55-faf9-46f5-b39e-ce718e67a476}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="LinksManager.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetA4.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetAcks.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetAddress.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetLogin.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetLowest.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetPeer2Peer.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetServerInfo.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetStream.h">
+      <Filter>NetDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="NetDriver.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="LinksManager.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetA4.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetAcks.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetAddress.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetLogin.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetLowest.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetPeer2Peer.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetServerInfo.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="NetStream.cpp">
+      <Filter>NetDriver</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

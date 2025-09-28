@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{44479f0b-670b-4426-a40f-e0df1655ef16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DebugInfoManager">
+      <UniqueIdentifier>{20b349e9-5c99-437b-9147-7b7645d0a640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StatsSystem">
+      <UniqueIdentifier>{d0e9a3f9-48f6-44b4-bd33-124a98d30ff7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugInfoManager.h">
+      <Filter>DebugInfoManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugInfoManagerInternal.h">
+      <Filter>DebugInfoManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugStatsSystem.h">
+      <Filter>StatsSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugInfoManagerInternal.cpp">
+      <Filter>DebugInfoManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugStatsSystem.cpp">
+      <Filter>StatsSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

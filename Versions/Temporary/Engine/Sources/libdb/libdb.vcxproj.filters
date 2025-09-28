@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{a034bbec-8e48-4c96-ad76-5fd028024fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{e3e5b014-c79a-40d7-8039-9a5776fc772b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{25ef89a1-fdc5-427c-847b-ad9002d2fde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Bind %28Manipulator%29">
+      <UniqueIdentifier>{183355d4-8bff-4a2f-a654-5a72f9705fbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\MetaInfo">
+      <UniqueIdentifier>{364187bf-6ee9-436d-922e-498203d91add}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\MetaInfo\StructMetaInfo">
+      <UniqueIdentifier>{dff24035-041e-47fc-a24e-2e757c7aad70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\MetaInfo\TypeDef">
+      <UniqueIdentifier>{9eb98ecd-db9d-442e-8c48-01921373053a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Database">
+      <UniqueIdentifier>{85e06abf-f9ea-4c05-b341-df644c7319fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper">
+      <UniqueIdentifier>{181c150e-2191-4045-a62f-2c73d2b9e8ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper\ResourceManager">
+      <UniqueIdentifier>{68b9d5b0-18af-4d14-b1bf-2099efd5f5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper\TableManipulator">
+      <UniqueIdentifier>{4a7a98a5-a021-40d5-80da-513a88bc76a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper\FolderManipulator">
+      <UniqueIdentifier>{522ed6a2-42f2-423f-ba5b-a79cb89031e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper\ObjectManipulator">
+      <UniqueIdentifier>{f904de13-534b-4763-b67f-d50d18d0fd99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Wrapper\DBIterator">
+      <UniqueIdentifier>{293d6752-c5b5-4a76-b35b-2d4b7d62f727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database\Checksum">
+      <UniqueIdentifier>{2f4feb3f-b38c-4bed-8f3d-4e238137c0da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TypesCompiler">
+      <UniqueIdentifier>{2b0aada5-1905-495f-adf6-ecac33e152be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TypesCompiler\Compile_C_Like">
+      <UniqueIdentifier>{13c9c02e-ed2d-4f8c-8379-2fa733dedfd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TypesCompiler\CodeGen">
+      <UniqueIdentifier>{c5bcc725-6136-4f30-bdd8-3622ef32ec8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TypesCompiler\Misc">
+      <UniqueIdentifier>{9c5540c1-9700-4218-ba52-1ad39fa7d8da}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DBObserver.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjMan.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjManIterator.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="DBWatcherClient.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Bind.h">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClInclude>
+    <ClInclude Include="BindArray.h">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClInclude>
+    <ClInclude Include="BindProcessor.h">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClInclude>
+    <ClInclude Include="OwnValue.h">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportMetaInfo.h">
+      <Filter>Database\MetaInfo\StructMetaInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="StructMetaInfo.h">
+      <Filter>Database\MetaInfo\StructMetaInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDef.h">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClInclude>
+    <ClInclude Include="Variant.h">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Db.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBObserverContainer.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDb.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderXmlSaxVisitor.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Index.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectHeader.h">
+      <Filter>Database\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Database\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="Manipulator.h">
+      <Filter>Database\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Database\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrapper\ResourceManagerInternal.h">
+      <Filter>Database\Wrapper\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrapper\TableManipulator.h">
+      <Filter>Database\Wrapper\TableManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrapper\FolderManipulator.h">
+      <Filter>Database\Wrapper\FolderManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRecordIDAllocator.h">
+      <Filter>Database\Wrapper\FolderManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Wrapper\ObjectManipulator.h">
+      <Filter>Database\Wrapper\ObjectManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Checksum.h">
+      <Filter>Database\Checksum</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileCLike.h">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileCLikeVisitor.h">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClInclude>
+    <ClInclude Include="Nodes2TypeDefs.h">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClInclude>
+    <ClInclude Include="Code.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenField.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenFile.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenForward.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenMisc.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenNamespace.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGenType.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeStructure.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="GenerateCode.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="GenerateCodeStructure.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="StrStream.h">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClInclude>
+    <ClInclude Include="Hungarian.h">
+      <Filter>TypesCompiler\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TerminalTypesDesc.h">
+      <Filter>TypesCompiler\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDefType.h">
+      <Filter>TypesCompiler\Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DBWatcherClient.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Bind.cpp">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClCompile>
+    <ClCompile Include="BindArray.cpp">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClCompile>
+    <ClCompile Include="BindProcessor.cpp">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClCompile>
+    <ClCompile Include="BindProcessorSaveLoad.cpp">
+      <Filter>Database\Bind %28Manipulator%29</Filter>
+    </ClCompile>
+    <ClCompile Include="ReportMetaInfo.cpp">
+      <Filter>Database\MetaInfo\StructMetaInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="StructMetaInfo.cpp">
+      <Filter>Database\MetaInfo\StructMetaInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="StructMetaInfoSetGet.cpp">
+      <Filter>Database\MetaInfo\StructMetaInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeDef.cpp">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClCompile>
+    <ClCompile Include="Variant.cpp">
+      <Filter>Database\MetaInfo\TypeDef</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>Database\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBObserverContainer.cpp">
+      <Filter>Database\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorDatabase.cpp">
+      <Filter>Database\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDatabase.cpp">
+      <Filter>Database\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="TestType.cpp">
+      <Filter>Database\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Database\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrapper\ResourceManagerInternal.cpp">
+      <Filter>Database\Wrapper\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrapper\TableManipulator.cpp">
+      <Filter>Database\Wrapper\TableManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrapper\FolderManipulator.cpp">
+      <Filter>Database\Wrapper\FolderManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRecordIDAllocator.cpp">
+      <Filter>Database\Wrapper\FolderManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="RenameNode.cpp">
+      <Filter>Database\Wrapper\FolderManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="Wrapper\ObjectManipulator.cpp">
+      <Filter>Database\Wrapper\ObjectManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDBIterator.cpp">
+      <Filter>Database\Wrapper\DBIterator</Filter>
+    </ClCompile>
+    <ClCompile Include="Checksum.cpp">
+      <Filter>Database\Checksum</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileCLike.cpp">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileCLikeVisitor.cpp">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClCompile>
+    <ClCompile Include="Nodes2TypeDefs.cpp">
+      <Filter>TypesCompiler\Compile_C_Like</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenField.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenFile.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenForward.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenMisc.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenNamespace.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGenType.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeStructure.cpp">
+      <Filter>TypesCompiler\CodeGen</Filter>
+    </ClCompile>
+    <ClCompile Include="Hungarian.cpp">
+      <Filter>TypesCompiler\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeDefType.cpp">
+      <Filter>TypesCompiler\Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="problems.txt" />
+  </ItemGroup>
+</Project>

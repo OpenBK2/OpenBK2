@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="BetaRelease|Win32">
+      <Configuration>BetaRelease</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="FastDebug|Win32">
+      <Configuration>FastDebug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{265C642F-2327-457A-93BB-58A3769CCD7C}</ProjectGuid>
+    <RootNamespace>AILogic</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <UseOfAtl>false</UseOfAtl>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.36518.2</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm500 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;NIVAL_DLL;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;FAST_DEBUG;NIVAL_DLL;_FASTDEBUG;_NSTL_HELP_DEBUG;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;NIVAL_DLL;_BETARELEASE;_DO_ASSERT_SLOW;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>false</StringPooling>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/IGNORE:4049 /IGNORE:4217 /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>$(OutDir)$(TargetName).exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\MySQL\lib;$(SolutionDir)vendor\Granny\lib;$(SolutionDir)vendor\Bink;$(SolutionDir)vendor\FMOD\api\lib;$(SolutionDir)vendor\S3TC;$(SolutionDir)vendor\Stingray\lib;$(SolutionDir)vendor\libintl\lib;$(SolutionDir)vendor\libsvn\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PreLinkEvent>
+      <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
+cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+if errorlevel 1 goto checklib
+:BuildImportLib
+lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
+goto end
+:checklib
+if not exist $(OutDir)$(ProjectName).lib goto BuildImportLib
+:end
+dir&gt;nul</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>/Ow /Zm300 /w34701 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_FINALRELEASE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>StdAfx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName).pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc70.pdb</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CallingConvention>FastCall</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <AdditionalOptions>/list &gt;nul %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Lib>
+    <PreLinkEvent>
+      <Command>cd $(ProjectDir)
+cd $(IntDir)
+n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook3
+"$(VCInstallDir)bin\lib" /NOLOGO /OUT:$(OutDir)$(ProjectName).lib *.obj</Command>
+    </PreLinkEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0419</Culture>
+      <AdditionalIncludeDirectories>$(CommonProgramFiles)\System\ado;$(SolutionDir)vendor\Stingray\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AAFeedBacks.h" />
+    <ClInclude Include="AckManager.h" />
+    <ClInclude Include="AICellsTiles.h" />
+    <ClInclude Include="AIClassesID.h" />
+    <ClInclude Include="aiconsts.h" />
+    <ClInclude Include="AIDebugInfo.h" />
+    <ClInclude Include="AIGeometry.h" />
+    <ClInclude Include="AIInternalConsts.h" />
+    <ClInclude Include="AILock.h" />
+    <ClInclude Include="AILogicCommand.h" />
+    <ClInclude Include="AILogicCommands.h" />
+    <ClInclude Include="AILogicInternal.h" />
+    <ClInclude Include="AIMap.h" />
+    <ClInclude Include="AITiles.h" />
+    <ClInclude Include="AITimer.h" />
+    <ClInclude Include="AIUnit.h" />
+    <ClInclude Include="AIUnitInfoForGeneral.h" />
+    <ClInclude Include="AllowFakeObjToCrushExecutor.h" />
+    <ClInclude Include="AnimUnit.h" />
+    <ClInclude Include="AnimUnitMech.h" />
+    <ClInclude Include="AnimUnitSoldier.h" />
+    <ClInclude Include="AntiArtillery.h" />
+    <ClInclude Include="AntiArtilleryManager.h" />
+    <ClInclude Include="Artillery.h" />
+    <ClInclude Include="ArtilleryBulletStorage.h" />
+    <ClInclude Include="ArtilleryPaths.h" />
+    <ClInclude Include="ArtilleryStates.h" />
+    <ClInclude Include="ArtRocketStates.h" />
+    <ClInclude Include="Aviation.h" />
+    <ClInclude Include="AviationUnit.h" />
+    <ClInclude Include="B2AI.h" />
+    <ClInclude Include="BalanceTest.h" />
+    <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Bridge.h" />
+    <ClInclude Include="BridgeCreation.h" />
+    <ClInclude Include="Building.h" />
+    <ClInclude Include="Cheats.h" />
+    <ClInclude Include="CLockWithUnlockPossibilities.h" />
+    <ClInclude Include="CollisionInternal.h" />
+    <ClInclude Include="CombatEstimator.h" />
+    <ClInclude Include="Commander.h" />
+    <ClInclude Include="CommandRegistratorForScript.h" />
+    <ClInclude Include="Commands.h" />
+    <ClInclude Include="CommonStates.h" />
+    <ClInclude Include="CommonUnit.h" />
+    <ClInclude Include="ComplexObstacleCreation.h" />
+    <ClInclude Include="Crap.h" />
+    <ClInclude Include="CreateAI.h" />
+    <ClInclude Include="DamageToEnemyUpdater.h" />
+    <ClInclude Include="DBAIConsts.h" />
+    <ClInclude Include="DifficultyLevel.h" />
+    <ClInclude Include="Diplomacy.h" />
+    <ClInclude Include="EnemyRememberer.h" />
+    <ClInclude Include="Entrenchment.h" />
+    <ClInclude Include="EntrenchmentCreation.h" />
+    <ClInclude Include="Executor.h" />
+    <ClInclude Include="ExecutorAdrenalineRush.h" />
+    <ClInclude Include="ExecutorAmbush.h" />
+    <ClInclude Include="ExecutorAttackGroup.h" />
+    <ClInclude Include="ExecutorAttackGroupEvent.h" />
+    <ClInclude Include="ExecutorBurningFuel.h" />
+    <ClInclude Include="ExecutorCamouflage.h" />
+    <ClInclude Include="ExecutorCaution.h" />
+    <ClInclude Include="ExecutorContainer.h" />
+    <ClInclude Include="ExecutorCounterFire.h" />
+    <ClInclude Include="ExecutorExactShot.h" />
+    <ClInclude Include="ExecutorFormationFirstAid.h" />
+    <ClInclude Include="ExecutorLinkedGrenades.h" />
+    <ClInclude Include="ExecutorPlaceCharge.h" />
+    <ClInclude Include="ExecutorPlaneDropBombs.h" />
+    <ClInclude Include="ExecutorRestoreTransparencyQueue.h" />
+    <ClInclude Include="ExecutorSeaReinf.h" />
+    <ClInclude Include="ExecutorSimpleEvent.h" />
+    <ClInclude Include="ExecutorSmokeShots.h" />
+    <ClInclude Include="ExecutorSniperCamouflage.h" />
+    <ClInclude Include="ExecutorSoldierEntrench.h" />
+    <ClInclude Include="ExecutorSpyMode.h" />
+    <ClInclude Include="ExecutorStaticObjectSegment.h" />
+    <ClInclude Include="ExecutorThrowGrenade.h" />
+    <ClInclude Include="ExecutorTiming.h" />
+    <ClInclude Include="ExecutorTrackTargetting.h" />
+    <ClInclude Include="ExecutorTransportHealInfantry.h" />
+    <ClInclude Include="ExecutorUnitBase.h" />
+    <ClInclude Include="ExecutorUnitBonus.h" />
+    <ClInclude Include="ExecutorUnitCombatBonus.h" />
+    <ClInclude Include="ExecutorWatchForEnemyUnloadPassangers.h" />
+    <ClInclude Include="FakeObjects.h" />
+    <ClInclude Include="FeedbackSystem.h" />
+    <ClInclude Include="Fence.h" />
+    <ClInclude Include="FenceCreation.h" />
+    <ClInclude Include="Formation.h" />
+    <ClInclude Include="FormationStates.h" />
+    <ClInclude Include="FreeFireManager.h" />
+    <ClInclude Include="General.h" />
+    <ClInclude Include="GeneralAirForce.h" />
+    <ClInclude Include="GeneralArtillery.h" />
+    <ClInclude Include="GeneralConsts.h" />
+    <ClInclude Include="GeneralHelper.h" />
+    <ClInclude Include="GeneralIntendant.h" />
+    <ClInclude Include="GeneralInternal.h" />
+    <ClInclude Include="GeneralInternalInterfaces.h" />
+    <ClInclude Include="GeneralTasks.h" />
+    <ClInclude Include="GlobalObjects.h" />
+    <ClInclude Include="GlobalWarFog.h" />
+    <ClInclude Include="GlobeScriptHandler.h" />
+    <ClInclude Include="GlobeUpdater.h" />
+    <ClInclude Include="Graveyard.h" />
+    <ClInclude Include="GridCreation.h" />
+    <ClInclude Include="GroupLogic.h" />
+    <ClInclude Include="GroupMoveExecutor.h" />
+    <ClInclude Include="GroupMover.h" />
+    <ClInclude Include="GroupMoverNew.h" />
+    <ClInclude Include="GroupUnit.h" />
+    <ClInclude Include="Guns.h" />
+    <ClInclude Include="GunsInternal.h" />
+    <ClInclude Include="HitsStore.h" />
+    <ClInclude Include="InBuildingStates.h" />
+    <ClInclude Include="InEntrenchmentStates.h" />
+    <ClInclude Include="InTransportStates.h" />
+    <ClInclude Include="IPlane.h" />
+    <ClInclude Include="KeyBuildingBonusSystem.h" />
+    <ClInclude Include="KillCorpseExecutor.h" />
+    <ClInclude Include="LinkObject.h" />
+    <ClInclude Include="ListsSet.h" />
+    <ClInclude Include="LongObjectCreation.h" />
+    <ClInclude Include="Manuver.h" />
+    <ClInclude Include="ManuverBuilder.h" />
+    <ClInclude Include="ManuverInternal.h" />
+    <ClInclude Include="ManuverStateDesc.h" />
+    <ClInclude Include="MemoryConsumeCheck.h" />
+    <ClInclude Include="Mine.h" />
+    <ClInclude Include="MountedGun.h" />
+    <ClInclude Include="MPLog.h" />
+    <ClInclude Include="NewUpdater.h" />
+    <ClInclude Include="ObjectProfile.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="ObstacleInternal.h" />
+    <ClInclude Include="ParatrooperPath.h" />
+    <ClInclude Include="PathFinder.h" />
+    <ClInclude Include="PathFractionArc.h" />
+    <ClInclude Include="PathFractionArc3D.h" />
+    <ClInclude Include="PathFractionArcLine3D.h" />
+    <ClInclude Include="PathFractionArcLineArc.h" />
+    <ClInclude Include="PathFractionArcLineArc3D.h" />
+    <ClInclude Include="PathFractionComplex.h" />
+    <ClInclude Include="PathFractionComposite.h" />
+    <ClInclude Include="PathFractionLine.h" />
+    <ClInclude Include="PlanePath.h" />
+    <ClInclude Include="PlanePathFraction.h" />
+    <ClInclude Include="PlanePathMath.h" />
+    <ClInclude Include="PlanePreferences.h" />
+    <ClInclude Include="PlanesFormation.h" />
+    <ClInclude Include="PlaneStates.h" />
+    <ClInclude Include="PlayerBonuses.h" />
+    <ClInclude Include="PlayerReinforcement.h" />
+    <ClInclude Include="PlayerResources.h" />
+    <ClInclude Include="PointChecking.h" />
+    <ClInclude Include="PredictedAntiAviationFire.h" />
+    <ClInclude Include="PresizePath.h" />
+    <ClInclude Include="Probability.h" />
+    <ClInclude Include="QueueUnit.h" />
+    <ClInclude Include="RailRoads.h" />
+    <ClInclude Include="Randomize.h" />
+    <ClInclude Include="Reinforcement.h" />
+    <ClInclude Include="ReinforcementPoints.h" />
+    <ClInclude Include="Resistance.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RndRunUpToEnemy.h" />
+    <ClInclude Include="RotatingFireplacesObject.h" />
+    <ClInclude Include="SaveDBID.h" />
+    <ClInclude Include="ScanLimiter.h" />
+    <ClInclude Include="ScenarioTracker.h" />
+    <ClInclude Include="Scripts.h" />
+    <ClInclude Include="SegmentedObjects.h" />
+    <ClInclude Include="SerializeOwner.h" />
+    <ClInclude Include="Shell.h" />
+    <ClInclude Include="ShootEstimator.h" />
+    <ClInclude Include="ShootEstimatorInternal.h" />
+    <ClInclude Include="SingleReinforcement.h" />
+    <ClInclude Include="SmokeScreen.h" />
+    <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoldierStates.h" />
+    <ClInclude Include="Specific.h" />
+    <ClInclude Include="Spiral.hpp" />
+    <ClInclude Include="StatesFactory.h" />
+    <ClInclude Include="StaticMembers.h" />
+    <ClInclude Include="StaticObject.h" />
+    <ClInclude Include="StaticObjectRotation.h" />
+    <ClInclude Include="StaticObjects.h" />
+    <ClInclude Include="StaticObjectsIters.h" />
+    <ClInclude Include="StaticObjectSlotInfo.h" />
+    <ClInclude Include="Statistics.h" />
+    <ClInclude Include="StatusUpdatesHelper.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StormableObject.h" />
+    <ClInclude Include="SupportAAGun.h" />
+    <ClInclude Include="TankPitPath.h" />
+    <ClInclude Include="TankStates.h" />
+    <ClInclude Include="Technics.h" />
+    <ClInclude Include="TechnicsStates.h" />
+    <ClInclude Include="TempBuffer.h" />
+    <ClInclude Include="TerraAIObserver.h" />
+    <ClInclude Include="TimeCounter.h" />
+    <ClInclude Include="TimerChargeExecutor.h" />
+    <ClInclude Include="Tracer.hpp" />
+    <ClInclude Include="Trains.h" />
+    <ClInclude Include="TransportStates.h" />
+    <ClInclude Include="Turret.h" />
+    <ClInclude Include="UnderConstructionObject.h" />
+    <ClInclude Include="UnitCreation.h" />
+    <ClInclude Include="UnitGuns.h" />
+    <ClInclude Include="Units.h" />
+    <ClInclude Include="UnitsIterators.h" />
+    <ClInclude Include="UnitsIterators2.h" />
+    <ClInclude Include="UnitsSegments.h" />
+    <ClInclude Include="UnitStates.h" />
+    <ClInclude Include="UnitTorpedo.h" />
+    <ClInclude Include="UpdatableObject.h" />
+    <ClInclude Include="UpdateUnitContainer.h" />
+    <ClInclude Include="ValidObjectCheck.h" />
+    <ClInclude Include="Visibility.hpp" />
+    <ClInclude Include="Weather.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AAFeedBacks.cpp" />
+    <ClCompile Include="AckManager.cpp" />
+    <ClCompile Include="AIConsts.cpp" />
+    <ClCompile Include="AIDebugInfo.cpp" />
+    <ClCompile Include="AIGeometry.cpp" />
+    <ClCompile Include="AIGeometryDebug.cpp" />
+    <ClCompile Include="AILogicCommand.cpp" />
+    <ClCompile Include="AILogicCommands.cpp" />
+    <ClCompile Include="AILogicInternal.cpp" />
+    <ClCompile Include="AILogicSerialize.cpp" />
+    <ClCompile Include="AIMap.cpp" />
+    <ClCompile Include="AITimer.cpp" />
+    <ClCompile Include="AIUnit.cpp" />
+    <ClCompile Include="AIUnitInfoForGeneral.cpp" />
+    <ClCompile Include="AIUnitSerialize.cpp" />
+    <ClCompile Include="AllowFakeObjToCrushExecutor.cpp" />
+    <ClCompile Include="AnimUnitMech.cpp" />
+    <ClCompile Include="AnimUnitSoldier.cpp" />
+    <ClCompile Include="AntiArtillery.cpp" />
+    <ClCompile Include="AntiArtilleryManager.cpp" />
+    <ClCompile Include="AntiArtillerySerialize.cpp" />
+    <ClCompile Include="Artillery.cpp" />
+    <ClCompile Include="ArtilleryBulletStorage.cpp" />
+    <ClCompile Include="ArtilleryPaths.cpp" />
+    <ClCompile Include="ArtilleryStates.cpp" />
+    <ClCompile Include="ArtRocketStates.cpp" />
+    <ClCompile Include="Aviation.cpp" />
+    <ClCompile Include="B2AI.cpp" />
+    <ClCompile Include="BalanceTest.cpp" />
+    <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="BehaviourSerialize.cpp" />
+    <ClCompile Include="Bridge.cpp" />
+    <ClCompile Include="BridgeCreation.cpp" />
+    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Cheats.cpp" />
+    <ClCompile Include="CLockWithUnlockPossibilities.cpp" />
+    <ClCompile Include="CollisionInternal.cpp" />
+    <ClCompile Include="CombatEstimator.cpp" />
+    <ClCompile Include="Commander.cpp" />
+    <ClCompile Include="CommandRegistratorForScript.cpp" />
+    <ClCompile Include="Commands.cpp" />
+    <ClCompile Include="CommonStates.cpp" />
+    <ClCompile Include="CommonUnit.cpp" />
+    <ClCompile Include="ComplexObstacleCreation.cpp" />
+    <ClCompile Include="CreateAI.cpp" />
+    <ClCompile Include="DamageToEnemyUpdater.cpp" />
+    <ClCompile Include="DBAIConsts.cpp" />
+    <ClCompile Include="DifficultyLevel.cpp" />
+    <ClCompile Include="Diplomacy.cpp" />
+    <ClCompile Include="EnemyRememberer.cpp" />
+    <ClCompile Include="Entrenchment.cpp" />
+    <ClCompile Include="EntrenchmentCreation.cpp" />
+    <ClCompile Include="Executor.cpp" />
+    <ClCompile Include="ExecutorAdrenalineRush.cpp" />
+    <ClCompile Include="ExecutorAmbush.cpp" />
+    <ClCompile Include="ExecutorAttackGroup.cpp" />
+    <ClCompile Include="ExecutorAttackGroupEvent.cpp" />
+    <ClCompile Include="ExecutorBurningFuel.cpp" />
+    <ClCompile Include="ExecutorCamouflage.cpp" />
+    <ClCompile Include="ExecutorCaution.cpp" />
+    <ClCompile Include="ExecutorContainer.cpp" />
+    <ClCompile Include="ExecutorCounterFire.cpp" />
+    <ClCompile Include="ExecutorExactShot.cpp" />
+    <ClCompile Include="ExecutorFormationFirstAid.cpp" />
+    <ClCompile Include="ExecutorLinkedGrenades.cpp" />
+    <ClCompile Include="ExecutorPlaceCharge.cpp" />
+    <ClCompile Include="ExecutorPlaneDropBombs.cpp" />
+    <ClCompile Include="ExecutorRestoreTransparencyQueue.cpp" />
+    <ClCompile Include="ExecutorSeaReinf.cpp" />
+    <ClCompile Include="ExecutorSimpleEvent.cpp" />
+    <ClCompile Include="ExecutorSmokeShots.cpp" />
+    <ClCompile Include="ExecutorSniperCamouflage.cpp" />
+    <ClCompile Include="ExecutorSoldierEntrench.cpp" />
+    <ClCompile Include="ExecutorSpyMode.cpp" />
+    <ClCompile Include="ExecutorStaticObjectSegment.cpp" />
+    <ClCompile Include="ExecutorThrowGrenade.cpp" />
+    <ClCompile Include="ExecutorTiming.cpp" />
+    <ClCompile Include="ExecutorTrackTargetting.cpp" />
+    <ClCompile Include="ExecutorTransportHealInfantry.cpp" />
+    <ClCompile Include="ExecutorUnitBase.cpp" />
+    <ClCompile Include="ExecutorUnitBonus.cpp" />
+    <ClCompile Include="ExecutorUnitCombatBonus.cpp" />
+    <ClCompile Include="ExecutorWatchForEnemyUnloadPassangers.cpp" />
+    <ClCompile Include="FakeObjects.cpp" />
+    <ClCompile Include="FeedbackSystem.cpp" />
+    <ClCompile Include="Fence.cpp" />
+    <ClCompile Include="FenceCreation.cpp" />
+    <ClCompile Include="Formation.cpp" />
+    <ClCompile Include="FormationEngineerStates.cpp" />
+    <ClCompile Include="FormationStates.cpp" />
+    <ClCompile Include="FreeFireManager.cpp" />
+    <ClCompile Include="GeneralAirForce.cpp" />
+    <ClCompile Include="GeneralArtillery.cpp" />
+    <ClCompile Include="GeneralConsts.cpp" />
+    <ClCompile Include="GeneralHelper.cpp" />
+    <ClCompile Include="GeneralIntendant.cpp" />
+    <ClCompile Include="GeneralInternal.cpp" />
+    <ClCompile Include="GeneralRearManager.cpp" />
+    <ClCompile Include="GeneralSerialize.cpp" />
+    <ClCompile Include="GeneralTasks.cpp" />
+    <ClCompile Include="GlobalObjects.cpp" />
+    <ClCompile Include="GlobalWarFog.cpp" />
+    <ClCompile Include="GlobeScriptHandler.cpp" />
+    <ClCompile Include="GlobeUpdater.cpp" />
+    <ClCompile Include="Graveyard.cpp" />
+    <ClCompile Include="GridCreation.cpp" />
+    <ClCompile Include="GroupLogic.cpp" />
+    <ClCompile Include="GroupLogicSerialize.cpp" />
+    <ClCompile Include="GroupMoveExecutor.cpp" />
+    <ClCompile Include="GroupMover.cpp" />
+    <ClCompile Include="GroupMoverNew.cpp" />
+    <ClCompile Include="Guns.cpp" />
+    <ClCompile Include="GunsSerialize.cpp" />
+    <ClCompile Include="HitsStore.cpp" />
+    <ClCompile Include="InBuildingStates.cpp" />
+    <ClCompile Include="InEntrenchmentStates.cpp" />
+    <ClCompile Include="InTransportStates.cpp" />
+    <ClCompile Include="KeyBuildingBonusSystem.cpp" />
+    <ClCompile Include="KillCorpseExecutor.cpp" />
+    <ClCompile Include="LinkObject.cpp" />
+    <ClCompile Include="ListsSet.cpp" />
+    <ClCompile Include="LongObjectCreation.cpp" />
+    <ClCompile Include="ManuverBuilder.cpp" />
+    <ClCompile Include="ManuverInternal.cpp" />
+    <ClCompile Include="ManuverStateDesc.cpp" />
+    <ClCompile Include="MemoryConsumeCheck.cpp" />
+    <ClCompile Include="Mine.cpp" />
+    <ClCompile Include="MountedGun.cpp" />
+    <ClCompile Include="MountedGunsSerialize.cpp" />
+    <ClCompile Include="NewUpdater.cpp" />
+    <ClCompile Include="NewUpdaterTransformers.cpp" />
+    <ClCompile Include="ObjectProfile.cpp" />
+    <ClCompile Include="ObstacleInternal.cpp" />
+    <ClCompile Include="ParatrooperPath.cpp" />
+    <ClCompile Include="PathFractionArc.cpp" />
+    <ClCompile Include="PathFractionArc3D.cpp" />
+    <ClCompile Include="PathFractionArcLine3D.cpp" />
+    <ClCompile Include="PathFractionArcLineArc.cpp" />
+    <ClCompile Include="PathFractionArcLineArc3D.cpp" />
+    <ClCompile Include="PathFractionComplex.cpp" />
+    <ClCompile Include="PathFractionComposite.cpp" />
+    <ClCompile Include="PathFractionLine.cpp" />
+    <ClCompile Include="PathInternalSerialize.cpp" />
+    <ClCompile Include="PathSearchFuncs.cpp" />
+    <ClCompile Include="PlanePath.cpp" />
+    <ClCompile Include="PlanePathMath.cpp" />
+    <ClCompile Include="PlanePreferences.cpp" />
+    <ClCompile Include="PlanesFormation.cpp" />
+    <ClCompile Include="PlaneStates.cpp" />
+    <ClCompile Include="PlayerBonuses.cpp" />
+    <ClCompile Include="PlayerReinforcement.cpp" />
+    <ClCompile Include="PlayerResources.cpp" />
+    <ClCompile Include="PointChecking.cpp" />
+    <ClCompile Include="PredictedAntiAviationFire.cpp" />
+    <ClCompile Include="PresizePath.cpp" />
+    <ClCompile Include="Probability.cpp" />
+    <ClCompile Include="QueueUnit.cpp" />
+    <ClCompile Include="RailRoads.cpp" />
+    <ClCompile Include="Reinforcement.cpp" />
+    <ClCompile Include="ReinforcementPoints.cpp" />
+    <ClCompile Include="Resistance.cpp" />
+    <ClCompile Include="RndRunUpToEnemy.cpp" />
+    <ClCompile Include="RotatingFireplacesObject.cpp" />
+    <ClCompile Include="ScanLimiter.cpp" />
+    <ClCompile Include="Scripts.cpp" />
+    <ClCompile Include="ScriptsSerialize.cpp" />
+    <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="ShellSerialize.cpp" />
+    <ClCompile Include="ShootEstimatorInternal.cpp" />
+    <ClCompile Include="ShootEstimatorSerialize.cpp" />
+    <ClCompile Include="SingleReinforcement.cpp" />
+    <ClCompile Include="SmokeScreen.cpp" />
+    <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoldierStates.cpp" />
+    <ClCompile Include="StaticMembers.cpp" />
+    <ClCompile Include="StaticObject.cpp" />
+    <ClCompile Include="StaticObjects.cpp" />
+    <ClCompile Include="StaticObjectsIters.cpp" />
+    <ClCompile Include="StaticObjectsSerialize.cpp" />
+    <ClCompile Include="Statistics.cpp" />
+    <ClCompile Include="StatusUpdatesHelper.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='BetaRelease|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FastDebug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="StormableObject.cpp" />
+    <ClCompile Include="SupportAAGun.cpp" />
+    <ClCompile Include="SupremeBeing.cpp" />
+    <ClCompile Include="TankPitPath.cpp" />
+    <ClCompile Include="TankStates.cpp" />
+    <ClCompile Include="Technics.cpp" />
+    <ClCompile Include="TechnicStates.cpp" />
+    <ClCompile Include="TempBuffer.cpp" />
+    <ClCompile Include="TerraAIObserver.cpp" />
+    <ClCompile Include="TimeCounter.cpp" />
+    <ClCompile Include="TimerChargeExecutor.cpp" />
+    <ClCompile Include="TrainCar.cpp" />
+    <ClCompile Include="Trains.cpp" />
+    <ClCompile Include="TransportEngineerStates.cpp" />
+    <ClCompile Include="TransportStates.cpp" />
+    <ClCompile Include="Turret.cpp" />
+    <ClCompile Include="TurretSerialize.cpp" />
+    <ClCompile Include="UnderConstructionObject.cpp" />
+    <ClCompile Include="UnitCreation.cpp" />
+    <ClCompile Include="UnitGuns.cpp" />
+    <ClCompile Include="Units.cpp" />
+    <ClCompile Include="UnitsIterators.cpp" />
+    <ClCompile Include="UnitsSegments.cpp" />
+    <ClCompile Include="UnitsSerialize.cpp" />
+    <ClCompile Include="UnitStates.cpp" />
+    <ClCompile Include="UnitTorpedo.cpp" />
+    <ClCompile Include="UpdatableObject.cpp" />
+    <ClCompile Include="UpdateUnitContainer.cpp" />
+    <ClCompile Include="Weather.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AILogic.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbaiconsts.cll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\B2_M1_Terrain\B2_M1_Terrain.vcxproj">
+      <Project>{5b10a18e-c5c9-4d32-96bc-e8439853d0a1}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\B2_M1_World\B2_M1_World.vcxproj">
+      <Project>{fb0729c8-3096-4832-a772-7fbabc397939}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Common_RTS_AI\Common_RTS_AI.vcxproj">
+      <Project>{284db713-adb5-4373-b61b-891e84a7e46d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\DebugTools\DebugTools.vcxproj">
+      <Project>{f926f770-d672-42cc-a284-f504472a5a48}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.vcxproj">
+      <Project>{8b3425aa-bc43-465c-bf85-936b1363ec24}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\libdb\libdb.vcxproj">
+      <Project>{0295967b-b4ed-4f85-bb3a-c56f3769e59f}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\MemoryLib\MemoryLib.vcxproj">
+      <Project>{968793be-412e-45b0-a801-e54c6307e49e}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Misc\Misc.vcxproj">
+      <Project>{1e0b6a39-dc95-48cb-9061-3679d40ad8c9}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Script\Script.vcxproj">
+      <Project>{a3198bd3-ad46-49c7-84ff-2377c7ac50cd}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Stats_B2_M1\Stats_B2_M1.vcxproj">
+      <Project>{f7183ab4-4aff-4052-86ac-95f55b009239}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\System\System.vcxproj">
+      <Project>{2a5f6c9e-08a5-4091-b46c-e65ec7bd94fa}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{ee1243ac-35bc-4293-8599-3f9acd425039}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

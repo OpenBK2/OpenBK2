@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{164c2cf2-803b-47d7-bf98-a1cf02d1b886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{0713441d-a3d6-4a40-b3a3-7df7a903af4f}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Image">
+      <UniqueIdentifier>{e1e7f734-7231-4a7b-9c5e-62c36a3334b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{507e9a90-10b3-43a2-9c84-dfc3f450e2a4}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DDS.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageConvertor.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Targa.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="fmtTarga.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="GUnpackDXT.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBMP.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageColor.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageDDS.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageEffect.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageInternal.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageMip.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessor.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImagePSD.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageScale.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageTGA.h">
+      <Filter>Image</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GUnpackDXT.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageBMP.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageDDS.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageEffect.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageInternal.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageMip.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessor.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImagePSD.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageScale.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageTGA.cpp">
+      <Filter>Image</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Image.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1729 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{b762a0f7-f0ce-42a3-9d85-cb4ee1f49825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{2bc24c69-1664-4690-9e91-00a4e8e3b4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps">
+      <UniqueIdentifier>{114f649e-c1cd-4f2e-806d-3b635228b524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Bitmaps\Toolbars">
+      <UniqueIdentifier>{e95c52f1-91a2-404f-a462-40090f3b1c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Manifest">
+      <UniqueIdentifier>{9c43a30b-ff41-49cc-a9d1-190f6651f431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{d56b9148-5d04-4c61-8a70-41f095044381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Defines">
+      <UniqueIdentifier>{1585a501-cbea-4355-89d3-69d4a0e9b662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ED_B2_M1">
+      <UniqueIdentifier>{fa7864c3-8b01-49ce-89e0-eb2172817961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ED_B2_M1\Data Extractors">
+      <UniqueIdentifier>{94012ba9-8e04-4411-968a-f72360d7b672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System">
+      <UniqueIdentifier>{1ac19730-a5a9-420c-bc0a-817d410da463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters">
+      <UniqueIdentifier>{c19d4047-d0ee-4954-8053-f9a7d34dc942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scenario &amp; Consts">
+      <UniqueIdentifier>{95995164-659f-48e6-96fe-df6f158bd465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scenario &amp; Consts\Campaign">
+      <UniqueIdentifier>{064e8bec-7bd0-4a28-8030-832472eaf551}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot">
+      <UniqueIdentifier>{7cd82086-dec0-41c8-899c-7556a8ff3154}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scenario &amp; Consts\ClientGameConsts">
+      <UniqueIdentifier>{d0a0f821-3d0d-4f98-8eb1-c07a54a15e85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scenario &amp; Consts\Chapter">
+      <UniqueIdentifier>{a0251f7b-5514-4a06-8ce6-725d4ae75a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\MapInfo">
+      <UniqueIdentifier>{49f7a411-9588-4c79-973c-15e08662ed02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene">
+      <UniqueIdentifier>{82d88114-33ac-42d2-9ee7-288f1745c047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\Geometry">
+      <UniqueIdentifier>{2daad79d-7248-45ec-ab8b-eedbe959bb06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\Skeleton">
+      <UniqueIdentifier>{11ebb156-55a9-40f9-8b9c-09c31ef05c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\Animation">
+      <UniqueIdentifier>{5f77f437-473c-49db-a4c8-154a4de58890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\Light">
+      <UniqueIdentifier>{a0e072ab-ff95-469c-9f93-95900c1fd8dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\Model">
+      <UniqueIdentifier>{60a97881-8a95-4f98-9ad8-bb56df3317e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Scene\TGNoise">
+      <UniqueIdentifier>{e3637e4b-dccc-4b80-925c-57ef58417e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter">
+      <UniqueIdentifier>{21764b2b-a594-4b9f-b824-df43b215f6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats">
+      <UniqueIdentifier>{7dc39612-efb7-46e8-9b09-b964155d4410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\BridgeRPGStats">
+      <UniqueIdentifier>{cdcc07c5-ac58-4066-b4bc-e8e1ee363459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats">
+      <UniqueIdentifier>{fc4a4144-e04c-4967-9760-8fc421cc9c64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\BuildingRPGStats">
+      <UniqueIdentifier>{0f39b2db-f74c-45dd-8a47-93de1fd64e0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\ObjectRPGStats">
+      <UniqueIdentifier>{01c7b3ac-861b-4195-b3dc-7be5f0e1a41f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\FenceRPGStats">
+      <UniqueIdentifier>{3933f707-9aa0-45b1-bec2-e49a30e7404f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\Entrenchment">
+      <UniqueIdentifier>{2996f0a3-6e7e-4ff6-a5f7-00d6151e0790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\MechUnitRPGStats">
+      <UniqueIdentifier>{2cac2aa7-70b1-4875-b203-7c29dea75f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\Squad">
+      <UniqueIdentifier>{ffd4c7ea-99ce-41f2-9dfc-e9a5249ccd8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\Infantry">
+      <UniqueIdentifier>{8d7ea6ae-efbf-4855-9f59-3b6264614b2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\Sounds">
+      <UniqueIdentifier>{a538ddc7-1dbd-4da2-a999-c708649c4a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\StatsExporter\Music">
+      <UniqueIdentifier>{f05d523e-e696-45e6-9d8f-84d530375696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Export System\Exporters\Minimap">
+      <UniqueIdentifier>{a2ce945a-2180-400a-9b84-267791564a26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System">
+      <UniqueIdentifier>{27cae3e0-b3ea-4a38-a712-1b4bb4a62a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors">
+      <UniqueIdentifier>{9cbe7f97-c6eb-49ce-ad53-db6b56a0bd75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo">
+      <UniqueIdentifier>{42eae90d-1b28-4cdd-bfd7-d57d00efd1e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Controller">
+      <UniqueIdentifier>{c29332f5-bf02-4a97-b1d2-4b88f236c9d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States">
+      <UniqueIdentifier>{de43c7f7-9e22-48ac-8694-4af847c97ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Common">
+      <UniqueIdentifier>{df31e1b5-e69b-4f4d-ac73-0270ca4c975c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Common\PolygonState">
+      <UniqueIdentifier>{6854ba5d-25a9-4d42-8bc1-94d1132665e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Common\MapInfoStoreInputState">
+      <UniqueIdentifier>{8937e526-bc05-4197-862f-160567d3fce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Terrain States">
+      <UniqueIdentifier>{1a9135b9-0950-49c9-89c9-9c85e49d4e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Terrain States\Field">
+      <UniqueIdentifier>{be344f6a-d732-45af-8b50-89cf67a21500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Terrain States\Height v3">
+      <UniqueIdentifier>{5ce76d54-bca1-44a3-8b23-8eefea229cf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States">
+      <UniqueIdentifier>{8e2bfe34-b70e-40f6-bded-b5c11dbba6e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States">
+      <UniqueIdentifier>{cd3ee3bf-aebe-4f13-9e39-dec5c17d9640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectMultiState">
+      <UniqueIdentifier>{a14609fd-3d8c-4c2f-bd26-8a05c1e5fd62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState">
+      <UniqueIdentifier>{512f9830-f5fe-4d17-8d1f-d5dc8f7e35ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\SimpleObject">
+      <UniqueIdentifier>{2babb7ef-26e0-4c80-84d6-38813291f04d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Bridge">
+      <UniqueIdentifier>{35422e95-7d35-4129-b5c7-17a2113211ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\FenceState">
+      <UniqueIdentifier>{1e602df7-db28-458f-bab6-73394c5d2ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\EntrenchmentState">
+      <UniqueIdentifier>{ad677968-1de7-4775-b9ef-9e37750a18a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Spot">
+      <UniqueIdentifier>{d4203d9c-84ec-4567-828e-23d7fd2091fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States">
+      <UniqueIdentifier>{beb97be7-5335-47a9-a765-efbcbca0f9ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOMultiState">
+      <UniqueIdentifier>{a0310bc2-15bf-44d3-8c7d-54c65c3fb418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState">
+      <UniqueIdentifier>{0bf5cc4a-509c-4993-a28c-c618415f4ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\Coast">
+      <UniqueIdentifier>{cde030b6-f745-4987-a105-abc44cd92d1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx">
+      <UniqueIdentifier>{3551022a-a324-4349-bf4c-3ba5782641b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Road">
+      <UniqueIdentifier>{6b712e1d-0950-4189-bb71-6b57a3d35c5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Crag">
+      <UniqueIdentifier>{8786aede-865c-48c2-abd9-ee2df7de5835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\River">
+      <UniqueIdentifier>{ffd53c1a-4b5e-4405-afb7-21ecc6bf934b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Lake">
+      <UniqueIdentifier>{3dc7c2d5-c569-4e75-86ef-50672e6ef6a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Gameplay States">
+      <UniqueIdentifier>{3f8d3025-7f34-4a2c-81d1-d8c84608a24b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Gameplay States\ReinfPoints">
+      <UniqueIdentifier>{2f5ea918-56d4-498d-9a22-d0d4e1a05f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Gameplay States\StartCamera">
+      <UniqueIdentifier>{0721eb9f-f79a-45c6-b0ce-ad5b2374ac5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Gameplay States\AIGeneral">
+      <UniqueIdentifier>{fe807bd9-7d13-4873-bada-0d572b928a27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Gameplay States\UnitStartCommands">
+      <UniqueIdentifier>{a70add70-c23f-41e0-95df-e42810baa91f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Scripts States">
+      <UniqueIdentifier>{1a43e54d-8dae-44f9-8ef5-f14b25e07191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptMovies">
+      <UniqueIdentifier>{d0b76b9e-d87b-4b21-b90b-586c79321962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptAreas">
+      <UniqueIdentifier>{3a5a98b9-922e-4f06-802b-d83afe86faad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Advanced States">
+      <UniqueIdentifier>{8663d71f-4587-4a3c-b5fb-47b46b1f867e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\States\Advanced States\AdvClipboard">
+      <UniqueIdentifier>{a3ca1091-608c-4491-87c3-8b517233bdc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows">
+      <UniqueIdentifier>{fce49cdc-a15e-4392-8c4e-75213e89f53d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\MiniMap">
+      <UniqueIdentifier>{8bebc333-6ded-4cd7-a60c-d4285baec11e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow">
+      <UniqueIdentifier>{fcb7b5fb-905f-4b57-a77d-91890aea62b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\TimeSliderControl">
+      <UniqueIdentifier>{1ae9dab0-8f34-4001-bb8e-9e789f7266d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\SettingsWindow">
+      <UniqueIdentifier>{757a879a-1602-4d9b-a693-ec055bee92c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar">
+      <UniqueIdentifier>{c0dcc37d-3e1b-40ba-b036-32ef9ef8c4f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer">
+      <UniqueIdentifier>{0249325f-46d6-4bf1-bab1-36056299f190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\FieldsTab">
+      <UniqueIdentifier>{5979f897-a356-43ad-a5ec-64081ca4aa2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\HeightsV3Tab">
+      <UniqueIdentifier>{c0e618cc-893e-438b-a57d-363e0d08a73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer">
+      <UniqueIdentifier>{e7204471-31b2-48f1-9b43-0b6224d7bf93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\MapObjectsTab">
+      <UniqueIdentifier>{20bb715d-ccdc-404b-8f30-6468fa0ee4c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\VSOTab">
+      <UniqueIdentifier>{01f48ad5-0961-4c04-ac2e-4d52f3565281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer">
+      <UniqueIdentifier>{46569c50-ce40-4d63-9866-0e3521d8fdd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab">
+      <UniqueIdentifier>{6ea6a7e7-4d22-470f-b0a6-fca43cc8292f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab\TypedDlg">
+      <UniqueIdentifier>{458a4691-e355-4081-beff-430afe8c574b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\StartCameraTab">
+      <UniqueIdentifier>{11a78e8a-fded-4abf-a961-8500e0c0c038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab">
+      <UniqueIdentifier>{f8a689ef-e618-4b4a-867b-7c6e6e2dba6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\UnitStartCmdTab">
+      <UniqueIdentifier>{7b1f4003-6d8a-4e70-916d-79b66b5c3b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer">
+      <UniqueIdentifier>{bc35d218-5166-468c-a29d-058ce5bed3c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab">
+      <UniqueIdentifier>{227176dc-acc7-4ec6-b116-38ae79c35460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\AddCameraDlg">
+      <UniqueIdentifier>{c5ac69fe-7fa1-4fd8-9962-adb3ac873be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\Run">
+      <UniqueIdentifier>{bf9c33f5-d20a-4034-9d97-c51a45a8544e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptAreaTab">
+      <UniqueIdentifier>{36c93e14-f882-4fe5-8ea4-d10dde28d018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Advanced Layer">
+      <UniqueIdentifier>{ae84f7a4-9fce-4c06-9f4f-fc918d0e063b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Advanced Layer\AdvClipboardTab">
+      <UniqueIdentifier>{6ac73feb-21e4-43fd-815b-3a88a922c5c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Other">
+      <UniqueIdentifier>{63d685c4-1634-4280-9f3c-d45c85d2f446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Other\View Filter">
+      <UniqueIdentifier>{56b2ee5f-4995-4398-84a9-9b0803a83894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Other\AIMarkers">
+      <UniqueIdentifier>{bf8c6a54-83be-4668-bdce-2037e6fc746b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types">
+      <UniqueIdentifier>{2bb768d5-7712-4c36-9684-efc49c18fd18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorSettings">
+      <UniqueIdentifier>{56411614-0ce1-47af-bbb0-554614b2f8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData">
+      <UniqueIdentifier>{eef856da-2456-496e-9afe-80f363645d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\BridgeInfoData">
+      <UniqueIdentifier>{dcecd75c-9a84-40e0-a6ca-bf0c0a4b8a3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SimpleObjectInfoData">
+      <UniqueIdentifier>{0384402f-9fcb-4cbe-8c92-a1c7293d0a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\EntrenchmentInfoData">
+      <UniqueIdentifier>{8e889fd1-3124-437b-99c7-b3bc6044e988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SpotInfoData">
+      <UniqueIdentifier>{e93e9402-ff46-423e-9727-65f914390d54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\HeightPattern">
+      <UniqueIdentifier>{aad8bbf0-1b5e-43ea-8ba5-a003701ffa05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MinimapImage">
+      <UniqueIdentifier>{217f2f3b-f7e4-46a3-9600-a1a07450a2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\EditorUpdatableWorld">
+      <UniqueIdentifier>{a78c7d55-0352-44a4-b047-e8ac4fb18e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\HeightContainer">
+      <UniqueIdentifier>{2ccb39d3-cb15-4ea5-8462-db69b1f629cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MoviesEditor">
+      <UniqueIdentifier>{26e1b7fa-5f3a-45dd-b2b5-b74aa7d5d051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Types\MoviesEditor\ScriptCamera">
+      <UniqueIdentifier>{43152d7f-fd59-43cd-a292-72656bdbb840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\MapInfo\Interfaces">
+      <UniqueIdentifier>{42ca5446-1cc9-424a-a9a0-cba6664ba35d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Terrain">
+      <UniqueIdentifier>{21b6a398-fcc0-4468-9972-5e6640c5afd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Terrain\States">
+      <UniqueIdentifier>{fca85982-e550-4059-abbd-fe4ca911899f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Terrain\Interfaces">
+      <UniqueIdentifier>{25777156-730d-4574-904e-6d0ca341b9ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Effect">
+      <UniqueIdentifier>{a809b423-87ef-41b3-8da2-d834b773e17e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Effect\States">
+      <UniqueIdentifier>{0776b000-28d9-4ff1-9bb1-ccc97123ca2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 Effect\Interfaces">
+      <UniqueIdentifier>{89410405-b5fe-4d5c-b19f-4a804b5d5aee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect">
+      <UniqueIdentifier>{060cc42d-c559-41f3-9a57-dd1d5c824465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\States">
+      <UniqueIdentifier>{2bad3dd8-7b3d-47b2-9da8-10dccd63e106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Interfaces">
+      <UniqueIdentifier>{91494d1a-9cb8-4d5d-a818-c720c787293b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Types">
+      <UniqueIdentifier>{fc2b8fd7-9bed-46b3-bd13-04ef5e81ebda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Types\ModelEditorSettings">
+      <UniqueIdentifier>{77b05c88-51fe-4b9e-8315-e7d41101881b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Docking Windows">
+      <UniqueIdentifier>{5c53c1cb-c695-4676-8236-88b9b2763404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Other">
+      <UniqueIdentifier>{65405bbc-e371-4824-9d7a-ab76289078ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Model, Material, Effect\Other\TargetMesh">
+      <UniqueIdentifier>{2cc63cb7-aba4-423d-b82b-431126981496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building">
+      <UniqueIdentifier>{a2d9c833-ebb5-4ae5-b971-84b05f5d0bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\States">
+      <UniqueIdentifier>{3e4d50fb-eb9e-4daf-b03a-136818c48def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\States\PointsList">
+      <UniqueIdentifier>{ee3da307-b9c9-4e9e-8ba2-f45a2a2abac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\Docking Windows">
+      <UniqueIdentifier>{e02879b7-ba6b-47a5-ae5e-7ecfcb1894bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\Docking Windows\PointsList">
+      <UniqueIdentifier>{319e8bd7-56d8-4683-b437-592c19c919ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\Types">
+      <UniqueIdentifier>{9f45a59b-a6b7-465b-92a6-c51d27c734bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Building\Interfaces">
+      <UniqueIdentifier>{26267bd1-1fd3-4401-a692-a1afa778fb3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad">
+      <UniqueIdentifier>{b419d51b-ebbf-4fc7-860d-ce556dc10aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad\States">
+      <UniqueIdentifier>{d5723a1b-e24b-42cd-a4c9-3c3d6a4a5879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad\States\Formation">
+      <UniqueIdentifier>{88fd9c9a-4205-4ccf-9173-5651b1061379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad\Docking Windows">
+      <UniqueIdentifier>{c3ad5831-336b-4461-a011-1fb2e35c3165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad\Docking Windows\Formations">
+      <UniqueIdentifier>{5f43caa1-d784-4171-b4b8-5f8ece9d8c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\Squad\Interfaces">
+      <UniqueIdentifier>{96d0159f-082c-4079-8941-03f2989742f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 EditorTest">
+      <UniqueIdentifier>{6402b1dc-2c17-4f95-bc2c-534d1c820035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 EditorTest\States">
+      <UniqueIdentifier>{0bee32dd-204a-4c1c-831e-1663fcdc56ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Edit System\Editors\%28Not Used%29 EditorTest\Interfaces">
+      <UniqueIdentifier>{4af95816-6197-4b3e-94ff-c4286c077381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System">
+      <UniqueIdentifier>{29aa31e3-eaa8-411d-918a-5b6edd9b03ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders">
+      <UniqueIdentifier>{600dc57b-0f55-44f4-8433-4a134f449890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\MapInfo">
+      <UniqueIdentifier>{7820429e-a3a0-45a5-91a8-f8629e723a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\VisObj">
+      <UniqueIdentifier>{a690ecda-d62a-4732-a4bc-03271a4d0106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\ObjectRPGStats">
+      <UniqueIdentifier>{615a4079-bd38-486f-9dad-cb023e3c2a09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\BuildingRPGStats">
+      <UniqueIdentifier>{e32bcfca-3876-4537-a0d0-a97c7cf6eb66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\MechUnitRPGStats">
+      <UniqueIdentifier>{555fe6bf-673e-425c-86b4-c9f89cb5dc7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\InfantryRPGStats">
+      <UniqueIdentifier>{b65ffdad-cd79-4c21-8931-c6f5be9eef61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\Animation">
+      <UniqueIdentifier>{b3c249e5-2fc1-4439-bb33-4b4eb58b7743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\StaticDebrisSet">
+      <UniqueIdentifier>{70656e1e-58eb-45b8-8e39-ba17a5885563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\DynamicDebrisSet">
+      <UniqueIdentifier>{db54ebdd-7ae5-4e9f-9632-45b012ae55ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Build System\Builders\Acks">
+      <UniqueIdentifier>{edc334c7-51a7-4cef-a2c1-5a1727e38891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ChildFrame System">
+      <UniqueIdentifier>{627f5d14-58fd-45c6-925d-62f79883a7ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ChildFrame System\ChildFrame_B2">
+      <UniqueIdentifier>{558b1257-a1f9-4a7b-b972-e663ab209ae2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\ChildFrame System\EditorInterfaceBase">
+      <UniqueIdentifier>{e6aa0b0e-81d4-4650-9794-fed588699c7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types">
+      <UniqueIdentifier>{5f041f53-52b5-4b05-9020-28adccff39d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\VSOManager">
+      <UniqueIdentifier>{def31898-3c3f-49d0-8ce3-baaf1cd5b320}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\AIObject">
+      <UniqueIdentifier>{389d270c-ead9-4714-946a-db9582241af7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics">
+      <UniqueIdentifier>{3b9c8751-0264-4fe4-aa84-31f8eebe3e6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\AnimationMnemonics">
+      <UniqueIdentifier>{0a291918-416e-47cc-afd5-6228ade30bdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\FormationMnemonics">
+      <UniqueIdentifier>{63f99563-5b4c-4f96-9611-4fc319e32d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\WeaponMnemonics">
+      <UniqueIdentifier>{f1817dfd-6a60-4064-bd44-40cb486e7e25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\SeasonMnemonics">
+      <UniqueIdentifier>{74cf2e5b-507f-43e0-ba65-d340f35d0636}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\UnitDesignTypes">
+      <UniqueIdentifier>{d4338d51-f0b8-41f0-a915-e1ff6460c265}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\ReinforcementTypes">
+      <UniqueIdentifier>{43d380ae-1967-4196-b261-667493ca63f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\AIGeneralTypes">
+      <UniqueIdentifier>{e038ccbe-c5ca-427b-9d69-aa418a1c842a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\EntrenchmentMnemonics">
+      <UniqueIdentifier>{7def6682-3904-4457-80d1-5a5232b4c951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\MinimapMnemonics">
+      <UniqueIdentifier>{5bc39bca-0072-41b5-b8df-f54922ea0068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\Mnemonics\ScriptCameraMovementTypes">
+      <UniqueIdentifier>{678c2655-d23e-4e5f-ac81-b72043b86881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Types\DB">
+      <UniqueIdentifier>{8cd34aba-b5d2-4b9e-a579-5828479dc4e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools">
+      <UniqueIdentifier>{106028c7-f1e6-45cc-b711-ee1bdddf4838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\SceneGeometry">
+      <UniqueIdentifier>{9b0722a6-6bda-4d74-be89-f834898fb7c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\SceneDraw">
+      <UniqueIdentifier>{cad8828b-0601-4c2e-9425-b6c80f2ef42b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Tools\DrawDCTools">
+      <UniqueIdentifier>{bf84d9d4-0a90-4eb9-9d57-034f0d6aa8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\UIScene">
+      <UniqueIdentifier>{5431371e-f10b-4434-aaf0-61f7473ad387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\EditorOptions">
+      <UniqueIdentifier>{af98c2af-515e-4328-b4df-972a329a7afc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\DBTypes">
+      <UniqueIdentifier>{33d45361-aec5-4030-b12b-754768bd9f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorScene">
+      <UniqueIdentifier>{5e2b8fdb-e601-4dc1-bdd7-a8232895b401}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandHandlerDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceDefines.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="StringResources.h">
+      <Filter>Sources\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ED_B2_M1DLL.h">
+      <Filter>Sources\ED_B2_M1</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectDataExtractor.h">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotDataExtractor.h">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClInclude>
+    <ClInclude Include="TileDataExtractor.h">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClInclude>
+    <ClInclude Include="VSODataExtractor.h">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClInclude>
+    <ClInclude Include="ExporterMethods.h">
+      <Filter>Sources\Export System</Filter>
+    </ClInclude>
+    <ClInclude Include="CampaignExporter.h">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\Campaign</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRootExporter.h">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLExport.h">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientGameConstsExporter.h">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\ClientGameConsts</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterExporter.h">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\Chapter</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoExporter.h">
+      <Filter>Sources\Export System\Exporters\MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="LightExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="TGNoiseExporter.h">
+      <Filter>Sources\Export System\Exporters\Scene\TGNoise</Filter>
+    </ClInclude>
+    <ClInclude Include="HPObjectRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticObjectRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="BridgeRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\BridgeRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBaseRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\ObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="FenceRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\FenceRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="EntrenchmentExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Entrenchment</Filter>
+    </ClInclude>
+    <ClInclude Include="MechUnitRPGStatsExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="TraceModel.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="SquadExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Squad</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitAnimationExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Infantry</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundDescExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicTrackExporter.h">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Music</Filter>
+    </ClInclude>
+    <ClInclude Include="MinimapExporter.h">
+      <Filter>Sources\Export System\Exporters\Minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorMethods.h">
+      <Filter>Sources\Edit System</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoController.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PolygonState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Common\PolygonState</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoStoreInputState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Common\MapInfoStoreInputState</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Terrain States\Field</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightStateV3.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Terrain States\Height v3</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectMultiState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectMultiState</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleObjectState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\SimpleObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BridgeState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="FenceState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\FenceState</Filter>
+    </ClInclude>
+    <ClInclude Include="EntrenchmentState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\EntrenchmentState</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Spot</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOMultiState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOMultiState</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState</Filter>
+    </ClInclude>
+    <ClInclude Include="CoastState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\Coast</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOStateEx.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx</Filter>
+    </ClInclude>
+    <ClInclude Include="RoadState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Road</Filter>
+    </ClInclude>
+    <ClInclude Include="CragState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Crag</Filter>
+    </ClInclude>
+    <ClInclude Include="RiverState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\River</Filter>
+    </ClInclude>
+    <ClInclude Include="LakeState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Lake</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinfPointsState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\ReinfPoints</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraPositionState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\StartCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeneralState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\AIGeneral</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitStartCmdState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\UnitStartCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptMovies</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptAreaState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptAreas</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvClipboardState.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Advanced States\AdvClipboard</Filter>
+    </ClInclude>
+    <ClInclude Include="MapClip.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Advanced States\AdvClipboard</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniMapWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="MoviesEditorWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSliderControl.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\TimeSliderControl</Filter>
+    </ClInclude>
+    <ClInclude Include="KeySettingsDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\SettingsWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MovEditorSettingsWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\SettingsWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="FieldWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\FieldsTab</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightWindowV3.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\HeightsV3Tab</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\MapObjectsTab</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\VSOTab</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinfPointsWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinfPointsTypedDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab\TypedDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinfPointsTypedTemplateAddDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab\TypedDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraPositionWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\StartCameraTab</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeneralWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGenMobileIDDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGenParcelDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClInclude>
+    <ClInclude Include="EdUnitStartCmd.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\UnitStartCmdTab</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitStartCmdWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\UnitStartCmdTab</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraAddDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\AddCameraDlg</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraRun.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\Run</Filter>
+    </ClInclude>
+    <ClInclude Include="EnterNameDialog.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptAreaTab</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptAreaWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptAreaTab</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvClipboardWindow.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Advanced Layer\AdvClipboardTab</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoViewFilterDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Other\View Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoAIMarkersSelectDlg.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Other\AIMarkers</Filter>
+    </ClInclude>
+    <ClInclude Include="AIMarkerSettings.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorSettings.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewFilterData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData_Clipboard.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData_Consts.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData_ObjectInfo.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData_ObjectInfoCollector.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoEditorData_Selection.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClInclude>
+    <ClInclude Include="BridgeInfoData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\BridgeInfoData</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleObjectInfoData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SimpleObjectInfoData</Filter>
+    </ClInclude>
+    <ClInclude Include="EntrenchmentInfoData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\EntrenchmentInfoData</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotInfoData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SpotInfoData</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightPattern.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\HeightPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="MinimapImage.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MinimapImage</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorUpdatableWorld.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\EditorUpdatableWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightContainer.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\HeightContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="MoviesEditorData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MoviesEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraEditorData.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MoviesEditor\ScriptCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoInterface.h">
+      <Filter>Sources\Edit System\Editors\MapInfo\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainInterface.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectEditor.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectState.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectInterface.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelEditor.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelState.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\States</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelInterface.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelEditorSettings.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Types\ModelEditorSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelWindow.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Docking Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetMesh.h">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Other\TargetMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingEditor.h">
+      <Filter>Sources\Edit System\Editors\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingState.h">
+      <Filter>Sources\Edit System\Editors\Building\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PointsListState.h">
+      <Filter>Sources\Edit System\Editors\Building\States\PointsList</Filter>
+    </ClInclude>
+    <ClInclude Include="PointListDialog.h">
+      <Filter>Sources\Edit System\Editors\Building\Docking Windows\PointsList</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogData.h">
+      <Filter>Sources\Edit System\Editors\Building\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkerSet.h">
+      <Filter>Sources\Edit System\Editors\Building\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingInterface.h">
+      <Filter>Sources\Edit System\Editors\Building\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SquadEditor.h">
+      <Filter>Sources\Edit System\Editors\Squad</Filter>
+    </ClInclude>
+    <ClInclude Include="SquadState.h">
+      <Filter>Sources\Edit System\Editors\Squad\States</Filter>
+    </ClInclude>
+    <ClInclude Include="FormationsState.h">
+      <Filter>Sources\Edit System\Editors\Squad\States\Formation</Filter>
+    </ClInclude>
+    <ClInclude Include="FormationWindow.h">
+      <Filter>Sources\Edit System\Editors\Squad\Docking Windows\Formations</Filter>
+    </ClInclude>
+    <ClInclude Include="SquadInterface.h">
+      <Filter>Sources\Edit System\Editors\Squad\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTestEditor.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTestState.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTestInterface.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="BuilderMethods.h">
+      <Filter>Sources\Build System</Filter>
+    </ClInclude>
+    <ClInclude Include="MapInfoBuilder.h">
+      <Filter>Sources\Build System\Builders\MapInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="VisObjBuilder.h">
+      <Filter>Sources\Build System\Builders\VisObj</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRPGStatsBuilder.h">
+      <Filter>Sources\Build System\Builders\ObjectRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingRPGStatsBuilder.h">
+      <Filter>Sources\Build System\Builders\BuildingRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="MechUnitRPGStatsBuilder.h">
+      <Filter>Sources\Build System\Builders\MechUnitRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="InfantryRPGStatsBuilder.h">
+      <Filter>Sources\Build System\Builders\InfantryRPGStats</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationBuilder.h">
+      <Filter>Sources\Build System\Builders\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicDebrisSetBuilder.h">
+      <Filter>Sources\Build System\Builders\DynamicDebrisSet</Filter>
+    </ClInclude>
+    <ClInclude Include="AckExcelReader.h">
+      <Filter>Sources\Build System\Builders\Acks</Filter>
+    </ClInclude>
+    <ClInclude Include="AckSetBuilder.h">
+      <Filter>Sources\Build System\Builders\Acks</Filter>
+    </ClInclude>
+    <ClInclude Include="CF_SceneB2.h">
+      <Filter>Sources\ChildFrame System\ChildFrame_B2</Filter>
+    </ClInclude>
+    <ClInclude Include="CFC_SceneB2.h">
+      <Filter>Sources\ChildFrame System\ChildFrame_B2</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorInterfaceBase.h">
+      <Filter>Sources\ChildFrame System\EditorInterfaceBase</Filter>
+    </ClInclude>
+    <ClInclude Include="VSOManager.h">
+      <Filter>Sources\Types\VSOManager</Filter>
+    </ClInclude>
+    <ClInclude Include="aiObject.h">
+      <Filter>Sources\Types\AIObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\AnimationMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="FormationMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\FormationMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\WeaponMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="SeasonMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\SeasonMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitDesignTypes.h">
+      <Filter>Sources\Types\Mnemonics\UnitDesignTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ReinforcementTypes.h">
+      <Filter>Sources\Types\Mnemonics\ReinforcementTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="AIGeneralTypes.h">
+      <Filter>Sources\Types\Mnemonics\AIGeneralTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="EntrenchmentMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\EntrenchmentMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="MinimapMnemonics.h">
+      <Filter>Sources\Types\Mnemonics\MinimapMnemonics</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCameraMovementTypes.h">
+      <Filter>Sources\Types\Mnemonics\ScriptCameraMovementTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DBField.h">
+      <Filter>Sources\Types\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMinimap.h">
+      <Filter>Sources\Types\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_SceneGeometry.h">
+      <Filter>Sources\Tools\SceneGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools_SceneDraw.h">
+      <Filter>Sources\Tools\SceneDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawToolsDC.h">
+      <Filter>Sources\Tools\DrawDCTools</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScene.hpp">
+      <Filter>Sources\UIScene</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorOptions.h">
+      <Filter>Sources\EditorOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="dbadvclipboard.h">
+      <Filter>Sources\DBTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="dbbuildersb2.h">
+      <Filter>Sources\DBTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="dbeditoroptionsb2.h">
+      <Filter>Sources\DBTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="editortest.h">
+      <Filter>Sources\DBTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorScene.h">
+      <Filter>EditorScene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ED_B2_M1DLL.cpp">
+      <Filter>Sources\ED_B2_M1</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectDataExtractor.cpp">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotDataExtractor.cpp">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClCompile>
+    <ClCompile Include="TileDataExtractor.cpp">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClCompile>
+    <ClCompile Include="VSODataExtractor.cpp">
+      <Filter>Sources\ED_B2_M1\Data Extractors</Filter>
+    </ClCompile>
+    <ClCompile Include="ExporterMethods.cpp">
+      <Filter>Sources\Export System</Filter>
+    </ClCompile>
+    <ClCompile Include="PassabilityProfile.cpp">
+      <Filter>Sources\Export System</Filter>
+    </ClCompile>
+    <ClCompile Include="CampaignExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\Campaign</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRootExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLExport.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLExportB2.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\GameRoot</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientGameConstsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\ClientGameConsts</Filter>
+    </ClCompile>
+    <ClCompile Include="ChapterExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scenario &amp; Consts\Chapter</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoExporter.cpp">
+      <Filter>Sources\Export System\Exporters\MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="LightExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="TGNoiseExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Scene\TGNoise</Filter>
+    </ClCompile>
+    <ClCompile Include="HPObjectRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticObjectRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="BridgeRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\BridgeRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectBaseRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\BuildingRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\ObjectBaseRPGStats\ObjectRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="FenceRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\StaticObjectRPGStats\FenceRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="EntrenchmentExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Entrenchment</Filter>
+    </ClCompile>
+    <ClCompile Include="MechUnitRPGStatsExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\MechUnitRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="TraceModel.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\MechUnitRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="SquadExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Squad</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitAnimationExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Infantry</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundDescExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicTrackExporter.cpp">
+      <Filter>Sources\Export System\Exporters\StatsExporter\Music</Filter>
+    </ClCompile>
+    <ClCompile Include="MinimapExporter.cpp">
+      <Filter>Sources\Export System\Exporters\Minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorMethods.cpp">
+      <Filter>Sources\Edit System</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditor.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoController.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PolygonState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Common\PolygonState</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoStoreInputState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Common\MapInfoStoreInputState</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Terrain States\Field</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightStateV3.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Terrain States\Height v3</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectMultiState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectMultiState</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleObjectState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\SimpleObject</Filter>
+    </ClCompile>
+    <ClCompile Include="BridgeState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="FenceState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\FenceState</Filter>
+    </ClCompile>
+    <ClCompile Include="EntrenchmentState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\EntrenchmentState</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\MapObject States\MapObjectState\Spot</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOMultiState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOMultiState</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState</Filter>
+    </ClCompile>
+    <ClCompile Include="CoastState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\Coast</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOStateEx.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx</Filter>
+    </ClCompile>
+    <ClCompile Include="RoadState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Road</Filter>
+    </ClCompile>
+    <ClCompile Include="CragState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Crag</Filter>
+    </ClCompile>
+    <ClCompile Include="RiverState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\River</Filter>
+    </ClCompile>
+    <ClCompile Include="LakeState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Objects States\VSO States\VSOState\VSOStateEx\Lake</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinfPointsState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\ReinfPoints</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraPositionState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\StartCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeneralState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\AIGeneral</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitStartCmdState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Gameplay States\UnitStartCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptMovies</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptAreaState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Scripts States\ScriptAreas</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvClipboardState.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Advanced States\AdvClipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="MapClip.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\States\Advanced States\AdvClipboard</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMapWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="MoviesEditorWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSliderControl.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\TimeSliderControl</Filter>
+    </ClCompile>
+    <ClCompile Include="KeySettingsDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\SettingsWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MovEditorSettingsWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\MoviesEditorWindow\SettingsWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="FieldWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\FieldsTab</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightWindowV3.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Terrain Layer\HeightsV3Tab</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\MapObjectsTab</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Objects Layer\VSOTab</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinfPointsWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinfPointsTypedDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab\TypedDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinfPointsTypedTemplateAddDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\ReinfPointsTab\TypedDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraPositionWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\StartCameraTab</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeneralWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGenMobileIDDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGenParcelDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\AIGeneralTab</Filter>
+    </ClCompile>
+    <ClCompile Include="EdUnitStartCmd.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\UnitStartCmdTab</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitStartCmdWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Gameplay Layer\UnitStartCmdTab</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraAddDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\AddCameraDlg</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraRun.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptMoviesTab\Run</Filter>
+    </ClCompile>
+    <ClCompile Include="EnterNameDialog.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptAreaTab</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptAreaWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Scripts Layer\ScriptAreaTab</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvClipboardWindow.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Docking Windows\Shortcut Bar\Advanced Layer\AdvClipboardTab</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniMap_ImageCreation.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoViewFilterDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Other\View Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoAIMarkersSelectDlg.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Other\AIMarkers</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorSettings.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorSettings</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData_Clipboard.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData_Consts.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData_ObjectInfo.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData_ObjectInfoCollector.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoEditorData_Selection.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData</Filter>
+    </ClCompile>
+    <ClCompile Include="BridgeInfoData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\BridgeInfoData</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleObjectInfoData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SimpleObjectInfoData</Filter>
+    </ClCompile>
+    <ClCompile Include="EntrenchmentInfoData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\EntrenchmentInfoData</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotInfoData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MapInfoEditorData\SpotInfoData</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightPattern.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\HeightPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="MinimapImage.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MinimapImage</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorUpdatableWorld.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\EditorUpdatableWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightContainer.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\HeightContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="MoviesEditorData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MoviesEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraEditorData.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Types\MoviesEditor\ScriptCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoInterface.cpp">
+      <Filter>Sources\Edit System\Editors\MapInfo\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditor.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainState.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainInterface.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectEditor.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectState.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectInterface.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Effect\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelEditor.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelState.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\States</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelInterface.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelEditorSettings.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Types\ModelEditorSettings</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelWindow.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Docking Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="IconsCreation.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetMesh.cpp">
+      <Filter>Sources\Edit System\Editors\Model, Material, Effect\Other\TargetMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingEditor.cpp">
+      <Filter>Sources\Edit System\Editors\Building</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingState.cpp">
+      <Filter>Sources\Edit System\Editors\Building\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PointsListState.cpp">
+      <Filter>Sources\Edit System\Editors\Building\States\PointsList</Filter>
+    </ClCompile>
+    <ClCompile Include="PointListDialog.cpp">
+      <Filter>Sources\Edit System\Editors\Building\Docking Windows\PointsList</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkerSet.cpp">
+      <Filter>Sources\Edit System\Editors\Building\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingInterface.cpp">
+      <Filter>Sources\Edit System\Editors\Building\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="SquadEditor.cpp">
+      <Filter>Sources\Edit System\Editors\Squad</Filter>
+    </ClCompile>
+    <ClCompile Include="SquadState.cpp">
+      <Filter>Sources\Edit System\Editors\Squad\States</Filter>
+    </ClCompile>
+    <ClCompile Include="FormationsState.cpp">
+      <Filter>Sources\Edit System\Editors\Squad\States\Formation</Filter>
+    </ClCompile>
+    <ClCompile Include="FormationWindow.cpp">
+      <Filter>Sources\Edit System\Editors\Squad\Docking Windows\Formations</Filter>
+    </ClCompile>
+    <ClCompile Include="SquadInterface.cpp">
+      <Filter>Sources\Edit System\Editors\Squad\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorTestEditor.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorTestState.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest\States</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorTestInterface.cpp">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 EditorTest\Interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="BuilderMethods.cpp">
+      <Filter>Sources\Build System</Filter>
+    </ClCompile>
+    <ClCompile Include="MapInfoBuilder.cpp">
+      <Filter>Sources\Build System\Builders\MapInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="VisObjBuilder.cpp">
+      <Filter>Sources\Build System\Builders\VisObj</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRPGStatsBuilder.cpp">
+      <Filter>Sources\Build System\Builders\ObjectRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingRPGStatsBuilder.cpp">
+      <Filter>Sources\Build System\Builders\BuildingRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="MechUnitRPGStatsBuilder.cpp">
+      <Filter>Sources\Build System\Builders\MechUnitRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="InfantryRPGStatsBuilder.cpp">
+      <Filter>Sources\Build System\Builders\InfantryRPGStats</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationBuilder.cpp">
+      <Filter>Sources\Build System\Builders\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticDebrisSetBuilder.cpp">
+      <Filter>Sources\Build System\Builders\StaticDebrisSet</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicDebrisSetBuilder.cpp">
+      <Filter>Sources\Build System\Builders\DynamicDebrisSet</Filter>
+    </ClCompile>
+    <ClCompile Include="AckExcelReader.cpp">
+      <Filter>Sources\Build System\Builders\Acks</Filter>
+    </ClCompile>
+    <ClCompile Include="AckSetBuilder.cpp">
+      <Filter>Sources\Build System\Builders\Acks</Filter>
+    </ClCompile>
+    <ClCompile Include="CF_SceneB2.cpp">
+      <Filter>Sources\ChildFrame System\ChildFrame_B2</Filter>
+    </ClCompile>
+    <ClCompile Include="CFC_SceneB2.cpp">
+      <Filter>Sources\ChildFrame System\ChildFrame_B2</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorInterfaceBase.cpp">
+      <Filter>Sources\ChildFrame System\EditorInterfaceBase</Filter>
+    </ClCompile>
+    <ClCompile Include="VSOManager.cpp">
+      <Filter>Sources\Types\VSOManager</Filter>
+    </ClCompile>
+    <ClCompile Include="aiObject.cpp">
+      <Filter>Sources\Types\AIObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\AnimationMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="FormationMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\FormationMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\WeaponMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="SeasonMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\SeasonMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitDesignTypes.cpp">
+      <Filter>Sources\Types\Mnemonics\UnitDesignTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ReinforcementTypes.cpp">
+      <Filter>Sources\Types\Mnemonics\ReinforcementTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="AIGeneralTypes.cpp">
+      <Filter>Sources\Types\Mnemonics\AIGeneralTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="EntrenchmentMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\EntrenchmentMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="MinimapMnemonics.cpp">
+      <Filter>Sources\Types\Mnemonics\MinimapMnemonics</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCameraMovementTypes.cpp">
+      <Filter>Sources\Types\Mnemonics\ScriptCameraMovementTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DBField.cpp">
+      <Filter>Sources\Types\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMinimap.cpp">
+      <Filter>Sources\Types\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_SceneGeometry.cpp">
+      <Filter>Sources\Tools\SceneGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools_SceneDraw.cpp">
+      <Filter>Sources\Tools\SceneDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawToolsDC.cpp">
+      <Filter>Sources\Tools\DrawDCTools</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScene.cpp">
+      <Filter>Sources\UIScene</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorOptions.cpp">
+      <Filter>Sources\EditorOptions</Filter>
+    </ClCompile>
+    <ClCompile Include="dbadvclipboard.cpp">
+      <Filter>Sources\DBTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="dbbuildersb2.cpp">
+      <Filter>Sources\DBTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="dbeditoroptionsb2.cpp">
+      <Filter>Sources\DBTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="editortest.cpp">
+      <Filter>Sources\DBTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorScene.cpp">
+      <Filter>EditorScene</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ED_B2_M1.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\dmoved_add_seq.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_del_seq.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_jump_first_key.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_jump_last_key.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_pause_movie.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_play_movie.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_resize.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_settings.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_step_next_key.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_step_prev_key.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\dmoved_stop_movie.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\tmith_bitmap.bmp">
+      <Filter>Resource Files\Bitmaps</Filter>
+    </Image>
+    <Image Include="res\toolbar_mapinfo_tools.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_mapinfo_view.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+    <Image Include="res\toolbar_model.bmp">
+      <Filter>Resource Files\Bitmaps\Toolbars</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="res\ED_B2_M1.manifest">
+      <Filter>Resource Files\Manifest</Filter>
+    </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbadvclipboard.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+    <None Include="dbbuildersb2.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+    <None Include="dbeditoroptionsb2.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+    <None Include="dbfield.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+    <None Include="dbminimap.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+    <None Include="editortest.cll">
+      <Filter>Sources\DBTypes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="MapInfoEditor.h">
+      <Filter>Sources\Edit System\Editors\MapInfo</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TerrainEditor.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TerrainState.h">
+      <Filter>Sources\Edit System\Editors\%28Not Used%29 Terrain\States</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StaticDebrisSetBuilder.h">
+      <Filter>Sources\Build System\Builders\StaticDebrisSet</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

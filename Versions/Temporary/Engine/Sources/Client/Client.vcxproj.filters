@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{591b0877-4ceb-4ae6-a390-353325f544cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client">
+      <UniqueIdentifier>{b5519bb1-49e5-44f1-8249-c45629d16c35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processors">
+      <UniqueIdentifier>{149cc12c-3633-41b5-bd3f-ec331fecdd02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Connection">
+      <UniqueIdentifier>{586bd6d6-f25b-48c9-8a65-e7372c591b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{95fdb35d-d76c-4398-8cba-ef24a448a2af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LAN">
+      <UniqueIdentifier>{169f8de1-c211-452f-ab1f-6d44dce18515}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerClient.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectServerProcessor.h">
+      <Filter>Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayGameProcessor.h">
+      <Filter>Processors</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionEffort.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionEffortInternal.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionInternal.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="LinksManager.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerClientInterface.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="LANClient.h">
+      <Filter>LAN</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerClient.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectServerProcessor.cpp">
+      <Filter>Processors</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayGameProcessor.cpp">
+      <Filter>Processors</Filter>
+    </ClCompile>
+    <ClCompile Include="Connection.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionEffort.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionEffortInternal.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionInternal.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="LinksManager.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="LANClient.cpp">
+      <Filter>LAN</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

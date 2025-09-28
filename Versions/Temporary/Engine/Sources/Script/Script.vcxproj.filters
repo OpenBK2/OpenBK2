@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8d9c5b54-0326-475f-9557-3538eca1e29a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LuaSrc">
+      <UniqueIdentifier>{be5b8524-a288-4b22-8fcc-39c2c334f0eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{fa7edfe9-e7e2-4d1e-97e4-e5b217b36511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BasicFunctions">
+      <UniqueIdentifier>{06062aa9-a206-41e6-8d32-884db52a1099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptWrapper">
+      <UniqueIdentifier>{31ce4887-f8ca-41eb-9142-fb577807235c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="lapi.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lcode.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="ldebug.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="ldo.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lfunc.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lgc.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="llex.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="llimits.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lmem.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lobject.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lopcodes.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lparser.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lsaver.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lstate.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lstring.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="ltable.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="ltm.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lua.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="luadebug.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lundump.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lvm.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="lzio.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="RegFunction.h">
+      <Filter>LuaSrc</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptInclude.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptWrapper.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>BasicFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="scriptCallLUA.h">
+      <Filter>BasicFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="scriptCommon.h">
+      <Filter>BasicFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="scriptPtr.h">
+      <Filter>BasicFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptWrapperInternal.h">
+      <Filter>ScriptWrapper</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="lapi.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lcode.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="ldebug.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="ldo.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lfunc.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lgc.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="llex.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lmem.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lobject.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lparser.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lsaver.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lstate.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lstring.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="ltable.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="ltm.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lundump.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lvm.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="lzio.cpp">
+      <Filter>LuaSrc</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonFunctions.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>BasicFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="scriptCommon.cpp">
+      <Filter>BasicFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="scriptPtr.cpp">
+      <Filter>BasicFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptWrapperInternal.cpp">
+      <Filter>ScriptWrapper</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

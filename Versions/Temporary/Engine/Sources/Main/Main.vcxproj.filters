@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{e329358b-5f94-458e-a388-f0b34157ae15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{3e538fe6-be7d-4d58-ab64-8abc004f6298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\MainLoop">
+      <UniqueIdentifier>{8748392c-aa80-4a6c-bdba-29e18df36efe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Timer">
+      <UniqueIdentifier>{0a178a29-36c4-449d-ab7d-da8186cedbd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Multiplayer">
+      <UniqueIdentifier>{61f6ba41-d1d4-4bcd-81a1-d59efc929007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Transceiver">
+      <UniqueIdentifier>{fe2211a1-ea53-4da2-9f98-5c2c8709ab4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\CommonAI">
+      <UniqueIdentifier>{55b63779-68a5-4844-92f3-d9526b82f6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Profiles">
+      <UniqueIdentifier>{c57b0310-048d-40c6-a91b-bcf90419cb43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\MODs">
+      <UniqueIdentifier>{c97c5e8d-7c26-41c7-9c01-680f93e90fc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{8230c3cf-049f-48eb-8958-3fedf0d27eed}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="DB">
+      <UniqueIdentifier>{ed8ae06e-8e07-4549-b915-c18e81ce184d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{c2ba965f-2d96-406e-abbf-9e8860fae06e}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameTimer.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MainLoop.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MainLoopCommands.h">
+      <Filter>Main\MainLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="MainLoopInternal.h">
+      <Filter>Main\MainLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimerInternal.h">
+      <Filter>Main\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Multiplayer.h">
+      <Filter>Main\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiplayerInternal.h">
+      <Filter>Main\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="NetMessages.h">
+      <Filter>Main\Multiplayer</Filter>
+    </ClInclude>
+    <ClInclude Include="AICmdsAutoMagicInterface.h">
+      <Filter>Main\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandsHistory.hpp">
+      <Filter>Main\Transceiver</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonAI.h">
+      <Filter>Main\CommonAI</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiles.h">
+      <Filter>Main\Profiles</Filter>
+    </ClInclude>
+    <ClInclude Include="MODs.h">
+      <Filter>Main\MODs</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBNetConsts.h">
+      <Filter>DB</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainLoopCommands.cpp">
+      <Filter>Main\MainLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="MainLoopInternal.cpp">
+      <Filter>Main\MainLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimerInternal.cpp">
+      <Filter>Main\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiplayerInternal.cpp">
+      <Filter>Main\Multiplayer</Filter>
+    </ClCompile>
+    <ClCompile Include="AICmdsAutoMagicInterface.cpp">
+      <Filter>Main\Transceiver</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonAI.cpp">
+      <Filter>Main\CommonAI</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiles.cpp">
+      <Filter>Main\Profiles</Filter>
+    </ClCompile>
+    <ClCompile Include="MODs.cpp">
+      <Filter>Main\MODs</Filter>
+    </ClCompile>
+    <ClCompile Include="DBNetConsts.cpp">
+      <Filter>DB</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialization.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Main.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbnetconsts.cll">
+      <Filter>DB</Filter>
+    </None>
+  </ItemGroup>
+</Project>

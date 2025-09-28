@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{7fb4778f-c2ac-4781-adcc-5fddb72e8531}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{3176c1b5-37a2-4737-bdf6-0d7c182bf683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\WinFrame">
+      <UniqueIdentifier>{d030b5ac-a0a2-4857-9112-650a7fb5d9d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{1e77db91-cba6-456b-8209-096fb8226423}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="revision.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="VersionInfo.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="WinFrame2Input.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="SysKeys.h">
+      <Filter>Main\WinFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Initialization.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleHook.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="WinFrame2Input.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SysKeys.cpp">
+      <Filter>Main\WinFrame</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="main.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="splash.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ModuleClassIDBases.txt" />
+  </ItemGroup>
+</Project>

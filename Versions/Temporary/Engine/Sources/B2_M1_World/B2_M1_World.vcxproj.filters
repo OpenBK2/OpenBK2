@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{9e56a2ec-d541-47fd-a303-258adbaf192e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UpdatableWorld">
+      <UniqueIdentifier>{1ff2025c-218c-45d7-88f9-d8de75bb7801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapObjects">
+      <UniqueIdentifier>{527d1646-c8b1-4c2d-97b8-2ce262759329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UpdatableProcesses">
+      <UniqueIdentifier>{68ca6944-410e-4474-aaea-9810fd19be69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ClientAckManager">
+      <UniqueIdentifier>{d3b994b1-551e-4e16-b972-14ac1a6c972c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{bffe5ba0-8288-4fa7-96c2-ddc89e14b45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AIInterface">
+      <UniqueIdentifier>{4fe2e549-ccf7-4562-86db-defa119dcc19}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Specific.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AllAnimationsPlayer.h">
+      <Filter>UpdatableWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionObjectiveStates.h">
+      <Filter>UpdatableWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdatableWorld.h">
+      <Filter>UpdatableWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="B2MapObj.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObj.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOBridge.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOBuilding.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOEntrenchment.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOFence.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOObject.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOProjectile.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOSquad.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOUnit.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOUnitHelicopter.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOUnitInfantry.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MOUnitMechanical.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeTrailEffect.h">
+      <Filter>MapObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadHouseAnimation.h">
+      <Filter>UpdatableProcesses</Filter>
+    </ClInclude>
+    <ClInclude Include="DeadHouseAnimations.h">
+      <Filter>UpdatableProcesses</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleMechProcess.h">
+      <Filter>UpdatableProcesses</Filter>
+    </ClInclude>
+    <ClInclude Include="ParatrooperAnimation.h">
+      <Filter>UpdatableProcesses</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdatableProcess.h">
+      <Filter>UpdatableProcesses</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientAckManagerInternal.h">
+      <Filter>ClientAckManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugAckHelper.hpp">
+      <Filter>ClientAckManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientAckManager.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Notifications.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonB2M1AI.h">
+      <Filter>AIInterface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AllAnimationsPlayer.cpp">
+      <Filter>UpdatableWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdatableWorld.cpp">
+      <Filter>UpdatableWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="B2MapObj.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObj.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOBridge.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOBuilding.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOEntrenchment.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOFence.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOObject.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOProjectile.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOSquad.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOUnit.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOUnitHelicopter.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOUnitInfantry.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MOUnitMechanical.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeTrailEffect.cpp">
+      <Filter>MapObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadHouseAnimation.cpp">
+      <Filter>UpdatableProcesses</Filter>
+    </ClCompile>
+    <ClCompile Include="DeadHouseAnimations.cpp">
+      <Filter>UpdatableProcesses</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleMechProcess.cpp">
+      <Filter>UpdatableProcesses</Filter>
+    </ClCompile>
+    <ClCompile Include="ParatrooperAnimation.cpp">
+      <Filter>UpdatableProcesses</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientAckManagerInternal.cpp">
+      <Filter>ClientAckManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonB2M1AI.cpp">
+      <Filter>AIInterface</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
