@@ -8,7 +8,7 @@ struct SRectOrder
 {
 	const vector<SRect> &s;
 	SRectOrder( const vector<SRect> &_s ) : s(_s) {}
-	operator()( int a, int b )
+	bool operator()( int a, int b )
 	{
 		return s[a].nYSize > s[b].nYSize || ( s[a].nYSize == s[b].nYSize && s[a].nXSize > s[b].nXSize );
 	}

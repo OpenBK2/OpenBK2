@@ -742,7 +742,7 @@ const float CBasePathUnit::GetMaxSpeedHere( const CVec2 &vPosition, const bool b
 IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking )
 {
 	CPtr<IStaticPath> pPath = 0;
-	const bNeedRelock = IsLockingTiles();
+	const bool bNeedRelock = IsLockingTiles();
 	if ( bNeedRelock )
 		UnlockTiles();
 	{

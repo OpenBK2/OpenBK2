@@ -32,7 +32,7 @@ public:
 	float GetSize() const { return fSize; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline GefFadeLatency( float fLatency )
+inline float GefFadeLatency( float fLatency )
 {
 	return -fLatency / log( 0.01f );
 }

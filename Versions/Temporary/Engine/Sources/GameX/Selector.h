@@ -291,7 +291,7 @@ public:
 	// получить список разрешенных действий (не совсем то же, что все действия без недоступных)
 	void GetEnabledActions( CUserActions *pActions );
 	void GetEnabledSuperActiveActions( CUserActions *pActions );
-	void SetMaxUnits( const int nMaxUnitSlots, const nMaxUnitPerSlot );
+	void SetMaxUnits( const int nMaxUnitSlots, const int nMaxUnitPerSlot );
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
 
 	void DoUpdateSelectedUnits();

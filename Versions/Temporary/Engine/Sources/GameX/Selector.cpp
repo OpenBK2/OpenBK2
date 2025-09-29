@@ -821,8 +821,8 @@ bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 
 	vector<int> buffer;
 	buffer.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
-	const nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
-	const nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
+	const int nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
+	const int nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
 
 	for ( int i = nBegin; i <= nEnd; ++i )
 	{
@@ -850,8 +850,8 @@ bool CSelector::DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, 
 
 	vector<int> buffer;
 	buffer.reserve( nMaxUnitSlots * nMaxUnitPerSlot );
-	const nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
-	const nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
+	const int nBegin = bAllUnitsCommand ? 0 : vAbilityGroups[nCurrentAbilityGroup].first;
+	const int nEnd = bAllUnitsCommand ? slots.size()-1 : vAbilityGroups[nCurrentAbilityGroup].second;
 
 	for ( int i = nBegin; i <= nEnd; ++i )
 	{
@@ -1236,7 +1236,7 @@ void CSelector::UnselectSlot( int nSlot )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CSelector::SetMaxUnits( const int _nMaxUnitSlots, const _nMaxUnitPerSlot )
+void CSelector::SetMaxUnits( const int _nMaxUnitSlots, const int _nMaxUnitPerSlot )
 {
 	nMaxUnitSlots = _nMaxUnitSlots;
 	nMaxUnitPerSlot = _nMaxUnitPerSlot;

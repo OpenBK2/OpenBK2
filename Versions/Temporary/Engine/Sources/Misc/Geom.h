@@ -688,8 +688,8 @@ public :
 	bool HomogeneousInverse( const SHMatrix &m );
 	const CVec3 GetTranslation() const { return CVec3( _14, _24, _34 ); }
 };
-inline operator==( const SHMatrix &a, const SHMatrix &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
-inline operator!=( const SHMatrix &a, const SHMatrix &b ) { return !(a == b); }
+inline bool operator==( const SHMatrix &a, const SHMatrix &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
+inline bool operator!=( const SHMatrix &a, const SHMatrix &b ) { return !(a == b); }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // прямое и обратное преобразование вместе
 struct SFBTransform

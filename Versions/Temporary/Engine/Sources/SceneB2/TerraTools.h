@@ -9,11 +9,11 @@ void LoadGrannyModel( const string &szFileName, vector<CVec3> *pVerts, vector<ST
 														 CVec3 *vMin, CVec3 *vMax );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ScanFill( CArray2D<BYTE> *pMask, const BYTE nColor );
-void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const nMaxX, const int nMaxY, const BYTE nColor );
+void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor );
 void DrawLine( CArray2D<BYTE> *pArray, const int nX1, const int nY1, const int nX2, const int nY2, const BYTE nColor );
 void SimpleFill( CArray2D<BYTE> *pArray, const int x, const int y, const BYTE nColor,const BYTE nBorderColor );
 void WiseFill( CArray2D<BYTE> *pMask, const BYTE nColor );
-void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const nMinY, const int nMaxX, const int nMaxY, const BYTE nColor );
+void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline void DrawRect( CArray2D<BYTE> *pImage,
 											const int x1, const int y1, const int x2, const int y2,

@@ -26,7 +26,7 @@ REGISTER_SAVELOAD_CLASS( UNKNOWN_PACKET_TYPE_ID, CUnknownPacket );
 //*													NetSaver                                 *
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EXTERNVAR N_SAVELOAD_VERSION;
+EXTERNVAR int N_SAVELOAD_VERSION;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // uses the fact that order of chunks during save and during load is the same
 // also requires no countchunks() use

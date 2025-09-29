@@ -156,7 +156,7 @@ void ScanFill( CArray2D<BYTE> *pMask, const BYTE nColor )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const nMaxX, const int nMaxY, const BYTE nColor )
+void ScanFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor )
 {
 	NI_ASSERT( (nMinX >= 0) && (nMaxX < pMask->GetSizeX()) && (nMinY >= 0) && (nMaxY < pMask->GetSizeY()), "Wrong area coordinates" );
 	NI_ASSERT( (nMinX <= nMaxX) && (nMinY <= nMaxY), "Wrong area coordinates" );
@@ -377,7 +377,7 @@ static int LineFillEx( CArray2D<BYTE> *pArray, const int x, const int y, const i
 	return xr;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static int LineFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const nMinY, const int nMaxX, const int nMaxY,
+static int LineFillInArea( CArray2D<BYTE> *pArray, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY,
 													 const int x, const int y, const int nDir, const int nPrevXl, const int nPrevXr, const BYTE nColor )
 {
 	if ( (x < nMinX) || (y < nMinY) || (x > nMaxX) || (y >= nMaxY) )
@@ -615,7 +615,7 @@ void WiseFill( CArray2D<BYTE> *pMask, const BYTE nColor )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const nMinY, const int nMaxX, const int nMaxY, const BYTE nColor )
+void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, const BYTE nColor )
 {
 	NI_ASSERT( (nMinX >= 0) && (nMaxX < pMask->GetSizeX()) && (nMinY >= 0) && (nMaxY < pMask->GetSizeY()), "Wrong area coordinates" );
 	NI_ASSERT( (nMinX <= nMaxX) && (nMinY <= nMaxY), "Wrong area coordinates" );

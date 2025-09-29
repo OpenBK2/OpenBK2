@@ -5,7 +5,7 @@
 #include "GeneralIntendant.h"
 #include "GeneralConsts.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CSupremeBeing::operator&( IBinSaver &saver )
+int CSupremeBeing::operator&( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
 	{

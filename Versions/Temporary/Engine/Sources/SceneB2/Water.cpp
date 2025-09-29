@@ -340,7 +340,7 @@ int CWaterPatch::Process( const long nTime )
 			const int nDy = (int)fDy;
 			//if ( foamParams[k][i].bIsFoamMoveForward )
 			//if ( !( nDy & 1 ) )
-			const nTale = nDy % 3;
+			const int nTale = nDy % 3;
 			if ( nTale < 2 )
 			{
 				const float fFoamDy = ( fDy - nDy + nTale ) * 0.5f;

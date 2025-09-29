@@ -87,7 +87,7 @@ const EIntersectionType FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1,
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // vDir1 must be normalized, vDir2 can be unnormalized !!!
-inline GetAngleCos( const CVec2 &vDir1, const CVec2 &vDir2 )
+inline float GetAngleCos( const CVec2 &vDir1, const CVec2 &vDir2 )
 {
 	CVec2 vDir2Norm( vDir2 );
 	if ( !Normalize( &vDir2Norm ) )

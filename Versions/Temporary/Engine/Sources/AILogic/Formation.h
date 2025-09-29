@@ -283,7 +283,7 @@ public:
 	virtual bool IsResupplyable() const { return bCanBeResupplied; }
 	virtual void SetResupplyable( const bool _bCanBeResupplied ) { bCanBeResupplied = _bCanBeResupplied; }
 
-	virtual const IsWithMoraleOfficer() const { return bWithMoraleOfficer; }
+	virtual const bool IsWithMoraleOfficer() const { return bWithMoraleOfficer; }
 
 	virtual void FreezeByState( const bool bFreeze );
 

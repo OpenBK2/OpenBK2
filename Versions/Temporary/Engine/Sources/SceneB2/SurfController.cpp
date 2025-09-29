@@ -37,7 +37,7 @@ void CVisSurfPatch::UpdateGeomData()
 	{
 		const float fDy = texYOffsets[i] + (float)pTimer->GetValue() * DEF_FOAM_DY * DEF_NEW_TIME;
 		const int nDy = (int)fDy;
-		const nTale = nDy % 3;
+		const int nTale = nDy % 3;
 		if ( nTale < 2 )
 		{
 			const float fFoamDy = ( fDy - nDy + nTale ) * 0.5f;

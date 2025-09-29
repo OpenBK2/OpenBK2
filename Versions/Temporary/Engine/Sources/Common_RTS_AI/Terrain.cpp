@@ -802,8 +802,8 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 	EFreeTileInfo eResult = FREE_NONE;
 	if ( aiClass & EAC_WATER )
 	{
-		const nClassIndexStatic = GetClassIndexFast( aiClass & EAC_WATER );
-		const nClassIndexDynamic = ( aiClass & EAC_TERRAIN ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_WATER );
+		const int nClassIndexStatic = GetClassIndexFast( aiClass & EAC_WATER );
+		const int nClassIndexDynamic = ( aiClass & EAC_TERRAIN ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_WATER );
 
 		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 && 
 			maxesSmooth[eMode][ nClassIndexDynamic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 )
@@ -813,8 +813,8 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 	}
 	if ( aiClass & EAC_TERRAIN )
 	{
-		const nClassIndexStatic = GetClassIndexFast( aiClass & EAC_TERRAIN );
-		const nClassIndexDynamic = ( aiClass & EAC_WATER ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_TERRAIN );
+		const int nClassIndexStatic = GetClassIndexFast( aiClass & EAC_TERRAIN );
+		const int nClassIndexDynamic = ( aiClass & EAC_WATER ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_TERRAIN );
 
 		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 && 
 				maxesSmooth[eMode][ nClassIndexDynamic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 )

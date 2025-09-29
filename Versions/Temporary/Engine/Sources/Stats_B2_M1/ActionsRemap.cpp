@@ -179,7 +179,7 @@ NDb::EUserAction GetActionByCommand( EActionCommand actionCommand )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
-	const nIndex = (int)specialAbility;
+	const int nIndex = (int)specialAbility;
 	NI_ASSERT( (nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT), StrFmt( "Unknown ability index: %d", nIndex ) );
 	return ( nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT ) ? mapAbilityToAction[nIndex] : NDb::USER_ACTION_UNKNOWN;
 }
