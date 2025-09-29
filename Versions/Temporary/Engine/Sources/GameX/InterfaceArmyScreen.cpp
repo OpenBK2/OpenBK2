@@ -15,8 +15,8 @@
 const int WAIT_TIME = 300; // msec
 const int STEP_WAIT_TIME = 50; // msec
 const float EXP_PROGRESS_STEP_FRACTION = 0.05f;
-const WORD* TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
-const WORD* DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
+const wchar_t* TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
+const wchar_t* DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
 const char* DYNAMIC_TAG_RANK_NAME_FORMAT = "rank%d_name";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CInterfaceArmyScreen::CReinfData : public CObjectBase

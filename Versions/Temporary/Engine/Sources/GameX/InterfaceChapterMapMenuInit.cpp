@@ -14,9 +14,9 @@
 #include "../Sound/MusicSystem.h"
 #include "../UI/WindowTooltip.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const WORD* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
-const WORD* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
-const WORD* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
+const wchar_t* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
+const wchar_t* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
+const wchar_t* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Too much is done in ChapterMap's Init() 
 // So it has been moved to this file
