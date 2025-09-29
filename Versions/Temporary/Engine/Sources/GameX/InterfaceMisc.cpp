@@ -177,12 +177,12 @@ void CICMessageBox::Configure( const char *pszConfig )
 	const char *pCurrPos = pszConfig;
 	while ( *pCurrPos != '0' )
 	{
-		char *p = strchr( pCurrPos, ':' );
+		const char *p = strchr( pCurrPos, ':' );
 		NI_ASSERT( p , StrFmt( "incorrect string format: %s", pszConfig ) );
 		string s( pCurrPos, p - pCurrPos );
 		if ( s == "type" )
 		{
-			char *p2 = strchr( p + 1, ';' );
+			const char *p2 = strchr( p + 1, ';' );
 			NI_ASSERT( p2 , StrFmt( "incorrect string format: %s", pszConfig ) );
 			szMainWindowName = string( p + 1, p2 - (p + 1) );
 			pCurrPos = p2 + 1;
