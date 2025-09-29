@@ -2018,6 +2018,9 @@ struct SRect
 	const int GetSide( const CVec2 &point ) const;
 
 	void Compress( const float fFactor );
+
+	SRect() : lengthAhead(0), lengthBack(0), width(0) {
+	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const float fabs( const SRect rect1, const SRect rect2 );
