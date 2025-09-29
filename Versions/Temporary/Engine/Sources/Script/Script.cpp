@@ -374,7 +374,6 @@ string Script::GetObjectAsText( const char* name, Script::Object value, bool bDe
 {
 	Script& script = *this;
 	string strRet;
-	using Script::Object;
 
 	// Indent the line the number of spaces for the current indentation level.
 	const unsigned int INDENT_SIZE = 2;
