@@ -15,19 +15,19 @@ const int CONNECTION_TIMEOUT = 20;
 CPlayGameProcessor::CPlayGameProcessor( CNet *_pNet, const char* pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
 : pNet( _pNet ), nNetGameVersion( _nNetGameVersion), szServerIP( pszServerIP ), nServerPort( _nServerPort ), nTimeOut( _nTimeOut )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessCreateGame );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectGame );
-	REGISTER_PACKET_PROCESSOR( ProcessMyIDPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessGameConnectingClientAccepted );
-	REGISTER_PACKET_PROCESSOR( ProcessLeaveGame );
-	REGISTER_PACKET_PROCESSOR( ProcessClientWantToConnect );
-	REGISTER_PACKET_PROCESSOR( ProcessGameKilled );
-	REGISTER_PACKET_PROCESSOR( ProcessAnswerConnectGame );
-	REGISTER_PACKET_PROCESSOR( ProcessKickClient );
-	REGISTER_PACKET_PROCESSOR( ProcessClientWasKicked );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectedGameID );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectGameFailed );
-	REGISTER_PACKET_PROCESSOR( ProcessGameClientDead );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessCreateGame );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessConnectGame );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessMyIDPacket );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessGameConnectingClientAccepted );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessLeaveGame );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessClientWantToConnect );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessGameKilled );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessAnswerConnectGame );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessKickClient );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessClientWasKicked );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessConnectedGameID );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessConnectGameFailed );
+	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessGameClientDead );
 
 	NEffortsFactory::SetServerInfo( szServerIP, nServerPort, nNetGameVersion );
 }

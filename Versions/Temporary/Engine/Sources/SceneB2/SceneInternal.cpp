@@ -68,20 +68,20 @@ IScene* CreateScene()
 CScene::CScene()
 : eScene( ES_UNKNOWN ), vBackgroundColor( vDefaultColor ), timeBadWeatherLeft( 0 ), bGetSizesFromTarget( false )
 {
-	observers.AddObserver( "scene_show_bboxes", ToggleShowMsg, SCENE_SHOW_BBOXES );
-	observers.AddObserver( "scene_show_grid", ToggleShowMsg, SCENE_SHOW_GRID );
-	observers.AddObserver( "wireframe", ToggleShowMsg, SCENE_SHOW_WIREFRAME );
-	observers.AddObserver( "scene_show_ui", ToggleShowMsg, SCENE_SHOW_UI );
-	observers.AddObserver( "scene_show_mip", ToggleShowMsg, SCENE_SHOW_MIPMAPS );
-	observers.AddObserver( "scene_show_overdraw", ToggleShowMsg, SCENE_SHOW_OVERDRAW );
-	observers.AddObserver( "scene_show_statistics", ToggleShowMsg, SCENE_SHOW_STATISTICS );
-	observers.AddObserver( "scene_show_shadows", ToggleShowMsg, SCENE_SHOW_SHADOWS );
-	observers.AddObserver( "scene_show_terrain", ToggleShowMsg, SCENE_SHOW_TERRAIN );
-	observers.AddObserver( "scene_show_ai_geom", ToggleShowMsg, SCENE_SHOW_AI_GEOM );
-	observers.AddObserver( "toggle_ai_passability", ToggleShowMsg, SCENE_SHOW_PASS_MARKERS );
-	observers.AddObserver( "make_map_shot", MakeMapShot );
-	observers.AddObserver( "screenshot", TakeScreenShotMsg );
-	observers.AddObserver( "measure_overdraw", CalcAverageOverdrawMsg );
+	observers.AddObserver( "scene_show_bboxes", &CScene::ToggleShowMsg, SCENE_SHOW_BBOXES );
+	observers.AddObserver( "scene_show_grid", &CScene::ToggleShowMsg, SCENE_SHOW_GRID );
+	observers.AddObserver( "wireframe", &CScene::ToggleShowMsg, SCENE_SHOW_WIREFRAME );
+	observers.AddObserver( "scene_show_ui", &CScene::ToggleShowMsg, SCENE_SHOW_UI );
+	observers.AddObserver( "scene_show_mip", &CScene::ToggleShowMsg, SCENE_SHOW_MIPMAPS );
+	observers.AddObserver( "scene_show_overdraw", &CScene::ToggleShowMsg, SCENE_SHOW_OVERDRAW );
+	observers.AddObserver( "scene_show_statistics", &CScene::ToggleShowMsg, SCENE_SHOW_STATISTICS );
+	observers.AddObserver( "scene_show_shadows", &CScene::ToggleShowMsg, SCENE_SHOW_SHADOWS );
+	observers.AddObserver( "scene_show_terrain", &CScene::ToggleShowMsg, SCENE_SHOW_TERRAIN );
+	observers.AddObserver( "scene_show_ai_geom", &CScene::ToggleShowMsg, SCENE_SHOW_AI_GEOM );
+	observers.AddObserver( "toggle_ai_passability", &CScene::ToggleShowMsg, SCENE_SHOW_PASS_MARKERS );
+	observers.AddObserver( "make_map_shot", &CScene::MakeMapShot );
+	observers.AddObserver( "screenshot", &TakeScreenShotMsg );
+	observers.AddObserver( "measure_overdraw", &CScene::CalcAverageOverdrawMsg );
 
 	bEditorMode = false;
 }

@@ -45,16 +45,16 @@ bool CInterfaceEscMenu::CReactions::Execute( const string &szSender, const strin
 CInterfaceEscMenu::CInterfaceEscMenu() : 
 	CInterfaceScreenBase( "MissionEscMenu", "esc_menu" ), bClosed( false )
 {
-	AddObserver( "try_exit_main_menu", MsgTryExitMainMenu );
-	AddObserver( "try_exit_windows", MsgTryExitWindows );
-	AddObserver( "go_main_menu", MsgGoMainMenu );
-	AddObserver( "options_menu", MsgOptionsMenu );
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
-	AddObserver( "menu_winned", MsgWinned );
+	AddObserver( "try_exit_main_menu", &CInterfaceEscMenu::MsgTryExitMainMenu );
+	AddObserver( "try_exit_windows", &CInterfaceEscMenu::MsgTryExitWindows );
+	AddObserver( "go_main_menu", &CInterfaceEscMenu::MsgGoMainMenu );
+	AddObserver( "options_menu", &CInterfaceEscMenu::MsgOptionsMenu );
+	AddObserver( "message_box_ok", &CInterfaceEscMenu::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceEscMenu::MsgCancel );
+	AddObserver( "menu_winned", &CInterfaceEscMenu::MsgWinned );
 
-	AddObserver( "multiplayer_end_mission", MsgMultiplayerEndMission );
-	AddObserver( "menu_help_button", MsgHelpButton );
+	AddObserver( "multiplayer_end_mission", &CInterfaceEscMenu::MsgMultiplayerEndMission );
+	AddObserver( "menu_help_button", &CInterfaceEscMenu::MsgHelpButton );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceEscMenu::~CInterfaceEscMenu()

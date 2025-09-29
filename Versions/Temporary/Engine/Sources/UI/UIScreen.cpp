@@ -38,14 +38,14 @@ CWindowScreen::CWindowScreen()
 	bindAlt( "alt_key" ),
 	bIsScreenFocused( false )
 {	
-	priorityEvents.AddObserver( "win_left_button_down", MsgOnLMouseDown );
-	priorityEvents.AddObserver( "win_left_button_up", MsgOnLMouseUp );
-	priorityEvents.AddObserver( "win_left_button_dblclk", MsgOnLMouseDblClick );
-	priorityEvents.AddObserver( "win_right_button_down", MsgOnRMouseDown );
-	priorityEvents.AddObserver( "win_right_button_up", MsgOnRMouseUp );
-	priorityEvents.AddObserver( "win_right_button_dblclk", MsgOnRMouseDblClick );
-	priorityEvents.AddObserver( "win_mouse_move", MsgOnMouseMove );
-	AddObserver( "win_key", OnKey );
+	priorityEvents.AddObserver( "win_left_button_down", &CWindowScreen::MsgOnLMouseDown );
+	priorityEvents.AddObserver( "win_left_button_up", &CWindowScreen::MsgOnLMouseUp );
+	priorityEvents.AddObserver( "win_left_button_dblclk", &CWindowScreen::MsgOnLMouseDblClick );
+	priorityEvents.AddObserver( "win_right_button_down", &CWindowScreen::MsgOnRMouseDown );
+	priorityEvents.AddObserver( "win_right_button_up", &CWindowScreen::MsgOnRMouseUp );
+	priorityEvents.AddObserver( "win_right_button_dblclk", &CWindowScreen::MsgOnRMouseDblClick );
+	priorityEvents.AddObserver( "win_mouse_move", &CWindowScreen::MsgOnMouseMove );
+	AddObserver( "win_key", &CWindowScreen::OnKey );
 }
 /////////////////////////////////////////////////////////////////////
 void CWindowScreen::UpdateResolution()

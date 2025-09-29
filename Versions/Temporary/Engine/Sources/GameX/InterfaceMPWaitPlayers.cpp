@@ -15,7 +15,7 @@
 CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() : 
 	CInterfaceMPScreenBase( "MPWaitPlayers", "mp_wait_players" )
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_INFO, SMPUILagInfoMessage, OnLagInfoMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_INFO, SMPUILagInfoMessage, &CInterfaceMPWaitPlayers::OnLagInfoMessage );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPWaitPlayers::Init()
@@ -43,7 +43,7 @@ bool CInterfaceMPWaitPlayers::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMPWaitPlayers::RegisterObservers()
 {
-	AddObserver( "multiplayer_pause", MsgOnMultiplayerPause );
+	AddObserver( "multiplayer_pause", &CInterfaceMPWaitPlayers::MsgOnMultiplayerPause );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPWaitPlayers::Execute( const string &szSender, const string &szReaction )

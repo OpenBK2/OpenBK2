@@ -22,7 +22,7 @@ const int nMAX_PLAYERS = 8;
 CInterfaceMPCustomGame::CInterfaceMPCustomGame() : 
 CInterfaceMPScreenBase( "MPCustomGame", "custom_game" ), nSelectedID(-1)
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, OnUpdateGameList );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CInterfaceMPCustomGame::OnUpdateGameList );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceMPCustomGame::~CInterfaceMPCustomGame()

@@ -137,7 +137,7 @@ CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector ) :
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMouseTranslatorB2Base::InitPrivate()
 {
-	AddObserver( "notify_forced_action", MsgNotifyForcedAction );
+	AddObserver( "notify_forced_action", &CMouseTranslatorB2Base::MsgNotifyForcedAction );
 	ResetState();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,7 +292,7 @@ CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	:
 {
 	ResetState();
 	
-	AddObserver( "cancel_action", MsgCancelAction );
+	AddObserver( "cancel_action", &CMouseTranslator::MsgCancelAction );
 	bDownSameTime = false;
 	downTime = 0;
 }

@@ -16,8 +16,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceReplaySaveLoad::CInterfaceReplaySaveLoad() : CInterfaceScreenBase( "ReplaySaveLoad", "intermission" )
 {
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
+	AddObserver( "message_box_ok", &CInterfaceReplaySaveLoad::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceReplaySaveLoad::MsgCancel );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceReplaySaveLoad::Init()

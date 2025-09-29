@@ -19,26 +19,26 @@ const char* PROFILE_MANAGER_VISITED = "ProfileManagerVisited";
 CInterfaceMainMenu::CInterfaceMainMenu() :
 	CInterfaceScreenBase( "MainMenu", "intermission" )
 {
-	AddObserver( "options_menu", MsgOptionsMenu );
-	AddObserver( "credits_screen", MsgCreditsScreen );
-	AddObserver( "campaign_selection_menu", MsgCampaignSelectionMenu );
-	AddObserver( "profile_manager_menu", MsgProfileManagerMenu );
-	AddObserver( "try_exit", MsgExit );
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
-	AddObserver( "menu_load", MsgLoadMenu );
-	AddObserver( "mp_games_list_menu", MsgMPGamesListMenu );
-	AddObserver( "menu_tutorial", MsgTutorialMenu );
+	AddObserver( "options_menu", &CInterfaceMainMenu::MsgOptionsMenu );
+	AddObserver( "credits_screen", &CInterfaceMainMenu::MsgCreditsScreen );
+	AddObserver( "campaign_selection_menu", &CInterfaceMainMenu::MsgCampaignSelectionMenu );
+	AddObserver( "profile_manager_menu", &CInterfaceMainMenu::MsgProfileManagerMenu );
+	AddObserver( "try_exit", &CInterfaceMainMenu::MsgExit );
+	AddObserver( "message_box_ok", &CInterfaceMainMenu::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceMainMenu::MsgCancel );
+	AddObserver( "menu_load", &CInterfaceMainMenu::MsgLoadMenu );
+	AddObserver( "mp_games_list_menu", &CInterfaceMainMenu::MsgMPGamesListMenu );
+	AddObserver( "menu_tutorial", &CInterfaceMainMenu::MsgTutorialMenu );
 
-	AddObserver( "menu_custom_mission", MsgMenuCustomMission );
-	AddObserver( "menu_encyclopedia", MsgEncyclopedia );
-	AddObserver( "menu_single_player", MsgSinglePlayer );
-	AddObserver( "quickload", MsgQuickLoad );
+	AddObserver( "menu_custom_mission", &CInterfaceMainMenu::MsgMenuCustomMission );
+	AddObserver( "menu_encyclopedia", &CInterfaceMainMenu::MsgEncyclopedia );
+	AddObserver( "menu_single_player", &CInterfaceMainMenu::MsgSinglePlayer );
+	AddObserver( "quickload", &CInterfaceMainMenu::MsgQuickLoad );
 
-	AddReaction( "reaction_on_multiplayer", OnMultiplayer );
-	AddReaction( "menu_custom_campaign", OnCustomCampaign );
-	AddReaction( "menu_load_mod", OnLoadMod );
-	AddReaction( "reaction_on_hall_of_fame", OnHallOfFame );
+	AddReaction( "reaction_on_multiplayer", &CInterfaceMainMenu::OnMultiplayer );
+	AddReaction( "menu_custom_campaign", &CInterfaceMainMenu::OnCustomCampaign );
+	AddReaction( "menu_load_mod", &CInterfaceMainMenu::OnLoadMod );
+	AddReaction( "reaction_on_hall_of_fame", &CInterfaceMainMenu::OnHallOfFame );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMainMenu::Init()

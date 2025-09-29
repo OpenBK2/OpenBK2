@@ -88,8 +88,8 @@ CPlayMovieInterface::CPlayMovieInterface()
 	bFadeOut( false ),
 	fFadeIn( 0.0f )
 {
-	AddObserver( "movie_skip_sequence", MsgSkipSequence );
-	AddObserver( "movie_skip_movie", MsgSkipMovie );
+	AddObserver( "movie_skip_sequence", &CPlayMovieInterface::MsgSkipSequence );
+	AddObserver( "movie_skip_movie", &CPlayMovieInterface::MsgSkipMovie );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CPlayMovieInterface::~CPlayMovieInterface()

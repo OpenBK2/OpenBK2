@@ -161,7 +161,7 @@ CWindowMiniMap::CWindowMiniMap() :
 	fAspect( 1.0f ),
 	vLastMousePos( VNULL2 )
 {
-	AddObserver( "mission_win_mouse_move_emit", MsgMouseMoveEmit );
+	AddObserver( "mission_win_mouse_move_emit", &CWindowMiniMap::MsgMouseMoveEmit );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nWarFogLevel )

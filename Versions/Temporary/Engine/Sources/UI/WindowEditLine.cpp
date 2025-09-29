@@ -22,16 +22,16 @@ CWindowEditLine::CWindowEditLine() : timeSegment( 0 ), nCursorPos( 0 ), bShowCur
 nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
 nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
 {
-	impotantMsgs.AddObserver( "editline_wordleft", OnCtrlLeft );
-	impotantMsgs.AddObserver( "editline_wordright", OnCtrlRight );
+	impotantMsgs.AddObserver( "editline_wordleft", &CWindowEditLine::OnCtrlLeft );
+	impotantMsgs.AddObserver( "editline_wordright", &CWindowEditLine::OnCtrlRight );
 
-	impotantMsgs.AddObserver( "editline_paste", OnPaste );
-	impotantMsgs.AddObserver( "editline_copy", OnCopy );
-	impotantMsgs.AddObserver( "editline_cut", OnCut );
-	impotantMsgs.AddObserver( "editline_select_all", OnSelectAll );
+	impotantMsgs.AddObserver( "editline_paste", &CWindowEditLine::OnPaste );
+	impotantMsgs.AddObserver( "editline_copy", &CWindowEditLine::OnCopy );
+	impotantMsgs.AddObserver( "editline_cut", &CWindowEditLine::OnCut );
+	impotantMsgs.AddObserver( "editline_select_all", &CWindowEditLine::OnSelectAll );
 
-	AddObserver( "win_char", OnChar );
-	AddObserver( "win_key", OnKey );
+	AddObserver( "win_char", &CWindowEditLine::OnChar );
+	AddObserver( "win_key", &CWindowEditLine::OnKey );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CWindowEditLine::RegisterObservers()

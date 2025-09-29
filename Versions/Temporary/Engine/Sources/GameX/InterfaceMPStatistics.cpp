@@ -21,8 +21,8 @@ const float UNFADE_TIME = 1.0f;
 CInterfaceMPStatistics::CInterfaceMPStatistics() :
 	CInterfaceMPScreenBase( "MPStatistics", "mp_statistics" )
 {
-	AddObserver( "menu_next", MsgNext );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_AFTERMATH, SMPUIGameAftemathMessage, OnGameAftermathMessage );
+	AddObserver( "menu_next", &CInterfaceMPStatistics::MsgNext );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_AFTERMATH, SMPUIGameAftemathMessage, &CInterfaceMPStatistics::OnGameAftermathMessage );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPStatistics::Init()

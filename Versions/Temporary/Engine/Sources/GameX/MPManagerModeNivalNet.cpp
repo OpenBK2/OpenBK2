@@ -45,40 +45,40 @@ CMPManagerModeNivalNet::CMPManagerModeNivalNet() :
 nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false )
 {
 	// Messages
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LOGIN_NIVAL_NET, SMPUILoginNivalNetMessage, OnLoginNivalNetMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REGISTER_NIVAL_NET, SMPUIRegisterMessage, OnRegisterNivalNetMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CUSTOM_GAME, SMPUIMessage, OnCustomGameMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER_GAME, SMPUILadderGameMessage, OnSetupLadderGameMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CANCEL_LADDER, SMPUIMessage, OnCancelLadderMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, OnBackFromGameListMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_JOIN_CHAT_CHANNEL, SMPUIJoinChannelMessage, OnJoinChatChannelMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_CHAT_CHANNELS, SMPUIMessage, OnRequestChatChannelsMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_INFO, SMPUILadderInfoRequestMessage, OnLadderInfoRequestMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHANGE_FRIEND_IGNORE, SMPUIChangeFriendIgnoreStatusMessage, OnChangeFriendIgnoreStatusMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LOGIN_NIVAL_NET, SMPUILoginNivalNetMessage, &CMPManagerModeNivalNet::OnLoginNivalNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REGISTER_NIVAL_NET, SMPUIRegisterMessage, &CMPManagerModeNivalNet::OnRegisterNivalNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CMPManagerModeNivalNet::OnChatMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CUSTOM_GAME, SMPUIMessage, &CMPManagerModeNivalNet::OnCustomGameMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER_GAME, SMPUILadderGameMessage, &CMPManagerModeNivalNet::OnSetupLadderGameMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CANCEL_LADDER, SMPUIMessage, &CMPManagerModeNivalNet::OnCancelLadderMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, &CMPManagerModeNivalNet::OnBackFromGameListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_JOIN_CHAT_CHANNEL, SMPUIJoinChannelMessage, &CMPManagerModeNivalNet::OnJoinChatChannelMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_CHAT_CHANNELS, SMPUIMessage, &CMPManagerModeNivalNet::OnRequestChatChannelsMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_INFO, SMPUILadderInfoRequestMessage, &CMPManagerModeNivalNet::OnLadderInfoRequestMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHANGE_FRIEND_IGNORE, SMPUIChangeFriendIgnoreStatusMessage, &CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage );
 
 	// Packets
-	REGISTER_PACKET_PROCESSOR( OnLobbyGamesPacket );
-	REGISTER_PACKET_PROCESSOR( OnMyIDPacket );
-	REGISTER_PACKET_PROCESSOR( OnConnectServerPacket );
-	REGISTER_PACKET_PROCESSOR( OnConnectGameFailed );
-	REGISTER_PACKET_PROCESSOR( OnConnectedGameIDPacket );
-	REGISTER_PACKET_PROCESSOR( OnNewGameClientPacket );
-	REGISTER_PACKET_PROCESSOR( OnEnterLobbyPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatChannelsListPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatChannelClientsPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatChannelClientNotifyPacket );
-	REGISTER_PACKET_PROCESSOR( OnGameClientWasKicked );
-	REGISTER_PACKET_PROCESSOR( OnGameClientDeadPacket );
-	REGISTER_PACKET_PROCESSOR( OnNetRemoveClientPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatIgnoreFriendListPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatFriendNotifyPacket );
-	REGISTER_PACKET_PROCESSOR( OnChatAFKResponsePacket );
-	REGISTER_PACKET_PROCESSOR( OnLadderStatisticsPacket );
-	REGISTER_PACKET_PROCESSOR( OnLadderInvalidStatisticsPacket );
-	REGISTER_PACKET_PROCESSOR( OnLadderShortStatisticsPacket );
-	REGISTER_PACKET_PROCESSOR( OnLadderInvitePacket );
-	REGISTER_PACKET_PROCESSOR( OnSystemBroadcastPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLobbyGamesPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnMyIDPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnConnectServerPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnConnectGameFailed );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnConnectedGameIDPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnNewGameClientPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnEnterLobbyPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatChannelsListPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatChannelClientsPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatChannelClientNotifyPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnGameClientWasKicked );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnGameClientDeadPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnNetRemoveClientPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatIgnoreFriendListPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatFriendNotifyPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnChatAFKResponsePacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLadderStatisticsPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLadderInvalidStatisticsPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLadderShortStatisticsPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLadderInvitePacket );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnSystemBroadcastPacket );
 
 	updateChannels.bUpdating = false;
 	bGotMyLadderStats = false;

@@ -51,17 +51,17 @@ CInterfaceScreenBase::CInterfaceScreenBase( const string &_szInterfaceType, cons
 	bInFocus = false;
 	nTime = 0; // 0 - need to set abs time at the appropriate place
 	//	
-	AddObserver( "win_mouse_move", MsgMouseMove );
-	AddObserver( "win_left_button_down", MsgLButtonDown );
-	AddObserver( "win_left_button_up", MsgLButtonUp );
-	AddObserver( "win_left_button_dblclk", MsgLButtonDblClk );
-	AddObserver( "win_right_button_down", MsgRButtonDown );
-	AddObserver( "win_right_button_up", MsgRButtonUp );
-	AddObserver( "win_right_button_dblclk", MsgRButtonDblClk );
-	AddObserver( "help_screen", MsgHelpScreen );
-	AddObserver( "show_console", OnShowConsole );
+	AddObserver( "win_mouse_move", &CInterfaceScreenBase::MsgMouseMove );
+	AddObserver( "win_left_button_down", &CInterfaceScreenBase::MsgLButtonDown );
+	AddObserver( "win_left_button_up", &CInterfaceScreenBase::MsgLButtonUp );
+	AddObserver( "win_left_button_dblclk", &CInterfaceScreenBase::MsgLButtonDblClk );
+	AddObserver( "win_right_button_down", &CInterfaceScreenBase::MsgRButtonDown );
+	AddObserver( "win_right_button_up", &CInterfaceScreenBase::MsgRButtonUp );
+	AddObserver( "win_right_button_dblclk", &CInterfaceScreenBase::MsgRButtonDblClk );
+	AddObserver( "help_screen", &CInterfaceScreenBase::MsgHelpScreen );
+	AddObserver( "show_console", &CInterfaceScreenBase::OnShowConsole );
 
-	AddObserver( "mission_win_mouse_move_emit", MsgMouseMove );
+	AddObserver( "mission_win_mouse_move_emit", &CInterfaceScreenBase::MsgMouseMove );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceScreenBase::Init()

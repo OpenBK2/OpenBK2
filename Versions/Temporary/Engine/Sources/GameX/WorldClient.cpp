@@ -270,86 +270,86 @@ CWorldClient::~CWorldClient()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CWorldClient::InitPrivate()
 {
-	AddObserver( "minimap_down", MsgMinimapDown );
-	AddObserver( "minimap_move", MsgMinimapMove );
-	AddObserver( "minimap_up", MsgMinimapUp );
+	AddObserver( "minimap_down", &CWorldClient::MsgMinimapDown );
+	AddObserver( "minimap_move", &CWorldClient::MsgMinimapMove );
+	AddObserver( "minimap_up", &CWorldClient::MsgMinimapUp );
 	
-	AddObserver( "set_destination_minimap", MsgSetDestinationMinimap );
-	AddObserver( "set_target_minimap", MsgSetTargetMinimap );
+	AddObserver( "set_destination_minimap", &CWorldClient::MsgSetDestinationMinimap );
+	AddObserver( "set_target_minimap", &CWorldClient::MsgSetTargetMinimap );
 
-	AddObserver( "scroll_map_true", MsgScrollMap );
+	AddObserver( "scroll_map_true", &CWorldClient::MsgScrollMap );
 
-	AddObserver( "start_selection", MsgStartSelection );
-	AddObserver( "update_selection", MsgUpdateSelection );
-	AddObserver( "end_selection", MsgEndSelection );
-	AddObserver( "cancel_selection", MsgCancelSelection );
+	AddObserver( "start_selection", &CWorldClient::MsgStartSelection );
+	AddObserver( "update_selection", &CWorldClient::MsgUpdateSelection );
+	AddObserver( "end_selection", &CWorldClient::MsgEndSelection );
+	AddObserver( "cancel_selection", &CWorldClient::MsgCancelSelection );
 
-	AddObserver( "set_target", MsgSetTarget );
-	AddObserver( "reset_target2", MsgResetTarget );
-	AddObserver( "set_destination", MsgSetDestination );
+	AddObserver( "set_target", &CWorldClient::MsgSetTarget );
+	AddObserver( "reset_target2", &CWorldClient::MsgResetTarget );
+	AddObserver( "set_destination", &CWorldClient::MsgSetDestination );
 
-	AddObserver( "update_direction", MsgUpdateDirection );
-	AddObserver( "set_direction", MsgSetDirection );
-	AddObserver( "cancel_direction", MsgCancelDirection );
-	AddObserver( "do_action", MsgDoAction );
+	AddObserver( "update_direction", &CWorldClient::MsgUpdateDirection );
+	AddObserver( "set_direction", &CWorldClient::MsgSetDirection );
+	AddObserver( "cancel_direction", &CWorldClient::MsgCancelDirection );
+	AddObserver( "do_action", &CWorldClient::MsgDoAction );
 	//
-	AddObserver( "set_forced_action", MsgSetForcedAction );
-	AddObserver( "game_reset_forced_action", MsgResetForcedAction );
-	AddObserver( "set_special_ability", MsgSetSpecialAbility );
+	AddObserver( "set_forced_action", &CWorldClient::MsgSetForcedAction );
+	AddObserver( "game_reset_forced_action", &CWorldClient::MsgResetForcedAction );
+	AddObserver( "set_special_ability", &CWorldClient::MsgSetSpecialAbility );
 	//
 //	AddObserver( "shift_down", MsgShiftDown  );
 //	AddObserver( "shift_up", MsgShiftUp  );
 	//
-	AddObserver( "show_areas_down", MsgAreasDown  );
-	AddObserver( "show_areas_up", MsgAreasUp  );
-	AddObserver( "show_ranges_down", MsgRangesDown  );
-	AddObserver( "show_ranges_up", MsgRangesUp  );
+	AddObserver( "show_areas_down", &CWorldClient::MsgAreasDown  );
+	AddObserver( "show_areas_up", &CWorldClient::MsgAreasUp  );
+	AddObserver( "show_ranges_down", &CWorldClient::MsgRangesDown  );
+	AddObserver( "show_ranges_up", &CWorldClient::MsgRangesUp  );
 	AddObserver( "show_xray_down", MsgXRay, 1 );
 	AddObserver( "show_xray_up", MsgXRay, 0 );
 	//
-	AddObserver( "unload_unit", MsgUnloadUnit );
-	AddObserver( "select_units", MsgSelectUnits );
-	AddObserver( "select_next_group", MsgSelectNextGroup );
-	AddObserver( "select_prev_group", MsgSelectPrevGroup );
+	AddObserver( "unload_unit", &CWorldClient::MsgUnloadUnit );
+	AddObserver( "select_units", &CWorldClient::MsgSelectUnits );
+	AddObserver( "select_next_group", &CWorldClient::MsgSelectNextGroup );
+	AddObserver( "select_prev_group", &CWorldClient::MsgSelectPrevGroup );
 	//
-	AddObserver( "update_selected_unit", MsgUpdateSelectedUnit );
+	AddObserver( "update_selected_unit", &CWorldClient::MsgUpdateSelectedUnit );
 	//
-	AddObserver( "show_objects_profile", ToggleLockProfiles );
+	AddObserver( "show_objects_profile", &CWorldClient::ToggleLockProfiles );
 
-	AddObserver( "play_all_animations", PlayAllAnimations );
+	AddObserver( "play_all_animations", &CWorldClient::PlayAllAnimations );
 
-	AddObserver( "assign_selection_group_0", MsgAssignSelectionGroup, 0 );
-	AddObserver( "assign_selection_group_1", MsgAssignSelectionGroup, 1 );
-	AddObserver( "assign_selection_group_2", MsgAssignSelectionGroup, 2 );
-	AddObserver( "assign_selection_group_3", MsgAssignSelectionGroup, 3 );
-	AddObserver( "assign_selection_group_4", MsgAssignSelectionGroup, 4 );
-	AddObserver( "assign_selection_group_5", MsgAssignSelectionGroup, 5 );
-	AddObserver( "assign_selection_group_6", MsgAssignSelectionGroup, 6 );
-	AddObserver( "assign_selection_group_7", MsgAssignSelectionGroup, 7 );
-	AddObserver( "assign_selection_group_8", MsgAssignSelectionGroup, 8 );
-	AddObserver( "assign_selection_group_9", MsgAssignSelectionGroup, 9 );
-	AddObserver( "restore_selection_group_0", MsgRestoreSelectionGroup, 0 );
-	AddObserver( "restore_selection_group_1", MsgRestoreSelectionGroup, 1 );
-	AddObserver( "restore_selection_group_2", MsgRestoreSelectionGroup, 2 );
-	AddObserver( "restore_selection_group_3", MsgRestoreSelectionGroup, 3 );
-	AddObserver( "restore_selection_group_4", MsgRestoreSelectionGroup, 4 );
-	AddObserver( "restore_selection_group_5", MsgRestoreSelectionGroup, 5 );
-	AddObserver( "restore_selection_group_6", MsgRestoreSelectionGroup, 6 );
-	AddObserver( "restore_selection_group_7", MsgRestoreSelectionGroup, 7 );
-	AddObserver( "restore_selection_group_8", MsgRestoreSelectionGroup, 8 );
-	AddObserver( "restore_selection_group_9", MsgRestoreSelectionGroup, 9 );
-	AddObserver( "center_selection_group_0", MsgCenterSelectionGroup, 0 );
-	AddObserver( "center_selection_group_1", MsgCenterSelectionGroup, 1 );
-	AddObserver( "center_selection_group_2", MsgCenterSelectionGroup, 2 );
-	AddObserver( "center_selection_group_3", MsgCenterSelectionGroup, 3 );
-	AddObserver( "center_selection_group_4", MsgCenterSelectionGroup, 4 );
-	AddObserver( "center_selection_group_5", MsgCenterSelectionGroup, 5 );
-	AddObserver( "center_selection_group_6", MsgCenterSelectionGroup, 6 );
-	AddObserver( "center_selection_group_7", MsgCenterSelectionGroup, 7 );
-	AddObserver( "center_selection_group_8", MsgCenterSelectionGroup, 8 );
-	AddObserver( "center_selection_group_9", MsgCenterSelectionGroup, 9 );
+	AddObserver( "assign_selection_group_0", &CWorldClient::MsgAssignSelectionGroup, 0 );
+	AddObserver( "assign_selection_group_1", &CWorldClient::MsgAssignSelectionGroup, 1 );
+	AddObserver( "assign_selection_group_2", &CWorldClient::MsgAssignSelectionGroup, 2 );
+	AddObserver( "assign_selection_group_3", &CWorldClient::MsgAssignSelectionGroup, 3 );
+	AddObserver( "assign_selection_group_4", &CWorldClient::MsgAssignSelectionGroup, 4 );
+	AddObserver( "assign_selection_group_5", &CWorldClient::MsgAssignSelectionGroup, 5 );
+	AddObserver( "assign_selection_group_6", &CWorldClient::MsgAssignSelectionGroup, 6 );
+	AddObserver( "assign_selection_group_7", &CWorldClient::MsgAssignSelectionGroup, 7 );
+	AddObserver( "assign_selection_group_8", &CWorldClient::MsgAssignSelectionGroup, 8 );
+	AddObserver( "assign_selection_group_9", &CWorldClient::MsgAssignSelectionGroup, 9 );
+	AddObserver( "restore_selection_group_0", &CWorldClient::MsgRestoreSelectionGroup, 0 );
+	AddObserver( "restore_selection_group_1", &CWorldClient::MsgRestoreSelectionGroup, 1 );
+	AddObserver( "restore_selection_group_2", &CWorldClient::MsgRestoreSelectionGroup, 2 );
+	AddObserver( "restore_selection_group_3", &CWorldClient::MsgRestoreSelectionGroup, 3 );
+	AddObserver( "restore_selection_group_4", &CWorldClient::MsgRestoreSelectionGroup, 4 );
+	AddObserver( "restore_selection_group_5", &CWorldClient::MsgRestoreSelectionGroup, 5 );
+	AddObserver( "restore_selection_group_6", &CWorldClient::MsgRestoreSelectionGroup, 6 );
+	AddObserver( "restore_selection_group_7", &CWorldClient::MsgRestoreSelectionGroup, 7 );
+	AddObserver( "restore_selection_group_8", &CWorldClient::MsgRestoreSelectionGroup, 8 );
+	AddObserver( "restore_selection_group_9", &CWorldClient::MsgRestoreSelectionGroup, 9 );
+	AddObserver( "center_selection_group_0", &CWorldClient::MsgCenterSelectionGroup, 0 );
+	AddObserver( "center_selection_group_1", &CWorldClient::MsgCenterSelectionGroup, 1 );
+	AddObserver( "center_selection_group_2", &CWorldClient::MsgCenterSelectionGroup, 2 );
+	AddObserver( "center_selection_group_3", &CWorldClient::MsgCenterSelectionGroup, 3 );
+	AddObserver( "center_selection_group_4", &CWorldClient::MsgCenterSelectionGroup, 4 );
+	AddObserver( "center_selection_group_5", &CWorldClient::MsgCenterSelectionGroup, 5 );
+	AddObserver( "center_selection_group_6", &CWorldClient::MsgCenterSelectionGroup, 6 );
+	AddObserver( "center_selection_group_7", &CWorldClient::MsgCenterSelectionGroup, 7 );
+	AddObserver( "center_selection_group_8", &CWorldClient::MsgCenterSelectionGroup, 8 );
+	AddObserver( "center_selection_group_9", &CWorldClient::MsgCenterSelectionGroup, 9 );
 
-	AddObserver( "center_current_selection", MsgCenterCurrentSelection );
+	AddObserver( "center_current_selection", &CWorldClient::MsgCenterCurrentSelection );
 
 	RegisterUserAction( NDb::USER_ACTION_MOVE, SActionDesc::AUTO | SActionDesc::FORCED, &CWorldClient::ActionMove );
 	RegisterUserAction( NDb::USER_ACTION_MOVE_TO_GRID, SActionDesc::FORCED, &CWorldClient::ActionMoveToGrid );
@@ -380,7 +380,7 @@ void CWorldClient::InitPrivate()
 	RegisterUserAction( NDb::USER_ACTION_INSTALL, SActionDesc::INSTANT, &CWorldClient::ActionInstall );
 	RegisterUserAction( NDb::USER_ACTION_UNINSTALL, SActionDesc::INSTANT, &CWorldClient::ActionUnInstall );
 
-	RegisterUserAction( NDb::USER_ACTION_CAPTURE_ARTILLERY, SActionDesc::AUTO, ActionCaptureArtillery );
+	RegisterUserAction( NDb::USER_ACTION_CAPTURE_ARTILLERY, SActionDesc::AUTO, &CWorldClient::ActionCaptureArtillery );
 	RegisterUserAction( NDb::USER_ACTION_HOOK_ARTILLERY, SActionDesc::AUTO | SActionDesc::FORCED, &CWorldClient::ActionHookArtillery );
 	RegisterUserAction( NDb::USER_ACTION_DEPLOY_ARTILLERY, SActionDesc::AUTO | SActionDesc::FORCED, &CWorldClient::ActionDeployArtillery );
 

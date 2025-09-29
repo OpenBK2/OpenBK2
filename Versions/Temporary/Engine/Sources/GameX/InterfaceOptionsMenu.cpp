@@ -87,8 +87,8 @@ int CInterfaceOptionsMenu::CReactions::Check( const string &szCheckName ) const
 CInterfaceOptionsMenu::CInterfaceOptionsMenu() : 
 	CInterfaceScreenBase( "OptionsMenu", "options_menu" )
 {
-	AddObserver( "back", MsgBack );
-	AddObserver( "accept", MsgAccept );
+	AddObserver( "back", &CInterfaceOptionsMenu::MsgBack );
+	AddObserver( "accept", &CInterfaceOptionsMenu::MsgAccept );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceOptionsMenu::~CInterfaceOptionsMenu()

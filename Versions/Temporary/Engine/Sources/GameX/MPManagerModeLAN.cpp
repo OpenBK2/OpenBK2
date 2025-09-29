@@ -64,15 +64,15 @@ wGameUniqueID(0), eCurrentState( EGS_NOT_IN_GAME )
 	pClient = pLANClient;
 
 	// Messages
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, OnChatMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CMPManagerModeLAN::OnChatMessage );
 
 	// Packets
-	REGISTER_PACKET_PROCESSOR( OnNetNewClient );
-	REGISTER_PACKET_PROCESSOR( OnConnectGameFailed );
-	REGISTER_PACKET_PROCESSOR( OnGameClientWasKicked );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeLAN::OnNetNewClient );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeLAN::OnConnectGameFailed );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeLAN::OnGameClientWasKicked );
 
-	REGISTER_PACKET_PROCESSOR( OnLANPassword );
-	REGISTER_PACKET_PROCESSOR( OnRequestLANPassword );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeLAN::OnLANPassword );
+	REGISTER_PACKET_PROCESSOR( &CMPManagerModeLAN::OnRequestLANPassword );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CMPManagerModeLAN::Segment()

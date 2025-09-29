@@ -23,7 +23,7 @@ CInterfaceNivalNet::CInterfaceNivalNet() :
 	CInterfaceMPScreenBase( "MPNivalNet", "nival_net" ),
 	eState( ES_NORMAL )
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CONNECT_RESULT, SMPUIConnectResultMessage, OnConnectResultMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CONNECT_RESULT, SMPUIConnectResultMessage, &CInterfaceNivalNet::OnConnectResultMessage );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceNivalNet::~CInterfaceNivalNet()

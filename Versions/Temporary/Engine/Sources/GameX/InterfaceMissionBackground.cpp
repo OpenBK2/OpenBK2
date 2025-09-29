@@ -24,8 +24,8 @@ CInterfaceMissionBackground::CInterfaceMissionBackground() :
 	++nInterfaceMissionBackgroundCount;
 #endif
 
-	AddObserver( "unload_background_mission", MsgUnloadMission );
-	AddObserver( "try_exit_windows", MsgTryExitWindows );
+	AddObserver( "unload_background_mission", &CInterfaceMissionBackground::MsgUnloadMission );
+	AddObserver( "try_exit_windows", &CInterfaceMissionBackground::MsgTryExitWindows );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceMissionBackground::~CInterfaceMissionBackground()

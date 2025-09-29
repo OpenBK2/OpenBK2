@@ -100,11 +100,11 @@ bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, c
 CInterfaceEncyclopedia::CInterfaceEncyclopedia() :
 	CInterfaceScreenBase( "Encyclopedia", "encyclopedia" )
 {
-	AddObserver( "menu_back", MsgBack );
-	AddObserver( "StepBackward", MsgStepBackward );
-	AddObserver( "StepForward", MsgStepForward );
-	AddObserver( "UnitSelectionChanged", MsgUnitSelectionChanged );
-	AddObserver( "HelpScreen", MsgHelpScreen );
+	AddObserver( "menu_back", &CInterfaceEncyclopedia::MsgBack );
+	AddObserver( "StepBackward", &CInterfaceEncyclopedia::MsgStepBackward );
+	AddObserver( "StepForward", &CInterfaceEncyclopedia::MsgStepForward );
+	AddObserver( "UnitSelectionChanged", &CInterfaceEncyclopedia::MsgUnitSelectionChanged );
+	AddObserver( "HelpScreen", &CInterfaceEncyclopedia::MsgHelpScreen );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceEncyclopedia::~CInterfaceEncyclopedia()

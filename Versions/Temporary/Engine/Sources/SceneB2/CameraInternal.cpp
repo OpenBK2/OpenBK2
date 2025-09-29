@@ -42,10 +42,10 @@ CCamera::CCamera()
 	transformStack.Make( matProj );
 	transformStack.SetCamera( matView );
 	//
-	AddObserver( "camera_mouse_rotate_start", MsgMouseRotation, true );
-	AddObserver( "camera_mouse_rotate_finish", MsgMouseRotation, false );
-	AddObserver( "camera_control_on", MsgMouseRotation, true );
-	AddObserver( "camera_control_off", MsgMouseRotation, false );
+	AddObserver( "camera_mouse_rotate_start", &CCamera::MsgMouseRotation, true );
+	AddObserver( "camera_mouse_rotate_finish", &CCamera::MsgMouseRotation, false );
+	AddObserver( "camera_control_on", &CCamera::MsgMouseRotation, true );
+	AddObserver( "camera_control_off", &CCamera::MsgMouseRotation, false );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCamera::SetHandleType(	bool _bMayaHandleType )

@@ -29,9 +29,9 @@ static bool s_bMPAllowStartGame;
 CInterfaceMPGameRoom::CInterfaceMPGameRoom() : 
 CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_ROOM_INIT, SMPUIGameRoomInitMessage, OnGameRoomInitMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, OnUpdateSlotMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPGameRoom::OnChatMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_ROOM_INIT, SMPUIGameRoomInitMessage, &CInterfaceMPGameRoom::OnGameRoomInitMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, &CInterfaceMPGameRoom::OnUpdateSlotMessage );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceMPGameRoom::~CInterfaceMPGameRoom()
@@ -66,8 +66,8 @@ bool CInterfaceMPGameRoom::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMPGameRoom::RegisterObservers()
 {	
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
+	AddObserver( "message_box_ok", &CInterfaceMPGameRoom::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceMPGameRoom::MsgCancel );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMPGameRoom::InitControls()

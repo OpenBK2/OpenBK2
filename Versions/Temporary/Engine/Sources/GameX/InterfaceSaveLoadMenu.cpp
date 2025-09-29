@@ -64,15 +64,15 @@ CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() :
 {
 	pScreenShotTexture = new CBackgroundMutableTexture;
 
-	AddObserver( "menu_back", MsgBack );
-	AddObserver( "menu_delete", MsgDelete );
-	AddObserver( "menu_load", MsgLoad );
-	AddObserver( "menu_save", MsgSave );
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
-	AddObserver( "save_list_dbl_click", MsgDblClick );
-	AddObserver( "select_prev", MsgSelectPrev );
-	AddObserver( "select_next", MsgSelectNext );
+	AddObserver( "menu_back", &CInterfaceSaveLoadMenu::MsgBack );
+	AddObserver( "menu_delete", &CInterfaceSaveLoadMenu::MsgDelete );
+	AddObserver( "menu_load", &CInterfaceSaveLoadMenu::MsgLoad );
+	AddObserver( "menu_save", &CInterfaceSaveLoadMenu::MsgSave );
+	AddObserver( "message_box_ok", &CInterfaceSaveLoadMenu::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceSaveLoadMenu::MsgCancel );
+	AddObserver( "save_list_dbl_click", &CInterfaceSaveLoadMenu::MsgDblClick );
+	AddObserver( "select_prev", &CInterfaceSaveLoadMenu::MsgSelectPrev );
+	AddObserver( "select_next", &CInterfaceSaveLoadMenu::MsgSelectNext );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceSaveLoadMenu::~CInterfaceSaveLoadMenu()

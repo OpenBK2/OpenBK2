@@ -36,9 +36,9 @@ CInterfaceMissionObjectives::CInterfaceMissionObjectives() :
 	bIsModal( true ),
 	bCameraBack( false )
 {
-	AddObserver( "menu_close", MsgBack );
-	AddObserver( "set_modality", MsgSetModality );
-	AddObserver( "mission_objectives_changed", MsgMissionObjectivesChanged );
+	AddObserver( "menu_close", &CInterfaceMissionObjectives::MsgBack );
+	AddObserver( "set_modality", &CInterfaceMissionObjectives::MsgSetModality );
+	AddObserver( "mission_objectives_changed", &CInterfaceMissionObjectives::MsgMissionObjectivesChanged );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CInterfaceMissionObjectives::~CInterfaceMissionObjectives()

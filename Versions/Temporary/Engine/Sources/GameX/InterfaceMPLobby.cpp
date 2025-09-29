@@ -17,12 +17,12 @@
 CInterfaceMPLobby::CInterfaceMPLobby() : 
 CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_CHANNELS, SMPUIChatChannelListMessage, OnChatChannelsListMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS, SMPUIChatChannelNicksMessage, OnChatChannelNicksMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS_CHANGE, SMPUIChatChannelNicksChangeMessage, OnChatChannelNicksChangeMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_SHORT_INFO, SMPUIShortInfoMessage, OnShortInfoMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER, SMPUILadderStatusChangeMessage, OnLadderMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPLobby::OnChatMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_CHANNELS, SMPUIChatChannelListMessage, &CInterfaceMPLobby::OnChatChannelsListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS, SMPUIChatChannelNicksMessage, &CInterfaceMPLobby::OnChatChannelNicksMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS_CHANGE, SMPUIChatChannelNicksChangeMessage, &CInterfaceMPLobby::OnChatChannelNicksChangeMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_SHORT_INFO, SMPUIShortInfoMessage, &CInterfaceMPLobby::OnShortInfoMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER, SMPUILadderStatusChangeMessage, &CInterfaceMPLobby::OnLadderMessage );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMPLobby::Init()

@@ -27,8 +27,8 @@ bool CInterfaceMissionMovieBorder::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMissionMovieBorder::RegisterObservers()
 {
-	AddObserver( "quicksave", MsgQuickSave );
-	AddObserver( "quickload", MsgQuickLoad );
+	AddObserver( "quicksave", &CInterfaceMissionMovieBorder::MsgQuickSave );
+	AddObserver( "quickload", &CInterfaceMissionMovieBorder::MsgQuickLoad );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMissionMovieBorder::MsgQuickSave( const SGameMessage &msg )

@@ -139,7 +139,7 @@ CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() :
 	eExitDir( EED_ENTER ), nSelectedMission( -1 ), nRecommendedTarget( 0 ),
 	bInitialDialogVisible( false )
 {
-	AddObserver( "message_box_ok", MsgMessageBoxOk );
+	AddObserver( "message_box_ok", &CInterfaceChapterMapMenu::MsgMessageBoxOk );
 
 	bonusButtons.resize( 4 );
 }
@@ -313,12 +313,12 @@ bool CInterfaceChapterMapMenu::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceChapterMapMenu::RegisterObservers()
 {
-	AddObserver( "menu_back", MsgBack );
-	AddObserver( "menu_play", MsgPlay );
-	AddObserver( "menu_return_from_subscreen", MsgReenter );
-	AddObserver( "menu_continue_play", MsgContinuePlay );
-	AddObserver( "complete_selected_mission", MsgCompleteSelectedMission );
-	AddObserver( "complete_chapter", MsgCompleteChapter );
+	AddObserver( "menu_back", &CInterfaceChapterMapMenu::MsgBack );
+	AddObserver( "menu_play", &CInterfaceChapterMapMenu::MsgPlay );
+	AddObserver( "menu_return_from_subscreen", &CInterfaceChapterMapMenu::MsgReenter );
+	AddObserver( "menu_continue_play", &CInterfaceChapterMapMenu::MsgContinuePlay );
+	AddObserver( "complete_selected_mission", &CInterfaceChapterMapMenu::MsgCompleteSelectedMission );
+	AddObserver( "complete_chapter", &CInterfaceChapterMapMenu::MsgCompleteChapter );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceChapterMapMenu::OnGetFocus( bool bFocus )

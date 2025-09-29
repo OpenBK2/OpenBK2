@@ -26,9 +26,9 @@ CInterfaceSingleStatistic::CInterfaceSingleStatistic() :
 	CInterfaceScreenBase( "SingleStatistics2", "single_statistic" ),
 	timePrevPopup( 0 )
 {
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
-	AddObserver( "try_exit_windows", MsgTryExitWindows );
+	AddObserver( "message_box_ok", &CInterfaceSingleStatistic::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceSingleStatistic::MsgCancel );
+	AddObserver( "try_exit_windows", &CInterfaceSingleStatistic::MsgTryExitWindows );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceSingleStatistic::Init()

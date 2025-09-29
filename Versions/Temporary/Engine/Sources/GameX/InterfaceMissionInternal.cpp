@@ -303,66 +303,66 @@ CInterfaceMission::CInterfaceMission()
 	bTryExitWindows( false )
 {
 	pMission = 0;	
-	AddObserver( "inc_game_speed", MsgChangeGameSpeed, +1 );
-	AddObserver( "dec_game_speed", MsgChangeGameSpeed, -1 );
-	AddObserver( "toggle_war_fog", MsgToggleWarFog );
+	AddObserver( "inc_game_speed", &MsgChangeGameSpeed, +1 );
+	AddObserver( "dec_game_speed", &MsgChangeGameSpeed, -1 );
+	AddObserver( "toggle_war_fog", &CInterfaceMission::MsgToggleWarFog );
 
 	// new reinf system
-	AddObserver( "new_update_reinf_avail", MsgNewUpdateReinfAvail );
-	AddObserver( "new_update_reinf_point", MsgNewUpdateReinfPoint );
-	AddObserver( "forced_action_call_reinf", MsgForcedActionCallReinf );
-	AddObserver( "reset_target", MsgResetTarget );
-	AddObserver( "reinf_update_minimap_pos", MsgUpdateMinimapPos );
-	AddObserver( "reinf_mode", MsgReinfMode );
-	AddObserver( "forced_action_call_no_reinf", MsgForcedActionCallNoReinf );
-	AddObserver( "bad_weather", MsgBadWeather );
-	AddObserver( "avia_returns", MsgAviaReturns );
+	AddObserver( "new_update_reinf_avail", &CInterfaceMission::MsgNewUpdateReinfAvail );
+	AddObserver( "new_update_reinf_point", &CInterfaceMission::MsgNewUpdateReinfPoint );
+	AddObserver( "forced_action_call_reinf", &CInterfaceMission::MsgForcedActionCallReinf );
+	AddObserver( "reset_target", &CInterfaceMission::MsgResetTarget );
+	AddObserver( "reinf_update_minimap_pos", &CInterfaceMission::MsgUpdateMinimapPos );
+	AddObserver( "reinf_mode", &CInterfaceMission::MsgReinfMode );
+	AddObserver( "forced_action_call_no_reinf", &CInterfaceMission::MsgForcedActionCallNoReinf );
+	AddObserver( "bad_weather", &CInterfaceMission::MsgBadWeather );
+	AddObserver( "avia_returns", &CInterfaceMission::MsgAviaReturns );
 
 	// super weapon	
-	AddObserver( "forced_action_call_super_weapon", MsgForcedActionCallSuperWeapon );
+	AddObserver( "forced_action_call_super_weapon", &CInterfaceMission::MsgForcedActionCallSuperWeapon );
 
 	//
-	AddObserver( "user_ability_slot_00", MsgUserAbilitySlot, 0 );
-	AddObserver( "user_ability_slot_01", MsgUserAbilitySlot, 1 );
-	AddObserver( "user_ability_slot_02", MsgUserAbilitySlot, 2 );
-	AddObserver( "user_ability_slot_03", MsgUserAbilitySlot, 3 );
+	AddObserver( "user_ability_slot_00", &CInterfaceMission::MsgUserAbilitySlot, 0 );
+	AddObserver( "user_ability_slot_01", &CInterfaceMission::MsgUserAbilitySlot, 1 );
+	AddObserver( "user_ability_slot_02", &CInterfaceMission::MsgUserAbilitySlot, 2 );
+	AddObserver( "user_ability_slot_03", &CInterfaceMission::MsgUserAbilitySlot, 3 );
 
-	AddObserver( "mission_multistate_panel_minimize", MsgMultistatePanelMinimize );
-	AddObserver( "mission_multistate_panel_maximize", MsgMultistatePanelMaximize );
-	AddObserver( "mission_toggle_multistate_panel", MsgMultistatePanelToggle );
+	AddObserver( "mission_multistate_panel_minimize", &CInterfaceMission::MsgMultistatePanelMinimize );
+	AddObserver( "mission_multistate_panel_maximize", &CInterfaceMission::MsgMultistatePanelMaximize );
+	AddObserver( "mission_toggle_multistate_panel", &CInterfaceMission::MsgMultistatePanelToggle );
 
-	AddObserver( "mission_update_special_select_btn", MsgUpdateSpecialSelectBtn );
+	AddObserver( "mission_update_special_select_btn", &CInterfaceMission::MsgUpdateSpecialSelectBtn );
 
-	AddObserver( "new_reset_forced_action", MsgResetForcedAction );
+	AddObserver( "new_reset_forced_action", &CInterfaceMission::MsgResetForcedAction );
 	
-	AddObserver( "MissionUnitViewClick", MsgUnitViewClick );
+	AddObserver( "MissionUnitViewClick", &CInterfaceMission::MsgUnitViewClick );
 
-	AddObserver( "mission_update_win_loose_state", MsgUpdateWinLooseState );
+	AddObserver( "mission_update_win_loose_state", &CInterfaceMission::MsgUpdateWinLooseState );
 
-	AddObserver( "multiplayer_win", MsgMultiplayerWin );
-	AddObserver( "multiplayer_loose", MsgMultiplayerLoose );
+	AddObserver( "multiplayer_win", &CInterfaceMission::MsgMultiplayerWin );
+	AddObserver( "multiplayer_loose", &CInterfaceMission::MsgMultiplayerLoose );
 	
-	AddObserver( "scroll_map", MsgScrollMap );
+	AddObserver( "scroll_map", &CInterfaceMission::MsgScrollMap );
 
-	AddImportantObserver( "win_mouse_move", MsgOnBeforeMouseMove );
+	AddImportantObserver( "win_mouse_move", &CInterfaceMission::MsgOnBeforeMouseMove );
 
-	AddObserver( "message_box_ok", MsgMessageBoxOk );
+	AddObserver( "message_box_ok", &CInterfaceMission::MsgMessageBoxOk );
 
-	AddObserver( "notification_open_reinf", MsgNotificationOpenReinf );
+	AddObserver( "notification_open_reinf", &CInterfaceMission::MsgNotificationOpenReinf );
 	
-	AddObserver( "mission_remove_player", MsgOnRemovePlayer );
+	AddObserver( "mission_remove_player", &CInterfaceMission::MsgOnRemovePlayer );
 
-	AddObserver( "notifications_camera_back", MsgNotificationsCameraBack );
+	AddObserver( "notifications_camera_back", &CInterfaceMission::MsgNotificationsCameraBack );
 
-	AddObserver( "multiplayer_pause", MsgOnMultiplayerPause );
+	AddObserver( "multiplayer_pause", &CInterfaceMission::MsgOnMultiplayerPause );
 	
-	AddObserver( "script_blink_action_button", MsgOnScriptBlinkActionButton );
-	AddObserver( "blink_objective_button", MsgBlinkObjectiveBtn );
+	AddObserver( "script_blink_action_button", &CInterfaceMission::MsgOnScriptBlinkActionButton );
+	AddObserver( "blink_objective_button", &CInterfaceMission::MsgBlinkObjectiveBtn );
 
-	scriptMovieMessageProcessor.AddObserver( "skip_movie", TrySkipMovie );
+	scriptMovieMessageProcessor.AddObserver( "skip_movie", &CInterfaceMission::TrySkipMovie );
 
 #ifndef _FINALRELEASE
-	AddObserver( "test_command", MsgTestCommand );
+	AddObserver( "test_command", &CInterfaceMission::MsgTestCommand );
 #endif //_FINALRELEASE
 	timeLastWarFogUpdate = 0;
 	// here we are calling this function to link with module Stats_B2_M1
@@ -427,40 +427,40 @@ bool CInterfaceMission::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMission::RegisterObservers()
 {
-	AddObserver( "win_loose", MsgWinLoose );
+	AddObserver( "win_loose", &CInterfaceMission::MsgWinLoose );
 
-	AddObserver( "esc_menu", MsgEscMenu );
-	AddObserver( "message_box_ok", MsgOk );
-	AddObserver( "message_box_cancel", MsgCancel );
+	AddObserver( "esc_menu", &CInterfaceMission::MsgEscMenu );
+	AddObserver( "message_box_ok", &CInterfaceMission::MsgOk );
+	AddObserver( "message_box_cancel", &CInterfaceMission::MsgCancel );
 
-	AddObserver( "try_exit_windows", MsgTryExitWindows );
-	AddObserver( "show_objectives", MsgShowObjectives );
+	AddObserver( "try_exit_windows", &CInterfaceMission::MsgTryExitWindows );
+	AddObserver( "show_objectives", &CInterfaceMission::MsgShowObjectives );
 
-	AddObserver( "mission_select_mode", MsgSelectMode );
-	AddObserver( "mission_multi_select_mode", MsgMultiSelectMode );
-	AddObserver( "mission_single_select_mode", MsgSingleSelectMode );
-	AddObserver( "mission_preselect_mode", MsgPreSelectMode );
-	AddObserver( "mission_update_single_unit", MsgUpdateSingleUnit );
-	AddObserver( "mission_update_unit_stats", MsgUpdateUnitStats );
-	AddObserver( "mission_update_super_weapon_stats", MsgUpdateSuperWeaponStats );
-	AddObserver( "update_buttons", MsgUpdateButtons );
-	AddObserver( "update_icon", MsgUnpdateIcon );
-	AddObserver( "highlight_units", MsgHighlightUnits );
+	AddObserver( "mission_select_mode", &CInterfaceMission::MsgSelectMode );
+	AddObserver( "mission_multi_select_mode", &CInterfaceMission::MsgMultiSelectMode );
+	AddObserver( "mission_single_select_mode", &CInterfaceMission::MsgSingleSelectMode );
+	AddObserver( "mission_preselect_mode", &CInterfaceMission::MsgPreSelectMode );
+	AddObserver( "mission_update_single_unit", &CInterfaceMission::MsgUpdateSingleUnit );
+	AddObserver( "mission_update_unit_stats", &CInterfaceMission::MsgUpdateUnitStats );
+	AddObserver( "mission_update_super_weapon_stats", &CInterfaceMission::MsgUpdateSuperWeaponStats );
+	AddObserver( "update_buttons", &CInterfaceMission::MsgUpdateButtons );
+	AddObserver( "update_icon", &CInterfaceMission::MsgUnpdateIcon );
+	AddObserver( "highlight_units", &CInterfaceMission::MsgHighlightUnits );
 
-	AddObserver( "set_ability_state", MsgSetAbilityState );
-	AddObserver( "set_ability_param", MsgSetAbilityParam );
+	AddObserver( "set_ability_state", &CInterfaceMission::MsgSetAbilityState );
+	AddObserver( "set_ability_param", &CInterfaceMission::MsgSetAbilityParam );
 	
-	AddObserver( "minimap_show_objectives", MsgMiniMapShowObjectives );
-	AddObserver( "minimap_hide_objectives", MsgMiniMapHideObjectives );
+	AddObserver( "minimap_show_objectives", &CInterfaceMission::MsgMiniMapShowObjectives );
+	AddObserver( "minimap_hide_objectives", &CInterfaceMission::MsgMiniMapHideObjectives );
 
-	AddObserver( "quicksave", MsgQuickSave );
-	AddObserver( "quickload", MsgQuickLoad );
+	AddObserver( "quicksave", &CInterfaceMission::MsgQuickSave );
+	AddObserver( "quickload", &CInterfaceMission::MsgQuickLoad );
 
-	AddObserver( "show_game_paused", MsgShowGamePaused );
-	AddObserver( "game_pause", MsgToggleGamePause );
-	AddObserver( "begin_script_movie_sequence", MsgBeginScriptMovieSequence );
+	AddObserver( "show_game_paused", &CInterfaceMission::MsgShowGamePaused );
+	AddObserver( "game_pause", &CInterfaceMission::MsgToggleGamePause );
+	AddObserver( "begin_script_movie_sequence", &CInterfaceMission::MsgBeginScriptMovieSequence );
 
-	AddObserver( "dump_mem_stats", MsgDumpMemoryStats );
+	AddObserver( "dump_mem_stats", &MsgDumpMemoryStats );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMission::MsgToggleGamePause( const SGameMessage &msg )
@@ -2882,7 +2882,7 @@ void CInterfaceMission::RegisterActionObservers()
 		NDb::EUserAction eAction = it->first;
 		
 		if ( !action.szHotkeyCmd.empty() )
-			AddObserver( action.szHotkeyCmd, MsgActionCmd, (int)(eAction) );
+			AddObserver( action.szHotkeyCmd, &CInterfaceMission::MsgActionCmd, (int)(eAction) );
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

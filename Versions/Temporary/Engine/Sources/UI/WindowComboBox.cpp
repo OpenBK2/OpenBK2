@@ -19,7 +19,7 @@ CWindowComboBox::CWindowComboBox() :
 	bSuppressPopupList( false ),
 	nMaxVisibleRows( 0 )
 {
-	AddObserver( "window_combo_box_close", OnEscape );
+	AddObserver( "window_combo_box_close", &CWindowComboBox::OnEscape );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )

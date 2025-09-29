@@ -19,12 +19,12 @@ IMPToUIManager *CreateMPManager()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CMPManager::CMPManager()
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UNKNOWN, SMPUIMessage, OnUnknownMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NO_NET, SMPUIMessage, OnNoNetMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET, SMPUIMessage, OnNivalNetMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LAN_NET, SMPUIMessage, OnLANNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UNKNOWN, SMPUIMessage, &CMPManager::OnUnknownMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NO_NET, SMPUIMessage, &CMPManager::OnNoNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET, SMPUIMessage, &CMPManager::OnNivalNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LAN_NET, SMPUIMessage, &CMPManager::OnLANNetMessage );
 
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, OnBackFromGameListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, &CMPManager::OnBackFromGameListMessage );
 
 	pCurrentNetMode = new CMPManagerModeNoNet;
 }

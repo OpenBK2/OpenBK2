@@ -20,9 +20,9 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nCl
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), nGameNetVersion( _nGameNetVersion ),
 	pNet( _pNet ), eState( ES_CONNECTING ), eSubState( ECONNECT_SERVER ), nTimeOut( _nTimeOut )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessClientAccepted );
-	REGISTER_PACKET_PROCESSOR( ProcessClientConnectInfo );
-	REGISTER_PACKET_PROCESSOR( ProcessClientIdentity );
+	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientAccepted );
+	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientConnectInfo );
+	REGISTER_PACKET_PROCESSOR( &CSimpleClientEffort::ProcessClientIdentity );
 
 	pConnet2PlayersNet = new CNet( nGameNetVersion, nServerPort, nTimeOut );
 	pLinksManager = new NNet::CGameLinksManager();
@@ -167,7 +167,7 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nCl
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), pNet( _pNet ), eState( ES_CONNECTING ),
 	szClientIP( _szClientIP ), nClientPort( _nClientPort ), pAcceptGamersNet( _pAcceptGamersNet )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessClientIdentity );
+	REGISTER_PACKET_PROCESSOR( &CSimpleServerEffort::ProcessClientIdentity );
 
 	SendBreakThroughPacket( szClientIP, nClientPort );
 	fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();

@@ -27,8 +27,8 @@ public:
 CFinishConnectionFilter::CFinishConnectionFilter()
 : bConnectionAlive( true )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessRemoveClient );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerPacket );
+	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessRemoveClient );
+	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessConnectServerPacket );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CFinishConnectionFilter::ProcessRemoveClient( CNetRemoveClient *pPacket )

@@ -173,7 +173,7 @@ void CWindow::RegisterObservers()
 
 	// register own observers
 	for ( int i = 0; i < pWindowStats->gameMessageReactions.size(); ++i )
-		AddObserver( pWindowStats->gameMessageReactions[i].szGameMessage, GameMessageSink, i );
+		AddObserver( pWindowStats->gameMessageReactions[i].szGameMessage, &CWindow::GameMessageSink, i );
 }
 //////////////////////////////////////////////////////////////////////
 void CWindow::SetBackground( IWindowPart *_pBackground )

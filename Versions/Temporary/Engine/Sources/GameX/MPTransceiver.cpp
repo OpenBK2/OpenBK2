@@ -69,8 +69,8 @@ REGISTER_SAVELOAD_CLASS( 112, CTransciverCommonPacket );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CMPTransceiver::CMPTransceiver() : nGameSpeed( 0 )
 {
-	REGISTER_PACKET_PROCESSOR( OnTransciverCommonPacket );
-	REGISTER_PACKET_PROCESSOR( OnAISegmentFinishedPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnTransciverCommonPacket );
+	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnAISegmentFinishedPacket );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMPTransceiver::StartMission()

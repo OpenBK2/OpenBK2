@@ -32,10 +32,10 @@ bool CWindowSelection::MsgCancelSelection( const SGameMessage &msg )
 /////////////////////////////////////////////////////////////////////////////
 void CWindowSelection::RegisterObservers()
 {
-	AddObserver( "start_selection", MsgStartSelection );
-	AddObserver( "update_selection", MsgUpdateSelection );
-	AddObserver( "end_selection", MsgEndSelection );
-	AddObserver( "cancel_selection", MsgCancelSelection );
+	AddObserver( "start_selection", &CWindowSelection::MsgStartSelection );
+	AddObserver( "update_selection", &CWindowSelection::MsgUpdateSelection );
+	AddObserver( "end_selection", &CWindowSelection::MsgEndSelection );
+	AddObserver( "cancel_selection", &CWindowSelection::MsgCancelSelection );
 }
 /////////////////////////////////////////////////////////////////////////////
 bool CWindowSelection::MsgUpdateSelection( const SGameMessage &msg )

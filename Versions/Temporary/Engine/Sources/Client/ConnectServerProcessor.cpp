@@ -14,11 +14,11 @@ CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckCo
 	bCheckConnect = _bCheckConnect;
 	eConnectState = ECS_CONNECTING;
 
-	REGISTER_PACKET_PROCESSOR( ProcessCheckConnect );
-	REGISTER_PACKET_PROCESSOR( ProcessLoginPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessRegisterPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
-	REGISTER_PACKET_PROCESSOR( ProcessForgottenPasswordPacket );
+	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessCheckConnect );
+	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessLoginPacket );
+	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessRegisterPacket );
+	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessNewClient );
+	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessForgottenPasswordPacket );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CConnectServerProcessor::Segment()

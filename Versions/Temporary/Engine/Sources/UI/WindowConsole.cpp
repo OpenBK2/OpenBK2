@@ -51,11 +51,11 @@ static const WCHAR szPrefix[] = L">>";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID(0)
 {
-	impotantMsgs.AddObserver( "show_console", OnShowConsole );
-	impotantMsgs.AddObserver( "win_char", OnChar );
-	impotantMsgs.AddObserver( "win_key", OnKeyDown );
-	impotantMsgs.AddObserver( "console_first_string", OnCtrlHome );
-	impotantMsgs.AddObserver( "console_last_string", OnCtrlEnd );
+	impotantMsgs.AddObserver( "show_console", &CWindowConsole::OnShowConsole );
+	impotantMsgs.AddObserver( "win_char", &CWindowConsole::OnChar );
+	impotantMsgs.AddObserver( "win_key", &CWindowConsole::OnKeyDown );
+	impotantMsgs.AddObserver( "console_first_string", &CWindowConsole::OnCtrlHome );
+	impotantMsgs.AddObserver( "console_last_string", &CWindowConsole::OnCtrlEnd );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, DWORD col, const int nWidth ) 
