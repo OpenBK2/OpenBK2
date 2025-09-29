@@ -17,11 +17,11 @@ static wstring EraseTags( const wstring &szStr )
 	for ( int i = 0; i != szStr.npos && i < szStr.size(); )
 	{
 		int pos = szStr.find( '<', i );
-		if ( pos != string.npos )
+		if ( pos != string::npos )
 		{
 			szRet += szStr.substr( i, pos - i );
 			i = szStr.find( '>', pos );
-			if ( i != string.npos )
+			if ( i != string::npos )
 				++i;
 		}
 		else
