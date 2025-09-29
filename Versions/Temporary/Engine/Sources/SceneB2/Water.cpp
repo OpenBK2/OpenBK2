@@ -948,7 +948,7 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 		float fAmpl;
 		if ( bIsCurWave )
 		{
-			fAmpl = Clamp( fabs((fCurWaveStart + fCurWaveLen) - fCurOffset * 2.0f) / (fCurWaveLen - fCurWaveStart), 0.0f, 1.0f );
+			fAmpl = Clamp( static_cast<float>(fabs((fCurWaveStart + fCurWaveLen) - fCurOffset * 2.0f) / (fCurWaveLen - fCurWaveStart)), 0.0f, 1.0f );
 			fAmpl = 1.0f - fAmpl * fAmpl;
 			fAmpl = DEF_WAVE_MIN_AMPL + fAmpl * DEF_WAVE_MAX_AMPL;
 		}

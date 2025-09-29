@@ -208,7 +208,7 @@ void CGrid::CreateGrid()
 		sortedColumns.push_back( nColumn );
 		sort( sortedColumns.begin(), sortedColumns.end(), compare );
 
-		fHeight = Max( fHeight, fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y ) );
+		fHeight = Max( fHeight, static_cast<float>(fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y )) );
 		fWidth = Max( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber(i)].x + vAABBHalfSize.x );
 	}
 

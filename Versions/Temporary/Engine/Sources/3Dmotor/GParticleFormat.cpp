@@ -27,8 +27,8 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 			for ( int i = 0; i < part.scale.nKeys; ++i )
 			{
 				CVec2 scale = part.scale.keys[i].value;
-				fMaxSize = Max( fabs(scale.x), fMaxSize );
-				fMaxSize = Max( fabs(scale.y), fMaxSize );
+				fMaxSize = Max( static_cast<float>(fabs(scale.x)), fMaxSize );
+				fMaxSize = Max( static_cast<float>(fabs(scale.y)), fMaxSize );
 			}
 		}
 		fMaxSize *= (FP_SQRT_2 * 0.5f);
