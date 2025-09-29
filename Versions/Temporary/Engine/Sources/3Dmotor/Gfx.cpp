@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include <D3D9.h>
 #include <ddraw.h>
-#include <dxerr9.h>
+#include <dxerr.h>
 #include "..\Misc\2DArray.h"
 #include "..\System\Commands.h"
 #include "Gfx.h"
@@ -11,7 +11,7 @@
 #include "GfxCatchGPF.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "dxerr9.lib")
+#pragma comment(lib, "dxerr.lib")
 namespace NGfx
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -995,8 +995,8 @@ void D3DASSERT( HRESULT hRes, const char *pDescr, ... )
 	va_end( va );
 	////
 	csSystem << "ERROR: " << buff << ". ";
-	csSystem << "CODE: " << DXGetErrorString9( hRes ) << ". ";
-	csSystem << "DESCRIPTION: " << DXGetErrorDescription9( hRes ) << endl;
+	csSystem << "CODE: " << DXGetErrorString( hRes ) << ". ";
+	csSystem << "DESCRIPTION: " << DXGetErrorDescription( hRes ) << endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Commands/Vars
