@@ -3,7 +3,7 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// в cpp файле написать макрос: REGISTER_CHILD_FRAME_IN_...( typeName, className )
+// РІ cpp С„Р°Р№Р»Рµ РЅР°РїРёСЃР°С‚СЊ РјР°РєСЂРѕСЃ: REGISTER_CHILD_FRAME_IN_...( typeName, className )
 interface IChildFrame : public CObjectBase
 {
 	//
@@ -21,13 +21,13 @@ interface IChildFrameContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408B400 };
 	//
-	// Проверить на возможность создания
+	// РџСЂРѕРІРµСЂРёС‚СЊ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ
 	virtual bool CanCreate( const string &rszChildFrameTypeName ) = 0;
-	// Проверить что именно этот редактор сейчас активен
+	// РџСЂРѕРІРµСЂРёС‚СЊ С‡С‚Рѕ РёРјРµРЅРЅРѕ СЌС‚РѕС‚ СЂРµРґР°РєС‚РѕСЂ СЃРµР№С‡Р°СЃ Р°РєС‚РёРІРµРЅ
 	virtual bool IsActive( const string &rszChildFrameTypeName ) = 0;
-	// Создать Сhild frame
+	// РЎРѕР·РґР°С‚СЊ РЎhild frame
 	virtual bool Create( const string &rszChildFrameTypeName ) = 0;
-	// Удалить Child Frame
+	// РЈРґР°Р»РёС‚СЊ Child Frame
 	virtual void Destroy() = 0;
 	//
 	virtual void Enter() = 0;

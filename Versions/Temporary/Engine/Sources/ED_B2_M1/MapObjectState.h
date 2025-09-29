@@ -26,7 +26,7 @@ class CMapObjectSelectState : public CDefaultInputState
 	
 	class CMapObjectState* pParentState;
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectSelectState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CMapObjectSelectState(): Invalid parameter: pParentState == 0" );
@@ -58,7 +58,7 @@ class CMapObjectEditState : public CDefaultInputState
 	
 	class CMapObjectState* pParentState;
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectEditState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CMapObjectEditState(): Invalid parameter: pParentState == 0" );
@@ -89,7 +89,7 @@ class CMapObjectAddState : public CDefaultInputState
 	
 	class CMapObjectState* pParentState;
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectAddState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CMapObjectAddState(): Invalid parameter: pParentState == 0" );
@@ -127,7 +127,7 @@ class CMapObjectPasteState : public CDefaultInputState
 	
 	class CMapObjectState* pParentState;
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectPasteState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
@@ -217,25 +217,25 @@ protected:
 	virtual void OnSetFocus( class CWnd* pNewWnd );
 
 	// CMapObjectState
-	// Возможно какое либо редактирование
+	// Р’РѕР·РјРѕР¶РЅРѕ РєР°РєРѕРµ Р»РёР±Рѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 	virtual bool CanEdit();
-	// Нарисовать draw tool или добавить к ним чеще чего-нибудь и потом нарисовать ( в перекрытом методе Draw() необходимо отрисовать sceneDrawTool )
+	// РќР°СЂРёСЃРѕРІР°С‚СЊ draw tool РёР»Рё РґРѕР±Р°РІРёС‚СЊ Рє РЅРёРј С‡РµС‰Рµ С‡РµРіРѕ-РЅРёР±СѓРґСЊ Рё РїРѕС‚РѕРј РЅР°СЂРёСЃРѕРІР°С‚СЊ ( РІ РїРµСЂРµРєСЂС‹С‚РѕРј РјРµС‚РѕРґРµ Draw() РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚СЂРёСЃРѕРІР°С‚СЊ sceneDrawTool )
 	virtual bool IsDrawSceneDrawTool() = 0;
-	// Установить всоты объекта в ноль
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РІСЃРѕС‚С‹ РѕР±СЉРµРєС‚Р° РІ РЅРѕР»СЊ
 	virtual void SetSelectionHeightsToZero( bool bSave );
-	// Установить линк
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ Р»РёРЅРє
 	virtual void InsertSelectionLink( UINT nLinkToSceneID );
-	// Удалить линки
+	// РЈРґР°Р»РёС‚СЊ Р»РёРЅРєРё
 	virtual void RemoveSelectionLinks();
-	// Удалить линк
+	// РЈРґР°Р»РёС‚СЊ Р»РёРЅРє
 	virtual void RemoveSelectionLinkTo();
-	// Удалить объект
+	// РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚
 	virtual void RemoveSelection();
-	// Переместить объект, используя указаную точку на карте
+	// РџРµСЂРµРјРµСЃС‚РёС‚СЊ РѕР±СЉРµРєС‚, РёСЃРїРѕР»СЊР·СѓСЏ СѓРєР°Р·Р°РЅСѓСЋ С‚РѕС‡РєСѓ РЅР° РєР°СЂС‚Рµ
 	virtual void MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave ); 
-	// Повернуть объект, используя указаную точку на карте
+	// РџРѕРІРµСЂРЅСѓС‚СЊ РѕР±СЉРµРєС‚, РёСЃРїРѕР»СЊР·СѓСЏ СѓРєР°Р·Р°РЅСѓСЋ С‚РѕС‡РєСѓ РЅР° РєР°СЂС‚Рµ
 	virtual void RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave ); 
-	// Вызывается из стейта добавления объекта ( если вернули true, переключится в IS_SELECT и автоматически обновится сцена ) 
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· СЃС‚РµР№С‚Р° РґРѕР±Р°РІР»РµРЅРёСЏ РѕР±СЉРµРєС‚Р° ( РµСЃР»Рё РІРµСЂРЅСѓР»Рё true, РїРµСЂРµРєР»СЋС‡РёС‚СЃСЏ РІ IS_SELECT Рё Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РѕР±РЅРѕРІРёС‚СЃСЏ СЃС†РµРЅР° ) 
 	virtual void InsertObjectEnter					() {}
 	virtual void InsertObjectLeave					() {}
 	virtual void InsertObjectDraw						( class CPaintDC *pPaintDC ) {}
@@ -259,7 +259,7 @@ protected:
 	//virtual void DrawShootAreas() {}
 public:
 	//
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectState( class CMapObjectMultiState *_pParentState = 0 ) : pParentState( _pParentState ), nSelectedSceneID( INVALID_NODE_ID ), bDrawShootAreas( true )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();

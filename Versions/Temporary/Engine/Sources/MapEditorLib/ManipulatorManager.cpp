@@ -56,7 +56,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 		return false;
 	}
 	string szName;
-	//собираем данные по массивам ( сколько нужно каких массивов )
+	//СЃРѕР±РёСЂР°РµРј РґР°РЅРЅС‹Рµ РїРѕ РјР°СЃСЃРёРІР°Рј ( СЃРєРѕР»СЊРєРѕ РЅСѓР¶РЅРѕ РєР°РєРёС… РјР°СЃСЃРёРІРѕРІ )
 	list<string> sourceArrayList;
 	list<int> sourceArraySizeList;
 	{
@@ -80,7 +80,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 		}
 	}
 	
-	//создаем все необходимые массивы
+	//СЃРѕР·РґР°РµРј РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РјР°СЃСЃРёРІС‹
 	list<string>::const_iterator itSourceArray = sourceArrayList.begin();
 	list<int>::const_iterator itSourceArraySize = sourceArraySizeList.begin();
 	while ( ( itSourceArray != sourceArrayList.end() ) && ( itSourceArraySize != sourceArraySizeList.end() ) )
@@ -95,7 +95,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 		++itSourceArraySize;
 	}
 
-	//создаем список полей
+	//СЃРѕР·РґР°РµРј СЃРїРёСЃРѕРє РїРѕР»РµР№
 	hash_map<string, DWORD> destinationFields;
 	if ( !bEqual )
 	{
@@ -109,7 +109,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 				{
 					if ( ( !pDesc->bArray || ( szName[szName.size() - 1] == ARRAY_NODE_END_CHAR ) ) && ( !pDesc->bStruct ) )
 					{
-						// добавление 
+						// РґРѕР±Р°РІР»РµРЅРёРµ 
 						destinationFields[szName] = 0;
 					}
 				}
@@ -118,10 +118,10 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 		}
 	}
 
-	//копируем поля
+	//РєРѕРїРёСЂСѓРµРј РїРѕР»СЏ
 	{
 		CPtr<IManipulatorIterator> pSourceManipulatorIterator = pSourceManipulator->Iterate( true, ECT_CACHE_LOCAL );
-		list<string> arrays; // стек по массивам
+		list<string> arrays; // СЃС‚РµРє РїРѕ РјР°СЃСЃРёРІР°Рј
 		while ( !pSourceManipulatorIterator->IsEnd() )
 		{
 			pSourceManipulatorIterator->GetName( &szName );

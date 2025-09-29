@@ -15,7 +15,7 @@ CMinesIter::CMinesIter( const CVec2 &vCenter, float fR, const int _nParty, const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMinesIter::Iterate()
 {
-	// сместиться от предыдущего значения.
+	// СЃРјРµСЃС‚РёС‚СЊСЃСЏ РѕС‚ РїСЂРµРґС‹РґСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
 	CStObjCircleIter<false>::Iterate();
 	// 
 	IterateToNextMine();

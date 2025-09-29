@@ -16,7 +16,7 @@
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
 #define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const WORD* FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // общепринятое допустимое в обществе ругательство
+const WORD* FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // РѕР±С‰РµРїСЂРёРЅСЏС‚РѕРµ РґРѕРїСѓСЃС‚РёРјРѕРµ РІ РѕР±С‰РµСЃС‚РІРµ СЂСѓРіР°С‚РµР»СЊСЃС‚РІРѕ
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* TUTORIAL_RECOMMENDED_MISSION = "TutorialRecommendedMission";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -469,7 +469,7 @@ struct SVar
 void CInterfaceState::OnSerialize( IBinSaver &saver )
 {
 	vector< pair<string, NGlobal::CValue> > vars;
-	vector< SVar > vars2; // используем вспомогательный массив, поскольку vector< pair<> > сериализовать нельзя
+	vector< SVar > vars2; // РёСЃРїРѕР»СЊР·СѓРµРј РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РјР°СЃСЃРёРІ, РїРѕСЃРєРѕР»СЊРєСѓ vector< pair<> > СЃРµСЂРёР°Р»РёР·РѕРІР°С‚СЊ РЅРµР»СЊР·СЏ
 	if ( !saver.IsReading() )
 	{
 		NGlobal::GetVarsByClass( &vars, STORAGE_SAVE );

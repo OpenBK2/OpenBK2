@@ -44,7 +44,7 @@ void CEntrenchmentCreation::InitConsts()
 bool CEntrenchmentCreation::SearchTrenches( const CVec2 &vCenter, const SRect &rectToTest )
 {
 	const float fMaxSize = Max( rectToTest.lengthAhead, Max(rectToTest.lengthBack, rectToTest.width ) ) + 2 * SConsts::TILE_SIZE;
-	// просканировать в радиусе на наличие окопов
+	// РїСЂРѕСЃРєР°РЅРёСЂРѕРІР°С‚СЊ РІ СЂР°РґРёСѓСЃРµ РЅР° РЅР°Р»РёС‡РёРµ РѕРєРѕРїРѕРІ
 	for ( CStObjCircleIter<false> iter( vCenter, fMaxSize ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CStaticObject *pObj = *iter;
@@ -139,7 +139,7 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 	for ( int i = 0; i < vPoints.size() - 1; ++i )
 	{
 		switcher = ((i+1)%3) == 0;
-		//решить что стрoить - fire place or line
+		//СЂРµС€РёС‚СЊ С‡С‚Рѕ СЃС‚СЂoРёС‚СЊ - fire place or line
 		nFrameIndex = switcher ? pRPG->GetFirePlaceIndex( 0 ) : pRPG->GetLineIndex( 0 );
 		const CVec2	pt = ( vPoints[i] + vPoints[i + 1] ) / 2.0f;
 		//
@@ -403,7 +403,7 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 		return false;
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
-	// пробежаться по юнитам, все разлокать.
+	// РїСЂРѕР±РµР¶Р°С‚СЊСЃСЏ РїРѕ СЋРЅРёС‚Р°Рј, РІСЃРµ СЂР°Р·Р»РѕРєР°С‚СЊ.
 	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, vPoints[nCurIndex], fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit * pUnit = *iter;
@@ -422,7 +422,7 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 		}
 	}
 
-	// теперь проверить, можно ли строить
+	// С‚РµРїРµСЂСЊ РїСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРѕРёС‚СЊ
 	for ( list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
@@ -442,7 +442,7 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 		return false;
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
-	// пробежаться по юнитам, все разлокать.
+	// РїСЂРѕР±РµР¶Р°С‚СЊСЃСЏ РїРѕ СЋРЅРёС‚Р°Рј, РІСЃРµ СЂР°Р·Р»РѕРєР°С‚СЊ.
 	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, vPoints[nIndex], fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit * pUnit = *iter;
@@ -464,7 +464,7 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 	list<SVector> tiles;
 	GetTilesUnderForIndex( &tiles, nIndex - nStartIndex );
 
-	// теперь проверить, можно ли строить
+	// С‚РµРїРµСЂСЊ РїСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРѕРёС‚СЊ
 	for ( list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( !CanDigTile( *it ) )
@@ -535,7 +535,7 @@ bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVe
 //*												  CEntrenchmentCreation										*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float CEntrenchmentCreation::GetTrenchWidth( int nType )// 0 - секция , 1 - поворот
+float CEntrenchmentCreation::GetTrenchWidth( int nType )// 0 - СЃРµРєС†РёСЏ , 1 - РїРѕРІРѕСЂРѕС‚
 {
 	const SEntrenchmentRPGStats *pRPG = theUnitCreation.GetEntrenchment();
 

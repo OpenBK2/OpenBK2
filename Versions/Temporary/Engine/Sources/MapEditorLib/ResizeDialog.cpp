@@ -63,7 +63,7 @@ BOOL CResizeDialog::OnInitDialog()
 {
 	CDialog ::OnInitDialog();
 
-	//получить размеры и позиции элементов
+	//РїРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂС‹ Рё РїРѕР·РёС†РёРё СЌР»РµРјРµРЅС‚РѕРІ
 	UpdateControlPositions();
 
 	LoadResizeDialogOptions();
@@ -137,10 +137,10 @@ void CResizeDialog::SetControlStyle( UINT nControlID, DWORD dwStyle, float fHorC
 	resizeDialogControlStyles[nControlID] = controlStyle;
 }
 
-//ANCHORE_LEFT				resize - относительно левого края ( центральная линия - 0.0f )
-//ANCHORE_RIGHT				resize - относительно правого края ( центральная линия - 1.0f )
-//ANCHORE_HOR_CENTER	resize - относительно центральной линии ( центральная линия - fHorCenterAnchorRatio)
-//RESIZE_HOR					дополнительно меняем размер на fHorResizeRatio
+//ANCHORE_LEFT				resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ Р»РµРІРѕРіРѕ РєСЂР°СЏ ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - 0.0f )
+//ANCHORE_RIGHT				resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїСЂР°РІРѕРіРѕ РєСЂР°СЏ ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - 1.0f )
+//ANCHORE_HOR_CENTER	resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ Р»РёРЅРёРё ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - fHorCenterAnchorRatio)
+//RESIZE_HOR					РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РјРµРЅСЏРµРј СЂР°Р·РјРµСЂ РЅР° fHorResizeRatio
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CResizeDialog::OnSize( UINT nType, int cx, int cy ) 
 {

@@ -30,7 +30,7 @@ public:
 		{
 			return ER_SUCCESS;
 		}
-		// Добавляем элемент в набор
+		// Р”РѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ РІ РЅР°Р±РѕСЂ
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( rszObjectName ) );
 		return ER_SUCCESS;
 	}

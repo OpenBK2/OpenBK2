@@ -47,13 +47,13 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	int nLatency;
 	int nSegmentsPackSize;
 
-	int nSegment;													// номер текущего сегмента
+	int nSegment;													// РЅРѕРјРµСЂ С‚РµРєСѓС‰РµРіРѕ СЃРµРіРјРµРЅС‚Р°
 	long nCommonSegment;
-	int nMyLogicID;												// номер "нашего" игрока
+	int nMyLogicID;												// РЅРѕРјРµСЂ "РЅР°С€РµРіРѕ" РёРіСЂРѕРєР°
 	bool bCommandsFromHistory;
 	vector<WORD> segmFinished;
 	WORD wMask;
-	typedef list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
+	typedef list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// РєРѕРјР°РЅРґС‹ РґР»СЏ РєР°Р¶РґРѕРіРѕ РёРіСЂРѕРєР° ( [i][j] i - РЅРѕРјРµСЂ СЃРµРіРјРµРЅС‚Р°, j - РЅРѕРјРµСЂ РёРіСЂРѕРєР° )
 	CArray2D<CAILogicCommandsList> cmds;
 
 	CDBPtr<NDb::SNetGameConsts> pConsts;

@@ -128,7 +128,7 @@ static void CalcWeighted( CVec3 *pRes, const CVec3 &a, float fA, const CVec3 &b,
 	pRes->z = ( a.z * fB - b.z * fA );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// мощная работа по наложению тени ( no welding yet )
+// РјРѕС‰РЅР°СЏ СЂР°Р±РѕС‚Р° РїРѕ РЅР°Р»РѕР¶РµРЅРёСЋ С‚РµРЅРё ( no welding yet )
 // calc average point
 static void CalcMiddlePoint( const SSPoint &a, const SSPoint &b, SSPoint *pRes, float fA, float fB )
 {

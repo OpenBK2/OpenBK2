@@ -58,7 +58,7 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	LONG nHeightTimer;
 	DWORD dwHeightData;
   inline UINT GetHeightID() { return 2; }
-  inline UINT GetHeightTimerInterval() { return 100; }	// Частота в миллисекундах
+  inline UINT GetHeightTimerInterval() { return 100; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
   void SetHeightTimer();
   void KillHeightTimer();
   void OnHeightTimer();

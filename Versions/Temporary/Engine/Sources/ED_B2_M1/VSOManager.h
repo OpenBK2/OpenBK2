@@ -196,12 +196,12 @@ public:
 		PT_OPNORMALE	= 1,
 		PT_BOTH				= 2,
 	};
-	// Получить выделеннную точку
-	static bool GetVSOSelection( SVSOSelection *pVSOSelection,												// Сюда записывается результат
-															 const CVec3 &rvPos,																	// Позиция пересечения луча от мыши с землей
-															 const CVec3 &rvOrigin,																// Параметры луча проходящие через курсор мыши ( стартовая точка )
-															 const CVec3 &rvDirection,														// Параметры луча проходящие через курсор мыши ( единичный вектор направления )
-															 const NDb::SVSOInstance &rVSO,												// VSO, в котором ищем
+	// РџРѕР»СѓС‡РёС‚СЊ РІС‹РґРµР»РµРЅРЅРЅСѓСЋ С‚РѕС‡РєСѓ
+	static bool GetVSOSelection( SVSOSelection *pVSOSelection,												// РЎСЋРґР° Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ СЂРµР·СѓР»СЊС‚Р°С‚
+															 const CVec3 &rvPos,																	// РџРѕР·РёС†РёСЏ РїРµСЂРµСЃРµС‡РµРЅРёСЏ Р»СѓС‡Р° РѕС‚ РјС‹С€Рё СЃ Р·РµРјР»РµР№
+															 const CVec3 &rvOrigin,																// РџР°СЂР°РјРµС‚СЂС‹ Р»СѓС‡Р° РїСЂРѕС…РѕРґСЏС‰РёРµ С‡РµСЂРµР· РєСѓСЂСЃРѕСЂ РјС‹С€Рё ( СЃС‚Р°СЂС‚РѕРІР°СЏ С‚РѕС‡РєР° )
+															 const CVec3 &rvDirection,														// РџР°СЂР°РјРµС‚СЂС‹ Р»СѓС‡Р° РїСЂРѕС…РѕРґСЏС‰РёРµ С‡РµСЂРµР· РєСѓСЂСЃРѕСЂ РјС‹С€Рё ( РµРґРёРЅРёС‡РЅС‹Р№ РІРµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ )
+															 const NDb::SVSOInstance &rVSO,												// VSO, РІ РєРѕС‚РѕСЂРѕРј РёС‰РµРј
 															 const CVSOSelectionParamList &rVSOSelectionParamList );
 	static bool Update( NDb::SVSOInstance *pVSO,
 											bool bResampleCurve,
@@ -227,12 +227,12 @@ public:
 												float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance, 
 												list<CVec2> *pPointsSequence, const vector<vector<CVec2> > &rLockedPolygons, list<CVec2> *pUsedPoints,
 												int nDepth = 0 );
-	//не симметричный метод, первый VSO продолжается на две точки по отношению ко второму с соблюдением ширины
-	//на обоих концах проставляется нулевая opacity
+	//РЅРµ СЃРёРјРјРµС‚СЂРёС‡РЅС‹Р№ РјРµС‚РѕРґ, РїРµСЂРІС‹Р№ VSO РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ РЅР° РґРІРµ С‚РѕС‡РєРё РїРѕ РѕС‚РЅРѕС€РµРЅРёСЋ РєРѕ РІС‚РѕСЂРѕРјСѓ СЃ СЃРѕР±Р»СЋРґРµРЅРёРµРј С€РёСЂРёРЅС‹
+	//РЅР° РѕР±РѕРёС… РєРѕРЅС†Р°С… РїСЂРѕСЃС‚Р°РІР»СЏРµС‚СЃСЏ РЅСѓР»РµРІР°СЏ opacity
 	static bool Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin, NDb::SVSOInstance *pVSO1, bool bVSO1Begin );
-	//вернуть первую не нулевую высоту
+	//РІРµСЂРЅСѓС‚СЊ РїРµСЂРІСѓСЋ РЅРµ РЅСѓР»РµРІСѓСЋ РІС‹СЃРѕС‚Сѓ
 	static float GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst );
-	// Необходим для генерации дорог ( используется не правильно )	
+	// РќРµРѕР±С…РѕРґРёРј РґР»СЏ РіРµРЅРµСЂР°С†РёРё РґРѕСЂРѕРі ( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РЅРµ РїСЂР°РІРёР»СЊРЅРѕ )	
 	static string GetDescriptionName( const string &rszBeginVSODesc, const string &rszEndVSODesc )
 	{
 		return rszBeginVSODesc;

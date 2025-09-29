@@ -7,7 +7,7 @@ namespace NStr
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int gs_nCodePage = GetACP();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// разделить строку на массив строк по заданному разделителю
+// СЂР°Р·РґРµР»РёС‚СЊ СЃС‚СЂРѕРєСѓ РЅР° РјР°СЃСЃРёРІ СЃС‚СЂРѕРє РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ СЂР°Р·РґРµР»РёС‚РµР»СЋ
 template <class T1>
 static void SplitStringT( const basic_string<T1> &szString, vector< basic_string<T1> > *pVector, const T1 tSeparator )
 {
@@ -47,7 +47,7 @@ void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// отрезать все символы 'cTrim' справа
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ СЃРёРјРІРѕР»С‹ 'cTrim' СЃРїСЂР°РІР°
 void TrimRight( string &szString, const char cTrim )
 {
 	size_t nPos = szString.find_last_not_of( cTrim );
@@ -70,7 +70,7 @@ void TrimRight( string &szString, const char *pszTrim )
 	else
 		szString.erase( nPos + 1, string::npos );
 }
-// вырезать все символы 'cTrim' из строки
+// РІС‹СЂРµР·Р°С‚СЊ РІСЃРµ СЃРёРјРІРѕР»С‹ 'cTrim' РёР· СЃС‚СЂРѕРєРё
 class CSymbolCheckFunctional
 {
 private:
@@ -193,7 +193,7 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // **
-// ** перевод Unicode <=> UTF-8
+// ** РїРµСЂРµРІРѕРґ Unicode <=> UTF-8
 // ** bytes | bits | representation
 // **     1 |    7 | 0vvvvvvv
 // **     2 |   11 | 110vvvvv 10vvvvvv
@@ -257,7 +257,7 @@ void UTF8ToUnicode( wstring *pRes, const string &szString )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перевод MBCS <=> Unicode
+// РїРµСЂРµРІРѕРґ MBCS <=> Unicode
 void SetCodePage( const int nCodePage )
 {
 	gs_nCodePage = nCodePage;

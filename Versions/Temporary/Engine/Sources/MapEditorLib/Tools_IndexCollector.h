@@ -15,7 +15,7 @@ public:
 	CIndexCollector( const TID &rInvalidID ) : invalidID( rInvalidID ) {}
 
 	const CIDToIndexMap& GetIDToIndexMap() { return idToIndexMap; }
-	// медленные операции
+	// РјРµРґР»РµРЅРЅС‹Рµ РѕРїРµСЂР°С†РёРё
 	bool Insert( const TID &rID, UINT nIndex, bool bSearchIndices )
 	{
 		if ( ( rID == invalidID ) || ( nIndex == INVALID_NODE_ID ) )
@@ -131,7 +131,7 @@ public:
 		posID->second = nNewIndex;
 		return true;
 	}
-	// быстрые операции
+	// Р±С‹СЃС‚СЂС‹Рµ РѕРїРµСЂР°С†РёРё
 	UINT Get( const TID &rID ) const
 	{
 		if ( rID == invalidID )
@@ -148,7 +148,7 @@ public:
 			return posID->second;
 		}
 	}
-	// медленные операции
+	// РјРµРґР»РµРЅРЅС‹Рµ РѕРїРµСЂР°С†РёРё
 	TID GetID( const UINT nIndex ) const
 	{
 		for ( CIDToIndexMap::const_iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
@@ -166,7 +166,7 @@ public:
 	{
 		return idToIndexMap.size();
 	}
-	// дебажный метод (требует очень много памяти)
+	// РґРµР±Р°Р¶РЅС‹Р№ РјРµС‚РѕРґ (С‚СЂРµР±СѓРµС‚ РѕС‡РµРЅСЊ РјРЅРѕРіРѕ РїР°РјСЏС‚Рё)
 	void Trace() const
 	{
 		int nMaxIndex = 0;

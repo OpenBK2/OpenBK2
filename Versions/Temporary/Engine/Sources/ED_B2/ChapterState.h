@@ -18,7 +18,7 @@ namespace NDb
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CChapterState : public CDefaultInputState
 {
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	CPtr<IScreen> pScreen;
 	CPtr<IButton> pMissionBtn;
 	CPtr<IButton> pBigMissionBtn;
@@ -31,7 +31,7 @@ class CChapterState : public CDefaultInputState
 	CVec2 vChapterMapSize;
 	SChapterMapMenuHelper::SArrow *pPickedArrow;
 	CObj<CMaskManipulator> pMaskManipulator;
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CChapterEditor *pChapterEditor;
 	CPtr<ITextView> pNumberView;
 	CPtr<ITextView> pBigNumberView;

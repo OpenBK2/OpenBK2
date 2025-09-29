@@ -2,7 +2,7 @@
 
 #include "DBWatcherClient.h"
 #include "../libdb/EditorDb.h"
-class CString;	// без такой ботвы #include "../../MapEditorLib/Interface_UserData.h" отказывается компилироваться!
+class CString;	// Р±РµР· С‚Р°РєРѕР№ Р±РѕС‚РІС‹ #include "../../MapEditorLib/Interface_UserData.h" РѕС‚РєР°Р·С‹РІР°РµС‚СЃСЏ РєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊСЃСЏ!
 #include "../MapEditorLib/Interface_UserData.h" 
 
 #include "../System/FilePath.h"

@@ -5,7 +5,7 @@ bool ToAIUnits( bool bInEditor )
 {
 	constraint.ToAIUnits( bInEditor );
 	constraintVertical.ToAIUnits( bInEditor );
-	// (секунды на полный оборот <=> градусы65535/тик)
+	// (СЃРµРєСѓРЅРґС‹ РЅР° РїРѕР»РЅС‹Р№ РѕР±РѕСЂРѕС‚ <=> РіСЂР°РґСѓСЃС‹65535/С‚РёРє)
 	if ( fHorizontalRotationSpeed != 0 )
 	{
 		float fLocalHSpeed = 1.0f / fHorizontalRotationSpeed * 65535.0f / 1000.0f;

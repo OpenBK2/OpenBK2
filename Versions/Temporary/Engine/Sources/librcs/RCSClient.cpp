@@ -248,9 +248,9 @@ void CClient::MoveFile( const string &_srcPath, const string &_dstPath )
 //		svn_client_move(
 //			&commitInfo,
 //			_srcPath.c_str(),
-//			0, // revision (необходимо только для операций внутри репозитария)
+//			0, // revision (РЅРµРѕР±С…РѕРґРёРјРѕ С‚РѕР»СЊРєРѕ РґР»СЏ РѕРїРµСЂР°С†РёР№ РІРЅСѓС‚СЂРё СЂРµРїРѕР·РёС‚Р°СЂРёСЏ)
 //			_dstPath.c_str(),
-//			false, // force (работать с файлом, если он не под контролем версий)
+//			false, // force (СЂР°Р±РѕС‚Р°С‚СЊ СЃ С„Р°Р№Р»РѕРј, РµСЃР»Рё РѕРЅ РЅРµ РїРѕРґ РєРѕРЅС‚СЂРѕР»РµРј РІРµСЂСЃРёР№)
 //			clientCtx,
 //			workingPool );
 //

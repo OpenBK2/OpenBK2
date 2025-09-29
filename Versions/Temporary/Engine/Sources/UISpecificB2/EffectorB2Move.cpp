@@ -240,7 +240,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, interface IScreen *pScre
 	{
 		if ( bGoOut )
 		{
-			// восстановим исходное положение для возможного повторного эффекта
+			// РІРѕСЃСЃС‚Р°РЅРѕРІРёРј РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ РґР»СЏ РІРѕР·РјРѕР¶РЅРѕРіРѕ РїРѕРІС‚РѕСЂРЅРѕРіРѕ СЌС„С„РµРєС‚Р°
 			pElement->SetPlacement( vInitialPos.x, vInitialPos.y, vInitialSize.x, vInitialSize.y, EWPF_ALL );
 			pElement->ShowWindow( false );
 		}

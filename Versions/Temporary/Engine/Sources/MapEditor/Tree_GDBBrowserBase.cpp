@@ -403,7 +403,7 @@ void CTreeGDBBrowserBase::OnEndLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResult
 				szSource += PATH_SEPARATOR_CHAR;
 			}
 			pFolderController->AddRenameOperation( szDestination, szSource, false );
-			// Надо передавать 0!
+			// РќР°РґРѕ РїРµСЂРµРґР°РІР°С‚СЊ 0!
 			( *pResult ) = pFolderController->Redo( true, true, 0 );
 			if ( ( *pResult ) )
 			{
@@ -536,7 +536,7 @@ bool CTreeGDBBrowserBase::GetCurrentSelectionSet( SSelectionSet *pSelectionSet )
 void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 {
 	//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator()" );
-	// Может быть ноль ( если нет выделенных объектов )
+	// РњРѕР¶РµС‚ Р±С‹С‚СЊ РЅРѕР»СЊ ( РµСЃР»Рё РЅРµС‚ РІС‹РґРµР»РµРЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ )
 	string szCurrentObject;
 	GetCurrentTreeItemName( &szCurrentObject );
 	if ( GetStrongSelection() && ( szCurrentObject != Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentObject ) )
@@ -1200,7 +1200,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 					return false;
 				}
 			}
-			// все правильно, количество элементов может поменяться
+			// РІСЃРµ РїСЂР°РІРёР»СЊРЅРѕ, РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РјРѕР¶РµС‚ РїРѕРјРµРЅСЏС‚СЊСЃСЏ
 			if ( GetChildItem( rTreeOperation.hDestination ) == 0 )
 			{
 				EGDBOType nType = GetTreeItemType( rTreeOperation.hDestination );
@@ -1341,8 +1341,8 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 				}
 				else
 				{
-					// проверяем на тождественность ссылок
-					// копирование папки происходит только при копировании в того же родителя
+					// РїСЂРѕРІРµСЂСЏРµРј РЅР° С‚РѕР¶РґРµСЃС‚РІРµРЅРЅРѕСЃС‚СЊ СЃСЃС‹Р»РѕРє
+					// РєРѕРїРёСЂРѕРІР°РЅРёРµ РїР°РїРєРё РїСЂРѕРёСЃС…РѕРґРёС‚ С‚РѕР»СЊРєРѕ РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё РІ С‚РѕРіРѕ Р¶Рµ СЂРѕРґРёС‚РµР»СЏ
 					string szDestinationName;
 					GetTreeItemName( hNewItem, &szDestinationName );
 					if ( szDestinationName == szSource )
@@ -1357,7 +1357,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 					}
 				}
 			}
-			// Непосредственно - копирование
+			// РќРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ - РєРѕРїРёСЂРѕРІР°РЅРёРµ
 			if ( bNeedCopy )
 			{
 				if ( nType == GDBO_FOLDER )
@@ -1380,7 +1380,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 				}
 				hNewItem = GetTreeItem( szDestination );
 			}
-			//Запускаем копирование детей
+			//Р—Р°РїСѓСЃРєР°РµРј РєРѕРїРёСЂРѕРІР°РЅРёРµ РґРµС‚РµР№
 			if ( hNewItem && ( nType == GDBO_FOLDER ) )
 			{
 				HTREEITEM hChildItem = GetChildItem( rTreeOperation.hSource );
@@ -1434,7 +1434,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 			}
 			else
 			{
-				// проверяем на тождественность ссылок
+				// РїСЂРѕРІРµСЂСЏРµРј РЅР° С‚РѕР¶РґРµСЃС‚РІРµРЅРЅРѕСЃС‚СЊ СЃСЃС‹Р»РѕРє
 				string szDestinationName;
 				GetTreeItemName( hNewItem, &szDestinationName );
 				if ( szDestinationName != szSource )
@@ -1457,7 +1457,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 					bNeedRemove = false;
 				}
 			}
-			// Непосредственно - перенос
+			// РќРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ - РїРµСЂРµРЅРѕСЃ
 			if ( ( bNeedRename ) && ( nType != GDBO_FOLDER ) )
 			{
 				Singleton<IFolderCallback>()->ClearUndoData();
@@ -1468,7 +1468,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 				Singleton<IFolderCallback>()->ClearUndoData();
 				hNewItem = GetTreeItem( szDestination );
 			}
-			//Запускаем перенос детей
+			//Р—Р°РїСѓСЃРєР°РµРј РїРµСЂРµРЅРѕСЃ РґРµС‚РµР№
 			if ( hNewItem && ( nType == GDBO_FOLDER ) )
 			{
 				HTREEITEM hChildItem = GetChildItem( rTreeOperation.hSource );
@@ -1533,7 +1533,7 @@ void CTreeGDBBrowserBase::NewFolder( HTREEITEM hParentItem )
 	GetUniqueName( hParentItem, szNewName, GDBO_FOLDER, &szNewFolderName );
 	szNewFolderName += PATH_SEPARATOR_CHAR;
 	string szUniqueObjectName = szNewFolderName;
-	// Расштряем имя до полного
+	// Р Р°СЃС€С‚СЂСЏРµРј РёРјСЏ РґРѕ РїРѕР»РЅРѕРіРѕ
 	GetTreeItemName( hParentItem, &szUniqueObjectName );
 	
 	CPtr<CFolderController> pFolderController = CreateController();
@@ -1576,7 +1576,7 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 		bool bCanChangeObjectName = true;
 		bool bNeedEdit = true;
 		bool bNeedExport = false;
-		// Проверяем возможность создания объекта
+		// РџСЂРѕРІРµСЂСЏРµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р°
 		{
 			Singleton<IFolderCallback>()->ClearUndoData();
 			if ( Singleton<IBuilderContainer>()->InsertObject( &szObjectTypeName,
@@ -1598,7 +1598,7 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 					}
 					RedrawWindow();
 					bCreateControls = false;
-					// Экспортируем вновь созданный объект
+					// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј РІРЅРѕРІСЊ СЃРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚
 					if ( bNeedExport )
 					{
 						if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, szObjectTypeName ) )
@@ -1622,7 +1622,7 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 					//
 					RedrawWindow();
 					/**
-					// Если объект можно переименовывать - его необходимо позволить переименовать
+					// Р•СЃР»Рё РѕР±СЉРµРєС‚ РјРѕР¶РЅРѕ РїРµСЂРµРёРјРµРЅРѕРІС‹РІР°С‚СЊ - РµРіРѕ РЅРµРѕР±С…РѕРґРёРјРѕ РїРѕР·РІРѕР»РёС‚СЊ РїРµСЂРµРёРјРµРЅРѕРІР°С‚СЊ
 					if ( bCanChangeObjectName )
 					{
 						EditLabel( hNewItem );

@@ -8,7 +8,7 @@ class CBridgeSpan;
 class CBridgeCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CBridgeCreation );
-	// для сортировки
+	// РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
 	struct SBridgeSpanSort
 	{
 		bool operator()( const CObj<CBridgeSpan> &s1, const CObj<CBridgeSpan> &s2 );
@@ -31,7 +31,7 @@ public:
 	static CVec2 SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit );
 
 	//specific
-	const CVec2 & GetStartPoint() const;	// куда посылать грузовик
+	const CVec2 & GetStartPoint() const;	// РєСѓРґР° РїРѕСЃС‹Р»Р°С‚СЊ РіСЂСѓР·РѕРІРёРє
 	bool IsFirstSegmentBuilt() const;
 
 	// common

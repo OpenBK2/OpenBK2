@@ -139,7 +139,7 @@ CTransportLoadRuState::CTransportLoadRuState ( CAITransportUnit *_pTransport, co
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CBuilding* CTransportLoadRuState::FindNearestSource()
 {
-	// для поиска ближайшего хранилища
+	// РґР»СЏ РїРѕРёСЃРєР° Р±Р»РёР¶Р°Р№С€РµРіРѕ С…СЂР°РЅРёР»РёС‰Р°
 	class CFindNearestConnected : public CStaticObjects::IEnumStoragesPredicate 
 	{
 		CPtr<CBuilding> pNearest;
@@ -147,7 +147,7 @@ CBuilding* CTransportLoadRuState::FindNearestSource()
 	public:
 		CFindNearestConnected() : fPathLength( 0 ) {  }
 		virtual bool OnlyConnected() const { return true; }
-		// true - закончить, то, что нужно уже нашлось
+		// true - Р·Р°РєРѕРЅС‡РёС‚СЊ, С‚Рѕ, С‡С‚Рѕ РЅСѓР¶РЅРѕ СѓР¶Рµ РЅР°С€Р»РѕСЃСЊ
 		virtual bool AddStorage( class CBuilding * pStorage, const float _fPathLength )
 		{
 			if ( pStorage->IsAlive() && ( !pNearest || fPathLength > _fPathLength ) )
@@ -208,7 +208,7 @@ void CTransportLoadRuState::Segment()
 			{
 				if ( pTransport->GetPlayer() == theDipl.GetMyNumber() )
 					updater.AddUpdate( EFB_WORK_TERMINATED, MAKELONG( pTransport->GetCenterPlain().x, pTransport->GetCenterPlain().y), 0 );
-				// почистить очередь команд у транспорта
+				// РїРѕС‡РёСЃС‚РёС‚СЊ РѕС‡РµСЂРµРґСЊ РєРѕРјР°РЅРґ Сѓ С‚СЂР°РЅСЃРїРѕСЂС‚Р°
 				theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_GUARD), pTransport, false );
 				Interrupt();
 			}
@@ -313,7 +313,7 @@ void CTransportLoadRuState::CreateSquad()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ETryStateInterruptResult CTransportLoadRuState::TryInterruptState( class CAICommand *pCommand )
 {
-	// если грузчики еще не в транспорте, то послать их догонять.
+	// РµСЃР»Рё РіСЂСѓР·С‡РёРєРё РµС‰Рµ РЅРµ РІ С‚СЂР°РЅСЃРїРѕСЂС‚Рµ, С‚Рѕ РїРѕСЃР»Р°С‚СЊ РёС… РґРѕРіРѕРЅСЏС‚СЊ.
 	if ( pCommand && pTransport->IsAlive() )
 	{
 		if ( IsValidObj( pLoaderSquad ) )
@@ -489,7 +489,7 @@ void CTransportServeState::Segment()
 
 		break;
 	case ETRS_WAIT_FOR_UNIT_TO_SERVE:
-		// стоим и ждем не понадобятся ли услуги еще.
+		// СЃС‚РѕРёРј Рё Р¶РґРµРј РЅРµ РїРѕРЅР°РґРѕР±СЏС‚СЃСЏ Р»Рё СѓСЃР»СѓРіРё РµС‰Рµ.
 		if ( curTime - timeLastUpdate > pTransport->GetBehUpdateDuration() )
 		{
 			if ( !bSendFinishFeedback )
@@ -562,7 +562,7 @@ void CTransportServeState::CreateSquad()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAICommand *pCommand )
 {
-	// если грузчики еще не в транспорте, то послать их догонять.
+	// РµСЃР»Рё РіСЂСѓР·С‡РёРєРё РµС‰Рµ РЅРµ РІ С‚СЂР°РЅСЃРїРѕСЂС‚Рµ, С‚Рѕ РїРѕСЃР»Р°С‚СЊ РёС… РґРѕРіРѕРЅСЏС‚СЊ.
 	if ( pTransport->IsRefValid() && pTransport->IsAlive() )
 	{
 		if ( IsValidObj( pLoaderSquad ) )
@@ -830,7 +830,7 @@ void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 
 	if ( fCurDist > fMaxRadius )
 	{
-		// подъезжать нужно
+		// РїРѕРґСЉРµР·Р¶Р°С‚СЊ РЅСѓР¶РЅРѕ
 		CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 		if ( pPath )
 			pUnit->SendAlongPath( pPath, VNULL2, true );
@@ -870,7 +870,7 @@ void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 	}
 	else
 	{
-		// уже на месте.
+		// СѓР¶Рµ РЅР° РјРµСЃС‚Рµ.
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -951,7 +951,7 @@ void CTransportBuildEntrenchmentState::PreCreate()
 CTransportClearMineState::CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint )
 	: CTransportBuildState( pTransport, vDestPoint ), timeNextCheck( curTime ), bWorkDone( false )
 {  
-	// посчитать время, которое нужно для того, чтобы проехать 1 длину грузовичка
+	// РїРѕСЃС‡РёС‚Р°С‚СЊ РІСЂРµРјСЏ, РєРѕС‚РѕСЂРѕРµ РЅСѓР¶РЅРѕ РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РїСЂРѕРµС…Р°С‚СЊ 1 РґР»РёРЅСѓ РіСЂСѓР·РѕРІРёС‡РєР°
 	SetStatus( EUS_DEMINE );
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>(pTransport->GetStats());
 	timeCheckPeriod = 100;//SConsts::MINE_VIS_RADIUS / pStats->fSpeed / 2;

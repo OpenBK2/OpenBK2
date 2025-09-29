@@ -21,20 +21,20 @@ namespace NMapInfoEditor
 		typedef hash_map<UINT, UINT> CSceneIDMap;
 		typedef hash_map<UINT, UINT> CLinkIDMap;
 		//
-		CObjectInfoMap objectInfoMap;												// Список SObjectInfo
-		CLinkIDMap linkIDMap;																// Список LinkID->SObjectInfoID
-		CSceneIDMap sceneIDMap;															// Список SceneID->SObjectInfoID
+		CObjectInfoMap objectInfoMap;												// РЎРїРёСЃРѕРє SObjectInfo
+		CLinkIDMap linkIDMap;																// РЎРїРёСЃРѕРє LinkID->SObjectInfoID
+		CSceneIDMap sceneIDMap;															// РЎРїРёСЃРѕРє SceneID->SObjectInfoID
 		//
-		CIndexCollector<UINT> linkIDToIndexCollector;				// Список индексов объектов ( прямое отображение LinkID->Index )
-		CIndexCollector<UINT> bridgeIDToIndexCollector;			// Список индексов мостов ( прямое отображение ID->Index )
-		CIndexCollector<UINT> trenchIDToIndexCollector;			// Список индексов окопов ( прямое отображение ID->Index )
-		CIndexCollector<UINT> spotIDToIndexCollector;				// Список индексов spots ( прямое отображение ID->Index )
+		CIndexCollector<UINT> linkIDToIndexCollector;				// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РѕР±СЉРµРєС‚РѕРІ ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ LinkID->Index )
+		CIndexCollector<UINT> bridgeIDToIndexCollector;			// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РјРѕСЃС‚РѕРІ ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID->Index )
+		CIndexCollector<UINT> trenchIDToIndexCollector;			// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РѕРєРѕРїРѕРІ ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID->Index )
+		CIndexCollector<UINT> spotIDToIndexCollector;				// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ spots ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID->Index )
 		//
-		CFreeIDCollector objectInfoIDCollector;							// для создания и идентификации новых SMapOnjectInfo
-		CFreeIDCollector linkIDCollector;										// для создания и идентификации новых object link ID
-		CFreeIDCollector bridgeIDCollector;									// для создания и идентификации новых bridge
-		CFreeIDCollector trenchIDCollector;									// для создания и идентификации новых entrenchment
-		CFreeIDCollector sceneIDCollector;									// для создания и идентификации новых scene object
+		CFreeIDCollector objectInfoIDCollector;							// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Рё РёРґРµРЅС‚РёС„РёРєР°С†РёРё РЅРѕРІС‹С… SMapOnjectInfo
+		CFreeIDCollector linkIDCollector;										// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Рё РёРґРµРЅС‚РёС„РёРєР°С†РёРё РЅРѕРІС‹С… object link ID
+		CFreeIDCollector bridgeIDCollector;									// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Рё РёРґРµРЅС‚РёС„РёРєР°С†РёРё РЅРѕРІС‹С… bridge
+		CFreeIDCollector trenchIDCollector;									// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Рё РёРґРµРЅС‚РёС„РёРєР°С†РёРё РЅРѕРІС‹С… entrenchment
+		CFreeIDCollector sceneIDCollector;									// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Рё РёРґРµРЅС‚РёС„РёРєР°С†РёРё РЅРѕРІС‹С… scene object
 		//
 		CPtr<IManipulator> pPropertyManipulator;
 		//
@@ -53,26 +53,26 @@ namespace NMapInfoEditor
 		void Clear();
 		void SetMapInfoEditor( const CMapInfoEditor *_pMapInfoEditor );
 		//
-		// вспомогательные методы
+		// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 		UINT GetLinkIDByObjectIndex( int nObjectIndex, IManipulator *pManipulator, bool bObject );
-		// методы общей загрузки карты
+		// РјРµС‚РѕРґС‹ РѕР±С‰РµР№ Р·Р°РіСЂСѓР·РєРё РєР°СЂС‚С‹
 		bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// методы добавления и удаления элементов
+		// РјРµС‚РѕРґС‹ РґРѕР±Р°РІР»РµРЅРёСЏ Рё СѓРґР°Р»РµРЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ
 		template<class TObjectInfo>
 		TObjectInfo* Insert( TObjectInfo *pCreatedObjectInfo, UINT *pnObjectInfoID )
 		{
 			TObjectInfo *pObjectInfo = pCreatedObjectInfo;
-			// создаем если необходимо
+			// СЃРѕР·РґР°РµРј РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ
 			if ( pObjectInfo == 0 )
 			{
 				pObjectInfo = new TObjectInfo();
 			}
-			// заполняем необходимую информацию
+			// Р·Р°РїРѕР»РЅСЏРµРј РЅРµРѕР±С…РѕРґРёРјСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
 			pObjectInfo->pObjectInfoCollector = this;
 			pObjectInfo->nObjectInfoID = objectInfoIDCollector.LockID();
-			// заносим к массив
+			// Р·Р°РЅРѕСЃРёРј Рє РјР°СЃСЃРёРІ
 			objectInfoMap[pObjectInfo->nObjectInfoID] = pObjectInfo;
 			if ( pnObjectInfoID )
 			{
@@ -86,10 +86,10 @@ namespace NMapInfoEditor
 			{
 				return 0;
 			}
-			// заполняем необходимую информацию
+			// Р·Р°РїРѕР»РЅСЏРµРј РЅРµРѕР±С…РѕРґРёРјСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
 			pCreatedObjectInfo->pObjectInfoCollector = this;
 			pCreatedObjectInfo->nObjectInfoID = objectInfoIDCollector.LockID();
-			// заносим к массив
+			// Р·Р°РЅРѕСЃРёРј Рє РјР°СЃСЃРёРІ
 			objectInfoMap[pCreatedObjectInfo->nObjectInfoID] = pCreatedObjectInfo;
 			if ( pnObjectInfoID )
 			{
@@ -164,7 +164,7 @@ namespace NMapInfoEditor
 		template<class Type>
 		void InsertToSelection( const Type &rObjectSceneIDList, bool bAutoRemove )
 		{
-			// проверим, что некоторые элементы необходимо добавить
+			// РїСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РЅРµРєРѕС‚РѕСЂС‹Рµ СЌР»РµРјРµРЅС‚С‹ РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ
 			CObjectInfoIDSet newObjectInfoIDSet;
 			CObjectInfoIDSet existingObjectInfoIDSet;
 			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
@@ -181,10 +181,10 @@ namespace NMapInfoEditor
 			}
 			if ( !newObjectInfoIDSet.empty() )
 			{
-				// установим абсолютные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeAbsolute();
 				//
-				// добавим элементы
+				// РґРѕР±Р°РІРёРј СЌР»РµРјРµРЅС‚С‹
 				for ( CObjectInfoIDSet::const_iterator itNewObjectInfoID = newObjectInfoIDSet.begin(); itNewObjectInfoID != newObjectInfoIDSet.end(); ++itNewObjectInfoID )
 				{
 					const UINT nObjectInfoID = itNewObjectInfoID->first;
@@ -193,18 +193,18 @@ namespace NMapInfoEditor
 						SObjectSelectionPart objectSelectionPart;
 						objectSelectionPart.vPosition = pObjectInfo->vPosition;
 						objectSelectionPart.fDirection = pObjectInfo->fDirection;
-						// заносим элемент в структуру данных объекта
+						// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 						objectSelection.objectSelectionPartMap[nObjectInfoID] = objectSelectionPart;
 					}
 				}
-				// установим относительные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeRelative();
 			}
 			else if ( bAutoRemove )
 			{
-				// установим абсолютные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeAbsolute();
-				// удалим элементы
+				// СѓРґР°Р»РёРј СЌР»РµРјРµРЅС‚С‹
 				for ( CObjectInfoIDSet::const_iterator itExistingObjectInfoID = existingObjectInfoIDSet.begin(); itExistingObjectInfoID != existingObjectInfoIDSet.end(); ++itExistingObjectInfoID )
 				{
 					const UINT nObjectInfoID = itExistingObjectInfoID->first;
@@ -214,7 +214,7 @@ namespace NMapInfoEditor
 						objectSelection.objectSelectionPartMap.erase( posObjectSelectionPart );
 					}
 				}
-				// установим относительные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeRelative();
 			}
 			AddLinkedObjectsToSelection();
@@ -224,9 +224,9 @@ namespace NMapInfoEditor
 		template<class Type>
 		void RemoveFromSelection( const Type &rObjectSceneIDList )
 		{
-			// установим абсолютные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeAbsolute();
-			// удалим элементы
+			// СѓРґР°Р»РёРј СЌР»РµРјРµРЅС‚С‹
 			for ( Type::const_iterator itObjectSceneID = rObjectSceneIDList.begin(); itObjectSceneID != rObjectSceneIDList.end(); ++itObjectSceneID )
 			{
 				const UINT nObjectInfoID = Pick( *itObjectSceneID );
@@ -236,7 +236,7 @@ namespace NMapInfoEditor
 					objectSelection.objectSelectionPartMap.erase( posObjectSelectionPart );
 				}
 			}
-			// установим относительные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeRelative();
 		}
 
@@ -255,7 +255,7 @@ namespace NMapInfoEditor
 			CTRect<float> selectionRect( rvPos0.x, rvPos0.y, rvPos1.x, rvPos1.y );
 			selectionRect.Normalize();
 
-			// проверим, что некоторые элементы необходимо добавить
+			// РїСЂРѕРІРµСЂРёРј, С‡С‚Рѕ РЅРµРєРѕС‚РѕСЂС‹Рµ СЌР»РµРјРµРЅС‚С‹ РЅРµРѕР±С…РѕРґРёРјРѕ РґРѕР±Р°РІРёС‚СЊ
 			CObjectInfoIDSet newObjectInfoIDSet;
 			CObjectInfoIDSet existingObjectInfoIDSet;
 			for( CObjectInfoMap::iterator itObject = objectInfoMap.begin(); itObject != objectInfoMap.end(); ++itObject )
@@ -286,10 +286,10 @@ namespace NMapInfoEditor
 			//
 			if ( !newObjectInfoIDSet.empty() )
 			{
-				// установим абсолютные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeAbsolute();
 				//
-				// добавим элементы
+				// РґРѕР±Р°РІРёРј СЌР»РµРјРµРЅС‚С‹
 				for ( CObjectInfoIDSet::const_iterator itNewObjectInfoID = newObjectInfoIDSet.begin(); itNewObjectInfoID != newObjectInfoIDSet.end(); ++itNewObjectInfoID )
 				{
 					const UINT nObjectInfoID = itNewObjectInfoID->first;
@@ -298,18 +298,18 @@ namespace NMapInfoEditor
 						SObjectSelectionPart objectSelectionPart;
 						objectSelectionPart.vPosition = pObjectInfo->vPosition;
 						objectSelectionPart.fDirection = pObjectInfo->fDirection;
-						// заносим элемент в структуру данных объекта
+						// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 						objectSelection.objectSelectionPartMap[nObjectInfoID] = objectSelectionPart;
 					}
 				}
-				// установим относительные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeRelative();
 			}
 			else if ( bAutoRemove )
 			{
-				// установим абсолютные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeAbsolute();
-				// удалим элементы
+				// СѓРґР°Р»РёРј СЌР»РµРјРµРЅС‚С‹
 				for ( CObjectInfoIDSet::const_iterator itExistingObjectInfoID = existingObjectInfoIDSet.begin(); itExistingObjectInfoID != existingObjectInfoIDSet.end(); ++itExistingObjectInfoID )
 				{
 					const UINT nObjectInfoID = itExistingObjectInfoID->first;
@@ -319,7 +319,7 @@ namespace NMapInfoEditor
 						objectSelection.objectSelectionPartMap.erase( posObjectSelectionPart );
 					}
 				}
-				// установим относительные координаты
+				// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 				objectSelection.MakeRelative();
 			}
 			AddLinkedObjectsToSelection();
@@ -331,9 +331,9 @@ namespace NMapInfoEditor
 		{
 			CTRect<float> selectionRect( rvPos0.x, rvPos0.y, rvPos1.x, rvPos1.y );
 			selectionRect.Normalize();
-			// установим абсолютные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeAbsolute();
-			// удалим элементы
+			// СѓРґР°Р»РёРј СЌР»РµРјРµРЅС‚С‹
 			for( CObjectInfoMap::iterator itObject = objectInfoMap.begin(); itObject != objectInfoMap.end(); ++itObject )
 			{
 				bool bInside = false;
@@ -356,7 +356,7 @@ namespace NMapInfoEditor
 					}
 				}
 			}
-			// установим относительные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeRelative();
 		}
 

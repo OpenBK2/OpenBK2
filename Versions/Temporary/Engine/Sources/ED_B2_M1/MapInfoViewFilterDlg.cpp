@@ -121,7 +121,7 @@ void CMapInfoViewFilterDlg::SetDialogData()
 		return;
 
 	bIsDataSetting = true;
-	// фильтр по типам объектов
+	// С„РёР»СЊС‚СЂ РїРѕ С‚РёРїР°Рј РѕР±СЉРµРєС‚РѕРІ
 	objTypesList.DeleteAllItems();
 	for ( int i = 0; i < pMapEditorSettings->viewFilterData.objTypeFilter.size(); ++i )
 	{

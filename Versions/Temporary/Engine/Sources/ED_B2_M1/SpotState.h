@@ -20,7 +20,7 @@ class CSpotState : public CMapObjectState
 		terrainSpotInstance.points.clear();
 	}
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CSpotState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, StrFmt( "CSpotState(): pParentState == 0" ) );

@@ -23,7 +23,7 @@ void CScriptAreaState::Clear()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// прочитать список скриптовых областей из базы
+// РїСЂРѕС‡РёС‚Р°С‚СЊ СЃРїРёСЃРѕРє СЃРєСЂРёРїС‚РѕРІС‹С… РѕР±Р»Р°СЃС‚РµР№ РёР· Р±Р°Р·С‹
 void CScriptAreaState::GetScriptAreaMap()
 {
 	if ( ( pMapInfoEditor == 0 ) || ( pMapInfoEditor->GetViewManipulator() == 0  ) )
@@ -86,9 +86,9 @@ void CScriptAreaState::GetScriptAreaMap()
 		//
 		if ( scriptArea.eType == NDb::EAT_CIRCLE )
 		{
-			// для круговых областей радиус сохраняется как в виде float в .R
-			// так и в виде радиус-вектора в .AABBHalfSize
-			// (игра использует .R, редактор по возможности .AABBHalfSize)
+			// РґР»СЏ РєСЂСѓРіРѕРІС‹С… РѕР±Р»Р°СЃС‚РµР№ СЂР°РґРёСѓСЃ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РєР°Рє РІ РІРёРґРµ float РІ .R
+			// С‚Р°Рє Рё РІ РІРёРґРµ СЂР°РґРёСѓСЃ-РІРµРєС‚РѕСЂР° РІ .AABBHalfSize
+			// (РёРіСЂР° РёСЃРїРѕР»СЊР·СѓРµС‚ .R, СЂРµРґР°РєС‚РѕСЂ РїРѕ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё .AABBHalfSize)
 			float r = fabs( v1 );
 			if ( !( r > FP_EPSILON ) )
 			{
@@ -410,7 +410,7 @@ bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMa
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CScriptAreaState::ClearSelection()
 {
-	// сбросить selection для областей
+	// СЃР±СЂРѕСЃРёС‚СЊ selection РґР»СЏ РѕР±Р»Р°СЃС‚РµР№
 	for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end(); ++itScriptArea )
 	{
 		itScriptArea->second.bSelected = false;
@@ -427,7 +427,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 		return false;
 	}
 
-	// удаление
+	// СѓРґР°Р»РµРЅРёРµ
 	if ( dialogData.eChangeMask & SScriptAreaWindowData::CHANGE_DEL_SEL )
 	{
 		if ( !dialogData.selectedScriptAreaIDList.empty() )
@@ -440,14 +440,14 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 			ClearSelection();
 			dialogData.selectedScriptAreaIDList.clear();
 		}
-		// обновить окно
+		// РѕР±РЅРѕРІРёС‚СЊ РѕРєРЅРѕ
 		SetScriptAreaWindowData( SScriptAreaWindowData::CHANGE_SET_ALL );
 		//
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 	//
-	// кто поселекчен
+	// РєС‚Рѕ РїРѕСЃРµР»РµРєС‡РµРЅ
 	if ( dialogData.eChangeMask & SScriptAreaWindowData::CHANGE_SELECTION )
 	{
 		ClearSelection();
@@ -469,7 +469,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 			}		
 		}
 	}
-	// обновить список областей в окне редактора (
+	// РѕР±РЅРѕРІРёС‚СЊ СЃРїРёСЃРѕРє РѕР±Р»Р°СЃС‚РµР№ РІ РѕРєРЅРµ СЂРµРґР°РєС‚РѕСЂР° (
 	SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMask(SScriptAreaWindowData::CHANGE_AREAS | SScriptAreaWindowData::CHANGE_SELECTION) );
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -523,7 +523,7 @@ void CScriptAreaState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 {
 	if ( nFlags & MK_SHIFT )
 	{
-		// с шифтом можно поселектить несколько областей
+		// СЃ С€РёС„С‚РѕРј РјРѕР¶РЅРѕ РїРѕСЃРµР»РµРєС‚РёС‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РѕР±Р»Р°СЃС‚РµР№
 		bShift = true;
 	}
 	else

@@ -80,13 +80,13 @@ namespace NMapInfoEditor
 		}
 		void ClearAdditionalPosition( bool bUpdateSceneElements ) { vAdditionalPosition = VNULL3; }
 		//
-		// если присутствует объект возвращает true
+		// РµСЃР»Рё РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РѕР±СЉРµРєС‚ РІРѕР·РІСЂР°С‰Р°РµС‚ true
 		bool Pick( const CVec3 &rvPos );
 		bool Pick( const CSelectionSquare &rSelectionSquare );
-		// рисует объект
+		// СЂРёСЃСѓРµС‚ РѕР±СЉРµРєС‚
 		bool Draw( CSceneDrawTool *pSceneDrawTool );
 		//
-		// вспомогательные методы
+		// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 		void UpdateSceneElements( bool bModel, bool bPosition, bool bDirection, float fAdditionalDirection ) {}
 		//
 		void FitToGrid( bool bUpdateSceneElements ) {}
@@ -94,52 +94,52 @@ namespace NMapInfoEditor
 		void SetCommonHeight( bool bUpdateSceneElements ) {}
 		void FixInvalidPos( bool bUpdateSceneElements );
 
-		// абстрактные методы
-		// настройщики
+		// Р°Р±СЃС‚СЂР°РєС‚РЅС‹Рµ РјРµС‚РѕРґС‹
+		// РЅР°СЃС‚СЂРѕР№С‰РёРєРё
 		void GetDrawSelectionParameters( DWORD *pdwSceneObject, DWORD *pdwObject, DWORD *pdwObjectLink, DWORD *pdwMainObject ) {}
 		bool NeedMakeOrientation() { return false; }
 		bool KeepZeroHeight() { return false; }
 		bool KeepCommonHeight() { return false; }
 		bool NeedProcessEditParameters() { return true; }
-		// процедуры
+		// РїСЂРѕС†РµРґСѓСЂС‹
 		SObjectInfo* CallDuplicate() const { return Duplicate(); }
 		EObjectInfoType GetObjectInfoType()  { return OIT_SPOT; }
-		// загружаем объект из базы
+		// Р·Р°РіСЂСѓР¶Р°РµРј РѕР±СЉРµРєС‚ РёР· Р±Р°Р·С‹
 		bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
-		// создаем объект
+		// СЃРѕР·РґР°РµРј РѕР±СЉРµРєС‚
 		bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// заполнить свойствами MaskManipulator
+		// Р·Р°РїРѕР»РЅРёС‚СЊ СЃРІРѕР№СЃС‚РІР°РјРё MaskManipulator
 		void InsertMaskManipulators( class CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator ) {}
 		void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
 		void GetMask( string *pszMask ) {}
 		//
-		// методы имеющие реализацию поумолчанию
-		// заполняет данные объекта, которые можно загрузить когда все объекты загружены
+		// РјРµС‚РѕРґС‹ РёРјРµСЋС‰РёРµ СЂРµР°Р»РёР·Р°С†РёСЋ РїРѕСѓРјРѕР»С‡Р°РЅРёСЋ
+		// Р·Р°РїРѕР»РЅСЏРµС‚ РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р°, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РєРѕРіРґР° РІСЃРµ РѕР±СЉРµРєС‚С‹ Р·Р°РіСЂСѓР¶РµРЅС‹
 		bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator ) { return true; }
-		// изменяет положение объекта
+		// РёР·РјРµРЅСЏРµС‚ РїРѕР»РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р°
 		bool Move( const SObjectEditInfo *pObjectEditInfo, const CVec3 &rvNewPosition,
 							 bool bMoveLinkedObjects,
 							 bool bUpdateScene, IEditorScene *pEditorScene,
 							 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// изменяет угол объекта
+		// РёР·РјРµРЅСЏРµС‚ СѓРіРѕР» РѕР±СЉРµРєС‚Р°
 		bool Rotate( const SObjectEditInfo *pObjectEditInfo, float fNewDirection,
 								 bool bRotateLinkedObjects,
 								 bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// обновляет позиции в сцене
+		// РѕР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёРё РІ СЃС†РµРЅРµ
 		bool UpdateScene( IEditorScene *pEditorScene );
-		// обновляет позиции в базе данных
+		// РѕР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёРё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 		bool UpdateDB( bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
 		void Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// проверить на возможность создания линка для этого объекта
+		// РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ Р»РёРЅРєР° РґР»СЏ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°
 		bool CheckLinkCapability( UINT nSceneObjectIDLinkTo ) { return false; }
-		// добавить линк на указанный объект
+		// РґРѕР±Р°РІРёС‚СЊ Р»РёРЅРє РЅР° СѓРєР°Р·Р°РЅРЅС‹Р№ РѕР±СЉРµРєС‚
 		bool InsertLink( bool bUpdateDB, UINT nSceneObjectIDLinkTo, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
-		// Удалить линки у объектов на этоот объкт, которые ссылаются на объект, после вызова этого метода на объект никто не ссылается
+		// РЈРґР°Р»РёС‚СЊ Р»РёРЅРєРё Сѓ РѕР±СЉРµРєС‚РѕРІ РЅР° СЌС‚РѕРѕС‚ РѕР±СЉРєС‚, РєРѕС‚РѕСЂС‹Рµ СЃСЃС‹Р»Р°СЋС‚СЃСЏ РЅР° РѕР±СЉРµРєС‚, РїРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РЅР° РѕР±СЉРµРєС‚ РЅРёРєС‚Рѕ РЅРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ
 		bool RemoveLinks( bool bUpdateLinkedObjects, bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
-		// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
+		// РЈРґР°Р»РёС‚СЊ Р»РёРЅРєРё Сѓ РѕР±СЉРµРєС‚Р°, РїРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РѕР±СЉРµРєС‚ РЅРё РЅР°РєРѕРіРѕ РЅРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ
 		bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator ) { return true; }
 		//
 		void UpdateByController( UINT nSpotID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );

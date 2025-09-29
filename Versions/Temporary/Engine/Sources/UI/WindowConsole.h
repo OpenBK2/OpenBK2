@@ -41,17 +41,17 @@ class CWindowConsole : public CWindow, public IConsole
 	CDBPtr<NDb::SWindowConsoleShared> pShared;
 	CPtr<NDb::SWindowConsole> pInstance;
 	CPtr<IML> pUpperSign;
-	CVectorOfColorStrings vectorOfStrings;		//все строчки в консоли
-	CVectorOfStrings vectorOfCommands;				//выполненные команды в консоли, для выбора предыдущих команд по стрелочкам вверх/вниз
+	CVectorOfColorStrings vectorOfStrings;		//РІСЃРµ СЃС‚СЂРѕС‡РєРё РІ РєРѕРЅСЃРѕР»Рё
+	CVectorOfStrings vectorOfCommands;				//РІС‹РїРѕР»РЅРµРЅРЅС‹Рµ РєРѕРјР°РЅРґС‹ РІ РєРѕРЅСЃРѕР»Рё, РґР»СЏ РІС‹Р±РѕСЂР° РїСЂРµРґС‹РґСѓС‰РёС… РєРѕРјР°РЅРґ РїРѕ СЃС‚СЂРµР»РѕС‡РєР°Рј РІРІРµСЂС…/РІРЅРёР·
 	CConsoleFunctions consoleFunctions;
 	CObj<CWindowEditLine> pEditLine;
 	int currTime;
-	int nBeginString;						//начальная отображаемая строка из списка строк. 0 считается самой свежей строчкой
-	int nBeginCommand;					//текущая команда из лога команд
+	int nBeginString;						//РЅР°С‡Р°Р»СЊРЅР°СЏ РѕС‚РѕР±СЂР°Р¶Р°РµРјР°СЏ СЃС‚СЂРѕРєР° РёР· СЃРїРёСЃРєР° СЃС‚СЂРѕРє. 0 СЃС‡РёС‚Р°РµС‚СЃСЏ СЃР°РјРѕР№ СЃРІРµР¶РµР№ СЃС‚СЂРѕС‡РєРѕР№
+	int nBeginCommand;					//С‚РµРєСѓС‰Р°СЏ РєРѕРјР°РЅРґР° РёР· Р»РѕРіР° РєРѕРјР°РЅРґ
 	int nConsoleSequenceID;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pShared); f.Add(3,&pInstance); f.Add(4,&pUpperSign); f.Add(5,&vectorOfStrings); f.Add(6,&vectorOfCommands); f.Add(7,&consoleFunctions); f.Add(8,&pEditLine); f.Add(9,&currTime); f.Add(10,&nBeginString); f.Add(11,&nBeginCommand); f.Add(12,&nConsoleSequenceID); return 0; }
 
-	//это дело вызывается после считывания новой комманды из буфера
+	//СЌС‚Рѕ РґРµР»Рѕ РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЃС‡РёС‚С‹РІР°РЅРёСЏ РЅРѕРІРѕР№ РєРѕРјРјР°РЅРґС‹ РёР· Р±СѓС„РµСЂР°
 	void ParseCommand( const wstring &szCommand );
 	void ReadConsoleStrings();
 protected:

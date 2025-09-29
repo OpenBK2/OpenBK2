@@ -196,7 +196,7 @@ private:
 	class CMapInfoEditor *pMapInfoEditor;
 	CSceneDrawTool sceneDrawTool;
 
-	// внутренние переменные
+	// РІРЅСѓС‚СЂРµРЅРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 	CTPoint<int> heightDiffPos;
 	CArray2D<float> heightDiff;
 	SGradient gradient;
@@ -205,7 +205,7 @@ private:
 	SHeightPattern levelPattern;
 	bool bEscaped;
 
-	// внутренние переменные
+	// РІРЅСѓС‚СЂРµРЅРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 	CVec3 vTileDiffPos;
 	CArray2D<BYTE> tileDiff;
 	CArray2D<BYTE> tileBrush;

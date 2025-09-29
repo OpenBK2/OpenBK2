@@ -909,7 +909,7 @@ float CScenarioTracker::GetReinforcementXPForLevel( NDb::EReinforcementType eTyp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CScenarioTracker::GetReinforcementCallsLeft( int nPlayer )
 {
-//	NI_ASSERT( GetCurrentMap() != 0, "mission not started" ); // àññåðò íå íóæåí, ò.ê. ìèññèÿ ìîæåò áûòü çàïóùåíà êàê ïîäëîæêà - áåç ScenarioTracker
+//	NI_ASSERT( GetCurrentMap() != 0, "mission not started" ); // Ð°ÑÑÐµÑ€Ñ‚ Ð½Ðµ Ð½ÑƒÐ¶ÐµÐ½, Ñ‚.Ðº. Ð¼Ð¸ÑÑÐ¸Ñ Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ Ð·Ð°Ð¿ÑƒÑ‰ÐµÐ½Ð° ÐºÐ°Ðº Ð¿Ð¾Ð´Ð»Ð¾Ð¶ÐºÐ° - Ð±ÐµÐ· ScenarioTracker
 	if ( GetCurrentMission() == 0 )
 	{
 		return 0;
@@ -953,7 +953,7 @@ enum EMissionObjectiveState CScenarioTracker::GetObjectiveState( const int nID )
 void CScenarioTracker::SetObjectiveState( const int nID, const EMissionObjectiveState eState )
 {
 	if ( !GetCurrentMission() )
-		return; // çàïóùåíà êàðòà áåç ìèññèè
+		return; // Ð·Ð°Ð¿ÑƒÑ‰ÐµÐ½Ð° ÐºÐ°Ñ€Ñ‚Ð° Ð±ÐµÐ· Ð¼Ð¸ÑÑÐ¸Ð¸
 
 	NI_VERIFY( nID >= 0 && nID < objectives.size(), StrFmt("Objective ID (%d) out of range [0..%d]", nID, objectives.size()), return );
 	NI_VERIFY( eState >= EMOS_MIN && eState <= EMOS_MAX, StrFmt("Objective state (%d) invalid (must be in range [%d..%d])", eState, EMOS_MIN + 1, EMOS_MAX - 1), return );

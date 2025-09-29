@@ -19,7 +19,7 @@ namespace NDb
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EMovingType
 {
-	MOVE_TYPE_MOVE = 0,										// на самом деле либо Move либо Turn
+	MOVE_TYPE_MOVE = 0,										// РЅР° СЃР°РјРѕРј РґРµР»Рµ Р»РёР±Рѕ Move Р»РёР±Рѕ Turn
 	MOVE_TYPE_DIVE = 1,										//for dive bombers
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ public:
 struct SAINotifyDeadAtAll : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		bool bRot;															// true - если потом придёт update на исчезновение
+		bool bRot;															// true - РµСЃР»Рё РїРѕС‚РѕРј РїСЂРёРґС‘С‚ update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&bRot); return 0; }
 public:
 };
@@ -80,7 +80,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		float fHitPoints;											// hit points
 		float fFuel;
 		ZSKIP//int nMainAmmo
-		ZSKIP//int nSecondaryAmmo;				// патроны главной пушки и всего остального
+		ZSKIP//int nSecondaryAmmo;				// РїР°С‚СЂРѕРЅС‹ РіР»Р°РІРЅРѕР№ РїСѓС€РєРё Рё РІСЃРµРіРѕ РѕСЃС‚Р°Р»СЊРЅРѕРіРѕ
 		NTimer::STime time;
 		vector<SWeaponAmmo> ammo;
 		int nSupply;
@@ -118,13 +118,13 @@ public:
 		: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ), bFriendLost( false ) { }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// update на вход/выход, юниты сначала входят не в стрелковую ячейку
+// update РЅР° РІС…РѕРґ/РІС‹С…РѕРґ, СЋРЅРёС‚С‹ СЃРЅР°С‡Р°Р»Р° РІС…РѕРґСЏС‚ РЅРµ РІ СЃС‚СЂРµР»РєРѕРІСѓСЋ СЏС‡РµР№РєСѓ
 struct SAINotifyEntranceState
 {
 	ZDATA
-		int nInfantryUniqueID;											// кто входит
-		int nTargetUniqueID;												// куда входит
-		bool bEnter;																// true - входит, false - выходит
+		int nInfantryUniqueID;											// РєС‚Рѕ РІС…РѕРґРёС‚
+		int nTargetUniqueID;												// РєСѓРґР° РІС…РѕРґРёС‚
+		bool bEnter;																// true - РІС…РѕРґРёС‚, false - РІС‹С…РѕРґРёС‚
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nInfantryUniqueID); f.Add(3,&nTargetUniqueID); f.Add(4,&bEnter); return 0; }
 public:
 	SAINotifyEntranceState() : nInfantryUniqueID( 0 ), nTargetUniqueID( 0 ) { }
@@ -140,7 +140,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	CVec2 center;													// (x, y)
 	float z;															// height (mostly for planes)
 	WORD dir;															// direction [0..65535) => [0..2pi), only for units
-	DWORD dwNormal;												// нормаль
+	DWORD dwNormal;												// РЅРѕСЂРјР°Р»СЊ
 	//OLD}
 
 	//NEW{
@@ -149,13 +149,13 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	//NEW}
 
 	float fSpeed;
-	BYTE cSoil;														// параметры почвы: дым из-под колёс, следы и т.д.
+	BYTE cSoil;														// РїР°СЂР°РјРµС‚СЂС‹ РїРѕС‡РІС‹: РґС‹Рј РёР·-РїРѕРґ РєРѕР»С‘СЃ, СЃР»РµРґС‹ Рё С‚.Рґ.
 
 	SAINotifyPlacement() : bNewFormat( false ), cSoil( 0 ) { }
 	SAINotifyPlacement(	const int nObjUniqueID, const CVec2 &_center, const short _z, const WORD _dir, const float _fSpeed )
 		: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ), fSpeed( _fSpeed ), cSoil( 0 ) { }
 
-	// для использования в AILogic
+	// РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РІ AILogic
 	virtual int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, (SSuspendedUpdate*)(this) );
@@ -209,7 +209,7 @@ struct SAINotifyHitInfo
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;					// weapon shell was fired
 		WORD wShell;														// shell index in the weapon
 		WORD wDir;															// direction hit was from
-		EHitType eHitType;											// тип попадани
+		EHitType eHitType;											// С‚РёРї РїРѕРїР°РґР°РЅРё
 		int nVictimUniqueID;
 		CVec3 explCoord;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&eHitType); f.Add(6,&nVictimUniqueID); f.Add(7,&explCoord); return 0; }
@@ -240,7 +240,7 @@ struct SAINotifyBaseShot
 {
 	ZDATA
 		int typeID;														// shot type
-		int nObjUniqueID;											// юнит, который стрелял либо объект, из которого он стрелял
+		int nObjUniqueID;											// СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ СЃС‚СЂРµР»СЏР» Р»РёР±Рѕ РѕР±СЉРµРєС‚, РёР· РєРѕС‚РѕСЂРѕРіРѕ РѕРЅ СЃС‚СЂРµР»СЏР»
 		BYTE cShell;													// shell number
 		NTimer::STime time;										// time, this shot was...
 		CVec3 vDestPos;												// destination point of this shot
@@ -267,14 +267,14 @@ public:
 struct SAINotifyInfantryShot : public SAINotifyBaseShot
 {
 	ZDATA_(SAINotifyBaseShot)
-		CDBPtr<NDb::SWeaponRPGStats> pWeapon;				// оружие
-		// если nSlot >= 0, то стрельбы из объекта, nSlot == -1, то стрельба в открытую
-		int nSlot;											// номер слота
+		CDBPtr<NDb::SWeaponRPGStats> pWeapon;				// РѕСЂСѓР¶РёРµ
+		// РµСЃР»Рё nSlot >= 0, С‚Рѕ СЃС‚СЂРµР»СЊР±С‹ РёР· РѕР±СЉРµРєС‚Р°, nSlot == -1, С‚Рѕ СЃС‚СЂРµР»СЊР±Р° РІ РѕС‚РєСЂС‹С‚СѓСЋ
+		int nSlot;											// РЅРѕРјРµСЂ СЃР»РѕС‚Р°
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAINotifyBaseShot*)this); f.Add(2,&pWeapon); f.Add(3,&nSlot); return 0; }
 public:
 // CRAP{
-// Эти два параметра нужны только нам в M1
-// Потому что мы не умеем другими способами передавать pWeapon
+// Р­С‚Рё РґРІР° РїР°СЂР°РјРµС‚СЂР° РЅСѓР¶РЅС‹ С‚РѕР»СЊРєРѕ РЅР°Рј РІ M1
+// РџРѕС‚РѕРјСѓ С‡С‚Рѕ РјС‹ РЅРµ СѓРјРµРµРј РґСЂСѓРіРёРјРё СЃРїРѕСЃРѕР±Р°РјРё РїРµСЂРµРґР°РІР°С‚СЊ pWeapon
 	int nPlatform;
 	int nGun;
 // CRAP}

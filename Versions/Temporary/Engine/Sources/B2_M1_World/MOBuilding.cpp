@@ -495,7 +495,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	fBuildingHP = Max( fBuildingHP - fDamage, 0.0f );
 	const bool bAlive = fBuildingHP > 0;
 	CPtr<CDeadHouseAnimations> pHolder = new CDeadHouseAnimations();
-	// наносим повреждения для секций
+	// РЅР°РЅРѕСЃРёРј РїРѕРІСЂРµР¶РґРµРЅРёСЏ РґР»СЏ СЃРµРєС†РёР№
 	if ( fMaxDistance > 0.1f && !GetStats()->slots.empty() )
 	{
 		nSlot = NWin32Random::Random( GetStats()->slots.size() );
@@ -559,7 +559,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 		}
 	}
 
-	// наносим повреждения для всего здания
+	// РЅР°РЅРѕСЃРёРј РїРѕРІСЂРµР¶РґРµРЅРёСЏ РґР»СЏ РІСЃРµРіРѕ Р·РґР°РЅРёСЏ
 	SAINotifyRPGStats stats;
 	stats.fHitPoints = fBuildingHP;
 	stats.fFuel = 0.0f;

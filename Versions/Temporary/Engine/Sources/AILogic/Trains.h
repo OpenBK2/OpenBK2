@@ -206,7 +206,7 @@ public:
 	virtual bool IsFinished() const { return bFinished; }
 	virtual void Segment( const NTimer::STime timeDiff );
 
-	// ненужные функции ?
+	// РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё ?
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; }
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap );
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
@@ -237,7 +237,7 @@ public:
 	virtual bool IsFinished() const { return pOwner->IsFinished(); }
 	virtual void Segment( const NTimer::STime timeDiff ) {}
 
-	// ненужные функции ?
+	// РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё ?
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; }
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap ) { return false; }
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }

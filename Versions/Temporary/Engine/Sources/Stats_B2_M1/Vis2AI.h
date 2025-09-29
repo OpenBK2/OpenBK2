@@ -55,7 +55,7 @@ inline void Fit2Grid( CVec3 *pPos, const float fGridCellSize )
 }
 inline void FitAIOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 {
-	// ñäâèíåì îáúåêò íà origin
+	// ÑÐ´Ð²Ð¸Ð½ÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð½Ð° origin
 	pPos->x -= vOrigin.x;
 	pPos->y -= vOrigin.y;
 	//
@@ -68,7 +68,7 @@ inline void FitVisOrigin2AIGrid( CVec3 *pPos, const CVec2 &vOrigin )
 {
 	// vis => AI with rounding to whole AI points
 	Vis2AI( pPos );
-	// ñäâèíåì îáúåêò íà origin
+	// ÑÐ´Ð²Ð¸Ð½ÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð½Ð° origin
 	FitAIOrigin2AIGrid( pPos, vOrigin );
 	// AI => Vis
 	AI2Vis( pPos );

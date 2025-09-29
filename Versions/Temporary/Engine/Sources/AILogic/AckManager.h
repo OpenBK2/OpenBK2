@@ -19,21 +19,21 @@ class CAckManager
 
 	typedef vector<SAIAcknowledgment> CAcknowledgments;
 	int ackIndex;													// for giving acks to client - counter
-	CAcknowledgments acknowledgements;		// накапливает Acknolegments идущие от AI
+	CAcknowledgments acknowledgements;		// РЅР°РєР°РїР»РёРІР°РµС‚ Acknolegments РёРґСѓС‰РёРµ РѕС‚ AI
 
 	void AddAcknowledgment( const SAIAcknowledgment &ack );
 public:
 	CAckManager();
 	virtual ~CAckManager();
-	//выдача клиенту Acknowledgements
+	//РІС‹РґР°С‡Р° РєР»РёРµРЅС‚Сѓ Acknowledgements
 //	void UpdateAcknowledgments( SAIAcknowledgment **pAckBuffer, int *pnLen );
 	bool UpdateAcknowledgment( SAIAcknowledgment &pAck );
 	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck );
 
-	//выдача клиенту Bored Acknowledgements
+	//РІС‹РґР°С‡Р° РєР»РёРµРЅС‚Сѓ Bored Acknowledgements
 //	void UpdateAcknowledgments( SAIBoredAcknowledgement **pAckBuffer, int *pnLen );
 
-	// для BORED acknowledgements
+	// РґР»СЏ BORED acknowledgements
 	void RegisterAsBored(	EUnitAckType eAck, class CAIUnit *pObject );
 	void UnRegisterAsBored(	EUnitAckType eAck, class CAIUnit *pObject );
 	

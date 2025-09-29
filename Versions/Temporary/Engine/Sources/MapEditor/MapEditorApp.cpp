@@ -385,11 +385,11 @@ BOOL CEditorApp::InitInstance()
 
 	CWinApp::InitInstance();
 	RWSetDotNetStyle( false );
-	// Получаем командную строку
+	// РџРѕР»СѓС‡Р°РµРј РєРѕРјР°РЅРґРЅСѓСЋ СЃС‚СЂРѕРєСѓ
 	string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
-	// проверяем наличие предыдущего редактора
+	// РїСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РїСЂРµРґС‹РґСѓС‰РµРіРѕ СЂРµРґР°РєС‚РѕСЂР°
 	CMapEditorSingletonChecker mapEditorSingletonChecker;
 	if ( szCommandLine.empty() )
 	{
@@ -408,39 +408,39 @@ BOOL CEditorApp::InitInstance()
 
 	const bool bShowSplashScreen = ( !IsDebuggerPresent() ) && ( NGlobal::GetVar( "disable_splash_screen", 0 ) == 0 );
 	CObj<CObjectBase> pSplashScreen;
-	//Показать SplashScreen
+	//РџРѕРєР°Р·Р°С‚СЊ SplashScreen
 	if ( bShowSplashScreen )
 		pSplashScreen = NSplash::CreateSplashScreen( "..\\splash.bmp", false );
 
-	// Нет такого же приложения, продолжаем инициализацию
+	// РќРµС‚ С‚Р°РєРѕРіРѕ Р¶Рµ РїСЂРёР»РѕР¶РµРЅРёСЏ, РїСЂРѕРґРѕР»Р¶Р°РµРј РёРЅРёС†РёР°Р»РёР·Р°С†РёСЋ
 #if defined( _DO_SEH ) && !defined( _DEBUG )
 	// set StructuredExceptionHandler 
 	SetCrashHandler();
 #endif // defined( _DO_SEH ) && !defined( _DEBUG )
 
-	// Загружаем данные пользователя с диска (UserData.xml и ConstUserData.xml)
+	// Р—Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ РґРёСЃРєР° (UserData.xml Рё ConstUserData.xml)
 	CreateUserDataSingleton();
 
-	// Пропарсить все аргументы командной строки
+	// РџСЂРѕРїР°СЂСЃРёС‚СЊ РІСЃРµ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
 	if ( !ParseCommandLine( szCommandLine ) )
 	{
 		return false;
 	}
 
-	// Установить рабочий раздел Registry
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЂР°Р±РѕС‡РёР№ СЂР°Р·РґРµР» Registry
 	CString strPath;
 	strPath.LoadString( IDS_REGISTRY_PATH );
 	const string szRegistryKey = StrFmt( "%s\\%s",
 																			 LPCTSTR( strPath ),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() );
 	SetRegistryKey( szRegistryKey.c_str() );
-	// Создаем все необходимые структуры данных
+	// РЎРѕР·РґР°РµРј РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ СЃС‚СЂСѓРєС‚СѓСЂС‹ РґР°РЅРЅС‹С…
 	if ( !CreateSingletons() )
 	{
 		DestroySingletons();
 		return false;
 	}
-	// Создаем главное окно
+	// РЎРѕР·РґР°РµРј РіР»Р°РІРЅРѕРµ РѕРєРЅРѕ
 	//
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
@@ -460,7 +460,7 @@ BOOL CEditorApp::InitInstance()
 	//
 	DebugTrace( "EditorApp() Load mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
 	//	
-	// после создания MainFrame
+	// РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ MainFrame
 	GameXPostStorageInitialize();
 	//
 	DebugTrace( "EditorApp() GameXPostStorageInitialize(): %g", NHPTimer::GetTimePassed( &time ) );
@@ -474,14 +474,14 @@ BOOL CEditorApp::InitInstance()
 	//
 	DebugTrace( "EditorApp() ModulePostCreateMainFrame(): %g", NHPTimer::GetTimePassed( &time ) );
 	//	
-	// Окно создано, закрываем Splash Screen
+	// РћРєРЅРѕ СЃРѕР·РґР°РЅРѕ, Р·Р°РєСЂС‹РІР°РµРј Splash Screen
 	if ( bShowSplashScreen )
 		pSplashScreen = 0;
 	//Singleton<IResourceManager>()->ResetCache();
 	//
 	//DebugTrace( "EditorApp() ResetCache(): %g", NHPTimer::GetTimePassed( &time ) );
 	//	
-	// И показываем основное окно
+	// Р РїРѕРєР°Р·С‹РІР°РµРј РѕСЃРЅРѕРІРЅРѕРµ РѕРєРЅРѕ
 	m_nCmdShow = SW_SHOWNORMAL;
 	/**
 	if ( szCommandLine.find( "-topmost" ) != string::npos )
@@ -506,7 +506,7 @@ int CEditorApp::ExitInstance()
 	ResetCrashHandler();
 #endif // defined( _DO_SEH ) && !defined( _DEBUG )
 	//
-	// Убираем все созданные в редакторе Singletons
+	// РЈР±РёСЂР°РµРј РІСЃРµ СЃРѕР·РґР°РЅРЅС‹Рµ РІ СЂРµРґР°РєС‚РѕСЂРµ Singletons
 	DestroySingletons();
 	//
 	return CWinApp::ExitInstance();
@@ -543,7 +543,7 @@ void CEditorApp::SetMapFileName( const string &szMapFileName )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorApp::RegisterEditors()
 {
-//	g_RegisterEditorsSemiAutoMagic.Load(); // сейчас регистрируются только в коде
+//	g_RegisterEditorsSemiAutoMagic.Load(); // СЃРµР№С‡Р°СЃ СЂРµРіРёСЃС‚СЂРёСЂСѓСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РІ РєРѕРґРµ
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // basement storage  

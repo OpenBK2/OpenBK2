@@ -19,9 +19,9 @@ bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *p
 bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
 void SavePassProfile( const NDb::SPassProfile &profile, const string &szPrefix, const string &szFieldName, IManipulator *pManipulator );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Правильное расположение bounding box
+// РџСЂР°РІРёР»СЊРЅРѕРµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ bounding box
 bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, const CVec3 &rvMin, const CVec3 &rvMax );
-// Правильные размеры bounding box
+// РџСЂР°РІРёР»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ bounding box
 bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

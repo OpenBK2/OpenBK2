@@ -159,7 +159,7 @@ bool CMPUITestServerClient::OnEnterGameRoomPacket( class CEnterLobbyPacket *pPac
 {
 	bLobby = true;
 
-	//{ DEBUG - добавим противников
+	//{ DEBUG - РґРѕР±Р°РІРёРј РїСЂРѕС‚РёРІРЅРёРєРѕРІ
 	SendPacket( new CRegisterPacket( 0, "ClientB2 01", "Pass", "Key", "email" ) );
 	SendPacket( new CRegisterPacket( 0, "ClientB2 02", "Pass", "Key", "email" ) );
 	SendPacket( new CRegisterPacket( 0, "ClientB2 03", "Pass", "Key", "email" ) );

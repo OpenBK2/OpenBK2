@@ -21,9 +21,9 @@ class CMineStaticObject : public CGivenPassabilityStObject
 	DWORD mVisibleStatus;
 	NTimer::STime nextSegmTime;
 
-	bool bIfWillBeDeleted; // кто-то из солдат направляется к этой мине
+	bool bIfWillBeDeleted; // РєС‚Рѕ-С‚Рѕ РёР· СЃРѕР»РґР°С‚ РЅР°РїСЂР°РІР»СЏРµС‚СЃСЏ Рє СЌС‚РѕР№ РјРёРЅРµ
 	ZONSERIALIZE 
-	ZSKIP		//bool bIfRegisteredInCWorld; // мина видима
+	ZSKIP		//bool bIfRegisteredInCWorld; // РјРёРЅР° РІРёРґРёРјР°
 
 	bool bAlive;
 public:
@@ -31,7 +31,7 @@ public:
 	//
 	void Detonate();
 
-	// зависит от клиента
+	// Р·Р°РІРёСЃРёС‚ РѕС‚ РєР»РёРµРЅС‚Р°
 	bool IsRegisteredInWorld() const;
 	void OnSerialize( IBinSaver &f )
 	{
@@ -51,7 +51,7 @@ public:
 	// if explodes under the given unit
 	bool WillExplodeUnder( CAIUnit *pUnit );
 
-	// сдетонировать, если при наезде данного юнита мина взрывается; true - если сдетонировала
+	// СЃРґРµС‚РѕРЅРёСЂРѕРІР°С‚СЊ, РµСЃР»Рё РїСЂРё РЅР°РµР·РґРµ РґР°РЅРЅРѕРіРѕ СЋРЅРёС‚Р° РјРёРЅР° РІР·СЂС‹РІР°РµС‚СЃСЏ; true - РµСЃР»Рё СЃРґРµС‚РѕРЅРёСЂРѕРІР°Р»Р°
 	bool CheckToDetonate( class CAIUnit *pUnit );
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual void Die( const float fDamage );
@@ -60,11 +60,11 @@ public:
 	virtual const bool IsVisible( const BYTE nParty ) const;
 	void SetVisible( int nParty, bool bVis = true );
 
-	// для удаления инженерами
+	// РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РёРЅР¶РµРЅРµСЂР°РјРё
 	bool IsBeingDisarmed() const {return bIfWillBeDeleted; }
 	void SetBeingDisarmed( bool bStartDisarm );
 
-	// зависит от клиента
+	// Р·Р°РІРёСЃРёС‚ РѕС‚ РєР»РёРµРЅС‚Р°
 	void RegisterInWorld();
 
 	void ClearVisibleStatus();

@@ -53,7 +53,7 @@ int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount
 	CountEdge( &count, t.i1 );
 	CountEdge( &count, t.i2 );
 	CountEdge( &count, t.i3 );
-	// вернуть индекс незакрытого ребра
+	// РІРµСЂРЅСѓС‚СЊ РёРЅРґРµРєСЃ РЅРµР·Р°РєСЂС‹С‚РѕРіРѕ СЂРµР±СЂР°
 	if ( count[ t.i1 & 0x7fff ] )
 		return t.i1 & 0x7fff;
 	if ( count[ t.i2 & 0x7fff ] )

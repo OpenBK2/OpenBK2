@@ -346,13 +346,13 @@ void CHeightPlatoStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Версии с проверкой на балланс красного и черного c простым уровнем
+// Р’РµСЂСЃРёРё СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° Р±Р°Р»Р»Р°РЅСЃ РєСЂР°СЃРЅРѕРіРѕ Рё С‡РµСЂРЅРѕРіРѕ c РїСЂРѕСЃС‚С‹Рј СѓСЂРѕРІРЅРµРј
 // Simple Plane SP
 // Check Red Black Ballance CRBB
 // Create Height Pattern To Level CHPTL
 // Calculate Average Height CAH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для заравнивания TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ TerrainHeight
 struct S_SP_CRBB_CHPTL_Functional
 {
 	CHeightContainer *pHeightContainer;
@@ -391,7 +391,7 @@ struct S_SP_CRBB_CHPTL_Functional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для вычисления средней высоты TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃСЂРµРґРЅРµР№ РІС‹СЃРѕС‚С‹ TerrainHeight
 struct S_SP_CRBB_CAH_Functional
 {
 	CHeightContainer *pHeightContainer;
@@ -435,12 +435,12 @@ void CalculateMatrix( CArray2D<double> *pMatrix, SDoubleVec3 *pvRightSide, int n
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Версии без проверки на балланс красного и черного c простым уровнем
+// Р’РµСЂСЃРёРё Р±РµР· РїСЂРѕРІРµСЂРєРё РЅР° Р±Р°Р»Р»Р°РЅСЃ РєСЂР°СЃРЅРѕРіРѕ Рё С‡РµСЂРЅРѕРіРѕ c РїСЂРѕСЃС‚С‹Рј СѓСЂРѕРІРЅРµРј
 // Simple Plane SP
 // Create Height Pattern To Level CHPTL
 // Calculate Average Height CAH
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для заравнивания TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ TerrainHeight
 struct S_SP_CHPTL_Functional
 {
 	SHeightPattern *pHeightPattern;
@@ -475,7 +475,7 @@ struct S_SP_CHPTL_Functional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для вычисления средней высоты TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃСЂРµРґРЅРµР№ РІС‹СЃРѕС‚С‹ TerrainHeight
 struct S_SP_CAH_Functional
 {
 	ITerraManager *pTerraManager;
@@ -504,13 +504,13 @@ struct S_SP_CAH_Functional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Версии с проверкой на балланс красного и черного c простым уровнем
+// Р’РµСЂСЃРёРё СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° Р±Р°Р»Р»Р°РЅСЃ РєСЂР°СЃРЅРѕРіРѕ Рё С‡РµСЂРЅРѕРіРѕ c РїСЂРѕСЃС‚С‹Рј СѓСЂРѕРІРЅРµРј
 // Complex Plane CP
 // Check Red Black Ballance CRBB
 // Create Height Pattern To Level CHPTL
 // Calculate Average Plane CAP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для заравнивания TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ TerrainHeight
 struct S_CP_CRBB_CHPTL_Functional
 {
 	CHeightContainer *pHeightContainer;
@@ -550,7 +550,7 @@ struct S_CP_CRBB_CHPTL_Functional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для вычисления параметров плоскости TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ РїР»РѕСЃРєРѕСЃС‚Рё TerrainHeight
 struct S_CP_CRBB_CAP_Functional
 {
 	CHeightContainer *pHeightContainer;
@@ -601,12 +601,12 @@ struct S_CP_CRBB_CAP_Functional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Версии без проверки на балланс красного и черного c простым уровнем
+// Р’РµСЂСЃРёРё Р±РµР· РїСЂРѕРІРµСЂРєРё РЅР° Р±Р°Р»Р»Р°РЅСЃ РєСЂР°СЃРЅРѕРіРѕ Рё С‡РµСЂРЅРѕРіРѕ c РїСЂРѕСЃС‚С‹Рј СѓСЂРѕРІРЅРµРј
 // Cimple Plane CP
 // Create Height Pattern To Level CHPTL
 // Calculate Average Plane CAP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для заравнивания TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ TerrainHeight
 struct S_CP_CHPTL_Functional
 {
 	SHeightPattern *pHeightPattern;
@@ -642,7 +642,7 @@ struct S_CP_CHPTL_Functional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// паттерн для вычисления параметров плоскости TerrainHeight
+// РїР°С‚С‚РµСЂРЅ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ РїР»РѕСЃРєРѕСЃС‚Рё TerrainHeight
 struct S_CP_CAP_Functional
 {
 	ITerraManager *pTerraManager;
@@ -1145,7 +1145,7 @@ void CHeightStateV3::CreateMapInfoController()
 	{
 		if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 		{
-			//записываем изменения в Undo Buffer
+			//Р·Р°РїРёСЃС‹РІР°РµРј РёР·РјРµРЅРµРЅРёСЏ РІ Undo Buffer
 			if ( CPtr<CMapInfoController> pMapInfoController = pMapInfoEditor->CreateController() )
 			{
 				bool bSaveChanges = false;
@@ -1213,7 +1213,7 @@ void CHeightStateV3::Enter()
 
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	// создаем градиент
+	// СЃРѕР·РґР°РµРј РіСЂР°РґРёРµРЅС‚
 	CArray2D<DWORD> image;
 	{
 		CFileStream stream( pUserData->constUserData.szStartFolder + "Editor\\profile.tga", CFileStream::WIN_READ_ONLY );

@@ -101,14 +101,14 @@ struct SUserData
 		typedef hash_map<string, DWORD> CExpandedPropertySet;
 		typedef hash_map<string, DWORD> CExpandedObjectSet;
 		// CRAP} HASH_SET
-		string szCurrentObject;										// объект выделенный в таблице
-		string szCurrentProperty;									// свойство выделенное у объекта
-		//CBrowsePathMap browsePathMap;						// пути для диалогов OpenFile и т.д.
-		CExpandedPropertySet expandedPropertySet;	// открытые ветки в Property Control
-		CExpandedObjectSet expandedObjectSet;			// открытые ветки в дереве обьектов
-		//string szEditorSettingsFileName;					// имя файла с настройками редактора, если не задан генерируется по умолчанию
-		//string szExporterSettingsFileName;				// имя файла с настройками экспортера, если не задан генерируется по умолчанию
-		//string szBuilderSettingsFileName;					// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
+		string szCurrentObject;										// РѕР±СЉРµРєС‚ РІС‹РґРµР»РµРЅРЅС‹Р№ РІ С‚Р°Р±Р»РёС†Рµ
+		string szCurrentProperty;									// СЃРІРѕР№СЃС‚РІРѕ РІС‹РґРµР»РµРЅРЅРѕРµ Сѓ РѕР±СЉРµРєС‚Р°
+		//CBrowsePathMap browsePathMap;						// РїСѓС‚Рё РґР»СЏ РґРёР°Р»РѕРіРѕРІ OpenFile Рё С‚.Рґ.
+		CExpandedPropertySet expandedPropertySet;	// РѕС‚РєСЂС‹С‚С‹Рµ РІРµС‚РєРё РІ Property Control
+		CExpandedObjectSet expandedObjectSet;			// РѕС‚РєСЂС‹С‚С‹Рµ РІРµС‚РєРё РІ РґРµСЂРµРІРµ РѕР±СЊРµРєС‚РѕРІ
+		//string szEditorSettingsFileName;					// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё СЂРµРґР°РєС‚РѕСЂР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+		//string szExporterSettingsFileName;				// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё СЌРєСЃРїРѕСЂС‚РµСЂР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+		//string szBuilderSettingsFileName;					// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё РєРѕРјРїРѕРЅРѕРІС‰РёРєР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -132,7 +132,7 @@ struct SUserData
 	typedef hash_map<string, string> CFilePathMap;
 	typedef hash_map<string, string> CRefPathMap;
 
-	// данные не изменемые из программы и не сохраняющиеся в файл
+	// РґР°РЅРЅС‹Рµ РЅРµ РёР·РјРµРЅРµРјС‹Рµ РёР· РїСЂРѕРіСЂР°РјРјС‹ Рё РЅРµ СЃРѕС…СЂР°РЅСЏСЋС‰РёРµСЃСЏ РІ С„Р°Р№Р»
 	struct SConstUserData
 	{
 		struct SPropertyControlData
@@ -148,9 +148,9 @@ struct SUserData
 
 		struct SObjectTypeData
 		{
-			string szEditorSettingsFileName;				// имя файла с настройками редактора, если не задан генерируется по умолчанию 
-			string szExporterSettingsFileName;			// имя файла с настройками экспортера, если не задан генерируется по умолчанию
-			string szBuilderSettingsFileName;				// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
+			string szEditorSettingsFileName;				// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё СЂРµРґР°РєС‚РѕСЂР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 
+			string szExporterSettingsFileName;			// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё СЌРєСЃРїРѕСЂС‚РµСЂР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
+			string szBuilderSettingsFileName;				// РёРјСЏ С„Р°Р№Р»Р° СЃ РЅР°СЃС‚СЂРѕР№РєР°РјРё РєРѕРјРїРѕРЅРѕРІС‰РёРєР°, РµСЃР»Рё РЅРµ Р·Р°РґР°РЅ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 
 			// serializing...
 			int operator&( IXmlSaver &xs )
@@ -165,21 +165,21 @@ struct SUserData
 
 		string szVersion;
 		string szApplicationTitle;
-		// поля необходимые для работы Property Control
+		// РїРѕР»СЏ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ СЂР°Р±РѕС‚С‹ Property Control
 		SPropertyControlData propertyControlData;
 		// maya export settings (pathes, scripts, etc.)
 		SMayaExportData mayaExportData;
 		// Object types' specific configuration files
 		CObjectTypeDataMap objectTypeData;
-		// Имя типа объекта, используемое в особом режиме редактора, как основной тип редактируемых объектов
+		// РРјСЏ С‚РёРїР° РѕР±СЉРµРєС‚Р°, РёСЃРїРѕР»СЊР·СѓРµРјРѕРµ РІ РѕСЃРѕР±РѕРј СЂРµР¶РёРјРµ СЂРµРґР°РєС‚РѕСЂР°, РєР°Рє РѕСЃРЅРѕРІРЅРѕР№ С‚РёРї СЂРµРґР°РєС‚РёСЂСѓРµРјС‹С… РѕР±СЉРµРєС‚РѕРІ
 		string szMainObjectType;
 		// Object GUID property
 		string szGUIDName;
 		// Common Folders
-		string szExportSourceFolder;					// Исходники для binary resources
-		string szExportDestinationFolder;			// Текущее место складывания binary resource при экспорте
-		string szDataStorageFolder;						// Основной каталог resources "..\\Data", (для конфигурационных файлов)
-		string szStartFolder;									// Стартовый каталог программы
+		string szExportSourceFolder;					// РСЃС…РѕРґРЅРёРєРё РґР»СЏ binary resources
+		string szExportDestinationFolder;			// РўРµРєСѓС‰РµРµ РјРµСЃС‚Рѕ СЃРєР»Р°РґС‹РІР°РЅРёСЏ binary resource РїСЂРё СЌРєСЃРїРѕСЂС‚Рµ
+		string szDataStorageFolder;						// РћСЃРЅРѕРІРЅРѕР№ РєР°С‚Р°Р»РѕРі resources "..\\Data", (РґР»СЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹С… С„Р°Р№Р»РѕРІ)
+		string szStartFolder;									// РЎС‚Р°СЂС‚РѕРІС‹Р№ РєР°С‚Р°Р»РѕРі РїСЂРѕРіСЂР°РјРјС‹
 		string szObjectRecordIDsFolder;				// folder with object record IDs .ini file
 
 		// serializing...
@@ -208,7 +208,7 @@ struct SUserData
 	CTableSetMap tableSetMap;									// visible tables
 	hash_map<int, string> szCurrentTableMap;	// current table
 	vector<int> tableHeaderWidthList;					// table header width values
-	vector<int> tableLinkHeaderWidthList;			// тоже самое но для диалога ObjectLink
+	vector<int> tableLinkHeaderWidthList;			// С‚РѕР¶Рµ СЃР°РјРѕРµ РЅРѕ РґР»СЏ РґРёР°Р»РѕРіР° ObjectLink
 	// User Module (project-specific module)
 	//vector<string> userModuleFileNamesList;	// list of project specific modules to load at editor start
 	string szUserModuleFileName;							// project specific module to load at editor start
@@ -225,13 +225,13 @@ struct SUserData
 	CObjectDBTypeMap infantryDBTypeMap;		// default ojects for infantry builder (copy fields to new object from here)
 	CObjectDBTypeMap mechUnitDBTypeMap;		// default ojects for mechUnit builder (copy fields to new object from here)
 	//
-	CFilePathMap filePathMap;							// пути для диалогов OpenFile и т.д.
-	CRefPathMap refPathMap;								// пути для диалогов RefLink и т.д.
+	CFilePathMap filePathMap;							// РїСѓС‚Рё РґР»СЏ РґРёР°Р»РѕРіРѕРІ OpenFile Рё С‚.Рґ.
+	CRefPathMap refPathMap;								// РїСѓС‚Рё РґР»СЏ РґРёР°Р»РѕРіРѕРІ RefLink Рё С‚.Рґ.
 	//
 	string szDebugParam;
 	//
-	list<int> gdbBrowserIDList;						// список окон с каталогами
-	int nFocusedGDBBrowserID;							// текущее активное окно с каталогамми
+	list<int> gdbBrowserIDList;						// СЃРїРёСЃРѕРє РѕРєРѕРЅ СЃ РєР°С‚Р°Р»РѕРіР°РјРё
+	int nFocusedGDBBrowserID;							// С‚РµРєСѓС‰РµРµ Р°РєС‚РёРІРЅРѕРµ РѕРєРЅРѕ СЃ РєР°С‚Р°Р»РѕРіР°РјРјРё
 	//
 	string szOpenedMODFolder;
 	//
@@ -306,10 +306,10 @@ struct SUserData
 		return string();
 	}
 
-	// Установить путь в соответствии с указанными свойствами
-	// для однозначности: если указан начальный путь то наличие проверяется только по указанному пути
-	// true		- имя существует в указанном каталоге ( поверка производится только при bExists = true )
-	// false	- имя не существует в указанном каталоге ( поверка производится только при bExists = true )
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСѓС‚СЊ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ СѓРєР°Р·Р°РЅРЅС‹РјРё СЃРІРѕР№СЃС‚РІР°РјРё
+	// РґР»СЏ РѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚Рё: РµСЃР»Рё СѓРєР°Р·Р°РЅ РЅР°С‡Р°Р»СЊРЅС‹Р№ РїСѓС‚СЊ С‚Рѕ РЅР°Р»РёС‡РёРµ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ РїСѓС‚Рё
+	// true		- РёРјСЏ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ СѓРєР°Р·Р°РЅРЅРѕРј РєР°С‚Р°Р»РѕРіРµ ( РїРѕРІРµСЂРєР° РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё bExists = true )
+	// false	- РёРјСЏ РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ СѓРєР°Р·Р°РЅРЅРѕРј РєР°С‚Р°Р»РѕРіРµ ( РїРѕРІРµСЂРєР° РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ С‚РѕР»СЊРєРѕ РїСЂРё bExists = true )
 	bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, ENormalizePathType type, bool *pbAbsolutePath )
 	{
 		string szPathPrefix = GetPath( type );
@@ -377,7 +377,7 @@ struct SUserData
 interface IUserDataContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408AB40 };
-	// Получить User Data
+	// РџРѕР»СѓС‡РёС‚СЊ User Data
 	virtual SUserData* Get() = 0;
 	//
 	virtual void Load() = 0;

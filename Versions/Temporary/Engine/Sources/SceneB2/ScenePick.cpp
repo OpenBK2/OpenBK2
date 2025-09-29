@@ -363,7 +363,7 @@ void CScene::GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter 
 		ray.ptOrigin = vCameraPos;
 		ray.ptDir = vObjPos - vCameraPos;
 
-		// ищем все объекты, закрывающие данный
+		// РёС‰РµРј РІСЃРµ РѕР±СЉРµРєС‚С‹, Р·Р°РєСЂС‹РІР°СЋС‰РёРµ РґР°РЅРЅС‹Р№
 		vector<NAI::SInterval> intervals;
 		data[eScene]->pAIMap->Trace( ray, &intervals, 1 );
 		list<int> obstacles;

@@ -127,7 +127,7 @@ bool CUnitStartCmdWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 void CUnitStartCmdWindow::NotifyHandler()
 {
 	if ( bIsDataBeginSet )
-		return;	// чтобы сообщения не шли в момент установки свойств контролов
+		return;	// С‡С‚РѕР±С‹ СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ С€Р»Рё РІ РјРѕРјРµРЅС‚ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІ РєРѕРЅС‚СЂРѕР»РѕРІ
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_STATE, ID_UNIT_START_CMD_WINDOW_UI_EVENT, 0 );
 }
@@ -148,7 +148,7 @@ void CUnitStartCmdWindow::GetDialogData( SUnitStartCmdWindowData *pData )
 		return;
 
 	pData->Clear();
-	// pData->commands -- не возвращаются, т.к. никому не нужны
+	// pData->commands -- РЅРµ РІРѕР·РІСЂР°С‰Р°СЋС‚СЃСЏ, С‚.Рє. РЅРёРєРѕРјСѓ РЅРµ РЅСѓР¶РЅС‹
 	pData->eLastAction = eLastAction;
 	for ( int i = 0; i < lcCommands.GetItemCount(); ++i )
 	{

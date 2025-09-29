@@ -46,12 +46,12 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 {
-	//! больше нет мест в формации
+	//! Р±РѕР»СЊС€Рµ РЅРµС‚ РјРµСЃС‚ РІ С„РѕСЂРјР°С†РёРё
 	NI_ASSERT( GetUnitsCount() < GetCellsCount(), "Cannot add more units to formation" );  
 	if ( GetUnitsCount() >= GetCellsCount() )
 		return false;
 
-	//! юнит уже в формации
+	//! СЋРЅРёС‚ СѓР¶Рµ РІ С„РѕСЂРјР°С†РёРё
 	CUnitsMap::const_iterator pos = units.find( pUnit->GetUniqueID() );
 	NI_ASSERT( pos == units.end(), StrFmt( "Unit (ID: %d) already in formation (ID: %d)", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );  
 	if ( pos != units.end() )

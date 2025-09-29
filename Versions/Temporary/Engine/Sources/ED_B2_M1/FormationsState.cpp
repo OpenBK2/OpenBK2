@@ -92,9 +92,9 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 {
 	//
-	//	после успешного выполнения функции:
-	//	число элементов размещения (order) в каждой формации = числу людей во взводе (members)
-	//  соответсвие между элементами members[] и formations[].orders[] происходит по индексу эл-та
+	//	РїРѕСЃР»Рµ СѓСЃРїРµС€РЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ С„СѓРЅРєС†РёРё:
+	//	С‡РёСЃР»Рѕ СЌР»РµРјРµРЅС‚РѕРІ СЂР°Р·РјРµС‰РµРЅРёСЏ (order) РІ РєР°Р¶РґРѕР№ С„РѕСЂРјР°С†РёРё = С‡РёСЃР»Сѓ Р»СЋРґРµР№ РІРѕ РІР·РІРѕРґРµ (members)
+	//  СЃРѕРѕС‚РІРµС‚СЃРІРёРµ РјРµР¶РґСѓ СЌР»РµРјРµРЅС‚Р°РјРё members[] Рё formations[].orders[] РїСЂРѕРёСЃС…РѕРґРёС‚ РїРѕ РёРЅРґРµРєСЃСѓ СЌР»-С‚Р°
 	//
 
 	CVariant v;
@@ -106,7 +106,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 	if ( nFormationsNumber > typeFormationMnemonics.Size() )
 	{
-		// лишние типы формаций
+		// Р»РёС€РЅРёРµ С‚РёРїС‹ С„РѕСЂРјР°С†РёР№
 		int nNumForDel = nFormationsNumber - typeFormationMnemonics.Size();
 		int nDeletedIdx = typeFormationMnemonics.Size();
 		for ( int d = 0; d < nNumForDel; ++d )
@@ -117,7 +117,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 	}
 	else if ( nFormationsNumber < typeFormationMnemonics.Size() )
 	{
-		// нет каких-то типов формаций
+		// РЅРµС‚ РєР°РєРёС…-С‚Рѕ С‚РёРїРѕРІ С„РѕСЂРјР°С†РёР№
 	}
 
 	if ( !pSquadManip->GetValue( "members", &v ) )
@@ -162,7 +162,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	возвращает кол-во людей во взводе
+//	РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»-РІРѕ Р»СЋРґРµР№ РІРѕ РІР·РІРѕРґРµ
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static int GetMembersNum( IManipulator *pSquadManip )
@@ -175,7 +175,7 @@ static int GetMembersNum( IManipulator *pSquadManip )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	возвращает список моделей взвода
+//	РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє РјРѕРґРµР»РµР№ РІР·РІРѕРґР°
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip )
@@ -446,7 +446,7 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 	for ( vector<string>::iterator it = memberModelNameList.begin(); it != memberModelNameList.end(); ++it )
 		memberModels.push_back( NDb::Get<NDb::SModel>( CDBID( *it ) ) );
 
-	// позиции
+	// РїРѕР·РёС†РёРё
 	vector<CVec2> positions;
 	for ( int m = 0; m < memberModelNameList.size(); ++m )
 	{
@@ -458,7 +458,7 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 
 	NI_ASSERT( (positions.size() == memberModels.size()), "(positions.size() != memberModels.size())" );
 
-	// расстановка
+	// СЂР°СЃСЃС‚Р°РЅРѕРІРєР°
 	int nMemberIndex = 0;
 	vector<CVec2>::iterator itPos = positions.begin();
 	for (	vector<const NDb::SModel*>::iterator itModel = memberModels.begin(); 

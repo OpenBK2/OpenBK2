@@ -32,10 +32,10 @@ public:
 
 		NTimer::STime endFogTime; 
 		NTimer::STime timeToEndDieAnimation;
-		// кончилсась анимация смерти и проинициализировались и endFogTime
+		// РєРѕРЅС‡РёР»СЃР°СЃСЊ Р°РЅРёРјР°С†РёСЏ СЃРјРµСЂС‚Рё Рё РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°Р»РёСЃСЊ Рё endFogTime
 		bool bAnimFinished;
 
-		list<SObjTileInfo> lockedTiles; // залоканные тайлы
+		list<SObjTileInfo> lockedTiles; // Р·Р°Р»РѕРєР°РЅРЅС‹Рµ С‚Р°Р№Р»С‹
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&endFogTime); f.Add(4,&timeToEndDieAnimation); f.Add(5,&bAnimFinished); f.Add(6,&lockedTiles); return 0; }
 
 	SKilledUnit() { }
@@ -128,7 +128,7 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 	CPtr<SKilledUnit> pKillInfo = new SKilledUnit();
 	
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
-	// играем fatality
+	// РёРіСЂР°РµРј fatality
 	if ( nFatality > -1 )
 	{
 		pKillInfo->bAnimFinished = false;
@@ -326,7 +326,7 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 	pDyingInfo->time = dieTime;
 	CAITimer::ToClientTime( &pDyingInfo->time );
 	pDyingInfo->typeID = dieAction;
-	// для disappeared units
+	// РґР»СЏ disappeared units
 	if ( dieAction != ACTION_NOTIFY_NONE )
 	{
 		if ( nFatality >= 0 )

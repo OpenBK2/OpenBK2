@@ -121,7 +121,7 @@ static void StartLagProfiling()
 static string szLaunchDirectory;
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	CreateMutex( 0, TRUE, "NIVAL_RTS_ENGINE" ); // при выходе система сама уничтожит этот mutex
+	CreateMutex( 0, TRUE, "NIVAL_RTS_ENGINE" ); // РїСЂРё РІС‹С…РѕРґРµ СЃРёСЃС‚РµРјР° СЃР°РјР° СѓРЅРёС‡С‚РѕР¶РёС‚ СЌС‚РѕС‚ mutex
 	if ( GetLastError() == ERROR_ALREADY_EXISTS )
 		return 0xDEAD;
 #ifndef _FINALRELEASE

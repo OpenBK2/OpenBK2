@@ -33,12 +33,12 @@ void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 		pParentState->nSelectedIndex = INVALID_NODE_ID;
 		//
 		pParentState->PickPolygon( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickPolygonIDList ) );
-		// Выделяем верхний Polygon
+		// Р’С‹РґРµР»СЏРµРј РІРµСЂС…РЅРёР№ Polygon
 		if ( !pParentState->pickPolygonIDList.empty() )
 		{
 			pParentState->nSelectedIndex = 0;
 		}
-		// Начинаем строить новый Polygon ( добавляем первую точку )
+		// РќР°С‡РёРЅР°РµРј СЃС‚СЂРѕРёС‚СЊ РЅРѕРІС‹Р№ Polygon ( РґРѕР±Р°РІР»СЏРµРј РїРµСЂРІСѓСЋ С‚РѕС‡РєСѓ )
 		else if ( pParentState->CanInsertPolygon() )
 		{
 			pParentState->nSelectedControlPoint = INVALID_NODE_ID;
@@ -58,12 +58,12 @@ void CPolygonSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 	{
 		pParentState->pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
 		//
-		// Активируем STATE редактирования Polygon
+		// РђРєС‚РёРІРёСЂСѓРµРј STATE СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ Polygon
 		if ( !pParentState->pickPolygonIDList.empty() )
 		{
 			pParentState->ValidateSelectedIndex();
 			pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_START );
-			// Запоманаем первоначальное расположение контрольных точек
+			// Р—Р°РїРѕРјР°РЅР°РµРј РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РєРѕРЅС‚СЂРѕР»СЊРЅС‹С… С‚РѕС‡РµРє
 			if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 			{
 				pParentState->controlPointList = ( *pControlPointList );
@@ -87,7 +87,7 @@ void CPolygonSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	{
 		pParentState->pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
 		//
-		// Переключаемся между Polygon ( если они один над другим )
+		// РџРµСЂРµРєР»СЋС‡Р°РµРјСЃСЏ РјРµР¶РґСѓ Polygon ( РµСЃР»Рё РѕРЅРё РѕРґРёРЅ РЅР°Рґ РґСЂСѓРіРёРј )
 		if ( !pParentState->pickPolygonIDList.empty() )
 		{
 			++( pParentState->nSelectedIndex );
@@ -152,7 +152,7 @@ void CPolygonEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoin
 						break;
 					}
 				}
-				// Необходимо обновить eventInfoList[CStoreInputState::ISE_LBUTTONDOWN];
+				// РќРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ eventInfoList[CStoreInputState::ISE_LBUTTONDOWN];
 				pParentState->pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
 			}
 			pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_CONTINUE_MOVE );
@@ -194,7 +194,7 @@ void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 				}
 			}
 		}
-		// Необходимо выделить другой VSO если мы попали мимо текущего выделенного VSO
+		// РќРµРѕР±С…РѕРґРёРјРѕ РІС‹РґРµР»РёС‚СЊ РґСЂСѓРіРѕР№ VSO РµСЃР»Рё РјС‹ РїРѕРїР°Р»Рё РјРёРјРѕ С‚РµРєСѓС‰РµРіРѕ РІС‹РґРµР»РµРЅРЅРѕРіРѕ VSO
 		const CPolygonState::CPolygonIDList pickPolygonIDList = pParentState->pickPolygonIDList;
 		const int nSelectedIndex = pParentState->nSelectedIndex;
 		const int nSelectedPolygonID = pParentState->GetSelectedPolygonID();
@@ -216,7 +216,7 @@ void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 					break;
 				}
 			}	
-			// Выделяем другой - первый обьект
+			// Р’С‹РґРµР»СЏРµРј РґСЂСѓРіРѕР№ - РїРµСЂРІС‹Р№ РѕР±СЊРµРєС‚
 			if ( bOldPolygonNotPresent )
 			{
 				pParentState->nSelectedIndex = 0;
@@ -224,7 +224,7 @@ void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 				bReturnOldPolygon = false;
 			}
 		}
-		// нет других обьектов ( или есть старый выделенный обьект )- возвращаем старый
+		// РЅРµС‚ РґСЂСѓРіРёС… РѕР±СЊРµРєС‚РѕРІ ( РёР»Рё РµСЃС‚СЊ СЃС‚Р°СЂС‹Р№ РІС‹РґРµР»РµРЅРЅС‹Р№ РѕР±СЊРµРєС‚ )- РІРѕР·РІСЂР°С‰Р°РµРј СЃС‚Р°СЂС‹Р№
 		if ( bReturnOldPolygon )
 		{
 			pParentState->pickPolygonIDList = pickPolygonIDList;
@@ -380,7 +380,7 @@ void CPolygonAddState::InsertPolygon()
 		pParentState->pickPolygonIDList.push_back( nNewPolygonID );
 		pParentState->nSelectedIndex = 0;
 		//
-		// Запоманаем первоначальное расположение контрольных точек
+		// Р—Р°РїРѕРјР°РЅР°РµРј РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РєРѕРЅС‚СЂРѕР»СЊРЅС‹С… С‚РѕС‡РµРє
 		if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 		{
 			pParentState->controlPointList = ( *pControlPointList );
@@ -549,7 +549,7 @@ void CPolygonState::Leave()
 	SetActiveInputState( IS_SELECT, true, false );
 	//
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
-	// Не надо
+	// РќРµ РЅР°РґРѕ
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 

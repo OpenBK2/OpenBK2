@@ -64,9 +64,9 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	CMapEditorSingletonApp mapEditorSingletonApp;
 	SMainFrameParams params;
 
-	list<CDWGDBBrowser*> gdbBrowserList;						// Окнa базы
-	CDWPropertyBrowser wndPropertyBrowser;					// Окно для показывания свойств обьекта в базе
-	CDWLog wndLog;																	// Окно лога
+	list<CDWGDBBrowser*> gdbBrowserList;						// РћРєРЅa Р±Р°Р·С‹
+	CDWPropertyBrowser wndPropertyBrowser;					// РћРєРЅРѕ РґР»СЏ РїРѕРєР°Р·С‹РІР°РЅРёСЏ СЃРІРѕР№СЃС‚РІ РѕР±СЊРµРєС‚Р° РІ Р±Р°Р·Рµ
+	CDWLog wndLog;																	// РћРєРЅРѕ Р»РѕРіР°
 	int nFreeToolbarID;
 	SSWTParams currentSWTParams;
 

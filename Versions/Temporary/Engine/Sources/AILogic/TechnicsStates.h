@@ -8,7 +8,7 @@ namespace NDb
 	struct SMechUnitRPGStats;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// выход из танк-пита. 
+// РІС‹С…РѕРґ РёР· С‚Р°РЅРє-РїРёС‚Р°. 
 class CTankPitLeaveState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CTankPitLeaveState );
@@ -36,7 +36,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// зарыться в землю ( самостоятельно окопаться )
+// Р·Р°СЂС‹С‚СЊСЃСЏ РІ Р·РµРјР»СЋ ( СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ РѕРєРѕРїР°С‚СЊСЃСЏ )
 class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CMechUnitEntrenchSelfState );

@@ -106,7 +106,7 @@ static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, 
 		return;
 	}
 	float t = v * c;
-	// Check to see if ‘t’ is beyond the extents of the line segment
+	// Check to see if â€˜tâ€™ is beyond the extents of the line segment
 	if (t < 0)
 	{
 		*pRes = a;

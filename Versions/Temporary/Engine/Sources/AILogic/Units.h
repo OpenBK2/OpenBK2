@@ -37,23 +37,23 @@ private:
 
 	typedef hash_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
 	CIDsRemap idsRemap;
-	// все юниты, распределённые по дипл. сторонам
+	// РІСЃРµ СЋРЅРёС‚С‹, СЂР°СЃРїСЂРµРґРµР»С‘РЅРЅС‹Рµ РїРѕ РґРёРїР». СЃС‚РѕСЂРѕРЅР°Рј
 	CListsSet< CObj<CAIUnit> > units;
 	hash_map< int, CObj<CFormation> > formations;
 	vector<int> sizes;
-	// самолёты
+	// СЃР°РјРѕР»С‘С‚С‹
 	list< CObj<CAviation> > planes;
-	// все операции проводятся с большими ячейками
+	// РІСЃРµ РѕРїРµСЂР°С†РёРё РїСЂРѕРІРѕРґСЏС‚СЃСЏ СЃ Р±РѕР»СЊС€РёРјРё СЏС‡РµР№РєР°РјРё
 
 	int nBigCellsSizeX, nBigCellsSizeY;
 
-	// количество юнитов в ячейке
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ СЋРЅРёС‚РѕРІ РІ СЏС‡РµР№РєРµ
 	CArray2D<WORD> nUnitsCell;
-	// номер ячейки
+	// РЅРѕРјРµСЂ СЏС‡РµР№РєРё
 	CArray2D<WORD> nCell;
-	// список юнитов для каждой из ячеек, 0 - not visible for enemy, 1 - visible for enemy
+	// СЃРїРёСЃРѕРє СЋРЅРёС‚РѕРІ РґР»СЏ РєР°Р¶РґРѕР№ РёР· СЏС‡РµРµРє, 0 - not visible for enemy, 1 - visible for enemy
 	vector< CListsSet<SInitializedWord> > unitsInCells;
-	// позиция юнита в ячейках
+	// РїРѕР·РёС†РёСЏ СЋРЅРёС‚Р° РІ СЏС‡РµР№РєР°С…
 	struct SUnitPosition
 	{
 		int nCellID; int nUnitPos; SVector cell;
@@ -64,9 +64,9 @@ private:
 	enum { N_CELLS_LEVELS = 3 };
 	CArray2D<WORD> numUnits[2][N_CELLS_LEVELS][3][2];
 	
-	// для нумерации ячеек
+	// РґР»СЏ РЅСѓРјРµСЂР°С†РёРё СЏС‡РµРµРє
 	CFreeIds cellsIds;
-	// для сериализации
+	// РґР»СЏ СЃРµСЂРёР°Р»РёР·Р°С†РёРё
 	hash_map< int, SVector > cellIdToCoord;
 
 
@@ -94,14 +94,14 @@ public:
 	void AddFormation( class CFormation *pFormation );
 	void DelFormation( class CFormation *pFormation );
 	
-	// добавить юнит в массив юнитов
+	// РґРѕР±Р°РІРёС‚СЊ СЋРЅРёС‚ РІ РјР°СЃСЃРёРІ СЋРЅРёС‚РѕРІ
 	void AddUnitToUnits( class CAIUnit *pUnit, const int nPlayer, const int nUnitType );
-	// добавить юнит на карту
+	// РґРѕР±Р°РІРёС‚СЊ СЋРЅРёС‚ РЅР° РєР°СЂС‚Сѓ
 	void AddUnitToMap( class CAIUnit *pUnit );
 	
-	// убирает юнит отовсюду, но не отдаёт его id
+	// СѓР±РёСЂР°РµС‚ СЋРЅРёС‚ РѕС‚РѕРІСЃСЋРґСѓ, РЅРѕ РЅРµ РѕС‚РґР°С‘С‚ РµРіРѕ id
 	void DeleteUnitFromMap( class CAIUnit *pUnit );
-	// окончательно удаляет юнит
+	// РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ СѓРґР°Р»СЏРµС‚ СЋРЅРёС‚
 	void FullUnitDelete( class CAIUnit *pUnit );
 
 	void AddUnitToCell( class CAIUnit *pUnit, bool bWithLeveledCelles );
@@ -112,8 +112,8 @@ public:
 	
 	const int Size( const int nParty ) const;
 	
-	// количество солдат в круге центром vCenter и радиусом fRadius с партией nParty
-	// сейчас реализация - просто итерирование внутри круга
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕР»РґР°С‚ РІ РєСЂСѓРіРµ С†РµРЅС‚СЂРѕРј vCenter Рё СЂР°РґРёСѓСЃРѕРј fRadius СЃ РїР°СЂС‚РёРµР№ nParty
+	// СЃРµР№С‡Р°СЃ СЂРµР°Р»РёР·Р°С†РёСЏ - РїСЂРѕСЃС‚Рѕ РёС‚РµСЂРёСЂРѕРІР°РЅРёРµ РІРЅСѓС‚СЂРё РєСЂСѓРіР°
 	const int GetNSoldiers( const CVec2 &vCenter, const float fRadius, const int nParty );
 	const int GetNUnits( const CVec2 &vCenter, const float fRadius, const int nParty );
 

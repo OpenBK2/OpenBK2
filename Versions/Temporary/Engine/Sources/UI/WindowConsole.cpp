@@ -42,11 +42,11 @@ void ShowDebugInfo( const string &szID, const vector<wstring> &paramsSet, void *
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пикселах
-static const int TEXT_LEFT_SPACE = 20;			//Отступ от левого края экрана до текста в консоли
-static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
-static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
-static const int CURSOR_ANIMATION_TIME = 400;		//период переключения курсора
+static const int CONSOLE_HEIGHT = 240;			//Р’С‹СЃРѕС‚Р° РєРѕРЅСЃРѕР»Рё РІ РїРёРєСЃРµР»Р°С…
+static const int TEXT_LEFT_SPACE = 20;			//РћС‚СЃС‚СѓРї РѕС‚ Р»РµРІРѕРіРѕ РєСЂР°СЏ СЌРєСЂР°РЅР° РґРѕ С‚РµРєСЃС‚Р° РІ РєРѕРЅСЃРѕР»Рё
+static const int TEXT_VERTICAL_SIZE = 20;		//Р Р°Р·РјРµСЂ С€СЂРёС„С‚Р° РїРѕ РІРµСЂС‚РёРєР°Р»Рё
+static const int MINUS_PAGE_SIZE = 5;				//РЎРїРµС†РёР°Р»СЊРЅР°СЏ РєРѕРЅСЃС‚Р°РЅС‚Р° РѕС‚СЃС‚СѓРїР° РґР»СЏ PgUp PgDown,
+static const int CURSOR_ANIMATION_TIME = 400;		//РїРµСЂРёРѕРґ РїРµСЂРµРєР»СЋС‡РµРЅРёСЏ РєСѓСЂСЃРѕСЂР°
 static const WCHAR szPrefix[] = L">>";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID(0)
@@ -187,7 +187,7 @@ void CWindowConsole::Visit( interface IUIVisitor *pVisitor )
 		}
 		nCurrentY -= TEXT_VERTICAL_SIZE;
 
-		// отобразим строчки в консоли
+		// РѕС‚РѕР±СЂР°Р·РёРј СЃС‚СЂРѕС‡РєРё РІ РєРѕРЅСЃРѕР»Рё
 		int nSize = vectorOfStrings.size();
 		for ( int i = nBeginString; i < nSize; ++i )
 		{
@@ -293,7 +293,7 @@ bool CWindowConsole::OnChar( const SGameMessage &msg )
 	if( !IsVisible() )
 		return false;
 
-	//Чтобы тильда, с помощью которой открыли консоль, не попадала в строку ввода
+	//Р§С‚РѕР±С‹ С‚РёР»СЊРґР°, СЃ РїРѕРјРѕС‰СЊСЋ РєРѕС‚РѕСЂРѕР№ РѕС‚РєСЂС‹Р»Рё РєРѕРЅСЃРѕР»СЊ, РЅРµ РїРѕРїР°РґР°Р»Р° РІ СЃС‚СЂРѕРєСѓ РІРІРѕРґР°
 	if( msg.nParam1=='`' )
 		return true;
 
@@ -321,7 +321,7 @@ bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 	if ( nBeginCommand == vectorOfCommands.size() || nBeginCommand == -1 )
 		return true;
 
-	//отобразим предыдущую команду
+	//РѕС‚РѕР±СЂР°Р·РёРј РїСЂРµРґС‹РґСѓС‰СѓСЋ РєРѕРјР°РЅРґСѓ
 	nBeginCommand++;
 	if ( nBeginCommand == vectorOfCommands.size() )
 	{
@@ -362,7 +362,7 @@ bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 
 	if ( nBeginCommand > 0 )
 	{
-		//сдвинем позицию на единицу вниз
+		//СЃРґРІРёРЅРµРј РїРѕР·РёС†РёСЋ РЅР° РµРґРёРЅРёС†Сѓ РІРЅРёР·
 		nBeginCommand--;
 		pEditLine->SetText( vectorOfCommands[vectorOfCommands.size()-nBeginCommand].c_str() );
 	}

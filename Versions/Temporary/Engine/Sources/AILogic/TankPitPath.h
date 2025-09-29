@@ -3,9 +3,9 @@
 #include "..\Common_RTS_AI\Path.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CBasePathUnit;
-// специфический путь для юнита, когда он выезжает из TankPit.
-// идя по этому пути танк не поворачивает. если он на что-либо натыкается, то он должен 
-// остановиться.
+// СЃРїРµС†РёС„РёС‡РµСЃРєРёР№ РїСѓС‚СЊ РґР»СЏ СЋРЅРёС‚Р°, РєРѕРіРґР° РѕРЅ РІС‹РµР·Р¶Р°РµС‚ РёР· TankPit.
+// РёРґСЏ РїРѕ СЌС‚РѕРјСѓ РїСѓС‚Рё С‚Р°РЅРє РЅРµ РїРѕРІРѕСЂР°С‡РёРІР°РµС‚. РµСЃР»Рё РѕРЅ РЅР° С‡С‚Рѕ-Р»РёР±Рѕ РЅР°С‚С‹РєР°РµС‚СЃСЏ, С‚Рѕ РѕРЅ РґРѕР»Р¶РµРЅ 
+// РѕСЃС‚Р°РЅРѕРІРёС‚СЊСЃСЏ.
 class CTankPitPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CTankPitPath );
@@ -23,7 +23,7 @@ public:
 	virtual void Segment( const NTimer::STime timeDiff );
 	
 	virtual const CVec2& GetFinishPoint() const { return vEndPoint; }
-//ненужные функции
+//РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё
 	virtual bool Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 	{
 		pUnit = _pUnit;

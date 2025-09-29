@@ -29,11 +29,11 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	};
 	struct SSideInfo
 	{
-		// количество fireSlots на стороне
+		// РєРѕР»РёС‡РµСЃС‚РІРѕ fireSlots РЅР° СЃС‚РѕСЂРѕРЅРµ
 		int nFireSlots;
-		// количество observation points на стороне
+		// РєРѕР»РёС‡РµСЃС‚РІРѕ observation points РЅР° СЃС‚РѕСЂРѕРЅРµ
 		int nObservationPoints;
-		// количество солдат в observation points стороны
+		// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕР»РґР°С‚ РІ observation points СЃС‚РѕСЂРѕРЅС‹
 		int nSoldiersInObservationPoints;
 
 		SSideInfo() : nFireSlots( 0 ), nObservationPoints( 0 ), nSoldiersInObservationPoints( 0 ) { }
@@ -46,9 +46,9 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	bool bKeyBuilding;
 	//
 
-	// начало состояния, когда все в стрелк. ячейках отдыхают
+	// РЅР°С‡Р°Р»Рѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ, РєРѕРіРґР° РІСЃРµ РІ СЃС‚СЂРµР»Рє. СЏС‡РµР№РєР°С… РѕС‚РґС‹С…Р°СЋС‚
 	NTimer::STime startOfRest;
-	// тревога
+	// С‚СЂРµРІРѕРіР°
 	bool bAlarm;
 
 
@@ -68,22 +68,22 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 
 	NTimer::STime lastDistibution;
 
-	// для каждой из сторон 3 наблюдательных fireplace
+	// РґР»СЏ РєР°Р¶РґРѕР№ РёР· СЃС‚РѕСЂРѕРЅ 3 РЅР°Р±Р»СЋРґР°С‚РµР»СЊРЅС‹С… fireplace
 	CArray2D<int> observationPlaces;
 
 	vector<SSideInfo> sides;
-	// по fire place - <номер точки << 2> | <сторона>
+	// РїРѕ fire place - <РЅРѕРјРµСЂ С‚РѕС‡РєРё << 2> | <СЃС‚РѕСЂРѕРЅР°>
 	vector<int> firePlace2Observation;
-	// по fireplace - солдат в нём
+	// РїРѕ fireplace - СЃРѕР»РґР°С‚ РІ РЅС‘Рј
 	vector< CPtr<CSoldier> > firePlace2Soldier;
 	int nLastFreeFireSoldierChoice;
 
-	// player последнего из защитников, побывавшего в здании
+	// player РїРѕСЃР»РµРґРЅРµРіРѕ РёР· Р·Р°С‰РёС‚РЅРёРєРѕРІ, РїРѕР±С‹РІР°РІС€РµРіРѕ РІ Р·РґР°РЅРёРё
 	int nLastPlayer;
 
 	int nScriptID;
 	
-	// должны ли юниты убегать из здания, когда у него останется мало здоровья
+	// РґРѕР»Р¶РЅС‹ Р»Рё СЋРЅРёС‚С‹ СѓР±РµРіР°С‚СЊ РёР· Р·РґР°РЅРёСЏ, РєРѕРіРґР° Сѓ РЅРµРіРѕ РѕСЃС‚Р°РЅРµС‚СЃСЏ РјР°Р»Рѕ Р·РґРѕСЂРѕРІСЊСЏ
 	bool bShouldEscape;
 	// units escaped
 	bool bEscaped;
@@ -108,17 +108,17 @@ public:
 
 	const BYTE GetFreeFireSlot();
 
-	// засунуть конкретного юнита в слот
+	// Р·Р°СЃСѓРЅСѓС‚СЊ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ СЋРЅРёС‚Р° РІ СЃР»РѕС‚
 	void PopFromFire();
 
-	// есть свободный слот, засунуть туда желающего
+	// РµСЃС‚СЊ СЃРІРѕР±РѕРґРЅС‹Р№ СЃР»РѕС‚, Р·Р°СЃСѓРЅСѓС‚СЊ С‚СѓРґР° Р¶РµР»Р°СЋС‰РµРіРѕ
 	void SeatSoldierToMedicalSlot();
-	// есть свободный слот, засунуть туда добровольца
+	// РµСЃС‚СЊ СЃРІРѕР±РѕРґРЅС‹Р№ СЃР»РѕС‚, Р·Р°СЃСѓРЅСѓС‚СЊ С‚СѓРґР° РґРѕР±СЂРѕРІРѕР»СЊС†Р°
 	void SeatSoldierToFireSlot();
 
-	// перераспределить солдатов (полечить/выгнать из medical places )
+	// РїРµСЂРµСЂР°СЃРїСЂРµРґРµР»РёС‚СЊ СЃРѕР»РґР°С‚РѕРІ (РїРѕР»РµС‡РёС‚СЊ/РІС‹РіРЅР°С‚СЊ РёР· medical places )
 	void DistributeAll();
-	// перераспределить не стреляющих солдатов ( полечить/выгнать из medical places )
+	// РїРµСЂРµСЂР°СЃРїСЂРµРґРµР»РёС‚СЊ РЅРµ СЃС‚СЂРµР»СЏСЋС‰РёС… СЃРѕР»РґР°С‚РѕРІ ( РїРѕР»РµС‡РёС‚СЊ/РІС‹РіРЅР°С‚СЊ РёР· medical places )
 	void DistributeNonFires();
 
 	void SetFiringUnitProperties( class CSoldier *pUnit, const int nSlot, const int nIndex );
@@ -133,41 +133,41 @@ public:
 
 	void PushSoldierToFirePlace( CSoldier *pUnit, const int nFirePlace );
 
-	// положить pUnit в первый попавшийся fireplace
+	// РїРѕР»РѕР¶РёС‚СЊ pUnit РІ РїРµСЂРІС‹Р№ РїРѕРїР°РІС€РёР№СЃСЏ fireplace
 	void PushToFire( class CSoldier *pUnit );
 	void PushToMedical( class CSoldier *pUnit );
 	void PushToRest( class CSoldier *pUnit );
 
-	// рассадить солдат в точки наблюдения
+	// СЂР°СЃСЃР°РґРёС‚СЊ СЃРѕР»РґР°С‚ РІ С‚РѕС‡РєРё РЅР°Р±Р»СЋРґРµРЅРёСЏ
 	void SetSoldiersToObservationPoints();
-	// попробовать отдыхающего солдата pSoldier поставить в точку наблюдения; true - поставился, false - нет
+	// РїРѕРїСЂРѕР±РѕРІР°С‚СЊ РѕС‚РґС‹С…Р°СЋС‰РµРіРѕ СЃРѕР»РґР°С‚Р° pSoldier РїРѕСЃС‚Р°РІРёС‚СЊ РІ С‚РѕС‡РєСѓ РЅР°Р±Р»СЋРґРµРЅРёСЏ; true - РїРѕСЃС‚Р°РІРёР»СЃСЏ, false - РЅРµС‚
 	bool TryToPushRestSoldierToObservation( CSoldier *pSoldier );
-	// попробовать солдата в стрелковой ячейке поставить в точку наблюдения; true - поставился, false - нет
+	// РїРѕРїСЂРѕР±РѕРІР°С‚СЊ СЃРѕР»РґР°С‚Р° РІ СЃС‚СЂРµР»РєРѕРІРѕР№ СЏС‡РµР№РєРµ РїРѕСЃС‚Р°РІРёС‚СЊ РІ С‚РѕС‡РєСѓ РЅР°Р±Р»СЋРґРµРЅРёСЏ; true - РїРѕСЃС‚Р°РІРёР»СЃСЏ, false - РЅРµС‚
 	bool TryToPushFireSoldierToObservation( CSoldier *pSoldier );
 
-	// находится ли pSoldier в точке наблюдения
+	// РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё pSoldier РІ С‚РѕС‡РєРµ РЅР°Р±Р»СЋРґРµРЅРёСЏ
 	bool IsSoldierInObservationPoint( CSoldier *pSoldier ) const;
-	// поставить pSoldier в observation point на стороне nSide
+	// РїРѕСЃС‚Р°РІРёС‚СЊ pSoldier РІ observation point РЅР° СЃС‚РѕСЂРѕРЅРµ nSide
 	void PushSoldierToObservationPoint( CSoldier *pSoldier, const int nSide );
 
-	// вернуть боковые точки наблюдения стороны nSide
+	// РІРµСЂРЅСѓС‚СЊ Р±РѕРєРѕРІС‹Рµ С‚РѕС‡РєРё РЅР°Р±Р»СЋРґРµРЅРёСЏ СЃС‚РѕСЂРѕРЅС‹ nSide
 	void GetSidesObservationPoints( const int nSide, int *pnLeftPoint, int *pnRightPoint ) const;
-	// вернуть центральную точку наблюдения стороны nSide
+	// РІРµСЂРЅСѓС‚СЊ С†РµРЅС‚СЂР°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ РЅР°Р±Р»СЋРґРµРЅРёСЏ СЃС‚РѕСЂРѕРЅС‹ nSide
 	const int GetMiddleObservationPoint( const int nSide ) const;
-	// вернуть первого из солдат на стороне nSize
+	// РІРµСЂРЅСѓС‚СЊ РїРµСЂРІРѕРіРѕ РёР· СЃРѕР»РґР°С‚ РЅР° СЃС‚РѕСЂРѕРЅРµ nSize
 	CSoldier* GetSoldierOnSide( const int nSide );
-	// true, если pSoldierInPoint в observation point лучше сменить на pSoldier
+	// true, РµСЃР»Рё pSoldierInPoint РІ observation point Р»СѓС‡С€Рµ СЃРјРµРЅРёС‚СЊ РЅР° pSoldier
 	bool IsBetterChangeObservationSoldier( CSoldier *pSoldier, CSoldier *pSoldierInPoint );
-	// выбрать сторону, чтобы посадить солдата в точку наблюдения,
-	// если в каждой из точек уже сидит солдат, вовращает -1
+	// РІС‹Р±СЂР°С‚СЊ СЃС‚РѕСЂРѕРЅСѓ, С‡С‚РѕР±С‹ РїРѕСЃР°РґРёС‚СЊ СЃРѕР»РґР°С‚Р° РІ С‚РѕС‡РєСѓ РЅР°Р±Р»СЋРґРµРЅРёСЏ,
+	// РµСЃР»Рё РІ РєР°Р¶РґРѕР№ РёР· С‚РѕС‡РµРє СѓР¶Рµ СЃРёРґРёС‚ СЃРѕР»РґР°С‚, РІРѕРІСЂР°С‰Р°РµС‚ -1
 	const int ChooseSideToSetSoldier( class CSoldier *pSoldier ) const;
 	void CentreSoldiersInObservationPoints();
-	// посадить солдат за встроенные пушки
+	// РїРѕСЃР°РґРёС‚СЊ СЃРѕР»РґР°С‚ Р·Р° РІСЃС‚СЂРѕРµРЅРЅС‹Рµ РїСѓС€РєРё
 	void ExchangeSoldiersToTurrets();
 
-	// количество HP, когда пора убегать из здания ( убегать, если их станет меньше )
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ HP, РєРѕРіРґР° РїРѕСЂР° СѓР±РµРіР°С‚СЊ РёР· Р·РґР°РЅРёСЏ ( СѓР±РµРіР°С‚СЊ, РµСЃР»Рё РёС… СЃС‚Р°РЅРµС‚ РјРµРЅСЊС€Рµ )
 	const float GetEscapeHitPoints() const;
-	// выгнать формацию солдата из дома, pFormations - список уже выгнанных формаций
+	// РІС‹РіРЅР°С‚СЊ С„РѕСЂРјР°С†РёСЋ СЃРѕР»РґР°С‚Р° РёР· РґРѕРјР°, pFormations - СЃРїРёСЃРѕРє СѓР¶Рµ РІС‹РіРЅР°РЅРЅС‹С… С„РѕСЂРјР°С†РёР№
 	void DriveOut( CSoldier *pSoldier, hash_set<int> *pFormations );
 	void KillAllInsiders();
 protected:
@@ -190,7 +190,7 @@ public:
 	const int GetNEntrancePoints() const { return pStats->entrances.size(); }
 	const CVec2 GetEntrancePoint( const int nEntrance ) const;
 	void GetEntranceData( CVec2 *pvPoint, WORD *pwDir, int nIndex ) const;
-	// найти выход, ближайший чтобы идти в точку point
+	// РЅР°Р№С‚Рё РІС‹С…РѕРґ, Р±Р»РёР¶Р°Р№С€РёР№ С‡С‚РѕР±С‹ РёРґС‚Рё РІ С‚РѕС‡РєСѓ point
 	bool ChooseEntrance( class CCommonUnit *pUnit, const CVec2 &vPoint, int *pnEntrance ) const;
 
 	void GoOutFromEntrance( const int nEntrance, class CSoldier *pUnit );
@@ -203,7 +203,7 @@ public:
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 
-	// итерирование по fire slots
+	// РёС‚РµСЂРёСЂРѕРІР°РЅРёРµ РїРѕ fire slots
 	virtual void StartIterate() { nIterator = 0; }
 	virtual void Iterate() { if ( nIterator < fire.Size() ) ++nIterator; }
 	virtual bool IsIterateFinished() { return nIterator == fire.Size(); }
@@ -232,13 +232,13 @@ public:
 	
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
 	
-	// можно ли менять слот у этого слодата
+	// РјРѕР¶РЅРѕ Р»Рё РјРµРЅСЏС‚СЊ СЃР»РѕС‚ Сѓ СЌС‚РѕРіРѕ СЃР»РѕРґР°С‚Р°
 	virtual bool CanRotateSoldier( class CSoldier *pSoldier ) const;
-	// поставить солдата в place вместо сидящего там
+	// РїРѕСЃС‚Р°РІРёС‚СЊ СЃРѕР»РґР°С‚Р° РІ place РІРјРµСЃС‚Рѕ СЃРёРґСЏС‰РµРіРѕ С‚Р°Рј
 	virtual void ExchangeUnitToFireplace( class CSoldier *pSoldier, int nFirePlace );
-	// количество fireplaces
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ fireplaces
 	const int GetNFirePlaces() const;
-	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
+	// СЃРѕР»РґР°С‚, СЃРёРґСЏС‰РёР№ РІ fireplace, РµСЃР»Рё fireplace РїСѓСЃС‚, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ 0
 	class CSoldier* GetSoldierInFireplace( const int nFireplace) const;
 	
 	virtual void SetScriptID( const int _nScriptID ) { nScriptID = _nScriptID; }
@@ -249,7 +249,7 @@ public:
 	virtual const float GetMinHP() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// простое здание
+// РїСЂРѕСЃС‚РѕРµ Р·РґР°РЅРёРµ
 class CBuildingSimple : public CBuilding
 {
 	OBJECT_BASIC_METHODS( CBuildingSimple );

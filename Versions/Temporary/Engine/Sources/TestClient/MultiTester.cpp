@@ -99,7 +99,7 @@ bool CMultiTester::Segment()
 	if ( bCancelled )
 		return false;
 
-	// В режиме ожидания ответа сервера только обрабатываем пакеты
+	// Р’ СЂРµР¶РёРјРµ РѕР¶РёРґР°РЅРёСЏ РѕС‚РІРµС‚Р° СЃРµСЂРІРµСЂР° С‚РѕР»СЊРєРѕ РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РїР°РєРµС‚С‹
 	DWORD dwTime = GetTickCount();
 	if ( !IsActive() )
 		return true;
@@ -222,7 +222,7 @@ void CMultiTester::TestChat()
 
 	if ( dwTime > CHAT_MESSAGE_SEND_PERIOD + dwLastChatMessageTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
-		string szMessage = "В чащах юга жил был цитрус. Но фальшивый экземпляр.";
+		string szMessage = "Р’ С‡Р°С‰Р°С… СЋРіР° Р¶РёР» Р±С‹Р» С†РёС‚СЂСѓСЃ. РќРѕ С„Р°Р»СЊС€РёРІС‹Р№ СЌРєР·РµРјРїР»СЏСЂ.";
 		SendChatMessage( szMessage );
 		return;
 	}

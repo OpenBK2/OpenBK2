@@ -14,7 +14,7 @@ namespace NDb
 class CAIUnit;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
-//*								  Оружие юнита																		*
+//*								  РћСЂСѓР¶РёРµ СЋРЅРёС‚Р°																		*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SCommonGunInfo : public CAIObjectBase
@@ -66,9 +66,9 @@ private:
 
 	bool bWaitForReload; //specific for artillery
 
-	// можно ли производить выстрел
+	// РјРѕР¶РЅРѕ Р»Рё РїСЂРѕРёР·РІРѕРґРёС‚СЊ РІС‹СЃС‚СЂРµР»
 	bool bCanShoot;
-	// сколько ещё осталось в очереди
+	// СЃРєРѕР»СЊРєРѕ РµС‰С‘ РѕСЃС‚Р°Р»РѕСЃСЊ РІ РѕС‡РµСЂРµРґРё
 	int nShotsLast;
 
 
@@ -85,19 +85,19 @@ protected:
 	int nOwnerParty;
 	CPtr<SCommonGunInfo> pCommonGunInfo;
 
-	// юнит, по которому стреляем ( в случае стрельбы по юниту )
+	// СЋРЅРёС‚, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ СЃС‚СЂРµР»СЏРµРј ( РІ СЃР»СѓС‡Р°Рµ СЃС‚СЂРµР»СЊР±С‹ РїРѕ СЋРЅРёС‚Сѓ )
 	CPtr<CAIUnit> pEnemy;
-	// куда стрелять
+	// РєСѓРґР° СЃС‚СЂРµР»СЏС‚СЊ
 	CVec2 target;
-	// время начала прицеливания или начала отдыха, в зависимости от состояния
+	// РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° РїСЂРёС†РµР»РёРІР°РЅРёСЏ РёР»Рё РЅР°С‡Р°Р»Р° РѕС‚РґС‹С…Р°, РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРѕСЃС‚РѕСЏРЅРёСЏ
 	NTimer::STime lastCheck;
 	CVec2 lastEnemyPos;
 	bool bAngleLocked;
 
-	// нужно ли прицеливаться
+	// РЅСѓР¶РЅРѕ Р»Рё РїСЂРёС†РµР»РёРІР°С‚СЊСЃСЏ
 	bool bAim;
 	bool bGrenade;
-	// высота точки, в которую направлена стрельба
+	// РІС‹СЃРѕС‚Р° С‚РѕС‡РєРё, РІ РєРѕС‚РѕСЂСѓСЋ РЅР°РїСЂР°РІР»РµРЅР° СЃС‚СЂРµР»СЊР±Р°
 	float z;
 
 	CParallelGuns parallelGuns;
@@ -118,7 +118,7 @@ private:
 	const CVec2 GetShootingPoint() const;
 	WORD GetVisAngleOfAim() const;
 
-	// для ускорения стрельбы в хороших случаях
+	// РґР»СЏ СѓСЃРєРѕСЂРµРЅРёСЏ СЃС‚СЂРµР»СЊР±С‹ РІ С…РѕСЂРѕС€РёС… СЃР»СѓС‡Р°СЏС…
 	void OnWaitForActionPointState();
 	void OnTurningState();
 	void OnAimState();
@@ -131,15 +131,15 @@ protected:
 	const NTimer::STime GetActionPoint() const;
 	//
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff ) = 0;
-	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle, cDeltaAngle - учитывать ли deltaAngle
+	// РјРѕР¶РЅРѕ Р»Рё РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ point ( РЅРµ РІСЂР°С‰Р°СЏ РЅРё turret РЅРё base ), РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ - СѓРіРѕР» addAngle, cDeltaAngle - СѓС‡РёС‚С‹РІР°С‚СЊ Р»Рё deltaAngle
 	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const = 0;
 	virtual void ToRestState();
 	virtual void Rest() = 0;
 	virtual bool AnalyzeTurning() = 0;
-	// можно ли стрельнуть по цели не вращая ни turret ни base и не двигаясь
-	// cDeltaAngle - учитывать ли deltaAngle
+	// РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ С†РµР»Рё РЅРµ РІСЂР°С‰Р°СЏ РЅРё turret РЅРё base Рё РЅРµ РґРІРёРіР°СЏСЃСЊ
+	// cDeltaAngle - СѓС‡РёС‚С‹РІР°С‚СЊ Р»Рё deltaAngle
 	bool CanShootWOGunTurn( const BYTE cDeltaAngle, const float fZ );
-	// можно ли стрелять по точке, если pUnit находится внутри статич. объекта
+	// РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРµР»СЏС‚СЊ РїРѕ С‚РѕС‡РєРµ, РµСЃР»Рё pUnit РЅР°С…РѕРґРёС‚СЃСЏ РІРЅСѓС‚СЂРё СЃС‚Р°С‚РёС‡. РѕР±СЉРµРєС‚Р°
 	bool AnalyzeLimitedAngle( class CCommonUnit *pUnit, const CVec2 &point ) const;
 	void Turning();
 	bool CanShootToTargetWOMove();
@@ -163,7 +163,7 @@ public:
 	virtual bool InFireRange( class CAIUnit *pTarget ) const;
 	virtual bool InFireRange( const CVec3 &vPoint ) const;
 	virtual float GetFireRange( float z ) const;
-	// возвращает fRandgeMax from rpgstats с учётом всех модификаторов - коэффициентов
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ fRandgeMax from rpgstats СЃ СѓС‡С‘С‚РѕРј РІСЃРµС… РјРѕРґРёС„РёРєР°С‚РѕСЂРѕРІ - РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
 	virtual float GetFireRangeMax() const;
 	virtual bool InGoToSideRange( const class CAIUnit *pTarget ) const;
 	virtual bool TooCloseToFire( const class CAIUnit *pTarget ) const;
@@ -177,7 +177,7 @@ public:
 	bool IsWaitForReload() const { return bWaitForReload; }
 	virtual void ClearWaitForReload() { bWaitForReload = false; }
 
-	// в данный момент в состоянии наводки и стрельбы
+	// РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РІ СЃРѕСЃС‚РѕСЏРЅРёРё РЅР°РІРѕРґРєРё Рё СЃС‚СЂРµР»СЊР±С‹
 	virtual bool IsFiring() const ;
 	bool IsBursting() const { return shootState == WAIT_FOR_ACTION_POINT || shootState == EST_SHOOTING; }
 
@@ -186,25 +186,25 @@ public:
 	virtual const SWeaponRPGStats::SShell& GetShell() const;
 
 	virtual bool IsRelaxing() const;
-	// можно ли стрельнуть по pEnemy, не вращая ни base ни turret, cDeltaAngle - учитывать ли deltaAngle
+	// РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ pEnemy, РЅРµ РІСЂР°С‰Р°СЏ РЅРё base РЅРё turret, cDeltaAngle - СѓС‡РёС‚С‹РІР°С‚СЊ Р»Рё deltaAngle
 	virtual bool CanShootWOGunTurn( class CAIUnit *pEnemy, const BYTE cDeltaAngle );
 	virtual const NTimer::STime GetRestTimeOfRelax() const;
 
-	// стрельба, когда двигаться запрещено
+	// СЃС‚СЂРµР»СЊР±Р°, РєРѕРіРґР° РґРІРёРіР°С‚СЊСЃСЏ Р·Р°РїСЂРµС‰РµРЅРѕ
 	virtual bool CanShootToUnitWOMove( class CAIUnit *pEnemy );
 	virtual bool CanShootToObjectWOMove( class CStaticObject *pObj );
 	virtual bool CanShootToPointWOMove( const CVec2 &point, const float fZ, const WORD wHorAddAngle = 0, const WORD wVertAddAngle = 0, CAIUnit *pEnemy = 0 );
 
-	// можно ли дострельнуть по высоте	
+	// РјРѕР¶РЅРѕ Р»Рё РґРѕСЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ РІС‹СЃРѕС‚Рµ	
 	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;	
 	virtual bool CanShootByHeight( const float fZ ) const;
 
-	// можно ли стрельнуть в объект по прямому приказу
+	// РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РІ РѕР±СЉРµРєС‚ РїРѕ РїСЂСЏРјРѕРјСѓ РїСЂРёРєР°Р·Сѓ
 	virtual bool CanShootToUnit( class CAIUnit *pEnemy );
 	virtual bool CanShootToObject( class CStaticObject *pObj );
 	virtual bool CanShootToPoint( const CVec2 &point, const float fZ, const WORD wHorAddAngle = 0, const WORD wVertAddAngle = 0 );
 
-	// можно пристрелить, не поворачивая base ( turret вращать можно )
+	// РјРѕР¶РЅРѕ РїСЂРёСЃС‚СЂРµР»РёС‚СЊ, РЅРµ РїРѕРІРѕСЂР°С‡РёРІР°СЏ base ( turret РІСЂР°С‰Р°С‚СЊ РјРѕР¶РЅРѕ )
 	virtual bool IsInShootCone( const CVec2 &point, const WORD wAddAngle = 0 ) const;
 
 	virtual const float GetDispersion() const;
@@ -213,29 +213,29 @@ public:
 	void LockInCurAngle() { bAngleLocked = true; }
 	void UnlockCurAngle() { bAngleLocked = false; }
 
-	// для самолётов
+	// РґР»СЏ СЃР°РјРѕР»С‘С‚РѕРІ
 	virtual void StartPlaneBurst( class CAIUnit *pEnemy, bool bReAim );
 
-	// можно пробить броню с учётом стороны, которой повёрнут pTarget
+	// РјРѕР¶РЅРѕ РїСЂРѕР±РёС‚СЊ Р±СЂРѕРЅСЋ СЃ СѓС‡С‘С‚РѕРј СЃС‚РѕСЂРѕРЅС‹, РєРѕС‚РѕСЂРѕР№ РїРѕРІС‘СЂРЅСѓС‚ pTarget
 	virtual bool CanBreakArmor( class CAIUnit *pTarget ) const;
-	// можно пробить броню с какой-нибудь стороны
+	// РјРѕР¶РЅРѕ РїСЂРѕР±РёС‚СЊ Р±СЂРѕРЅСЋ СЃ РєР°РєРѕР№-РЅРёР±СѓРґСЊ СЃС‚РѕСЂРѕРЅС‹
 	virtual bool CanBreach( const class CCommonUnit *pTarget ) const;
-	// можно пробить броню со стороны nSide
+	// РјРѕР¶РЅРѕ РїСЂРѕР±РёС‚СЊ Р±СЂРѕРЅСЋ СЃРѕ СЃС‚РѕСЂРѕРЅС‹ nSide
 	virtual bool CanBreach( const class CCommonUnit *pTarget, const int nSide ) const;
 	virtual bool CanBreach( const SHPObjectRPGStats *pStats, const int nSide ) const;
 
-	// будет делать все действия, нужные для стрельбы по цели (повороты, прицеливание), но не будет стрелять
+	// Р±СѓРґРµС‚ РґРµР»Р°С‚СЊ РІСЃРµ РґРµР№СЃС‚РІРёСЏ, РЅСѓР¶РЅС‹Рµ РґР»СЏ СЃС‚СЂРµР»СЊР±С‹ РїРѕ С†РµР»Рё (РїРѕРІРѕСЂРѕС‚С‹, РїСЂРёС†РµР»РёРІР°РЅРёРµ), РЅРѕ РЅРµ Р±СѓРґРµС‚ СЃС‚СЂРµР»СЏС‚СЊ
 	void DontShoot() { bCanShoot = false; }
-	// отменяет DontShoot()
+	// РѕС‚РјРµРЅСЏРµС‚ DontShoot()
 	void CanShoot() { bCanShoot = true; }
 	bool IsShootAllowed(){ return bCanShoot; }
 
-	// стреляет ли общий gun ( с учётом патронов - т.е. учитываются все guns, находящиеся с ним в одном стволе )
+	// СЃС‚СЂРµР»СЏРµС‚ Р»Рё РѕР±С‰РёР№ gun ( СЃ СѓС‡С‘С‚РѕРј РїР°С‚СЂРѕРЅРѕРІ - С‚.Рµ. СѓС‡РёС‚С‹РІР°СЋС‚СЃСЏ РІСЃРµ guns, РЅР°С…РѕРґСЏС‰РёРµСЃСЏ СЃ РЅРёРј РІ РѕРґРЅРѕРј СЃС‚РІРѕР»Рµ )
 	bool IsCommonGunFiring() const { return pCommonGunInfo->bFiring; }
-	// равен ли pGun ( с учётом патронов )
+	// СЂР°РІРµРЅ Р»Рё pGun ( СЃ СѓС‡С‘С‚РѕРј РїР°С‚СЂРѕРЅРѕРІ )
 	virtual bool IsCommonEqual( const CBasicGun *pGun ) const;
 
-	// "номер ствола" ( gun-ы, отличающиеся только патронами, но находящиеся в одном стволе )
+	// "РЅРѕРјРµСЂ СЃС‚РІРѕР»Р°" ( gun-С‹, РѕС‚Р»РёС‡Р°СЋС‰РёРµСЃСЏ С‚РѕР»СЊРєРѕ РїР°С‚СЂРѕРЅР°РјРё, РЅРѕ РЅР°С…РѕРґСЏС‰РёРµСЃСЏ РІ РѕРґРЅРѕРј СЃС‚РІРѕР»Рµ )
 	int GetCommonGunNumber() const { return pCommonGunInfo->nGun; }
 	int GetPlatform() const { return pCommonGunInfo->nPlatform; }
 
@@ -246,7 +246,7 @@ public:
 	virtual void Fire( const CVec2 &target, const float z, const bool bShowBombEffect );
 	virtual WORD GetTrajectoryZAngle( const CVec3 &vToAim ) const;
 
-	// сказать, почему отказался стрелять
+	// СЃРєР°Р·Р°С‚СЊ, РїРѕС‡РµРјСѓ РѕС‚РєР°Р·Р°Р»СЃСЏ СЃС‚СЂРµР»СЏС‚СЊ
 	virtual const EUnitAckType& GetRejectReason() const { return eRejectReason; }
 	virtual void SetRejectReason( const EUnitAckType &eReason );
 
@@ -257,20 +257,20 @@ public:
 	void AddParallelGun( CBasicGun *pGun ) { parallelGuns.push_back( pGun ); }
 	void SetToParallelGun() { bParallelGun = true; }
 
-	// среднее значение
+	// СЃСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ
 	virtual const int GetPiercing() const;
-	// разброс
+	// СЂР°Р·Р±СЂРѕСЃ
 	virtual const int GetPiercingRandom() const;
-	// рандомное значение piercing
+	// СЂР°РЅРґРѕРјРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ piercing
 	virtual const int GetRandomPiercing() const;
 	virtual const int GetMaxPossiblePiercing() const;
 	virtual const int GetMinPossiblePiercing() const;
 
-	// среднее значение damage
+	// СЃСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ damage
 	virtual const float GetDamage() const;
-	// разброс
+	// СЂР°Р·Р±СЂРѕСЃ
 	virtual const float GetDamageRandom() const;
-	// рандомное значение damage
+	// СЂР°РЅРґРѕРјРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ damage
 	virtual const float GetRandomDamage() const;
 
 	virtual bool IsBallisticTrajectory() const;
@@ -284,15 +284,15 @@ public:
 	virtual WORD GetVerTurnConstraint() const = 0;
 	virtual class CTurret* GetTurret() const = 0;
 
-	// направление, по которому в данный момент смотрит орудие
+	// РЅР°РїСЂР°РІР»РµРЅРёРµ, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ СЃРјРѕС‚СЂРёС‚ РѕСЂСѓРґРёРµ
 	virtual const WORD GetGlobalDir() const = 0;
 	// for AA guns.
 	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const { return 0; }
 	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const { return 0; }
 	virtual void TraceAim( class CAIUnit *pUnit ) = 0;
-	// если на турели, то повернуть в относительный угол wAngle
+	// РµСЃР»Рё РЅР° С‚СѓСЂРµР»Рё, С‚Рѕ РїРѕРІРµСЂРЅСѓС‚СЊ РІ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ СѓРіРѕР» wAngle
 	virtual void TurnToRelativeDir( const WORD wAngle ) = 0;
-	// разрешить/запретить атаковать без учёта ограничения на поворот орудия по горизонтали
+	// СЂР°Р·СЂРµС€РёС‚СЊ/Р·Р°РїСЂРµС‚РёС‚СЊ Р°С‚Р°РєРѕРІР°С‚СЊ Р±РµР· СѓС‡С‘С‚Р° РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РЅР° РїРѕРІРѕСЂРѕС‚ РѕСЂСѓРґРёСЏ РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё
 	virtual void SetCircularAttack( const bool bCanAttack ) = 0;
 	virtual class CBuilding *GetMountBuilding() const { return 0; }
 	virtual void StopTracing() = 0;

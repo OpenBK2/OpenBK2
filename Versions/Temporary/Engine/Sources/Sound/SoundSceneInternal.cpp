@@ -78,8 +78,8 @@ REGISTER_SAVELOAD_CLASS( 0x1107C480, CSoundScene2D )
 REGISTER_SAVELOAD_CLASS( 0x11190BC0, CSoundScene ) 
 REGISTER_SAVELOAD_CLASS( 0x11190BC1, CSoundScene3D ) 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-NTimer::STime CSoundScene2D::curTime;			// чтобы не передавать всюду
-SIntThree CSoundScene2D::vLimit;						// размер в клетках всей звуковой сцены
+NTimer::STime CSoundScene2D::curTime;			// С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµРґР°РІР°С‚СЊ РІСЃСЋРґСѓ
+SIntThree CSoundScene2D::vLimit;						// СЂР°Р·РјРµСЂ РІ РєР»РµС‚РєР°С… РІСЃРµР№ Р·РІСѓРєРѕРІРѕР№ СЃС†РµРЅС‹
 int CSoundScene2D::nMinZ;										// minimum camera height
 static bool s_bSound5_1 = false;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ void CSoundScene2D::CSoundsCollector::operator()( CSound * sound, bool bHearable
 		CSoundSubstTable::iterator it = substTable.find( sound->GetDesc() );
 		if ( substTable.end() == it )
 		{
-			// сам звук будет своей заменой
+			// СЃР°Рј Р·РІСѓРє Р±СѓРґРµС‚ СЃРІРѕРµР№ Р·Р°РјРµРЅРѕР№
 			sounds[sound->GetDesc()].push_back( sound );
 		}
 		else
@@ -447,7 +447,7 @@ void CSoundScene2D::SetSoundPos( const WORD wID, const CVec3 &vPos )
 
 	const SIntThree vNewCell( vPos / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE );
 	
-	// звук переместился в другую клетку
+	// Р·РІСѓРє РїРµСЂРµРјРµСЃС‚РёР»СЃСЏ РІ РґСЂСѓРіСѓСЋ РєР»РµС‚РєСѓ
 	if ( vFormerCell != vNewCell )
 	{
 		CSoundCell *pNewCell = GetSoundCell( vNewCell );
@@ -496,13 +496,13 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 {
 	if ( !pSFX || !pGameTimer )
 		return;
-	pSFX->Update( _vListener, _vCameraDir, GetCurTime() - timeLastUpdate ); // ВЫЗЫВАТЬ РАНЬШЕ ВСЯКОЙ РАБОТЫ СО ЗВУКОМ!
+	pSFX->Update( _vListener, _vCameraDir, GetCurTime() - timeLastUpdate ); // Р’Р«Р—Р«Р’РђРўР¬ Р РђРќР¬РЁР• Р’РЎРЇРљРћР™ Р РђР‘РћРўР« РЎРћ Р—Р’РЈРљРћРњ!
 
 	const CVec3 vListener( _vListener.x, _vListener.y, 0 );
 	CVec2 vCameraDir( _vCameraDir.x, _vCameraDir.y );
 	Normalize( &vCameraDir );
 
-	MixInterfaceSounds(); // звуки от интерфейса должны играть под паузой
+	MixInterfaceSounds(); // Р·РІСѓРєРё РѕС‚ РёРЅС‚РµСЂС„РµР№СЃР° РґРѕР»Р¶РЅС‹ РёРіСЂР°С‚СЊ РїРѕРґ РїР°СѓР·РѕР№
 	
 	if ( bMapInitted ) 
 	{
@@ -523,10 +523,10 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 			if ( CSoundScene2D::GetCurTime() > timeLastUpdate + SSoundSceneConsts::SS_UPDATE_PERIOD ||
 					((vListenerCell.x == -1 || vListenerCell.y != -1) && vFormerCameraCell != vListenerCell) || 
 					vCameraDir != vFormerCameraDir ) 
-			{// камера сместилась - полный пересчет
+			{// РєР°РјРµСЂР° СЃРјРµСЃС‚РёР»Р°СЃСЊ - РїРѕР»РЅС‹Р№ РїРµСЂРµСЃС‡РµС‚
 				vFormerCameraDir = vCameraDir;
 
-				// ------------- удалить все доигравшие звуки
+				// ------------- СѓРґР°Р»РёС‚СЊ РІСЃРµ РґРѕРёРіСЂР°РІС€РёРµ Р·РІСѓРєРё
 				for ( CSoundCellsWithSound::iterator it = soundCellsWithSound.begin(); it != soundCellsWithSound.end(); ++it )
 				{
 					NI_ASSERT( IsValid( it->second ), StrFmt("Invalid cell at ( delete finished sounds ){%d : %d}", it->first.x, it->first.y) );
@@ -544,7 +544,7 @@ void CSoundScene2D::UpdateSound( const CVec3 &_vListener, const CVec3 &_vCameraD
 					it = updatedCells.erase( it );
 				}
 				
-				// -- взять все звуки, которые слышны в центральной клетке
+				// -- РІР·СЏС‚СЊ РІСЃРµ Р·РІСѓРєРё, РєРѕС‚РѕСЂС‹Рµ СЃР»С‹С€РЅС‹ РІ С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ РєР»РµС‚РєРµ
 				for ( CSoundCellsWithSound::iterator it = soundCellsWithSound.begin(); it != soundCellsWithSound.end(); ++it )
 				{
 					NI_ASSERT( IsValid( it->second ), StrFmt("Invalid cell at ( enum all sounds ){%d : %d}", it->first.x, it->first.y) );
@@ -590,12 +590,12 @@ void CSoundScene2D::MixInterfaceSounds()
 
 		// mix not started
 
-		//отсортировать их по времени старта.
+		//РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РёС… РїРѕ РІСЂРµРјРµРЅРё СЃС‚Р°СЂС‚Р°.
 		CSoundStartTimePredicate pr;
 		(*it).second.sort( pr );
 
-		// найти порции звуков, у которых разница во времени меньше Delta 
-		// и скормить их Mix()
+		// РЅР°Р№С‚Рё РїРѕСЂС†РёРё Р·РІСѓРєРѕРІ, Сѓ РєРѕС‚РѕСЂС‹С… СЂР°Р·РЅРёС†Р° РІРѕ РІСЂРµРјРµРЅРё РјРµРЅСЊС€Рµ Delta 
+		// Рё СЃРєРѕСЂРјРёС‚СЊ РёС… Mix()
 		CSoundsList::iterator beginIterator = (*it).second.begin();
 		CSoundsList::iterator endIterator = (*it).second.begin();
 		while( (*it).second.end() != beginIterator )
@@ -612,7 +612,7 @@ void CSoundScene2D::MixInterfaceSounds()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoundScene2D::MixSingle( CSoundScene2D::CHearableSounds & sounds, const CVec3 & vListener )
 {
-	//оставшиеся запустить на проигрышь без смешивания.
+	//РѕСЃС‚Р°РІС€РёРµСЃСЏ Р·Р°РїСѓСЃС‚РёС‚СЊ РЅР° РїСЂРѕРёРіСЂС‹С€СЊ Р±РµР· СЃРјРµС€РёРІР°РЅРёСЏ.
 	for ( CHearableSounds::iterator substIter = sounds.begin(); substIter != sounds.end(); ++substIter )
 	{
 		const NDb::SSoundDesc *pSubst = (*substIter).first;
@@ -632,19 +632,19 @@ void CSoundScene2D::MixSingle( CSoundScene2D::CHearableSounds & sounds, const CV
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoundScene2D::MixMixedWithDelta( CSoundScene2D::CHearableSounds & sounds, const CVec3 & vListener )
 {
-	// 2) выбрать звуки, которые можно объединять если начало разнесено во времени.
-				//сделать замену.
+	// 2) РІС‹Р±СЂР°С‚СЊ Р·РІСѓРєРё, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ РѕР±СЉРµРґРёРЅСЏС‚СЊ РµСЃР»Рё РЅР°С‡Р°Р»Рѕ СЂР°Р·РЅРµСЃРµРЅРѕ РІРѕ РІСЂРµРјРµРЅРё.
+				//СЃРґРµР»Р°С‚СЊ Р·Р°РјРµРЅСѓ.
 	for ( CHearableSounds::iterator substIter = sounds.begin(); substIter != sounds.end(); ++substIter )
 	{
 		const NDb::SSoundDesc *pSubst = (*substIter).first;
 
-		//отсортировать их по времени старта.
+		//РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РёС… РїРѕ РІСЂРµРјРµРЅРё СЃС‚Р°СЂС‚Р°.
 		CSoundsList & curSounds = (*substIter).second;
 		CSoundStartTimePredicate pr;
 		curSounds.sort( pr );
 
-		// найти порции звуков, у которых разница во времени меньше Delta 
-		// и скормить их Mix()
+		// РЅР°Р№С‚Рё РїРѕСЂС†РёРё Р·РІСѓРєРѕРІ, Сѓ РєРѕС‚РѕСЂС‹С… СЂР°Р·РЅРёС†Р° РІРѕ РІСЂРµРјРµРЅРё РјРµРЅСЊС€Рµ Delta 
+		// Рё СЃРєРѕСЂРјРёС‚СЊ РёС… Mix()
 		CSoundsList::iterator beginIterator = curSounds.begin();
 		CSoundsList::iterator endIterator = curSounds.begin();
 		while( curSounds.end() != beginIterator )
@@ -660,8 +660,8 @@ void CSoundScene2D::MixMixedWithDelta( CSoundScene2D::CHearableSounds & sounds, 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoundScene2D::MixMixedAlways( CSoundScene2D::CHearableSounds & sounds, const CVec3 & vListener )
 {
-	// 1) выбрать звуки, которые играть как один всегда, просчитать им координаты.
-				//запустить на проигрыш.
+	// 1) РІС‹Р±СЂР°С‚СЊ Р·РІСѓРєРё, РєРѕС‚РѕСЂС‹Рµ РёРіСЂР°С‚СЊ РєР°Рє РѕРґРёРЅ РІСЃРµРіРґР°, РїСЂРѕСЃС‡РёС‚Р°С‚СЊ РёРј РєРѕРѕСЂРґРёРЅР°С‚С‹.
+				//Р·Р°РїСѓСЃС‚РёС‚СЊ РЅР° РїСЂРѕРёРіСЂС‹С€.
 	for ( CHearableSounds::iterator substIter = sounds.begin(); substIter != sounds.end(); ++substIter )
 	{
 		CSoundsList & curSounds = (*substIter).second;
@@ -683,7 +683,7 @@ void CSoundScene2D::PlaySubstSound( ISound *pSubstSound, unsigned int nStartSamp
 
 		if ( !pSFX->IsPlaying( pSubstSound ) && ( nStartSample < nSoundLenght ) )
 		{
-			// возобновить проигрыш звука 
+			// РІРѕР·РѕР±РЅРѕРІРёС‚СЊ РїСЂРѕРёРіСЂС‹С€ Р·РІСѓРєР° 
 			const int nChannel = pSFX->PlaySample( pSubstSound, bLooped, nStartSample );
 		}
 		else
@@ -700,7 +700,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 												const int nMixMinimum,
 												bool bDelete ) 
 {
-	CVec3 vSoundCoord( VNULL3 );					// координата звука относительно камеры
+	CVec3 vSoundCoord( VNULL3 );					// РєРѕРѕСЂРґРёРЅР°С‚Р° Р·РІСѓРєР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РєР°РјРµСЂС‹
 	
 	float fPan = 0;
 	float fVolume = 0;
@@ -708,7 +708,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 	float fMaxHearRadius = 0;
 
 	CPtr<CSubstSound> pSubstStruct;
-	CSound *pSound = 0;										// первый же играющий звук
+	CSound *pSound = 0;										// РїРµСЂРІС‹Р№ Р¶Рµ РёРіСЂР°СЋС‰РёР№ Р·РІСѓРє
 	int nSounds = 0;
 	NTimer::STime nStartTime = 0;
 	bool bLooped = false;
@@ -724,11 +724,11 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 			vSoundCoord += v * fVol;
 			
 			++nSounds;
-			bLooped |= sound.IsLooped(); // замена зациклена если хоть один звучок зациклен
+			bLooped |= sound.IsLooped(); // Р·Р°РјРµРЅР° Р·Р°С†РёРєР»РµРЅР° РµСЃР»Рё С…РѕС‚СЊ РѕРґРёРЅ Р·РІСѓС‡РѕРє Р·Р°С†РёРєР»РµРЅ
 			if ( !pSound ) pSound = &sound;
 
 			if ( !pSubstStruct && sound.IsSubstituted() && sound.IsMarkedStarted() ) 
-			{	// звук - уже заменени и он уже играет
+			{	// Р·РІСѓРє - СѓР¶Рµ Р·Р°РјРµРЅРµРЅРё Рё РѕРЅ СѓР¶Рµ РёРіСЂР°РµС‚
 				pSubstStruct = sound.GetSubst();
 				nStartTime = sound.GetBeginTime();
 			}
@@ -741,18 +741,18 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 		
 		if ( !pSubstStruct )
 		{
-			// замену создать заново и запустить на проигрыш
+			// Р·Р°РјРµРЅСѓ СЃРѕР·РґР°С‚СЊ Р·Р°РЅРѕРІРѕ Рё Р·Р°РїСѓСЃС‚РёС‚СЊ РЅР° РїСЂРѕРёРіСЂС‹С€
 			CPtr<ISound> pSubstituteSound = CSoundManager::CreateSound2D( pSubst, pSound->IsLooped() );
-			if ( pSubstituteSound == 0 ) // значит звук замены не задан
+			if ( pSubstituteSound == 0 ) // Р·РЅР°С‡РёС‚ Р·РІСѓРє Р·Р°РјРµРЅС‹ РЅРµ Р·Р°РґР°РЅ
 				pSubstituteSound = pSound->GetSound();
 			pSubstStruct = new CSubstSound( pSubstituteSound );
 			pSubstituteSound->SetVolumeType( pSound->GetSound()->GetVolumeType() );
 		}
 
-		// СДЕЛАТЬ ЗАМЕНУ ЗВУКАМ И УДАЛИТЬ ИХ ИЗ ВРЕМЕННОГО СПИСКА ЗВУКОВ
-		unsigned int nStartSample = 0; // время для возобновления звука
+		// РЎР”Р•Р›РђРўР¬ Р—РђРњР•РќРЈ Р—Р’РЈРљРђРњ Р РЈР”РђР›РРўР¬ РРҐ РР— Р’Р Р•РњР•РќРќРћР“Рћ РЎРџРРЎРљРђ Р—Р’РЈРљРћР’
+		unsigned int nStartSample = 0; // РІСЂРµРјСЏ РґР»СЏ РІРѕР·РѕР±РЅРѕРІР»РµРЅРёСЏ Р·РІСѓРєР°
 		NTimer::STime nStartTime = 0;
-		// вычислиить время старта ( в самплах )
+		// РІС‹С‡РёСЃР»РёРёС‚СЊ РІСЂРµРјСЏ СЃС‚Р°СЂС‚Р° ( РІ СЃР°РјРїР»Р°С… )
 		for ( CSoundsList::iterator soundsIter = begin_iter; soundsIter != end_iter; ++soundsIter)
 		{
 			CSound & sound = *(*soundsIter);
@@ -765,7 +765,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 			}
 		}
 
-		// все заменить
+		// РІСЃРµ Р·Р°РјРµРЅРёС‚СЊ
 		for ( CSoundsList::iterator soundsIter = begin_iter; soundsIter != end_iter; )
 		{
 			CSound & sound = *(*soundsIter);
@@ -786,7 +786,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 				++soundsIter;
 		}
 
-		// проапдейтить звук в соответствии с тем, что намикшировали
+		// РїСЂРѕР°РїРґРµР№С‚РёС‚СЊ Р·РІСѓРє РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ С‚РµРј, С‡С‚Рѕ РЅР°РјРёРєС€РёСЂРѕРІР°Р»Рё
 		fMaxHearRadius = 1.0f * pSound->GetRadiusMax() * SSoundSceneConsts::SS_SOUND_CELL_SIZE * SSoundSceneConsts::SS_TILE_SIZE;
 		CalcVolNPan( &fVolume, &fPan, vSoundCoord, fMaxHearRadius );
 
@@ -802,7 +802,7 @@ void CSoundScene2D::Mix(	CSoundsList & curSounds,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSoundScene2D::MuteSounds( CSoundsList	* muteSounds )
 {
-// замолчать все неслышные звуки.
+// Р·Р°РјРѕР»С‡Р°С‚СЊ РІСЃРµ РЅРµСЃР»С‹С€РЅС‹Рµ Р·РІСѓРєРё.
 	// ---------------------------------------------
 	for ( CSoundsList::iterator it = muteSounds->begin(); it != muteSounds->end(); ++it )
 	{

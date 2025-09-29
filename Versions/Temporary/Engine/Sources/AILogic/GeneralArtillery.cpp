@@ -43,7 +43,7 @@ bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
 	return fFireRange2 > fDistToRegion2;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// артиллерия свободна и может выполнять различные команды
+// Р°СЂС‚РёР»Р»РµСЂРёСЏ СЃРІРѕР±РѕРґРЅР° Рё РјРѕР¶РµС‚ РІС‹РїРѕР»РЅСЏС‚СЊ СЂР°Р·Р»РёС‡РЅС‹Рµ РєРѕРјР°РЅРґС‹
 bool IsArtilleryFree( CAIUnit *pUnit )
 {
 	return !pUnit->GetState() || 
@@ -119,7 +119,7 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 		CVec2 vDir = vRegionCenter - pUnit->GetCenterPlain();
 		Normalize( &vDir );
 
-		// сдвинуть центр дальше
+		// СЃРґРІРёРЅСѓС‚СЊ С†РµРЅС‚СЂ РґР°Р»СЊС€Рµ
 		const CVec2 vNewCenter = vRegionCenter + vDir * 10 * SConsts::TILE_SIZE;
 		if ( CanUnitBombardRegion( pUnit, vNewCenter ) )
 			return true;
@@ -131,7 +131,7 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter, const float fRadius, bool bIsAntiArtilleryFight, const int nCellNumber )
 {
 	list<CAIUnit*> bombardmentUnits;
-	// сформировать список атакующей артиллерии
+	// СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє Р°С‚Р°РєСѓСЋС‰РµР№ Р°СЂС‚РёР»Р»РµСЂРёРё
 	int nMaxUnits = Min( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) );
 	int cnt = 0;
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end() && cnt < nMaxUnits; )
@@ -390,7 +390,7 @@ void CGeneralArtilleryTask::GoingToBattle()
 			{
 				CAIUnit *pUnit = iter->pUnit;
 
-				// не смогла отцепиться
+				// РЅРµ СЃРјРѕРіР»Р° РѕС‚С†РµРїРёС‚СЊСЃСЏ
 				if ( IsArtilleryBeingTowed( pUnit ) )
 					iter->pGoToPosition = new CGeneralArtilleryGoToPosition( pUnit, iter->vReservePosition, true );
 				else
@@ -399,7 +399,7 @@ void CGeneralArtilleryTask::GoingToBattle()
 					const float fDistToAttackPos2 = fabs2( vCenter - iter->vAttackPos );
 					const float fFireRange2 = sqr( pUnit->GetFirstArtilleryGun()->GetFireRange( 0 ) );
 
-					// не достреливает
+					// РЅРµ РґРѕСЃС‚СЂРµР»РёРІР°РµС‚
 					if ( fFireRange2 <= fDistToAttackPos2 )
 						iter->pGoToPosition = new CGeneralArtilleryGoToPosition( pUnit, iter->vReservePosition, true );
 					else

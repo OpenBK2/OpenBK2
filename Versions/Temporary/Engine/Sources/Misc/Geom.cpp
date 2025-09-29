@@ -248,7 +248,7 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 	const CVec2 center( ( v1.x + v2.x + v3.x + v4.x ) / 4, ( v1.y + v2.y + v3.y + v4.y ) / 4 );
 	const short int rightSign = Sign( TriangleAAA( v1, v2, center ) );
 
-	// вырожденный прямоугольник
+	// РІС‹СЂРѕР¶РґРµРЅРЅС‹Р№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє
 	if ( rightSign == 0 )
 		return fabs2( point - center ) < 0.001f;
 
@@ -303,7 +303,7 @@ bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVe
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const int SRect::GetSide( const WORD dirFromRectCenter ) const
 {
-	// разница по модулю 65536	
+	// СЂР°Р·РЅРёС†Р° РїРѕ РјРѕРґСѓР»СЋ 65536	
 	const WORD diff = dirFromRectCenter - GetDirectionByVector( dir );
 
 	if ( diff <= 8192 )
@@ -354,7 +354,7 @@ const float fabs( const SRect rect1, const SRect rect2 )
 	const float segm2Min = Min( Min( f2_1, f2_2 ), Min( f2_3, f2_4 ) );
 	const float segm2Max = Max( Max( f2_1, f2_2 ), Max( f2_3, f2_4 ) );
 
-	// не пересекаются
+	// РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ
 	if ( segm1Max < segm2Min || segm2Max < segm1Min )
 		return Min( fabs( segm1Max - segm2Min ), fabs( segm2Max - segm1Min ) );
 	else

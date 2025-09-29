@@ -91,19 +91,19 @@ class CEditorModuleB2M1 : public IEditorModule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleStartup()
 {
-	// не существует еще <все> кроме Singleton<IUserDataContainer>()
+	// РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РµС‰Рµ <РІСЃРµ> РєСЂРѕРјРµ Singleton<IUserDataContainer>()
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleShutdown()
 {
-	// существует только Singleton<IUserDataContainer>()
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚РѕР»СЊРєРѕ Singleton<IUserDataContainer>()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleCreate()
 {
-	// существует уже <все>
-	// вызывается до создания MainFrame
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ СѓР¶Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РґРѕ СЃРѕР·РґР°РЅРёСЏ MainFrame
 	//
 	Singleton<IObjectCollector>()->RegisterDataExtractor( new CMapObjectDataExtractor() );
 	Singleton<IObjectCollector>()->RegisterDataExtractor( CMapObjectWindow::MAPOBJECT_EXTRACTOR_TYPE, new CMapObjectDataExtractor() );
@@ -138,8 +138,8 @@ void CEditorModuleB2M1::ModuleCreate()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleDestroy()
 {
-	// существует еще <все>
-	// вызывается после разрушения MainFrame
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ РµС‰Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЂР°Р·СЂСѓС€РµРЅРёСЏ MainFrame
 	//
 	Singleton<IExporterContainer>()->UnRegisterExportTool( NMEGeomAttribs::GetOrCreateTempAttributesExportTool() );
 	NMEGeomAttribs::DestroyTempAttributesExportTool();
@@ -152,32 +152,32 @@ void CEditorModuleB2M1::ModuleDestroy()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleCreateControls()
 {
-	// существует уже <все>
-	// вызывается после создания MainFrame, перед LoadBarState
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ СѓР¶Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ MainFrame, РїРµСЂРµРґ LoadBarState
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModulePostCreateControls()
 {
-	// существует уже <все>
-	// вызывается после создания MainFrame, после LoadBarState
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ СѓР¶Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ MainFrame, РїРѕСЃР»Рµ LoadBarState
 	PrintGrannyVersions();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModulePreDestroyControls()
 {
-	// существует еще <все>
-	// вызывается перед разрушением MainFrame, перед SaveBarState
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ РµС‰Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ СЂР°Р·СЂСѓС€РµРЅРёРµРј MainFrame, РїРµСЂРµРґ SaveBarState
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModuleDestroyControls()
 {
-	// существует еще <все>
-	// вызывается после создания MainFrame, после SaveBarState
+	// СЃСѓС‰РµСЃС‚РІСѓРµС‚ РµС‰Рµ <РІСЃРµ>
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ MainFrame, РїРѕСЃР»Рµ SaveBarState
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEditorModuleB2M1::ModulePostCreateMainFrame()
 {
-	// вызывается после создания MainFrame и PostStorageInitialize()
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ MainFrame Рё PostStorageInitialize()
 	Singleton<IChildFrameContainer>()->Create( "__CHILD_FRAME_DX_SCENE_LABEL__" );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ BOOL WINAPI DllMain( HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpReserved )
 {
   if ( ul_reason_for_call == DLL_PROCESS_ATTACH )
 	{
-		// Для подключения ресурсов из DLL
+		// Р”Р»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ СЂРµСЃСѓСЂСЃРѕРІ РёР· DLL
 		theEDB2M1Instance = (HINSTANCE)hInst;
 	}
 	return true;

@@ -18,7 +18,7 @@ namespace NGfx
 namespace NGScene
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//! Типы шрифтов
+//! РўРёРїС‹ С€СЂРёС„С‚РѕРІ
 struct SFont
 {
 	ZDATA
@@ -30,7 +30,7 @@ struct SFont
 	SFont( int _nSize, const string &_szName ): nSize( _nSize ), szName( _szName ) {}
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//! Описание шрифта
+//! РћРїРёСЃР°РЅРёРµ С€СЂРёС„С‚Р°
 class CFontInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CFontInfo);
@@ -51,7 +51,7 @@ public:
 	CPtrFuncBase<CFontFormatInfo>* GetFormatInfo() const { return pInfo; }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//! Локаль
+//! Р›РѕРєР°Р»СЊ
 class CTextLocaleInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CTextLocaleInfo);

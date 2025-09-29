@@ -12,7 +12,7 @@ namespace NDb
 class CEntrenchmentCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CEntrenchmentCreation );
-	float GetTrenchWidth( int nType );// 0 - секция , 1 - поворот
+	float GetTrenchWidth( int nType );// 0 - СЃРµРєС†РёСЏ , 1 - РїРѕРІРѕСЂРѕС‚
 	typedef vector< CObj<CEntrenchmentPart> > CParts;
 	bool CanBuildNextInner() const;
 	bool CanBuildNextInnerSlow( const int _nIndex ) const;
@@ -24,10 +24,10 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	CParts parts;
 	
 	CObj<CEntrenchmentPart> pBeginTerminator;		//
-	CObj<CEntrenchmentPart> pEndTerminator;			// текущий конечный терминатор
-	CObj<CEntrenchmentPart> pNewEndTerminator;	// будуший конечный терминатор
+	CObj<CEntrenchmentPart> pEndTerminator;			// С‚РµРєСѓС‰РёР№ РєРѕРЅРµС‡РЅС‹Р№ С‚РµСЂРјРёРЅР°С‚РѕСЂ
+	CObj<CEntrenchmentPart> pNewEndTerminator;	// Р±СѓРґСѓС€РёР№ РєРѕРЅРµС‡РЅС‹Р№ С‚РµСЂРјРёРЅР°С‚РѕСЂ
 	
-	vector<CVec2> vPoints;						// центры окопов
+	vector<CVec2> vPoints;						// С†РµРЅС‚СЂС‹ РѕРєРѕРїРѕРІ
 	//
 	int nCurIndex;
 	SAIAngle wAngle;
@@ -35,7 +35,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	bool bCannot;
 	bool bSayAck;
 
-	list<SVector> tilesUnder;									// ТАйлы под следующим сегментом
+	list<SVector> tilesUnder;									// РўРђР№Р»С‹ РїРѕРґ СЃР»РµРґСѓСЋС‰РёРј СЃРµРіРјРµРЅС‚РѕРј
 
 	//consts
 	int nTermInd;

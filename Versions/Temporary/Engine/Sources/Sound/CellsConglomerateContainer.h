@@ -55,7 +55,7 @@ public:
 
 	void Clear();
 
-	// для всех клеток, звуки из которых слышны
+	// РґР»СЏ РІСЃРµС… РєР»РµС‚РѕРє, Р·РІСѓРєРё РёР· РєРѕС‚РѕСЂС‹С… СЃР»С‹С€РЅС‹
 	template <class TEnumFunc> 
 		void EnumHearableCells( TEnumFunc func, const SIntThree &center )
 	{

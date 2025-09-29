@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define STANDART_SMOOTH_SOLDIER_PATH 0x311133C0
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! запоминание состояние для CStandartSmoothPath
+//! Р·Р°РїРѕРјРёРЅР°РЅРёРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РґР»СЏ CStandartSmoothPath
 class CStandartSmoothPathMemento : public IMemento
 {
 	OBJECT_BASIC_METHODS( CStandartSmoothPathMemento );
@@ -22,10 +22,10 @@ public:
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! //! сглаженный путь для разных солдатиков, сглаживание IPath при помощи сплайнов, упрощенные повороты
+//! //! СЃРіР»Р°Р¶РµРЅРЅС‹Р№ РїСѓС‚СЊ РґР»СЏ СЂР°Р·РЅС‹С… СЃРѕР»РґР°С‚РёРєРѕРІ, СЃРіР»Р°Р¶РёРІР°РЅРёРµ IPath РїСЂРё РїРѕРјРѕС‰Рё СЃРїР»Р°Р№РЅРѕРІ, СѓРїСЂРѕС‰РµРЅРЅС‹Рµ РїРѕРІРѕСЂРѕС‚С‹
 class CStandartSmoothPathBasis : public ISmoothPath
 {
-	// владелец пути
+	// РІР»Р°РґРµР»РµС† РїСѓС‚Рё
 	CBasePathUnit *pUnit;
 	ZDATA
 		ZONSERIALIZE
@@ -76,7 +76,7 @@ public:
 	CStandartSmoothPathBasis() : pPath( 0 ), pUnit( 0 ), bFinished( true ), bStopped( true ), 
 		p0( VNULL2 ), p1( VNULL2 ), p2( VNULL2 ), p3( VNULL2 ), predPoint( VNULL2 ),
 		nIter( 0 ), nPoints( 0 ) {}
-	// возвращает - пошёл юнит по пути или нет
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ - РїРѕС€С‘Р» СЋРЅРёС‚ РїРѕ РїСѓС‚Рё РёР»Рё РЅРµС‚
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
 

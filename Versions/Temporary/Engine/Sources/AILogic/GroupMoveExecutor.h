@@ -9,9 +9,9 @@ struct SUnitListInfo
 	CPtr<CCommonUnit> pUnit;
 	int nCell;
 
-	bool bCanGo;		// юнит может двигаться
-	bool bGoAway;		// юнит должен свалить (пропустить задних)
-	bool bAtPlace;	// притопал на место, первая часть построения для юнита закончена
+	bool bCanGo;		// СЋРЅРёС‚ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ
+	bool bGoAway;		// СЋРЅРёС‚ РґРѕР»Р¶РµРЅ СЃРІР°Р»РёС‚СЊ (РїСЂРѕРїСѓСЃС‚РёС‚СЊ Р·Р°РґРЅРёС…)
+	bool bAtPlace;	// РїСЂРёС‚РѕРїР°Р» РЅР° РјРµСЃС‚Рѕ, РїРµСЂРІР°СЏ С‡Р°СЃС‚СЊ РїРѕСЃС‚СЂРѕРµРЅРёСЏ РґР»СЏ СЋРЅРёС‚Р° Р·Р°РєРѕРЅС‡РµРЅР°
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nCell); f.Add(4,&bCanGo); f.Add(5,&bGoAway); f.Add(6,&bAtPlace); return 0; }
 public:
 	SUnitListInfo() : pUnit( 0 ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 ) {}

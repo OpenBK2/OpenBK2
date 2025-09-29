@@ -8,7 +8,7 @@
 #include "..\MapEditorLib\ObjectController.h"
 #include "SortTreeControl.h"
 
-// Можно вставлять только в диалоги CDialog и в его производные
+// РњРѕР¶РЅРѕ РІСЃС‚Р°РІР»СЏС‚СЊ С‚РѕР»СЊРєРѕ РІ РґРёР°Р»РѕРіРё CDialog Рё РІ РµРіРѕ РїСЂРѕРёР·РІРѕРґРЅС‹Рµ
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort );
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	void CopySelection();
 	void PasteSelection();
 	//
-	// Функция сортировки
+	// Р¤СѓРЅРєС†РёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
 	friend int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort );
 	int SortItemText( const CString &rstrText0, const CString &rstrText1 );
 	//
@@ -38,7 +38,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	CPtr<IPCItemEditor> pActiveItemEditor;
 	CPtr<IPCItemEditor> pMultilineStringEditor;
 	//
-	// Таймер дла отложенного считывания полей структур из базы
+	// РўР°Р№РјРµСЂ РґР»Р° РѕС‚Р»РѕР¶РµРЅРЅРѕРіРѕ СЃС‡РёС‚С‹РІР°РЅРёСЏ РїРѕР»РµР№ СЃС‚СЂСѓРєС‚СѓСЂ РёР· Р±Р°Р·С‹
 	LONG nCreateTreeTimer;
 	bool bCreateTree;
 	bool bAsync;
@@ -47,19 +47,19 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	ENewElementExpandMode newElementExpandMode;
 	HTREEITEM hCreateTreeParentItem;
   inline UINT GetCreateTreeTimerID() { return 200; }
-  inline UINT GetCreateTreeTimerInterval() { return 20; }	// Частота в миллисекундах
-	inline UINT GetCreateTreeTimerCount() { return ( bShowHidden ? 100 : 20 ); }		// Количество считываний за один раз
+  inline UINT GetCreateTreeTimerInterval() { return 20; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
+	inline UINT GetCreateTreeTimerCount() { return ( bShowHidden ? 100 : 20 ); }		// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‡РёС‚С‹РІР°РЅРёР№ Р·Р° РѕРґРёРЅ СЂР°Р·
   void SetCreateTreeTimer();
   void KillCreateTreeTimer();
   void OnCreateTreeTimer();
 	//
-	// hArrayItem - куда вставлять
-	// hItem - после которого вставлять (TVI_FIRST для вставки на первое место, TVI_LAST для добавления элемента в конец)
-	// nNewIndex - новый ( реальный индекс элемента, не (-1) )
+	// hArrayItem - РєСѓРґР° РІСЃС‚Р°РІР»СЏС‚СЊ
+	// hItem - РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РІСЃС‚Р°РІР»СЏС‚СЊ (TVI_FIRST РґР»СЏ РІСЃС‚Р°РІРєРё РЅР° РїРµСЂРІРѕРµ РјРµСЃС‚Рѕ, TVI_LAST РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° РІ РєРѕРЅРµС†)
+	// nNewIndex - РЅРѕРІС‹Р№ ( СЂРµР°Р»СЊРЅС‹Р№ РёРЅРґРµРєСЃ СЌР»РµРјРµРЅС‚Р°, РЅРµ (-1) )
 	bool InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nNewIndex );
-	// hArrayItem - из которого удалять
-	// hItem - который удалять (0 для удаления всего)
-	// nDeleteIndex - индекс для удаления (при удалении всего игнорируется)
+	// hArrayItem - РёР· РєРѕС‚РѕСЂРѕРіРѕ СѓРґР°Р»СЏС‚СЊ
+	// hItem - РєРѕС‚РѕСЂС‹Р№ СѓРґР°Р»СЏС‚СЊ (0 РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РІСЃРµРіРѕ)
+	// nDeleteIndex - РёРЅРґРµРєСЃ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ (РїСЂРё СѓРґР°Р»РµРЅРёРё РІСЃРµРіРѕ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ)
 	bool DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nDeleteIndex );
 	//
 	void ExpandPCItem();
@@ -155,7 +155,7 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 	
-	// Создание Undo Operation
+	// РЎРѕР·РґР°РЅРёРµ Undo Operation
 	virtual CObjectController* CreateController() { return CDefaultView::CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) ); }
 	// CDefaultView
 	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel );

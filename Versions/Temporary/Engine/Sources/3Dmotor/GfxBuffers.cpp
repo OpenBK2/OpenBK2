@@ -1442,7 +1442,7 @@ void InitBuffers()
 	{
 		if ( bHardwareVP )
 		{
-			// придержим память под более полезные вещи типа текстур
+			// РїСЂРёРґРµСЂР¶РёРј РїР°РјСЏС‚СЊ РїРѕРґ Р±РѕР»РµРµ РїРѕР»РµР·РЅС‹Рµ РІРµС‰Рё С‚РёРїР° С‚РµРєСЃС‚СѓСЂ
 			NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pHold;
 			for ( int nAmount = 16 * 1024 * 1024; nAmount > 4 * 1024 * 1024; nAmount -= 2 * 1024 * 1024 )
 			{
@@ -1461,7 +1461,7 @@ void InitBuffers()
 	{
 		if ( bHardwareVP )
 		{
-			// придержим память под более полезные вещи типа текстур
+			// РїСЂРёРґРµСЂР¶РёРј РїР°РјСЏС‚СЊ РїРѕРґ Р±РѕР»РµРµ РїРѕР»РµР·РЅС‹Рµ РІРµС‰Рё С‚РёРїР° С‚РµРєСЃС‚СѓСЂ
 			NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pHold;
 			for ( int nAmount = 16 * 1024 * 1024; nAmount > 4 * 1024 * 1024; nAmount -= 2 * 1024 * 1024 )
 			{

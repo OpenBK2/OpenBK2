@@ -9,7 +9,7 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 	int nPlayer;
 	unsigned long ulCheckSum;
 
-	// не сэйвится!
+	// РЅРµ СЃСЌР№РІРёС‚СЃСЏ!
 	static vector< list<unsigned long> > checkSums;
 public:	
 	static WORD wMask;
@@ -38,7 +38,7 @@ public:
 	unsigned long ulCheckSum;
 	int nSegment;
 
-	// не сэйвится!
+	// РЅРµ СЃСЌР№РІРёС‚СЃСЏ!
 	static CArray2D<unsigned long> checkSums;
 	static WORD wMask;
 public:
@@ -75,7 +75,7 @@ public:
 	//
 	void Execute();
 	//
-	// нужно ли сохранять в истории команд
+	// РЅСѓР¶РЅРѕ Р»Рё СЃРѕС…СЂР°РЅСЏС‚СЊ РІ РёСЃС‚РѕСЂРёРё РєРѕРјР°РЅРґ
 	bool NeedToBeStored() const { return true; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

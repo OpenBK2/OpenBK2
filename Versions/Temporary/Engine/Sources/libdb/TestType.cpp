@@ -119,7 +119,7 @@ void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 	pStruct1->AddField( GetSimpleType("bool"), "TypeBool", 3, L"just a test bool value", 0, 0 );
 	pStruct1->AddField( GetSimpleType("GUID"), "TypeGUID", 4, L"just a test GUID value", 0, pAttributeHidden );
 	pStruct1->AddField( GetSimpleType("string"), "TypeString", 5, L"just a test string value", 0, pAttributeHidden );
-	pStruct1->AddField( GetSimpleType("wstring"), "TypeWString", 6, L"just a test wstring value", 0, 0, L"Œ˜ÂÌ¸ ÍÎ∏‚ÓÂ default value" );
+	pStruct1->AddField( GetSimpleType("wstring"), "TypeWString", 6, L"just a test wstring value", 0, 0, L"–û—á–µ–Ω—å –∫–ª—ë–≤–æ–µ default value" );
 	pStruct1->AddField( pEnumUnitType, "TypeEnumUnitType", 7, L"just a test enum (UnitType) value", 0, 0 );
 	pStruct1->AddField( pBinaryFlags, "TypeBinaryFlags", 8, L"just a test binary (Flags) value", 0, 0 );
 	// nested type: Struct2
@@ -212,15 +212,15 @@ void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 	// nested type: MapObject
 	STypeStruct *pMapObject = new STypeStruct( "MapObject" );
 	pMapInfo->nestedTypes.push_back( pMapObject );
-	pMapObject->AddField( GetSimpleType("float"), "HP", 1, L"(ÔÓˆÂÌÚ˚ ÓÚ 0 ‰Ó 1) ∆ËÁÌ¸", 0, 0 );
-	pMapObject->AddField( GetSimpleType("Vec3"), "Pos", 2, L"(ÏÂÚ˚) œÓÎÓÊÂÌËÂ Ì‡ Í‡ÚÂ", 0, 0 );
-	pMapObject->AddField( GetSimpleType("Quat"), "Rot", 3, L"(Í‚‡ÚÂÌËÓÌ) ŒËÂÌÚ‡ˆËˇ Ó·˙ÂÍÚ‡ ‚ ÔÓÒÚ‡ÌÒÚ‚Â", 0, 0 );
-	pMapObject->AddField( GetSimpleType("GUID"), "LinkID", 4, L"”ÌËÍ‡Î¸Ì˚È Ë‰ÂÌÚËÙËÍ‡ÚÓ Ó·˙ÂÍÚ‡ Ì‡ Í‡ÚÂ", 0, 0 );
-	pMapObject->AddField( GetSimpleType("GUID"), "LinkWith", 5, L"— ÍÂÏ Ó·˙ÂÍÚ ÒÎËÌÍÓ‚‡Ì", 0, 0 );
-	pMapObject->AddField( new STypeRef(pHPObject), "Object", 6, L"—Ò˚ÎÍ‡ Ì‡ ÓÔËÒ‡ÚÂÎ¸ ÒÚ‡ÚÒÓ‚ Ó·˙ÂÍÚ‡", 0, 0 );
-//	pMapObject->AddField( GetSimpleType("string"), "Object", 6, L"—Ò˚ÎÍ‡ Ì‡ ÓÔËÒ‡ÚÂÎ¸ ÒÚ‡ÚÒÓ‚ Ó·˙ÂÍÚ‡", 0, 0 );
+	pMapObject->AddField( GetSimpleType("float"), "HP", 1, L"(–ø—Ä–æ—Ü–µ–Ω—Ç—ã –æ—Ç 0 –¥–æ 1) –ñ–∏–∑–Ω—å", 0, 0 );
+	pMapObject->AddField( GetSimpleType("Vec3"), "Pos", 2, L"(–º–µ—Ç—Ä—ã) –ü–æ–ª–æ–∂–µ–Ω–∏–µ –Ω–∞ –∫–∞—Ä—Ç–µ", 0, 0 );
+	pMapObject->AddField( GetSimpleType("Quat"), "Rot", 3, L"(–∫–≤–∞—Ç–µ—Ä–Ω–∏–æ–Ω) –û—Ä–∏–µ–Ω—Ç–∞—Ü–∏—è –æ–±—ä–µ–∫—Ç–∞ –≤ –ø—Ä–æ—Å—Ç—Ä–∞–Ω—Å—Ç–≤–µ", 0, 0 );
+	pMapObject->AddField( GetSimpleType("GUID"), "LinkID", 4, L"–£–Ω–∏–∫–∞–ª—å–Ω—ã–π –∏–¥–µ–Ω—Ç–∏—Ñ–∏–∫–∞—Ç–æ—Ä –æ–±—ä–µ–∫—Ç–∞ –Ω–∞ –∫–∞—Ä—Ç–µ", 0, 0 );
+	pMapObject->AddField( GetSimpleType("GUID"), "LinkWith", 5, L"–° –∫–µ–º –æ–±—ä–µ–∫—Ç —Å–ª–∏–Ω–∫–æ–≤–∞–Ω", 0, 0 );
+	pMapObject->AddField( new STypeRef(pHPObject), "Object", 6, L"–°—Å—ã–ª–∫–∞ –Ω–∞ –æ–ø–∏—Å–∞—Ç–µ–ª—å —Å—Ç–∞—Ç—Å–æ–≤ –æ–±—ä–µ–∫—Ç–∞", 0, 0 );
+//	pMapObject->AddField( GetSimpleType("string"), "Object", 6, L"–°—Å—ã–ª–∫–∞ –Ω–∞ –æ–ø–∏—Å–∞—Ç–µ–ª—å —Å—Ç–∞—Ç—Å–æ–≤ –æ–±—ä–µ–∫—Ç–∞", 0, 0 );
 	//
-	pMapInfo->AddField( new STypeArray(pMapObject), "Objects", 7, L"—ÔËÒÓÍ ‚ÒÂı Ó·˙ÂÍÚÓ‚ Ì‡ Í‡ÚÂ", 0, 0 );
+	pMapInfo->AddField( new STypeArray(pMapObject), "Objects", 7, L"–°–ø–∏—Å–æ–∫ –≤—Å–µ—Ö –æ–±—ä–µ–∫—Ç–æ–≤ –Ω–∞ –∫–∞—Ä—Ç–µ", 0, 0 );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -138,7 +138,7 @@ protected:
 	void RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback );
 	void ClearCallbackList();
 	//
-	// возвращает общее количество объектов
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЉРµРєС‚РѕРІ
 	int ApplyFilter( CObjectCollection *pObjectCollection, const string &rszObjectTypeName );
 	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter );
 	bool GetObjectParams( SObjectParams* pObjectParams, const string &rszObjectTypeName, const string &rszObjectName );

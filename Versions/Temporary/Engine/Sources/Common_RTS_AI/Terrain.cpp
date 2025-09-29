@@ -160,7 +160,7 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 			soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] = 
 				soil[rightY * 2 + 1][rightX * 2	] = soil[rightY * 2 + 1][rightX * 2 + 1] = cSoilType;
 
-			// инициализировать возможность строительства окопов
+			// РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР° РѕРєРѕРїРѕРІ
 
 			if ( tileDigImpossible[tileType] )
 			{
@@ -183,7 +183,7 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 			LockTile( rightX * 2 + 1, rightY * 2		, aiClass );
 			LockTile( rightX * 2 + 1, rightY * 2 + 1, aiClass );
 
-			// инициализировать типы terrain для воронок
+			// РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ С‚РёРїС‹ terrain РґР»СЏ РІРѕСЂРѕРЅРѕРє
 			if ( passClasses[ tileType ] & EAC_WATER )
 			{				
 				int nX = Clamp( rightX * 2, 0, terrainTypes.GetSizeX() - 1 );
@@ -262,10 +262,10 @@ void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClas
 			else
 				digImpossible.RemoveData( tile.x, tile.y );
 
-			// влияние на скорость юнитов
+			// РІР»РёСЏРЅРёРµ РЅР° СЃРєРѕСЂРѕСЃС‚СЊ СЋРЅРёС‚РѕРІ
 			passTypes[tile.y / 2][tile.x / 2] = nPassabilityIndex;
 
-			// проходимость
+			// РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊ
 			UnlockTile( tile.x, tile.y, EAC_ANY );
 			LockTile( tile.x, tile.y, aiClass );
 
@@ -835,7 +835,7 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 {
 	const SVector vStartTile( pAIMap->GetTile( vStart ) );
 	const SVector vEndTile( pAIMap->GetTile( vEnd ) );
-	// первый тайл свободный, ищем с начала
+	// РїРµСЂРІС‹Р№ С‚Р°Р№Р» СЃРІРѕР±РѕРґРЅС‹Р№, РёС‰РµРј СЃ РЅР°С‡Р°Р»Р°
 	if ( CanUnitGo( nBoundTileRadius, vStartTile, aiClass ) != FREE_NONE )
 	{
 		CVec2 vResult = vStart;
@@ -850,7 +850,7 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 			return vEnd;
 		return vResult;
 	}
-	// первый тайл занят, ищем первый подходящий тайл с конца
+	// РїРµСЂРІС‹Р№ С‚Р°Р№Р» Р·Р°РЅСЏС‚, РёС‰РµРј РїРµСЂРІС‹Р№ РїРѕРґС…РѕРґСЏС‰РёР№ С‚Р°Р№Р» СЃ РєРѕРЅС†Р°
 	else if ( bFindWayBack )
 	{
 		CBres bres;
@@ -882,14 +882,14 @@ const float CTerrain::GetPass( const int nX, const int nY ) const
 		SVector visTile = pAIMap->GetTile( nX, nY );
 		visTile.x >>= 1;
 		visTile.y >>= 1;
-		//CRAP{ мостовые проблемы
+		//CRAP{ РјРѕСЃС‚РѕРІС‹Рµ РїСЂРѕР±Р»РµРјС‹
 		const float fResult = passabilities[ passTypes[visTile.y][visTile.x] ];
 		return ( fResult == 0.0f ) ? 1.0f : fResult;
 		//CRAP}
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// залокать от статического объекта
+// Р·Р°Р»РѕРєР°С‚СЊ РѕС‚ СЃС‚Р°С‚РёС‡РµСЃРєРѕРіРѕ РѕР±СЉРµРєС‚Р°
 void CTerrain::LockTile( const int x, const int y, const EAIClasses aiClasses )
 {
 	//const EAIClasses aiClass = buf[y][x];
@@ -900,7 +900,7 @@ void CTerrain::LockTile( const int x, const int y, const EAIClasses aiClasses )
 	*/
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// разлокать от статич. объекта
+// СЂР°Р·Р»РѕРєР°С‚СЊ РѕС‚ СЃС‚Р°С‚РёС‡. РѕР±СЉРµРєС‚Р°
 void CTerrain::UnlockTile( const int x, const int y, const EAIClasses aiClasses )
 { 
 	//const EAIClasses aiClass = buf[y][x];
@@ -942,17 +942,17 @@ void CTerrain::UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int up
 				maxes[eMode][nClassIndex].SetData( x, y, 0 );
 			else
 			{
-				//тайл на границе
+				//С‚Р°Р№Р» РЅР° РіСЂР°РЅРёС†Рµ
 				if ( x == 0 || y == 0 )
 					maxes[eMode][nClassIndex].SetData( x, y, 1 );
-				//тайл не залокан
+				//С‚Р°Р№Р» РЅРµ Р·Р°Р»РѕРєР°РЅ
 				else if ( !IsLocked4ClassWOBoundaryCheck( x, y, aiClass ) )
 				{
 					const BYTE mxy_1 = maxes[eMode][nClassIndex].GetData( x, y-1 );
 
 					if ( maxes[eMode][nClassIndex].GetData( x-1, y ) < mxy_1 && maxes[eMode][nClassIndex].GetData( x, y ) < mxy_1 )
 					{
-						//локаем тайлы ближе к границе
+						//Р»РѕРєР°РµРј С‚Р°Р№Р»С‹ Р±Р»РёР¶Рµ Рє РіСЂР°РЅРёС†Рµ
 						if ( y + mxy_1 - 1 >= nSizeY )
 							maxes[eMode][nClassIndex].SetData( x, y, mxy_1 - 1 );
 						else
@@ -1184,7 +1184,7 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 	const int xMax = Min( _xMax, pAIMap->GetSizeX() - 2 );
 	const int yMax = Min( _yMax, pAIMap->GetSizeY() - 2 );
 	
-	// избавляемся от "левых" залоканных мест
+	// РёР·Р±Р°РІР»СЏРµРјСЃСЏ РѕС‚ "Р»РµРІС‹С…" Р·Р°Р»РѕРєР°РЅРЅС‹С… РјРµСЃС‚
   for ( int y = yMin; y <= yMax; ++y )
 		for ( int x = xMin; x <= xMax; ++x )
 		{
@@ -1215,7 +1215,7 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 		maskForSmooth.RemoveData( tile.x, tile.y );
 	}
 
-	// избавляемся от "левых" разлоканых мест
+	// РёР·Р±Р°РІР»СЏРµРјСЃСЏ РѕС‚ "Р»РµРІС‹С…" СЂР°Р·Р»РѕРєР°РЅС‹С… РјРµСЃС‚
 	for ( int y = yMin; y <= yMax; ++y )
 		for ( int x = xMin; x <= xMax; ++x )
 		{

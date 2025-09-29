@@ -24,9 +24,9 @@ class CTimeCounter
 public:
 	CTimeCounter();
 
-	// bStart true - начать counter, false - закончить
+	// bStart true - РЅР°С‡Р°С‚СЊ counter, false - Р·Р°РєРѕРЅС‡РёС‚СЊ
 	void Count( const int nName, const bool bStart );
-	// медленный и неточный, bStart true - начать counter, false - закончить
+	// РјРµРґР»РµРЅРЅС‹Р№ Рё РЅРµС‚РѕС‡РЅС‹Р№, bStart true - РЅР°С‡Р°С‚СЊ counter, false - Р·Р°РєРѕРЅС‡РёС‚СЊ
 	void Count( const string &szName, const bool bStart );
 
 	void PrintCounters();

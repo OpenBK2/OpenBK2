@@ -16,15 +16,15 @@ class CSquadState : public CMultiInputState, public ICommandHandler
 {
 	friend class CSquadEditor;
 
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CSquadEditor *pSquadEditor;
 	bool bNeedLoadEnterConfig;
 
-	// Методы общего назначения
+	// РњРµС‚РѕРґС‹ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ
 	bool IsMultiInputState( int nStateIndex );
 	void LoadEnterConfig();
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CSquadState( CSquadEditor *_pSquadEditor );
 			
 public:

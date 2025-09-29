@@ -60,9 +60,9 @@
 // MIS = MAPINFO STATE
 #define ID_MIS_CHANGE_STATE													3000
 // Configuration window commands
-#define ID_GET_EDIT_PARAMETERS											3020	// сконфигурировать настроечный диалог
-#define ID_SET_EDIT_PARAMETERS											3021	// получить данные из настроечного диалога
-#define ID_UPDATE_EDIT_PARAMETERS										3022	// обновить данные и сконфигурировать настроечный диалог
+#define ID_GET_EDIT_PARAMETERS											3020	// СЃРєРѕРЅС„РёРіСѓСЂРёСЂРѕРІР°С‚СЊ РЅР°СЃС‚СЂРѕРµС‡РЅС‹Р№ РґРёР°Р»РѕРі
+#define ID_SET_EDIT_PARAMETERS											3021	// РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ РёР· РЅР°СЃС‚СЂРѕРµС‡РЅРѕРіРѕ РґРёР°Р»РѕРіР°
+#define ID_UPDATE_EDIT_PARAMETERS										3022	// РѕР±РЅРѕРІРёС‚СЊ РґР°РЅРЅС‹Рµ Рё СЃРєРѕРЅС„РёРіСѓСЂРёСЂРѕРІР°С‚СЊ РЅР°СЃС‚СЂРѕРµС‡РЅС‹Р№ РґРёР°Р»РѕРі
 //
 //	Common States commands
 #define ID_WINDOW_GET_DIALOG_DATA										3081
@@ -246,7 +246,7 @@
 
 #define IDS_PM_PLACE_FIELD													14090
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//23000...43999 диалоги
+//23000...43999 РґРёР°Р»РѕРіРё
 #define IDD_TAB_MI_TERRAIN_HEIGHT_V3								23080
 #define IDC_TMITHV3_BRUSH_LABEL											23081
 #define IDC_TMITHV3_BRUSH_TILE											23082

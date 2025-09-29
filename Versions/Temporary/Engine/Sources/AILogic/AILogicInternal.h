@@ -30,7 +30,7 @@ class CAILogic : public IAILogic
 	bool bSuspended;
 	bool bFirstTime;
 	
-	// мосты
+	// РјРѕСЃС‚С‹
 	typedef list< list<CPtr<CBridgeSpan> > > Bridges;
 	Bridges bridges;
 	CAITimer timer;
@@ -38,7 +38,7 @@ class CAILogic : public IAILogic
 	//
 	list< CObj<CCommonUnit> > garbage;
 
-	// скрипты
+	// СЃРєСЂРёРїС‚С‹
 	CScripts scripts;
 	bool bMissionLoaded;
 	
@@ -69,13 +69,13 @@ class CAILogic : public IAILogic
 	NTimer::STime timeLastMiniMapUpdateUnits;
 	bool bNeedNewGroupNumber;
 	
-	// проверить, не является ли object грузовиком, подцеплённым к сценарийной артиллерии
-	// если да, ищет подходящий к артиллерии грузовик (в pNewStats) и возвращает true, если артиллерия не найдена - возвращает false
-	// если это не является таким грузовиком, возвращает true
+	// РїСЂРѕРІРµСЂРёС‚СЊ, РЅРµ СЏРІР»СЏРµС‚СЃСЏ Р»Рё object РіСЂСѓР·РѕРІРёРєРѕРј, РїРѕРґС†РµРїР»С‘РЅРЅС‹Рј Рє СЃС†РµРЅР°СЂРёР№РЅРѕР№ Р°СЂС‚РёР»Р»РµСЂРёРё
+	// РµСЃР»Рё РґР°, РёС‰РµС‚ РїРѕРґС…РѕРґСЏС‰РёР№ Рє Р°СЂС‚РёР»Р»РµСЂРёРё РіСЂСѓР·РѕРІРёРє (РІ pNewStats) Рё РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё Р°СЂС‚РёР»Р»РµСЂРёСЏ РЅРµ РЅР°Р№РґРµРЅР° - РІРѕР·РІСЂР°С‰Р°РµС‚ false
+	// РµСЃР»Рё СЌС‚Рѕ РЅРµ СЏРІР»СЏРµС‚СЃСЏ С‚Р°РєРёРј РіСЂСѓР·РѕРІРёРєРѕРј, РІРѕР·РІСЂР°С‰Р°РµС‚ true
 	bool CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *linksInfo, const SMechUnitRPGStats **pNewStats ) const;
 
 	// Loading
-	// часть инициализации, общая для игры и редактора
+	// С‡Р°СЃС‚СЊ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё, РѕР±С‰Р°СЏ РґР»СЏ РёРіСЂС‹ Рё СЂРµРґР°РєС‚РѕСЂР°
 	void CommonInit( const NDb::STerrain *pTerrainInfo );
 
 	void LoadUnits( const struct NDb::SMapInfo* pMapInfo, LinkInfo *linksInfo );
@@ -172,7 +172,7 @@ public:
 	// for debug
 	virtual int GetUniqueID( CObjectBase *pObj );
 	
-	// при игре в multiplayer: все игроки загрузились и игра стартовала
+	// РїСЂРё РёРіСЂРµ РІ multiplayer: РІСЃРµ РёРіСЂРѕРєРё Р·Р°РіСЂСѓР·РёР»РёСЃСЊ Рё РёРіСЂР° СЃС‚Р°СЂС‚РѕРІР°Р»Р°
 	virtual void NetGameStarted();
 	virtual bool IsNetGameStarted() const;
 

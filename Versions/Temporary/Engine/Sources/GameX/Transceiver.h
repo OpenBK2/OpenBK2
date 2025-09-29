@@ -19,7 +19,7 @@ interface ITransceiver : public CObjectBase
 	// perform segments for AI
 	virtual void DoSegments() = 0;
 
-	// обработать pCommand, пришедшую на текущем сегменте
+	// РѕР±СЂР°Р±РѕС‚Р°С‚СЊ pCommand, РїСЂРёС€РµРґС€СѓСЋ РЅР° С‚РµРєСѓС‰РµРј СЃРµРіРјРµРЅС‚Рµ
 	virtual void SendCommand( interface IAILogicCommandB2 *pCommand ) = 0;
 
 	// client commands

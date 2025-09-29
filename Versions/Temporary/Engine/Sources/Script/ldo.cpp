@@ -395,7 +395,7 @@ static void message( lua_State *L, const char *s )
 	const TObject *em = luaH_getglobal( L, LUA_ERRORMESSAGE );
 	if ( em->GetType() == LUA_TFUNCTION ) 
 	{
-		// выводим сообщение в новом thread-е
+		// РІС‹РІРѕРґРёРј СЃРѕРѕР±С‰РµРЅРёРµ РІ РЅРѕРІРѕРј thread-Рµ
 		CObj<CLuaThread> pOld = L->pCT;
 		ASSERT( pOld );
 		lua_setThread( L, lua_newThread( L, "Message thread" ) );

@@ -163,8 +163,8 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 {
 	if ( !pTerrain || bMuteAll ) return ;
 
-	// если камера сместилась - получить информацию о звуках заново,
-	// все их запустить
+	// РµСЃР»Рё РєР°РјРµСЂР° СЃРјРµСЃС‚РёР»Р°СЃСЊ - РїРѕР»СѓС‡РёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ Р·РІСѓРєР°С… Р·Р°РЅРѕРІРѕ,
+	// РІСЃРµ РёС… Р·Р°РїСѓСЃС‚РёС‚СЊ
 	if ( vListener != vNewListener || CSoundScene2D::GetCurTime() - lastUpdateTime > SSoundSceneConsts::SS_UPDATE_PERIOD )
 	{
 		lastUpdateTime = CSoundScene2D::GetCurTime();
@@ -193,7 +193,7 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 		}
 	}
 
-	// обработать all sounds 
+	// РѕР±СЂР°Р±РѕС‚Р°С‚СЊ all sounds 
 	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end();  ++it )
 	{
 		CTerrainSound &sound = (*it).second;

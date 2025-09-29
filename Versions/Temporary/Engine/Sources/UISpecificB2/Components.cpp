@@ -163,9 +163,9 @@ void CTextureRoundSegmentVisitor::Visit( interface IUIVisitor *pVisitor )
 void CTextureRoundSegmentVisitor::DrawTriangle( interface IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,	
 	const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 )
 {
-	// CRAP - выводится просто цвет без текстуры, сделать вывод с текстурой нетривиально,
-	// сейчас такой возможности нет (и нельзя будет пользоваться 2D-текстурой, если совсем не заморочиться)
-	// vTex2, vTex3 - для CRAP не используются
+	// CRAP - РІС‹РІРѕРґРёС‚СЃСЏ РїСЂРѕСЃС‚Рѕ С†РІРµС‚ Р±РµР· С‚РµРєСЃС‚СѓСЂС‹, СЃРґРµР»Р°С‚СЊ РІС‹РІРѕРґ СЃ С‚РµРєСЃС‚СѓСЂРѕР№ РЅРµС‚СЂРёРІРёР°Р»СЊРЅРѕ,
+	// СЃРµР№С‡Р°СЃ С‚Р°РєРѕР№ РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё РЅРµС‚ (Рё РЅРµР»СЊР·СЏ Р±СѓРґРµС‚ РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ 2D-С‚РµРєСЃС‚СѓСЂРѕР№, РµСЃР»Рё СЃРѕРІСЃРµРј РЅРµ Р·Р°РјРѕСЂРѕС‡РёС‚СЊСЃСЏ)
+	// vTex2, vTex3 - РґР»СЏ CRAP РЅРµ РёСЃРїРѕР»СЊР·СѓСЋС‚СЃСЏ
 	CTRect<float> rectTexture( 1, 1, pTexture ? pTexture->nWidth - 1 : 2, pTexture ? pTexture->nHeight - 1 : 2 );
 
 	CVec2 sPos[4];

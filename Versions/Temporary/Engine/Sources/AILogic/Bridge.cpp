@@ -83,7 +83,7 @@ CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, c
 	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
-	// под всем мостом запретить строить окопы.
+	// РїРѕРґ РІСЃРµРј РјРѕСЃС‚РѕРј Р·Р°РїСЂРµС‚РёС‚СЊ СЃС‚СЂРѕРёС‚СЊ РѕРєРѕРїС‹.
 	list<SVector> tiles;
 	GetCoveredTiles( &tiles );
 	GetTerrain()->AddUndigableTiles( tiles );
@@ -386,7 +386,7 @@ void CBridgeSpan::Die( const float fDamage )
 	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
 
-	// убить юнитов, стоявших на этом пролёте
+	// СѓР±РёС‚СЊ СЋРЅРёС‚РѕРІ, СЃС‚РѕСЏРІС€РёС… РЅР° СЌС‚РѕРј РїСЂРѕР»С‘С‚Рµ
 	const CVec2 rectCenter( ( pass.GetMaxX() + pass.GetMinX() ) * 0.5f, ( pass.GetMinY() + pass.GetMaxY() ) * 0.5f );
 	const CVec2 vAABBHalfSize( ( pass.GetMaxX() - pass.GetMinX() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS, 
 		( pass.GetMaxY() - pass.GetMinY() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS );
@@ -509,7 +509,7 @@ static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, con
 {
 	CTilesColl a( pTiles );
 
-	//перейдм к DWORD чтобы не переполнялось
+	//РїРµСЂРµР№РґРј Рє DWORD С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµРїРѕР»РЅСЏР»РѕСЃСЊ
 	DWORD arDir[4];
 	DWORD dwDir = wDir;
 	arDir[0] = GetDirectionByVector( (rect.v1 +rect.v2)/2 - rect.center );
@@ -532,22 +532,22 @@ static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, con
 	const int nTileSize = GetAIMap()->GetTileSize();
 
 	if ( need(iMin,0) )
-	{//wDir не лежит между arDir[0] и arDir[1]
+	{//wDir РЅРµ Р»РµР¶РёС‚ РјРµР¶РґСѓ arDir[0] Рё arDir[1]
 		MakeLine2( rect.v1.x/nTileSize, rect.v1.y/nTileSize, rect.v2.x/nTileSize, rect.v2.y/nTileSize, a );
 	}
 
 	if ( need(iMin,1) )
-	{//wDir не лежит между arDir[1] и arDir[2]
+	{//wDir РЅРµ Р»РµР¶РёС‚ РјРµР¶РґСѓ arDir[1] Рё arDir[2]
 		MakeLine2( rect.v2.x/nTileSize, rect.v2.y/nTileSize, rect.v3.x/nTileSize, rect.v3.y/nTileSize, a );
 	}
 
 	if ( need(iMin,2) )
-	{//wDir no лежит между arDir[1] и arDir[2]
+	{//wDir no Р»РµР¶РёС‚ РјРµР¶РґСѓ arDir[1] Рё arDir[2]
 		MakeLine2( rect.v3.x/nTileSize, rect.v3.y/nTileSize, rect.v4.x/nTileSize, rect.v4.y/nTileSize, a );
 	}
 
 	if ( need(iMin,3) )
-	{//wDir no лежит между arDir[1] и arDir[2]
+	{//wDir no Р»РµР¶РёС‚ РјРµР¶РґСѓ arDir[1] Рё arDir[2]
 		MakeLine2( rect.v4.x/nTileSize, rect.v4.y/nTileSize, rect.v1.x/nTileSize, rect.v1.y/nTileSize, a );
 	}
 }
@@ -555,7 +555,7 @@ static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, con
 CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 : pSpan( pSpan )
 {
-	// найти тайлы. запомнить состояние залоченности.
+	// РЅР°Р№С‚Рё С‚Р°Р№Р»С‹. Р·Р°РїРѕРјРЅРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°Р»РѕС‡РµРЅРЅРѕСЃС‚Рё.
 	SRect rect; 
 	pSpan->GetBoundRect( &rect );
 
@@ -563,7 +563,7 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 	GetTilesUnderRectSide( rect, &tiles, wDir + 65535/2, a );
 
 	list<SObjTileInfo> tilesInfo;
-	// разлокать
+	// СЂР°Р·Р»РѕРєР°С‚СЊ
 	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
 		const EAIClasses lockInfo = GetTerrain()->GetTileLockInfo( *it );
@@ -574,7 +574,7 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 	}
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
-	// залокать для всех
+	// Р·Р°Р»РѕРєР°С‚СЊ РґР»СЏ РІСЃРµС…
 	for ( list<SObjTileInfo>::iterator iter = tilesInfo.begin(); iter != tilesInfo.end(); ++iter )
 		iter->lockInfo = EAC_TERRAIN;
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
@@ -582,13 +582,13 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CFullBridge::SSpanLock::Unlock()
 {
-	// разлокать для всех
+	// СЂР°Р·Р»РѕРєР°С‚СЊ РґР»СЏ РІСЃРµС…
 	list<SObjTileInfo> tilesInfo;
 	for ( list<SVector>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 		tilesInfo.push_back( SObjTileInfo( *iter, EAC_TERRAIN ) );
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
-	// залокать как было
+	// Р·Р°Р»РѕРєР°С‚СЊ РєР°Рє Р±С‹Р»Рѕ
 	list<EAIClasses>::const_iterator lockedIter = formerTiles.begin();
 	list<SObjTileInfo>::iterator tilesInfoIter = tilesInfo.begin();
 	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
@@ -599,7 +599,7 @@ void CFullBridge::SSpanLock::Unlock()
 	}
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
 	
-	// забыть тайлы
+	// Р·Р°Р±С‹С‚СЊ С‚Р°Р№Р»С‹
 	tiles.clear();
 	formerTiles.clear();
 }
@@ -657,7 +657,7 @@ void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, c
 			CBridgeSpan *pSpan = *iter;
 			if ( pSpan != pDamagedSpan )
 			{
-				// раздать всем damage, чтобы уравнять процентное соотношение всех HP
+				// СЂР°Р·РґР°С‚СЊ РІСЃРµРј damage, С‡С‚РѕР±С‹ СѓСЂР°РІРЅСЏС‚СЊ РїСЂРѕС†РµРЅС‚РЅРѕРµ СЃРѕРѕС‚РЅРѕС€РµРЅРёРµ РІСЃРµС… HP
 				const float fCurMaxHP = pSpan->GetStats()->fMaxHP;
 				const float fCurHPPercent = pSpan->GetHitPoints() / fCurMaxHP;
 				if ( fCurHPPercent > fNewHPPercent )

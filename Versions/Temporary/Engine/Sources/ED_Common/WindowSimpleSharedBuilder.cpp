@@ -27,7 +27,7 @@ bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManip
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
 	if ( (bool)value )
@@ -71,7 +71,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 		return pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 	}
 
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	pBuildDataManipulator->GetValue( "Texture", &value );
 	const string szTextureFileName = value.GetStr();
 	pBuildDataManipulator->GetValue( "Color", &value );
@@ -98,7 +98,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 		CPtr<IManipulator> pTexManipulator = pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTexObjectName );
 		NI_ASSERT( pTexManipulator != 0, "CWindowSimpleSharedBuilder::InternalInsertObject() pTexManipulator == 0" );
 
-		// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû Texture
+		// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Texture
 		bResult = bResult && pTexManipulator->SetValue( "SrcName", szTextureFileName );
 		bResult = bResult && pTexManipulator->SetValue( "Type", string("TEXTURE_2D") );
 		bResult = bResult && pTexManipulator->SetValue( "ConversionType", string("CONVERT_ORDINARY") );
@@ -118,7 +118,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 	CPtr<IManipulator> pBSTManipulator = pResourceManager->CreateObjectManipulator( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName );
 	NI_ASSERT( pBSTManipulator != 0, "CWindowSimpleSharedBuilder::InternalInsertObject() pBSTManipulator == 0" );
 
-	// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû BackgroundSimpleTexture
+	// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ BackgroundSimpleTexture
 	if ( !szTextureFileName.empty() )
 	{
 		bResult = bResult && pBSTManipulator->SetValue( "Texture", szTexObjectName );
@@ -134,7 +134,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 	CPtr<IManipulator> pWSSManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szWSSObjectName );
 	NI_ASSERT( pWSSManipulator != 0, "CWindowSimpleSharedBuilder::InternalInsertObject() pWSSManipulator == 0" );
 
-	// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû
+	// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 	string szBSTObjectRefName;
 	CStringManager::GetRefValueFromTypeAndName( &szBSTObjectRefName, BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName, TYPE_SEPARATOR_CHAR );
 	bResult = bResult && pWSSManipulator->SetValue( "Background", szBSTObjectRefName );

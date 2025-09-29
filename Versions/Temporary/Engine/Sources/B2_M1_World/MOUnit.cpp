@@ -79,7 +79,7 @@ bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	bool bCreated = CMapObj::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 	if ( bCreated )
 	{
-		SetVisible( false, eSeason, ( eDayTime == NDb::DAY_NIGHT ) ); // чтобы изначально не было видно под warfog'ом.
+		SetVisible( false, eSeason, ( eDayTime == NDb::DAY_NIGHT ) ); // С‡С‚РѕР±С‹ РёР·РЅР°С‡Р°Р»СЊРЅРѕ РЅРµ Р±С‹Р»Рѕ РІРёРґРЅРѕ РїРѕРґ warfog'РѕРј.
 //		Scene()->ShowObject( nUniqueID, IsVisible() );
 	}
 

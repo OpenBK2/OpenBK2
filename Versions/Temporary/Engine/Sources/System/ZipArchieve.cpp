@@ -282,7 +282,7 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 	{
 		err = inflate( &stream, Z_FINISH );
 		inflateEnd( &stream );
-		// CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
+		// CRAP{ РїРѕС‡РµРјСѓ-С‚Рѕ РёРЅРѕРіРґР° РїСЂРё СЂР°СЃРїР°РєРѕРІРєРµ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ "buffer error" РІСЃРµСЃС‚Рѕ "stream end"...
 		if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
 			err = Z_OK;
 		// CRAP}

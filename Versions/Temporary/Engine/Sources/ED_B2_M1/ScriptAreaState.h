@@ -22,7 +22,7 @@ public:
 		NDb::EScriptAreaTypes eType;
 		int nScriptAreaID;
 		string szName;
-		CPolygonState::CControlPointList cpList; // (2шт. макс.)
+		CPolygonState::CControlPointList cpList; // (2С€С‚. РјР°РєСЃ.)
 		bool bSelected;
 		//
 		enum { CLR_NORMAL_AREA = 0x0000FF00, CLR_SELECTED_AREA = 0xFFFFFF00 };
@@ -44,8 +44,8 @@ private:
 	CIndexCollector<UINT> scriptAreaIDToIndexCollector;
 	CFreeIDCollector scriptAreaIDCollector;
 	//
-	SScriptAreaWindowData dialogData;			// данные окна редактора
-	bool bShift;													// для мультиселекта областей
+	SScriptAreaWindowData dialogData;			// РґР°РЅРЅС‹Рµ РѕРєРЅР° СЂРµРґР°РєС‚РѕСЂР°
+	bool bShift;													// РґР»СЏ РјСѓР»СЊС‚РёСЃРµР»РµРєС‚Р° РѕР±Р»Р°СЃС‚РµР№
 	//
 	bool SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMask eChangeMask );
 	bool ProcessScriptAreaWindowData();

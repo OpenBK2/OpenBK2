@@ -203,7 +203,7 @@ interface IScenarioTracker : public IAIScenarioTracker
 		ZDATA
 		DWORD dwColor;
 		CDBPtr<NDb::SBackground> pUnitFullInfo;
-		int nColorIndex; // индекс цвета хитбара над юнитами на карте
+		int nColorIndex; // РёРЅРґРµРєСЃ С†РІРµС‚Р° С…РёС‚Р±Р°СЂР° РЅР°Рґ СЋРЅРёС‚Р°РјРё РЅР° РєР°СЂС‚Рµ
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwColor); f.Add(3,&pUnitFullInfo); f.Add(4,&nColorIndex); return 0; }
 		
 		SPlayerColor() : dwColor( 0 ), nColorIndex( 0 ) {}
@@ -213,14 +213,14 @@ interface IScenarioTracker : public IAIScenarioTracker
 	virtual bool IsCustomCampaign() const = 0;
 
 	// objectives
-	// Задания, про которые игрок уже знает
+	// Р—Р°РґР°РЅРёСЏ, РїСЂРѕ РєРѕС‚РѕСЂС‹Рµ РёРіСЂРѕРє СѓР¶Рµ Р·РЅР°РµС‚
 	virtual int GetKnownObjectiveCount() const = 0;
-	// Возвращает ID задания
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ ID Р·Р°РґР°РЅРёСЏ
 	virtual int GetKnownObjectiveID( const int nIndex ) = 0;
 
 	virtual int GetObjectiveCount() const = 0;
 	virtual enum EMissionObjectiveState GetObjectiveState( const int nID ) const = 0;
-	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
+	// Р—Р°РґР°РЅРёРµ, РІРїРµСЂРІС‹Рµ РёР·РјРµРЅРёРІС€РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РёР· EMOS_WAITING РїРѕРїР°РґР°РµС‚ РІ РєРѕРЅРµС† СЃРїРёСЃРєР° РёР·РІРµСЃС‚РЅС‹С…
 	virtual void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) = 0;
 	virtual bool GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const = 0;
 	virtual void SetObjectiveObjects( int nID, const vector< CMapObj* > &objects ) = 0;
@@ -239,7 +239,7 @@ interface IScenarioTracker : public IAIScenarioTracker
 	virtual const NDb::SMapInfo* GetLastMission() const = 0;
 	virtual const SMissionStats* GetMissionStats( const NDb::SMapInfo *pMission ) const { return 0; }
 	virtual void GetReinforcementCallsInfo( int nPlayer, vector<int> *pCallsByType ) {}
-	//{ CRAP - убрать из интерфейса, когда будет известно, что миссия запускается только после инициализации ScenarioTracker
+	//{ CRAP - СѓР±СЂР°С‚СЊ РёР· РёРЅС‚РµСЂС„РµР№СЃР°, РєРѕРіРґР° Р±СѓРґРµС‚ РёР·РІРµСЃС‚РЅРѕ, С‡С‚Рѕ РјРёСЃСЃРёСЏ Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ РёРЅРёС†РёР°Р»РёР·Р°С†РёРё ScenarioTracker
 	virtual void ClearMissionScriptVars() = 0;
 	//}
 	

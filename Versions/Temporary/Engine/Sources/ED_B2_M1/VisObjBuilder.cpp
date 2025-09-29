@@ -118,7 +118,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 	NI_ASSERT( pBuildDataManipulator != 0, "CTerrainBuilder::AddVisObjEntry() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szMBFullFileName;
 	if ( rszMBFullFileName.empty() )
 	{
@@ -193,7 +193,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 	{
 		return false;
 	}
-	// Опередяем наличие файла модели, если есть новая модель создаем новые геометрию аигеометрию и скелет
+	// РћРїРµСЂРµРґСЏРµРј РЅР°Р»РёС‡РёРµ С„Р°Р№Р»Р° РјРѕРґРµР»Рё, РµСЃР»Рё РµСЃС‚СЊ РЅРѕРІР°СЏ РјРѕРґРµР»СЊ СЃРѕР·РґР°РµРј РЅРѕРІС‹Рµ РіРµРѕРјРµС‚СЂРёСЋ Р°РёРіРµРѕРјРµС‚СЂРёСЋ Рё СЃРєРµР»РµС‚
 	string szGeometryName = szMBSeasonedFileName;
 	string szAIGeometryName = szMBSeasonedFileName;
 	GetResourceFileName( &szGeometryName, RT_GEOMETRY, rszUniqueObjectName );
@@ -209,31 +209,31 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 		szSkeletonName = szCommonSkeletonName;
 	}
 	//
-	// Опередяем наличие файла текструры, если есть новая текстура создаем новые материал и текстуру
+	// РћРїРµСЂРµРґСЏРµРј РЅР°Р»РёС‡РёРµ С„Р°Р№Р»Р° С‚РµРєСЃС‚СЂСѓСЂС‹, РµСЃР»Рё РµСЃС‚СЊ РЅРѕРІР°СЏ С‚РµРєСЃС‚СѓСЂР° СЃРѕР·РґР°РµРј РЅРѕРІС‹Рµ РјР°С‚РµСЂРёР°Р» Рё С‚РµРєСЃС‚СѓСЂСѓ
 	string szMaterialName = szTGASeasonedFileName;
 	string szTextureName = szTGASeasonedFileName;
 	GetResourceFileName( &szMaterialName, RT_MATERIAL, rszUniqueObjectName );
 	GetResourceFileName( &szTextureName, RT_TEXTURE, rszUniqueObjectName );
 	//
-	// Если есть новая модель или текстура - создаем новую модель
+	// Р•СЃР»Рё РµСЃС‚СЊ РЅРѕРІР°СЏ РјРѕРґРµР»СЊ РёР»Рё С‚РµРєСЃС‚СѓСЂР° - СЃРѕР·РґР°РµРј РЅРѕРІСѓСЋ РјРѕРґРµР»СЊ
 	string szModelName = szMBSeasonedFileName + "_" + szTGASeasonedFileName;
 	GetResourceFileName( &szModelName, RT_MODEL, rszUniqueObjectName );
 	//
-	// добавляем модель
+	// РґРѕР±Р°РІР»СЏРµРј РјРѕРґРµР»СЊ
 	bool bResult = true;
 	if ( pFolderCallback->IsUniqueName( MODEL_TYPE_NAME, szModelName ) )
 	{
 		bResult = bResult && pFolderCallback->InsertObject( MODEL_TYPE_NAME, szModelName );
 	}
-	// добавляем материал
+	// РґРѕР±Р°РІР»СЏРµРј РјР°С‚РµСЂРёР°Р»
 	if ( pFolderCallback->IsUniqueName( MATERIAL_TYPE_NAME, szMaterialName ) )
 	{
 		bResult = bResult && pFolderCallback->InsertObject( MATERIAL_TYPE_NAME, szMaterialName );
-		//добавляем текстуру
+		//РґРѕР±Р°РІР»СЏРµРј С‚РµРєСЃС‚СѓСЂСѓ
 		if ( pFolderCallback->IsUniqueName( TEXTURE_TYPE_NAME, szTextureName ) )
 		{
 			bResult = bResult && pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTextureName );
-			//Устанавливаем имя файла текстуры
+			//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРјСЏ С„Р°Р№Р»Р° С‚РµРєСЃС‚СѓСЂС‹
 			if ( bResult )
 			{
 				if ( CPtr<IManipulator> pTextureManipulator = pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTextureName ) )
@@ -253,7 +253,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 				}
 			}
 		}
-		// устанавливаем текстуру и ее параметры
+		// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РµРєСЃС‚СѓСЂСѓ Рё РµРµ РїР°СЂР°РјРµС‚СЂС‹
 		if ( bResult )
 		{
 			if ( CPtr<IManipulator> pMaterialManipulator = pResourceManager->CreateObjectManipulator( MATERIAL_TYPE_NAME, szMaterialName ) )
@@ -263,15 +263,15 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 			}
 		}
 	}
-	// добавляем геометрию
+	// РґРѕР±Р°РІР»СЏРµРј РіРµРѕРјРµС‚СЂРёСЋ
 	if ( pFolderCallback->IsUniqueName( GEOMETRY_TYPE_NAME, szGeometryName ) )
 	{
 		bResult = bResult && pFolderCallback->InsertObject( GEOMETRY_TYPE_NAME, szGeometryName );
-		//добавляем аигеометрию
+		//РґРѕР±Р°РІР»СЏРµРј Р°РёРіРµРѕРјРµС‚СЂРёСЋ
 		if ( pFolderCallback->IsUniqueName( AIGEOMETRY_TYPE_NAME, szAIGeometryName ) )
 		{
 			bResult = bResult && pFolderCallback->InsertObject( AIGEOMETRY_TYPE_NAME, szAIGeometryName );
-			//Устанавливаем имя модели для аигеометрии
+			//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРјСЏ РјРѕРґРµР»Рё РґР»СЏ Р°РёРіРµРѕРјРµС‚СЂРёРё
 			if ( bResult )
 			{
 				if ( CPtr<IManipulator> pAIGeometryManipulator = pResourceManager->CreateObjectManipulator( AIGEOMETRY_TYPE_NAME, szAIGeometryName ) )
@@ -290,7 +290,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 				}
 			}
 		}
-		// устанавливаем имя файла модели для геометрии и аигеометрию
+		// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРјСЏ С„Р°Р№Р»Р° РјРѕРґРµР»Рё РґР»СЏ РіРµРѕРјРµС‚СЂРёРё Рё Р°РёРіРµРѕРјРµС‚СЂРёСЋ
 		if ( bResult )
 		{
 			if ( CPtr<IManipulator> pGeometryManipulator = pResourceManager->CreateObjectManipulator( GEOMETRY_TYPE_NAME, szGeometryName ) )
@@ -302,11 +302,11 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 			}
 		}
 	}
-	// добавляем скелет
+	// РґРѕР±Р°РІР»СЏРµРј СЃРєРµР»РµС‚
 	if ( pFolderCallback->IsUniqueName( SKELETON_TYPE_NAME, szSkeletonName ) )
 	{
 		bResult = bResult && pFolderCallback->InsertObject( SKELETON_TYPE_NAME, szSkeletonName );
-		// устанавливаем имя файла модели для скелета
+		// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРјСЏ С„Р°Р№Р»Р° РјРѕРґРµР»Рё РґР»СЏ СЃРєРµР»РµС‚Р°
 		if ( bResult )
 		{
 			if ( CPtr<IManipulator> pSkeletonManipulator = pResourceManager->CreateObjectManipulator( SKELETON_TYPE_NAME, szSkeletonName ) )
@@ -316,7 +316,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 			}
 		}
 	}
-	// устанавливаем материал, геометрию и скелет
+	// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјР°С‚РµСЂРёР°Р», РіРµРѕРјРµС‚СЂРёСЋ Рё СЃРєРµР»РµС‚
 	if ( bResult )
 	{
 		if ( CPtr<IManipulator> pModelManipulator = pResourceManager->CreateObjectManipulator( MODEL_TYPE_NAME, szModelName ) )
@@ -332,7 +332,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 			bResult = bResult && pModelManipulator->SetValue( "Skeleton", szSkeletonName );
 		}
 	}
-	// устанавливаем модель
+	// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјРѕРґРµР»СЊ
 	bResult = bResult && pVisObjManipulator->InsertNode( "Models" );
 	if ( bResult )
 	{
@@ -355,7 +355,7 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, stri
 	NI_ASSERT( pBuildDataManipulator != 0, "CVisObjBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CVisObjBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szMBFullFileName;
 	if ( !CManipulatorManager::GetValue( &szMBFullFileName, pBuildDataManipulator, "ModelFileName" ) || szMBFullFileName.empty() )
 	{
@@ -429,7 +429,7 @@ bool CVisObjBuilder::InternalInsertObject( string *pszObjectTypeName,
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 	if ( bResult )
 	{
-		// Добавляем VisObjEntry для каждого сезона
+		// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, string(), string(), NDb::SEASON_WINTER );
 		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, string(), string(), NDb::SEASON_SPRING );
 		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, string(), string(), NDb::SEASON_SUMMER );
@@ -478,7 +478,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 			//
 			bool bResult = true;
 			//
-			//определяем количество mb и tga файлов
+			//РѕРїСЂРµРґРµР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ mb Рё tga С„Р°Р№Р»РѕРІ
 			int nMBFileCount = 0;
 			int nTGAFileCount = 0;
 			while ( NFile::DoesFileExist( StrFmt( "%s%d.mb", ( pUserData->constUserData.szExportSourceFolder + szMBFileFolder ).c_str(), nMBFileCount + 1 ) ) )
@@ -505,7 +505,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 					CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 					pManipulator->RemoveNode( "Models" );
 				}
-				// Добавляем VisObjEntry для каждого сезона
+				// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
@@ -533,7 +533,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 					CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 					pManipulator->RemoveNode( "Models" );
 				}
-				// Добавляем VisObjEntry для каждого сезона
+				// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
 				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
@@ -559,7 +559,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
-					// Добавляем VisObjEntry для каждого сезона
+					// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
@@ -585,7 +585,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
-					// Добавляем VisObjEntry для каждого сезона
+					// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
@@ -611,7 +611,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
-					// Добавляем VisObjEntry для каждого сезона
+					// Р”РѕР±Р°РІР»СЏРµРј VisObjEntry РґР»СЏ РєР°Р¶РґРѕРіРѕ СЃРµР·РѕРЅР°
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
 					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );

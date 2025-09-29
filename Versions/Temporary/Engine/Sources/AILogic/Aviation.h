@@ -18,7 +18,7 @@ class CAviation : public CMilitaryCar, public IPlane
 		ZDATA_(CMilitaryCar)
 	CDBPtr<SMechUnitRPGStats> pStats;
 
-	// для формации самолетов
+	// РґР»СЏ С„РѕСЂРјР°С†РёРё СЃР°РјРѕР»РµС‚РѕРІ
 	CObj<CPlanesFormation> pFormation;
 	CVec3 vPlanesShift;										// shift in formation
 	float fFuel;
@@ -48,7 +48,7 @@ public:
 	
 	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
 	virtual IStatesFactory* GetStatesFactory() const;
-	// для стрельбы
+	// РґР»СЏ СЃС‚СЂРµР»СЊР±С‹
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
 	{ 
 		pShotInfo->typeID = GetShootAction(); 
@@ -66,7 +66,7 @@ public:
 	
 	virtual NTimer::STime GetDisappearInterval() const { return 0; }
 
-	// для получения нормали у истребителей.
+	// РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РЅРѕСЂРјР°Р»Рё Сѓ РёСЃС‚СЂРµР±РёС‚РµР»РµР№.
 	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const { return 0; }
 
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
@@ -81,11 +81,11 @@ public:
 	virtual void Stop() { }
 	virtual void Disappear();
 	
-	// залокать unit ( если уже был залокана, то старый lock исчезает )
+	// Р·Р°Р»РѕРєР°С‚СЊ unit ( РµСЃР»Рё СѓР¶Рµ Р±С‹Р» Р·Р°Р»РѕРєР°РЅР°, С‚Рѕ СЃС‚Р°СЂС‹Р№ lock РёСЃС‡РµР·Р°РµС‚ )
 	virtual void Lock( const CBasicGun *pGun ) { }
-	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
+	// unlock unit ( РµСЃР»Рё Р·Р°Р»РѕРєР°РЅ РґСЂСѓРіРёРј gun-РѕРј, С‚Рѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚СЃСЏ )
 	virtual void Unlock( const CBasicGun *pGun ) { }
-	// залокан ли каким-либо gun-ом, не равным pGun
+	// Р·Р°Р»РѕРєР°РЅ Р»Рё РєР°РєРёРј-Р»РёР±Рѕ gun-РѕРј, РЅРµ СЂР°РІРЅС‹Рј pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const { return true; }
 	
 	// plane's formation, to force planes keep parade during flight.

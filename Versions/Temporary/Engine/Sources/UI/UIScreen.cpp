@@ -248,7 +248,7 @@ void CWindowScreen::InitSingletonWindows()
 //////////////////////////////////////////////////////////////////////
 void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
 {
-	// откатим незаконченную прямую последовательность
+	// РѕС‚РєР°С‚РёРј РЅРµР·Р°РєРѕРЅС‡РµРЅРЅСѓСЋ РїСЂСЏРјСѓСЋ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
 	for ( CStateSequiences::iterator it = stateSequiences.begin(); it != stateSequiences.end(); ++it )
 	{
 		if ( it->GetName() == szCmdSeq ) 
@@ -260,7 +260,7 @@ void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
 			return;
 		}
 	}
-	// уберем законченную прямую последовательность
+	// СѓР±РµСЂРµРј Р·Р°РєРѕРЅС‡РµРЅРЅСѓСЋ РїСЂСЏРјСѓСЋ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
 	for ( CStateSequiences::iterator it = finishedAnimations.begin(); it != finishedAnimations.end(); ++it )
 	{
 		if ( it->GetName() == szCmdSeq ) 

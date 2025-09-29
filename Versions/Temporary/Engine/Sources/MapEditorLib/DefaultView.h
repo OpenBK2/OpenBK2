@@ -6,18 +6,18 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CDefaultView : public IView
 {
-	// Метка для последующего удаления Undo Operation из очереди
+	// РњРµС‚РєР° РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµРіРѕ СѓРґР°Р»РµРЅРёСЏ Undo Operation РёР· РѕС‡РµСЂРµРґРё
 	string szTemporaryLabel;
-	// Набор изменяемых объектов
+	// РќР°Р±РѕСЂ РёР·РјРµРЅСЏРµРјС‹С… РѕР±СЉРµРєС‚РѕРІ
 	SObjectSet objectSet;
-	// Манипулятордля изменений обьектов (может быть MultiManipulator)
+	// РњР°РЅРёРїСѓР»СЏС‚РѕСЂРґР»СЏ РёР·РјРµРЅРµРЅРёР№ РѕР±СЊРµРєС‚РѕРІ (РјРѕР¶РµС‚ Р±С‹С‚СЊ MultiManipulator)
 	CPtr<IManipulator> pViewManipulator;
 
 public:
 	CDefaultView() {}
 	~CDefaultView() { RemoveViewManipulator(); }
 	//
-	// Функция создания Controller
+	// Р¤СѓРЅРєС†РёСЏ СЃРѕР·РґР°РЅРёСЏ Controller
 	template <class TController>
 	TController* CreateController( TController *pTYPEObject )
 	{

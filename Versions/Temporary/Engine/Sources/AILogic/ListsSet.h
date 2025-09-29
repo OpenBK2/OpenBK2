@@ -56,10 +56,10 @@ public:
 	
 	typedef int tEnumerator;
 	const int Add( const int listNum, const T &value );
-	// возвращает позицию вставленного
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ РІСЃС‚Р°РІР»РµРЅРЅРѕРіРѕ
 	int InsertAfter( const int listNum, const int nPos, const T &value );
 	
-	// возвращает предыдущий у удаляемого
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РїСЂРµРґС‹РґСѓС‰РёР№ Сѓ СѓРґР°Р»СЏРµРјРѕРіРѕ
 	const int Erase( const int listNum, const int pos );
 	
 	const int begin( const int listNum )	const	{ if ( listNum >= fronts.size() ) return 0; else return fronts[listNum]; }
@@ -97,7 +97,7 @@ public:
 
 	void DelList( const int listNum, const tEnumerator lastPos )
 	{
-		// не пустой
+		// РЅРµ РїСѓСЃС‚РѕР№
 		if ( lastPos != 0 )
 		{
 			nexts[lastPos] = freePtr;
@@ -313,7 +313,7 @@ public:
 	}
 	const int GetQueuesNum() const { return cListsSet.GetListsNum(); }
 	
-	// возвращает итератор в очереди
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РёС‚РµСЂР°С‚РѕСЂ РІ РѕС‡РµСЂРµРґРё
 	inline int Push( const int queueNum, const T &el );
 	inline int PushAndEvict( const int queueNum, const T &el );
 	
@@ -330,7 +330,7 @@ public:
 	
 	inline void DelQueue( const int queueNum );
 
-	// begin - голова очереди, end - хвост
+	// begin - РіРѕР»РѕРІР° РѕС‡РµСЂРµРґРё, end - С…РІРѕСЃС‚
 	const int begin( const int queueNum )	const	{ return IsEmpty(queueNum) ? end() : currentPos[queueNum]; }
 	const int end( ) const { return 0; }
 	const int last( const int queueNum ) const { return cListsSet.begin( queueNum ); }
@@ -451,7 +451,7 @@ public:
 	
 	void PushFront( const int deckNum, const T &el );
 
-	//возвращает хвост
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ С…РІРѕСЃС‚
 	T& GetLastEl( const int nDeckNum );
 	const T& GetLastEl( const int nDeckNum ) const;
 };
@@ -491,7 +491,7 @@ const T& CDecksSet<T>::GetLastEl( const int nDeckNum ) const
 //*													Serializers															*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// предполагается, что T - user-defined object
+// РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ, С‡С‚Рѕ T - user-defined object
 template <class T>
 inline int SElInfo<T>::operator&( IBinSaver &saver )
 {
@@ -503,7 +503,7 @@ inline int SElInfo<T>::operator&( IBinSaver &saver )
 	return 0;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для WORD
+// РґР»СЏ WORD
 template <>
 inline int SElInfo<WORD>::operator&( IBinSaver &saver )
 {

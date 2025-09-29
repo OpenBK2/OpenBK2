@@ -76,7 +76,7 @@ BOOL CMapInfoAIMarkersSelectDlg::OnInitDialog()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMapInfoAIMarkersSelectDlg::OnOK()
 {
-	GetDD();	// сохранить настройки фильтра
+	GetDD();	// СЃРѕС…СЂР°РЅРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё С„РёР»СЊС‚СЂР°
 	CDialog::OnOK();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ void CMapInfoAIMarkersSelectDlg::SetDD()
 {
 	if ( !pMarkerSettings )
 		return;
-	// фильтр по типам объектов
+	// С„РёР»СЊС‚СЂ РїРѕ С‚РёРїР°Рј РѕР±СЉРµРєС‚РѕРІ
 	lcUnitTypes.DeleteAllItems();
 	for ( int i = 0; i < pMarkerSettings->objTypeMarkers.size(); ++i )
 	{
@@ -125,7 +125,7 @@ void CMapInfoAIMarkersSelectDlg::GetDD()
 {
 	if ( !pMarkerSettings )
 		return;
-	// фильтр по типам объектов
+	// С„РёР»СЊС‚СЂ РїРѕ С‚РёРїР°Рј РѕР±СЉРµРєС‚РѕРІ
 	for ( int i = 0; i < lcUnitTypes.GetItemCount(); ++i )
 	{
 		pMarkerSettings->objTypeMarkers[i].bShowMarker = lcUnitTypes.GetCheck( i );

@@ -237,7 +237,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 	const string szSkeletonsFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + SKELETONS_BIN_PATH;
 
 
-	// создаем аниматор для вычисления положения костей в мировых координатах
+	// СЃРѕР·РґР°РµРј Р°РЅРёРјР°С‚РѕСЂ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РїРѕР»РѕР¶РµРЅРёСЏ РєРѕСЃС‚РµР№ РІ РјРёСЂРѕРІС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
 	NAnimation::SGrannySkeletonHandle handle;
 	handle.nModelInFile = 0;
 	handle.pSkeleton = 0;
@@ -272,7 +272,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 	pAnimator.Refresh(); // CSkeletonAnimator::Recalc()
 
 
-	// читаем файл скелета для получения имен костей (локаторов)
+	// С‡РёС‚Р°РµРј С„Р°Р№Р» СЃРєРµР»РµС‚Р° РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РёРјРµРЅ РєРѕСЃС‚РµР№ (Р»РѕРєР°С‚РѕСЂРѕРІ)
 	const NDb::SSkeleton *pDBSkeleton = NDb::Get<NDb::SSkeleton>( dbidSkeleton );
 	string szFilePath = NBinResources::GetExistentBinaryFileName( szSkeletonsFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid );
 
@@ -287,7 +287,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 
 	hash_map<int,int> potentialParents;
 
-	// вычисляем положение костей
+	// РІС‹С‡РёСЃР»СЏРµРј РїРѕР»РѕР¶РµРЅРёРµ РєРѕСЃС‚РµР№
 	granny_skeleton *pSkeleton = pInfo->Skeletons[0];
 	for ( int nBoneIndex = 0; nBoneIndex < pSkeleton->BoneCount; ++nBoneIndex )
 	{
@@ -309,7 +309,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 		}
 	}
 
-	// вычисляем иерархию локаторов
+	// РІС‹С‡РёСЃР»СЏРµРј РёРµСЂР°СЂС…РёСЋ Р»РѕРєР°С‚РѕСЂРѕРІ
 	for ( CLocatorInfoIter i = pLocatorsInfo->begin(); i != pLocatorsInfo->end(); ++i )
 	{
 		int nGrannyParentIdx = i->nParentIdx;
@@ -380,7 +380,7 @@ bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern
 		}
 	}
 
-	//имя не содержит числового индекса
+	//РёРјСЏ РЅРµ СЃРѕРґРµСЂР¶РёС‚ С‡РёСЃР»РѕРІРѕРіРѕ РёРЅРґРµРєСЃР°
 	*pQIdx = -1;
 	return true;
 }
@@ -496,9 +496,9 @@ void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 																			 const char *pszStructFieldName,
 																			 const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
-	// есть массив структур
-	// ф-ция устанавливает значение точек для поля типа Vec2 в структуре
-	// если точек больше чем элементов в массиве будет добавлено нужное число пустых структур
+	// РµСЃС‚СЊ РјР°СЃСЃРёРІ СЃС‚СЂСѓРєС‚СѓСЂ
+	// С„-С†РёСЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РѕС‡РµРє РґР»СЏ РїРѕР»СЏ С‚РёРїР° Vec2 РІ СЃС‚СЂСѓРєС‚СѓСЂРµ
+	// РµСЃР»Рё С‚РѕС‡РµРє Р±РѕР»СЊС€Рµ С‡РµРј СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅРѕ РЅСѓР¶РЅРѕРµ С‡РёСЃР»Рѕ РїСѓСЃС‚С‹С… СЃС‚СЂСѓРєС‚СѓСЂ
 
 	vector<SLocatorQInfo> lc;
 	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
@@ -527,10 +527,10 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 																			 const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 																			 bool bClear )
 {
-	// есть массив структур
-	// ф-ция устанавливает значение точек для поля типа Vec3 в структуре
-	// если точек больше чем элементов в массиве будет добавлено нужное число пустых структур
-	// если bClear, то все уже существующие элементы массива будут удалены
+	// РµСЃС‚СЊ РјР°СЃСЃРёРІ СЃС‚СЂСѓРєС‚СѓСЂ
+	// С„-С†РёСЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р·РЅР°С‡РµРЅРёРµ С‚РѕС‡РµРє РґР»СЏ РїРѕР»СЏ С‚РёРїР° Vec3 РІ СЃС‚СЂСѓРєС‚СѓСЂРµ
+	// РµСЃР»Рё С‚РѕС‡РµРє Р±РѕР»СЊС€Рµ С‡РµРј СЌР»РµРјРµРЅС‚РѕРІ РІ РјР°СЃСЃРёРІРµ Р±СѓРґРµС‚ РґРѕР±Р°РІР»РµРЅРѕ РЅСѓР¶РЅРѕРµ С‡РёСЃР»Рѕ РїСѓСЃС‚С‹С… СЃС‚СЂСѓРєС‚СѓСЂ
+	// РµСЃР»Рё bClear, С‚Рѕ РІСЃРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ СЌР»РµРјРµРЅС‚С‹ РјР°СЃСЃРёРІР° Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹
 
 	vector<SLocatorQInfo> lc;
 	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
@@ -692,13 +692,13 @@ bool FixLocators( const SObjectSet &objectSet, const string &szLocatorNamePatter
 {
 	for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
 	{
-		// Получаем манипулятор на объект
+		// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° РѕР±СЉРµРєС‚
 		const string szCurObjectTypeName = objectSet.szObjectTypeName;
 		CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szCurObjectTypeName, itObjectName->first );
 		if ( !pManipulator )
 			return false;
 
-		// Получаем манипулятор на VisObject
+		// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject
 		CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
 		if ( pVisObjectManipulator )
 		{
@@ -720,7 +720,7 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 	mtx.RotateVector( &vec, V3_AXIS_Z ); 
 	float fAngle = atan2( vec.y, vec.x ); // -pi...+pi
 
-	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
+	// СѓРіРѕР» РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РІ AI СЃРёСЃС‚РµРјРµ РѕС‚С‡СЃС‡РµС‚Р° (РѕС‚СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРё РѕС‚ (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi
 		fAngle += FP_2PI;
 
@@ -737,7 +737,7 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 	if ( bGetInRadian )
 		return fAngle;
 
-	// в AI еденицах
+	// РІ AI РµРґРµРЅРёС†Р°С…
 	const float F_EPS_ANGLE = 0.01f;
 	if ( fabs(fAngle) < F_EPS_ANGLE )
 	{

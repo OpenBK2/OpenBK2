@@ -57,14 +57,14 @@ unsigned int CSound::GetSamplesPassed()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float CSound::GetVolume( const NTimer::STime time, const float fDist ) const
 {
-	// сначала - затухание удаленного звука
+	// СЃРЅР°С‡Р°Р»Р° - Р·Р°С‚СѓС…Р°РЅРёРµ СѓРґР°Р»РµРЅРЅРѕРіРѕ Р·РІСѓРєР°
 	float fVolDim = 0.0f;
 	if ( bDimMark ) 
 		fVolDim = 1.0f * (time - timeBeginDim) / SSoundSceneConsts::SS_SOUND_DIM_TIME;
 	if ( fVolDim > 1.0f )
 		return 0.0f;
 
-	// теперь зависимость от расстояния
+	// С‚РµРїРµСЂСЊ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊ РѕС‚ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ
 	float fVolDist = 0.0f;
 	if ( fDist / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE > nMinRadius )
 		fVolDist = 1.0f * ( fDist - SSoundSceneConsts::SS_SOUND_CELL_SIZE * SSoundSceneConsts::SS_TILE_SIZE * nMinRadius ) / ( nMaxRadius - nMinRadius ) / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
@@ -78,7 +78,7 @@ void CSound::MarkToDim( const NTimer::STime time )
 {
 	timeBeginDim = time;
 	bDimMark = true;
-	wID = 0; // звук теперь управляется сценой
+	wID = 0; // Р·РІСѓРє С‚РµРїРµСЂСЊ СѓРїСЂР°РІР»СЏРµС‚СЃСЏ СЃС†РµРЅРѕР№
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const NDb::SSoundDesc* CSound::GetDesc() const

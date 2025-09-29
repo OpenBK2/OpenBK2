@@ -1,7 +1,7 @@
 #if !defined(__AIMARKERSETTINGS__)
 #define __AIMARKERSETTINGS__
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// настройки маркеров дальности видимости и дальности стрельбы
+// РЅР°СЃС‚СЂРѕР№РєРё РјР°СЂРєРµСЂРѕРІ РґР°Р»СЊРЅРѕСЃС‚Рё РІРёРґРёРјРѕСЃС‚Рё Рё РґР°Р»СЊРЅРѕСЃС‚Рё СЃС‚СЂРµР»СЊР±С‹
 struct SAIMarkerSettings
 { 
 	struct SObjTypeShowMarker
@@ -18,9 +18,9 @@ struct SAIMarkerSettings
 			return 0;
 		}
 	};
-	vector<SObjTypeShowMarker> objTypeMarkers;		// отображать или нет маркеры 
-	bool bForSelectionOnly;														// отображать маркеры только для выбранного объекта
-	int nPlayer;																			// для юнитов какого игрока отображать маркеры (-1 -- для всех)
+	vector<SObjTypeShowMarker> objTypeMarkers;		// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РёР»Рё РЅРµС‚ РјР°СЂРєРµСЂС‹ 
+	bool bForSelectionOnly;														// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РјР°СЂРєРµСЂС‹ С‚РѕР»СЊРєРѕ РґР»СЏ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
+	int nPlayer;																			// РґР»СЏ СЋРЅРёС‚РѕРІ РєР°РєРѕРіРѕ РёРіСЂРѕРєР° РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ РјР°СЂРєРµСЂС‹ (-1 -- РґР»СЏ РІСЃРµС…)
 	///
 	SAIMarkerSettings() :
 		bForSelectionOnly( false ),
@@ -49,7 +49,7 @@ struct SAIMarkerSettings
 		if ( xs.IsReading() )
 		{
 			vector<string> newTypeNames;
-			// очистить список считанный из файла от типов, которых нет в EDesignUnitType
+			// РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє СЃС‡РёС‚Р°РЅРЅС‹Р№ РёР· С„Р°Р№Р»Р° РѕС‚ С‚РёРїРѕРІ, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ EDesignUnitType
 			for ( vector<SObjTypeShowMarker>::iterator it = objTypeMarkers.begin(); it != objTypeMarkers.end(); )
 			{
 				bool bInvalidType = true;
@@ -73,7 +73,7 @@ struct SAIMarkerSettings
 					++it;
 				}
 			}
-			// добавить типы, которых нет еще в файле на диске
+			// РґРѕР±Р°РІРёС‚СЊ С‚РёРїС‹, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РµС‰Рµ РІ С„Р°Р№Р»Рµ РЅР° РґРёСЃРєРµ
 			for ( int i = 0; i < typeUnitDesignTypeMnemonics.Size(); ++i )
 			{
 				bool bNew = true;

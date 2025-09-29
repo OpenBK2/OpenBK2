@@ -129,7 +129,7 @@ bool CCommonUnit::IsLocked( const CBasicGun *pGun ) const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CCommonUnit::CanShootToUnitWoMove( class CAIUnit *_pTarget )
 {
-	// можно ли пробить армор и вообще попасть
+	// РјРѕР¶РЅРѕ Р»Рё РїСЂРѕР±РёС‚СЊ Р°СЂРјРѕСЂ Рё РІРѕРѕР±С‰Рµ РїРѕРїР°СЃС‚СЊ
 	bool bCan = false;
 	int nGun = GetNGuns();
 	for ( int i=0; i<nGun; ++i )
@@ -399,9 +399,9 @@ IStaticPath* CCommonUnit::GetPathToBuilding( CBuilding *pBuilding, int *pnEntran
 
 		if ( !GetTerrain()->IsLocked( GetAIMap()->GetTile( vEntr ), EAC_HUMAN ) )
 		{
-			// здесь - не CPtr!!! Нужно, чтобы при выходе из функции он не удалялся
+			// Р·РґРµСЃСЊ - РЅРµ CPtr!!! РќСѓР¶РЅРѕ, С‡С‚РѕР±С‹ РїСЂРё РІС‹С…РѕРґРµ РёР· С„СѓРЅРєС†РёРё РѕРЅ РЅРµ СѓРґР°Р»СЏР»СЃСЏ
 			IStaticPath *pPath = CreateStaticPathToPoint( vEntr, VNULL2, this, false, GetAIMap() );
-			// чтобы удалять путь
+			// С‡С‚РѕР±С‹ СѓРґР°Р»СЏС‚СЊ РїСѓС‚СЊ
 			CPtr<IStaticPath> pGarbage;
 
 			if ( pPath && pBuilding->IsGoodPointForRunIn( pPath->GetFinishPoint(), i ) )
@@ -436,7 +436,7 @@ IStaticPath* CCommonUnit::GetPathToEntrenchment( CEntrenchment *pEntrenchment )
 
 	CVec2 toRectCenter( rect.center - finishPoint );
 	Normalize( &toRectCenter );
-	// немного сдвинуть к центру окопа
+	// РЅРµРјРЅРѕРіРѕ СЃРґРІРёРЅСѓС‚СЊ Рє С†РµРЅС‚СЂСѓ РѕРєРѕРїР°
 	finishPoint += toRectCenter * SConsts::TILE_SIZE;
 
 	return CreateStaticPathToPoint( finishPoint, VNULL2, this, false, GetAIMap() );

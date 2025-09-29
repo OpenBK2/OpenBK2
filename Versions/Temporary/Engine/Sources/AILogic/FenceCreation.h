@@ -8,7 +8,7 @@ class CGivenPassabilityStObject;
 class CFenceCreation : public CLongObjectCreation
 {
 	OBJECT_BASIC_METHODS( CFenceCreation );
-	// скопировал у Костика
+	// СЃРєРѕРїРёСЂРѕРІР°Р» Сѓ РљРѕСЃС‚РёРєР°
 	struct APointHelper
 	{
 		vector<CVec2> m_points;
@@ -17,8 +17,8 @@ class CFenceCreation : public CLongObjectCreation
 	};
 
 	ZDATA_(CLongObjectCreation)
-	vector< CObj<CFence> > fenceSegements;	// сегменты
-	vector<CVec2> vPoints;					// позиции
+	vector< CObj<CFence> > fenceSegements;	// СЃРµРіРјРµРЅС‚С‹
+	vector<CVec2> vPoints;					// РїРѕР·РёС†РёРё
 	bool bTmpNonCheatPath; // if skipped 1 or more objects - move to another without cheat path
 
 	int nCurIndex;

@@ -22,7 +22,7 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectInfoCollector != 0, "SBridgeInfo::Load(), pObjectInfoCollector == 0" );
 		NI_ASSERT( pObjectLoadInfo != 0, "SBridgeInfo::Load(), pObjectLoadInfo == 0" );
 		//
-		// Устанавливаем общие параметры
+		// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕР±С‰РёРµ РїР°СЂР°РјРµС‚СЂС‹
 		vPosition = VNULL3;
 		fDirection = 0.0f;
 		const string szBridgePrefix = StrFmt( "Bridges.[%d]", pObjectLoadInfo->nObjectIndex );
@@ -38,11 +38,11 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// Добавляем объекты базы
+		// Р”РѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹ Р±Р°Р·С‹
 		bool bResult = true;
 		for ( int nBridgeElementIndex = 0; nBridgeElementIndex < bridgeElementList.size(); ++nBridgeElementIndex )
 		{
-			// получаем расположенние объекта в базе данных
+			// РїРѕР»СѓС‡Р°РµРј СЂР°СЃРїРѕР»РѕР¶РµРЅРЅРёРµ РѕР±СЉРµРєС‚Р° РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 			const UINT nLinkID = bridgeElementList[nBridgeElementIndex];
 			const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
 			if ( nObjectIndex == INVALID_NODE_ID )
@@ -51,7 +51,7 @@ namespace NMapInfoEditor
 				continue;
 			}
 			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
-			// создаем SMapInfoElement и заполняем его данными
+			// СЃРѕР·РґР°РµРј SMapInfoElement Рё Р·Р°РїРѕР»РЅСЏРµРј РµРіРѕ РґР°РЅРЅС‹РјРё
 			SObjectInfo::SMapInfoElement mapInfoElement;
 			string szRPGStatsTypeName;
 			string szRPGStatsName;
@@ -72,7 +72,7 @@ namespace NMapInfoEditor
 			{
 				continue;
 			}
-			// заносим элемент в структуру данных объекта
+			// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 			mapInfoElementMap[nLinkID] = mapInfoElement;
 			pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
 		}
@@ -80,7 +80,7 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// вычисляем относительные координаты и угол элементов объекта
+		// РІС‹С‡РёСЃР»СЏРµРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СѓРіРѕР» СЌР»РµРјРµРЅС‚РѕРІ РѕР±СЉРµРєС‚Р°
 		int nBridgeElementCount = 0;
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
@@ -100,7 +100,7 @@ namespace NMapInfoEditor
 				itMapInfoElement->second.fDirection -= fDirection;
 			}
 		}
-		// заполняем сцену и проставляем ссылки в mapInfo
+		// Р·Р°РїРѕР»РЅСЏРµРј СЃС†РµРЅСѓ Рё РїСЂРѕСЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєРё РІ mapInfo
 		CreateSceneObjects( pEditorScene, pManipulator, true );
 		pObjectInfoCollector->bridgeIDToIndexCollector.Insert( nBridgeID, pObjectLoadInfo->nObjectIndex, pObjectLoadInfo->bSearchIndices );
 		return true;
@@ -128,7 +128,7 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// Устанавливаем общие параметры
+		// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕР±С‰РёРµ РїР°СЂР°РјРµС‚СЂС‹
 		vPosition = VNULL3;
 		fDirection = pBridgeCreateInfo->fDirection;
 		for ( list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
@@ -136,9 +136,9 @@ namespace NMapInfoEditor
 			vPosition += *itBridgeElementCenterPoint;
 		}
 		vPosition /= ( 1.0f * nBridgeElementCount );
-		// Добавляем объекты базы
+		// Р”РѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹ Р±Р°Р·С‹
 		int nBridgeElementIndex = 0;
-		list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
+		list<int> bridgeLinkIDList; // РґР»СЏ Р±С‹СЃС‚СЂРѕР№ Р·Р°РїРёСЃРё РІРµРєС‚РѕСЂР° РІ Р±Р°Р·Сѓ (СЃРµРєС†РёСЏ РјРѕСЃС‚РѕРІ)
 		for ( list<CVec3>::const_iterator itBridgeElementCenterPoint = pBridgeCreateInfo->centerPointList.begin(); itBridgeElementCenterPoint != pBridgeCreateInfo->centerPointList.end(); ++itBridgeElementCenterPoint )
 		{
 			int nObjectIndex = INVALID_NODE_ID;
@@ -147,7 +147,7 @@ namespace NMapInfoEditor
 			{
 				continue;
 			}
-			// создаем SMapInfoElement и заполняем его данными
+			// СЃРѕР·РґР°РµРј SMapInfoElement Рё Р·Р°РїРѕР»РЅСЏРµРј РµРіРѕ РґР°РЅРЅС‹РјРё
 			SObjectInfo::SMapInfoElement mapInfoElement;
 			mapInfoElement.szRPGStatsTypeName = pBridgeCreateInfo->szRPGStatsTypeName;
 			mapInfoElement.rpgStatsDBID = pBridgeCreateInfo->rpgStatsDBID;
@@ -196,9 +196,9 @@ namespace NMapInfoEditor
 			}
 			++nBridgeElementIndex;
 		}
-		// заполняем сцену и проставляем ссылки в mapInfo
+		// Р·Р°РїРѕР»РЅСЏРµРј СЃС†РµРЅСѓ Рё РїСЂРѕСЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєРё РІ mapInfo
 		CreateSceneObjects( pEditorScene, pManipulator, true );
-		//Добавляем информацию в секцию мостов
+		//Р”РѕР±Р°РІР»СЏРµРј РёРЅС„РѕСЂРјР°С†РёСЋ РІ СЃРµРєС†РёСЋ РјРѕСЃС‚РѕРІ
 		int nBridgeIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nBridgeIndex, pManipulator, "Bridges" );
 		const string szBridgePrefix = StrFmt( "Bridges.[%d]", nBridgeIndex );
@@ -361,7 +361,7 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		list<int> bridgeLinkIDList; // для быстрой записи вектора в базу (секция мостов)
+		list<int> bridgeLinkIDList; // РґР»СЏ Р±С‹СЃС‚СЂРѕР№ Р·Р°РїРёСЃРё РІРµРєС‚РѕСЂР° РІ Р±Р°Р·Сѓ (СЃРµРєС†РёСЏ РјРѕСЃС‚РѕРІ)
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			bridgeLinkIDList.push_back( itMapInfoElement->first );

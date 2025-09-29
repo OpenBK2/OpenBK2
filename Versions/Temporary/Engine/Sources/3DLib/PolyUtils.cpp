@@ -730,7 +730,7 @@ void CPolyClipper::InsertEdge( SPolygon *pResult, const SEdge &_edge, vector<CVe
 		pResult->listEdges.add( edge );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// добавляем в первый полигон все пересечения с ребрами второго
+// РґРѕР±Р°РІР»СЏРµРј РІ РїРµСЂРІС‹Р№ РїРѕР»РёРіРѕРЅ РІСЃРµ РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ СЂРµР±СЂР°РјРё РІС‚РѕСЂРѕРіРѕ
 void CPolyClipper::FindIntersections( const SPolygon &sPolygon, const SPolygon &sClipPolygon, SPolygon *psResult )
 {
 	SPolygon sResPolygon;

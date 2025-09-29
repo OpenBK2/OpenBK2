@@ -7,7 +7,7 @@ class CAITimer
 public:
 	CAITimer();
 	static NTimer::STime GetSegmentTime();
-	static NTimer::STime GetGameTime(); // – ¿ — ’ Œ ƒ » “ — ﬂ ! ! ! ! ! “ŒÀ‹ Œ ƒÀﬂ Updater'‡
+	static NTimer::STime GetGameTime(); // –† –ê –° –• –û –î –ò –¢ –° –Ø ! ! ! ! ! –¢–û–õ–¨–ö–û –î–õ–Ø Updater'–∞
 	static void ToClientTime( NTimer::STime *pTime );
 	static void SetSpeed( int nSpeed );
 };

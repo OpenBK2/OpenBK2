@@ -621,7 +621,7 @@ void CInterfaceEncyclopedia::AddSelectedUnit( CUnitData *pData, EFilterCountries
 	if ( !pData )
 		return;
 	if ( nSelUnit >= 0 && nSelUnit + 1 < selectedUnits.size() )
-		selectedUnits.resize( nSelUnit + 1 ); // óäàëèì ëèøíèå þíèòû â undo
+		selectedUnits.resize( nSelUnit + 1 ); // ÑƒÐ´Ð°Ð»Ð¸Ð¼ Ð»Ð¸ÑˆÐ½Ð¸Ðµ ÑŽÐ½Ð¸Ñ‚Ñ‹ Ð² undo
 	SSelectedUnit unit;
 	unit.pData = pData;
 	unit.eCountry = eCountry;

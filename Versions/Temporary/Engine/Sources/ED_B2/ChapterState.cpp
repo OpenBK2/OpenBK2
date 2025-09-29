@@ -42,7 +42,7 @@ void CChapterState::Enter()
 
 	LoadChapterMap();
 	
-	// Ξανξβλÿεμ ρφενσ
+	// ΠΠ±Π½ΠΎΠ²Π»ΡΠµΠΌ ΡΡ†ΠµΠ½Ρƒ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_SCROLLBARS, 1 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	//
@@ -64,7 +64,7 @@ void CChapterState::Leave()
 	pChapter = 0;
 	pScreen = 0;
 
-	// Ξανξβλÿεμ ρφενσ
+	// ΠΠ±Π½ΠΎΠ²Π»ΡΠµΠΌ ΡΡ†ΠµΠ½Ρƒ
 //	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 
 	// clear the scene

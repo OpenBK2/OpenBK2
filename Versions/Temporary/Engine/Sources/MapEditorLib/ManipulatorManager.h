@@ -54,38 +54,38 @@ public:
 	};
 	typedef list<SReferenceInfo> CReferenceInfoList;
 
-	// Скопировать значения из одного манипулятора в другой
+	// РЎРєРѕРїРёСЂРѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёСЏ РёР· РѕРґРЅРѕРіРѕ РјР°РЅРёРїСѓР»СЏС‚РѕСЂР° РІ РґСЂСѓРіРѕР№
 	static bool CloneDBManipulator( interface IManipulator *pDestinationManipulator,
 																	interface IManipulator *pSourceManipulator,
 																	bool bEqual );
-	// Проверить ссылку на то, что это ссылка, на заполненность, и получить данные о ней
+	// РџСЂРѕРІРµСЂРёС‚СЊ СЃСЃС‹Р»РєСѓ РЅР° С‚Рѕ, С‡С‚Рѕ СЌС‚Рѕ СЃСЃС‹Р»РєР°, РЅР° Р·Р°РїРѕР»РЅРµРЅРЅРѕСЃС‚СЊ, Рё РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ Рѕ РЅРµР№
 	static bool GetParamsFromReference( const string &rszRefValueName,
 																			const interface IManipulator *pSourceManipulator,
 																			string *pszRefObjectTypeName,
 																			string *pszRefObjectName,
 																			const SPropertyDesc **ppRefDesc );
-	// Получить манипулятор по ссылке ( если это ссылка )
+	// РџРѕР»СѓС‡РёС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РїРѕ СЃСЃС‹Р»РєРµ ( РµСЃР»Рё СЌС‚Рѕ СЃСЃС‹Р»РєР° )
 	static interface IManipulator* CreateManipulatorFromReference( const string &rszRefValueName,
 																																 const interface IManipulator *pSourceManipulator,
 																																 string *pszRefObjectTypeName,
 																																 string *pszRefObjectName,
 																																 const SPropertyDesc **ppRefDesc );
 
-	// Получить манипулятор по ссылке ( если это ссылка ), если ссылка NULL,
-	//   создать ее и установить ее как значение.
-	// Создание ссылки происходит по стандартному адресу:
-	//   ПолноеИмяИсходногоМанипулятора\szReferenceName
-	// Параметры:
-	//   pResultManipulator - указатель на манипулятор-результат
-	//          (в него поместится то что есть по ссылке, или новое значение)
-	//   pManipulator       - указатель на исходный манипулятор, поле которого
-	//          есть ссылка, которую необходимо получить или создать
-	//   szTableName        - имя таблицы, в которой необходимо создать новую
-	//          ссылку, если поле пусто
-	//   szFieldName        - имя поля исходного манипулятора, из которого достаем
-	//          ссылку (или записываем вновь созданную ссылку)
-	//   szReferenceName    - имя вновь созданной ссылки
-	//   pszResultName      - указатель на строку, в которую вернется имя созданного объекта. Может быть 0.
+	// РџРѕР»СѓС‡РёС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РїРѕ СЃСЃС‹Р»РєРµ ( РµСЃР»Рё СЌС‚Рѕ СЃСЃС‹Р»РєР° ), РµСЃР»Рё СЃСЃС‹Р»РєР° NULL,
+	//   СЃРѕР·РґР°С‚СЊ РµРµ Рё СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РµРµ РєР°Рє Р·РЅР°С‡РµРЅРёРµ.
+	// РЎРѕР·РґР°РЅРёРµ СЃСЃС‹Р»РєРё РїСЂРѕРёСЃС…РѕРґРёС‚ РїРѕ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРјСѓ Р°РґСЂРµСЃСѓ:
+	//   РџРѕР»РЅРѕРµРРјСЏРСЃС…РѕРґРЅРѕРіРѕРњР°РЅРёРїСѓР»СЏС‚РѕСЂР°\szReferenceName
+	// РџР°СЂР°РјРµС‚СЂС‹:
+	//   pResultManipulator - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РјР°РЅРёРїСѓР»СЏС‚РѕСЂ-СЂРµР·СѓР»СЊС‚Р°С‚
+	//          (РІ РЅРµРіРѕ РїРѕРјРµСЃС‚РёС‚СЃСЏ С‚Рѕ С‡С‚Рѕ РµСЃС‚СЊ РїРѕ СЃСЃС‹Р»РєРµ, РёР»Рё РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ)
+	//   pManipulator       - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РёСЃС…РѕРґРЅС‹Р№ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ, РїРѕР»Рµ РєРѕС‚РѕСЂРѕРіРѕ
+	//          РµСЃС‚СЊ СЃСЃС‹Р»РєР°, РєРѕС‚РѕСЂСѓСЋ РЅРµРѕР±С…РѕРґРёРјРѕ РїРѕР»СѓС‡РёС‚СЊ РёР»Рё СЃРѕР·РґР°С‚СЊ
+	//   szTableName        - РёРјСЏ С‚Р°Р±Р»РёС†С‹, РІ РєРѕС‚РѕСЂРѕР№ РЅРµРѕР±С…РѕРґРёРјРѕ СЃРѕР·РґР°С‚СЊ РЅРѕРІСѓСЋ
+	//          СЃСЃС‹Р»РєСѓ, РµСЃР»Рё РїРѕР»Рµ РїСѓСЃС‚Рѕ
+	//   szFieldName        - РёРјСЏ РїРѕР»СЏ РёСЃС…РѕРґРЅРѕРіРѕ РјР°РЅРёРїСѓР»СЏС‚РѕСЂР°, РёР· РєРѕС‚РѕСЂРѕРіРѕ РґРѕСЃС‚Р°РµРј
+	//          СЃСЃС‹Р»РєСѓ (РёР»Рё Р·Р°РїРёСЃС‹РІР°РµРј РІРЅРѕРІСЊ СЃРѕР·РґР°РЅРЅСѓСЋ СЃСЃС‹Р»РєСѓ)
+	//   szReferenceName    - РёРјСЏ РІРЅРѕРІСЊ СЃРѕР·РґР°РЅРЅРѕР№ СЃСЃС‹Р»РєРё
+	//   pszResultName      - СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚СЂРѕРєСѓ, РІ РєРѕС‚РѕСЂСѓСЋ РІРµСЂРЅРµС‚СЃСЏ РёРјСЏ СЃРѕР·РґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°. РњРѕР¶РµС‚ Р±С‹С‚СЊ 0.
 	static bool ForceCreateManipulatorForReference( CPtr<IManipulator> *pResultManipulator,
 	                                      IManipulator *pManipulator,
 																				const string &szTableName,
@@ -93,21 +93,21 @@ public:
 																				const string &szReferenceName,
 																				string *pszResultName );
 
-	// получить список ссылок из манипулятора
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЃСЃС‹Р»РѕРє РёР· РјР°РЅРёРїСѓР»СЏС‚РѕСЂР°
 	static bool EnumReferences( CReferenceInfoList *pReferenceInfoList,
 															const interface IManipulator* pSourceManipulator,
 															const UINT nFlags,
 															const bool bEnumHidden,
 															const ECacheType eCacheType );
 	//
-	// Привести размер массива к указанному ( добавить необходимое или удалить лишнее )
+	// РџСЂРёРІРµСЃС‚Рё СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР° Рє СѓРєР°Р·Р°РЅРЅРѕРјСѓ ( РґРѕР±Р°РІРёС‚СЊ РЅРµРѕР±С…РѕРґРёРјРѕРµ РёР»Рё СѓРґР°Р»РёС‚СЊ Р»РёС€РЅРµРµ )
 	static bool EnsureArraySize( const int nSize,
 															 interface IManipulator *pManipulator,
 															 const string &rszArrayName );
-	// получить список ссылок из манипулятора
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЃСЃС‹Р»РѕРє РёР· РјР°РЅРёРїСѓР»СЏС‚РѕСЂР°
 	static void Trace( const string &rszPrefix, interface IManipulator* pManipulator );
 	//
-	// создать манипулятор по ObjectSet 
+	// СЃРѕР·РґР°С‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РїРѕ ObjectSet 
 	static IManipulator *CreateObectSetManipulator( const struct SObjectSet &rObjectSet );
 
 	template<class TValue> 
@@ -238,13 +238,13 @@ public:
 			int nXIndex = 0;
 			for ( ;nXIndex < nXCount; ++nXIndex )
 			{
-				// Добавляем внешний элемент массива
+				// Р”РѕР±Р°РІР»СЏРµРј РІРЅРµС€РЅРёР№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР°
 				if ( nXIndex >= nExistingXCount )
 				{
 					bResult = pManipulator->InsertNode( sz2DArrayName, nXIndex );
 				}
 				const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
-				// Добавляем внутренний массив
+				// Р”РѕР±Р°РІР»СЏРµРј РІРЅСѓС‚СЂРµРЅРЅРёР№ РјР°СЃСЃРёРІ
 				int nExistingYCount = 0;
 				bResult = bResult && GetValue( &nExistingYCount, pManipulator, szArrayName );
 				if ( bResult )
@@ -252,7 +252,7 @@ public:
 					int nYIndex = 0;
 					for ( ;nYIndex < nYCount; ++nYIndex )
 					{
-						// Добавляем внутренний элемент массива
+						// Р”РѕР±Р°РІР»СЏРµРј РІРЅСѓС‚СЂРµРЅРЅРёР№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР°
 						if ( nYIndex >= nExistingYCount )
 						{
 							bResult = pManipulator->InsertNode( szArrayName, nYIndex );
@@ -273,10 +273,10 @@ public:
 			{
 				for ( ;nXIndex < nExistingXCount; --nExistingXCount )
 				{
-					// Удаляем сначало внутренний массив
+					// РЈРґР°Р»СЏРµРј СЃРЅР°С‡Р°Р»Рѕ РІРЅСѓС‚СЂРµРЅРЅРёР№ РјР°СЃСЃРёРІ
 					const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 					bResult = pManipulator->RemoveNode( szArrayName );
-					// Удаляем элемент внешнего массива
+					// РЈРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚ РІРЅРµС€РЅРµРіРѕ РјР°СЃСЃРёРІР°
 					bResult = bResult && pManipulator->RemoveNode( sz2DArrayName, nXIndex );
 					if ( !bResult )
 					{
@@ -562,7 +562,7 @@ public:
 		int nExistingXCount = 0;
 		int nExistingYCount = 0;
 		bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
-		// необходимо получить максимальный размер по Y
+		// РЅРµРѕР±С…РѕРґРёРјРѕ РїРѕР»СѓС‡РёС‚СЊ РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РїРѕ Y
 		if ( bResult )
 		{
 			vector<int> sizeList;
@@ -588,7 +588,7 @@ public:
 				{
 					pvData->SetSizes( nExistingXCount, nExistingYCount );
 					pvData->FillEvery( rDefaultValue );
-					// заполняем массив значениями
+					// Р·Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ Р·РЅР°С‡РµРЅРёСЏРјРё
 					for ( int nXIndex = 0; nXIndex != nExistingXCount; ++nXIndex )
 					{
 						const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );

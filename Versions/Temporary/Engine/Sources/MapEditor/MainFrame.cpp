@@ -150,10 +150,10 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	CEditorApp *pApp = dynamic_cast<CEditorApp *>( AfxGetApp() );
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	//Создаем singeton для приложения
+	//РЎРѕР·РґР°РµРј singeton РґР»СЏ РїСЂРёР»РѕР¶РµРЅРёСЏ
 	mapEditorSingletonApp.CreateMapFile( GetSafeHwnd() );
 	params.Load( true );
-	//Путь до Help файла
+	//РџСѓС‚СЊ РґРѕ Help С„Р°Р№Р»Р°
 	{
 		char pBuffer[0xFFF + 1];
 		::GetCurrentDirectory( 0xFFF, pBuffer );
@@ -162,13 +162,13 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 		strHelpFilePath = CString( pBuffer ) + CString( "\\" ) + strHelpFileName;
 	}
 	//
-	//Создаем ToolBars
+	//РЎРѕР·РґР°РµРј ToolBars
 	SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager );	
 	if ( TOOLBARS_COUNT > 0 )
 	{
 		VERIFY( pToolBarMgr->LoadToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[0] ),
 																							MAKEINTRESOURCE( TOOLBAR_ID[0] ) ) );
-		//нулевой элемент пропускаем
+		//РЅСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РїСЂРѕРїСѓСЃРєР°РµРј
 		for ( DWORD nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 		{
 			VERIFY( pToolBarMgr->AddToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ),
@@ -186,7 +186,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 																			 0,
 																			 true,
 																			 TOOLBAR_SHOW[0] );
-		//нулевой элемент пропускаем
+		//РЅСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РїСЂРѕРїСѓСЃРєР°РµРј
 		for ( DWORD nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 		{
 			strToolbarName.LoadString( TOOLBAR_NAME_ID[nElementIndex] );
@@ -201,14 +201,14 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 																				 TOOLBAR_SHOW[nElementIndex] );
 		}
 	}	
-	//Создаем StatusBar
+	//РЎРѕР·РґР°РµРј StatusBar
 	if ( !wndStatusBar.Create( this ) ||
 			 !wndStatusBar.SetIndicators( STATUSBAR_INDICATORS_ID,
 																		sizeof( STATUSBAR_INDICATORS_ID ) / sizeof( UINT ) ) )
 	{
 		return -1;
 	}
-	//нулевой элемент пропускаем
+	//РЅСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РїСЂРѕРїСѓСЃРєР°РµРј
 	for ( DWORD nElementIndex = 1; nElementIndex < STATUSBAR_ELEMENTS; ++nElementIndex )
 	{
 		const int nPaneIndex = wndStatusBar.CommandToIndex( STATUSBAR_INDICATORS_ID[nElementIndex] );
@@ -217,7 +217,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 															SBPS_NORMAL,
 															STATUSBAR_INDICATORS_SIZE[nElementIndex] );
 	}
-	//Создаем Menubar
+	//РЎРѕР·РґР°РµРј Menubar
 	pApp->CreateMenus( this );
 	EnableDocking( CBRS_ALIGN_ANY );
 	//pToolBarMgr->SetDefaultDockState();
@@ -294,17 +294,17 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 										0,
 										DOCKING_WINDOWS_RATE[2],
 										DOCKING_WINDOWS_WIDTH[2] );
-	//создаем Logger
+	//СЃРѕР·РґР°РµРј Logger
 	nDWID = SECControlBar::GetUniqueBarID( this, ID_DW_LOG_WINDOW );
 	//
-	// Создаем постоянные панели в различных редакторах
+	// РЎРѕР·РґР°РµРј РїРѕСЃС‚РѕСЏРЅРЅС‹Рµ РїР°РЅРµР»Рё РІ СЂР°Р·Р»РёС‡РЅС‹С… СЂРµРґР°РєС‚РѕСЂР°С…
 	Singleton<IMainFrameContainer>()->Set( this );
-	// Создаем дополнительные Controls
+	// РЎРѕР·РґР°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 	{
 		pApp->GetEditorModules()[nModuleIndex]->ModuleCreateControls();
 	}
-	// Создаем дополнительные Controls в зарегистрированных редакторах
+	// РЎРѕР·РґР°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Controls РІ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… СЂРµРґР°РєС‚РѕСЂР°С…
 	Singleton<IEditorContainer>()->CreateControls();
 	//
 	pToolBarMgr->SetButtonMap( pApp->GetToolbarButtonsMap() );
@@ -312,12 +312,12 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//pToolBarMgr->EnableFlyBy( TRUE );
 	pToolBarMgr->EnableCoolLook( true );
 
-	//Грузим расположение панелей
+	//Р“СЂСѓР·РёРј СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РїР°РЅРµР»РµР№
 	CString strRegistryKeyName;
 	strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
 	LoadBarState( strRegistryKeyName );
 	pToolBarMgr->LoadState( strRegistryKeyName );
-	// Создаем дополнительные Controls
+	// РЎРѕР·РґР°РµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 	{
 		pApp->GetEditorModules()[nModuleIndex]->ModulePostCreateControls();
@@ -423,9 +423,9 @@ void CMainFrame::OnClose()
 		DestroyProgressDialog();
 		//
 		SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager );	
-		// Закрываем текущий редактор
+		// Р—Р°РєСЂС‹РІР°РµРј С‚РµРєСѓС‰РёР№ СЂРµРґР°РєС‚РѕСЂ
 		Singleton<IEditorContainer>()->DestroyActiveEditor( false );
-		// Удаляем дополнительные Controls
+		// РЈРґР°Р»СЏРµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Controls
 		Singleton<IEditorContainer>()->PreDestroyControls();
 		CEditorApp *pApp = dynamic_cast<CEditorApp *>( AfxGetApp() );
 		for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
@@ -437,11 +437,11 @@ void CMainFrame::OnClose()
 		strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
 		SaveBarState( strRegistryKeyName );
 		pToolBarMgr->SaveState( strRegistryKeyName );
-		//Закрываем текущий Child Frame ( если он уже не был закрыт из редактора )
+		//Р—Р°РєСЂС‹РІР°РµРј С‚РµРєСѓС‰РёР№ Child Frame ( РµСЃР»Рё РѕРЅ СѓР¶Рµ РЅРµ Р±С‹Р» Р·Р°РєСЂС‹С‚ РёР· СЂРµРґР°РєС‚РѕСЂР° )
 		Singleton<IChildFrameContainer>()->Destroy();
-		// Удаляем постоянные панели в различных редакторах
+		// РЈРґР°Р»СЏРµРј РїРѕСЃС‚РѕСЏРЅРЅС‹Рµ РїР°РЅРµР»Рё РІ СЂР°Р·Р»РёС‡РЅС‹С… СЂРµРґР°РєС‚РѕСЂР°С…
 		Singleton<IEditorContainer>()->DestroyControls();
-		// Удаляем дополнительные Controls
+		// РЈРґР°Р»СЏРµРј РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ Controls
 		for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 		{
 			pApp->GetEditorModules()[nModuleIndex]->ModuleDestroyControls();

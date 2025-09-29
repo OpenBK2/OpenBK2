@@ -5,34 +5,34 @@
 #include "DefaultController.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TYPE_INSERT:		( используется только для Update )
-// szDestination	- имя вставляемого объекта
+// TYPE_INSERT:		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szDestination	- РёРјСЏ РІСЃС‚Р°РІР»СЏРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°
 //
-// TYPE_REMOVE:		( используется только для Update )
-// szDestination	- имя удаляемого объекта
+// TYPE_REMOVE:		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szDestination	- РёРјСЏ СѓРґР°Р»СЏРµРјРѕРіРѕ РѕР±СЉРµРєС‚Р°
 //
-// TYPE_COPY:			( используется только для Update )
-// szDestination	- куда копировать
-// szSource				- откуда копировать
+// TYPE_COPY:			( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szDestination	- РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+// szSource				- РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
 //
-// TYPE_RENAME:		( используется только для Update )
-// szDestination	- куда перемещать
-// szSource				- откуда перемещать
-// newValue				- true / false, true - смена HTREEITEM, false - только переименование текущего объекта в базе и в дереве
+// TYPE_RENAME:		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szDestination	- РєСѓРґР° РїРµСЂРµРјРµС‰Р°С‚СЊ
+// szSource				- РѕС‚РєСѓРґР° РїРµСЂРµРјРµС‰Р°С‚СЊ
+// newValue				- true / false, true - СЃРјРµРЅР° HTREEITEM, false - С‚РѕР»СЊРєРѕ РїРµСЂРµРёРјРµРЅРѕРІР°РЅРёРµ С‚РµРєСѓС‰РµРіРѕ РѕР±СЉРµРєС‚Р° РІ Р±Р°Р·Рµ Рё РІ РґРµСЂРµРІРµ
 //
-// TYPE_COLOR		( используется только для Update )
-// szDestination	- имя объекта
-// newValue				- новое (установленное) значение
+// TYPE_COLOR		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szDestination	- РёРјСЏ РѕР±СЉРµРєС‚Р°
+// newValue				- РЅРѕРІРѕРµ (СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ) Р·РЅР°С‡РµРЅРёРµ
 //
-// TYPE_EXPAND		( используется только для Update )
-// szName					- имя объекта
+// TYPE_EXPAND		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szName					- РёРјСЏ РѕР±СЉРµРєС‚Р°
 // newValue				- 1 Expand, 0 Collapse
 //
-// TYPE_CHECK		( используется только для Update )
-// szName					- имя объекта
+// TYPE_CHECK		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szName					- РёРјСЏ РѕР±СЉРµРєС‚Р°
 //
-// TYPE_EXPORT		( используется только для Update )
-// szName					- имя объекта
+// TYPE_EXPORT		( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Update )
+// szName					- РёРјСЏ РѕР±СЉРµРєС‚Р°
 // newValue				- 1 Force Export, 0 Export
 class CFolderController : public CDefaultController
 {
@@ -60,7 +60,7 @@ public:
 	//
 	typedef list<SUndoData> CUndoDataList;
 	
-	// список данных подвергнутых изменениям
+	// СЃРїРёСЃРѕРє РґР°РЅРЅС‹С… РїРѕРґРІРµСЂРіРЅСѓС‚С‹С… РёР·РјРµРЅРµРЅРёСЏРј
 	CUndoDataList undoDataList;
 
 protected:

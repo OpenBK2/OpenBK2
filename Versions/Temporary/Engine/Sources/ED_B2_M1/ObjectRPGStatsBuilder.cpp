@@ -24,7 +24,7 @@ bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulat
 	NI_ASSERT( pBuildDataManipulator != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
 	{
@@ -60,7 +60,7 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	{
 		return false;
 	}
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	string szVisualObject;
 	string szSource;
 	CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" );
@@ -79,7 +79,7 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 				CManipulatorManager::CloneDBManipulator( pObjectRPGStatsManipulator, pSourceObjectRPGStatsManipulator, true );
 			}
 		}
-		// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû
+		// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		bResult = bResult && pObjectRPGStatsManipulator->SetValue( "GameType", string( "SGVOGT_OBJECT" ) );
 		bResult = bResult && pObjectRPGStatsManipulator->SetValue( "visualObject", szVisualObject );
 	}

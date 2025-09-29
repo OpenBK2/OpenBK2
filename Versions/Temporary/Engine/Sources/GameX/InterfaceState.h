@@ -97,7 +97,7 @@ interface IInterfaceState : public CObjectBase
 	virtual wstring GetMPChatMessage() = 0;
 	virtual void ClearMPChatMessages() = 0;
 
-	// проверяет текст, заменяя запрещенные вхождения на спец. символы
+	// РїСЂРѕРІРµСЂСЏРµС‚ С‚РµРєСЃС‚, Р·Р°РјРµРЅСЏСЏ Р·Р°РїСЂРµС‰РµРЅРЅС‹Рµ РІС…РѕР¶РґРµРЅРёСЏ РЅР° СЃРїРµС†. СЃРёРјРІРѕР»С‹
 	virtual wstring FilterMPChatText( const wstring &wszText ) = 0;
 	
 	virtual int GetTutorialRecommendedMission() const = 0;

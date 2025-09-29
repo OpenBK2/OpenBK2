@@ -25,17 +25,17 @@ public:
 	int GetUnitLevel( const NDb::EReinforcementType eType, const int nPlayer ) const;
 	// player captured oter player's unit
 	void UnitCaptured( const int nPlayer );
-	// игрок nPlayer уничтожил юниты игрока nKilledUnitsPlayer, fTotalAIPrice - их price
+	// РёРіСЂРѕРє nPlayer СѓРЅРёС‡С‚РѕР¶РёР» СЋРЅРёС‚С‹ РёРіСЂРѕРєР° nKilledUnitsPlayer, fTotalAIPrice - РёС… price
 	void UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, const float fTotalAIPrice, const EReinforcementType eKillerType, const EReinforcementType eDeadType, const bool bInfantry );
-	// unit умер
+	// unit СѓРјРµСЂ
 	void UnitDead( class CCommonUnit *pUnit );
-	// игрок nPlayer уничтожил house
+	// РёРіСЂРѕРє nPlayer СѓРЅРёС‡С‚РѕР¶РёР» house
 	void ObjectDestroyed( const int nPlayer );
-	// игрок nPlayer вызвал авиацию
+	// РёРіСЂРѕРє nPlayer РІС‹Р·РІР°Р» Р°РІРёР°С†РёСЋ
 	void AviationCalled( const int nPlayer );
-	// игрок nPlayer использовал reinforcement
+	// РёРіСЂРѕРє nPlayer РёСЃРїРѕР»СЊР·РѕРІР°Р» reinforcement
 	void ReinforcementUsed( const int nPlayer );
-	// игрок nPlayer использовал ресурсы
+	// РёРіСЂРѕРє nPlayer РёСЃРїРѕР»СЊР·РѕРІР°Р» СЂРµСЃСѓСЂСЃС‹
 	void ResourceUsed( const int nPlayer, const float fResources );
 	//player's experience
 	void IncreasePlayerExperience( const int nPlayer, const NDb::EReinforcementType eType, const float fPrice ) ;

@@ -143,9 +143,9 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 {
-	// ïðîâåðèòü, íåò ëè êàêîãî-íèòü çàáîðà, íà òåõ òàéëàõ, êîòîðûå ëî÷èò pObj
+	// Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ, Ð½ÐµÑ‚ Ð»Ð¸ ÐºÐ°ÐºÐ¾Ð³Ð¾-Ð½Ð¸Ñ‚ÑŒ Ð·Ð°Ð±Ð¾Ñ€Ð°, Ð½Ð° Ñ‚ÐµÑ… Ñ‚Ð°Ð¹Ð»Ð°Ñ…, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð»Ð¾Ñ‡Ð¸Ñ‚ pObj
 
-	// íàéòè ñåãìåíò, êîòîðûé ëî÷èò òàéëû
+	// Ð½Ð°Ð¹Ñ‚Ð¸ ÑÐµÐ³Ð¼ÐµÐ½Ñ‚, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ Ð»Ð¾Ñ‡Ð¸Ñ‚ Ñ‚Ð°Ð¹Ð»Ñ‹
 	SRect r1;
 	pObj->GetBoundRect( &r1 );
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;

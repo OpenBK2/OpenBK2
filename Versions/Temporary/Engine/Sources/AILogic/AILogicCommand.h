@@ -3,7 +3,7 @@
 interface IAILogicCommandB2 : public CObjectBase
 {
 	virtual void Execute() = 0;
-	// нужно ли сохранять в истории команд
+	// РЅСѓР¶РЅРѕ Р»Рё СЃРѕС…СЂР°РЅСЏС‚СЊ РІ РёСЃС‚РѕСЂРёРё РєРѕРјР°РЅРґ
 	virtual bool NeedToBeStored() const = 0;
 
 #ifndef _FINALRELEASE

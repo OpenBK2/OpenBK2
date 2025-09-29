@@ -56,10 +56,10 @@ class CScripts
 	CPtr<IScriptWrapper> pScript;
 	CPtr<IGlobeScriptHandler> pGlobeScriptHandler;
 
-	// номер группы - юниты
+	// РЅРѕРјРµСЂ РіСЂСѓРїРїС‹ - СЋРЅРёС‚С‹
 	static CScriptGroups groups;
 
-	// номер reinforcement - reinforcement object
+	// РЅРѕРјРµСЂ reinforcement - reinforcement object
 	struct SReinforcementObject
 	{
 		ZDATA
@@ -72,17 +72,17 @@ class CScripts
 	};
 	typedef list<SReinforcementObject> CReinfList;
 	hash_map<int, CReinfList> reinforcs;
-	// отложенные (некуда поставить) подкрепления
+	// РѕС‚Р»РѕР¶РµРЅРЅС‹Рµ (РЅРµРєСѓРґР° РїРѕСЃС‚Р°РІРёС‚СЊ) РїРѕРґРєСЂРµРїР»РµРЅРёСЏ
 	CReinfList suspendedReinforcs;
 	CReinfList::iterator reinforcsIter;
 	NTimer::STime lastTimeToCheckSuspendedReinforcs;
 
 	hash_map<int, int> reservePositions;
 
-	// юнит - номер скриптовой группы
+	// СЋРЅРёС‚ - РЅРѕРјРµСЂ СЃРєСЂРёРїС‚РѕРІРѕР№ РіСЂСѓРїРїС‹
 	hash_map< int, int> groupUnits;
 	
-	// для сегмента
+	// РґР»СЏ СЃРµРіРјРµРЅС‚Р°
 	hash_map<int, SScriptInfo>::iterator segmIter;
 
 	hash_map<string, NDb::SScriptArea> areas;
@@ -94,13 +94,13 @@ class CScripts
 	static list<CObj<CAIUnit> > rememberedUnits;
 	
 	//
-	// удалить все невалидные юниты в начале данной группы
+	// СѓРґР°Р»РёС‚СЊ РІСЃРµ РЅРµРІР°Р»РёРґРЅС‹Рµ СЋРЅРёС‚С‹ РІ РЅР°С‡Р°Р»Рµ РґР°РЅРЅРѕР№ РіСЂСѓРїРїС‹
 	void DelInvalidBegin( const int targetId );
 
-	// вывести сообщение об ошибке
+	// РІС‹РІРµСЃС‚Рё СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
 	void OutScriptError( const char *pszString );
 
-	// проставить новые линки подкреплению
+	// РїСЂРѕСЃС‚Р°РІРёС‚СЊ РЅРѕРІС‹Рµ Р»РёРЅРєРё РїРѕРґРєСЂРµРїР»РµРЅРёСЋ
 	void SetNewLinksToReinforcement( CReinfList *pReinf, hash_map<int, int> *pOld2NewLinks );
 	//
 	bool CanLandWithShift( const SMapObjectInfo &mapObject, CVec2 *pvShift );
@@ -142,7 +142,7 @@ public:
 	int GetScriptID( CUpdatableObj *pObj ) const;
 	void AddObjToScriptGroup( CUpdatableObj *pObj, const int nGroup );
 	void AddUnitToReinforcGroup( const SMapObjectInfo &mapObject, const int nGroup, const struct SHPObjectRPGStats *pStats/*, IScenarioUnit *pScenarioUnit */);
-	// удалить все невалидные юниты в группе, 
+	// СѓРґР°Р»РёС‚СЊ РІСЃРµ РЅРµРІР°Р»РёРґРЅС‹Рµ СЋРЅРёС‚С‹ РІ РіСЂСѓРїРїРµ, 
 	void DelInvalidUnits( const int scriptId );
 	
 	void Init( const NDb::SMapInfo* pMapInfo );
@@ -240,12 +240,12 @@ public:
 	static int ChangePlayer( struct lua_State *state );
 	
 	// params: <number of player> <number of mode>; returns: none;
-	// nMode = 0 - снять god mode полностью
-	// nMode = 1 - неубиваемость
-	// nMode = 2 - неубиваемость и убийство с первого раза
-	// nMode = 3 - убийство с первого раза
-	// nMode = 4 - снять только неубиваемость
-	// nMode = 5 - снять только убийство с первого раза
+	// nMode = 0 - СЃРЅСЏС‚СЊ god mode РїРѕР»РЅРѕСЃС‚СЊСЋ
+	// nMode = 1 - РЅРµСѓР±РёРІР°РµРјРѕСЃС‚СЊ
+	// nMode = 2 - РЅРµСѓР±РёРІР°РµРјРѕСЃС‚СЊ Рё СѓР±РёР№СЃС‚РІРѕ СЃ РїРµСЂРІРѕРіРѕ СЂР°Р·Р°
+	// nMode = 3 - СѓР±РёР№СЃС‚РІРѕ СЃ РїРµСЂРІРѕРіРѕ СЂР°Р·Р°
+	// nMode = 4 - СЃРЅСЏС‚СЊ С‚РѕР»СЊРєРѕ РЅРµСѓР±РёРІР°РµРјРѕСЃС‚СЊ
+	// nMode = 5 - СЃРЅСЏС‚СЊ С‚РѕР»СЊРєРѕ СѓР±РёР№СЃС‚РІРѕ СЃ РїРµСЂРІРѕРіРѕ СЂР°Р·Р°
 	static int God( struct lua_State *state );
 
 	// params: <name of global var> <integer value of global var>; returns: none;
@@ -270,9 +270,9 @@ public:
 	static int IsSomeUnitInParty( struct lua_State *state );
 	static int IsSomePlayerUnit( struct lua_State *pState );
 	static int IsUnitNearScriptObject( struct lua_State *state );
-	// формация считается за один юнит
+	// С„РѕСЂРјР°С†РёСЏ СЃС‡РёС‚Р°РµС‚СЃСЏ Р·Р° РѕРґРёРЅ СЋРЅРёС‚
 	static int GetNUnitsInPartyUF( struct lua_State *pState );
-	// формация считается за один юнит
+	// С„РѕСЂРјР°С†РёСЏ СЃС‡РёС‚Р°РµС‚СЃСЏ Р·Р° РѕРґРёРЅ СЋРЅРёС‚
 	static int GetNUnitsInPlayerUF( struct lua_State *pState );
 	
 	// params: <script id of squad> <number of new formation>; returns: none;
@@ -295,8 +295,8 @@ public:
 	static int GetPartyOfUnits( struct lua_State *state );
 	
 	// params: <script id> <damage value>; returns: none;
-	// если damage == 0, то объект уничтожается
-	// если damage < 0, то объект лечится
+	// РµСЃР»Рё damage == 0, С‚Рѕ РѕР±СЉРµРєС‚ СѓРЅРёС‡С‚РѕР¶Р°РµС‚СЃСЏ
+	// РµСЃР»Рё damage < 0, С‚Рѕ РѕР±СЉРµРєС‚ Р»РµС‡РёС‚СЃСЏ
 	static int DamageObject( struct lua_State *pState );
 
 	// params: <script id> <catch flag>; returns: none;
@@ -421,7 +421,7 @@ public:
 	static int SetGameSpeed( struct lua_State *pState );
 
 	// params: <name of unit type> <number of party>; return: number of units
-	// работает медленно!
+	// СЂР°Р±РѕС‚Р°РµС‚ РјРµРґР»РµРЅРЅРѕ!
 	static int GetNUnitsOfType( struct lua_State *pState );
 	// params: none; returns: <xsize ysize> in AI points
 	static int GetMapSize( struct lua_State *pState );

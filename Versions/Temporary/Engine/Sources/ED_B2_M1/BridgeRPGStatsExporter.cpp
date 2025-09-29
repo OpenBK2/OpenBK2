@@ -232,19 +232,19 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 	GetVisObjectNameList( &visualObjectNameList, pManipulator );
 	for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 	{
-		// Получаем манипулятор на VisObject
+		// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject
 		CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( ( *itVisualObject ) + ".VisualObjects.[0]", pManipulator, 0, 0, 0 );
 		if ( !pVisObjectManipulator )
 		{
 			return;
 		}
-		// Получаем манипулятор модель сезона по умолчанию ( летнюю )
+		// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РјРѕРґРµР»СЊ СЃРµР·РѕРЅР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ ( Р»РµС‚РЅСЋСЋ )
 		CPtr<IManipulator> pModelManipulator = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 		if ( pModelManipulator == 0 )
 		{
 			return;
 		}
-		// Получаем Геометрию, чтобы определить имя файла со сценой
+		// РџРѕР»СѓС‡Р°РµРј Р“РµРѕРјРµС‚СЂРёСЋ, С‡С‚РѕР±С‹ РѕРїСЂРµРґРµР»РёС‚СЊ РёРјСЏ С„Р°Р№Р»Р° СЃРѕ СЃС†РµРЅРѕР№
 		string szSorceValue;
 		{
 			if ( CPtr<IManipulator> pGeometryManipulator = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelManipulator, 0, 0, 0 ) )
@@ -256,7 +256,7 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 		//
 		const string szScriptTemplate = GetTextTemplate( "ExportAIGeometry" );
 		const string szSettingsFileName = GetGrannyExportSettingsFileName( "AIGeometry" );
-		// Формируем тело скрипта
+		// Р¤РѕСЂРјРёСЂСѓРµРј С‚РµР»Рѕ СЃРєСЂРёРїС‚Р°
 		string szTempMAIGeometryName;
 		string szTempCenterAIGeometryName;
 		string szTempBorderAIGeometryName;
@@ -319,7 +319,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	// Формируем тело скрипта
+	// Р¤РѕСЂРјРёСЂСѓРµРј С‚РµР»Рѕ СЃРєСЂРёРїС‚Р°
 	const string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
 	//const string szGeometryFolder = pUserData->szExportDestinationFolder + GEOMETRY_FOLDER;
 	bool bResult = true;
@@ -350,7 +350,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		CVec2 vPassabilityOrigin = VNULL2;
 		CVec2 vSize = VNULL2;
 		CArray2D<BYTE> passabilityArray;
-		// создаем массивы проходимостей
+		// СЃРѕР·РґР°РµРј РјР°СЃСЃРёРІС‹ РїСЂРѕС…РѕРґРёРјРѕСЃС‚РµР№
 		CArray2D<BYTE> bridgePassabilityArray;
 		CArray2D<BYTE> centerPassabilityArray;
 		CArray2D<BYTE> borderPassabilityArray;
@@ -368,7 +368,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			( ( centerPassabilityArray.GetSizeX() > 0 ) && ( centerPassabilityArray.GetSizeY() > 0 ) ) &&
 			( ( borderPassabilityArray.GetSizeX() > 0 ) && ( borderPassabilityArray.GetSizeY() > 0 ) ) )
 		{
-			// Центрируем origin
+			// Р¦РµРЅС‚СЂРёСЂСѓРµРј origin
 			try
 			{
 				CVec3 vMin = VNULL3;
@@ -437,7 +437,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			//Trace2DByteArray( bridgePassabilityArray, StrFmt( " (%g,%g)", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
 			//Trace2DByteArray( centerPassabilityArray, StrFmt( " (%g,%g)", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
 			//Trace2DByteArray( borderPassabilityArray, StrFmt( " (%g,%g)", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
-			// находим максимальный origin
+			// РЅР°С…РѕРґРёРј РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ origin
 			vPassabilityOrigin = vBridgePassabilityOrigin;
 			if ( vCenterPassabilityOrigin.x > vPassabilityOrigin.x )
 			{
@@ -455,11 +455,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			{
 				vPassabilityOrigin.y = vBorderPassabilityOrigin.y;
 			}
-			// увеличиваем размер массивов со стороны (0,0)
+			// СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІРѕРІ СЃРѕ СЃС‚РѕСЂРѕРЅС‹ (0,0)
 			EnlargeArray( &bridgePassabilityArray, vBridgePassabilityOrigin, vPassabilityOrigin );
 			EnlargeArray( &centerPassabilityArray, vCenterPassabilityOrigin, vPassabilityOrigin );
 			EnlargeArray( &borderPassabilityArray, vBorderPassabilityOrigin, vPassabilityOrigin );
-			// находим максимальный размер массива
+			// РЅР°С…РѕРґРёРј РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІР°
 			CTPoint<int> size( bridgePassabilityArray.GetSizeX(), bridgePassabilityArray.GetSizeY() );
 			if ( centerPassabilityArray.GetSizeX() > size.x )
 			{
@@ -477,7 +477,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			{
 				size.y = borderPassabilityArray.GetSizeY();
 			}
-			// увеличиваем размер массивов с другой стороны
+			// СѓРІРµР»РёС‡РёРІР°РµРј СЂР°Р·РјРµСЂ РјР°СЃСЃРёРІРѕРІ СЃ РґСЂСѓРіРѕР№ СЃС‚РѕСЂРѕРЅС‹
 			EnlargeArray( &bridgePassabilityArray, size );
 			EnlargeArray( &centerPassabilityArray, size );
 			EnlargeArray( &borderPassabilityArray, size );
@@ -507,7 +507,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	{
 		bResult = bResult && CManipulatorManager::SetValue( fHeight, pManipulator, "Height" );
 	}
-	// Приводим массивы к одинаковой четности по стороне Y
+	// РџСЂРёРІРѕРґРёРј РјР°СЃСЃРёРІС‹ Рє РѕРґРёРЅР°РєРѕРІРѕР№ С‡РµС‚РЅРѕСЃС‚Рё РїРѕ СЃС‚РѕСЂРѕРЅРµ Y
 	{
 		int nMaxYSize = 0;
 		{
@@ -538,7 +538,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			}
 		}
 	}
-	// Прописываем данные
+	// РџСЂРѕРїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	{
 		list<CArray2D<BYTE> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
 		list<CVec2>::const_iterator itPassabilityOrigin = passabilityOriginList.begin();
@@ -546,9 +546,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		//
 		for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 		{
-			// Удаляем старый массив
+			// РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ РјР°СЃСЃРёРІ
 			bResult = bResult && CManipulatorManager::Remove2DArray( pManipulator, ( *itVisualObject ) + ".Passability" );
-			// Добавляем новую информацию
+			// Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
 			bResult = bResult && CManipulatorManager::Set2DArray( *itPassabilityArray,	pManipulator, ( *itVisualObject ) + ".Passability" );
 			bResult = bResult && CManipulatorManager::SetVec2(		*itPassabilityOrigin,	pManipulator, ( *itVisualObject ) + ".Origin" );
 			bResult = bResult && CManipulatorManager::SetVec2(		*itSize,							pManipulator, ( *itVisualObject ) + ".Size" );
@@ -564,7 +564,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			}
 		}
 	}
-	// Удаляем созданные временные файлы
+	// РЈРґР°Р»СЏРµРј СЃРѕР·РґР°РЅРЅС‹Рµ РІСЂРµРјРµРЅРЅС‹Рµ С„Р°Р№Р»С‹
 	for ( list<string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
 	{
 		string szTempMAIGeometryName;
@@ -582,7 +582,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		::DeleteFile( szCenterDestination.c_str() );
 		::DeleteFile( szBorderDestination.c_str() );
 	}
-	// Удаляем временный каталог ( только если он пустой )
+	// РЈРґР°Р»СЏРµРј РІСЂРµРјРµРЅРЅС‹Р№ РєР°С‚Р°Р»РѕРі ( С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕРЅ РїСѓСЃС‚РѕР№ )
 	{
 		list<string> szFileNameList;
 		NFile::GetDirectoryFiles( szBridgeFolder.c_str(), "*", &szFileNameList, true );

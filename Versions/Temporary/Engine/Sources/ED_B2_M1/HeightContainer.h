@@ -11,27 +11,27 @@ class CHeightContainer
 	static int STACK_SIZE;
 	static int TRACE_IMAGE_TILE_SIZE;
 	//
-	CTPoint<int> planeSize;														// размер однобитной плоскости
-	int nStackCount;																	// количество стеков
-	float fTileSize;																	// размер сетки
-	vector<CArray2D<DWORD> > blackPlaneStackList;			// стеки однобитных плоскостей ( по sizeof(DWORD) на стек ) (черные)
-	vector<CArray2D<DWORD> > redPlaneStackList;				// стеки однобитных плоскостей ( по sizeof(DWORD) на стек ) (красные)
-	vector<DWORD> markedBitslList;										// набор битов помарканной точки (берется из черной плоскости)
-	vector<DWORD> filledBitsList;											// набор битов указывающий заполненность ( если последнее число == 0, то можно сократить количество плоскостей ) (общее для обоих типов плоскостей)
-	CFreeIDCollector freePlaneIndexCollector;					// номера свободных плоскостей
+	CTPoint<int> planeSize;														// СЂР°Р·РјРµСЂ РѕРґРЅРѕР±РёС‚РЅРѕР№ РїР»РѕСЃРєРѕСЃС‚Рё
+	int nStackCount;																	// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚РµРєРѕРІ
+	float fTileSize;																	// СЂР°Р·РјРµСЂ СЃРµС‚РєРё
+	vector<CArray2D<DWORD> > blackPlaneStackList;			// СЃС‚РµРєРё РѕРґРЅРѕР±РёС‚РЅС‹С… РїР»РѕСЃРєРѕСЃС‚РµР№ ( РїРѕ sizeof(DWORD) РЅР° СЃС‚РµРє ) (С‡РµСЂРЅС‹Рµ)
+	vector<CArray2D<DWORD> > redPlaneStackList;				// СЃС‚РµРєРё РѕРґРЅРѕР±РёС‚РЅС‹С… РїР»РѕСЃРєРѕСЃС‚РµР№ ( РїРѕ sizeof(DWORD) РЅР° СЃС‚РµРє ) (РєСЂР°СЃРЅС‹Рµ)
+	vector<DWORD> markedBitslList;										// РЅР°Р±РѕСЂ Р±РёС‚РѕРІ РїРѕРјР°СЂРєР°РЅРЅРѕР№ С‚РѕС‡РєРё (Р±РµСЂРµС‚СЃСЏ РёР· С‡РµСЂРЅРѕР№ РїР»РѕСЃРєРѕСЃС‚Рё)
+	vector<DWORD> filledBitsList;											// РЅР°Р±РѕСЂ Р±РёС‚РѕРІ СѓРєР°Р·С‹РІР°СЋС‰РёР№ Р·Р°РїРѕР»РЅРµРЅРЅРѕСЃС‚СЊ ( РµСЃР»Рё РїРѕСЃР»РµРґРЅРµРµ С‡РёСЃР»Рѕ == 0, С‚Рѕ РјРѕР¶РЅРѕ СЃРѕРєСЂР°С‚РёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР»РѕСЃРєРѕСЃС‚РµР№ ) (РѕР±С‰РµРµ РґР»СЏ РѕР±РѕРёС… С‚РёРїРѕРІ РїР»РѕСЃРєРѕСЃС‚РµР№)
+	CFreeIDCollector freePlaneIndexCollector;					// РЅРѕРјРµСЂР° СЃРІРѕР±РѕРґРЅС‹С… РїР»РѕСЃРєРѕСЃС‚РµР№
 	hash_map<int, int> polygonID2PlaneIndexMap;				// PolygonID -> PlaneIndex (0...nCount)
 	//
-	bool bTraceToImage;																// для тестовых целей
+	bool bTraceToImage;																// РґР»СЏ С‚РµСЃС‚РѕРІС‹С… С†РµР»РµР№
 	//
-	void AddStack();																											// добавить новый набор плоскостей
-	void EraseStack();																										// удалить неиспользуемый набор плоскостей
-	int AddPlane( int nPolygonID );																				// добавить плоскость в массив плосковтей
-	void ErasePlane( int nPolygonID );																		// удалить плоскость из списка областей
+	void AddStack();																											// РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ РЅР°Р±РѕСЂ РїР»РѕСЃРєРѕСЃС‚РµР№
+	void EraseStack();																										// СѓРґР°Р»РёС‚СЊ РЅРµРёСЃРїРѕР»СЊР·СѓРµРјС‹Р№ РЅР°Р±РѕСЂ РїР»РѕСЃРєРѕСЃС‚РµР№
+	int AddPlane( int nPolygonID );																				// РґРѕР±Р°РІРёС‚СЊ РїР»РѕСЃРєРѕСЃС‚СЊ РІ РјР°СЃСЃРёРІ РїР»РѕСЃРєРѕРІС‚РµР№
+	void ErasePlane( int nPolygonID );																		// СѓРґР°Р»РёС‚СЊ РїР»РѕСЃРєРѕСЃС‚СЊ РёР· СЃРїРёСЃРєР° РѕР±Р»Р°СЃС‚РµР№
 	//
-	void ClearPlane( int nPlaneIndex );																		// обнулить плоскость
+	void ClearPlane( int nPlaneIndex );																		// РѕР±РЅСѓР»РёС‚СЊ РїР»РѕСЃРєРѕСЃС‚СЊ
 	void FillPlane( int nPlaneIndex,
 									const vector<CVec2> &rBlackPolygon,
-									const vector<CVec2> &rRedPolygon );										// закрасить плоскость
+									const vector<CVec2> &rRedPolygon );										// Р·Р°РєСЂР°СЃРёС‚СЊ РїР»РѕСЃРєРѕСЃС‚СЊ
 	//
 	void GetBits( vector<DWORD> *pBitsList, const int x, const int y );
 	void AddBitsToString( string *pszMessage, const DWORD dwBits ) const;
@@ -46,13 +46,13 @@ public:
 	void SetSize( const int x, const int y, bool _bTraceToImage );
 	inline bool IsValid() { return ( fTileSize > 0.0f ) && ( nStackCount > 0 ) && ( planeSize.x > 0 ) && ( planeSize.y > 0 ); }
 	//
-	void Mark( const int x, const int y );																// сохранить точку
+	void Mark( const int x, const int y );																// СЃРѕС…СЂР°РЅРёС‚СЊ С‚РѕС‡РєСѓ
 	bool Compare( const int x, const int y );															// true - identical, false - not identical
 	//
 	void InsertPolygon( const vector<CVec2> &rBlackPolygon,
 											const vector<CVec2> &rRedPolygon,
-											int nPolygonID );																	// добавить или обновить полигон
-	void ErasePolygon( int nPolygonID );																	// удалить полигон
+											int nPolygonID );																	// РґРѕР±Р°РІРёС‚СЊ РёР»Рё РѕР±РЅРѕРІРёС‚СЊ РїРѕР»РёРіРѕРЅ
+	void ErasePolygon( int nPolygonID );																	// СѓРґР°Р»РёС‚СЊ РїРѕР»РёРіРѕРЅ
 	bool GetBlackRedBallance( const CTRect<int> &rRect );
 	//
 	void InsertVSO( const NDb::SVSOInstance &rVSO );

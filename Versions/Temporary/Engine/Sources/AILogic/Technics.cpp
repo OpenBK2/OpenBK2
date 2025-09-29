@@ -76,7 +76,7 @@ void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGSta
 	timeLastHeal = NRandom::Random( GetBehUpdateDuration() );
 
 
-	//медицинские грузовички лечат пехоту в радиусе
+	//РјРµРґРёС†РёРЅСЃРєРёРµ РіСЂСѓР·РѕРІРёС‡РєРё Р»РµС‡Р°С‚ РїРµС…РѕС‚Сѓ РІ СЂР°РґРёСѓСЃРµ
 	if ( CanCommandBeExecutedByStats( ACTION_COMMAND_HEAL_INFANTRY ) )
 		pTheExecutorsContainer->Add( new CExecutorTransportHealInfantry( this ) );
 
@@ -294,7 +294,7 @@ void CMilitaryCar::AddPassenger( CSoldier *pUnit )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMilitaryCar::PrepareToDelete()
 {
-	// всех сидящих внутри - убить.
+	// РІСЃРµС… СЃРёРґСЏС‰РёС… РІРЅСѓС‚СЂРё - СѓР±РёС‚СЊ.
 	while ( GetNPassengers() )
 		GetPassenger( 0 )->Die( false, 0 );
 
@@ -321,9 +321,9 @@ void CMilitaryCar::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinfo
 const CVec2 CMilitaryCar::GetPassengerCoordinates( const int n )
 {
 	const int nPass = GetNPassengers();
-	// солдат на стороне
+	// СЃРѕР»РґР°С‚ РЅР° СЃС‚РѕСЂРѕРЅРµ
 	const int nSoldiersOnSide = ( n > nPass / 2 ) ? ( nPass / 2 + nPass % 2 ) : ( nPass / 2 );
-	// знак, отвечающий за сторону, на которой сидит солдат (поворот frontDirVec - влево или вправо)
+	// Р·РЅР°Рє, РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° СЃС‚РѕСЂРѕРЅСѓ, РЅР° РєРѕС‚РѕСЂРѕР№ СЃРёРґРёС‚ СЃРѕР»РґР°С‚ (РїРѕРІРѕСЂРѕС‚ frontDirVec - РІР»РµРІРѕ РёР»Рё РІРїСЂР°РІРѕ)
 	float fSideSign = ( n > nPass / 2 ) ? -1.0f : 1.0f;
 
 	const int nSoldierIndex = ( n <= nPass / 2 ) ? n : n - nPass / 2;
@@ -352,7 +352,7 @@ void CMilitaryCar::Segment()
 	if ( pLockingUnit != 0 && ( !pLockingUnit->IsRefValid() || !pLockingUnit->IsAlive() ) )
 		pLockingUnit = 0;
 	
-	// CRAR{ соптимизировать!, не посылать, если координаты не изменились
+	// CRAR{ СЃРѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ!, РЅРµ РїРѕСЃС‹Р»Р°С‚СЊ, РµСЃР»Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РЅРµ РёР·РјРµРЅРёР»РёСЃСЊ
 	int i = 0;
 	for ( list<CPtr<CSoldier> >::iterator iter = pass.begin(); iter != pass.end(); ++iter, ++i )
 	{
@@ -507,7 +507,7 @@ void CMilitaryCar::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated
 
 	if ( GetFirstArtilleryGun() != 0 )
 	{
-		// в радиусе цели нет
+		// РІ СЂР°РґРёСѓСЃРµ С†РµР»Рё РЅРµС‚
 		if ( *pBestTarget == 0 && 
 				 ( pCurTarget == 0 || pCurTarget->GetStats()->IsInfantry() ) && theDipl.IsAIPlayer( GetPlayer() ) )
 		{
@@ -556,10 +556,10 @@ void CTank::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShe
 	else
 		CMilitaryCar::TakeDamage( fDamage , pShell, nPlayerOfShoot, pShotUnit );
 
-	// обработать specials
+	// РѕР±СЂР°Р±РѕС‚Р°С‚СЊ specials
 	if ( IsAlive() && theCheats.GetImmortals( theDipl.GetNParty( nPlayerOfShoot ) ) != 1 )
 	{
-		// отрывает гусеницу, всегда, даже на Easy, дизайнеры захотели
+		// РѕС‚СЂС‹РІР°РµС‚ РіСѓСЃРµРЅРёС†Сѓ, РІСЃРµРіРґР°, РґР°Р¶Рµ РЅР° Easy, РґРёР·Р°Р№РЅРµСЂС‹ Р·Р°С…РѕС‚РµР»Рё
 		// cannot recive ->special from DB
 		if ( /*theDifficultyLevel.GetLevel() != 0 &&*/ pShell && ( NRandom::Random( 0.0f, 1.0f ) < pShell->fBrokeTrackProbability ) || ( pShotUnit && pShotUnit->IsTargetingTrack() ) )
 		{
@@ -709,7 +709,7 @@ void CAITransportUnit::Segment()
 {
 	CMilitaryCar::Segment();
 
-	if ( pTowedArtillery && !IsTowing() ) // убили буксоируемую пушку
+	if ( pTowedArtillery && !IsTowing() ) // СѓР±РёР»Рё Р±СѓРєСЃРѕРёСЂСѓРµРјСѓСЋ РїСѓС€РєСѓ
 	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_STATE_CHANGED, this, ECS_UNHOOK_CANNON );
 		pTowedArtillery = 0;

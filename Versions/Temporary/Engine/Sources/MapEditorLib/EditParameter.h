@@ -60,7 +60,7 @@ void SetComboBoxEditParameters( const TList &rList, const int nIndex, TControl *
 				nSelectedIndex = 0;
 			}
 			//
-			// устанавливаем новый список
+			// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РЅРѕРІС‹Р№ СЃРїРёСЃРѕРє
 			if ( bCount )
 			{
 				pControl->ResetContent();
@@ -72,7 +72,7 @@ void SetComboBoxEditParameters( const TList &rList, const int nIndex, TControl *
 					++nListIndex;	
 				}
 			}
-			// устанавливаем новый index
+			// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РЅРѕРІС‹Р№ index
 			if ( bIndex )
 			{
 				nSelectedIndex = nIndex;

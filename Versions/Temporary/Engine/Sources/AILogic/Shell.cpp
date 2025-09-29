@@ -120,10 +120,10 @@ CExplosion::CExplosion( CAIUnit *pUnit, const CBasicGun *pGun, const CVec3 &expl
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const SAINotifyHitInfo::EHitType CExplosion::ProcessExactHit( CAIUnit *pTarget, const SRect &combatRect, const CVec3 &explCoord, const int nRandPiercing, const int nRandArmor ) const
 {
-	// попали по комбат системе
+	// РїРѕРїР°Р»Рё РїРѕ РєРѕРјР±Р°С‚ СЃРёСЃС‚РµРјРµ
 	if ( combatRect.IsPointInside( CVec2( explCoord.x, explCoord.y )  ) )
 	{
-		// пробили
+		// РїСЂРѕР±РёР»Рё
 		if ( nRandPiercing >= nRandArmor && !pTarget->IsSavedByCover() )
 			return SAINotifyHitInfo::EHT_HIT;
 		else
@@ -176,9 +176,9 @@ bool CExplosion::ProcessSmokeScreenExplosion() const
 	const SWeaponRPGStats::SShell &rShell = pWeapon->shells[nShellType];
 	if ( rShell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_FOG )
 	{
-		// большой радиус взрыва - радиус завесы,
-		// nPiercing - прозрачность,
-		// fDamage - время существования
+		// Р±РѕР»СЊС€РѕР№ СЂР°РґРёСѓСЃ РІР·СЂС‹РІР° - СЂР°РґРёСѓСЃ Р·Р°РІРµСЃС‹,
+		// nPiercing - РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ,
+		// fDamage - РІСЂРµРјСЏ СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёСЏ
 		theStatObjs.AddNewSmokeScreen(
 			GetExplCoordinates(),
 			pWeapon->shells[nShellType].fArea,
@@ -193,7 +193,7 @@ bool CExplosion::ProcessSmokeScreenExplosion() const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CExplosion::AddHitToSend( CHitInfo *pHit )
 {
-	//чтобы удалилось
+	//С‡С‚РѕР±С‹ СѓРґР°Р»РёР»РѕСЃСЊ
 	CPtr<CHitInfo> memHit = pHit;
 	if ( pHitToSend == 0 || pHitToSend->eHitType != SAINotifyHitInfo::EHT_HIT )
 		pHitToSend = pHit;
@@ -244,7 +244,7 @@ void CCumulativeExpl::Explode()
 	bool bHit = false;
 	bool bSoldierHit = false;
 	
-	// по юнитам
+	// РїРѕ СЋРЅРёС‚Р°Рј
 	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, vExplCoord, 0.0f ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pTarget = *iter;
@@ -253,10 +253,10 @@ void CCumulativeExpl::Explode()
 			if ( nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE || nShellType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 				pTarget->Grazed( pUnit );
 			
-			// target жив, target не тот, кто стрелял и по высоте совпадает с высотой взрыва
+			// target Р¶РёРІ, target РЅРµ С‚РѕС‚, РєС‚Рѕ СЃС‚СЂРµР»СЏР» Рё РїРѕ РІС‹СЃРѕС‚Рµ СЃРѕРІРїР°РґР°РµС‚ СЃ РІС‹СЃРѕС‚РѕР№ РІР·СЂС‹РІР°
 			if ( !bSoldierHit || !pTarget->GetStats()->IsInfantry() )
 			{
-				// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений
+				// С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРїСѓСЃРєР°Р»СЃСЏ РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё РёР·-Р·Р° РѕРїС‚РёРјРёР·Р°С†РёРё РІС‹С‡РёСЃР»РµРЅРёСЏ bool РІС‹СЂР°Р¶РµРЅРёР№
 				const bool bExplResult = pTarget->ProcessCumulativeExpl( this, nArmorDir, false );
 				bHit = bHit || bExplResult;
 
@@ -274,11 +274,11 @@ void CCumulativeExpl::Explode()
 
 	if ( InOnGround( fExplTerrainZ ) )
 	{
-		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
-		// итератор нужен, значит здесь нельзя заводить итератор.
+		// РЅРµР»СЊР·СЏ СЃРѕР·РґР°РІР°С‚СЊ 2 РёС‚РµСЂР°С‚РѕСЂР° РїРѕ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚Р°Рј, РІРЅСѓС‚СЂРё ProcessCumulativeExpl
+		// РёС‚РµСЂР°С‚РѕСЂ РЅСѓР¶РµРЅ, Р·РЅР°С‡РёС‚ Р·РґРµСЃСЊ РЅРµР»СЊР·СЏ Р·Р°РІРѕРґРёС‚СЊ РёС‚РµСЂР°С‚РѕСЂ.
 		list<CExistingObject*> hitObjects;
 		
-		// по статическим объектам
+		// РїРѕ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚Р°Рј
 		for ( CStObjCircleIter<false> iter( vExplCoord, 0 ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CExistingObject *pObj = *iter;
@@ -288,13 +288,13 @@ void CCumulativeExpl::Explode()
 		
 		for ( list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
-			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
+			// С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРїСѓСЃРєР°Р»СЃСЏ РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё РёР·-Р·Р° РѕРїС‚РёРјРёР·Р°С†РёРё РІС‹С‡РёСЃР»РµРЅРёСЏ bool РІС‹СЂР°Р¶РµРЅРёР№			
 			const bool bExplResult = (*it)->ProcessCumulativeExpl( this, nArmorDir, false );
 			bHit = bHit || bExplResult;
 		}
 	}
 	
-	// ни в кого не попало
+	// РЅРё РІ РєРѕРіРѕ РЅРµ РїРѕРїР°Р»Рѕ
 	if ( !bHit )
 	{
 		if ( InOnGround( fExplTerrainZ ) )
@@ -344,10 +344,10 @@ void CBurstExpl::Explode()
 	
 	const float &fRadius = pWeapon->shells[nShellType].fArea2;
 	const float &fSmallRadius = pWeapon->shells[nShellType].fArea;
-	NI_ASSERT( fRadius != 0, "Неверный тип взрыва" );
+	NI_ASSERT( fRadius != 0, "РќРµРІРµСЂРЅС‹Р№ С‚РёРї РІР·СЂС‹РІР°" );
 
 	bool bHit = false;
-	// по юнитам
+	// РїРѕ СЋРЅРёС‚Р°Рј
 	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, explCoord, fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pTarget = *iter;
@@ -358,7 +358,7 @@ void CBurstExpl::Explode()
 					 pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ) )
 				pTarget->Grazed( pUnit );
 
-			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений
+			// С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРїСѓСЃРєР°Р»СЃСЏ РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё РёР·-Р·Р° РѕРїС‚РёРјРёР·Р°С†РёРё РІС‹С‡РёСЃР»РµРЅРёСЏ bool РІС‹СЂР°Р¶РµРЅРёР№
 			const bool bExplResult = pTarget->ProcessBurstExpl( this, nArmorDir, fRadius, fSmallRadius );
 			bHit = bHit || bExplResult;
 
@@ -374,12 +374,12 @@ void CBurstExpl::Explode()
 
 	if ( InOnGround( fExplTerrainZ ) )
 	{	
-		// по статическим объектам
-		// нельзя создавать 2 итератора по статическим объектам, внутри ProcessCumulativeExpl
-		// итератор нужен, значит здесь нельзя заводить итератор.
+		// РїРѕ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚Р°Рј
+		// РЅРµР»СЊР·СЏ СЃРѕР·РґР°РІР°С‚СЊ 2 РёС‚РµСЂР°С‚РѕСЂР° РїРѕ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚Р°Рј, РІРЅСѓС‚СЂРё ProcessCumulativeExpl
+		// РёС‚РµСЂР°С‚РѕСЂ РЅСѓР¶РµРЅ, Р·РЅР°С‡РёС‚ Р·РґРµСЃСЊ РЅРµР»СЊР·СЏ Р·Р°РІРѕРґРёС‚СЊ РёС‚РµСЂР°С‚РѕСЂ.
 		list<CExistingObject*> hitObjects;
 		
-		// по статическим объектам
+		// РїРѕ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚Р°Рј
 		for ( CStObjCircleIter<false> iter( explCoord, fSmallRadius + 300.0f ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CExistingObject *pObj = *iter;
@@ -388,7 +388,7 @@ void CBurstExpl::Explode()
 		}
 		for ( list<CExistingObject*>::iterator it = hitObjects.begin(); it != hitObjects.end(); ++it )
 		{
-			// чтобы не пропускался вызов функции из-за оптимизации вычисления bool выражений			
+			// С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРїСѓСЃРєР°Р»СЃСЏ РІС‹Р·РѕРІ С„СѓРЅРєС†РёРё РёР·-Р·Р° РѕРїС‚РёРјРёР·Р°С†РёРё РІС‹С‡РёСЃР»РµРЅРёСЏ bool РІС‹СЂР°Р¶РµРЅРёР№			
 			const bool bExplResult = (*it)->ProcessBurstExpl( this, nArmorDir, fRadius, fSmallRadius );
 			bHit = bHit || bExplResult;
 		}
@@ -398,7 +398,7 @@ void CBurstExpl::Explode()
 	if ( pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_TORPEDO )
 		bHit = false;
 
-	// так никуда и не попали
+	// С‚Р°Рє РЅРёРєСѓРґР° Рё РЅРµ РїРѕРїР°Р»Рё
 	int nExplodeShellType = nShellType;
 	if ( !bShowEffect && pWeapon->shells[nShellType].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
 		nShellType+1 < pWeapon->shells.size() && pWeapon->shells[nShellType+1].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
@@ -628,19 +628,19 @@ void CShellsStore::AddShell( CVisShell *pShell )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CShellsStore::Segment()
 {
-	// взорвать невидимые снаряды
+	// РІР·РѕСЂРІР°С‚СЊ РЅРµРІРёРґРёРјС‹Рµ СЃРЅР°СЂСЏРґС‹
 	while ( !invisShells.empty() && invisShells.top()->GetExplTime() <= curTime + SConsts::AI_SEGMENT_DURATION / 2 )
 	{
 		invisShells.top()->Explode();
 		invisShells.pop();
 	}
 
-	// обновить видимые
+	// РѕР±РЅРѕРІРёС‚СЊ РІРёРґРёРјС‹Рµ
 	CVisShellList::iterator iter = visShells.begin();
 	while ( iter != visShells.end() )
 	{
 		CVisShell *shell = *iter;
-		// долетел
+		// РґРѕР»РµС‚РµР»
 		if ( shell->GetExplTime() <= curTime )
 		{
 			shell->Explode();
@@ -790,20 +790,20 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, floa
 		fV = sqr( fV );
 		fG = fV / fMaxRange / 2;
 		const float fCoeff = fG * x0;
-		// добавить скорости, если не хватает
+		// РґРѕР±Р°РІРёС‚СЊ СЃРєРѕСЂРѕСЃС‚Рё, РµСЃР»Рё РЅРµ С…РІР°С‚Р°РµС‚
 		if ( fV < fCoeff + 0.001f )
 			fV = fCoeff + 0.001f;
 
 		const float fSqrt1 = sqrt( fV + fCoeff );
 		const float fSqrt2 = sqrt( fV - fCoeff );
 
-		// крутая траектория
+		// РєСЂСѓС‚Р°СЏ С‚СЂР°РµРєС‚РѕСЂРёСЏ
 		/*if ( eType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
 		{
  			fVx = 0.5f * ( fSqrt1 - fSqrt2 );
 			fVy = 0.5f * ( fSqrt1 + fSqrt2 );
 		}
-		// пологая траектория
+		// РїРѕР»РѕРіР°СЏ С‚СЂР°РµРєС‚РѕСЂРёСЏ
 		else*/
 		{
 			fVx = 0.5f * ( fSqrt1 + fSqrt2 );

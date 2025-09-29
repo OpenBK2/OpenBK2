@@ -16,9 +16,9 @@ public:
 class CChapterEditor : public CEditorBase, public CDefaultView
 {
 	OBJECT_NOCOPY_METHODS( CChapterEditor );
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	CChapterEditorSettings editorSettings;
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CChapterState *pChapterState;
 	//
 	CChapterEditor();

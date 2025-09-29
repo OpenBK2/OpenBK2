@@ -60,7 +60,7 @@ const SSpan& GetSpanStats( const int nIndex, const int nState = 0 ) const
 	NI_ASSERT( nIndex >= 0 && nIndex < states[nState].spans.size(), StrFmt("Index %d for the spans of the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), states[nState].spans.size()) );
 	return states[nState].spans[nIndex];
 }
-// â ñëåäóþùèõ ÷åòûð¸õ ôóíêöèÿõ 'nIndex' îáîçíà÷àåò íå 'segment', à 'span', èç êîòîðîãî íàäî âûäåðíóòü 'nSlab' segment è âåðíóòü åãî äàííûå*/
+// Ð² ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ñ… Ñ‡ÐµÑ‚Ñ‹Ñ€Ñ‘Ñ… Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑÑ… 'nIndex' Ð¾Ð±Ð¾Ð·Ð½Ð°Ñ‡Ð°ÐµÑ‚ Ð½Ðµ 'segment', Ð° 'span', Ð¸Ð· ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ð½Ð°Ð´Ð¾ Ð²Ñ‹Ð´ÐµÑ€Ð½ÑƒÑ‚ÑŒ 'nSlab' segment Ð¸ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ ÐµÐ³Ð¾ Ð´Ð°Ð½Ð½Ñ‹Ðµ*/
 const SElementRPGStats& GetElementStats( const int nIndex ) const
 {
 	if ( nIndex == -1 || nIndex == 1 )

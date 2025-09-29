@@ -17,7 +17,7 @@ class CAIUnitInfoForGeneral : public CAIObjectBase
 	CVec2 vLastVisibleAntiArtCenter;
 	float fDistToLastVisibleAntiArt;
 
-	// когда в следующий раз говорить об изменении в состоянии генералу
+	// РєРѕРіРґР° РІ СЃР»РµРґСѓСЋС‰РёР№ СЂР°Р· РіРѕРІРѕСЂРёС‚СЊ РѕР± РёР·РјРµРЅРµРЅРёРё РІ СЃРѕСЃС‚РѕСЏРЅРёРё РіРµРЅРµСЂР°Р»Сѓ
 	NTimer::STime nextTimeToReportGeneral;
 
 	float fWeight;

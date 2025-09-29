@@ -56,10 +56,10 @@ bool CMODContainer::NewMOD()
 			NProgress::SetMessage( StrFmt( strPM, szMODFolder.c_str() ) );
 			NProgress::SetRange( 0, 2 );
 			//
-			// Создать файлы с именем и описанием
+			// РЎРѕР·РґР°С‚СЊ С„Р°Р№Р»С‹ СЃ РёРјРµРЅРµРј Рё РѕРїРёСЃР°РЅРёРµРј
 			String2File( strName, true, szMODFolder + "name.txt", ::GetACP(), true );
 			String2File( strDescriotion, true, szMODFolder + "desc.txt", ::GetACP(), true );
-			// Открыть новый мод
+			// РћС‚РєСЂС‹С‚СЊ РЅРѕРІС‹Р№ РјРѕРґ
 			NMOD::InstantAttachMOD( szMODFolder, NDb::DATABASE_MODE_EDITOR );
 			NProgress::IteratePosition(); // 1
 			Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_RELOAD, true );

@@ -12,7 +12,7 @@ class CCoastState : public CVSOState
 
 	bool bVSOChanged;
 	NDb::SVSOInstance oldVSOInstance;
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CCoastState( class CVSOMultiState *_pParentState = 0 ) : CVSOState( _pParentState )
 	{
 		NI_ASSERT( _pParentState != 0, "CCoastState(): Invalid parameter: _pParentState == 0" );

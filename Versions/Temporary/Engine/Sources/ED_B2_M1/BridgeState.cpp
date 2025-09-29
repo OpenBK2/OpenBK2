@@ -254,7 +254,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		pEditParameters->nFlags = MIMOSEP_PLAYER_INDEX;
 		GetEditParameters( pEditParameters, CHID_MAPINFO_MAPOBJECT_WINDOW );
 		//
-		// получаем размер 
+		// РїРѕР»СѓС‡Р°РµРј СЂР°Р·РјРµСЂ 
 		if ( objectSet.szObjectTypeName.empty() )
 		{
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<DWORD>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
@@ -269,7 +269,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				}
 			}
 		}
-		// находим опорные точки моста
+		// РЅР°С…РѕРґРёРј РѕРїРѕСЂРЅС‹Рµ С‚РѕС‡РєРё РјРѕСЃС‚Р°
 		bridgeElementCenterPointList.clear();
 		vDirection = VNULL3;
 		if ( ( vEndSize.x > FP_EPSILON ) && ( vCenterSize.x > FP_EPSILON ) )
@@ -298,7 +298,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		if ( bPlace )
 		{
 			CWaitCursor waitCursor;
-			// Записываем мост в базу
+			// Р—Р°РїРёСЃС‹РІР°РµРј РјРѕСЃС‚ РІ Р±Р°Р·Сѓ
 			ClearScene();
 			const int nBridgeElementCount = bridgeElementCenterPointList.size();
 			if ( nBridgeElementCount > 1 )
@@ -437,7 +437,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 						sceneIDlist.pop_back();
 					}
 				}
-				// ставим повое изображение моста
+				// СЃС‚Р°РІРёРј РїРѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РјРѕСЃС‚Р°
 				const float fInDirectionAngle = GetPolarAngle( vDirection ); 
 				int nBridgeElementSceneID = INVALID_NODE_ID;
 				//
@@ -499,7 +499,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 // basement storage  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
-			// Поднимаем землю под мостом
+			// РџРѕРґРЅРёРјР°РµРј Р·РµРјР»СЋ РїРѕРґ РјРѕСЃС‚РѕРј
 			if ( nSelectedMapObjectInfoID != INVALID_NODE_ID )
 			{
 				if ( CanEdit() )
@@ -510,7 +510,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 						SBridgeInfo *pMapObjectInfo = checked_cast<SBridgeInfo*>( &( *posMapObjectInfo->second ) );
 						if ( pMapObjectInfo )
 						{
-							//Вычисляем параметры поднятия земли под объектом
+							//Р’С‹С‡РёСЃР»СЏРµРј РїР°СЂР°РјРµС‚СЂС‹ РїРѕРґРЅСЏС‚РёСЏ Р·РµРјР»Рё РїРѕРґ РѕР±СЉРµРєС‚РѕРј
 							bool bStartEmpty = true;
 							bool bEndEmpty = true;
 							CVec3 vStart = VNULL3;
@@ -550,7 +550,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 							vStart -= vNormDirection * ( fWidth / 2.0f );
 							vEnd += vNormDirection * ( fWidth / 2.0f );
 							fCommonHeight = fCommonHeight / ( pMapObjectInfo->mapInfoElementMap.size() * 1.0f );
-							// Поднимаем землю
+							// РџРѕРґРЅРёРјР°РµРј Р·РµРјР»СЋ
 							if ( IEditorScene *pScene = EditorScene() )
 							{
 								if ( ITerraManager *pTerrain = pScene->GetTerrain() )
@@ -559,7 +559,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 									GetMapInfoEditor()->bNeedSave = true;
 								}
 							}
-							// Вычисляем новую высоту
+							// Р’С‹С‡РёСЃР»СЏРµРј РЅРѕРІСѓСЋ РІС‹СЃРѕС‚Сѓ
 							float fNewCommonHeight = 0.0f;
 							for ( SMapObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = pMapObjectInfo->mapInfoElementMap.begin(); itMapInfoElement != pMapObjectInfo->mapInfoElementMap.end(); ++itMapInfoElement )
 							{
@@ -567,7 +567,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 								fNewCommonHeight += ( vPos.z + GetTerrainHeight( vPos.x, vPos.y ) );
 							}
 							fNewCommonHeight = fNewCommonHeight / ( pMapObjectInfo->mapInfoElementMap.size() * 1.0f );
-							// Подгоняем мост под новую высоту
+							// РџРѕРґРіРѕРЅСЏРµРј РјРѕСЃС‚ РїРѕРґ РЅРѕРІСѓСЋ РІС‹СЃРѕС‚Сѓ
 							CVec3 vPos = VNULL3;
 							Get3DPosOnMapHeights( &vPos, CVec2( previousMousePoint.x, previousMousePoint.y ), ( *GetStaticMapHeights() ) );
 							vPos.z = 0.0f;

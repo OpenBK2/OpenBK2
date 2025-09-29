@@ -207,7 +207,7 @@ bool CInterfaceChapterMapMenu::Init()
 
 	if ( !Singleton<IScenarioTracker>()->IsCampaignActive() )
 	{
-		// игра окончена
+		// РёРіСЂР° РѕРєРѕРЅС‡РµРЅР°
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 
 		const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();

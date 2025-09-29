@@ -209,7 +209,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	const bool bArtilleryMech = pOwner->GetFirstArtilleryGun() != 0;
 
 	const SRect enemyRect = pEnemy->GetUnitRect();
-	// площать combat rect
+	// РїР»РѕС‰Р°С‚СЊ combat rect
 	const float fSEnemyRect = 
 		2 * enemyRect.width * ( enemyRect.lengthAhead + enemyRect.lengthBack ) / sqr( pEnemy->GetRemissiveCoeff() );
 
@@ -227,13 +227,13 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 			   shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH )
 		{
 /*
-			// либо за горизонт, либо миномёт, либо прямой наводкой
+			// Р»РёР±Рѕ Р·Р° РіРѕСЂРёР·РѕРЅС‚, Р»РёР±Рѕ РјРёРЅРѕРјС‘С‚, Р»РёР±Рѕ РїСЂСЏРјРѕР№ РЅР°РІРѕРґРєРѕР№
 			if ( bOverHorizont ||
 					 pOwner->GetStats()->etype == RPG_TYPE_ART_MORTAR ||
  					 !bOverHorizont && pGun->GetShell().etrajectory == TRAJECTORY_LINE )
 */
 			{
-				// можно выстрелить
+				// РјРѕР¶РЅРѕ РІС‹СЃС‚СЂРµР»РёС‚СЊ
 				if ( /*!pGun->TooCloseToFire( pEnemy ) &&*/
 						 (
 							!bArtilleryMech && pGun->CanShootToUnit( pEnemy ) ||
@@ -250,12 +250,12 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						return;
 					}
 					
-					// нельзя стрелять по очагам сопротивления
+					// РЅРµР»СЊР·СЏ СЃС‚СЂРµР»СЏС‚СЊ РїРѕ РѕС‡Р°РіР°Рј СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ
 					if ( theDipl.IsAIPlayer( pOwner->GetPlayer() ) && pGun->IsBallisticTrajectory() && 
 							 theSupremeBeing.IsInResistanceCircle( pEnemy->GetCenterPlain(), pOwner->GetParty() ) )
 						continue;
 					
-					// нельзя двигаться или нужно идти достаточно далеко, чтобы примерно дойти до точки, откуда можно стрелять
+					// РЅРµР»СЊР·СЏ РґРІРёРіР°С‚СЊСЃСЏ РёР»Рё РЅСѓР¶РЅРѕ РёРґС‚Рё РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґР°Р»РµРєРѕ, С‡С‚РѕР±С‹ РїСЂРёРјРµСЂРЅРѕ РґРѕР№С‚Рё РґРѕ С‚РѕС‡РєРё, РѕС‚РєСѓРґР° РјРѕР¶РЅРѕ СЃС‚СЂРµР»СЏС‚СЊ
 					const float fFireRange = pGun->GetFireRange( pEnemy->GetCenter().z );
 					const float fDistToGo = Max( 0.0f, fDist - fFireRange );
 					const CVec2 vPoint = vCenterPlain + vDirToEnemy * fDistToGo;
@@ -269,33 +269,33 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 
 						fTime += FindTimeToTurnToPoint( pEnemy->GetCenterPlain(), pOwner, pGun );
 
-						// макс. броня врага не пробивается оружием
+						// РјР°РєСЃ. Р±СЂРѕРЅСЏ РІСЂР°РіР° РЅРµ РїСЂРѕР±РёРІР°РµС‚СЃСЏ РѕСЂСѓР¶РёРµРј
 						if ( pGun->GetMaxPossiblePiercing() < pEnemy->GetMaxArmor() )
-							// поворот на 30 градусов ( 65536 / 360 * 30 )
+							// РїРѕРІРѕСЂРѕС‚ РЅР° 30 РіСЂР°РґСѓСЃРѕРІ ( 65536 / 360 * 30 )
 							fTime += 5461.0f * pOwner->GetTurnSpeed();
 
 						const float fDispRadius = GetDispByRadius( pGun, pOwner->GetCenterPlain(), pEnemy->GetCenterPlain() );
 						float fR;
-						// dispersion умножается на 0.56, т.к. у нас не равномерное распр. при попадании снаряда,
-						// а что-то типа равномерного в квадрате. Число 0.56 взято из экспериментов
+						// dispersion СѓРјРЅРѕР¶Р°РµС‚СЃСЏ РЅР° 0.56, С‚.Рє. Сѓ РЅР°СЃ РЅРµ СЂР°РІРЅРѕРјРµСЂРЅРѕРµ СЂР°СЃРїСЂ. РїСЂРё РїРѕРїР°РґР°РЅРёРё СЃРЅР°СЂСЏРґР°,
+						// Р° С‡С‚Рѕ-С‚Рѕ С‚РёРїР° СЂР°РІРЅРѕРјРµСЂРЅРѕРіРѕ РІ РєРІР°РґСЂР°С‚Рµ. Р§РёСЃР»Рѕ 0.56 РІР·СЏС‚Рѕ РёР· СЌРєСЃРїРµСЂРёРјРµРЅС‚РѕРІ
 						if ( pEnemy->GetMaxArmor() == 0 )
 						{
-							// может быть area damage
-							// если техника, то по малому радиусу взрыва
+							// РјРѕР¶РµС‚ Р±С‹С‚СЊ area damage
+							// РµСЃР»Рё С‚РµС…РЅРёРєР°, С‚Рѕ РїРѕ РјР°Р»РѕРјСѓ СЂР°РґРёСѓСЃСѓ РІР·СЂС‹РІР°
 							if ( !pEnemy->GetStats()->IsInfantry() )
 								fR = 0.56 * fDispRadius - shell.fArea;
-							// если солдат и свободен, то по большому радиусу
+							// РµСЃР»Рё СЃРѕР»РґР°С‚ Рё СЃРІРѕР±РѕРґРµРЅ, С‚Рѕ РїРѕ Р±РѕР»СЊС€РѕРјСѓ СЂР°РґРёСѓСЃСѓ
 							else if ( pEnemy->IsFree() )
 								fR = 0.56 * fDispRadius - shell.fArea2;
 							else
-								// если солдат и не свободен, то по малому радиусу
+								// РµСЃР»Рё СЃРѕР»РґР°С‚ Рё РЅРµ СЃРІРѕР±РѕРґРµРЅ, С‚Рѕ РїРѕ РјР°Р»РѕРјСѓ СЂР°РґРёСѓСЃСѓ
 								fR = 0.56 * fDispRadius - shell.fArea;
 						}
 						else
-							// только точное попадание
+							// С‚РѕР»СЊРєРѕ С‚РѕС‡РЅРѕРµ РїРѕРїР°РґР°РЅРёРµ
 							fR = 0.56 * fDispRadius;
 
-						// вероятность попасть ( примерная... )
+						// РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕРїР°СЃС‚СЊ ( РїСЂРёРјРµСЂРЅР°СЏ... )
 						float fProbToHit;
 						if ( fR <= 0 )
 							fProbToHit = 1;
@@ -310,10 +310,10 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 						const bool bPreferThisGun = pEnemy->IsInfantry() &&
 							( pWeapon->eWeaponType == NDb::SWeaponRPGStats::WEAPON_MACHINEGUN || pWeapon->eWeaponType == NDb::SWeaponRPGStats::WEAPON_SUBMACHINEGUN ) &&
 							fDist < pWeapon->fRangeMax;
-						// выстрелов, чтобы убить с вероятностью 80%		
+						// РІС‹СЃС‚СЂРµР»РѕРІ, С‡С‚РѕР±С‹ СѓР±РёС‚СЊ СЃ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊСЋ 80%		
 						const float fShotsToKill = bPreferThisGun ? 0.0f : fPierceProb * 0.8 * pEnemy->GetHitPoints() / pGun->GetDamage();
 						const float fProbShotsToKill = fShotsToKill / fProbToHit;
-						// очередей
+						// РѕС‡РµСЂРµРґРµР№
 
 						const int nAmmoPerBurst = pGun->GetWeapon()->nAmmoPerBurst;
 						const int nBursts = ceil( fProbShotsToKill / nAmmoPerBurst );
@@ -359,7 +359,7 @@ void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 	if ( pOwner->IsFreeEnemySearch() && pOwner->GetFirstArtilleryGun() != 0 )
 	{
 		const float fDistToEnemy2 = fabs2( pOwner->GetCenterPlain() - vEnemyCenter );
-		// враг за горизонтом
+		// РІСЂР°Рі Р·Р° РіРѕСЂРёР·РѕРЅС‚РѕРј
 		if ( fDistToEnemy2 >= sqr( pOwner->GetSightRadius() ) )
 		{
 			const float fDispersion = pOwner->GetFirstArtilleryGun()->GetDispersion();
@@ -512,7 +512,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 
 	const float fDist = fabs( pOwner->GetCenter() - pEnemy->GetCenter() );
 
-	// не внутри объекта, есть только ружьё или стреляем по солдатам
+	// РЅРµ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°, РµСЃС‚СЊ С‚РѕР»СЊРєРѕ СЂСѓР¶СЊС‘ РёР»Рё СЃС‚СЂРµР»СЏРµРј РїРѕ СЃРѕР»РґР°С‚Р°Рј
 	if ( pOwner->IsFree() && ( ( !bUseGrenadeAutocast && !bUseGrenadeFixed ) || ( ( dwForbidden & 1 ) == 0 && ( pOwner->GetNGuns() == 1 || pEnemy->GetStats()->IsInfantry() ) ) ) )
 	{
 		CBasicGun *pGun = pOwner->GetGun( 0 );
@@ -528,7 +528,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 	{
 		//const SRect enemyRect = pEnemy->GetUnitRect();
 		const CVec2 vEnemySize = pEnemy->GetStats()->vAABBHalfSize;
-		// площать combat rect
+		// РїР»РѕС‰Р°С‚СЊ combat rect
 		const float fSEnemyRect = 
 			4.0f * vEnemySize.y * ( vEnemySize.x ) / sqr( pEnemy->GetRemissiveCoeff() );
 
@@ -551,7 +551,7 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 				   shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
 					 pGun->GetNAmmo() > 0 && pGun->CanShootToUnit( pEnemy ) )
 			{
-				// нельзя двигаться или можно идти достаточно далеко, чтобы примерно дойти до точки, откуда можно стрелять
+				// РЅРµР»СЊР·СЏ РґРІРёРіР°С‚СЊСЃСЏ РёР»Рё РјРѕР¶РЅРѕ РёРґС‚Рё РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РґР°Р»РµРєРѕ, С‡С‚РѕР±С‹ РїСЂРёРјРµСЂРЅРѕ РґРѕР№С‚Рё РґРѕ С‚РѕС‡РєРё, РѕС‚РєСѓРґР° РјРѕР¶РЅРѕ СЃС‚СЂРµР»СЏС‚СЊ
 				const float fDistToGo = Max( 0.0f, fDist - pGun->GetFireRange( pEnemy->GetCenter().z ) );
 				const CVec2 vPoint = vCeneterPlain + vDirToEnemy * fDistToGo;
 
@@ -561,37 +561,37 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 
 					const float fDispRadius = GetDispByRadius( pGun, pOwner->GetCenterPlain(), pEnemy->GetCenterPlain() );
 					float fR;
-					// dispersion умножается на 0.56, т.к. у нас не равномерное распр. при попадании снаряда,
-					// а что-то типа равномерного в квадрате. Число 0.56 взято из экспериментов
+					// dispersion СѓРјРЅРѕР¶Р°РµС‚СЃСЏ РЅР° 0.56, С‚.Рє. Сѓ РЅР°СЃ РЅРµ СЂР°РІРЅРѕРјРµСЂРЅРѕРµ СЂР°СЃРїСЂ. РїСЂРё РїРѕРїР°РґР°РЅРёРё СЃРЅР°СЂСЏРґР°,
+					// Р° С‡С‚Рѕ-С‚Рѕ С‚РёРїР° СЂР°РІРЅРѕРјРµСЂРЅРѕРіРѕ РІ РєРІР°РґСЂР°С‚Рµ. Р§РёСЃР»Рѕ 0.56 РІР·СЏС‚Рѕ РёР· СЌРєСЃРїРµСЂРёРјРµРЅС‚РѕРІ
 					if ( pEnemy->GetMaxArmor() == 0 )
 					{
-						// может быть area damage
-						// если техника, то по малому радиусу взрыва
+						// РјРѕР¶РµС‚ Р±С‹С‚СЊ area damage
+						// РµСЃР»Рё С‚РµС…РЅРёРєР°, С‚Рѕ РїРѕ РјР°Р»РѕРјСѓ СЂР°РґРёСѓСЃСѓ РІР·СЂС‹РІР°
 						if ( !pEnemy->GetStats()->IsInfantry() )
 							fR = 0.56 * fDispRadius - shell.fArea;
-						// если солдат и свободен, то по большому радиусу
+						// РµСЃР»Рё СЃРѕР»РґР°С‚ Рё СЃРІРѕР±РѕРґРµРЅ, С‚Рѕ РїРѕ Р±РѕР»СЊС€РѕРјСѓ СЂР°РґРёСѓСЃСѓ
 						else if ( pEnemy->IsFree() )
 							fR = 0.56 * fDispRadius - shell.fArea2;
 						else
-							// если солдат и не свободен, то по малому радиусу
+							// РµСЃР»Рё СЃРѕР»РґР°С‚ Рё РЅРµ СЃРІРѕР±РѕРґРµРЅ, С‚Рѕ РїРѕ РјР°Р»РѕРјСѓ СЂР°РґРёСѓСЃСѓ
 							fR = 0.56 * fDispRadius - shell.fArea;
 					}
 					else
-						// только точное попадание
+						// С‚РѕР»СЊРєРѕ С‚РѕС‡РЅРѕРµ РїРѕРїР°РґР°РЅРёРµ
 						fR = 0.56 * fDispRadius;
 
-					// вероятность попасть ( примерная... )
+					// РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕРїР°СЃС‚СЊ ( РїСЂРёРјРµСЂРЅР°СЏ... )
 					float fProbToHit;
 					if ( fR <= 0 )
 						fProbToHit = 1;
 					else
 						fProbToHit = Min( 1.0f, fSEnemyRect / ( FP_PI * sqr( fR ) ) );
 
-					// выстрелов, чтобы убить с вероятностью 80%		
+					// РІС‹СЃС‚СЂРµР»РѕРІ, С‡С‚РѕР±С‹ СѓР±РёС‚СЊ СЃ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊСЋ 80%		
 					const float fShotsToKill = 0.8 * pEnemy->GetHitPoints() / pGun->GetDamage();
 					const float fProbShotsToKill = fShotsToKill / fProbToHit;
 
-					// очередей
+					// РѕС‡РµСЂРµРґРµР№
 					const int nAmmoPerBurst = pGun->GetWeapon()->nAmmoPerBurst;
 					const int nBursts = ceil( fProbShotsToKill / nAmmoPerBurst );
 
@@ -626,29 +626,29 @@ void CSoldierShootEstimator::AddUnit( CAIUnit *pEnemy )
 	theScanLimiter.TargetScanning( pOwner->GetStats()->etype );	
 	
 	CBasicGun *pBestLocalGun = 0;
-	// а не кинуть ли гранату?``
+	// Р° РЅРµ РєРёРЅСѓС‚СЊ Р»Рё РіСЂР°РЅР°С‚Сѓ?``
 	if ( bHasGrenades && ( bUseGrenadeFixed || bUseGrenadeAutocast ) )
 	{
-		// enemy - mech. unit, который может двигаться
+		// enemy - mech. unit, РєРѕС‚РѕСЂС‹Р№ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ
 		if ( bUseGrenadeFixed || pOwner->GetGun( 1 )->CanShootToUnit( pEnemy ) /*( !pEnemy->GetStats()->IsInfantry() && pEnemy->CanMove() && !pEnemy->NeedDeinstall() )*/ )
 		{
 			int nAttackingGrenades = pEnemy->GetNAttackingGrenages();
-			// сколько гранат, не учитывая нас
+			// СЃРєРѕР»СЊРєРѕ РіСЂР°РЅР°С‚, РЅРµ СѓС‡РёС‚С‹РІР°СЏ РЅР°СЃ
 			if ( bDamageToCurTargetUpdated && pEnemy == pCurTarget )
 				--nAttackingGrenades;
 
-			// гранат не хватает и можно кинуть гранату по юниту
+			// РіСЂР°РЅР°С‚ РЅРµ С…РІР°С‚Р°РµС‚ Рё РјРѕР¶РЅРѕ РєРёРЅСѓС‚СЊ РіСЂР°РЅР°С‚Сѓ РїРѕ СЋРЅРёС‚Сѓ
 			if ( ( bUseGrenadeFixed || nAttackingGrenades < N_GOOD_NUMBER_ATTACKING_GRENADES ) /*&& pOwner->GetGun( 1 )->CanShootToUnit( pEnemy )*/ )
 			{
 				const float fDistToEnemy2 = fabs2( pOwner->GetCenter() - pEnemy->GetCenter() );
 
-				// юнит недалеко
+				// СЋРЅРёС‚ РЅРµРґР°Р»РµРєРѕ
 				if ( bUseGrenadeFixed || fDistToEnemy2 <= SConsts::MAX_DISTANCE_TO_THROW_GRENADE )
 				{
-					// по лучшему уже кидаем гранату
+					// РїРѕ Р»СѓС‡С€РµРјСѓ СѓР¶Рµ РєРёРґР°РµРј РіСЂР°РЅР°С‚Сѓ
 					if ( bThrowGrenade )
 					{
-						// если ближе, чем best unit
+						// РµСЃР»Рё Р±Р»РёР¶Рµ, С‡РµРј best unit
 						if ( pBestUnit == 0 || fDistToEnemy2 < fabs2( pBestUnit->GetCenter() - pOwner->GetCenter() ) )
 						{
 							pBestUnit = pEnemy;
@@ -811,7 +811,7 @@ void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
 	if ( !bCanShootByHeight )
 		return;
 		
-		// приоритеты при защитном огне 
+		// РїСЂРёРѕСЂРёС‚РµС‚С‹ РїСЂРё Р·Р°С‰РёС‚РЅРѕРј РѕРіРЅРµ 
 	const float fTempRating = CalcRating( pEnemy, pGun );
 
 	if ( !pCurTarget || fTempRating > fBestRating )
@@ -882,7 +882,7 @@ void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 		return;
 	}
 	
-	// убедиться, что какой-то из небомбовых ганов может пробить цель ( и есть патроны )
+	// СѓР±РµРґРёС‚СЊСЃСЏ, С‡С‚Рѕ РєР°РєРѕР№-С‚Рѕ РёР· РЅРµР±РѕРјР±РѕРІС‹С… РіР°РЅРѕРІ РјРѕР¶РµС‚ РїСЂРѕР±РёС‚СЊ С†РµР»СЊ ( Рё РµСЃС‚СЊ РїР°С‚СЂРѕРЅС‹ )
 	bool bCanBreak = false;
 	bool bOnlyBombs = true;
 	int nGuns = pOwner->GetNGuns();
@@ -1015,15 +1015,15 @@ void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimat
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CShootEstimatorForObstacles::AddObstacle( interface IObstacle *pObstacle )
 {
-	// уничтожать только вражеские препятствия
+	// СѓРЅРёС‡С‚РѕР¶Р°С‚СЊ С‚РѕР»СЊРєРѕ РІСЂР°Р¶РµСЃРєРёРµ РїСЂРµРїСЏС‚СЃС‚РІРёСЏ
 	if ( theDipl.GetDiplStatus( pObstacle->GetPlayer(), pOwner->GetPlayer() ) != EDI_ENEMY )
 		return false;
 
-	//учитывать C
-	// - время поворота
-	// - скорость уничтожения
-	// - время подъезда
-	// - количество оставшегося здоровья
+	//СѓС‡РёС‚С‹РІР°С‚СЊ C
+	// - РІСЂРµРјСЏ РїРѕРІРѕСЂРѕС‚Р°
+	// - СЃРєРѕСЂРѕСЃС‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅРёСЏ
+	// - РІСЂРµРјСЏ РїРѕРґСЉРµР·РґР°
+	// - РєРѕР»РёС‡РµСЃС‚РІРѕ РѕСЃС‚Р°РІС€РµРіРѕСЃСЏ Р·РґРѕСЂРѕРІСЊСЏ
 
 	NTimer::STime timeToKill = 0;
 	CBasicGun *pGun = pObstacle->ChooseGunToShootToSelf( pOwner, &timeToKill );
@@ -1085,7 +1085,7 @@ void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
 	if ( fTempRating == 0.0f )
 		return;
 
-	// приоритеты при защитном огне 
+	// РїСЂРёРѕСЂРёС‚РµС‚С‹ РїСЂРё Р·Р°С‰РёС‚РЅРѕРј РѕРіРЅРµ 
 	if ( !pBestTarget || fTempRating > fBestRating )
 	{
 		pBestTarget = pEnemy;	

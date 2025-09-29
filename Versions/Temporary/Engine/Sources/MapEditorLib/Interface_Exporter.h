@@ -17,12 +17,12 @@ interface IReportCollector : public CObjectBase
 #define DEFAULT_EXPORTER_LABEL __DefaultHierarchicalExporter__
 #define DEFAULT_EXPORTER_LABEL_TXT "__DefaultHierarchicalExporter__"
 
-// При иерархическом экспорте вызовы StartExport и FinishExpost производятся в произвольном порядке
-// Вызов Export для родителя производятся раньше чем для потомков
+// РџСЂРё РёРµСЂР°СЂС…РёС‡РµСЃРєРѕРј СЌРєСЃРїРѕСЂС‚Рµ РІС‹Р·РѕРІС‹ StartExport Рё FinishExpost РїСЂРѕРёР·РІРѕРґСЏС‚СЃСЏ РІ РїСЂРѕРёР·РІРѕР»СЊРЅРѕРј РїРѕСЂСЏРґРєРµ
+// Р’С‹Р·РѕРІ Export РґР»СЏ СЂРѕРґРёС‚РµР»СЏ РїСЂРѕРёР·РІРѕРґСЏС‚СЃСЏ СЂР°РЅСЊС€Рµ С‡РµРј РґР»СЏ РїРѕС‚РѕРјРєРѕРІ
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
+// РІ cpp С„Р°Р№Р»Рµ РЅР°РїРёСЃР°С‚СЊ РјР°РєСЂРѕСЃ: REGISTER_EDITOR_IN_...( typeName, className )
 
-// При создании конвертера
+// РџСЂРё СЃРѕР·РґР°РЅРёРё РєРѕРЅРІРµСЂС‚РµСЂР°
 // Constructor()
 // StartExport 
 // Export()
@@ -30,27 +30,27 @@ interface IReportCollector : public CObjectBase
 // Export()
 // FinishExport 
 
-// При разрушении конвертера
+// РџСЂРё СЂР°Р·СЂСѓС€РµРЅРёРё РєРѕРЅРІРµСЂС‚РµСЂР°
 // Destructor()
 
-// При переключении конвертеров ( не удаляется и не создается )
+// РџСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё РєРѕРЅРІРµСЂС‚РµСЂРѕРІ ( РЅРµ СѓРґР°Р»СЏРµС‚СЃСЏ Рё РЅРµ СЃРѕР·РґР°РµС‚СЃСЏ )
 // StartExport 
 // Export()
 // ...
 // Export()
 // FinishExport 
 
-// Первый параметр
+// РџРµСЂРІС‹Р№ РїР°СЂР°РјРµС‚СЂ
 #define FORCE_EXPORT true
 #define NOT_FORCE_EXPORT false
 
-// Второй параметр
+// Р’С‚РѕСЂРѕР№ РїР°СЂР°РјРµС‚СЂ
 #define START_EXPORT_TOOLS true
 #define FINISH_EXPORT_TOOLS true
 #define NOT_START_EXPORT_TOOLS false
 #define NOT_FINISH_EXPORT_TOOLS false
 
-// Третий параметр
+// РўСЂРµС‚РёР№ РїР°СЂР°РјРµС‚СЂ
 #define EXPORT_REFERENCES true
 #define CHECK_REFERENCES true
 #define NOT_EXPORT_REFERENCES false
@@ -75,38 +75,38 @@ enum EXPORT_RESULT
 interface IManipulator;
 interface IExporter : public CObjectBase
 {
-	// bForce - безусловный экспорт объектов (различные пункты меню)
-	// rszObjectTypeName используется при написании экспортеров для нескольких объектов 
-	// (на каждый тип по своему экземпляру экпортера)
-	// Вызывается перед конвертацией данных
-	// true - все нормально
-	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта 
-	// возвращает ER_FAIL, FinishExport не вызывается
+	// bForce - Р±РµР·СѓСЃР»РѕРІРЅС‹Р№ СЌРєСЃРїРѕСЂС‚ РѕР±СЉРµРєС‚РѕРІ (СЂР°Р·Р»РёС‡РЅС‹Рµ РїСѓРЅРєС‚С‹ РјРµРЅСЋ)
+	// rszObjectTypeName РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РЅР°РїРёСЃР°РЅРёРё СЌРєСЃРїРѕСЂС‚РµСЂРѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРёС… РѕР±СЉРµРєС‚РѕРІ 
+	// (РЅР° РєР°Р¶РґС‹Р№ С‚РёРї РїРѕ СЃРІРѕРµРјСѓ СЌРєР·РµРјРїР»СЏСЂСѓ СЌРєРїРѕСЂС‚РµСЂР°)
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РєРѕРЅРІРµСЂС‚Р°С†РёРµР№ РґР°РЅРЅС‹С…
+	// true - РІСЃРµ РЅРѕСЂРјР°Р»СЊРЅРѕ
+	// false - РґР»СЏ РІСЃРµС… РѕР±СЉРµРєС‚РѕРІ СЌС‚РѕРіРѕ С‚РёРїР° СЌРєСЃРїРѕСЂС‚ РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ, РѕРїСЂРѕСЃ СЂРµР·СѓР»СЊС‚Р°С‚Р° СЌРєСЃРїРѕСЂС‚Р° 
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ ER_FAIL, FinishExport РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
 	virtual bool StartExport( const string &rszObjectTypeName, bool bForce ) = 0;
-	// Вызывается после конвертации данных
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ РєРѕРЅРІРµСЂС‚Р°С†РёРё РґР°РЅРЅС‹С…
 	virtual void FinishExport( const string &rszObjectTypeName, bool bForce ) = 0;
-	// Вызывается на каждый объект
-	// ER_FAIL - не вызывается экспорт ссылок и экспорт после ссылок
-	// ER_BREAK - немедленное прекращение текущего экспорта
-	// ER_SUCCES - все впорядке, можно продолжать
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РЅР° РєР°Р¶РґС‹Р№ РѕР±СЉРµРєС‚
+	// ER_FAIL - РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ СЌРєСЃРїРѕСЂС‚ СЃСЃС‹Р»РѕРє Рё СЌРєСЃРїРѕСЂС‚ РїРѕСЃР»Рµ СЃСЃС‹Р»РѕРє
+	// ER_BREAK - РЅРµРјРµРґР»РµРЅРЅРѕРµ РїСЂРµРєСЂР°С‰РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ СЌРєСЃРїРѕСЂС‚Р°
+	// ER_SUCCES - РІСЃРµ РІРїРѕСЂСЏРґРєРµ, РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶Р°С‚СЊ
 	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
 																			const string &rszObjectTypeName,
 																			const string &rszObjectName,
 																			bool bForce,
 																			EXPORT_TYPE exportType ) = 0;
-	// Вызывается перед проверкой даных
-	// bExport - вызывается после экспорта объекта
-	// true - все нормально
-	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта
-	// возвращает ER_FAIL, FinishExport не вызывается
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РїСЂРѕРІРµСЂРєРѕР№ РґР°РЅС‹С…
+	// bExport - РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЌРєСЃРїРѕСЂС‚Р° РѕР±СЉРµРєС‚Р°
+	// true - РІСЃРµ РЅРѕСЂРјР°Р»СЊРЅРѕ
+	// false - РґР»СЏ РІСЃРµС… РѕР±СЉРµРєС‚РѕРІ СЌС‚РѕРіРѕ С‚РёРїР° СЌРєСЃРїРѕСЂС‚ РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ, РѕРїСЂРѕСЃ СЂРµР·СѓР»СЊС‚Р°С‚Р° СЌРєСЃРїРѕСЂС‚Р°
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ ER_FAIL, FinishExport РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ
 	virtual bool StartCheck( const string &rszObjectTypeName, bool bExport ) = 0;
-	// Вызывается после конвертации данных
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ РєРѕРЅРІРµСЂС‚Р°С†РёРё РґР°РЅРЅС‹С…
 	virtual void FinishCheck( const string &rszObjectTypeName, bool bExport ) = 0;
-	// Вызывается на каждый объект
-	// bExport - вызывается после экспорта объекта
-	// ER_FAIL - не вызывается экспорт ссылок и экспорт после ссылок
-	// ER_BREAK - немедленное прекращение текущего экспорта
-	// ER_SUCCES - все впорядке, можно продолжать
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РЅР° РєР°Р¶РґС‹Р№ РѕР±СЉРµРєС‚
+	// bExport - РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЌРєСЃРїРѕСЂС‚Р° РѕР±СЉРµРєС‚Р°
+	// ER_FAIL - РЅРµ РІС‹Р·С‹РІР°РµС‚СЃСЏ СЌРєСЃРїРѕСЂС‚ СЃСЃС‹Р»РѕРє Рё СЌРєСЃРїРѕСЂС‚ РїРѕСЃР»Рµ СЃСЃС‹Р»РѕРє
+	// ER_BREAK - РЅРµРјРµРґР»РµРЅРЅРѕРµ РїСЂРµРєСЂР°С‰РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ СЌРєСЃРїРѕСЂС‚Р°
+	// ER_SUCCES - РІСЃРµ РІРїРѕСЂСЏРґРєРµ, РјРѕР¶РЅРѕ РїСЂРѕРґРѕР»Р¶Р°С‚СЊ
 	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
 																			const string &rszObjectTypeName,
 																			const string &rszObjectName,
@@ -117,9 +117,9 @@ interface IExporter : public CObjectBase
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IExportTool : public CObjectBase
 {
-	// Вызывается из StartDefaultExport
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· StartDefaultExport
 	virtual void StartExportTool() = 0;
-	// Вызывается из FinishDefaultExport
+	// Р’С‹Р·С‹РІР°РµС‚СЃСЏ РёР· FinishDefaultExport
 	virtual void FinishExportTool() = 0;
 };
 
@@ -128,20 +128,20 @@ interface IExporterContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C1 };
 	//
-	// Проверить на возможность конвертирования объекта
+	// РџСЂРѕРІРµСЂРёС‚СЊ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РєРѕРЅРІРµСЂС‚РёСЂРѕРІР°РЅРёСЏ РѕР±СЉРµРєС‚Р°
 	virtual bool CanExportObject( const string &rszObjectTypeName ) = 0;
-	//Получить конкретный экспортер
+	//РџРѕР»СѓС‡РёС‚СЊ РєРѕРЅРєСЂРµС‚РЅС‹Р№ СЌРєСЃРїРѕСЂС‚РµСЂ
 	virtual IExporter* GetExporter( const string &rszObjectTypeName ) = 0;
 	//
-	// Методы создания и удаления експортеров
+	// РњРµС‚РѕРґС‹ СЃРѕР·РґР°РЅРёСЏ Рё СѓРґР°Р»РµРЅРёСЏ РµРєСЃРїРѕСЂС‚РµСЂРѕРІ
 	virtual void Create( const string &rszObjectTypeName ) = 0;
 	virtual void Destroy( const string &rszObjectTypeName ) = 0;
 	//
-	// Методы регистрирования ExportTool
+	// РњРµС‚РѕРґС‹ СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРёСЏ ExportTool
 	virtual void RegisterExportTool( IExportTool *pExportTool ) = 0;
 	virtual void UnRegisterExportTool( IExportTool *pExportTool ) = 0;
 	//
-	// Методы для экпорта по умолчанию, так запускается иерархический экспорт
+	// РњРµС‚РѕРґС‹ РґР»СЏ СЌРєРїРѕСЂС‚Р° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, С‚Р°Рє Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ РёРµСЂР°СЂС…РёС‡РµСЃРєРёР№ СЌРєСЃРїРѕСЂС‚
 	virtual bool StartExport( const string &rszObjectTypeName, 
 														bool bForce, 
 														bool bStartTools, 
@@ -155,7 +155,7 @@ interface IExporterContainer : public CObjectBase
 																			const string &rszObjectName,
 																			bool bForce,
 																			bool bExportReferences ) = 0;
-	// Методы для проверки по умолчанию, так запускается иерархическая проверка
+	// РњРµС‚РѕРґС‹ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ, С‚Р°Рє Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ РёРµСЂР°СЂС…РёС‡РµСЃРєР°СЏ РїСЂРѕРІРµСЂРєР°
 	virtual bool StartCheck( const string &rszObjectTypeName, 
 													bool bStartTools, 
 													bool bCheckReferences ) = 0;
@@ -167,9 +167,9 @@ interface IExporterContainer : public CObjectBase
 																		 const string &rszObjectName,
 																		 bool bCheckReferences ) = 0;
 	//
-	// Проверить на удачность конвертации данного объекта ( имя объекта в формате: szObjectTypeName:szObjectName )
+	// РџСЂРѕРІРµСЂРёС‚СЊ РЅР° СѓРґР°С‡РЅРѕСЃС‚СЊ РєРѕРЅРІРµСЂС‚Р°С†РёРё РґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° ( РёРјСЏ РѕР±СЉРµРєС‚Р° РІ С„РѕСЂРјР°С‚Рµ: szObjectTypeName:szObjectName )
 	virtual EXPORT_RESULT GetExportResult( const string &rszObjectRefName ) = 0;
-	// Проверить на удачность конвертации данного объекта
+	// РџСЂРѕРІРµСЂРёС‚СЊ РЅР° СѓРґР°С‡РЅРѕСЃС‚СЊ РєРѕРЅРІРµСЂС‚Р°С†РёРё РґР°РЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°
 	virtual EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName ) = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

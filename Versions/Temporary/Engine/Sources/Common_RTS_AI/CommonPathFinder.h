@@ -28,7 +28,7 @@ private:
 	int nLength, nStart;
 
 	int minDistance, minPointNum;
-	// нашли точку
+	// РЅР°С€Р»Рё С‚РѕС‡РєСѓ
 	bool bFinished;
 	int nCyclePoints;
 
@@ -60,7 +60,7 @@ private:
 
 	void EraseCycles();
 	void AnalyzePoint( const SVector &point, const int num );
-	// если юнит сейчас на непроходимом тайле, то можно длина пути от pointFrom то lastKnownGoodTile, а потом искать путь
+	// РµСЃР»Рё СЋРЅРёС‚ СЃРµР№С‡Р°СЃ РЅР° РЅРµРїСЂРѕС…РѕРґРёРјРѕРј С‚Р°Р№Р»Рµ, С‚Рѕ РјРѕР¶РЅРѕ РґР»РёРЅР° РїСѓС‚Рё РѕС‚ pointFrom С‚Рѕ lastKnownGoodTile, Р° РїРѕС‚РѕРј РёСЃРєР°С‚СЊ РїСѓС‚СЊ
 	const int GetAdditionalPathLength( const SVector &pointFrom );
 
 	bool CalculatePath();

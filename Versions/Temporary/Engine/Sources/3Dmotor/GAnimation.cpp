@@ -175,7 +175,7 @@ void CSkeletonAnimator::ClearAnimVector()
 	animHolders.clear();
 
 	// scalar channels
-	// В поддержку каналов, сделанных "на вырост", scalarChannels не должны очищаться.
+	// Р’ РїРѕРґРґРµСЂР¶РєСѓ РєР°РЅР°Р»РѕРІ, СЃРґРµР»Р°РЅРЅС‹С… "РЅР° РІС‹СЂРѕСЃС‚", scalarChannels РЅРµ РґРѕР»Р¶РЅС‹ РѕС‡РёС‰Р°С‚СЊСЃСЏ.
 	//scalarChannels.clear();
 
 	// global movement
@@ -402,7 +402,7 @@ void CSkeletonAnimator::AddScalarTracks( SAnimationHolder *pH, granny_track_grou
 	{
 		granny_vector_track &scalarTrack = pTrackGroup->VectorTracks[i];
 
-		// согласно схеме оптимизации запросов GetChannelIndex всегда возвращает валидный индекс
+		// СЃРѕРіР»Р°СЃРЅРѕ СЃС…РµРјРµ РѕРїС‚РёРјРёР·Р°С†РёРё Р·Р°РїСЂРѕСЃРѕРІ GetChannelIndex РІСЃРµРіРґР° РІРѕР·РІСЂР°С‰Р°РµС‚ РІР°Р»РёРґРЅС‹Р№ РёРЅРґРµРєСЃ
 		int nChannelIndex = GetChannelIndex( scalarTrack.Name );
 		ASSERT( nChannelIndex != INVALID_CHANNEL_ID );
 		scalarChannels[nChannelIndex].bBinded = true;
@@ -413,7 +413,7 @@ void CSkeletonAnimator::AddScalarTracks( SAnimationHolder *pH, granny_track_grou
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSkeletonAnimator::AddAnnotationTrack( SAnimationHolder *pH, granny_track_group *pTrackGroup )
 {
-	// FIXME: отбирать трэк по имени
+	// FIXME: РѕС‚Р±РёСЂР°С‚СЊ С‚СЂСЌРє РїРѕ РёРјРµРЅРё
 	if ( pTrackGroup->TextTrackCount > 0 )
 	{
 		granny_text_track &textTrack = pTrackGroup->TextTracks[0];
@@ -893,9 +893,9 @@ int CSkeletonAnimator::GetChannelIndex( const string &szName )
 		return nChannelIndex;
 	}
 
-	// Такого канала ещё нет.
-	// Чтобы избавиться от повторных запросов и повторных поисков по символьному имени,
-	// создаём неактивный scalarChannel "на вырост".
+	// РўР°РєРѕРіРѕ РєР°РЅР°Р»Р° РµС‰С‘ РЅРµС‚.
+	// Р§С‚РѕР±С‹ РёР·Р±Р°РІРёС‚СЊСЃСЏ РѕС‚ РїРѕРІС‚РѕСЂРЅС‹С… Р·Р°РїСЂРѕСЃРѕРІ Рё РїРѕРІС‚РѕСЂРЅС‹С… РїРѕРёСЃРєРѕРІ РїРѕ СЃРёРјРІРѕР»СЊРЅРѕРјСѓ РёРјРµРЅРё,
+	// СЃРѕР·РґР°С‘Рј РЅРµР°РєС‚РёРІРЅС‹Р№ scalarChannel "РЅР° РІС‹СЂРѕСЃС‚".
 	int nChannelIndex = scalarChannels.size();
 	SScalarChannel &channel = scalarChannels.push_back();
 	channel.szName = szName;

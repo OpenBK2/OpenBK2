@@ -32,7 +32,7 @@ void GetAlphaEmboss( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSource
 //
 void DrawLine( CArray2D<DWORD> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
 //
-//все одного размера!
+//РІСЃРµ РѕРґРЅРѕРіРѕ СЂР°Р·РјРµСЂР°!
 template<class TArray>
 void FastComposeImagesByAlpha( CArray2D<DWORD> *pDestImage, const TArray &rSourceImageList, DWORD dwMinAlpha )
 {
@@ -55,7 +55,7 @@ void FastComposeImagesByAlpha( CArray2D<DWORD> *pDestImage, const TArray &rSourc
 		}
 	}
 }
-//все одного размера!
+//РІСЃРµ РѕРґРЅРѕРіРѕ СЂР°Р·РјРµСЂР°!
 template<class TArray>
 void FastComposeImagesByColor( CArray2D<DWORD> *pDestImage, const TArray &rSourceImageList, DWORD dwColor, bool bInclude )
 {
@@ -100,7 +100,7 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 														 rCheck.y,
 														 rSize.x - rCheck.x,
 														 rSize.y - rCheck.y );
-	//середина
+	//СЃРµСЂРµРґРёРЅР°
 	//********
 	//********
 	//**0000**
@@ -116,7 +116,7 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 			( *pFunctional )( nXIndex, nYIndex );
 		}
 	}
-	//левый и правый края
+	//Р»РµРІС‹Р№ Рё РїСЂР°РІС‹Р№ РєСЂР°СЏ
 	//00****00
 	//00****00
 	//00****00
@@ -136,7 +136,7 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 			( *pWBCFunctional )( nXIndex, nYIndex );
 		}
 	}
-	//верхний и нижний края
+	//РІРµСЂС…РЅРёР№ Рё РЅРёР¶РЅРёР№ РєСЂР°СЏ
 	//**0000**
 	//**0000**
 	//********
@@ -159,7 +159,7 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал применяющий данный паттерн к указанной точке картинки
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїСЂРёРјРµРЅСЏСЋС‰РёР№ РґР°РЅРЅС‹Р№ РїР°С‚С‚РµСЂРЅ Рє СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРµ РєР°СЂС‚РёРЅРєРё
 struct SApplyFilterFunctional
 {
 	CArray2D<DWORD> *pDestImage;
@@ -223,7 +223,7 @@ struct SApplyFilterFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал применяющий данный паттерн к указанной точке картинки, с проверкой диапазонов
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїСЂРёРјРµРЅСЏСЋС‰РёР№ РґР°РЅРЅС‹Р№ РїР°С‚С‚РµСЂРЅ Рє СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРµ РєР°СЂС‚РёРЅРєРё, СЃ РїСЂРѕРІРµСЂРєРѕР№ РґРёР°РїР°Р·РѕРЅРѕРІ
 // WBC = with bounds check
 struct SWBCApplyFilterFunctional
 {
@@ -295,7 +295,7 @@ struct SWBCApplyFilterFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё
 struct SMarkOutsideEdgeFunctional
 {
 	CArray2D<DWORD> *pDestImage;
@@ -336,7 +336,7 @@ struct SMarkOutsideEdgeFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки, с проверкой диапазонов
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё, СЃ РїСЂРѕРІРµСЂРєРѕР№ РґРёР°РїР°Р·РѕРЅРѕРІ
 // WBC = with bounds check
 struct SWBCMarkOutsideEdgeFunctional
 {
@@ -387,7 +387,7 @@ struct SWBCMarkOutsideEdgeFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё
 struct SMarkInsideEdgeFunctional
 {
 	CArray2D<DWORD> *pDestImage;
@@ -428,7 +428,7 @@ struct SMarkInsideEdgeFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки, с проверкой диапазонов
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё, СЃ РїСЂРѕРІРµСЂРєРѕР№ РґРёР°РїР°Р·РѕРЅРѕРІ
 // WBC = with bounds check
 struct SWBCMarkInsideEdgeFunctional
 {
@@ -479,7 +479,7 @@ struct SWBCMarkInsideEdgeFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё
 struct SEraseEdgeFunctional
 {
 	CArray2D<DWORD> *pDestImage;
@@ -516,7 +516,7 @@ struct SEraseEdgeFunctional
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал помечающий край картинки, с проверкой диапазонов
+//С„СѓРЅРєС†РёРѕРЅР°Р» РїРѕРјРµС‡Р°СЋС‰РёР№ РєСЂР°Р№ РєР°СЂС‚РёРЅРєРё, СЃ РїСЂРѕРІРµСЂРєРѕР№ РґРёР°РїР°Р·РѕРЅРѕРІ
 // WBC = with bounds check
 struct SWBCEraseEdgeFunctional
 {

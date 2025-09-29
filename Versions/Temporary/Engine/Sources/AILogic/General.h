@@ -19,7 +19,7 @@ enum EResupplyType
 	_ERT_COUNT						= 5,
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// главная логика
+// РіР»Р°РІРЅР°СЏ Р»РѕРіРёРєР°
 class CSupremeBeing
 {
 	public: int operator&( IBinSaver &saver ); private:;
@@ -36,13 +36,13 @@ public:
 
 	void SetUnitVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible );
 	
-	// когда зенитка начинает атаку нашего самолета
+	// РєРѕРіРґР° Р·РµРЅРёС‚РєР° РЅР°С‡РёРЅР°РµС‚ Р°С‚Р°РєСѓ РЅР°С€РµРіРѕ СЃР°РјРѕР»РµС‚Р°
 	void SetAAVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible );
 	
 	// creates number of generals
-	// каждый генерал знает о юнитах, которые являются мобильным резервом
+	// РєР°Р¶РґС‹Р№ РіРµРЅРµСЂР°Р» Р·РЅР°РµС‚ Рѕ СЋРЅРёС‚Р°С…, РєРѕС‚РѕСЂС‹Рµ СЏРІР»СЏСЋС‚СЃСЏ РјРѕР±РёР»СЊРЅС‹Рј СЂРµР·РµСЂРІРѕРј
 	void Init( const NDb::SMapInfo* pMapInfo );
-	// раздать юниты генералам
+	// СЂР°Р·РґР°С‚СЊ СЋРЅРёС‚С‹ РіРµРЅРµСЂР°Р»Р°Рј
 	void GiveNewUnitsToGenerals( const list<class CCommonUnit*> &pUnits, bool bFromReinforcement = false );
 
 	bool IsMobileReinforcement( int nParty, int nGroup ) const;
@@ -52,7 +52,7 @@ public:
 	bool MustShootToObstacles( const int nPlayer );
 	void RegisterDelayedTask( interface IGeneralDelayedTask *pTask );
 	
-	// для очагов сопротивления
+	// РґР»СЏ РѕС‡Р°РіРѕРІ СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
 		const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
 		const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt );

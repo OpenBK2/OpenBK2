@@ -23,12 +23,12 @@ public:
 private:
 	struct SProperty
 	{
-		bool bFilled;																		// Сигнализирует о заполненности информации
+		bool bFilled;																		// РЎРёРіРЅР°Р»РёР·РёСЂСѓРµС‚ Рѕ Р·Р°РїРѕР»РЅРµРЅРЅРѕСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёРё
 
-		string szName;																	// Короткое имя свойства
-		string szType;																	// Имя типа (если есть)
-		UINT nID;																				// ID (если есть)
-		bool bHidden;																		// Скрытое ли поле?
+		string szName;																	// РљРѕСЂРѕС‚РєРѕРµ РёРјСЏ СЃРІРѕР№СЃС‚РІР°
+		string szType;																	// РРјСЏ С‚РёРїР° (РµСЃР»Рё РµСЃС‚СЊ)
+		UINT nID;																				// ID (РµСЃР»Рё РµСЃС‚СЊ)
+		bool bHidden;																		// РЎРєСЂС‹С‚РѕРµ Р»Рё РїРѕР»Рµ?
 
 		SProperty() : bFilled( false ), nID( INVALID_NODE_ID ), bHidden( false ) {}
 		SProperty( const SProperty &rProperty ) : bFilled( rProperty.bFilled ), szName( rProperty.szName ), szType( rProperty.szType ), nID( rProperty.nID ), bHidden( rProperty.bHidden ) {}
@@ -45,39 +45,39 @@ private:
 			return *this;
 		}	
 	};
-	typedef list<string> CPropertyList;								// для хранения порядка следования
-	typedef hash_map<string, SProperty> CPropertyMap;	// для хранения данных
-	typedef hash_map<int, string> CPropertyIDMap;			// для хранения данных
+	typedef list<string> CPropertyList;								// РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїРѕСЂСЏРґРєР° СЃР»РµРґРѕРІР°РЅРёСЏ
+	typedef hash_map<string, SProperty> CPropertyMap;	// РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…
+	typedef hash_map<int, string> CPropertyIDMap;			// РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…
 
-	EMaskMode maskMode;																// Тип путей воспринимаемых редактором
-	CPropertyList propertyList;												// Информация по последовательности полей
-	CPropertyMap propertyMap;													// Закешированная информация по полям
-	CPropertyIDMap propertyIDMap;											// Список ID объектов (заполняется только не для пустых объектов)
-	string szMask;																		// Путь добавляемый к элементам (с разделителем)
-	CPtr<IManipulator> pTargetManipulator;						// Манипулятор, который мы маскируем
+	EMaskMode maskMode;																// РўРёРї РїСѓС‚РµР№ РІРѕСЃРїСЂРёРЅРёРјР°РµРјС‹С… СЂРµРґР°РєС‚РѕСЂРѕРј
+	CPropertyList propertyList;												// РРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё РїРѕР»РµР№
+	CPropertyMap propertyMap;													// Р—Р°РєРµС€РёСЂРѕРІР°РЅРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РїРѕР»СЏРј
+	CPropertyIDMap propertyIDMap;											// РЎРїРёСЃРѕРє ID РѕР±СЉРµРєС‚РѕРІ (Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РЅРµ РґР»СЏ РїСѓСЃС‚С‹С… РѕР±СЉРµРєС‚РѕРІ)
+	string szMask;																		// РџСѓС‚СЊ РґРѕР±Р°РІР»СЏРµРјС‹Р№ Рє СЌР»РµРјРµРЅС‚Р°Рј (СЃ СЂР°Р·РґРµР»РёС‚РµР»РµРј)
+	CPtr<IManipulator> pTargetManipulator;						// РњР°РЅРёРїСѓР»СЏС‚РѕСЂ, РєРѕС‚РѕСЂС‹Р№ РјС‹ РјР°СЃРєРёСЂСѓРµРј
 
-	// Перевести полученное имя в оригинальное в соответствии в установленным методом
+	// РџРµСЂРµРІРµСЃС‚Рё РїРѕР»СѓС‡РµРЅРЅРѕРµ РёРјСЏ РІ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё РІ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј РјРµС‚РѕРґРѕРј
 	bool SetToOriginalName( string *pszName ) const;
-	// Перевести полученное имя в короткое в соответствии в установленным методом
+	// РџРµСЂРµРІРµСЃС‚Рё РїРѕР»СѓС‡РµРЅРЅРѕРµ РёРјСЏ РІ РєРѕСЂРѕС‚РєРѕРµ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё РІ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј РјРµС‚РѕРґРѕРј
 	bool SetToMaskName( string *pszName ) const;
 
 	CMaskManipulator() {}
 public:
-	// Конструирование манипулятора 
+	// РљРѕРЅСЃС‚СЂСѓРёСЂРѕРІР°РЅРёРµ РјР°РЅРёРїСѓР»СЏС‚РѕСЂР° 
 	CMaskManipulator( const string& rszMask,  IManipulator *_pTargetManipulator, EMaskMode _maskMode );
-	// Добавление имен ( имена могут быть длинными, а могут быть короткими, по усмотрению.
+	// Р”РѕР±Р°РІР»РµРЅРёРµ РёРјРµРЅ ( РёРјРµРЅР° РјРѕРіСѓС‚ Р±С‹С‚СЊ РґР»РёРЅРЅС‹РјРё, Р° РјРѕРіСѓС‚ Р±С‹С‚СЊ РєРѕСЂРѕС‚РєРёРјРё, РїРѕ СѓСЃРјРѕС‚СЂРµРЅРёСЋ.
 	bool AddName( const string &rszName, bool bFilled, const string& rszType, UINT nID, bool bHidden );
-	// Установление типа работы (как воспринимаются все имена в методах IManipulator), возвращает старый тип работы
+	// РЈСЃС‚Р°РЅРѕРІР»РµРЅРёРµ С‚РёРїР° СЂР°Р±РѕС‚С‹ (РєР°Рє РІРѕСЃРїСЂРёРЅРёРјР°СЋС‚СЃСЏ РІСЃРµ РёРјРµРЅР° РІ РјРµС‚РѕРґР°С… IManipulator), РІРѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°СЂС‹Р№ С‚РёРї СЂР°Р±РѕС‚С‹
 	inline EMaskMode SetMode( EMaskMode newMaskMode ) { const EMaskMode oldMaskMode = maskMode; maskMode = newMaskMode; return oldMaskMode; }
-	// Получение типа работы (как воспринимаются все имена в методах IManipulator)
+	// РџРѕР»СѓС‡РµРЅРёРµ С‚РёРїР° СЂР°Р±РѕС‚С‹ (РєР°Рє РІРѕСЃРїСЂРёРЅРёРјР°СЋС‚СЃСЏ РІСЃРµ РёРјРµРЅР° РІ РјРµС‚РѕРґР°С… IManipulator)
 	inline EMaskMode GetMode() const { return maskMode; }
-	// Установление пути
+	// РЈСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РїСѓС‚Рё
 	inline void SetMask( const string &rszMask )
 	{ 
 		//DebugTrace( "CMaskManipulator::SetMask(): <%s>", rszMask.c_str() );
 		szMask = rszMask;
 	}
-	// Получение пути
+	// РџРѕР»СѓС‡РµРЅРёРµ РїСѓС‚Рё
 	inline void GetMask( string *pszMask ) const { ( *pszMask ) = szMask; }
 
 	// IManipulator

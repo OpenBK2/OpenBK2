@@ -32,24 +32,24 @@ enum EForceType
 	FT_INFANTRY_IN_TRENCHES,
 	FT_FREE_INFANTRY,
 
-	FT_MOBILE_TANKS,											// мобильное подкрепление
+	FT_MOBILE_TANKS,											// РјРѕР±РёР»СЊРЅРѕРµ РїРѕРґРєСЂРµРїР»РµРЅРёРµ
 	FT_SWARMING_TANKS,										// tanks that is ascribed to attack group
-	FT_STATIONARY_MECH_UNITS,							// ЮНИты из обороны
+	FT_STATIONARY_MECH_UNITS,							// Р®РќРС‚С‹ РёР· РѕР±РѕСЂРѕРЅС‹
 	FT_RECAPTURE_STORAGE,
 
 	FT_TRUCK_REPAIR_BUILDING,							//truck that is able to repair buildings
 	FT_TRUCK_RESUPPLY,
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// через этот интерфейс получают врагов
+// С‡РµСЂРµР· СЌС‚РѕС‚ РёРЅС‚РµСЂС„РµР№СЃ РїРѕР»СѓС‡Р°СЋС‚ РІСЂР°РіРѕРІ
 interface IEnemyEnumerator
 {
-	// возращает, нужно ли ещё предлагать врагов
+	// РІРѕР·СЂР°С‰Р°РµС‚, РЅСѓР¶РЅРѕ Р»Рё РµС‰С‘ РїСЂРµРґР»Р°РіР°С‚СЊ РІСЂР°РіРѕРІ
 	virtual bool EnumEnemy( class CAIUnit *pEnemy ) = 0;
 	virtual bool EnumResistances( const struct SResistance &resistance ) { return false; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// через этот - выдают
+// С‡РµСЂРµР· СЌС‚РѕС‚ - РІС‹РґР°СЋС‚
 interface IEnemyContainer
 {
 	virtual void GiveEnemies( IEnemyEnumerator *pEnumerator ) = 0;
@@ -81,15 +81,15 @@ interface IWorkerEnumerator
 // ****
 interface ICommander : public CAIObjectBase
 {
-	// средняя сложность тасков, которые выполняет данный менджер
+	// СЃСЂРµРґРЅСЏСЏ СЃР»РѕР¶РЅРѕСЃС‚СЊ С‚Р°СЃРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ РІС‹РїРѕР»РЅСЏРµС‚ РґР°РЅРЅС‹Р№ РјРµРЅРґР¶РµСЂ
 	virtual float GetMeanSeverity() const = 0;
-	// выдает работников из заданной группы, начиная с самого хорошего по нумератору
+	// РІС‹РґР°РµС‚ СЂР°Р±РѕС‚РЅРёРєРѕРІ РёР· Р·Р°РґР°РЅРЅРѕР№ РіСЂСѓРїРїС‹, РЅР°С‡РёРЅР°СЏ СЃ СЃР°РјРѕРіРѕ С…РѕСЂРѕС€РµРіРѕ РїРѕ РЅСѓРјРµСЂР°С‚РѕСЂСѓ
 	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) = 0;
-	// забирает работника назад
+	// Р·Р°Р±РёСЂР°РµС‚ СЂР°Р±РѕС‚РЅРёРєР° РЅР°Р·Р°Рґ
 	virtual void Give( CCommonUnit *pWorker ) = 0;
 	virtual void Segment() = 0;
 
-	// дать наводку артиллерии или авиации or ask for resupply(repair,heal)(отменить существуюшую)
+	// РґР°С‚СЊ РЅР°РІРѕРґРєСѓ Р°СЂС‚РёР»Р»РµСЂРёРё РёР»Рё Р°РІРёР°С†РёРё or ask for resupply(repair,heal)(РѕС‚РјРµРЅРёС‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС€СѓСЋ)
 	virtual int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) { return 0; }
 	virtual void CancelRequest( int nRequestID, enum EForceType eType ) {  }
 };
@@ -99,22 +99,22 @@ interface ICommander : public CAIObjectBase
 // ****
 interface IGeneralTask : public CAIObjectBase
 {
-	// для определения имени таска
+	// РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РёРјРµРЅРё С‚Р°СЃРєР°
 	virtual ETaskName GetName() const = 0;
-	// чтобы таск мог запросить работников, но так, чтобы суммарная сила работников
-	// не превышала заданной
+	// С‡С‚РѕР±С‹ С‚Р°СЃРє РјРѕРі Р·Р°РїСЂРѕСЃРёС‚СЊ СЂР°Р±РѕС‚РЅРёРєРѕРІ, РЅРѕ С‚Р°Рє, С‡С‚РѕР±С‹ СЃСѓРјРјР°СЂРЅР°СЏ СЃРёР»Р° СЂР°Р±РѕС‚РЅРёРєРѕРІ
+	// РЅРµ РїСЂРµРІС‹С€Р°Р»Р° Р·Р°РґР°РЅРЅРѕР№
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) = 0;
-	// чтобы таск мог вернуть работников, но так, чтобы суммарая не стала 
-	// меньше заданной
+	// С‡С‚РѕР±С‹ С‚Р°СЃРє РјРѕРі РІРµСЂРЅСѓС‚СЊ СЂР°Р±РѕС‚РЅРёРєРѕРІ, РЅРѕ С‚Р°Рє, С‡С‚РѕР±С‹ СЃСѓРјРјР°СЂР°СЏ РЅРµ СЃС‚Р°Р»Р° 
+	// РјРµРЅСЊС€Рµ Р·Р°РґР°РЅРЅРѕР№
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) = 0;
-	// по этому параметру таски сортируются
-	//положительная серьезность - все нормально, отрицательная - ситцуация плохая
+	// РїРѕ СЌС‚РѕРјСѓ РїР°СЂР°РјРµС‚СЂСѓ С‚Р°СЃРєРё СЃРѕСЂС‚РёСЂСѓСЋС‚СЃСЏ
+	//РїРѕР»РѕР¶РёС‚РµР»СЊРЅР°СЏ СЃРµСЂСЊРµР·РЅРѕСЃС‚СЊ - РІСЃРµ РЅРѕСЂРјР°Р»СЊРЅРѕ, РѕС‚СЂРёС†Р°С‚РµР»СЊРЅР°СЏ - СЃРёС‚С†СѓР°С†РёСЏ РїР»РѕС…Р°СЏ
 	virtual float GetSeverity() const = 0;
 
-	// задача выполнена
+	// Р·Р°РґР°С‡Р° РІС‹РїРѕР»РЅРµРЅР°
 	virtual bool IsFinished() const = 0;
 
-	// принудительно завершить задачу, вернуть всех работников
+	// РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ Р·Р°РІРµСЂС€РёС‚СЊ Р·Р°РґР°С‡Сѓ, РІРµСЂРЅСѓС‚СЊ РІСЃРµС… СЂР°Р±РѕС‚РЅРёРєРѕРІ
 	virtual void CancelTask( ICommander *pManager ) = 0;
 	
 	virtual void Segment() = 0;

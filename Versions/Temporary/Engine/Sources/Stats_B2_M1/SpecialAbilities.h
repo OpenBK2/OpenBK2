@@ -15,7 +15,7 @@ enum EAbilitySwitchState
 	EASS_SWITCHING_ON		= 3,
 	EASS_SWITCHING_OFF	= 4,
 	EASS_READY_TO_ON		= 5, // regenereated, but not switched on
-	EASS_CHANGE_AUTOCAST_ONLY			= 6, // не менять текущее состояние абилити, только автокаст
+	EASS_CHANGE_AUTOCAST_ONLY			= 6, // РЅРµ РјРµРЅСЏС‚СЊ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р°Р±РёР»РёС‚Рё, С‚РѕР»СЊРєРѕ Р°РІС‚РѕРєР°СЃС‚
 };
 
 struct SAbilitySwitchState 

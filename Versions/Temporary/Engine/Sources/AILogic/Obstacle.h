@@ -3,14 +3,14 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // wrapper pattern
-// оболочка для всех препятствий, которые нужно уничтожать на своем пути
+// РѕР±РѕР»РѕС‡РєР° РґР»СЏ РІСЃРµС… РїСЂРµРїСЏС‚СЃС‚РІРёР№, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ СѓРЅРёС‡С‚РѕР¶Р°С‚СЊ РЅР° СЃРІРѕРµРј РїСѓС‚Рё
 interface IObstacle : public CAIObjectBase
 {
-	// для того, чтобы не стрелять вем по 1 препятствию
+	// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РЅРµ СЃС‚СЂРµР»СЏС‚СЊ РІРµРј РїРѕ 1 РїСЂРµРїСЏС‚СЃС‚РІРёСЋ
 	virtual void UpdateTakenDamagePower( const float fUpdate ) = 0;
 	virtual const float GetTakenDamagePower() const = 0;
 	
-	// выбирает пушку, из которой юнит лучше разрушит это препятствие
+	// РІС‹Р±РёСЂР°РµС‚ РїСѓС€РєСѓ, РёР· РєРѕС‚РѕСЂРѕР№ СЋРЅРёС‚ Р»СѓС‡С€Рµ СЂР°Р·СЂСѓС€РёС‚ СЌС‚Рѕ РїСЂРµРїСЏС‚СЃС‚РІРёРµ
 	virtual class CBasicGun *ChooseGunToShootToSelf( class CCommonUnit *pUnit, NTimer::STime *pTime ) = 0;
 
 	virtual int GetPlayer() const = 0;
@@ -18,10 +18,10 @@ interface IObstacle : public CAIObjectBase
 	virtual const CVec3 GetCenter() const = 0;
 	virtual bool IsAlive() const = 0;
 	
-	// помещает в начало очереди юнита команду на атаку этого обьекта
+	// РїРѕРјРµС‰Р°РµС‚ РІ РЅР°С‡Р°Р»Рѕ РѕС‡РµСЂРµРґРё СЋРЅРёС‚Р° РєРѕРјР°РЅРґСѓ РЅР° Р°С‚Р°РєСѓ СЌС‚РѕРіРѕ РѕР±СЊРµРєС‚Р°
 	virtual void IssueUnitAttackCommand( class CCommonUnit *pUnit ) = 0;
 	
-	// может ли юнит разрушить объект просто проехав по нему.
+	// РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ СЂР°Р·СЂСѓС€РёС‚СЊ РѕР±СЉРµРєС‚ РїСЂРѕСЃС‚Рѕ РїСЂРѕРµС…Р°РІ РїРѕ РЅРµРјСѓ.
 	virtual bool CanDeleteByMovingOver( class CAIUnit * pUnit ) = 0;
 	virtual class CUpdatableObj *GetObject() const = 0;
 };

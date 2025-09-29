@@ -64,7 +64,7 @@ void CFence::InitDirectionInfo()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CFence::AnalyzeConnection( CFence *pFence )
 {
-	// такого нет
+	// С‚Р°РєРѕРіРѕ РЅРµС‚
 	if ( find( neighFences.begin(), neighFences.end(), pFence ) == neighFences.end() )
 	{
 		if ( rightTile == pFence->leftTile ||

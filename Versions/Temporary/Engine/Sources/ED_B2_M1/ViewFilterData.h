@@ -1,6 +1,6 @@
 #pragma once
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// настройки фильтра визуализации объектов сцены для MapInfo Editor
+// РЅР°СЃС‚СЂРѕР№РєРё С„РёР»СЊС‚СЂР° РІРёР·СѓР°Р»РёР·Р°С†РёРё РѕР±СЉРµРєС‚РѕРІ СЃС†РµРЅС‹ РґР»СЏ MapInfo Editor
 struct SViewFilterData
 { 
 	struct SObjTypeFilter
@@ -17,17 +17,17 @@ struct SViewFilterData
 			return 0;
 		}
 	};
-	vector<SObjTypeFilter> objTypeFilter;			// показывать или нет объекты (units, buildings, static ...)
-	bool bShowGrid;														// отображать сетку
-	string szGridSize;												// тип(размер) сетки
-	bool bShowBBoxes;													// показывать bounding boxes для моделей
-	bool bWireFrame;													// режим ренедеринга wireframe
-	bool bShowTerrain;												// показывать terrain
-	bool bShowShadows;												// показывать тени
-	bool bShowWarfog;													// показывать warfog
-	bool bShowStats;													// показывать статистику
-	bool bMipmap;															// отображать уровни текстур
-	bool bOverdraw;														// отображать число перерисовок пикселов
+	vector<SObjTypeFilter> objTypeFilter;			// РїРѕРєР°Р·С‹РІР°С‚СЊ РёР»Рё РЅРµС‚ РѕР±СЉРµРєС‚С‹ (units, buildings, static ...)
+	bool bShowGrid;														// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ СЃРµС‚РєСѓ
+	string szGridSize;												// С‚РёРї(СЂР°Р·РјРµСЂ) СЃРµС‚РєРё
+	bool bShowBBoxes;													// РїРѕРєР°Р·С‹РІР°С‚СЊ bounding boxes РґР»СЏ РјРѕРґРµР»РµР№
+	bool bWireFrame;													// СЂРµР¶РёРј СЂРµРЅРµРґРµСЂРёРЅРіР° wireframe
+	bool bShowTerrain;												// РїРѕРєР°Р·С‹РІР°С‚СЊ terrain
+	bool bShowShadows;												// РїРѕРєР°Р·С‹РІР°С‚СЊ С‚РµРЅРё
+	bool bShowWarfog;													// РїРѕРєР°Р·С‹РІР°С‚СЊ warfog
+	bool bShowStats;													// РїРѕРєР°Р·С‹РІР°С‚СЊ СЃС‚Р°С‚РёСЃС‚РёРєСѓ
+	bool bMipmap;															// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ СѓСЂРѕРІРЅРё С‚РµРєСЃС‚СѓСЂ
+	bool bOverdraw;														// РѕС‚РѕР±СЂР°Р¶Р°С‚СЊ С‡РёСЃР»Рѕ РїРµСЂРµСЂРёСЃРѕРІРѕРє РїРёРєСЃРµР»РѕРІ
 	///
 	SViewFilterData() :
 	bShowGrid( false ),
@@ -61,7 +61,7 @@ struct SViewFilterData
 	{
 		if ( !pObjTypes )
 			return;
-		// эти типы объектов можно будет показывать/скрывать
+		// СЌС‚Рё С‚РёРїС‹ РѕР±СЉРµРєС‚РѕРІ РјРѕР¶РЅРѕ Р±СѓРґРµС‚ РїРѕРєР°Р·С‹РІР°С‚СЊ/СЃРєСЂС‹РІР°С‚СЊ
 		const char *pszObjTypeNames[] = 
 		{
 				"ObjectRPGStats",
@@ -97,7 +97,7 @@ struct SViewFilterData
 			vector<string> typeNames;
 //			vector<string> newTypeNames;
 			GetObjectTypesForFiltering( &typeNames );
-			// очистить список считанный из файла от типов, которых нет в pszObjTypeNames[]
+			// РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє СЃС‡РёС‚Р°РЅРЅС‹Р№ РёР· С„Р°Р№Р»Р° РѕС‚ С‚РёРїРѕРІ, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РІ pszObjTypeNames[]
 			for ( vector<SObjTypeFilter>::iterator it = objTypeFilter.begin(); it != objTypeFilter.end(); )
 			{
 				bool bInvalidType = true;
@@ -120,7 +120,7 @@ struct SViewFilterData
 					++it;
 				}
 			}
-			// добавить типы, которых нет еще в файле на диске
+			// РґРѕР±Р°РІРёС‚СЊ С‚РёРїС‹, РєРѕС‚РѕСЂС‹С… РЅРµС‚ РµС‰Рµ РІ С„Р°Р№Р»Рµ РЅР° РґРёСЃРєРµ
 			for ( int i = 0; i < typeNames.size(); ++i )
 			{
 				bool bNew = true;

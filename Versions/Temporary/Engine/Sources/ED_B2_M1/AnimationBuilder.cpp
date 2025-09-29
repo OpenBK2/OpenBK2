@@ -51,7 +51,7 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szSrcName;
 	if ( !CManipulatorManager::GetValue( &szSrcName, pBuildDataManipulator, "SrcName" ) || szSrcName.empty() )
 	{
@@ -121,7 +121,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 		}
 	}
 	bool bResult = true;
-	// Формируем файл с атрибутами анимаций
+	// Р¤РѕСЂРјРёСЂСѓРµРј С„Р°Р№Р» СЃ Р°С‚СЂРёР±СѓС‚Р°РјРё Р°РЅРёРјР°С†РёР№
 	if ( !szSrcName.empty() && !szRootJoint.empty() )
 	{
 		string szScriptText;
@@ -146,7 +146,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 			typedef hash_map<string, int> CAnimationMap;
 			CAnimationMap animationMap;
 			// CRAP} HASH_SET
-			// Находим все анимации в текущем каталоге
+			// РќР°С…РѕРґРёРј РІСЃРµ Р°РЅРёРјР°С†РёРё РІ С‚РµРєСѓС‰РµРј РєР°С‚Р°Р»РѕРіРµ
 			{
 				CPtr<IManipulatorIterator> pIterator = pAnimationFolderManipulator->Iterate( true, ECT_CACHE_LOCAL );
 				const int nSize = rszAnimationFolder.size();
@@ -175,7 +175,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 				}
 				pAnimationFolderManipulator->ClearCache();
 			}
-			// Читаем набор анимаций из файла с атрибутами
+			// Р§РёС‚Р°РµРј РЅР°Р±РѕСЂ Р°РЅРёРјР°С†РёР№ РёР· С„Р°Р№Р»Р° СЃ Р°С‚СЂРёР±СѓС‚Р°РјРё
 			if ( bResult )
 			{
 				if ( !Singleton<IExporterContainer>()->StartExport( szAnimationTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, NOT_EXPORT_REFERENCES ) )
@@ -270,13 +270,13 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 							if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) ) 
 							{
 								
-								// Удалим анимацию из списка несуществующих анимаций
+								// РЈРґР°Р»РёРј Р°РЅРёРјР°С†РёСЋ РёР· СЃРїРёСЃРєР° РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… Р°РЅРёРјР°С†РёР№
 								CAnimationMap::iterator posAnimation = animationMap.find( szAnimationName );
 								if ( posAnimation != animationMap.end() )
 								{
 									animationMap.erase( posAnimation );
 								}
-								// Запишем свойства инимации
+								// Р—Р°РїРёС€РµРј СЃРІРѕР№СЃС‚РІР° РёРЅРёРјР°С†РёРё
 								bResult = bResult && pAnimationManipulator->SetValue( "SrcName", szSrcName );
 								bResult = bResult && pAnimationManipulator->SetValue( "RootJoint", szRootJoint );
 								bResult = bResult && pAnimationManipulator->SetValue( "Type", szAnimationType );
@@ -317,7 +317,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 				::DeleteFile( szAnimParamsDestination.c_str() );
 				Singleton<IExporterContainer>()->FinishExport( szAnimationTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, NOT_EXPORT_REFERENCES );
 			}
-			// Удаляем лишние анимации:
+			// РЈРґР°Р»СЏРµРј Р»РёС€РЅРёРµ Р°РЅРёРјР°С†РёРё:
 			if ( bResult )
 			{
 				for ( CAnimationMap::iterator itAnimation = animationMap.begin(); itAnimation != animationMap.end(); ++itAnimation ) 

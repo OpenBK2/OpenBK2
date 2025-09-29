@@ -164,14 +164,14 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 
 	CAviation * pSamplePlane = checked_cast_ptr<CAviation*>( createdAviation[0] );
 
-	// проредить.
+	// РїСЂРѕСЂРµРґРёС‚СЊ.
 	SSameEnemyPointPredicate pr1;
 	list<CVec2>::iterator firstSame = unique( vPoints.begin(), vPoints.end(), pr1 );
 	vPoints.erase( firstSame, vPoints.end() );
 
 	const float fFlyHeight( pSamplePlane->GetZ() );
 
-	// проверить каждую линию на безопасность.
+	// РїСЂРѕРІРµСЂРёС‚СЊ РєР°Р¶РґСѓСЋ Р»РёРЅРёСЋ РЅР° Р±РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ.
 	CVec2 vCurStartPoint = pSamplePlane->GetCenterPlain();
 	for ( list<CVec2>::iterator it = vPoints.begin(); it != vPoints.end();  )
 	{
@@ -233,7 +233,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 				const float fDist1 = fabs2( vStart - vCenter );
 				float fMinDist;
 
-				if ( fDistToCenter > fDist1 ) // нормаль от точки не падает на отрезок
+				if ( fDistToCenter > fDist1 ) // РЅРѕСЂРјР°Р»СЊ РѕС‚ С‚РѕС‡РєРё РЅРµ РїР°РґР°РµС‚ РЅР° РѕС‚СЂРµР·РѕРє
 					fMinDist = fDist1;
 				else 
 				{
@@ -287,7 +287,7 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints
 		ids.push_back( createdAviation[i]->GetUniqueId() );
 	Singleton<IAILogic>()->RegisterGroup( ids, nGroupID );
 
-	// если вызвались
+	// РµСЃР»Рё РІС‹Р·РІР°Р»РёСЃСЊ
 	for ( ; it != vPoints.end(); ++it )
 	{
 		cmd.vPos = *it;
@@ -366,7 +366,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 			}
 		}
 	}
-	// вообще-то круто было бы проверить и возврат, но это невозможно
+	// РІРѕРѕР±С‰Рµ-С‚Рѕ РєСЂСѓС‚Рѕ Р±С‹Р»Рѕ Р±С‹ РїСЂРѕРІРµСЂРёС‚СЊ Рё РІРѕР·РІСЂР°С‚, РЅРѕ СЌС‚Рѕ РЅРµРІРѕР·РјРѕР¶РЅРѕ
 	if ( !vPointsToFly.empty() )
 		LaunchPlane( FT_AIR_SCOUT, vPointsToFly, nPlayer );
 }
@@ -419,7 +419,7 @@ void CGeneralAirForce::SetAAVisible( CAIUnit *pUnit, const bool bVisible )
 	AntiAviation::iterator it = antiAviation.find( pUnit->GetUniqueId() );
 	if (  it == antiAviation.end() )
 	{
-		// создать
+		// СЃРѕР·РґР°С‚СЊ
 		CEnemyRememberer *pEnemy = new CEnemyRememberer( SGeneralConsts::TIME_SONT_SEE_AA_BEFORE_FORGET );
 		antiAviation[pUnit->GetUniqueId()] = pEnemy;
 	}

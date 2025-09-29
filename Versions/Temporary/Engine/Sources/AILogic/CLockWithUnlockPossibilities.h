@@ -1,8 +1,8 @@
 #pragma once
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//в заданном тайл сете запоминает состояние залоченности
-// и сохраняет его. 
-// после этого есть возможность восстановить начальное состояние залоченности
+//РІ Р·Р°РґР°РЅРЅРѕРј С‚Р°Р№Р» СЃРµС‚Рµ Р·Р°РїРѕРјРёРЅР°РµС‚ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°Р»РѕС‡РµРЅРЅРѕСЃС‚Рё
+// Рё СЃРѕС…СЂР°РЅСЏРµС‚ РµРіРѕ. 
+// РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РµСЃС‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°Р»РѕС‡РµРЅРЅРѕСЃС‚Рё
 class CAIUnit;
 class CLockWithUnlockPossibilities
 {
@@ -17,7 +17,7 @@ class CLockWithUnlockPossibilities
 	bool bLocked;
 	BYTE bAIClass; //
 protected:
-	SRect bigRect; // весь этот Rect будет пройден танком.
+	SRect bigRect; // РІРµСЃСЊ СЌС‚РѕС‚ Rect Р±СѓРґРµС‚ РїСЂРѕР№РґРµРЅ С‚Р°РЅРєРѕРј.
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&formerTilesType); f.Add(3,&pathTiles); f.Add(4,&bLocked); f.Add(5,&bAIClass); f.Add(6,&bigRect); return 0; }
 protected:
 	bool TryLockAlongTheWay( const bool bLock, const BYTE _bAIClass ) ;

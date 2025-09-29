@@ -58,8 +58,8 @@ void CExporterBase::SetExportObjectResult( const string &rszObjectRefName, EXPOR
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Собираем новые типы требующие вызова StartExport и FinishExport
-// Дополнительно запоминаем тип и имя объекта ( может быть не указан в имени свойства )
+// РЎРѕР±РёСЂР°РµРј РЅРѕРІС‹Рµ С‚РёРїС‹ С‚СЂРµР±СѓСЋС‰РёРµ РІС‹Р·РѕРІР° StartExport Рё FinishExport
+// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ Р·Р°РїРѕРјРёРЅР°РµРј С‚РёРї Рё РёРјСЏ РѕР±СЉРµРєС‚Р° ( РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ СѓРєР°Р·Р°РЅ РІ РёРјРµРЅРё СЃРІРѕР№СЃС‚РІР° )
 bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 																					const string &rszObjectTypeName,
 																					const string &rszObjectName,
@@ -188,7 +188,7 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 {
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
-	// Необходимо заканчивать экспорт в обратном порядке - переделываем лист
+	// РќРµРѕР±С…РѕРґРёРјРѕ Р·Р°РєР°РЅС‡РёРІР°С‚СЊ СЌРєСЃРїРѕСЂС‚ РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ - РїРµСЂРµРґРµР»С‹РІР°РµРј Р»РёСЃС‚
 	list<string> backObjectTypeNameList;
 	for ( list<string>::const_iterator itObjectTypeName = objectTypeNameList.GetList().begin(); itObjectTypeName != objectTypeNameList.GetList().end(); ++itObjectTypeName )
 	{
@@ -261,18 +261,18 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
 	string szObjectRefName;
 	CStringManager::GetRefValueFromTypeAndName( &szObjectRefName, rszObjectTypeName, rszObjectName, TYPE_SEPARATOR_CHAR );
-	// проверяем что у этого объекта прошел StartExport
+	// РїСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ Сѓ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р° РїСЂРѕС€РµР» StartExport
 	EXPORT_RESULT eResult = GetStartExportResult( rszObjectTypeName );
 	if ( eResult == ER_FAIL )
 	{
 		SetExportObjectResult( szObjectRefName, eResult );
 		return ER_FAIL;
 	}
-	// Проверяем что мы еще не экспортировали этот объект
+	// РџСЂРѕРІРµСЂСЏРµРј С‡С‚Рѕ РјС‹ РµС‰Рµ РЅРµ СЌРєСЃРїРѕСЂС‚РёСЂРѕРІР°Р»Рё СЌС‚РѕС‚ РѕР±СЉРµРєС‚
 	eResult = GetExportObjectResult( szObjectRefName );
 	if ( eResult == ER_UNKNOWN )
 	{
-		// Экспортируем обьект до экспорта ссылок
+		// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј РѕР±СЊРµРєС‚ РґРѕ СЌРєСЃРїРѕСЂС‚Р° СЃСЃС‹Р»РѕРє
 		eResult = ER_SUCCESS;
 		if ( IExporter *pExporter = pExporterContainer->GetExporter( rszObjectTypeName ) )
 		{
@@ -320,7 +320,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				return eResult;
 			}
 		}
-		// Экспортируем ссылочные типы
+		// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј СЃСЃС‹Р»РѕС‡РЅС‹Рµ С‚РёРїС‹
 		{
 			eResult = HierarchyExportObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, bForce );
 			if ( eResult == ER_BREAK )
@@ -329,7 +329,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				return eResult;
 			}
 		}
-		// Экспортируем обьект после экспорта ссылок
+		// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј РѕР±СЊРµРєС‚ РїРѕСЃР»Рµ СЌРєСЃРїРѕСЂС‚Р° СЃСЃС‹Р»РѕРє
 		if ( IExporter *pExporter = pExporterContainer->GetExporter( rszObjectTypeName ) )
 		{
 			if ( bExport )
@@ -386,7 +386,7 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
   NI_ASSERT( pManipulator != 0, "CExporterBase::HierarchyExportObject() pManipulator == 0" );
 	//
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	// Получаем список типов ссылок
+	// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє С‚РёРїРѕРІ СЃСЃС‹Р»РѕРє
 	CObjectTypeNameList currentObjectTypeNameList;
 	CExportObjectTypeNameMap currentExportObjectTypeNameMap;
 	CExportObjectNameMap currentExportObjectNameMap;
@@ -398,7 +398,7 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 												&currentExportObjectNameMap,
 												( !bExport ) ? &invalidLinkList : 0 );
 	InnerStartExport( currentObjectTypeNameList, bExport, bForce );
-	// Экпортируем ссылочные поля
+	// Р­РєРїРѕСЂС‚РёСЂСѓРµРј СЃСЃС‹Р»РѕС‡РЅС‹Рµ РїРѕР»СЏ
 	for ( CExportObjectNameMap::const_iterator itCurrentExportObjectName = currentExportObjectNameMap.begin(); itCurrentExportObjectName != currentExportObjectNameMap.end(); ++itCurrentExportObjectName )
 	{
 		const string szObjectTypeName = currentExportObjectTypeNameMap[itCurrentExportObjectName->first];

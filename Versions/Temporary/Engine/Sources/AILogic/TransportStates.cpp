@@ -647,7 +647,7 @@ void CTransportLandState::Segment()
 		case ELS_LANDING:
 			{
 				InitStatus();
-				// найти все формации в транспорте, которые не принадлежат пушке, которая болтается сзади
+				// РЅР°Р№С‚Рё РІСЃРµ С„РѕСЂРјР°С†РёРё РІ С‚СЂР°РЅСЃРїРѕСЂС‚Рµ, РєРѕС‚РѕСЂС‹Рµ РЅРµ РїСЂРёРЅР°РґР»РµР¶Р°С‚ РїСѓС€РєРµ, РєРѕС‚РѕСЂР°СЏ Р±РѕР»С‚Р°РµС‚СЃСЏ СЃР·Р°РґРё
 				CPtr<CArtillery> pArt = pTransport->GetTowedArtillery();
 				CFormation *pGunCrew = !IsValidObj( pArt ) ? 0 : pTransport->GetTowedArtilleryCrew();
 				const int nGunCrew = pGunCrew == 0 ? 0 : pGunCrew->Size();
@@ -659,7 +659,7 @@ void CTransportLandState::Segment()
 
 					if ( !pFormation )
 					{
-						// найти формацию, которую нужно высадить
+						// РЅР°Р№С‚Рё С„РѕСЂРјР°С†РёСЋ, РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ РІС‹СЃР°РґРёС‚СЊ
 						for ( int i = 0; i < nPassangers && pFormation == 0; ++i )
 						{
 							CFormation *pTmp = pTransport->GetPassenger( i )->GetFormation();
@@ -873,7 +873,7 @@ void CTransportHookArtilleryState::Segment()
 					}
 					else
 					{
-						// подъехать передом.
+						// РїРѕРґСЉРµС…Р°С‚СЊ РїРµСЂРµРґРѕРј.
 						CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pTransport, true, GetAIMap() );
 						if ( pPath )
 						{
@@ -913,7 +913,7 @@ void CTransportHookArtilleryState::Segment()
 
 			break;
 		case TTGS_APPROACH_BY_MOVE_BACK:
-			// расстояние между пушкой и грузовиком почти равно размерам грузовичка и пушки
+			// СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РїСѓС€РєРѕР№ Рё РіСЂСѓР·РѕРІРёРєРѕРј РїРѕС‡С‚Рё СЂР°РІРЅРѕ СЂР°Р·РјРµСЂР°Рј РіСЂСѓР·РѕРІРёС‡РєР° Рё РїСѓС€РєРё
 			if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
 			{
 				//not possible, cannot take nither other player's artillery nor free artillery
@@ -922,7 +922,7 @@ void CTransportHookArtilleryState::Segment()
 			}
 			else		
 			{
-				// подъезжаем на нужное расстояние к пушке
+				// РїРѕРґСЉРµР·Р¶Р°РµРј РЅР° РЅСѓР¶РЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ Рє РїСѓС€РєРµ
 				const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
 														fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
 				const float dist1 = fabs( pArtillery->GetCenterPlain() - pTransport->GetCenterPlain() );
@@ -1018,7 +1018,7 @@ void CTransportHookArtilleryState::Segment()
 			else if ( pArtillery->IsUninstalled() && 
 								pArtillery->GetCurUninstallAction() == ACTION_NOTIFY_UNINSTALL_TRANSPORT )
 			{
-					// повернуть пушку к грузовичку
+					// РїРѕРІРµСЂРЅСѓС‚СЊ РїСѓС€РєСѓ Рє РіСЂСѓР·РѕРІРёС‡РєСѓ
 				pTransport->SetGoForward( true );
 				eState = TTGS_WAIT_FOR_TURN;
 				timeLast = curTime;
@@ -1100,7 +1100,7 @@ ETryStateInterruptResult CTransportHookArtilleryState::TryInterruptState( class 
 		return TSIR_YES_IMMIDIATELY;
 	}
 
-	// не по смерти разрещается прерывать только если не начали крутить пушку
+	// РЅРµ РїРѕ СЃРјРµСЂС‚Рё СЂР°Р·СЂРµС‰Р°РµС‚СЃСЏ РїСЂРµСЂС‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РµСЃР»Рё РЅРµ РЅР°С‡Р°Р»Рё РєСЂСѓС‚РёС‚СЊ РїСѓС€РєСѓ
 	if ( !pTransport->IsAlive () )
 	{
 		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_STOP_THIS_ACTION), pArtillery, false );
@@ -1300,7 +1300,7 @@ void CTransportUnhookArtilleryState::Segment()
 		{
 			CArtillery *pArt = pTransport->GetTowedArtillery();
 
-			//отпустить пушку
+			//РѕС‚РїСѓСЃС‚РёС‚СЊ РїСѓС€РєСѓ
 			pTransport->SetTowedArtillery( 0 );
 			pArt->GetState()->TryInterruptState( 0 );
 			
@@ -1309,7 +1309,7 @@ void CTransportUnhookArtilleryState::Segment()
 			else
 			{
 				CFormation *pCrew = pTransport->GetTowedArtilleryCrew();
-				//выгнать артиллеристов из транспорта
+				//РІС‹РіРЅР°С‚СЊ Р°СЂС‚РёР»Р»РµСЂРёСЃС‚РѕРІ РёР· С‚СЂР°РЅСЃРїРѕСЂС‚Р°
 				CSoldier *pSold = 0;
 				CVec2 point2D( pTransport->GetEntrancePoint() );
 				CVec3 point3D( point2D.x, point2D.y, GetHeights()->GetZ( point2D ) );
@@ -1330,13 +1330,13 @@ void CTransportUnhookArtilleryState::Segment()
 				}
 				pCrew->SetCenter( point3D );
 
-				// пусть пушку могут теперь селектить
+				// РїСѓСЃС‚СЊ РїСѓС€РєСѓ РјРѕРіСѓС‚ С‚РµРїРµСЂСЊ СЃРµР»РµРєС‚РёС‚СЊ
 				pArt->SetCrew( pCrew );
 
-				// дать команду пушке инталлироваться
+				// РґР°С‚СЊ РєРѕРјР°РЅРґСѓ РїСѓС€РєРµ РёРЅС‚Р°Р»Р»РёСЂРѕРІР°С‚СЊСЃСЏ
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_INSTALL ), pArt, false );
 
-				// все , можем уезжать, справятся без нас
+				// РІСЃРµ , РјРѕР¶РµРј СѓРµР·Р¶Р°С‚СЊ, СЃРїСЂР°РІСЏС‚СЃСЏ Р±РµР· РЅР°СЃ
 				pTransport->SetCommandFinished();
 			}
 		}

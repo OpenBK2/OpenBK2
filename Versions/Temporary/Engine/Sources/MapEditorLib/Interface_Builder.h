@@ -22,19 +22,19 @@ interface IView;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SBuildDataParams
 {
-	UINT nFlags;										// Параметры редактрования
-	string szObjectTypeName;				// Тип объекта
-	// имя формируется следующим образом:
+	UINT nFlags;										// РџР°СЂР°РјРµС‚СЂС‹ СЂРµРґР°РєС‚СЂРѕРІР°РЅРёСЏ
+	string szObjectTypeName;				// РўРёРї РѕР±СЉРµРєС‚Р°
+	// РёРјСЏ С„РѕСЂРјРёСЂСѓРµС‚СЃСЏ СЃР»РµРґСѓСЋС‰РёРј РѕР±СЂР°Р·РѕРј:
 	// string szFileName = szObjectNamePrefix + szObjectName + szObjectNamePostfix;
 	// CStringManager::ExtendFileExtention( &szFileName, szObjectNameExtention );
-	// Если установлено, что редактируем каталог - не забудте в szObjectNamePostfix в начале поставить слеш
-	string szObjectNamePrefix;			// Нередактируемая часть
-	string szObjectName;						// Объект редактирования
-	string szObjectNamePostfix;			// Нерадактируемая часть
-	string szObjectNameExtention;		// Расширение (необходимо разделять)
+	// Р•СЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ, С‡С‚Рѕ СЂРµРґР°РєС‚РёСЂСѓРµРј РєР°С‚Р°Р»РѕРі - РЅРµ Р·Р°Р±СѓРґС‚Рµ РІ szObjectNamePostfix РІ РЅР°С‡Р°Р»Рµ РїРѕСЃС‚Р°РІРёС‚СЊ СЃР»РµС€
+	string szObjectNamePrefix;			// РќРµСЂРµРґР°РєС‚РёСЂСѓРµРјР°СЏ С‡Р°СЃС‚СЊ
+	string szObjectName;						// РћР±СЉРµРєС‚ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
+	string szObjectNamePostfix;			// РќРµСЂР°РґР°РєС‚РёСЂСѓРµРјР°СЏ С‡Р°СЃС‚СЊ
+	string szObjectNameExtention;		// Р Р°СЃС€РёСЂРµРЅРёРµ (РЅРµРѕР±С…РѕРґРёРјРѕ СЂР°Р·РґРµР»СЏС‚СЊ)
 	//
-	bool bNeedExport;								// Необходимо ли экспортировать объект после создания
-	bool bNeedEdit;									// Необходимо ли загружать одъект после экспорта или создания
+	bool bNeedExport;								// РќРµРѕР±С…РѕРґРёРјРѕ Р»Рё СЌРєСЃРїРѕСЂС‚РёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ
+	bool bNeedEdit;									// РќРµРѕР±С…РѕРґРёРјРѕ Р»Рё Р·Р°РіСЂСѓР¶Р°С‚СЊ РѕРґСЉРµРєС‚ РїРѕСЃР»Рµ СЌРєСЃРїРѕСЂС‚Р° РёР»Рё СЃРѕР·РґР°РЅРёСЏ
 	SBuildDataParams() : nFlags( BDF_ALL ), bNeedExport( false ), bNeedEdit( false ) {}
 	void GetObjectName( string *pszObjectName )
 	{
@@ -57,47 +57,47 @@ typedef hash_map<int, CTableSet> CTableSetMap;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IBuildDataCallback
 {
-	// проверить данные на правильность заполнения, если данные не верны вернуть краткое описание ошибки
-	// pszDescription - может быть нулевой
+	// РїСЂРѕРІРµСЂРёС‚СЊ РґР°РЅРЅС‹Рµ РЅР° РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ Р·Р°РїРѕР»РЅРµРЅРёСЏ, РµСЃР»Рё РґР°РЅРЅС‹Рµ РЅРµ РІРµСЂРЅС‹ РІРµСЂРЅСѓС‚СЊ РєСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ РѕС€РёР±РєРё
+	// pszDescription - РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅСѓР»РµРІРѕР№
 	virtual bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView ) = 0;
-	// проверить имя объекта на уникальность
+	// РїСЂРѕРІРµСЂРёС‚СЊ РёРјСЏ РѕР±СЉРµРєС‚Р° РЅР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ
 	virtual bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName ) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
+// РІ cpp С„Р°Р№Р»Рµ РЅР°РїРёСЃР°С‚СЊ РјР°РєСЂРѕСЃ: REGISTER_EDITOR_IN_...( typeName, className )
 
-// При создании компоновщика
+// РџСЂРё СЃРѕР·РґР°РЅРёРё РєРѕРјРїРѕРЅРѕРІС‰РёРєР°
 // Constructor()
 // Build();
 
-// При разрушении компоновщика
+// РџСЂРё СЂР°Р·СЂСѓС€РµРЅРёРё РєРѕРјРїРѕРЅРѕРІС‰РёРєР°
 // Destructor()
 
-// При переключении компоновщиков ( не удаляется и не создается )
+// РџСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё РєРѕРјРїРѕРЅРѕРІС‰РёРєРѕРІ ( РЅРµ СѓРґР°Р»СЏРµС‚СЃСЏ Рё РЅРµ СЃРѕР·РґР°РµС‚СЃСЏ )
 // Build();
 interface IBuilder : public CObjectBase
 {
-	// Создать и скомпоновать объекты ( может быть добавлено сразу много объектов )
-	// true - создали какие либо объекты ( необходимо обработать ситуацию дальше )
-	// false - нажали Cancel ( ситуацию обрабатывать нет необходимости )
-	virtual bool InsertObject( string *pszObjectTypeName,											// Необходимо для создания Builder'ов для несколько типов объектов
-														 string *pszUniqueObjectName,										// Имя выбранное пользователем ( полное )
+	// РЎРѕР·РґР°С‚СЊ Рё СЃРєРѕРјРїРѕРЅРѕРІР°С‚СЊ РѕР±СЉРµРєС‚С‹ ( РјРѕР¶РµС‚ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅРѕ СЃСЂР°Р·Сѓ РјРЅРѕРіРѕ РѕР±СЉРµРєС‚РѕРІ )
+	// true - СЃРѕР·РґР°Р»Рё РєР°РєРёРµ Р»РёР±Рѕ РѕР±СЉРµРєС‚С‹ ( РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ СЃРёС‚СѓР°С†РёСЋ РґР°Р»СЊС€Рµ )
+	// false - РЅР°Р¶Р°Р»Рё Cancel ( СЃРёС‚СѓР°С†РёСЋ РѕР±СЂР°Р±Р°С‚С‹РІР°С‚СЊ РЅРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё )
+	virtual bool InsertObject( string *pszObjectTypeName,											// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 string *pszUniqueObjectName,										// РРјСЏ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј ( РїРѕР»РЅРѕРµ )
 														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,										// Можно ли после создания объекта менять его имя
-														 bool *pbNeedExport,														// Нужно ли экспортить сразу после создания
+														 bool *pbCanChangeObjectName,										// РњРѕР¶РЅРѕ Р»Рё РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° РјРµРЅСЏС‚СЊ РµРіРѕ РёРјСЏ
+														 bool *pbNeedExport,														// РќСѓР¶РЅРѕ Р»Рё СЌРєСЃРїРѕСЂС‚РёС‚СЊ СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ
 														 bool *pbNeedEdit ) = 0;
-	// Скопировать объект
-	virtual bool CopyObject( const string &rszObjectTypeName,									// Необходимо для создания Builder'ов для несколько типов объектов
-													 const string &rszDestination,										// Имя куда копировать
-													 const string &rszSource ) = 0;										// Имя откуда копировать
-	// Переименовать объект
-	virtual bool RenameObject( const string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const string &rszDestination,									// Имя куда копировать
-														 const string &rszSource ) = 0;									// Имя откуда копировать
-	// Удалить объект
-	virtual bool RemoveObject( const string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const string &rszObjectName ) = 0;							// Имя выбранное пользователем ( полное )
+	// РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
+	virtual bool CopyObject( const string &rszObjectTypeName,									// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+													 const string &rszDestination,										// РРјСЏ РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+													 const string &rszSource ) = 0;										// РРјСЏ РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+	// РџРµСЂРµРёРјРµРЅРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
+	virtual bool RenameObject( const string &rszObjectTypeName,								// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 const string &rszDestination,									// РРјСЏ РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+														 const string &rszSource ) = 0;									// РРјСЏ РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+	// РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚
+	virtual bool RemoveObject( const string &rszObjectTypeName,								// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 const string &rszObjectName ) = 0;							// РРјСЏ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј ( РїРѕР»РЅРѕРµ )
 	//
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) = 0;
 };
@@ -106,29 +106,29 @@ interface IBuilderContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C3 };
 	//
-	// Проверить на существование компоновщика
+	// РџСЂРѕРІРµСЂРёС‚СЊ РЅР° СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ РєРѕРјРїРѕРЅРѕРІС‰РёРєР°
 	virtual bool CanBuildObject( const string &rszObjectTypeName ) = 0;
 	virtual bool CanDefaultBuildObject( const string &rszObjectTypeName ) = 0;
-	// Методы создания и удаления компоновщиков
+	// РњРµС‚РѕРґС‹ СЃРѕР·РґР°РЅРёСЏ Рё СѓРґР°Р»РµРЅРёСЏ РєРѕРјРїРѕРЅРѕРІС‰РёРєРѕРІ
 	virtual void Create( const string &rszObjectTypeName ) = 0;
 	virtual void Destroy( const string &rszObjectTypeName ) = 0;
 	//
-	virtual bool InsertObject( string *pszObjectTypeName,											// Необходимо для создания Builder'ов для несколько типов объектов
-														 string *pszUniqueObjectName,										// Имя выбранное пользователем ( полное )
+	virtual bool InsertObject( string *pszObjectTypeName,											// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 string *pszUniqueObjectName,										// РРјСЏ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј ( РїРѕР»РЅРѕРµ )
 														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,										// Можно ли после создания объекта менять его имя
-														 bool *pbNeedExport,														// Нужно ли экспортить сразу после создания
-														 bool *pbNeedEdit ) = 0;												// Нужно ли загружать редактор после экспорта или после создания объекта
-	virtual bool CopyObject( const string &rszObjectTypeName,									// Необходимо для создания Builder'ов для несколько типов объектов
-													 const string &rszDestination,										// Имя куда копировать
-													 const string &rszSource ) = 0;										// Имя откуда копировать
-	virtual bool RenameObject( const string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const string &rszDestination,									// Имя куда копировать
-														 const string &rszSource ) = 0;									// Имя откуда копировать
-	virtual bool RemoveObject( const string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const string &rszObjectName ) = 0;							// Имя выбранное пользователем ( полное )
+														 bool *pbCanChangeObjectName,										// РњРѕР¶РЅРѕ Р»Рё РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р° РјРµРЅСЏС‚СЊ РµРіРѕ РёРјСЏ
+														 bool *pbNeedExport,														// РќСѓР¶РЅРѕ Р»Рё СЌРєСЃРїРѕСЂС‚РёС‚СЊ СЃСЂР°Р·Сѓ РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ
+														 bool *pbNeedEdit ) = 0;												// РќСѓР¶РЅРѕ Р»Рё Р·Р°РіСЂСѓР¶Р°С‚СЊ СЂРµРґР°РєС‚РѕСЂ РїРѕСЃР»Рµ СЌРєСЃРїРѕСЂС‚Р° РёР»Рё РїРѕСЃР»Рµ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚Р°
+	virtual bool CopyObject( const string &rszObjectTypeName,									// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+													 const string &rszDestination,										// РРјСЏ РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+													 const string &rszSource ) = 0;										// РРјСЏ РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+	virtual bool RenameObject( const string &rszObjectTypeName,								// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 const string &rszDestination,									// РРјСЏ РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+														 const string &rszSource ) = 0;									// РРјСЏ РѕС‚РєСѓРґР° РєРѕРїРёСЂРѕРІР°С‚СЊ
+	virtual bool RemoveObject( const string &rszObjectTypeName,								// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Builder'РѕРІ РґР»СЏ РЅРµСЃРєРѕР»СЊРєРѕ С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ
+														 const string &rszObjectName ) = 0;							// РРјСЏ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј ( РїРѕР»РЅРѕРµ )
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) = 0;
-	// заполнить BuildData
+	// Р·Р°РїРѕР»РЅРёС‚СЊ BuildData
 	virtual bool FillBuildData(	string *pszBuildDataTypeName,
 															string *pszBuildDataName,
 															SBuildDataParams *pBuildDataParams,					

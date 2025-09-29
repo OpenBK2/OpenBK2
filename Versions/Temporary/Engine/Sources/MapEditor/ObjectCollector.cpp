@@ -49,7 +49,7 @@ void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFile
 				wszText.resize( ( fileBuffer.size() - 2 ) / sizeof( wchar_t ) );
 				memcpy( &( wszText[0] ), &( fileBuffer[0] ) + 2, wszText.size() * sizeof( wchar_t ) );
 				//wszText.erase( remove_if( wszText.begin(), wszText.end(), bind2nd( std::equal_to<wchar_t>(), 0x0D ) ), wszText.end() );
-				// îòðåçàåì ïåðåíîñû ñòðîê ñ îáðàòíîãî êîíöà
+				// Ð¾Ñ‚Ñ€ÐµÐ·Ð°ÐµÐ¼ Ð¿ÐµÑ€ÐµÐ½Ð¾ÑÑ‹ ÑÑ‚Ñ€Ð¾Ðº Ñ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾Ð³Ð¾ ÐºÐ¾Ð½Ñ†Ð°
 				int nLastIndex = 0;
 				for ( nLastIndex = ( wszText.size() - 1 ); nLastIndex >= 0; --nLastIndex )
 				{
@@ -66,7 +66,7 @@ void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFile
 				{
 					wszText = wszText.substr( 0, nLastIndex + 1 );
 				}
-				// ïåðåâîäèì â ÑString
+				// Ð¿ÐµÑ€ÐµÐ²Ð¾Ð´Ð¸Ð¼ Ð² Ð¡String
 				const int nBufferLength = ::WideCharToMultiByte( ::GetACP(), 0, wszText.c_str(), wszText.length(), 0, 0, 0, 0 );
 				LPTSTR lptStr = pstrText->GetBuffer( nBufferLength );
 				::WideCharToMultiByte( ::GetACP(), 0, wszText.c_str(), wszText.length(), lptStr, nBufferLength, 0, 0 );

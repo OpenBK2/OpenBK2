@@ -9,17 +9,17 @@ namespace NCollider
 bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
 	const CVec3 &ptCenter, float fR );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// направленная прямая в пространстве Плюкера
+// РЅР°РїСЂР°РІР»РµРЅРЅР°СЏ РїСЂСЏРјР°СЏ РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ РџР»СЋРєРµСЂР°
 struct SSegment
 {
-	float fC0, fC1, fC2, fC3, fC4, fC5; // координаты прямой в 6D пространстве Плюкера
+	float fC0, fC1, fC2, fC3, fC4, fC5; // РєРѕРѕСЂРґРёРЅР°С‚С‹ РїСЂСЏРјРѕР№ РІ 6D РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ РџР»СЋРєРµСЂР°
 
 	SSegment() {}
 	SSegment( const CVec3 &p, const CVec3 &q )
 	{
 		CalcCoords( p, q );
 	}
-	// вычисление координат по двум точкам
+	// РІС‹С‡РёСЃР»РµРЅРёРµ РєРѕРѕСЂРґРёРЅР°С‚ РїРѕ РґРІСѓРј С‚РѕС‡РєР°Рј
 	void CalcCoords( const CVec3 &p, const CVec3 &q )
 	{
 		fC0 = p.x*q.y-q.x*p.y;

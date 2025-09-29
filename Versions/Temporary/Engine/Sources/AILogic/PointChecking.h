@@ -49,7 +49,7 @@ class CGoToDistance : public IPointChecking
 
 public:
 	CGoToDistance() { }
-	// дистанция задаётся в тайлах
+	// РґРёСЃС‚Р°РЅС†РёСЏ Р·Р°РґР°С‘С‚СЃСЏ РІ С‚Р°Р№Р»Р°С…
 	CGoToDistance( const float tileDistance, const SVector &_targetTile )
 		: tileDistance2( sqr( tileDistance ) ), targetTile( _targetTile ) { }
 

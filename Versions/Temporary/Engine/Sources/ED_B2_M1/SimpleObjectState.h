@@ -24,7 +24,7 @@ class CSimpleObjectState : public CMapObjectState
 	//
 	void ClearData();
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CSimpleObjectState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, StrFmt( "CSimpleObjectState(): pParentState == 0" ) );

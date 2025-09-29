@@ -122,7 +122,7 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 	CFileStream stream( NVFS::GetMainVFS(), pszFileName );
 	NI_ASSERT( stream.IsOk() != 0, StrFmt( "Can't find script file \"%s\"", pszFileName ) );
 	const int nSize = stream.GetSize();
-	// +10 на всякий случай
+	// +10 РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№
 	vector<char> buffer( nSize + 10 );
 	stream.Read( &(buffer[0]), nSize );
 	return (script.DoBuffer( &(buffer[0]), nSize, "Script" ) == 0) ; 

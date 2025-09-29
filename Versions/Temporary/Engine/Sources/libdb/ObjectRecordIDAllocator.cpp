@@ -27,7 +27,7 @@ public:
 		{
 			::Sleep(100);
 			lock = ::CreateFile(szFileLockName.c_str(), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, 0);
-			// FIXME: проверять GetLastError на sharing error, а то при просто некорректном имени файла всё повиснет
+			// FIXME: РїСЂРѕРІРµСЂСЏС‚СЊ GetLastError РЅР° sharing error, Р° С‚Рѕ РїСЂРё РїСЂРѕСЃС‚Рѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРј РёРјРµРЅРё С„Р°Р№Р»Р° РІСЃС‘ РїРѕРІРёСЃРЅРµС‚
 		}
 		while( lock == INVALID_HANDLE_VALUE );
 	}

@@ -300,7 +300,7 @@ IUnitState* CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 		{
 			pResult = CFormationLeaveBuildingState::Instance( pFormation, pFormation->GetBuilding(), ALP_POSITION_VALID, cmd.vPos );
 		}
-		else if ( pFormation->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
+		else if ( pFormation->IsInTankPit() && !pCommand->IsFromAI() )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 		{
 			theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pFormation);
 			theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF), pFormation );
@@ -861,7 +861,7 @@ bool CFormationEnterBuildingState::SetPathForRunUp()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CFormationEnterBuildingState::SendUnitsToBuilding()
 {
-	// послать юнитов в здание
+	// РїРѕСЃР»Р°С‚СЊ СЋРЅРёС‚РѕРІ РІ Р·РґР°РЅРёРµ
 	pFormation->Stop();
 	for ( int i = 0; i < pFormation->Size(); ++i )
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER, pBuilding->GetUniqueId() ), (*pFormation)[i], false );
@@ -878,7 +878,7 @@ void CFormationEnterBuildingState::Segment()
 {
 	//NI_ASSERT( !pFormation->IsInWaitingState(), "Wrong formation waiting state" );
 	
-	// здание разрушено или там не хватит места
+	// Р·РґР°РЅРёРµ СЂР°Р·СЂСѓС€РµРЅРѕ РёР»Рё С‚Р°Рј РЅРµ С…РІР°С‚РёС‚ РјРµСЃС‚Р°
 	if ( !IsValidObj( pBuilding ) || state != EES_WAITINIG_TO_ENTER && pBuilding->GetPlayer() != -1 && IsNotEnoughSpace() )
 	{
 		pFormation->SendAcknowledgement( ACK_NEGATIVE );
@@ -1043,7 +1043,7 @@ CFormationEnterEntrenchmentState::CFormationEnterEntrenchmentState( CFormation *
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CFormationEnterEntrenchmentState::IsAnyPartCloseToEntrenchment() const
 {
-	// посмотреть положение центра формации
+	// РїРѕСЃРјРѕС‚СЂРµС‚СЊ РїРѕР»РѕР¶РµРЅРёРµ С†РµРЅС‚СЂР° С„РѕСЂРјР°С†РёРё
 	const float fFormationRadius2 = sqr( Max( pFormation->GetRadius(), SConsts::TILE_SIZE * 4.0f ) );
 	const CVec2 vFormationCenter = pFormation->GetCenterPlain();
 	CVec2 vClosestPoint;
@@ -1052,7 +1052,7 @@ bool CFormationEnterEntrenchmentState::IsAnyPartCloseToEntrenchment() const
 	if ( fabs2( vClosestPoint - vFormationCenter ) < fFormationRadius2 )
 		return true;
 	
-	// посмотреть положения каждого из солдатиков
+	// РїРѕСЃРјРѕС‚СЂРµС‚СЊ РїРѕР»РѕР¶РµРЅРёСЏ РєР°Р¶РґРѕРіРѕ РёР· СЃРѕР»РґР°С‚РёРєРѕРІ
 	int i = 0;
 	while ( i < pFormation->Size() )
 	{
@@ -1092,7 +1092,7 @@ void CFormationEnterEntrenchmentState::EnterToEntrenchment()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CFormationEnterEntrenchmentState::Segment()
 {
-	// окоп non valid или там кто-то уже сидит
+	// РѕРєРѕРї non valid РёР»Рё С‚Р°Рј РєС‚Рѕ-С‚Рѕ СѓР¶Рµ СЃРёРґРёС‚
 	if ( !IsValidObj( pEntrenchment ) )
 		TryInterruptState( 0 );	
 	switch ( state )
@@ -1229,19 +1229,19 @@ ETryStateInterruptResult CFormationIdleBuildingState::TryInterruptState( CAIComm
 	if ( cmdType == ACTION_COMMAND_LOAD && pCommand->GetFlag() == 1 )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	
-	//некотороые команды в данном состоянии невозможны
+	//РЅРµРєРѕС‚РѕСЂРѕС‹Рµ РєРѕРјР°РЅРґС‹ РІ РґР°РЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё РЅРµРІРѕР·РјРѕР¶РЅС‹
 	if ( cmdType == ACTION_COMMAND_ROTATE_TO || cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
 			 cmdType == ACTION_COMMAND_USE_SPYGLASS || IsRestCommand( cmdType ) || cmdType == ACTION_COMMAND_STAND_GROUND )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 
-	// эти команды можно выполнить, не выходя из здания
+	// СЌС‚Рё РєРѕРјР°РЅРґС‹ РјРѕР¶РЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ, РЅРµ РІС‹С…РѕРґСЏ РёР· Р·РґР°РЅРёСЏ
 	if ( cmdType == ACTION_COMMAND_CATCH_FORMATION )
 	{
 		pFormation->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
 	}
 
-	// некоторые команды передать солдатам
+	// РЅРµРєРѕС‚РѕСЂС‹Рµ РєРѕРјР°РЅРґС‹ РїРµСЂРµРґР°С‚СЊ СЃРѕР»РґР°С‚Р°Рј
 	if (	cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
 				cmdType == ACTION_COMMAND_ATTACK_UNIT ||
 //				cmdType == ACTION_COMMAND_AMBUSH ||
@@ -1269,7 +1269,7 @@ ETryStateInterruptResult CFormationIdleBuildingState::TryInterruptState( CAIComm
 			return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 
-	// все остальные команды - через выход из здания
+	// РІСЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РєРѕРјР°РЅРґС‹ - С‡РµСЂРµР· РІС‹С…РѕРґ РёР· Р·РґР°РЅРёСЏ
 	if ( cmdType != ACTION_COMMAND_WAIT_TO_FORM	&&
 			 cmdType != ACTION_COMMAND_DISBAND_FORMATION &&
 			 cmdType != ACTION_COMMAND_FORM_FORMATION )
@@ -1338,19 +1338,19 @@ ETryStateInterruptResult CFormationIdleEntrenchmentState::TryInterruptState( cla
 	if ( cmdType == ACTION_COMMAND_LOAD && pCommand->GetFlag() == 1 )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 
-	//некотороые команды в данном состоянии невозможны
+	//РЅРµРєРѕС‚РѕСЂРѕС‹Рµ РєРѕРјР°РЅРґС‹ РІ РґР°РЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё РЅРµРІРѕР·РјРѕР¶РЅС‹
 	if ( cmdType == ACTION_COMMAND_ROTATE_TO || cmdType == ACTION_COMMAND_ROTATE_TO_DIR || 
 			 IsRestCommand( cmdType ) || cmdType == ACTION_COMMAND_STAND_GROUND )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 
-		// эти команды можно выполнить, не выходя из здания
+		// СЌС‚Рё РєРѕРјР°РЅРґС‹ РјРѕР¶РЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ, РЅРµ РІС‹С…РѕРґСЏ РёР· Р·РґР°РЅРёСЏ
 	if ( cmdType == ACTION_COMMAND_CATCH_FORMATION )
 	{
 		pFormation->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
 	}
 
-	// некоторые команды передать солдатам
+	// РЅРµРєРѕС‚РѕСЂС‹Рµ РєРѕРјР°РЅРґС‹ РїРµСЂРµРґР°С‚СЊ СЃРѕР»РґР°С‚Р°Рј
 	if (	cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
 				cmdType == ACTION_COMMAND_ATTACK_UNIT ||
 //				cmdType == ACTION_COMMAND_AMBUSH ||
@@ -1379,7 +1379,7 @@ ETryStateInterruptResult CFormationIdleEntrenchmentState::TryInterruptState( cla
 			return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 
-	// все остальные команды - через выход из окопа.
+	// РІСЃРµ РѕСЃС‚Р°Р»СЊРЅС‹Рµ РєРѕРјР°РЅРґС‹ - С‡РµСЂРµР· РІС‹С…РѕРґ РёР· РѕРєРѕРїР°.
 	if ( cmdType != ACTION_COMMAND_WAIT_TO_FORM	&&
 			 cmdType != ACTION_COMMAND_DISBAND_FORMATION &&
 			 cmdType != ACTION_COMMAND_FORM_FORMATION )
@@ -1498,7 +1498,7 @@ void CFormationLeaveEntrenchmentState::Segment()
 	CVec2 startPoint;
 	pEntrenchment->GetClosestPoint( point, &startPoint );
 
-	// найти первую точку пути вне окопа
+	// РЅР°Р№С‚Рё РїРµСЂРІСѓСЋ С‚РѕС‡РєСѓ РїСѓС‚Рё РІРЅРµ РѕРєРѕРїР°
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( startPoint, point, VNULL2, pFormation, false, GetAIMap() );
 	if ( pPath != 0 )
 	{
@@ -1758,10 +1758,10 @@ IUnitState* CFormationRotateState::Instance( CFormation *pFormation, const WORD 
 CFormationRotateState::CFormationRotateState( CFormation *_pFormation, const WORD wDir )
 : pFormation( _pFormation )
 {
-	// повернуть формацию
+	// РїРѕРІРµСЂРЅСѓС‚СЊ С„РѕСЂРјР°С†РёСЋ
 	pFormation->TurnToDirection( wDir, false, true );
 
-	// сказать каждому юниту формации построиться
+	// СЃРєР°Р·Р°С‚СЊ РєР°Р¶РґРѕРјСѓ СЋРЅРёС‚Сѓ С„РѕСЂРјР°С†РёРё РїРѕСЃС‚СЂРѕРёС‚СЊСЃСЏ
 	const SAIUnitCmd paradeCmd( ACTION_COMMAND_PARADE );
 	for ( int i = 0; i < pFormation->Size(); ++i )
 		theGroupLogic.UnitCommand( paradeCmd, (*pFormation)[i], false );
@@ -2215,7 +2215,7 @@ void CFormationCatchTransportState::Segment()
 						pTransportToCatch->SetResursUnitsLeft( SConsts::TRANSPORT_RU_CAPACITY );
 				}
 				
-				if ( 0 != nNotInTransport ) //не все добежали
+				if ( 0 != nNotInTransport ) //РЅРµ РІСЃРµ РґРѕР±РµР¶Р°Р»Рё
 					vEnterPoint = pTransportToCatch->GetEntrancePoint();
 			}
 
@@ -2287,7 +2287,7 @@ void CFormationParaDropState::Segment()
 			IUnitState  *pState = (*pFormation)[i]->GetState();
 			if ( EUSN_PARTROOP == pState->GetName() )
 			{
-				//кто-то уже выпрыгнул
+				//РєС‚Рѕ-С‚Рѕ СѓР¶Рµ РІС‹РїСЂС‹РіРЅСѓР»
 				eState = EPS_WAIT_FOR_PARADROP_END;
 				return;
 			}
@@ -2301,7 +2301,7 @@ void CFormationParaDropState::Segment()
 				IUnitState  *pState = (*pFormation)[i]->GetState();
 				if ( EUSN_PARTROOP == pState->GetName() )
 				{
-					//кто-то еще не долетел
+					//РєС‚Рѕ-С‚Рѕ РµС‰Рµ РЅРµ РґРѕР»РµС‚РµР»
 					if ( !static_cast<CSoldierParaDroppingState*>( pState )->IsLanded() )
 						return;
 				}
@@ -2532,7 +2532,7 @@ void CFormationFormState::Segment()
 	{
 		pMemFormation->SetCenter( pMainSoldier->GetCenter() );
 
-		// сформировать команду
+		// СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ РєРѕРјР°РЅРґСѓ
 		SAIUnitCmd cmd;
 		if ( pMainSoldier->IsFree() )
 			cmd.nCmdType = ACTION_COMMAND_MOVE_TO;
@@ -2551,7 +2551,7 @@ void CFormationFormState::Segment()
 			}
 		}
 
-		// раздать команду всем
+		// СЂР°Р·РґР°С‚СЊ РєРѕРјР°РЅРґСѓ РІСЃРµРј
 		SAIUnitCmd waitCmd( ACTION_COMMAND_WAIT_TO_FORM, pMainSoldier->GetUniqueId(), 0.0f );
 		for ( int i = 0; i < pMemFormation->Size(); ++i )
 		{
@@ -2659,7 +2659,7 @@ void CFormationWaitToFormState::FormFormation()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CFormationWaitToFormState::Segment()
 {
-	// проверять не сразу же, а когда команда дойдёт до всех солдат формации
+	// РїСЂРѕРІРµСЂСЏС‚СЊ РЅРµ СЃСЂР°Р·Сѓ Р¶Рµ, Р° РєРѕРіРґР° РєРѕРјР°РЅРґР° РґРѕР№РґС‘С‚ РґРѕ РІСЃРµС… СЃРѕР»РґР°С‚ С„РѕСЂРјР°С†РёРё
 	if ( curTime - startTime > 1000 )
 	{
 		if ( bMain )
@@ -2667,7 +2667,7 @@ void CFormationWaitToFormState::Segment()
 			bool bCanForm = true;
 			for ( int i = 0; i < pFormFormation->Size(); ++i )
 			{
-				// команда на формирование прервана
+				// РєРѕРјР°РЅРґР° РЅР° С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ РїСЂРµСЂРІР°РЅР°
 				if ( !(*pFormFormation)[i]->IsInWait2Form() )
 				{
 					pFormation->SetCommandFinished();
@@ -2776,19 +2776,19 @@ void CCatchFormationState::AnalyzeFreeFormation()
 	const CVec2 vFormationCenter = pFormation->GetCenterPlain();
 	CSoldier *pSoldier = (*pCatchingFormation)[0];
 	
-	// если нужно откуда-то выбегать
+	// РµСЃР»Рё РЅСѓР¶РЅРѕ РѕС‚РєСѓРґР°-С‚Рѕ РІС‹Р±РµРіР°С‚СЊ
 	if ( !pSoldier->IsFree() )
 		LeaveCurStaticObject();
-	// просто бежать к формации
+	// РїСЂРѕСЃС‚Рѕ Р±РµР¶Р°С‚СЊ Рє С„РѕСЂРјР°С†РёРё
 	else 
 	{
-		// добежали или формация сдвинулась
+		// РґРѕР±РµР¶Р°Р»Рё РёР»Рё С„РѕСЂРјР°С†РёСЏ СЃРґРІРёРЅСѓР»Р°СЃСЊ
 		if ( pCatchingFormation->IsIdle() || fabs2( vFormationCenter - lastFormationPos ) >= sqr( float( 2 * SConsts::TILE_SIZE ) ) )
 		{
 			lastFormationPos = vFormationCenter;
 			const float fDist2 = fabs2( vFormationCenter - pCatchingFormation->GetCenterPlain() );
 			
-			// близко
+			// Р±Р»РёР·РєРѕ
 			if ( fDist2 <= sqr( float( 8 * SConsts::TILE_SIZE ) ) )
 			{
 				if ( (*pFormation)[0]->CanJoinToFormation() )
@@ -2808,10 +2808,10 @@ void CCatchFormationState::AnalyzeFormationInBuilding( CBuilding *pBuilding )
 {
 	CSoldier *pSoldier = (*pCatchingFormation)[0];
 
-	// внутри объекта, но не того, который нужно
+	// РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°, РЅРѕ РЅРµ С‚РѕРіРѕ, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ
 	if ( !pSoldier->IsFree() && ( !pSoldier->IsInBuilding() || pSoldier->GetBuilding() != pBuilding ) )
 		LeaveCurStaticObject();
-	// не внутри объекта
+	// РЅРµ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
 	else if ( pSoldier->IsFree() )
 	{
 		const CVec2 vCatchingFormationCenter = pCatchingFormation->GetCenterPlain();
@@ -2820,15 +2820,15 @@ void CCatchFormationState::AnalyzeFormationInBuilding( CBuilding *pBuilding )
 		if ( pBuilding->ChooseEntrance( pCatchingFormation, vCatchingFormationCenter, &nEntrance ) )
 			vPointToGo = pBuilding->GetEntrancePoint( nEntrance );
 
-		// можно вбежать в это здание
+		// РјРѕР¶РЅРѕ РІР±РµР¶Р°С‚СЊ РІ СЌС‚Рѕ Р·РґР°РЅРёРµ
 		if ( vPointToGo.x != -1.0f )
 		{
-			// уже близко
+			// СѓР¶Рµ Р±Р»РёР·РєРѕ
 			if ( fabs2( vCatchingFormationCenter - vPointToGo ) <= sqr( float( 5 * SConsts::TILE_SIZE ) ) )
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER, pBuilding->GetUniqueId(), float(0) ), pCatchingFormation );
 			else
 			{
-				// нужно подправить путь
+				// РЅСѓР¶РЅРѕ РїРѕРґРїСЂР°РІРёС‚СЊ РїСѓС‚СЊ
 				if ( pBuilding != pLastFormationObject || pCatchingFormation->IsIdle() )
 				{
 					pLastFormationObject = pBuilding;
@@ -2859,7 +2859,7 @@ void CCatchFormationState::AnalyzeFormationInEntrenchment( CEntrenchment *pEntre
 		CVec2 vPointToGo;
 		pEntrenchment->GetClosestPoint( pSoldier->GetCenterPlain(), &vPointToGo );
 
-		// близко к точке входа
+		// Р±Р»РёР·РєРѕ Рє С‚РѕС‡РєРµ РІС…РѕРґР°
 		if ( fabs2( vCatchingFormationCenter - vPointToGo ) <= sqr( float( 5 * SConsts::TILE_SIZE ) ) )
 			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER, pEntrenchment->GetUniqueId(), float(1) ), pCatchingFormation );
 		else if ( pCatchingFormation->IsIdle() || pLastFormationObject != (CObjectBase*)pEntrenchment )
@@ -2888,7 +2888,7 @@ void CCatchFormationState::AnalyzeFormationInTransport( CMilitaryCar *pCar )
 	{
 		const CVec2 vTransportCenter = pCar->GetCenterPlain();
 		const float fDist2 = fabs2( pCatchingFormation->GetCenterPlain() - vTransportCenter );
-		// далеко, нужно подбежать
+		// РґР°Р»РµРєРѕ, РЅСѓР¶РЅРѕ РїРѕРґР±РµР¶Р°С‚СЊ
 		if ( fDist2 > sqr( float( 5*SConsts::TILE_SIZE ) ) && 
 				( pLastFormationObject != (CObjectBase*)pCar || pCatchingFormation->IsIdle() ) )
 		{
@@ -2921,13 +2921,13 @@ void CCatchFormationState::SetToDisbandedState()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCatchFormationState::Segment()
 {
-	// формация расформирована
+	// С„РѕСЂРјР°С†РёСЏ СЂР°СЃС„РѕСЂРјРёСЂРѕРІР°РЅР°
 	if ( pFormation->IsDisabled() )
 		SetToDisbandedState();
-	// пора проверить состояние формации
+	// РїРѕСЂР° РїСЂРѕРІРµСЂРёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ С„РѕСЂРјР°С†РёРё
 	else if ( curTime - lastUpdateTime >= 1500 )
 	{
-		// всех невиртуальных убили
+		// РІСЃРµС… РЅРµРІРёСЂС‚СѓР°Р»СЊРЅС‹С… СѓР±РёР»Рё
 		if ( pFormation->Size() == 0 )
 			JoinToFormation();
 		else

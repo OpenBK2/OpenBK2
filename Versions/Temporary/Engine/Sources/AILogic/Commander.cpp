@@ -41,32 +41,32 @@ float CCommander::GetMeanSeverity() const
 void CCommander::Segment()
 {
 
-	// ïðîäåëàòü ðàáëòó âñåìè òàñêàìè
+	// Ð¿Ñ€Ð¾Ð´ÐµÐ»Ð°Ñ‚ÑŒ Ñ€Ð°Ð±Ð»Ñ‚Ñƒ Ð²ÑÐµÐ¼Ð¸ Ñ‚Ð°ÑÐºÐ°Ð¼Ð¸
 	SSegmentPredicate segmentPred;
 	for_each( tasks.begin(), tasks.end(), segmentPred );
 
-	// âûáðàòü çàâåðøåííûå çàäà÷è
+	// Ð²Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ‹Ðµ Ð·Ð°Ð´Ð°Ñ‡Ð¸
 	SFinishedPredicate finishedPred;
 	Tasks::iterator finishedFirst = remove_if( tasks.begin(), tasks.end(), finishedPred );
 
-	// çàáðàòü âñåõ ðàáîòíèêîâ ó çàâåðøåííûõ çàäà÷
+	// Ð·Ð°Ð±Ñ€Ð°Ñ‚ÑŒ Ð²ÑÐµÑ… Ñ€Ð°Ð±Ð¾Ñ‚Ð½Ð¸ÐºÐ¾Ð² Ñƒ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ‹Ñ… Ð·Ð°Ð´Ð°Ñ‡
 	STakeWorkersPredicate takeWorkers( this );
 	for_each( finishedFirst, tasks.end(), takeWorkers );
 	
-	// óäàëèòü çàâåðøåííûå çàäà÷è
+	// ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ð·Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð½Ñ‹Ðµ Ð·Ð°Ð´Ð°Ñ‡Ð¸
 	tasks.erase( finishedFirst, tasks.end() );
 
-	// îòñîðòèðîâàòü çàäà÷è ïî ïðèîðèòåòàì
+	// Ð¾Ñ‚ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ð·Ð°Ð´Ð°Ñ‡Ð¸ Ð¿Ð¾ Ð¿Ñ€Ð¸Ð¾Ñ€Ð¸Ñ‚ÐµÑ‚Ð°Ð¼
 	STaskSortPresicate pr;
 	sort( tasks.begin(), tasks.end(), pr );
 
-	// ïîñ÷èòàòü ñðåäíþþ ñëîæíîñòü âñåõ òàñêîâ
+	// Ð¿Ð¾ÑÑ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ ÑÑ€ÐµÐ´Ð½ÑŽÑŽ ÑÐ»Ð¾Ð¶Ð½Ð¾ÑÑ‚ÑŒ Ð²ÑÐµÑ… Ñ‚Ð°ÑÐºÐ¾Ð²
 	STaskCalcSeverityPredicate calcSeverity;
 	calcSeverity = for_each( tasks.begin(), tasks.end(), calcSeverity );
 	fMeanSeverity = calcSeverity.GetSeverity();
 
 	
-	// ó òàñêîâ, êîòîðûõ âñå õîðîøî ïîïûòàòüñÿ çàáðàòü ëèøíèå þíèòû
+	// Ñƒ Ñ‚Ð°ÑÐºÐ¾Ð², ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ñ… Ð²ÑÐµ Ñ…Ð¾Ñ€Ð¾ÑˆÐ¾ Ð¿Ð¾Ð¿Ñ‹Ñ‚Ð°Ñ‚ÑŒÑÑ Ð·Ð°Ð±Ñ€Ð°Ñ‚ÑŒ Ð»Ð¸ÑˆÐ½Ð¸Ðµ ÑŽÐ½Ð¸Ñ‚Ñ‹
 	for ( Tasks::iterator i = tasks.begin(); i != tasks.end(); ++i )
 		(*i)->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
 	

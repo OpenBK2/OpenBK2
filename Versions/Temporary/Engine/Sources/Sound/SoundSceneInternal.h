@@ -21,8 +21,8 @@ class CSoundScene2D : public ISoundScene
 	OBJECT_NOCOPY_METHODS( CSoundScene2D );
 public:
 
-	static const NTimer::STime &GetCurTime();		// чтобы не передавать всюду
-	// для определения лежит ли звук в пределах карты
+	static const NTimer::STime &GetCurTime();		// С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµРґР°РІР°С‚СЊ РІСЃСЋРґСѓ
+	// РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ Р»РµР¶РёС‚ Р»Рё Р·РІСѓРє РІ РїСЂРµРґРµР»Р°С… РєР°СЂС‚С‹
 	static bool IsInBounds( const int x, const int y, const int z );
 	typedef list< SUpdatedCell > CUpdatedCells; 
 public:
@@ -36,8 +36,8 @@ public:
 	typedef hash_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsOutOfBounds;
 	typedef hash_map<SIntThree, CPtr<CSoundCell>, SIntThreeHash> CSoundCellsWithSound;
 
-	// для сбора звуков, которые слышны в клетке и сортировки их по
-	// звукам их заменяющим
+	// РґР»СЏ СЃР±РѕСЂР° Р·РІСѓРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ СЃР»С‹С€РЅС‹ РІ РєР»РµС‚РєРµ Рё СЃРѕСЂС‚РёСЂРѕРІРєРё РёС… РїРѕ
+	// Р·РІСѓРєР°Рј РёС… Р·Р°РјРµРЅСЏСЋС‰РёРј
 	class CSoundsCollector
 	{
 		CSoundSubstTable	&substTable;
@@ -56,35 +56,35 @@ public:
 private:
 	enum ESoundSceneMode eSoundSceneMode;
 	bool bMapInitted;
-	CFreeIds freeIDs;											// таблица ID звуков
+	CFreeIds freeIDs;											// С‚Р°Р±Р»РёС†Р° ID Р·РІСѓРєРѕРІ
 	typedef hash_map< WORD, SIntThree > CSoundIDs;
-	CSoundIDs soundIDs;			// в какой клетке находится звук.
+	CSoundIDs soundIDs;			// РІ РєР°РєРѕР№ РєР»РµС‚РєРµ РЅР°С…РѕРґРёС‚СЃСЏ Р·РІСѓРє.
 
 	CPtr<ISFX> pSFX;
 	CPtr<IGameTimer> pGameTimer;
 
-	CUpdatedCells updatedCells;						// для промежуточного хранения
+	CUpdatedCells updatedCells;						// РґР»СЏ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРіРѕ С…СЂР°РЅРµРЅРёСЏ
 
 	NTimer::STime timeLastUpdate;
-	SIntThree vFormerCameraCell;								// для отслеживания перемещения камеры
-	static SIntThree vLimit;											// максимальные размеры карты
+	SIntThree vFormerCameraCell;								// РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ РєР°РјРµСЂС‹
+	static SIntThree vLimit;											// РјР°РєСЃРёРјР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ РєР°СЂС‚С‹
 	static int nMinZ;															// minimal camera height
 
-	CSoundSubstTable substTable;					// таблица замены звуков
+	CSoundSubstTable substTable;					// С‚Р°Р±Р»РёС†Р° Р·Р°РјРµРЅС‹ Р·РІСѓРєРѕРІ
 
-	CHearableSounds interfaceSounds;					// звуки от интерфейса
+	CHearableSounds interfaceSounds;					// Р·РІСѓРєРё РѕС‚ РёРЅС‚РµСЂС„РµР№СЃР°
 	hash_set<int> finishedInterfaceSounds;
 	hash_set<int> deletedInterfaceSounds;
 
 	CTerrainSounds terrainSounds;
 	CMapSounds mapSounds;
 
-	CSoundCellsInBounds	soundCellsInBounds;								// звуки на карте
-	CSoundCellsOutOfBounds soundCellsOutOfBounds;		// звуки за кратой (гл.образом самолеты)
-	CSoundCellsWithSound soundCellsWithSound;				// список всех клеток со звуками
+	CSoundCellsInBounds	soundCellsInBounds;								// Р·РІСѓРєРё РЅР° РєР°СЂС‚Рµ
+	CSoundCellsOutOfBounds soundCellsOutOfBounds;		// Р·РІСѓРєРё Р·Р° РєСЂР°С‚РѕР№ (РіР».РѕР±СЂР°Р·РѕРј СЃР°РјРѕР»РµС‚С‹)
+	CSoundCellsWithSound soundCellsWithSound;				// СЃРїРёСЃРѕРє РІСЃРµС… РєР»РµС‚РѕРє СЃРѕ Р·РІСѓРєР°РјРё
 
 	CCellsConglomerateContainer cellsPHS;
-	static NTimer::STime curTime;					// чтобы не передавать всюду
+	static NTimer::STime curTime;					// С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµРґР°РІР°С‚СЊ РІСЃСЋРґСѓ
 	CVec2 vFormerCameraDir;
 
 	// helper functions
@@ -128,7 +128,7 @@ public:
 	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
 	void SetTerrain( interface ITerrainSounds * pTerrain );
 
-	// если начался или идет бой - то вызывать эу функцию
+	// РµСЃР»Рё РЅР°С‡Р°Р»СЃСЏ РёР»Рё РёРґРµС‚ Р±РѕР№ - С‚Рѕ РІС‹Р·С‹РІР°С‚СЊ СЌСѓ С„СѓРЅРєС†РёСЋ
 	void MuteTerrain( const bool bMute );
 	WORD AddSound( 	const NDb::SComplexSoundDesc *pStats,
 		const CVec3 &vPos,
@@ -137,9 +137,9 @@ public:
 		const unsigned int nTimeAfterStart,
 		int nVolumeType );
 
-	//удаляет звук из сцены. ID становится инвалидным
+	//СѓРґР°Р»СЏРµС‚ Р·РІСѓРє РёР· СЃС†РµРЅС‹. ID СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РёРЅРІР°Р»РёРґРЅС‹Рј
 	void RemoveSound( const WORD wID );
-	// задает новую позицию звуку.
+	// Р·Р°РґР°РµС‚ РЅРѕРІСѓСЋ РїРѕР·РёС†РёСЋ Р·РІСѓРєСѓ.
 	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
 	bool IsSoundFinished( const WORD wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
@@ -203,9 +203,9 @@ public:
 		const enum ESoundAddMode eAddMode,
 		const unsigned int nTimeAfterStart,
 		int nVolumeType );
-	// удаляет звук из сцены. ID становится инвалидным
+	// СѓРґР°Р»СЏРµС‚ Р·РІСѓРє РёР· СЃС†РµРЅС‹. ID СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РёРЅРІР°Р»РёРґРЅС‹Рј
 	void RemoveSound( const WORD wID );
-	// задает новую позицию звуку.
+	// Р·Р°РґР°РµС‚ РЅРѕРІСѓСЋ РїРѕР·РёС†РёСЋ Р·РІСѓРєСѓ.
 	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
 	bool IsSoundFinished( const WORD wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );
@@ -255,9 +255,9 @@ public:
 		const unsigned int nTimeAfterStart,
 		int nVolumeType );
 
-	//удаляет звук из сцены. ID становится инвалидным
+	//СѓРґР°Р»СЏРµС‚ Р·РІСѓРє РёР· СЃС†РµРЅС‹. ID СЃС‚Р°РЅРѕРІРёС‚СЃСЏ РёРЅРІР°Р»РёРґРЅС‹Рј
 	void RemoveSound( const WORD wID );
-	// задает новую позицию звуку.
+	// Р·Р°РґР°РµС‚ РЅРѕРІСѓСЋ РїРѕР·РёС†РёСЋ Р·РІСѓРєСѓ.
 	void SetSoundPos( const WORD wID, const class CVec3 &vPos );
 	bool IsSoundFinished( const WORD wID ) const;
 	void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius );

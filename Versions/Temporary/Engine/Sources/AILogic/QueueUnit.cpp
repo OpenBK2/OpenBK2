@@ -85,7 +85,7 @@ void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 	if ( CanCommandBeExecuted( pCommand ) &&
 			 GetStatesFactory()->CanCommandBeExecuted( pCommand ) )
 	{
-		//вставить текущую команду в очередь
+		//РІСЃС‚Р°РІРёС‚СЊ С‚РµРєСѓС‰СѓСЋ РєРѕРјР°РЅРґСѓ РІ РѕС‡РµСЂРµРґСЊ
 		if ( IsValid( pCmdCurrent ) )
 		{
 			CAICommand *pOldCommand = new CAICommand( *pCmdCurrent );
@@ -98,13 +98,13 @@ void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 			bDoNotDeleteMeFromCommand = pCmdCurrent->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_TO && 
 				( pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||	pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_SWARM_ATTACK_FORMATION || pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT );
 
-			pState->TryInterruptState( 0 );// грубо прервать состояние
+			pState->TryInterruptState( 0 );// РіСЂСѓР±Рѕ РїСЂРµСЂРІР°С‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ
 			NullSegmTime();
 
 			bDoNotDeleteMeFromCommand = false;
 		}
 
-		//вставить полученную команду в очередь
+		//РІСЃС‚Р°РІРёС‚СЊ РїРѕР»СѓС‡РµРЅРЅСѓСЋ РєРѕРјР°РЅРґСѓ РІ РѕС‡РµСЂРµРґСЊ
 		cmds.PushFront( GetUniqueIdQU(), pCommand );
 	}
 }
@@ -154,20 +154,20 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 	
 	if ( bPlaceInQueue )
 		cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
-	//если текущее состояние завершено
+	//РµСЃР»Рё С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ
 	else if ( bCmdFinished || !pState )
 	{
 		DelCmdQueue( GetUniqueIdQU() );
 
 		bCmdFinished = true;
 
-		//добавить текушую команду в очередь
+		//РґРѕР±Р°РІРёС‚СЊ С‚РµРєСѓС€СѓСЋ РєРѕРјР°РЅРґСѓ РІ РѕС‡РµСЂРµРґСЊ
 		cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
 	}
-	//текущее состояние не завершено
+	//С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РЅРµ Р·Р°РІРµСЂС€РµРЅРѕ
 	else 
 	{
-		if ( pCmd && pCmd->ToUnitCmd().nCmdType == ACTION_COMMAND_STOP_THIS_ACTION ) // прервать насильно
+		if ( pCmd && pCmd->ToUnitCmd().nCmdType == ACTION_COMMAND_STOP_THIS_ACTION ) // РїСЂРµСЂРІР°С‚СЊ РЅР°СЃРёР»СЊРЅРѕ
 		{
 			if ( !bCmdFinished )
 			{
@@ -200,30 +200,30 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 			if ( eAbility == NDb::ABILITY_NOT_ABILITY || 
 				!bCommandAdded && bNeedToInterruptsState && 
 				eSAaction != NDb::PARAM_ABILITY_AUTOCAST_ON && eSAaction != NDb::PARAM_ABILITY_AUTOCAST_OFF ) 
-			{						// спрашиваем у текущего состояния можно ли его прервать
+			{						// СЃРїСЂР°С€РёРІР°РµРј Сѓ С‚РµРєСѓС‰РµРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ РјРѕР¶РЅРѕ Р»Рё РµРіРѕ РїСЂРµСЂРІР°С‚СЊ
 
 				switch ( pState->TryInterruptState( pCommand ) )
 				{
 				case TSIR_YES_IMMIDIATELY:
 					NullSegmTime();
 				case TSIR_YES_WAIT:
-					// почистить очередь
+					// РїРѕС‡РёСЃС‚РёС‚СЊ РѕС‡РµСЂРµРґСЊ
 					DelCmdQueue( GetUniqueIdQU() );
-					//добавить текушую команду в очередь
+					//РґРѕР±Р°РІРёС‚СЊ С‚РµРєСѓС€СѓСЋ РєРѕРјР°РЅРґСѓ РІ РѕС‡РµСЂРµРґСЊ
 					cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
 
 					break;
 				case TSIR_YES_MANAGED_ALREADY:
-					// команду уже поместили в очередь
+					// РєРѕРјР°РЅРґСѓ СѓР¶Рµ РїРѕРјРµСЃС‚РёР»Рё РІ РѕС‡РµСЂРµРґСЊ
 					break;
 				case TSIR_NO_COMMAND_INCOMPATIBLE:
-					// игнорировать команду
+					// РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ РєРѕРјР°РЅРґСѓ
 					break;
 				}
 			}
 		}
 	}
-	// команду игнорировать
+	// РєРѕРјР°РЅРґСѓ РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CQueueUnit::SetCommandFinished()
@@ -243,7 +243,7 @@ void CQueueUnit::PopCmd( const int nID )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CQueueUnit::Segment()
 {
-	// отдыхаем, а есть команды, которые нужно выполнить
+	// РѕС‚РґС‹С…Р°РµРј, Р° РµСЃС‚СЊ РєРѕРјР°РЅРґС‹, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ
 	if ( !bCmdFinished && IsValid( pState ) && pState->IsRestState() && !cmds.IsEmpty( GetUniqueIdQU() ) )
 	{
 		CObj<CAICommand> pCmd = cmds.Peek( GetUniqueIdQU() );
@@ -256,7 +256,7 @@ void CQueueUnit::Segment()
 				break;
 			case TSIR_YES_WAIT:
 				cmds.PushFront( GetUniqueIdQU(), pCmd.GetPtr() );
-				// это нужно, если юнит захотел задержаться в RestState ( например если ждем починки )
+				// СЌС‚Рѕ РЅСѓР¶РЅРѕ, РµСЃР»Рё СЋРЅРёС‚ Р·Р°С…РѕС‚РµР» Р·Р°РґРµСЂР¶Р°С‚СЊСЃСЏ РІ RestState ( РЅР°РїСЂРёРјРµСЂ РµСЃР»Рё Р¶РґРµРј РїРѕС‡РёРЅРєРё )
 				pState->Segment();
 				break;
 			case TSIR_YES_MANAGED_ALREADY:
@@ -265,7 +265,7 @@ void CQueueUnit::Segment()
 				break;
 		}
 	} 
-	// текущее состояние завершилось само
+	// С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РІРµСЂС€РёР»РѕСЃСЊ СЃР°РјРѕ
 	else if ( bCmdFinished ) 
 	{
 		//bCmdFinished = false;
@@ -280,7 +280,7 @@ void CQueueUnit::Segment()
 				lastChangeStateTime = curTime;
 				FreezeByState( false );
 			}
-			else // очередь команд не пуста
+			else // РѕС‡РµСЂРµРґСЊ РєРѕРјР°РЅРґ РЅРµ РїСѓСЃС‚Р°
 			{
 				CObj<CAICommand> pCmd = cmds.Peek( GetUniqueIdQU() );
 				
@@ -329,7 +329,7 @@ void CQueueUnit::Segment()
 				}
 				else
 				{
-					// команда игнорируется					
+					// РєРѕРјР°РЅРґР° РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ					
 				}
 			}
 		} while( pNewState == 0 );

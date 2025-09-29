@@ -77,9 +77,9 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 		return false;
 	}
 	bool bResult = true;
-	// Проверяем окопы:
-	//CIndexCollector<UINT> objectIDToIndexCollector( INVALID_NODE_ID );			// Список индексов объектов ( прямое отображение ID->Index )
-	//CIndexCollector<UINT> objectLinkIDToIndexCollector( INVALID_NODE_ID );	// Список индексов объектов ( прямое отображение LinkID->Index )
+	// РџСЂРѕРІРµСЂСЏРµРј РѕРєРѕРїС‹:
+	//CIndexCollector<UINT> objectIDToIndexCollector( INVALID_NODE_ID );			// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РѕР±СЉРµРєС‚РѕРІ ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ ID->Index )
+	//CIndexCollector<UINT> objectLinkIDToIndexCollector( INVALID_NODE_ID );	// РЎРїРёСЃРѕРє РёРЅРґРµРєСЃРѕРІ РѕР±СЉРµРєС‚РѕРІ ( РїСЂСЏРјРѕРµ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ LinkID->Index )
 	//CIndexCollector<UINT> entrenchmentIDToIndexCollector( INVALID_NODE_ID );
 	CIndexCollector<UINT> entrenchmentLinkIDToIndexCollector( INVALID_NODE_ID );
 

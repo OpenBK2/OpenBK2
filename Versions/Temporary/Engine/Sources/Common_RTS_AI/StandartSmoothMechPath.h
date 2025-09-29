@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define STANDART_SMOOTH_MECH_PATH 0x311133C2
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! сглаженный путь для механических юнитов
+//! СЃРіР»Р°Р¶РµРЅРЅС‹Р№ РїСѓС‚СЊ РґР»СЏ РјРµС…Р°РЅРёС‡РµСЃРєРёС… СЋРЅРёС‚РѕРІ
 class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 {
 	OBJECT_BASIC_METHODS( CStandartSmoothMechPath );
@@ -25,13 +25,13 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 	//
 	void AddSmoothTurn();
 
-	// построить большой разворот
+	// РїРѕСЃС‚СЂРѕРёС‚СЊ Р±РѕР»СЊС€РѕР№ СЂР°Р·РІРѕСЂРѕС‚
 	bool BuildLargeTurn( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint );
-	// построить серию маленьких разворотов (второй вариант, может дать более оптимальный разворот)
+	// РїРѕСЃС‚СЂРѕРёС‚СЊ СЃРµСЂРёСЋ РјР°Р»РµРЅСЊРєРёС… СЂР°Р·РІРѕСЂРѕС‚РѕРІ (РІС‚РѕСЂРѕР№ РІР°СЂРёР°РЅС‚, РјРѕР¶РµС‚ РґР°С‚СЊ Р±РѕР»РµРµ РѕРїС‚РёРјР°Р»СЊРЅС‹Р№ СЂР°Р·РІРѕСЂРѕС‚)
 	bool BuildSmallTurns( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward );
-	// прсото сглаженно выйти на новый угол
+	// РїСЂСЃРѕС‚Рѕ СЃРіР»Р°Р¶РµРЅРЅРѕ РІС‹Р№С‚Рё РЅР° РЅРѕРІС‹Р№ СѓРіРѕР»
 	bool BuildSmoothTurn( const CVec2 &vUnitMoveDir, const bool bCheckThreshold );
-	// отехать задом, чтобы было место для маневра
+	// РѕС‚РµС…Р°С‚СЊ Р·Р°РґРѕРј, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ РјРµСЃС‚Рѕ РґР»СЏ РјР°РЅРµРІСЂР°
 	bool RideAway();
 
 	bool CheckTurn( const WORD wNewDir );

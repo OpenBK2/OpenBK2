@@ -12,15 +12,15 @@ struct SGeometryCellInfo
 	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority ) : vCellPosition( _vCellPosition ), nPriority( _nPriority ) {}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! гладкий путь для группы (формации), позиции не привязаны (!!!) к юнитам, позиции привязаны к некоему приоритету (индексу),
-//! который определяет класс юнита (т.е. офицеры могут стоять на таких-то позяциях, а солдаты на таких)
+//! РіР»Р°РґРєРёР№ РїСѓС‚СЊ РґР»СЏ РіСЂСѓРїРїС‹ (С„РѕСЂРјР°С†РёРё), РїРѕР·РёС†РёРё РЅРµ РїСЂРёРІСЏР·Р°РЅС‹ (!!!) Рє СЋРЅРёС‚Р°Рј, РїРѕР·РёС†РёРё РїСЂРёРІСЏР·Р°РЅС‹ Рє РЅРµРєРѕРµРјСѓ РїСЂРёРѕСЂРёС‚РµС‚Сѓ (РёРЅРґРµРєСЃСѓ),
+//! РєРѕС‚РѕСЂС‹Р№ РѕРїСЂРµРґРµР»СЏРµС‚ РєР»Р°СЃСЃ СЋРЅРёС‚Р° (С‚.Рµ. РѕС„РёС†РµСЂС‹ РјРѕРіСѓС‚ СЃС‚РѕСЏС‚СЊ РЅР° С‚Р°РєРёС…-С‚Рѕ РїРѕР·СЏС†РёСЏС…, Р° СЃРѕР»РґР°С‚С‹ РЅР° С‚Р°РєРёС…)
 class CGroupSmoothPath : public CStandartSmoothPathBasis
 {
 	struct SCellInfo
 	{
-		//! поворот от направления формации к юниту
+		//! РїРѕРІРѕСЂРѕС‚ РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ С„РѕСЂРјР°С†РёРё Рє СЋРЅРёС‚Сѓ
 		CVec2 vUnitShift;
-		//! проекция смещения юнита относительно центра формации на направление формации
+		//! РїСЂРѕРµРєС†РёСЏ СЃРјРµС‰РµРЅРёСЏ СЋРЅРёС‚Р° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР° С„РѕСЂРјР°С†РёРё РЅР° РЅР°РїСЂР°РІР»РµРЅРёРµ С„РѕСЂРјР°С†РёРё
 		float fUnitProjShift;
 		SCellInfo() : vUnitShift( VNULL2 ), fUnitProjShift( 0.0f ) {}
 		SCellInfo( const CVec2 &vUnitPosition )
@@ -36,9 +36,9 @@ class CGroupSmoothPath : public CStandartSmoothPathBasis
 			return 0;
 		}
 	};
-	//! набор положений внутри группы
+	//! РЅР°Р±РѕСЂ РїРѕР»РѕР¶РµРЅРёР№ РІРЅСѓС‚СЂРё РіСЂСѓРїРїС‹
 	typedef vector<SCellInfo> CCells;
-	//! связь между набором положений и типом (priority) юнитов
+	//! СЃРІСЏР·СЊ РјРµР¶РґСѓ РЅР°Р±РѕСЂРѕРј РїРѕР»РѕР¶РµРЅРёР№ Рё С‚РёРїРѕРј (priority) СЋРЅРёС‚РѕРІ
 	typedef hash_map< int, CCells > CPriorityCells;
 	//
 	struct SGeometry
@@ -102,15 +102,15 @@ class CGroupSmoothPath : public CStandartSmoothPathBasis
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStandartSmoothPathBasis *)this); f.Add(2,&geometries); f.Add(3,&units); f.Add(4,&nCurrentGeometry); f.Add(5,&nUnitsCount); f.Add(6,&nCellsCount); f.Add(7,&fMaxPathShift); f.Add(8,&fSpeedCoeff); return 0; }
 protected:
 	const CVec2 GetDirection() const { return GetUnit()->GetDirectionVector(); }
-	//! получить смещение юнита в формации
+	//! РїРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ СЋРЅРёС‚Р° РІ С„РѕСЂРјР°С†РёРё
 	const CVec2 GetUnitFormationShift( const CBasePathUnit *pUnit ) const;
-	//! получить проекцию смещения юнита в формации
+	//! РїРѕР»СѓС‡РёС‚СЊ РїСЂРѕРµРєС†РёСЋ СЃРјРµС‰РµРЅРёСЏ СЋРЅРёС‚Р° РІ С„РѕСЂРјР°С†РёРё
 	const float GetUnitFormationProjection( const CBasePathUnit *pUnit ) const;
-	//! вычислить ячейки для каждого юнита, с учетом наиболее выгодного совместного пути в точку vPosition
-	//! с достижением направления vDirection
+	//! РІС‹С‡РёСЃР»РёС‚СЊ СЏС‡РµР№РєРё РґР»СЏ РєР°Р¶РґРѕРіРѕ СЋРЅРёС‚Р°, СЃ СѓС‡РµС‚РѕРј РЅР°РёР±РѕР»РµРµ РІС‹РіРѕРґРЅРѕРіРѕ СЃРѕРІРјРµСЃС‚РЅРѕРіРѕ РїСѓС‚Рё РІ С‚РѕС‡РєСѓ vPosition
+	//! СЃ РґРѕСЃС‚РёР¶РµРЅРёРµРј РЅР°РїСЂР°РІР»РµРЅРёСЏ vDirection
 	void RecalcCells( const CVec2 &vPosition, const CVec2 &vDirection );
-	//! вычислить ячейки с учетом текущего пути (в финальной точке, направление finish - start) или
-	//! (если нет пути) по текущему положению центрального (виртуального) юнита
+	//! РІС‹С‡РёСЃР»РёС‚СЊ СЏС‡РµР№РєРё СЃ СѓС‡РµС‚РѕРј С‚РµРєСѓС‰РµРіРѕ РїСѓС‚Рё (РІ С„РёРЅР°Р»СЊРЅРѕР№ С‚РѕС‡РєРµ, РЅР°РїСЂР°РІР»РµРЅРёРµ finish - start) РёР»Рё
+	//! (РµСЃР»Рё РЅРµС‚ РїСѓС‚Рё) РїРѕ С‚РµРєСѓС‰РµРјСѓ РїРѕР»РѕР¶РµРЅРёСЋ С†РµРЅС‚СЂР°Р»СЊРЅРѕРіРѕ (РІРёСЂС‚СѓР°Р»СЊРЅРѕРіРѕ) СЋРЅРёС‚Р°
 	void RecalcCells();
 
 public:
@@ -141,15 +141,15 @@ public:
 
 	virtual void Segment( const NTimer::STime timeDiff );
 
-	//! получить смещение юнита относительно текущего центра формации, с учетом текущего направления формации
+	//! РїРѕР»СѓС‡РёС‚СЊ СЃРјРµС‰РµРЅРёРµ СЋРЅРёС‚Р° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С‚РµРєСѓС‰РµРіРѕ С†РµРЅС‚СЂР° С„РѕСЂРјР°С†РёРё, СЃ СѓС‡РµС‚РѕРј С‚РµРєСѓС‰РµРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ С„РѕСЂРјР°С†РёРё
 	virtual const CVec2 GetUnitShift( const CBasePathUnit *pUnit ) const { return GetDirection() ^ GetUnitFormationShift( pUnit ); };
-	//! получить текущие координаты юнита
+	//! РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РёРµ РєРѕРѕСЂРґРёРЅР°С‚С‹ СЋРЅРёС‚Р°
 	virtual const CVec2 GetUnitCenter( const CBasePathUnit *pUnit ) const { return GetCenter() + GetUnitShift( pUnit ); };
-	//! получить центр юнита, где юнит может встать на прямой между центром формации и юнитом
+	//! РїРѕР»СѓС‡РёС‚СЊ С†РµРЅС‚СЂ СЋРЅРёС‚Р°, РіРґРµ СЋРЅРёС‚ РјРѕР¶РµС‚ РІСЃС‚Р°С‚СЊ РЅР° РїСЂСЏРјРѕР№ РјРµР¶РґСѓ С†РµРЅС‚СЂРѕРј С„РѕСЂРјР°С†РёРё Рё СЋРЅРёС‚РѕРј
 	virtual const CVec2 GetValidUnitCenter( const CBasePathUnit *pUnit ) const;
-	//! получить текущее направление юнита
+	//! РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РµРµ РЅР°РїСЂР°РІР»РµРЅРёРµ СЋРЅРёС‚Р°
 	virtual const CVec2 GetUnitDirection( const CBasePathUnit *pUnit ) const { return GetUnit()->GetDirectionVector(); }
-	//! получить проекцию позиции юнита на путь (ушел вперед/назад)
+	//! РїРѕР»СѓС‡РёС‚СЊ РїСЂРѕРµРєС†РёСЋ РїРѕР·РёС†РёРё СЋРЅРёС‚Р° РЅР° РїСѓС‚СЊ (СѓС€РµР» РІРїРµСЂРµРґ/РЅР°Р·Р°Рґ)
 	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const { return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit ); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

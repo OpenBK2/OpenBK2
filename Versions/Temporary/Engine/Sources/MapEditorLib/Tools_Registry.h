@@ -3,9 +3,9 @@
 #pragma once
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Класс для работы с Registry, только REG_SZ, REG_DWORD
-//Возвращаемое значение - ERROR_SUCCES (0) или код GetLastError()
-//Все внутренние ключи указываются относительно открытой секции, новые подкаталоги запрещены
+//РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Registry, С‚РѕР»СЊРєРѕ REG_SZ, REG_DWORD
+//Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ - ERROR_SUCCES (0) РёР»Рё РєРѕРґ GetLastError()
+//Р’СЃРµ РІРЅСѓС‚СЂРµРЅРЅРёРµ РєР»СЋС‡Рё СѓРєР°Р·С‹РІР°СЋС‚СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕС‚РєСЂС‹С‚РѕР№ СЃРµРєС†РёРё, РЅРѕРІС‹Рµ РїРѕРґРєР°С‚Р°Р»РѕРіРё Р·Р°РїСЂРµС‰РµРЅС‹
 class CRegistrySection
 {
   protected:
@@ -20,7 +20,7 @@ class CRegistrySection
 
 	bool IsValid() { return ( hRegistrySection != 0 ); }
 
-  //STL строка
+  //STL СЃС‚СЂРѕРєР°
 	LONG LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const;
   LONG SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const;
  
@@ -28,7 +28,7 @@ class CRegistrySection
 	LONG LoadDWORD( LPCTSTR pszRegistryKey, DWORD *pdwLoadValue, DWORD dwDefaultValue ) const;
   LONG SaveDWORD( LPCTSTR pszRegistryKey, DWORD dwSaveValue ) const;
 
-	//Любое число ( только простые типы ), сохраняется и считывается по маске pszMask, хранится в виде строки для наглядности
+	//Р›СЋР±РѕРµ С‡РёСЃР»Рѕ ( С‚РѕР»СЊРєРѕ РїСЂРѕСЃС‚С‹Рµ С‚РёРїС‹ ), СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ Рё СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїРѕ РјР°СЃРєРµ pszMask, С…СЂР°РЅРёС‚СЃСЏ РІ РІРёРґРµ СЃС‚СЂРѕРєРё РґР»СЏ РЅР°РіР»СЏРґРЅРѕСЃС‚Рё
 	template<class TValue>
 	LONG LoadNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, TValue *pLoadValue, const TValue rDefaultValue ) const
 	{
@@ -61,7 +61,7 @@ class CRegistrySection
 		return SaveString( pszRegistryKey, szBuffer );
 	}
 
-  //CTRect<TValue>, каждое поле сохраняется и считывается по маске pszMask,  хранится в виде строки для наглядности
+  //CTRect<TValue>, РєР°Р¶РґРѕРµ РїРѕР»Рµ СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ Рё СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїРѕ РјР°СЃРєРµ pszMask,  С…СЂР°РЅРёС‚СЃСЏ РІ РІРёРґРµ СЃС‚СЂРѕРєРё РґР»СЏ РЅР°РіР»СЏРґРЅРѕСЃС‚Рё
 	template<class TValue>
 	LONG LoadRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, CTRect<TValue> *pLoadValue, const CTRect<TValue> &rDefaultValue ) const
 	{

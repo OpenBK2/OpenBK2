@@ -7,20 +7,20 @@ struct SCheats
 {
 	public: int operator&( IBinSaver &saver ); private:;
 private:
-	// просчитывать ли туман bWarFog
+	// РїСЂРѕСЃС‡РёС‚С‹РІР°С‚СЊ Р»Рё С‚СѓРјР°РЅ bWarFog
 	bool bWarFog;
-	// для кого просчитывать туман
+	// РґР»СЏ РєРѕРіРѕ РїСЂРѕСЃС‡РёС‚С‹РІР°С‚СЊ С‚СѓРјР°РЅ
 	int nPartyForWarFog;
 
-	// загружать статич. объекты и реки или нет
+	// Р·Р°РіСЂСѓР¶Р°С‚СЊ СЃС‚Р°С‚РёС‡. РѕР±СЉРµРєС‚С‹ Рё СЂРµРєРё РёР»Рё РЅРµС‚
 	bool bLoadObjects;
 	
 	bool bTurnOffWarFog;
 	bool bHistoryPlaying;
 	//
-	// убиваема или нет данная сторона
+	// СѓР±РёРІР°РµРјР° РёР»Рё РЅРµС‚ РґР°РЅРЅР°СЏ СЃС‚РѕСЂРѕРЅР°
 	vector<BYTE> immortals;
-	// убивает ли данная сторона с первого раза
+	// СѓР±РёРІР°РµС‚ Р»Рё РґР°РЅРЅР°СЏ СЃС‚РѕСЂРѕРЅР° СЃ РїРµСЂРІРѕРіРѕ СЂР°Р·Р°
 	vector<BYTE> firstShoot;
 
 	bool bPasswordOK;

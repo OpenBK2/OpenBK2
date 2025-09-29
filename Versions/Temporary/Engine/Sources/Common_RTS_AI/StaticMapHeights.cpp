@@ -56,8 +56,8 @@ const float CStaticMapHeights::GetVisZ( float x, float y ) const
 		return 0;
 	//
 	GetPoint4Spline( CVec2( x, y ), &u, &v, ptCtrls );
-	// âûñîòû ðàçæèìàþòñÿ îáðàòíî, ò.ê. äëÿ ñïëàéíà äà¸òñÿ ñåòêà ñ øàãîì 1 ( à íå 2 * TILE_SIZE )
-	// óìíîæàåòñÿ íà fAITileZCoeff1, ÷òîáû ïåðåâåñòè â AI âûñîòû
+	// Ð²Ñ‹ÑÐ¾Ñ‚Ñ‹ Ñ€Ð°Ð·Ð¶Ð¸Ð¼Ð°ÑŽÑ‚ÑÑ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾, Ñ‚.Ðº. Ð´Ð»Ñ ÑÐ¿Ð»Ð°Ð¹Ð½Ð° Ð´Ð°Ñ‘Ñ‚ÑÑ ÑÐµÑ‚ÐºÐ° Ñ ÑˆÐ°Ð³Ð¾Ð¼ 1 ( Ð° Ð½Ðµ 2 * TILE_SIZE )
+	// ÑƒÐ¼Ð½Ð¾Ð¶Ð°ÐµÑ‚ÑÑ Ð½Ð° fAITileZCoeff1, Ñ‡Ñ‚Ð¾Ð±Ñ‹ Ð¿ÐµÑ€ÐµÐ²ÐµÑÑ‚Ð¸ Ð² AI Ð²Ñ‹ÑÐ¾Ñ‚Ñ‹
 	return betaSpline3D.Value( u, v, ptCtrls ) * 2.0f * nTileSize;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +354,7 @@ const float CStaticMapHeights::GetHeight( const int x, const int y ) const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
-	// âñå ïðîèñõîäèò â Vis êîîðäèíàòàõ
+	// Ð²ÑÐµ Ð¿Ñ€Ð¾Ð¸ÑÑ…Ð¾Ð´Ð¸Ñ‚ Ð² Vis ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ð°Ñ…
 	const float maxX = (heights.GetSizeX() - 4) * 2.0f * nTileSize;
 	const float maxY = (heights.GetSizeY() - 4) * 2.0f * nTileSize;
 
@@ -394,24 +394,24 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		t02 = 1.0f;
 	const float t2 = Min( t01, t02 );
 
-  // ïðîñìàòðèâàòü îòðåçîê â èíòåðâàëå t1 .. t2, âñå ÷òî âíå - ëåæèò çà ïðåäåëàìè êàðòû
+  // Ð¿Ñ€Ð¾ÑÐ¼Ð°Ñ‚Ñ€Ð¸Ð²Ð°Ñ‚ÑŒ Ð¾Ñ‚Ñ€ÐµÐ·Ð¾Ðº Ð² Ð¸Ð½Ñ‚ÐµÑ€Ð²Ð°Ð»Ðµ t1 .. t2, Ð²ÑÐµ Ñ‡Ñ‚Ð¾ Ð²Ð½Ðµ - Ð»ÐµÐ¶Ð¸Ñ‚ Ð·Ð° Ð¿Ñ€ÐµÐ´ÐµÐ»Ð°Ð¼Ð¸ ÐºÐ°Ñ€Ñ‚Ñ‹
 	pvResult->x = 0.0f;
 	pvResult->y = 0.0f;
 	pvResult->z = 0.0f;
 
 	if ( t1 >= 0.0f && t2 <= 1.0f && vBegin != vEnd )
 	{
-		// ò - òåêóùåå ïåðåñå÷åíèå ëó÷à è ñåòêè, ò0 - ïðåäûäóùåå
+		// Ñ‚ - Ñ‚ÐµÐºÑƒÑ‰ÐµÐµ Ð¿ÐµÑ€ÐµÑÐµÑ‡ÐµÐ½Ð¸Ðµ Ð»ÑƒÑ‡Ð° Ð¸ ÑÐµÑ‚ÐºÐ¸, Ñ‚0 - Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰ÐµÐµ
 		float t = t1, t0 = t1;
-		// çÂ0 - âûñîòà ïî íàøåìó ëó÷ó â òî÷êå ò
+		// Ð·Ð’0 - Ð²Ñ‹ÑÐ¾Ñ‚Ð° Ð¿Ð¾ Ð½Ð°ÑˆÐµÐ¼Ñƒ Ð»ÑƒÑ‡Ñƒ Ð² Ñ‚Ð¾Ñ‡ÐºÐµ Ñ‚
 		float zV0 = vLineZ[0] * t + vLineZ[1];
-		// çÒ0 - ðåàëüíàÿ âûñîòà â òî÷êå ò
+		// Ð·Ð¢0 - Ñ€ÐµÐ°Ð»ÑŒÐ½Ð°Ñ Ð²Ñ‹ÑÐ¾Ñ‚Ð° Ð² Ñ‚Ð¾Ñ‡ÐºÐµ Ñ‚
 		float zT0 = GetVisZ( vLineX[0] * t + vLineX[1], vLineY[0] * t + vLineY[1] );
 		float zV, zT;
-		// äõ, äó - íàïðàâëåíèå äâèæåíèÿ ïî ñåòêå
+		// Ð´Ñ…, Ð´Ñƒ - Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ Ð´Ð²Ð¸Ð¶ÐµÐ½Ð¸Ñ Ð¿Ð¾ ÑÐµÑ‚ÐºÐµ
 		const int dX = Sign( vEnd.x - vBegin.x );
 		const int dY = Sign( vEnd.y - vBegin.y );
-		// õ, ó - êîîðäèíàòû áëèæàéøåãî óçëà ñåòêè âûñîò
+		// Ñ…, Ñƒ - ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ Ð±Ð»Ð¸Ð¶Ð°Ð¹ÑˆÐµÐ³Ð¾ ÑƒÐ·Ð»Ð° ÑÐµÑ‚ÐºÐ¸ Ð²Ñ‹ÑÐ¾Ñ‚
 		int x = ((vLineX[0] * t + vLineX[1]) / nTileSize / 2.0f);
 		int y = ((vLineY[0] * t + vLineY[1]) / nTileSize / 2.0f);
 		//

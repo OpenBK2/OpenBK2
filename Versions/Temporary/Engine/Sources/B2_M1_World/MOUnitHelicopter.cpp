@@ -469,7 +469,7 @@ void CMOUnitHelicopter::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 {																																								
 	const SAINotifyMechShot &shot = *( static_cast<const SAINotifyMechShot*>(&_shot) );
 
-	// îòêàò è îòäà÷à îðóäèÿ
+	// Ð¾Ñ‚ÐºÐ°Ñ‚ Ð¸ Ð¾Ñ‚Ð´Ð°Ñ‡Ð° Ð¾Ñ€ÑƒÐ´Ð¸Ñ
 	SHMatrix mShootPoint;
 	const int nID = GetID();
 	const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( nID, shot.cPlatform, shot.cGun );

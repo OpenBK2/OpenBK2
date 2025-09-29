@@ -33,8 +33,8 @@ class CWinVFS : public IVFS
 		const string &szBasePath;
 	public:
 		CWinFileEntry( const DWORD _dwCheckTime, const string &_szBasePath ) : CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ) {  }
-		// мы не храним имя файла, а передаём его в виде параметра, т.к. оно итак хранится в hash_map от storage, 
-		// а эту хрень вызывают только здесь и только я... (теперь уже не только ты -)
+		// РјС‹ РЅРµ С…СЂР°РЅРёРј РёРјСЏ С„Р°Р№Р»Р°, Р° РїРµСЂРµРґР°С‘Рј РµРіРѕ РІ РІРёРґРµ РїР°СЂР°РјРµС‚СЂР°, С‚.Рє. РѕРЅРѕ РёС‚Р°Рє С…СЂР°РЅРёС‚СЃСЏ РІ hash_map РѕС‚ storage, 
+		// Р° СЌС‚Сѓ С…СЂРµРЅСЊ РІС‹Р·С‹РІР°СЋС‚ С‚РѕР»СЊРєРѕ Р·РґРµСЃСЊ Рё С‚РѕР»СЊРєРѕ СЏ... (С‚РµРїРµСЂСЊ СѓР¶Рµ РЅРµ С‚РѕР»СЊРєРѕ С‚С‹ -)
 		CDataStream* OpenStream( const string &szPathName );
 		bool GetStats( SFileStats *pStats, const string &szPathName ) const;
 	};

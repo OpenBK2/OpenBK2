@@ -54,7 +54,7 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	// Ôîðìèðóåì òåëî ñêðèïòà
+	// Ð¤Ð¾Ñ€Ð¼Ð¸Ñ€ÑƒÐµÐ¼ Ñ‚ÐµÐ»Ð¾ ÑÐºÑ€Ð¸Ð¿Ñ‚Ð°
 	string szSorceValue;
 	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
 	const string szSource				= pUserData->constUserData.szExportSourceFolder + szSorceValue;

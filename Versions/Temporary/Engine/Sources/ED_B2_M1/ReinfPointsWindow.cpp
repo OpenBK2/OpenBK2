@@ -119,7 +119,7 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 	if ( pData->bAviationPointSelected )
 		return;
 
-	bIsDataSetting = true; // флаг установки свойств контролов
+	bIsDataSetting = true; // С„Р»Р°Рі СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІ РєРѕРЅС‚СЂРѕР»РѕРІ
 
 	wndPlayerComboBox.ResetContent();
 	for ( int nPlayerIndex = 0; nPlayerIndex < pData->nPlayerCount; ++nPlayerIndex )
@@ -196,7 +196,7 @@ bool CReinfPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 void CReinfPointsWindow::NotifyHandler()
 {
 	if ( bIsDataSetting )
-		return;	// чтобы сообщения не шли в момент установки свойств контролов
+		return;	// С‡С‚РѕР±С‹ СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ С€Р»Рё РІ РјРѕРјРµРЅС‚ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІ РєРѕРЅС‚СЂРѕР»РѕРІ
 
 	CWaitCursor wcur;
 

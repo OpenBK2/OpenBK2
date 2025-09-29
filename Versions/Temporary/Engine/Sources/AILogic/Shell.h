@@ -22,8 +22,8 @@ public:
 	WORD wShell;
 	SAIAngle wDir;
 
-	CPtr<CObjectBase> pVictim;  // для попадания по юниту
-	CVec3 explCoord;					// для попадания по земле
+	CPtr<CObjectBase> pVictim;  // РґР»СЏ РїРѕРїР°РґР°РЅРёСЏ РїРѕ СЋРЅРёС‚Сѓ
+	CVec3 explCoord;					// РґР»СЏ РїРѕРїР°РґР°РЅРёСЏ РїРѕ Р·РµРјР»Рµ
 
 	SAINotifyHitInfo::EHitType eHitType;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&pVictim); f.Add(6,&explCoord); f.Add(7,&eHitType); return 0; }
@@ -45,7 +45,7 @@ public:
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
-//*												Траектории																*
+//*												РўСЂР°РµРєС‚РѕСЂРёРё																*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IBallisticTraj : public CAIObjectBase
@@ -67,16 +67,16 @@ class CBallisticTraj: public IBallisticTraj
 	OBJECT_BASIC_METHODS( CBallisticTraj	);
 	ZDATA
 	CVec3 vStart3D;
-	// скорости
+	// СЃРєРѕСЂРѕСЃС‚Рё
 	float fVx, fVy;
-	// ускорения свободного падения
+	// СѓСЃРєРѕСЂРµРЅРёСЏ СЃРІРѕР±РѕРґРЅРѕРіРѕ РїР°РґРµРЅРёСЏ
 
-	SAIAngle wAngle; //вертикальнй угол
+	SAIAngle wAngle; //РІРµСЂС‚РёРєР°Р»СЊРЅР№ СѓРіРѕР»
 
 	SAIAngle wDir;
 	CVec2 vDir;
 
-	float fG; // для данной траектории ускорение свободного падения
+	float fG; // РґР»СЏ РґР°РЅРЅРѕР№ С‚СЂР°РµРєС‚РѕСЂРёРё СѓСЃРєРѕСЂРµРЅРёРµ СЃРІРѕР±РѕРґРЅРѕРіРѕ РїР°РґРµРЅРёСЏ
 
 	NTimer::STime startTime, explTime;
 
@@ -184,7 +184,7 @@ public:
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET; }
 };
 //*******************************************************************
-//*								  Взрывы																					*
+//*								  Р’Р·СЂС‹РІС‹																					*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CExplosion : public CAIObjectBase
@@ -234,7 +234,7 @@ public:
 	float GetMaxDamage() const ;
 	NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajectoryType() const { return pWeapon->shells[nShellType].etrajectory; }
 	
-	// если explosion дымовой, то вернется true.
+	// РµСЃР»Рё explosion РґС‹РјРѕРІРѕР№, С‚Рѕ РІРµСЂРЅРµС‚СЃСЏ true.
 	bool ProcessSmokeScreenExplosion() const;
 
 	void AddHitToSend( CHitInfo *pHit );
@@ -249,9 +249,9 @@ class CBurstExpl : public CExplosion
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExplosion*)this); f.Add(2,&nArmorDir); f.Add(3,&bShowEffect); return 0; }
 public:
 	CBurstExpl() { }
-	// nArmorDir == 0  -  просто по плоскому направлению ( это для снарядов )
-	// nArmorDir == 1  -  взрыв под днищем ( для мин )
-	// nArmorDir == 2  -  взрыв над крышей
+	// nArmorDir == 0  -  РїСЂРѕСЃС‚Рѕ РїРѕ РїР»РѕСЃРєРѕРјСѓ РЅР°РїСЂР°РІР»РµРЅРёСЋ ( СЌС‚Рѕ РґР»СЏ СЃРЅР°СЂСЏРґРѕРІ )
+	// nArmorDir == 1  -  РІР·СЂС‹РІ РїРѕРґ РґРЅРёС‰РµРј ( РґР»СЏ РјРёРЅ )
+	// nArmorDir == 2  -  РІР·СЂС‹РІ РЅР°Рґ РєСЂС‹С€РµР№
 
 	CBurstExpl( CAIUnit *pUnit, const class CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool bShowEffect );
 	CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const BYTE nShellType, const bool bRandomize, const int ArmorDir, const bool bShowEffect );
@@ -288,10 +288,10 @@ public:
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
-//*								  Снаряды																					*
+//*								  РЎРЅР°СЂСЏРґС‹																					*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// снаряд, попадающй мгновенно
+// СЃРЅР°СЂСЏРґ, РїРѕРїР°РґР°СЋС‰Р№ РјРіРЅРѕРІРµРЅРЅРѕ
 class CMomentShell
 {
 	ZDATA
@@ -307,7 +307,7 @@ public:
 	float GetMaxDamage() const { return expl->GetMaxDamage(); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// снаряд
+// СЃРЅР°СЂСЏРґ
 class CShell
 {
 
@@ -341,7 +341,7 @@ public:
 	NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajectoryType() const { return expl->GetTrajectoryType(); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// невидимый снаряд
+// РЅРµРІРёРґРёРјС‹Р№ СЃРЅР°СЂСЏРґ
 class CInvisShell : public CAIObjectBase, public CShell
 {
 	OBJECT_BASIC_METHODS( CInvisShell );
@@ -355,7 +355,7 @@ public:
 	//bool operator < ( const CInvisShell &shell ) { return GetExplTime() > shell.GetExplTime(); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// видимый снаряд
+// РІРёРґРёРјС‹Р№ СЃРЅР°СЂСЏРґ
 class CVisShell : public CLinkObject, public CShell
 {
 	OBJECT_BASIC_METHODS( CVisShell );		
@@ -390,7 +390,7 @@ public:
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
-//*								  Склад снарядов																	*
+//*								  РЎРєР»Р°Рґ СЃРЅР°СЂСЏРґРѕРІ																	*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for remove ambiguity with CPtr opeartor <
@@ -418,11 +418,11 @@ typedef list< CObj<CVisShell> > CVisShellList;
 class CShellsStore
 {
 
-	// все невидимые снаряды
+	// РІСЃРµ РЅРµРІРёРґРёРјС‹Рµ СЃРЅР°СЂСЏРґС‹
 	typedef priority_queue< SInvisShell, vector<SInvisShell>, SInvisShellCompare > CInvisShells;
 	ZDATA
 	CInvisShells invisShells;
-	// все видимые снаряды
+	// РІСЃРµ РІРёРґРёРјС‹Рµ СЃРЅР°СЂСЏРґС‹
 	CVisShellList visShells;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); return 0; }
@@ -437,7 +437,7 @@ public:
 
 	void Segment();
 	
-	// для тестирования multiplayer
+	// РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ multiplayer
 	void UpdateCheckSum( uLong *pCheckSum );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

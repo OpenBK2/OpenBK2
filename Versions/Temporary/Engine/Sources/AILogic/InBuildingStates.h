@@ -65,9 +65,9 @@ class CSoldierAttackInBuildingState : public IUnitAttackingState
 	CPtr<CAIUnit> pEnemy;
 
 	CPtr<CBasicGun> pGun;
-	// стрельба окончена
+	// СЃС‚СЂРµР»СЊР±Р° РѕРєРѕРЅС‡РµРЅР°
 	bool bFinish;
-	// обязательно нужно прицелиться
+	// РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РЅСѓР¶РЅРѕ РїСЂРёС†РµР»РёС‚СЊСЃСЏ
 	bool bAim;
 	int nEnemyParty;
 	CDamageToEnemyUpdater damageToEnemyUpdater;

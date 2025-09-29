@@ -203,22 +203,22 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *li
 	{
 		CDBPtr<SUnitBaseRPGStats> pStats = checked_cast<const SUnitBaseRPGStats*>( object.pObject.GetPtr() );
 
-		// транспорт и с кем-то линкуется
+		// С‚СЂР°РЅСЃРїРѕСЂС‚ Рё СЃ РєРµРј-С‚Рѕ Р»РёРЅРєСѓРµС‚СЃСЏ
 		if ( pStats->IsTransport() && object.link.nLinkWith > 0 )
 		{
 			CObjectBase *pObj = CLinkObject::GetObjectByLink( object.link.nLinkWith );
-			// найден объект, с которым линкуется
+			// РЅР°Р№РґРµРЅ РѕР±СЉРµРєС‚, СЃ РєРѕС‚РѕСЂС‹Рј Р»РёРЅРєСѓРµС‚СЃСЏ
 			if ( pObj )
 			{
 				CArtillery *pArtillery = dynamic_cast<CArtillery*>( pObj );
 	
-				// линкуется с артиллерией
+				// Р»РёРЅРєСѓРµС‚СЃСЏ СЃ Р°СЂС‚РёР»Р»РµСЂРёРµР№
 				if ( pArtillery )
 				{
 					if ( !pArtillery->GetStats()->GetActions()->availExposures.GetData( ACTION_COMMAND_TAKE_ARTILLERY ) )
 						return false;
 
-					// артиллерия сценарийная, нужно заменить на подходяцщий грузовик
+					// Р°СЂС‚РёР»Р»РµСЂРёСЏ СЃС†РµРЅР°СЂРёР№РЅР°СЏ, РЅСѓР¶РЅРѕ Р·Р°РјРµРЅРёС‚СЊ РЅР° РїРѕРґС…РѕРґСЏС†С‰РёР№ РіСЂСѓР·РѕРІРёРє
 /*
 					if ( pArtillery->GetScenarioUnit() )
 					{
@@ -239,7 +239,7 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *li
 				/*else								// removed - trucks were unable to travel inside other units (i.e. transport ships)
 					return false;*/
 			}
-			// линкуется с несуществующим объектом
+			// Р»РёРЅРєСѓРµС‚СЃСЏ СЃ РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРј РѕР±СЉРµРєС‚РѕРј
 			else
 				return false;
 		}
@@ -544,7 +544,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		}
 #endif
 		// DebugTrace( "mapobj %d", i );
-		// в reinforcement
+		// РІ reinforcement
 		const int nGroup = pMapInfo->reinforcements.GetGroupById( pMapInfo->objects[i].nScriptID );
 		if ( nGroup != -1 )
 			scripts.AddUnitToReinforcGroup( pMapInfo->objects[i], nGroup, 0/*, 0 */);
@@ -578,7 +578,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAILogic::LinkArtilleryWithTransport( CArtillery * pArtillery, CAITransportUnit *pTransport )
 {
-	// переместить артиллерию к пушке
+	// РїРµСЂРµРјРµСЃС‚РёС‚СЊ Р°СЂС‚РёР»Р»РµСЂРёСЋ Рє РїСѓС€РєРµ
 	pTransport->SetTowedArtillery( pArtillery );
 	pArtillery->SetBeingHooked( pTransport );
 	CFormation* pCrew = pArtillery->GetCrew();
@@ -679,18 +679,18 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 			if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(CLinkObject::GetObjectByUniqueId( iter->first )) )
 			{
 				const SMapObjectInfo::SLinkInfo &link = linksInfo[pUnit->GetUniqueId()];
-				// с кем-то линкуется и этот кто-то существует
+				// СЃ РєРµРј-С‚Рѕ Р»РёРЅРєСѓРµС‚СЃСЏ Рё СЌС‚РѕС‚ РєС‚Рѕ-С‚Рѕ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 				if ( link.nLinkWith > 0 )
 				{
 					CObjectBase *pObj = CLinkObject::GetObjectByLink( link.nLinkWith );
 					if ( pObj )
 					{
-						//линковка грузовичка с пушкой
+						//Р»РёРЅРєРѕРІРєР° РіСЂСѓР·РѕРІРёС‡РєР° СЃ РїСѓС€РєРѕР№
 						if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit*>( pObj ) )
 						{
 							if ( CArtillery *pArtillery = dynamic_cast<CArtillery*>(pUnit) )
 								LinkArtilleryWithTransport( pArtillery, pTransport );
-							// линкуются солдатики
+							// Р»РёРЅРєСѓСЋС‚СЃСЏ СЃРѕР»РґР°С‚РёРєРё
 							else if ( pUnit->IsFormation() )
 							{
 								//theGroupLogic.UnitCommand( SAIUnitCmd( link.bIntention ? ACTION_COMMAND_LOAD : ACTION_COMMAND_LOAD_NOW, pTransport->GetUniqueId() ), pUnit, false );
@@ -726,10 +726,10 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 							if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit*>(pUnit) )
 								LinkArtilleryWithTransport( pArtillery, pTransport );
 						}
-						// линковка с юнитом
+						// Р»РёРЅРєРѕРІРєР° СЃ СЋРЅРёС‚РѕРј
 						else if ( CCommonUnit *pWithUnit = dynamic_cast<CCommonUnit*>(pObj) )
 						{
-							// линкуются солдатики
+							// Р»РёРЅРєСѓСЋС‚СЃСЏ СЃРѕР»РґР°С‚РёРєРё
 							if ( pUnit->IsFormation() )
 							{
 								if ( link.bIntention )
@@ -753,7 +753,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 						// link with static object
 						else if ( CStaticObject *pStaticObj = dynamic_cast<CStaticObject*>( pObj ) )
 						{
-							// линковка с домиком
+							// Р»РёРЅРєРѕРІРєР° СЃ РґРѕРјРёРєРѕРј
 							if ( pStaticObj->GetObjectType() == ESOT_BUILDING )
 							{
 								if ( link.bIntention )
@@ -764,7 +764,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER_BUILDING_NOW, pStaticObj->GetUniqueId() ), pLoadingUnit, false );
 								}
 							}
-							// линковка с окопом
+							// Р»РёРЅРєРѕРІРєР° СЃ РѕРєРѕРїРѕРј
 							else if ( pStaticObj->GetObjectType() == ESOT_ENTR_PART )
 							{
 								if ( link.bIntention )
@@ -789,10 +789,10 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments )
 {
-	// по окопам
+	// РїРѕ РѕРєРѕРїР°Рј
 	for ( int i = 0; i < entrenchments.size(); ++i )
 	{
-		// по секциям
+		// РїРѕ СЃРµРєС†РёСЏРј
 		CPtr<CFullEntrenchment> pFullEntrenchment = new CFullEntrenchment();
 		for ( int j = 0; j < entrenchments[i].sections.size(); ++j )
 		{
@@ -815,11 +815,11 @@ void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAILogic::LoadBridges( const vector< NDb::SIntArray > &bridgesInfo )
 {
-	// по мостам
+	// РїРѕ РјРѕСЃС‚Р°Рј
 	for ( int i = 0; i < bridgesInfo.size(); ++i )
 	{
 		list<CPtr<CBridgeSpan> > bridge;
-		// по пролётам
+		// РїРѕ РїСЂРѕР»С‘С‚Р°Рј
 		CPtr<CFullBridge> pFullBridge = new CFullBridge;
 		for ( int j = 0; j < bridgesInfo[i].data.size(); ++j )
 		{
@@ -907,7 +907,7 @@ void CAILogic::InitReservePositions()
 			CAIUnit *pUnit = checked_cast<CAIUnit*>( pLinkObject );
 			pUnit->SetBattlePos( iter->vPos );
 
-			// есть грузовичок, который таскает
+			// РµСЃС‚СЊ РіСЂСѓР·РѕРІРёС‡РѕРє, РєРѕС‚РѕСЂС‹Р№ С‚Р°СЃРєР°РµС‚
 			CLinkObject *pLinkTruck = CLinkObject::GetObjectByLink( iter->nTruckLinkID );
 			if ( pLinkTruck && pLinkTruck->IsRefValid() && pLinkTruck->IsAlive() )
 			{
@@ -932,7 +932,7 @@ void CAILogic::InitReservePositions( hash_map<int, int> &old2NewLinks )
 				CCommonUnit *pUnit = checked_cast<CCommonUnit*>( pLinkObject );
 				pUnit->SetBattlePos( iter->vPos );
 
-				// есть грузовичок, который таскает
+				// РµСЃС‚СЊ РіСЂСѓР·РѕРІРёС‡РѕРє, РєРѕС‚РѕСЂС‹Р№ С‚Р°СЃРєР°РµС‚
 				const int nTruckLink = iter->nTruckLinkID;
 				if ( old2NewLinks.find( nTruckLink ) != old2NewLinks.end() )
 				{
@@ -1078,15 +1078,15 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	theReinfArray.InitPlayerReinforcementArray( pMapInfo, pConsts );
 	// init key-building bonus system
 	theBonusSystem.InitBonusSystem( pMapInfo );
-	// перед загрузкой юнитов запомнить, кто является мобильным резервом
-	// -- порядок не менять
+	// РїРµСЂРµРґ Р·Р°РіСЂСѓР·РєРѕР№ СЋРЅРёС‚РѕРІ Р·Р°РїРѕРјРЅРёС‚СЊ, РєС‚Рѕ СЏРІР»СЏРµС‚СЃСЏ РјРѕР±РёР»СЊРЅС‹Рј СЂРµР·РµСЂРІРѕРј
+	// -- РїРѕСЂСЏРґРѕРє РЅРµ РјРµРЅСЏС‚СЊ
 	if ( !NGlobal::GetVar( "balance_test", 0 ) )
 		LoadUnits( pMapInfo, &linksInfo );
 	theBonusSystem.SendUpdates();
 
 	LoadEntrenchments( pMapInfo->entrenchments );
 	LoadBridges( pMapInfo->bridges );
-	// проинициализировать все maxes на карте
+	// РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ РІСЃРµ maxes РЅР° РєР°СЂС‚Рµ
 	GetTerrain()->FinishInitMode();
 	theStatObjs.PostAllObjectsInit();
 
@@ -1113,7 +1113,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 		theReinfArray.PlaceInitialUnits();
 	}
 
-	// -- конец порядок не менять
+	// -- РєРѕРЅРµС† РїРѕСЂСЏРґРѕРє РЅРµ РјРµРЅСЏС‚СЊ
 	startCmds = pMapInfo->startCommandsList;
 	InitStartCommands();
 

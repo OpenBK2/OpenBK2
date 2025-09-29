@@ -12,15 +12,15 @@ namespace NDb
 #define NODE_REMOVEALL_INDEX (-1)               //Manipulator - remove all
 #define INVALID_NODE_ID (0xffFFffFF)            //error when asking for node id
 //
-#define ARRAY_NODE_START_CHAR   '['             // Стартовый символ номера элемента массива
-#define ARRAY_NODE_END_CHAR     ']'             // Комечный символ элемента массива
+#define ARRAY_NODE_START_CHAR   '['             // РЎС‚Р°СЂС‚РѕРІС‹Р№ СЃРёРјРІРѕР» РЅРѕРјРµСЂР° СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
+#define ARRAY_NODE_END_CHAR     ']'             // РљРѕРјРµС‡РЅС‹Р№ СЃРёРјРІРѕР» СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
 //
 #define LEVEL_SEPARATOR_CHAR    '.'             //separator for fields in structs
-#define TYPE_SEPARATOR_CHAR     ':'             //Разделитель между типом и именем объекта в мульти ссылках
-#define PATH_SEPARATOR_CHAR     '\\'            //разделитель между папками в FolderManipulator
-//#define PATH_SEPARATOR_CHAR_STR "\\"            //он же, в виде с-строки
+#define TYPE_SEPARATOR_CHAR     ':'             //Р Р°Р·РґРµР»РёС‚РµР»СЊ РјРµР¶РґСѓ С‚РёРїРѕРј Рё РёРјРµРЅРµРј РѕР±СЉРµРєС‚Р° РІ РјСѓР»СЊС‚Рё СЃСЃС‹Р»РєР°С…
+#define PATH_SEPARATOR_CHAR     '\\'            //СЂР°Р·РґРµР»РёС‚РµР»СЊ РјРµР¶РґСѓ РїР°РїРєР°РјРё РІ FolderManipulator
+//#define PATH_SEPARATOR_CHAR_STR "\\"            //РѕРЅ Р¶Рµ, РІ РІРёРґРµ СЃ-СЃС‚СЂРѕРєРё
 //
-#define ID_PREFIX_CHAR          '#'             //Если перед индексом масмва установлен этот символ то это ID а не индекс массива
+#define ID_PREFIX_CHAR          '#'             //Р•СЃР»Рё РїРµСЂРµРґ РёРЅРґРµРєСЃРѕРј РјР°СЃРјРІР° СѓСЃС‚Р°РЅРѕРІР»РµРЅ СЌС‚РѕС‚ СЃРёРјРІРѕР» С‚Рѕ СЌС‚Рѕ ID Р° РЅРµ РёРЅРґРµРєСЃ РјР°СЃСЃРёРІР°
 //
 #define FS_EXLUDE_SYMBOLS       "*?""<>|"       //subject to remove
 //
@@ -69,11 +69,11 @@ struct SPropertyDesc : public SIteratorDesc
 	CValuesList values;                             //possible values (i.e. for combo boxes), MBCS
 	string szEnumName;
 	
-	bool bArray;                                    //Массив
-	bool bStruct;                                   //Структура
-	bool bMultiArray;                               //Является массивом в массиве (always false)
-	bool bHidden;                                   //ограничение доступа к объекту через конструктор IManipulator
-	bool bReadOnly;                                 //флаг считываемый из GDB, используется в Property Control
+	bool bArray;                                    //РњР°СЃСЃРёРІ
+	bool bStruct;                                   //РЎС‚СЂСѓРєС‚СѓСЂР°
+	bool bMultiArray;                               //РЇРІР»СЏРµС‚СЃСЏ РјР°СЃСЃРёРІРѕРј РІ РјР°СЃСЃРёРІРµ (always false)
+	bool bHidden;                                   //РѕРіСЂР°РЅРёС‡РµРЅРёРµ РґРѕСЃС‚СѓРїР° Рє РѕР±СЉРµРєС‚Сѓ С‡РµСЂРµР· РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ IManipulator
+	bool bReadOnly;                                 //С„Р»Р°Рі СЃС‡РёС‚С‹РІР°РµРјС‹Р№ РёР· GDB, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ Property Control
 	bool bNoCode;
 	bool bNoHeader;
 	bool bUseUpperType;

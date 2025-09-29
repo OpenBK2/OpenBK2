@@ -40,10 +40,10 @@ class CResizeDialog : public CDialog
 
 	public:
 	SOptions resizeDialogOptions;
-	//ANCHORE_LEFT				resize - относительно левого края ( центральная линия - 0.0f )
-	//ANCHORE_RIGHT				resize - относительно правого края ( центральная линия - 1.0f )
-	//ANCHORE_HOR_CENTER	resize - относительно центральной линии ( центральная линия - fHorCenterAnchorRatio)
-	//RESIZE_HOR					дополнительно меняем размер на fHorResizeRatio
+	//ANCHORE_LEFT				resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ Р»РµРІРѕРіРѕ РєСЂР°СЏ ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - 0.0f )
+	//ANCHORE_RIGHT				resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїСЂР°РІРѕРіРѕ РєСЂР°СЏ ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - 1.0f )
+	//ANCHORE_HOR_CENTER	resize - РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ Р»РёРЅРёРё ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ Р»РёРЅРёСЏ - fHorCenterAnchorRatio)
+	//RESIZE_HOR					РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РјРµРЅСЏРµРј СЂР°Р·РјРµСЂ РЅР° fHorResizeRatio
 	enum
 	{
 		ANCHORE_LEFT							= 0x001,
@@ -74,20 +74,20 @@ class CResizeDialog : public CDialog
 	void UpdateControlPositions();
 
 protected:
-	//минимальные размеры клиентской части диалога
+	//РјРёРЅРёРјР°Р»СЊРЅС‹Рµ СЂР°Р·РјРµСЂС‹ РєР»РёРµРЅС‚СЃРєРѕР№ С‡Р°СЃС‚Рё РґРёР°Р»РѕРіР°
 	virtual int GetMinimumXDimension() { return 0; }
 	virtual int GetMinimumYDimension() { return 0; }
 
-	//способ сохранения
+	//СЃРїРѕСЃРѕР± СЃРѕС…СЂР°РЅРµРЅРёСЏ
 	virtual bool SerializeToRegistry() { return false; }
 	
-	//файл XML относительно текущего IDataStorage
+	//С„Р°Р№Р» XML РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С‚РµРєСѓС‰РµРіРѕ IDataStorage
 	virtual void GetXMLFilePath( string *pszXMLFilePath ) {}
 	
-	//ключ REGISTRY относительно HKEY_CURRENT_USER
+	//РєР»СЋС‡ REGISTRY РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ HKEY_CURRENT_USER
 	virtual void GetRegistryKey( string *pszRegistryKey ) {}
 
-	//Рисовать или не рисовать гриппер
+	//Р РёСЃРѕРІР°С‚СЊ РёР»Рё РЅРµ СЂРёСЃРѕРІР°С‚СЊ РіСЂРёРїРїРµСЂ
 	virtual bool IsToolTipsEnable() { return false; }
 	virtual bool IsDrawGripper() { return false; }
 	virtual bool IsRestoreSize() { return true; }

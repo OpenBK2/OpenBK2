@@ -84,17 +84,17 @@ public:
 	bool IsRectOnLockedTiles( const SRect &rect, const EAIClasses aiClass );
 	bool IsCircleOnLockedTiles( const CCircle &circle, const EAIClasses aiClass );
 
-	// возвращает tiles, которые накрывает данный четырёхугольник
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ tiles, РєРѕС‚РѕСЂС‹Рµ РЅР°РєСЂС‹РІР°РµС‚ РґР°РЅРЅС‹Р№ С‡РµС‚С‹СЂС‘С…СѓРіРѕР»СЊРЅРёРє
 	template<class TContainter>
 		inline void GetTilesCoveredByQuadrangle( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles );
-	// возвращает tiles, которые накрывает данный rect
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ tiles, РєРѕС‚РѕСЂС‹Рµ РЅР°РєСЂС‹РІР°РµС‚ РґР°РЅРЅС‹Р№ rect
 	template<class TContainter>
 		inline void GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles );
 	template<class TContainter>
 		inline void GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
 	template<class TContainter>
 		inline void GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
-	//возвращает tiles, которые пересекаются со сторонами данного rect
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ tiles, РєРѕС‚РѕСЂС‹Рµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ СЃРѕ СЃС‚РѕСЂРѕРЅР°РјРё РґР°РЅРЅРѕРіРѕ rect
 	template<class TContainter>
 		inline void GetTilesCoveredByRectSides( const SRect &rect, TContainter *pTiles );
 

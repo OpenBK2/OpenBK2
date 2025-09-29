@@ -541,8 +541,8 @@ bool CLadderLobby::MatchMakingStep()
 				gameInfo.team2Players.clear();
 				
 				hash_map<int, list<int> > candidates;
-				// Распихиваем игроков по командам, тех, кто не выбрал команду - распихиваем случайно
-				// Если историчность отключена - всех случайно
+				// Р Р°СЃРїРёС…РёРІР°РµРј РёРіСЂРѕРєРѕРІ РїРѕ РєРѕРјР°РЅРґР°Рј, С‚РµС…, РєС‚Рѕ РЅРµ РІС‹Р±СЂР°Р» РєРѕРјР°РЅРґСѓ - СЂР°СЃРїРёС…РёРІР°РµРј СЃР»СѓС‡Р°Р№РЅРѕ
+				// Р•СЃР»Рё РёСЃС‚РѕСЂРёС‡РЅРѕСЃС‚СЊ РѕС‚РєР»СЋС‡РµРЅР° - РІСЃРµС… СЃР»СѓС‡Р°Р№РЅРѕ
 				for ( list<int>::iterator it = players.begin(); it != players.end(); ++it )
 				{
 					int nPlayerID = *it;
@@ -566,12 +566,12 @@ bool CLadderLobby::MatchMakingStep()
 
 				NLadder::RandomizeList( &candidates[1] );
 				NLadder::RandomizeList( &candidates[2] );
-				// Если получилось слишком мало кандидатов в одну из команд - попробуем еще раз
+				// Р•СЃР»Рё РїРѕР»СѓС‡РёР»РѕСЃСЊ СЃР»РёС€РєРѕРј РјР°Р»Рѕ РєР°РЅРґРёРґР°С‚РѕРІ РІ РѕРґРЅСѓ РёР· РєРѕРјР°РЅРґ - РїРѕРїСЂРѕР±СѓРµРј РµС‰Рµ СЂР°Р·
 
         while ( candidates[1].size() >= ( nTeamSize - 1 ) && candidates[2].size() >= nTeamSize )
 				{
 
-					// Заполняем команды кандидатами
+					// Р—Р°РїРѕР»РЅСЏРµРј РєРѕРјР°РЅРґС‹ РєР°РЅРґРёРґР°С‚Р°РјРё
 					gameInfo.team1Players.push_back( nFirstPlayerID );
 					while( ( gameInfo.team1Players.size() < nTeamSize && !candidates[1].empty() ) 
 						|| ( gameInfo.team2Players.size() < nTeamSize && !candidates[2].empty() ) )
@@ -589,14 +589,14 @@ bool CLadderLobby::MatchMakingStep()
 					}
 
 					if ( gameInfo.team1Players.size() < nTeamSize || gameInfo.team2Players.size() < nTeamSize )
-						continue; 				// Кандидатов не хватило :(
+						continue; 				// РљР°РЅРґРёРґР°С‚РѕРІ РЅРµ С…РІР°С‚РёР»Рѕ :(
 					
 					const float nTeam1Level = NLadder::TeamLevel( ladderClients, gameInfo.team1Players );
 					const float nTeam2Level = NLadder::TeamLevel( ladderClients, gameInfo.team2Players );
 
 					if ( fabs( nTeam2Level - nTeam1Level ) <= pConsts->nLevelDelta )
 					{
-						// Команды подобраны. Начинаем игру.
+						// РљРѕРјР°РЅРґС‹ РїРѕРґРѕР±СЂР°РЅС‹. РќР°С‡РёРЅР°РµРј РёРіСЂСѓ.
 						CreateLadderGame( gameInfo );
 
 #ifndef CONSOLE_LOG_SILENCE
@@ -608,8 +608,8 @@ bool CLadderLobby::MatchMakingStep()
 					list<int> &weakTeam = ( nTeam1Level < nTeam2Level ) ? gameInfo.team1Players : gameInfo.team2Players;
 					list<int> &strongTeam = ( nTeam1Level > nTeam2Level ) ? gameInfo.team1Players : gameInfo.team2Players;
 
-					// Так как команды получились сильно разного уровня, то либо выкидываем слабейшего из слабой,
-					//  либо выкидываем сильнейшего из сильной
+					// РўР°Рє РєР°Рє РєРѕРјР°РЅРґС‹ РїРѕР»СѓС‡РёР»РёСЃСЊ СЃРёР»СЊРЅРѕ СЂР°Р·РЅРѕРіРѕ СѓСЂРѕРІРЅСЏ, С‚Рѕ Р»РёР±Рѕ РІС‹РєРёРґС‹РІР°РµРј СЃР»Р°Р±РµР№С€РµРіРѕ РёР· СЃР»Р°Р±РѕР№,
+					//  Р»РёР±Рѕ РІС‹РєРёРґС‹РІР°РµРј СЃРёР»СЊРЅРµР№С€РµРіРѕ РёР· СЃРёР»СЊРЅРѕР№
 					if ( NRandom::Random( 0, 1 ) )
 					{
 						NLadder::DropWeakestExcept( ladderClients, &weakTeam, nFirstPlayerID );

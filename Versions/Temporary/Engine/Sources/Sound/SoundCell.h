@@ -2,13 +2,13 @@
 #include "Sound.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//клетка, содержащая звук
+//РєР»РµС‚РєР°, СЃРѕРґРµСЂР¶Р°С‰Р°СЏ Р·РІСѓРє
 class CSoundCell : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CSoundCell );
-	int nRadius;												// радиус звучания этой клетки(в клетках)
+	int nRadius;												// СЂР°РґРёСѓСЃ Р·РІСѓС‡Р°РЅРёСЏ СЌС‚РѕР№ РєР»РµС‚РєРё(РІ РєР»РµС‚РєР°С…)
 	typedef list< CPtr<CSound> > CSounds;
-	CSounds sounds;												// звуки этой клетки
+	CSounds sounds;												// Р·РІСѓРєРё СЌС‚РѕР№ РєР»РµС‚РєРё
 	void RecountForDelete();
 	NTimer::STime timeLastCombatHear;
 	bool IsSoundHearable( const CSound *pSound, const int nRadius ) const;
@@ -19,13 +19,13 @@ public:
 
 	int GetRadius() const { return nRadius; }
 	void SetRadius( int nRad ) { nRadius = nRad; }
-	void AddSound( class CSound *pSound );	// добавляет звук и пересчитывает радиус звучания
-	void RemoveSound( const WORD wID, ISFX * pSFX =0 );					// удаляет звук и пересчитывает радиус звучания
+	void AddSound( class CSound *pSound );	// РґРѕР±Р°РІР»СЏРµС‚ Р·РІСѓРє Рё РїРµСЂРµСЃС‡РёС‚С‹РІР°РµС‚ СЂР°РґРёСѓСЃ Р·РІСѓС‡Р°РЅРёСЏ
+	void RemoveSound( const WORD wID, ISFX * pSFX =0 );					// СѓРґР°Р»СЏРµС‚ Р·РІСѓРє Рё РїРµСЂРµСЃС‡РёС‚С‹РІР°РµС‚ СЂР°РґРёСѓСЃ Р·РІСѓС‡Р°РЅРёСЏ
 	CSound * GetSound( const WORD wID );
 	const CSound * GetSound( const WORD wID ) const;
 
-	// удалить звуки с ID == 0 , которые завершились
-	// все доигравшие звуки пометить как доигравшие
+	// СѓРґР°Р»РёС‚СЊ Р·РІСѓРєРё СЃ ID == 0 , РєРѕС‚РѕСЂС‹Рµ Р·Р°РІРµСЂС€РёР»РёСЃСЊ
+	// РІСЃРµ РґРѕРёРіСЂР°РІС€РёРµ Р·РІСѓРєРё РїРѕРјРµС‚РёС‚СЊ РєР°Рє РґРѕРёРіСЂР°РІС€РёРµ
 	void Update( ISFX * pSFX );
 
 	bool HasSounds() const { return sounds.begin() != sounds.end(); }
@@ -35,7 +35,7 @@ public:
 	bool IsCombat() const;
 
 
-	// для всех звуков, которые слышны на расстояние больше nRadius и еще не доиграли
+	// РґР»СЏ РІСЃРµС… Р·РІСѓРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ СЃР»С‹С€РЅС‹ РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРµ Р±РѕР»СЊС€Рµ nRadius Рё РµС‰Рµ РЅРµ РґРѕРёРіСЂР°Р»Рё
 	template <class TEnumFunc> 
 		void EnumHearableSounds( int nRadius, TEnumFunc func )
 	{
@@ -45,7 +45,7 @@ public:
 				func( *it );
 		}
 	}
-	// для перебора всех звуков.
+	// РґР»СЏ РїРµСЂРµР±РѕСЂР° РІСЃРµС… Р·РІСѓРєРѕРІ.
 	template <class TEnumFunc>
 		void EnumAllSounds( TEnumFunc func, int nRadius )
 	{
@@ -61,7 +61,7 @@ public:
 		}
 		else
 		{
-			// значит ни один из звуков этой клетки не слышен
+			// Р·РЅР°С‡РёС‚ РЅРё РѕРґРёРЅ РёР· Р·РІСѓРєРѕРІ СЌС‚РѕР№ РєР»РµС‚РєРё РЅРµ СЃР»С‹С€РµРЅ
 			for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 				func( *it, false );
 		}

@@ -106,7 +106,7 @@ class CScenarioTracker : public IScenarioTracker
 	ZSKIP //vector<int> leaderFirstNames;
 	ZSKIP //vector<int> leaderLastNames;
 	ZSKIP //vector<int> leaderPictures;
-	ZSKIP //CReinforcementEnableStates chapterReinfPotential; // потенциально доступные подкрепления в данной главе
+	ZSKIP //CReinforcementEnableStates chapterReinfPotential; // РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ РґРѕСЃС‚СѓРїРЅС‹Рµ РїРѕРґРєСЂРµРїР»РµРЅРёСЏ РІ РґР°РЅРЅРѕР№ РіР»Р°РІРµ
 	vector<SChapterReinf> chapterCurrentReinfs;
 	SPlayerColor playerColorUser;
 	SPlayerColor playerColorFriend;
@@ -146,14 +146,14 @@ public:
 	~CScenarioTracker();
 
 	// objectives
-	// Задания, про которые игрок уже знает
+	// Р—Р°РґР°РЅРёСЏ, РїСЂРѕ РєРѕС‚РѕСЂС‹Рµ РёРіСЂРѕРє СѓР¶Рµ Р·РЅР°РµС‚
 	int GetKnownObjectiveCount() const;
-	// Возвращает ID задания
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ ID Р·Р°РґР°РЅРёСЏ
 	int GetKnownObjectiveID( const int nIndex );
 
 	int GetObjectiveCount() const;
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
-	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
+	// Р—Р°РґР°РЅРёРµ, РІРїРµСЂРІС‹Рµ РёР·РјРµРЅРёРІС€РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РёР· EMOS_WAITING РїРѕРїР°РґР°РµС‚ РІ РєРѕРЅРµС† СЃРїРёСЃРєР° РёР·РІРµСЃС‚РЅС‹С…
 	void SetObjectiveState( const int nID, const EMissionObjectiveState eState );
 	bool GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const;
 	void SetObjectiveObjects( int nID, const vector< CMapObj* > &objects );
@@ -384,14 +384,14 @@ public:
 	bool IsCustomCampaign() const { return false; }
 	
 	// objectives
-	// Задания, про которые игрок уже знает
+	// Р—Р°РґР°РЅРёСЏ, РїСЂРѕ РєРѕС‚РѕСЂС‹Рµ РёРіСЂРѕРє СѓР¶Рµ Р·РЅР°РµС‚
 	int GetKnownObjectiveCount() const { return 0; }
-	// Возвращает ID задания
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ ID Р·Р°РґР°РЅРёСЏ
 	int GetKnownObjectiveID( const int nIndex ) { return -1; }
 
 	int GetObjectiveCount() const { return 0; }
 	enum EMissionObjectiveState GetObjectiveState( const int nID ) const;
-	// Задание, впервые изменившее состояние из EMOS_WAITING попадает в конец списка известных
+	// Р—Р°РґР°РЅРёРµ, РІРїРµСЂРІС‹Рµ РёР·РјРµРЅРёРІС€РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РёР· EMOS_WAITING РїРѕРїР°РґР°РµС‚ РІ РєРѕРЅРµС† СЃРїРёСЃРєР° РёР·РІРµСЃС‚РЅС‹С…
 	void SetObjectiveState( const int nID, const EMissionObjectiveState eState ) {}
 	bool GetObjectivePlaces( int nID, vector<CVec3> *pPlaces ) const { return false; }
 	void SetObjectiveObjects( int nID, const vector< CMapObj* > &objects ) {}

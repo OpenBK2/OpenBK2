@@ -25,7 +25,7 @@ class CAIUnit: public CCommonUnit
 	BYTE player;
 	bool bTrampled;
 
-	// половина угла обзора
+	// РїРѕР»РѕРІРёРЅР° СѓРіР»Р° РѕР±Р·РѕСЂР°
 	SAIAngle wVisionAngle;
 	
 	//RPG stats
@@ -34,7 +34,7 @@ class CAIUnit: public CCommonUnit
 	CObj<CAntiArtillery> pAntiArtillery;
 	CObj<interface IAnimUnit> pAnimUnit;
 
-	//окоп, в котором этот юнит тусуется
+	//РѕРєРѕРї, РІ РєРѕС‚РѕСЂРѕРј СЌС‚РѕС‚ СЋРЅРёС‚ С‚СѓСЃСѓРµС‚СЃСЏ
 	CObj<CExistingObject> pTankPit; 
 	bool bVirtualTankPit;									// unit cannot move like it is in tankpit, but don't have bonuses
 	bool bIsInTankPit;
@@ -106,7 +106,7 @@ protected:
 
 	CObj<CAIUnitInfoForGeneral> pUnitInfoForGeneral;
 
-	// необходимые действия перед смертью/исчезновением с карты
+	// РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґРµР№СЃС‚РІРёСЏ РїРµСЂРµРґ СЃРјРµСЂС‚СЊСЋ/РёСЃС‡РµР·РЅРѕРІРµРЅРёРµРј СЃ РєР°СЂС‚С‹
 	void DieTrain( const float fDamage );
 	
 	virtual void InitGuns() = 0;
@@ -133,14 +133,14 @@ public:
 
 	virtual void PrepareToDelete();
 	DWORD GetForbiddenGuns() const { return dwForbiddenGuns; }
-	// для updater-а
+	// РґР»СЏ updater-Р°
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 	//virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual const NTimer::STime GetTimeOfDeath() const { return timeToDeath; }
 
 	virtual const CVec2 GetGunCenter( const int nGun, const int nPlatform ) const;
-		// когда танк въехал в TankPit или его окопали вызывается эта функция
+		// РєРѕРіРґР° С‚Р°РЅРє РІСЉРµС…Р°Р» РІ TankPit РёР»Рё РµРіРѕ РѕРєРѕРїР°Р»Рё РІС‹Р·С‹РІР°РµС‚СЃСЏ СЌС‚Р° С„СѓРЅРєС†РёСЏ
 	void SetInTankPit( CExistingObject *pTankPit );
 	void SetOffTankPit();
 	void SetInVirtualTankPit() { bVirtualTankPit = true; }
@@ -154,22 +154,22 @@ public:
 	//
 	virtual const SUnitBaseRPGStats* GetStats() const = 0;
 
-	// в месте, где его никто не видит и он никого не видит
+	// РІ РјРµСЃС‚Рµ, РіРґРµ РµРіРѕ РЅРёРєС‚Рѕ РЅРµ РІРёРґРёС‚ Рё РѕРЅ РЅРёРєРѕРіРѕ РЅРµ РІРёРґРёС‚
 	virtual bool IsInSolidPlace() const { return false; }
 	virtual bool IsInFirePlace() const { return false; }
 	virtual bool IsFree() const { return true; }
 
-	// обработка команд
+	// РѕР±СЂР°Р±РѕС‚РєР° РєРѕРјР°РЅРґ
 	virtual void Segment();
 	virtual void FreezeSegment();
 	bool IsPossibleChangeAction() const	{ return IsAlive(); }
 	virtual void Die( const bool fromExplosion, const float fDamage );
 	virtual void Disappear();
 
-	// виден ли данной дипломатической стороной
+	// РІРёРґРµРЅ Р»Рё РґР°РЅРЅРѕР№ РґРёРїР»РѕРјР°С‚РёС‡РµСЃРєРѕР№ СЃС‚РѕСЂРѕРЅРѕР№
 	virtual const bool IsVisible( const BYTE party ) const;
 	void SetVisibility( BYTE party, bool bVisible ) { visible4Party[party] = bVisible; }
-	// для отложенных updates
+	// РґР»СЏ РѕС‚Р»РѕР¶РµРЅРЅС‹С… updates
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 	//virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
@@ -194,32 +194,32 @@ public:
 	const float GetHitPoints() const { return fHitPoints; }
 	void IncreaseHitPoints( const float fInc = 1 );
 	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
-	// true при попадании
+	// true РїСЂРё РїРѕРїР°РґР°РЅРёРё
 	virtual bool ProcessCumulativeExpl( class CExplosion *pExpl, const int nArmorDir, const bool bFromExpl );
-	// true при точном попадании
+	// true РїСЂРё С‚РѕС‡РЅРѕРј РїРѕРїР°РґР°РЅРёРё
 	virtual bool ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
-	// true при попадании
+	// true РїСЂРё РїРѕРїР°РґР°РЅРёРё
 	virtual bool ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
 
-	// вероятность, с которой нанесётся damage при попадании
+	// РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ, СЃ РєРѕС‚РѕСЂРѕР№ РЅР°РЅРµСЃС‘С‚СЃСЏ damage РїСЂРё РїРѕРїР°РґР°РЅРёРё
 	virtual const float GetCover() const;
 	virtual bool IsSavedByCover() const;
 
 	virtual class CTurret* GetTurret( const int nTurret ) const { NI_ASSERT( false, "Wrong call of get turret" ); return 0; }
 	
-	// для стрельбы
+	// РґР»СЏ СЃС‚СЂРµР»СЊР±С‹
 	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
 	virtual const EActionNotify GetShootAction() const = 0;
 	virtual const EActionNotify GetAimAction() const = 0;
 	virtual const EActionNotify GetDieAction() const = 0;
 	virtual const EActionNotify GetIdleAction() const = 0;
-	// для Move есть типы
+	// РґР»СЏ Move РµСЃС‚СЊ С‚РёРїС‹
 	virtual const EActionNotify GetMovingAction() const = 0;
 
 	virtual const bool CanMove() const;
 	virtual const bool CanMoveCritical() const;
-	// может ли повернуться в принципе (может быть, понадобиться деинсталляция)
+	// РјРѕР¶РµС‚ Р»Рё РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ РїСЂРёРЅС†РёРїРµ (РјРѕР¶РµС‚ Р±С‹С‚СЊ, РїРѕРЅР°РґРѕР±РёС‚СЊСЃСЏ РґРµРёРЅСЃС‚Р°Р»Р»СЏС†РёСЏ)
 	virtual const bool CanRotate() const;
 	
 	virtual void SetCamoulfage();
@@ -236,9 +236,9 @@ public:
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const;
 	
 	virtual const BYTE GetPlayer() const { return player; }
-	// сменить дипломатию с корректным update в units
+	// СЃРјРµРЅРёС‚СЊ РґРёРїР»РѕРјР°С‚РёСЋ СЃ РєРѕСЂСЂРµРєС‚РЅС‹Рј update РІ units
 	virtual void ChangePlayer( const BYTE cPlayer );
-	// просто поставить другую дипломатию
+	// РїСЂРѕСЃС‚Рѕ РїРѕСЃС‚Р°РІРёС‚СЊ РґСЂСѓРіСѓСЋ РґРёРїР»РѕРјР°С‚РёСЋ
 	void SetPlayer( const BYTE cPlayer ) { player = cPlayer; }
 
 	virtual bool InVisCone( const CVec2 &point ) const { return true; }
@@ -255,7 +255,7 @@ public:
 	virtual void Fired( const float fGunRadius, const int nGun );
 	virtual NTimer::STime GetDisappearInterval() const;
 
-	// бонусы
+	// Р±РѕРЅСѓСЃС‹
 	virtual const float GetDispersionBonus() const { return 1.0f; }
 	virtual const void SetDispersionBonus( const float fBonus ) {}
 	virtual const float GetRelaxTimeBonus() const { return 1.0f; }
@@ -269,22 +269,22 @@ public:
 	virtual void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const;
 	virtual void WarFogChanged();
 
-	// update изображения shoot area или range area
+	// update РёР·РѕР±СЂР°Р¶РµРЅРёСЏ shoot area РёР»Рё range area
 	virtual void UpdateArea( const EActionNotify eAction );
 	
 	virtual const EAIClasses GetAIPassabilityClass() const { return (EAIClasses)GetStats()->nAIPassabilityClass; }
 	
-	// патроны
+	// РїР°С‚СЂРѕРЅС‹
 	const int GetNCommonGuns() const;
 	const SBaseGunRPGStats& GetCommonGunStats( const int nCommonGun ) const;
 	virtual int GetNAmmo( const int nCommonGun ) const;
-	// nAmmo со знаком
+	// nAmmo СЃРѕ Р·РЅР°РєРѕРј
 	virtual void ChangeAmmo( const int nCommonGun, const int nAmmo );
 	virtual bool IsCommonGunFiring( const int nCommonGun ) const;
 
 	virtual const float GetSmoothTurnThreshold() const { return 0.3f; }
 	
-	// заметен ли юнитом pUnit, радиус обнаружения fNoticeRadius
+	// Р·Р°РјРµС‚РµРЅ Р»Рё СЋРЅРёС‚РѕРј pUnit, СЂР°РґРёСѓСЃ РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ fNoticeRadius
 	virtual bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius );
 	
 	const int ChooseFatality( const float fDamage );
@@ -292,10 +292,10 @@ public:
 	void NullCollisions();
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
-	// ack для команды pCommand
+	// ack РґР»СЏ РєРѕРјР°РЅРґС‹ pCommand
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
 	
-	// коллизится ли с движущимися объектами
+	// РєРѕР»Р»РёР·РёС‚СЃСЏ Р»Рё СЃ РґРІРёР¶СѓС‰РёРјРёСЃСЏ РѕР±СЉРµРєС‚Р°РјРё
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
 	
 	virtual const int GetMinArmor() const;
@@ -318,54 +318,54 @@ public:
 	virtual EUnitAckType GetGunsRejectReason() const;
 	bool DoesExistRejectGunsReason( const EUnitAckType &ackType ) const;
 	
-	// целеразрешение
-	// скорость убийства юнита с pStats из pGun
+	// С†РµР»РµСЂР°Р·СЂРµС€РµРЅРёРµ
+	// СЃРєРѕСЂРѕСЃС‚СЊ СѓР±РёР№СЃС‚РІР° СЋРЅРёС‚Р° СЃ pStats РёР· pGun
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const DWORD dwGuns ) const;
-	// скорость убийства юнита из наилучшего gun
+	// СЃРєРѕСЂРѕСЃС‚СЊ СѓР±РёР№СЃС‚РІР° СЋРЅРёС‚Р° РёР· РЅР°РёР»СѓС‡С€РµРіРѕ gun
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const;
-	// скорость убийства юнита из pGun
+	// СЃРєРѕСЂРѕСЃС‚СЊ СѓР±РёР№СЃС‚РІР° СЋРЅРёС‚Р° РёР· pGun
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy, class CBasicGun *pGun ) const;
-	// скорость убийства юнита из набора Gun, номера задаются маской
+	// СЃРєРѕСЂРѕСЃС‚СЊ СѓР±РёР№СЃС‚РІР° СЋРЅРёС‚Р° РёР· РЅР°Р±РѕСЂР° Gun, РЅРѕРјРµСЂР° Р·Р°РґР°СЋС‚СЃСЏ РјР°СЃРєРѕР№
 	virtual const float GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const;
 	void UpdateTakenDamagePower( const float fUpdate );
 	const float GetTakenDamagePower() const { return fTakenDamagePower; }
 	
-	// обнулить время для периодов сканирования
+	// РѕР±РЅСѓР»РёС‚СЊ РІСЂРµРјСЏ РґР»СЏ РїРµСЂРёРѕРґРѕРІ СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ
 	virtual void ResetTargetScan();
-	// просканировать, если пора; если нашли цель, то атаковать
-	// возвращает: в младшем бите - была ли найдена цель, во втором бите - было ли произведено сканирование
+	// РїСЂРѕСЃРєР°РЅРёСЂРѕРІР°С‚СЊ, РµСЃР»Рё РїРѕСЂР°; РµСЃР»Рё РЅР°С€Р»Рё С†РµР»СЊ, С‚Рѕ Р°С‚Р°РєРѕРІР°С‚СЊ
+	// РІРѕР·РІСЂР°С‰Р°РµС‚: РІ РјР»Р°РґС€РµРј Р±РёС‚Рµ - Р±С‹Р»Р° Р»Рё РЅР°Р№РґРµРЅР° С†РµР»СЊ, РІРѕ РІС‚РѕСЂРѕРј Р±РёС‚Рµ - Р±С‹Р»Рѕ Р»Рё РїСЂРѕРёР·РІРµРґРµРЅРѕ СЃРєР°РЅРёСЂРѕРІР°РЅРёРµ
 	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
-	// поискать цель, текущая цель для атаки - pCurTarget
+	// РїРѕРёСЃРєР°С‚СЊ С†РµР»СЊ, С‚РµРєСѓС‰Р°СЏ С†РµР»СЊ РґР»СЏ Р°С‚Р°РєРё - pCurTarget
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-	// поискать цель вдалеке для артиллерийского обстрела, текущая цель для атаки - pCurTarget
+	// РїРѕРёСЃРєР°С‚СЊ С†РµР»СЊ РІРґР°Р»РµРєРµ РґР»СЏ Р°СЂС‚РёР»Р»РµСЂРёР№СЃРєРѕРіРѕ РѕР±СЃС‚СЂРµР»Р°, С‚РµРєСѓС‰Р°СЏ С†РµР»СЊ РґР»СЏ Р°С‚Р°РєРё - pCurTarget
 	virtual void LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-		// для того, чтобы искать врагов не только в секторе атаки, а во всём круге
+		// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РёСЃРєР°С‚СЊ РІСЂР°РіРѕРІ РЅРµ С‚РѕР»СЊРєРѕ РІ СЃРµРєС‚РѕСЂРµ Р°С‚Р°РєРё, Р° РІРѕ РІСЃС‘Рј РєСЂСѓРіРµ
 	void SetCircularAttack( const bool bCanAttack );
-	// поискать препятствие.
+	// РїРѕРёСЃРєР°С‚СЊ РїСЂРµРїСЏС‚СЃС‚РІРёРµ.
 	virtual interface IObstacle *LookForObstacle();
 	void UpdateNAttackingGrenages( const int nUpdate ) { nGrenades += nUpdate; NI_ASSERT( nGrenades >= 0, "Wrong number of grenades" ); }
 	const int GetNAttackingGrenages() const { return nGrenades; }
 
-	// установать в curTime время для периодов выбора gun
+	// СѓСЃС‚Р°РЅРѕРІР°С‚СЊ РІ curTime РІСЂРµРјСЏ РґР»СЏ РїРµСЂРёРѕРґРѕРІ РІС‹Р±РѕСЂР° gun
 	virtual void ResetGunChoosing();
-	// если пора перевыбрать gun, то перевыбрать
+	// РµСЃР»Рё РїРѕСЂР° РїРµСЂРµРІС‹Р±СЂР°С‚СЊ gun, С‚Рѕ РїРµСЂРµРІС‹Р±СЂР°С‚СЊ
 	CBasicGun* AnalyzeGunChoose( CAIUnit *pEnemy );
 
 	void EnemyKilled( CAIUnit *pEnemy );
 
 	virtual bool CanMoveForGuard() const { return CanMove() && !GetStats()->IsTrain(); }
-	// время, через которое general забудет о невидимом юните
+	// РІСЂРµРјСЏ, С‡РµСЂРµР· РєРѕС‚РѕСЂРѕРµ general Р·Р°Р±СѓРґРµС‚ Рѕ РЅРµРІРёРґРёРјРѕРј СЋРЅРёС‚Рµ
 	virtual const float GetTimeToForget() const;
 	CAIUnitInfoForGeneral* GetUnitInfoForGeneral() const;
 	void SetLastVisibleTime( const NTimer::STime time );
 	
-	// радиус, в котром сканируются цели
+	// СЂР°РґРёСѓСЃ, РІ РєРѕС‚СЂРѕРј СЃРєР°РЅРёСЂСѓСЋС‚СЃСЏ С†РµР»Рё
 	virtual const float GetTargetScanRadius();
-	// юнит находиться в свободном поиске целей
+	// СЋРЅРёС‚ РЅР°С…РѕРґРёС‚СЊСЃСЏ РІ СЃРІРѕР±РѕРґРЅРѕРј РїРѕРёСЃРєРµ С†РµР»РµР№
 	virtual bool IsFreeEnemySearch() const { return bFreeEnemySearch; }
 
-	// количество сегментнов, прошедшее с прошлого вызова SecondSegment
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРµРіРјРµРЅС‚РЅРѕРІ, РїСЂРѕС€РµРґС€РµРµ СЃ РїСЂРѕС€Р»РѕРіРѕ РІС‹Р·РѕРІР° SecondSegment
 	virtual const float GetPathSegmentsPeriod() const { return 1.0f; }
 	
 	virtual float GetPriceMax() const;
@@ -381,20 +381,20 @@ public:
 	
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
-	//для посылки генералу информации о видимых врагах, а также посылки update о видимости юнита
+	//РґР»СЏ РїРѕСЃС‹Р»РєРё РіРµРЅРµСЂР°Р»Сѓ РёРЅС„РѕСЂРјР°С†РёРё Рѕ РІРёРґРёРјС‹С… РІСЂР°РіР°С…, Р° С‚Р°РєР¶Рµ РїРѕСЃС‹Р»РєРё update Рѕ РІРёРґРёРјРѕСЃС‚Рё СЋРЅРёС‚Р°
 	void CalcVisibility( const bool bIgnoreTime );
-	// клиент зависима!
+	// РєР»РёРµРЅС‚ Р·Р°РІРёСЃРёРјР°!
 	virtual const bool IsVisibleByPlayer();
 	bool CalculateUnitVisibility4PartyInner( const BYTE party ) const;
 	
-	// залокать unit ( если уже был залокана, то старый lock исчезает )
+	// Р·Р°Р»РѕРєР°С‚СЊ unit ( РµСЃР»Рё СѓР¶Рµ Р±С‹Р» Р·Р°Р»РѕРєР°РЅР°, С‚Рѕ СЃС‚Р°СЂС‹Р№ lock РёСЃС‡РµР·Р°РµС‚ )
 	virtual void Lock( const CBasicGun *pGun );
-	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
+	// unlock unit ( РµСЃР»Рё Р·Р°Р»РѕРєР°РЅ РґСЂСѓРіРёРј gun-РѕРј, С‚Рѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚СЃСЏ )
 	virtual void Unlock( const CBasicGun *pGun );
-	// залокан ли каким-либо gun-ом, не равным pGun
+	// Р·Р°Р»РѕРєР°РЅ Р»Рё РєР°РєРёРј-Р»РёР±Рѕ gun-РѕРј, РЅРµ СЂР°РІРЅС‹Рј pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const;
 	
-	// смена текущего типа патронов.
+	// СЃРјРµРЅР° С‚РµРєСѓС‰РµРіРѕ С‚РёРїР° РїР°С‚СЂРѕРЅРѕРІ.
 	void SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
 
 	// for planes
@@ -417,7 +417,7 @@ public:
 	bool IsRevealed() const;
 	
 	virtual const bool IsInfantry() const;
-	// обстрелян юнитом pUnit
+	// РѕР±СЃС‚СЂРµР»СЏРЅ СЋРЅРёС‚РѕРј pUnit
 	virtual void Grazed( CAIUnit *pUnit ) { }
 	
 	void NullCreationTime() { creationTime = 0; }

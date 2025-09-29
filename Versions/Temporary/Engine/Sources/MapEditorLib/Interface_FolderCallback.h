@@ -4,8 +4,8 @@
 
 #include "Interface_Controller.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Последовательность создания объектов должна быть такова чтобы при удалении объектов сначала могли удалится более ранние объекты
-// это значить, что объект на который ссылаются необходимо создавать позже
+// РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ РѕР±СЉРµРєС‚РѕРІ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ С‚Р°РєРѕРІР° С‡С‚РѕР±С‹ РїСЂРё СѓРґР°Р»РµРЅРёРё РѕР±СЉРµРєС‚РѕРІ СЃРЅР°С‡Р°Р»Р° РјРѕРіР»Рё СѓРґР°Р»РёС‚СЃСЏ Р±РѕР»РµРµ СЂР°РЅРЅРёРµ РѕР±СЉРµРєС‚С‹
+// СЌС‚Рѕ Р·РЅР°С‡РёС‚СЊ, С‡С‚Рѕ РѕР±СЉРµРєС‚ РЅР° РєРѕС‚РѕСЂС‹Р№ СЃСЃС‹Р»Р°СЋС‚СЃСЏ РЅРµРѕР±С…РѕРґРёРјРѕ СЃРѕР·РґР°РІР°С‚СЊ РїРѕР·Р¶Рµ
 interface IFolderCallback : public CObjectBase
 {
 	enum { tidTypeID = 0x140A7000 };
@@ -15,23 +15,23 @@ interface IFolderCallback : public CObjectBase
 	virtual void UnockObjects( const SObjectSet &rObjectSet ) = 0;
 	// define locked object
 	virtual bool IsObjectLocked( const string &rszTypeName, const CDBID &rDBID ) const = 0;
-	// Очистить буфер
+	// РћС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
 	virtual void ClearUndoData() = 0;
-	// Удалить созданные объекты объекты 
+	// РЈРґР°Р»РёС‚СЊ СЃРѕР·РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚С‹ РѕР±СЉРµРєС‚С‹ 
 	virtual void UndoChanges() = 0;
-	// Уникальное ли имя
+	// РЈРЅРёРєР°Р»СЊРЅРѕРµ Р»Рё РёРјСЏ
 	virtual bool IsUniqueName( const string &rszTypeName, const string &rszName ) = 0;
-	// Сделать имя уникальным
+	// РЎРґРµР»Р°С‚СЊ РёРјСЏ СѓРЅРёРєР°Р»СЊРЅС‹Рј
 	virtual bool UniqueName( const string &szTypeName, string *pszName ) = 0;
-	// Создать объект в базе ( и в дереве )
+	// РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚ РІ Р±Р°Р·Рµ ( Рё РІ РґРµСЂРµРІРµ )
 	virtual bool InsertObject( const string &rszObjectTypeName, const string &rszObjectName ) = 0;
-	// Скопировать объект
+	// РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
 	virtual bool CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource ) = 0;
-	// Переименовать объект
+	// РџРµСЂРµРёРјРµРЅРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
 	virtual bool RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource ) = 0;
-	// Удалить объект из базы ( и из дерева )
+	// РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РёР· Р±Р°Р·С‹ ( Рё РёР· РґРµСЂРµРІР° )
 	virtual bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName, bool bRecursive ) = 0;
-	// Установить свойство объекта
+	// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ РѕР±СЉРµРєС‚Р°
 	virtual bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor ) = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -23,9 +23,9 @@ public:
 		fw_dx( VNULL2 ), fw_d2x( VNULL2 ), fw_d3x( VNULL2 ), t( 0 ), tForward( 0 ),
 		cntToForward( 0 ) {}
 
-		// для вычисления сплайна
+		// РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃРїР»Р°Р№РЅР°
 		const static float DELTA;
-		// для просмотра вперёд на предмет залоканных тайлов на пути
+		// РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РІРїРµСЂС‘Рґ РЅР° РїСЂРµРґРјРµС‚ Р·Р°Р»РѕРєР°РЅРЅС‹С… С‚Р°Р№Р»РѕРІ РЅР° РїСѓС‚Рё
 		const static float DELTA_FORWARD;
 		const static int N_OF_ITERATONS;
 		const static int N_ITERS_TO_FORWARD;
@@ -45,14 +45,14 @@ public:
 			CVec2 fw_dx, fw_d2x, fw_d3x;
 		};
 
-		// если pIter->t == -1, то дальше итерировать нельзя, т.к. сплайн кончился
+		// РµСЃР»Рё pIter->t == -1, С‚Рѕ РґР°Р»СЊС€Рµ РёС‚РµСЂРёСЂРѕРІР°С‚СЊ РЅРµР»СЊР·СЏ, С‚.Рє. СЃРїР»Р°Р№РЅ РєРѕРЅС‡РёР»СЃСЏ
 		const void StartForwardIterating( SForwardIter *pIter );
 		const void IterateForward( SForwardIter *pIter );
 
 		void DumpState() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// путь по окружности
+// РїСѓС‚СЊ РїРѕ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 class CCirclePath
 {
 	float fStartDir, fDirDiff;
@@ -60,11 +60,11 @@ class CCirclePath
 	float fRadius;
 	bool bClockWise;
 
-	float fCurrentDelta;    // текущее приращение
-	CVec2 vX, vDX;				  // координата точки и направление касательной в этой точке
-	CVec2 vLastX, vLastDX;  // координата последние точки и направление в этой точке
+	float fCurrentDelta;    // С‚РµРєСѓС‰РµРµ РїСЂРёСЂР°С‰РµРЅРёРµ
+	CVec2 vX, vDX;				  // РєРѕРѕСЂРґРёРЅР°С‚Р° С‚РѕС‡РєРё Рё РЅР°РїСЂР°РІР»РµРЅРёРµ РєР°СЃР°С‚РµР»СЊРЅРѕР№ РІ СЌС‚РѕР№ С‚РѕС‡РєРµ
+	CVec2 vLastX, vLastDX;  // РєРѕРѕСЂРґРёРЅР°С‚Р° РїРѕСЃР»РµРґРЅРёРµ С‚РѕС‡РєРё Рё РЅР°РїСЂР°РІР»РµРЅРёРµ РІ СЌС‚РѕР№ С‚РѕС‡РєРµ
 
-	bool bForwardDir;				// едем вперед или нет
+	bool bForwardDir;				// РµРґРµРј РІРїРµСЂРµРґ РёР»Рё РЅРµС‚
 
 public:
 	CCirclePath()
@@ -103,16 +103,16 @@ public:
 		const CVec2 &GetLastDX() const { return vLastDX; }
 
 		const bool IsForwardDir() const { return bForwardDir; }
-		// fLength - длина пути, которую необходимо пройти. Возвращаемое значение, сколько еще можно пройти,
-		// т.е. не нулевое, если завершили идти по этой окружности
+		// fLength - РґР»РёРЅР° РїСѓС‚Рё, РєРѕС‚РѕСЂСѓСЋ РЅРµРѕР±С…РѕРґРёРјРѕ РїСЂРѕР№С‚Рё. Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ, СЃРєРѕР»СЊРєРѕ РµС‰Рµ РјРѕР¶РЅРѕ РїСЂРѕР№С‚Рё,
+		// С‚.Рµ. РЅРµ РЅСѓР»РµРІРѕРµ, РµСЃР»Рё Р·Р°РІРµСЂС€РёР»Рё РёРґС‚Рё РїРѕ СЌС‚РѕР№ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 		float Iterate( const float fLength );
 
 		int operator&( IBinSaver &saver );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! вызвать func для тайлов на окружности начиная от wStartAngle до wStartAngle+wDiffAngle, и до тех
-//! пор, пока func возвращает true. Возвращает дельту между начальным углом и последним углом, где 
-//! func вернул true
+//! РІС‹Р·РІР°С‚СЊ func РґР»СЏ С‚Р°Р№Р»РѕРІ РЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё РЅР°С‡РёРЅР°СЏ РѕС‚ wStartAngle РґРѕ wStartAngle+wDiffAngle, Рё РґРѕ С‚РµС…
+//! РїРѕСЂ, РїРѕРєР° func РІРѕР·РІСЂР°С‰Р°РµС‚ true. Р’РѕР·РІСЂР°С‰Р°РµС‚ РґРµР»СЊС‚Сѓ РјРµР¶РґСѓ РЅР°С‡Р°Р»СЊРЅС‹Рј СѓРіР»РѕРј Рё РїРѕСЃР»РµРґРЅРёРј СѓРіР»РѕРј, РіРґРµ 
+//! func РІРµСЂРЅСѓР» true
 template<class TYPE>
 WORD CheckArcTiles( TYPE &func, const CVec2 &vUnit, const WORD wStartAngle, const WORD wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward, CAIMap *pAIMap )
 {

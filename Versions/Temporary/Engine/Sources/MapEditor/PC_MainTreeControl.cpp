@@ -579,7 +579,7 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 		{
 			if ( pCreateTreeManipulatorIterator = GetViewManipulator()->Iterate( bShowHidden, ECT_NO_CACHE ) ) //bShowHidden ? ECT_CACHE_LOCAL : ECT_NO_CACHE ) )
 			{
-				// необходимо найти первое вхождение интересующей нас ветки
+				// РЅРµРѕР±С…РѕРґРёРјРѕ РЅР°Р№С‚Рё РїРµСЂРІРѕРµ РІС…РѕР¶РґРµРЅРёРµ РёРЅС‚РµСЂРµСЃСѓСЋС‰РµР№ РЅР°СЃ РІРµС‚РєРё
 				if ( !szCreateTreeParentName.empty() )
 				{
 					while ( !pCreateTreeManipulatorIterator->IsEnd() )
@@ -627,7 +627,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 						( ( szName == szCreateTreeParentName ) ||
 							( szName.find( szCreateTreeParentName ) != 0 ) ) )
 				{
-					// больше нет ни одного нужного нам элемента
+					// Р±РѕР»СЊС€Рµ РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ РЅСѓР¶РЅРѕРіРѕ РЅР°Рј СЌР»РµРјРµРЅС‚Р°
 					pCreateTreeManipulatorIterator = 0;
 					break;	
 				}
@@ -1215,7 +1215,7 @@ bool CPCMainTreeControl::UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEdit
 		}
 		if ( !bValueChanged )
 		{
-			// Если объект - ссылка, то имя его могло поменяться, но значение не поменялось
+			// Р•СЃР»Рё РѕР±СЉРµРєС‚ - СЃСЃС‹Р»РєР°, С‚Рѕ РёРјСЏ РµРіРѕ РјРѕРіР»Рѕ РїРѕРјРµРЅСЏС‚СЊСЃСЏ, РЅРѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ РїРѕРјРµРЅСЏР»РѕСЃСЊ
 			HTREEITEM hItem = GetTreeItem( szName );
 			const EPCIEType nType = GetTreeItemType( hItem );
 			if ( typePCIEMnemonics.IsRef( nType ) )
@@ -1300,7 +1300,7 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 		}
 		SetPCItemView( hAddedItem, pDesc );
 
-		// Увеличиваем нумерацию элементов на 1
+		// РЈРІРµР»РёС‡РёРІР°РµРј РЅСѓРјРµСЂР°С†РёСЋ СЌР»РµРјРµРЅС‚РѕРІ РЅР° 1
 		HTREEITEM hSiblingItem = GetNextSiblingItem( hAddedItem );
 		++nNewIndex;
 		while ( hSiblingItem )
@@ -1311,7 +1311,7 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 			++nNewIndex;
 		}
 	
-		// Обновляем дерево ( могли добавится новые поля )
+		// РћР±РЅРѕРІР»СЏРµРј РґРµСЂРµРІРѕ ( РјРѕРіР»Рё РґРѕР±Р°РІРёС‚СЃСЏ РЅРѕРІС‹Рµ РїРѕР»СЏ )
 		CreateTree( hAddedItem, true, false );
 		return true;
 	}
@@ -1334,7 +1334,7 @@ bool CPCMainTreeControl::DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 	//DebugTrace( "DeleteNode1: %s %d", szArrayName.c_str(), nDeleteIndex );
 	if ( hItem != 0 )
 	{
-		// Уменьшаем нумерацию элементов на 1
+		// РЈРјРµРЅСЊС€Р°РµРј РЅСѓРјРµСЂР°С†РёСЋ СЌР»РµРјРµРЅС‚РѕРІ РЅР° 1
 		HTREEITEM hSiblingItem = GetNextSiblingItem( hItem );
 		while ( hSiblingItem )
 		{
@@ -1434,12 +1434,12 @@ void CPCMainTreeControl::AddNode()
 	{
 		return;
 	}
-	// добавляем элемент к дереву и манипулятору
+	// РґРѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ Рє РґРµСЂРµРІСѓ Рё РјР°РЅРёРїСѓР»СЏС‚РѕСЂСѓ
 	if ( HTREEITEM hArrayItem = GetSelectedItem() )
 	{
 		string szName;
 		GetTreeItemName( hArrayItem, &szName );
-		//заполняем UNDO структуру
+		//Р·Р°РїРѕР»РЅСЏРµРј UNDO СЃС‚СЂСѓРєС‚СѓСЂСѓ
 		CPtr<CObjectBaseController> pObjectController = CreateController();
 		if ( pObjectController->AddInsertOperation( szName, NODE_ADD_INDEX, GetViewManipulator() ) )
 		{
@@ -1456,7 +1456,7 @@ void CPCMainTreeControl::DeleteAllNodes()
 	{
 		return;
 	}
-	// удаляем элементы из дерева и манипулятора
+	// СѓРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚С‹ РёР· РґРµСЂРµРІР° Рё РјР°РЅРёРїСѓР»СЏС‚РѕСЂР°
 	if ( HTREEITEM hArrayItem = GetSelectedItem() )
 	{
 		CString strMessage;
@@ -1465,7 +1465,7 @@ void CPCMainTreeControl::DeleteAllNodes()
 		{
 			string szName;
 			GetTreeItemName( hArrayItem, &szName );
-			//заполняем UNDO структуру
+			//Р·Р°РїРѕР»РЅСЏРµРј UNDO СЃС‚СЂСѓРєС‚СѓСЂСѓ
 			CPtr<CObjectBaseController> pObjectController = CreateController();
 			if ( pObjectController->AddRemoveOperation( szName, NODE_REMOVEALL_INDEX, GetViewManipulator() ) )
 			{
@@ -2279,7 +2279,7 @@ void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, co
 		CVariant varUID;
 		if ( CManipulatorManager::GetValue( &varUID, _pViewManipulator, Singleton<IUserDataContainer>()->Get()->constUserData.szGUIDName ) )
 		{
-			// дополнительная защита от не GUID полей и multivariant.
+			// РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ Р·Р°С‰РёС‚Р° РѕС‚ РЅРµ GUID РїРѕР»РµР№ Рё multivariant.
 			if ( varUID.GetType() == CVariant::VT_POINTER )
 			{
 				GUID uid;
@@ -2401,7 +2401,7 @@ void CPCMainTreeControl::Undo( IController* pController )
 			}
 		}
 		RedrawWindow();
-   	// Посылаем сообщение родительскому диалогу
+   	// РџРѕСЃС‹Р»Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРјСѓ РґРёР°Р»РѕРіСѓ
 		{
 			CDialog *pwndParentDialog = dynamic_cast<CDialog*>( GetParent() );
 			pwndParentDialog->SendMessage( WM_PC_MANIPULATOR_CHANGE, 0, 0 );
@@ -2505,7 +2505,7 @@ void CPCMainTreeControl::Redo( IController* pController )
 				}
 			}
 			RedrawWindow();
-			// Посылаем сообщение родительскому диалогу
+			// РџРѕСЃС‹Р»Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРјСѓ РґРёР°Р»РѕРіСѓ
 			{
 				CDialog *pwndParentDialog = dynamic_cast<CDialog*>( GetParent() );
 				pwndParentDialog->SendMessage( WM_PC_MANIPULATOR_CHANGE, 0, 0 );

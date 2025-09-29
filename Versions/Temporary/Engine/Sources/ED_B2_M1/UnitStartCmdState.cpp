@@ -170,7 +170,7 @@ bool SStartCommandList::LoadFromDB( IManipulator *pManipulator )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void SStartCommandList::RemoveCommands( const vector<int> &rIndices )
 {
-	// удаляет команды с индексами из rIndices
+	// СѓРґР°Р»СЏРµС‚ РєРѕРјР°РЅРґС‹ СЃ РёРЅРґРµРєСЃР°РјРё РёР· rIndices
 	//
 	if ( rIndices.empty() || commands.empty() )
 		return;
@@ -347,7 +347,7 @@ void CUnitStartCmdState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 	{
 		if ( GetCurrentCommandType() && GetCurrentCommandType()->nNeedTargetUnit )
 		{
-			// выбор объекта
+			// РІС‹Р±РѕСЂ РѕР±СЉРµРєС‚Р°
 			CMapObjectState::OnMouseMove( nFlags, rMousePoint );
 			if ( GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.size() != 1 )
 			{
@@ -369,7 +369,7 @@ void CUnitStartCmdState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 		{
 			if ( nFlags & MK_LBUTTON )
 			{
-				// указание точки
+				// СѓРєР°Р·Р°РЅРёРµ С‚РѕС‡РєРё
 				nCurrTargetUnit = -1;
 				Get3DPosOnMapHeights( &vCurrTargetPos, CVec2( rMousePoint.x, rMousePoint.y ) );
 				vCurrTargetPos.z = GetTerrainHeight( vCurrTargetPos.x, vCurrTargetPos.y );
@@ -394,7 +394,7 @@ void CUnitStartCmdState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	{
 		if ( GetCurrentCommandType() && GetCurrentCommandType()->nNeedTargetUnit )
 		{
-			// выбор объекта
+			// РІС‹Р±РѕСЂ РѕР±СЉРµРєС‚Р°
 			CMapObjectState::OnLButtonDown( nFlags, rMousePoint );
 			if ( GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.size() != 1 )
 			{
@@ -414,7 +414,7 @@ void CUnitStartCmdState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 		}
 		else
 		{
-			// указание точки
+			// СѓРєР°Р·Р°РЅРёРµ С‚РѕС‡РєРё
 			nCurrTargetUnit = -1;
 			Get3DPosOnMapHeights( &vCurrTargetPos, CVec2( rMousePoint.x, rMousePoint.y ) );
 			vCurrTargetPos.z = GetTerrainHeight( vCurrTargetPos.x, vCurrTargetPos.y );
@@ -437,7 +437,7 @@ void CUnitStartCmdState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 	{
 		if ( GetCurrentCommandType() && GetCurrentCommandType()->nNeedTargetUnit )
 		{
-			// выбор объекта
+			// РІС‹Р±РѕСЂ РѕР±СЉРµРєС‚Р°
 			CMapObjectState::OnLButtonUp( nFlags, rMousePoint );
 			if ( GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.size() != 1 )
 			{
@@ -457,7 +457,7 @@ void CUnitStartCmdState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 		}
 		else
 		{
-			// указание точки
+			// СѓРєР°Р·Р°РЅРёРµ С‚РѕС‡РєРё
 			nCurrTargetUnit = -1;
 			Get3DPosOnMapHeights( &vCurrTargetPos, CVec2( rMousePoint.x, rMousePoint.y ) );
 			vCurrTargetPos.z = GetTerrainHeight( vCurrTargetPos.x, vCurrTargetPos.y );
@@ -928,7 +928,7 @@ bool CUnitStartCmdState::GetLinkIDs( vector<int> *pLinkIDs )
 			if ( !pMO )
 				continue;
 			//
-			// по элементам объекта
+			// РїРѕ СЌР»РµРјРµРЅС‚Р°Рј РѕР±СЉРµРєС‚Р°
 			for ( SObjectInfo::CMapInfoElementMap::iterator itElem = pMO->mapInfoElementMap.begin();
 				itElem != pMO->mapInfoElementMap.end(); ++itElem )
 			{

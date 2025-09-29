@@ -24,7 +24,7 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 		//
 		vector<string> stringList;
 		//
-		// Получаем список таблиц в базе данных
+		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС† РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 		list<string> tables;
 		if ( IResourceManager *pResourceManager = Singleton<IResourceManager>() )
 		{
@@ -41,7 +41,7 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 					}
 				}
 			}
-			// Заполняем список объектов
+			// Р—Р°РїРѕР»РЅСЏРµРј СЃРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ
 			for ( list<string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 			{
 				if ( GetPropertyDesc()->refTypes.find( *itTable ) != GetPropertyDesc()->refTypes.end() )

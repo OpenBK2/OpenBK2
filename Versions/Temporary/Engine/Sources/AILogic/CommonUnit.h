@@ -5,7 +5,7 @@
 #include "QueueUnit.h"
 #include "..\Common_RTS_AI\BasePathUnit.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// причины по которым с юнита пытаются снять камуфляж,
+// РїСЂРёС‡РёРЅС‹ РїРѕ РєРѕС‚РѕСЂС‹Рј СЃ СЋРЅРёС‚Р° РїС‹С‚Р°СЋС‚СЃСЏ СЃРЅСЏС‚СЊ РєР°РјСѓС„Р»СЏР¶,
 enum ECamouflageRemoveReason
 {
 	ECRR_SELF_SHOOT,
@@ -66,7 +66,7 @@ class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit,
 
 	float fDesirableSpeed;
 	CPtr<CCommonUnit> pFollowedUnit;
-	// минимальная желательная скорость из-за того, что за нами кто-то следует
+	// РјРёРЅРёРјР°Р»СЊРЅР°СЏ Р¶РµР»Р°С‚РµР»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РёР·-Р·Р° С‚РѕРіРѕ, С‡С‚Рѕ Р·Р° РЅР°РјРё РєС‚Рѕ-С‚Рѕ СЃР»РµРґСѓРµС‚
 	float fMinFollowingSpeed;
 	CVec2 vFollowShift;
 
@@ -115,7 +115,7 @@ public:
 	const BYTE GetParty() const;
 	virtual void ChangePlayer( const BYTE cPlayer ) = 0;
 	
-	// какой максимальный damage можно нанести юниту pTarget
+	// РєР°РєРѕР№ РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ damage РјРѕР¶РЅРѕ РЅР°РЅРµСЃС‚Рё СЋРЅРёС‚Сѓ pTarget
 	virtual const float GetMaxDamage( class CCommonUnit *pTarget ) const;
 
 	virtual const float GetSightRadius() const = 0;
@@ -131,7 +131,7 @@ public:
 	virtual const bool IsVisible( const BYTE party ) const = 0;
 
 	virtual const bool NeedDeinstall() const { return false; }
-	// может ли сейчас стрелять ( например, если не инсталлирована, то не может )
+	// РјРѕР¶РµС‚ Р»Рё СЃРµР№С‡Р°СЃ СЃС‚СЂРµР»СЏС‚СЊ ( РЅР°РїСЂРёРјРµСЂ, РµСЃР»Рё РЅРµ РёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°РЅР°, С‚Рѕ РЅРµ РјРѕР¶РµС‚ )
 	virtual const bool CanShoot() const { return true; }
 	virtual const bool CanShootToPlanes() const = 0;
 	virtual const bool CanShootInMovement() { return false; }
@@ -145,15 +145,15 @@ public:
 	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason )=0;
 
 	
-	// про updat-ить область range/пристрелки
+	// РїСЂРѕ updat-РёС‚СЊ РѕР±Р»Р°СЃС‚СЊ range/РїСЂРёСЃС‚СЂРµР»РєРё
 	virtual void UpdateArea( const EActionNotify eAction ) = 0;
 	virtual const DWORD GetNormale( const CVec2 &vCenter ) const;
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
-	// залокать unit ( если уже был залокана, то старый lock исчезает )
+	// Р·Р°Р»РѕРєР°С‚СЊ unit ( РµСЃР»Рё СѓР¶Рµ Р±С‹Р» Р·Р°Р»РѕРєР°РЅР°, С‚Рѕ СЃС‚Р°СЂС‹Р№ lock РёСЃС‡РµР·Р°РµС‚ )
 	virtual void Lock( const CBasicGun *pGun );
-	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
+	// unlock unit ( РµСЃР»Рё Р·Р°Р»РѕРєР°РЅ РґСЂСѓРіРёРј gun-РѕРј, С‚Рѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚СЃСЏ )
 	virtual void Unlock( const CBasicGun *pGun );
-	// залокан ли каким-либо gun-ом, не равным pGun
+	// Р·Р°Р»РѕРєР°РЅ Р»Рё РєР°РєРёРј-Р»РёР±Рѕ gun-РѕРј, РЅРµ СЂР°РІРЅС‹Рј pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const;
 	
 	virtual class CTurret* GetTurret( const int nTurret ) const = 0;
@@ -167,17 +167,17 @@ public:
 	void SetTruck( class CAIUnit *pUnit );
 	class CAIUnit* GetTruck() const;
 	
-	// удалить юнит с карты
+	// СѓРґР°Р»РёС‚СЊ СЋРЅРёС‚ СЃ РєР°СЂС‚С‹
 	virtual void Disappear() = 0;
-	// умереть
+	// СѓРјРµСЂРµС‚СЊ
 	virtual void Die( const bool fromExplosion, const float fDamage ) = 0;
 
-	// true возвращает только формация
+	// true РІРѕР·РІСЂР°С‰Р°РµС‚ С‚РѕР»СЊРєРѕ С„РѕСЂРјР°С†РёСЏ
 	virtual bool IsFormation() const { return false; }
 	virtual const bool IsInfantry() const { return false; }
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) = 0;
-	// ack для команды pCommand
+	// ack РґР»СЏ РєРѕРјР°РЅРґС‹ pCommand
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) = 0;
 
 	//virtual const float GetMaxSpeedHere( const CVec2 &point, bool bAdjust = true ) const;
@@ -186,21 +186,21 @@ public:
 	virtual float GetDesirableSpeed() const;
 	virtual void AdjustWithDesirableSpeed( float *pfMaxSpeed ) const;
 
-	// follow state - мы за кем-то следуем
+	// follow state - РјС‹ Р·Р° РєРµРј-С‚Рѕ СЃР»РµРґСѓРµРј
 	void SetFollowState( class CCommonUnit *pFollowedUnit );
 	void UnsetFollowState();
 	bool IsInFollowState();
-	// вернуть юнит, за которым следуем
+	// РІРµСЂРЅСѓС‚СЊ СЋРЅРёС‚, Р·Р° РєРѕС‚РѕСЂС‹Рј СЃР»РµРґСѓРµРј
 	class CCommonUnit* GetFollowedUnit() const;
 	const CVec2& GetFollowShift() const { return vFollowShift; }
 
-	// юнит pFollowingUnit следует за нами
+	// СЋРЅРёС‚ pFollowingUnit СЃР»РµРґСѓРµС‚ Р·Р° РЅР°РјРё
 	void FollowingByYou( class CCommonUnit *pFollowingUnit );
 
 	virtual void Segment();
 	virtual void FreezeSegment();
 	
-	// управляем ли (н-р, пушка без расчёта неуправляема)
+	// СѓРїСЂР°РІР»СЏРµРј Р»Рё (РЅ-СЂ, РїСѓС€РєР° Р±РµР· СЂР°СЃС‡С‘С‚Р° РЅРµСѓРїСЂР°РІР»СЏРµРјР°)
 	virtual bool IsOperable() const { return true; }
 	
 	virtual const int GetMinArmor() const = 0;
@@ -217,10 +217,10 @@ public:
 
 	virtual EUnitAckType GetGunsRejectReason() const = 0;
 
-	// для целеразрешения
+	// РґР»СЏ С†РµР»РµСЂР°Р·СЂРµС€РµРЅРёСЏ
 	void SetShootEstimator( interface IShootEstimator *pShootEstimator );
-	// сбросить всю информацию в shoot estimator и проинициализировать его юнитом pCurEnemy
-	// считается что сейчас стреляем по pCurEnemy, bDamageUpdated - был ли update на damage pCurEnemy нами
+	// СЃР±СЂРѕСЃРёС‚СЊ РІСЃСЋ РёРЅС„РѕСЂРјР°С†РёСЋ РІ shoot estimator Рё РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ РµРіРѕ СЋРЅРёС‚РѕРј pCurEnemy
+	// СЃС‡РёС‚Р°РµС‚СЃСЏ С‡С‚Рѕ СЃРµР№С‡Р°СЃ СЃС‚СЂРµР»СЏРµРј РїРѕ pCurEnemy, bDamageUpdated - Р±С‹Р» Р»Рё update РЅР° damage pCurEnemy РЅР°РјРё
 	void ResetShootEstimator( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden = 0 );
 	void AddUnitToShootEstimator( class CAIUnit *pUnit );
 	CAIUnit* GetBestShootEstimatedUnit() const;
@@ -228,16 +228,16 @@ public:
 	const int GetNumOfBestShootEstimatedGun() const;
 
 	virtual const float GetKillSpeed( class CAIUnit *pEnemy ) const { return 0; }
-	// обнулить время для периодов сканирования
+	// РѕР±РЅСѓР»РёС‚СЊ РІСЂРµРјСЏ РґР»СЏ РїРµСЂРёРѕРґРѕРІ СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ
 	virtual void ResetTargetScan() = 0;
-	// просканировать, если пора; если нашли цель, то атаковать
+	// РїСЂРѕСЃРєР°РЅРёСЂРѕРІР°С‚СЊ, РµСЃР»Рё РїРѕСЂР°; РµСЃР»Рё РЅР°С€Р»Рё С†РµР»СЊ, С‚Рѕ Р°С‚Р°РєРѕРІР°С‚СЊ
 	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 ) = 0;
-	// просканировать на поиск цели
+	// РїСЂРѕСЃРєР°РЅРёСЂРѕРІР°С‚СЊ РЅР° РїРѕРёСЃРє С†РµР»Рё
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun ) = 0;
-	// поиск препятствия
+	// РїРѕРёСЃРє РїСЂРµРїСЏС‚СЃС‚РІРёСЏ
 	virtual interface IObstacle * LookForObstacle() { return 0; };
 	
-	// нужно ли пытаться подъезать близко к точке, которую охраняет (н-р, для поездов не нужно)
+	// РЅСѓР¶РЅРѕ Р»Рё РїС‹С‚Р°С‚СЊСЃСЏ РїРѕРґСЉРµР·Р°С‚СЊ Р±Р»РёР·РєРѕ Рє С‚РѕС‡РєРµ, РєРѕС‚РѕСЂСѓСЋ РѕС…СЂР°РЅСЏРµС‚ (РЅ-СЂ, РґР»СЏ РїРѕРµР·РґРѕРІ РЅРµ РЅСѓР¶РЅРѕ)
 	virtual bool CanMoveForGuard() const = 0;
 
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const = 0;
@@ -269,7 +269,7 @@ public:
 
 	virtual const int GetUnitPriority() const { return 0; }
 
-	//новый PathFinder
+	//РЅРѕРІС‹Р№ PathFinder
 	virtual bool IsInFormation() const { return false; }
 	virtual class CFormation* GetFormation() const { return 0; }
 	virtual const float GetSpeedForFollowing();
@@ -284,7 +284,7 @@ public:
 	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius, const bool bOnlyMech, const SIterateUnitsCallback &callback ) const;
 	virtual const bool IsTrain() const = 0;
 
-	//старый PathFinder
+	//СЃС‚Р°СЂС‹Р№ PathFinder
 	IStaticPath* GetPathToBuilding( CBuilding *pBuilding, int *pnEntrance );
 	IStaticPath* GetPathToEntrenchment( CEntrenchment *pEntrenchment );
 	virtual const int GetFormationSlot() { return 0; }

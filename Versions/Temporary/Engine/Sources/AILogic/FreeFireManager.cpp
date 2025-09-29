@@ -31,7 +31,7 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 		{
 			CBasicGun *pGun = pUnit->GetGun( i );
 
-			// íåëüçÿ àíàëèçèðîâàòü
+			// Ð½ÐµÐ»ÑŒÐ·Ñ Ð°Ð½Ð°Ð»Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ
 			if ( pGun->IsCommonEqual( pActiveGun ) || pGun->IsCommonGunFiring() || 
 				pGun->GetGun().nPriority == 0 && !pUnit->IsIdle() && !pUnit->CanShootInMovement() || pGun->GetNAmmo() == 0 )
 			{

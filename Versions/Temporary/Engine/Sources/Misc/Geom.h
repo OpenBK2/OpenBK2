@@ -372,7 +372,7 @@ struct SVector
 	SVector& operator-=( const SVector &vec ) { x -= vec.x; y -= vec.y; return *this; }
 	const int operator*( const SVector &vec ) const { return x*vec.x + y*vec.y; }
 	SVector& operator*=( const int n ) { x *= n; y *= n; return *this; }
-	// деление нацело
+	// РґРµР»РµРЅРёРµ РЅР°С†РµР»Рѕ
 	SVector& operator/=( const int n ) { const float coeff = 1.0f / float(n); x *= coeff; y *= coeff; return *this; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -396,14 +396,14 @@ public:
 	CLine2( const float _a, const float _b, const float _c ) : a( _a ), b( _b ), c( _c ), dummy( 0 ) { }
 	CLine2( const CVec2 &p1, const CVec2 &p2 ) : a( p2.y - p1.y ), b( p1.x - p2.x ), c( p2.x*p1.y - p1.x*p2.y ), dummy( 0 ) {  }
 
-	// расстояние до точки со знаком
+	// СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ С‚РѕС‡РєРё СЃРѕ Р·РЅР°РєРѕРј
 	float DistToPoint( const CVec2 &point );
-	// проекция точки на прямую
+	// РїСЂРѕРµРєС†РёСЏ С‚РѕС‡РєРё РЅР° РїСЂСЏРјСѓСЋ
 	void ProjectPoint( const CVec2 &point, CVec2 *result );
-	// знак - в какой полуплоскости отн. прямой лежит точка
+	// Р·РЅР°Рє - РІ РєР°РєРѕР№ РїРѕР»СѓРїР»РѕСЃРєРѕСЃС‚Рё РѕС‚РЅ. РїСЂСЏРјРѕР№ Р»РµР¶РёС‚ С‚РѕС‡РєР°
 	const int GetSign( const CVec2 &point ) const { return Sign( a * point.x + b * point.y + c); }
 
-	// нормализация линии
+	// РЅРѕСЂРјР°Р»РёР·Р°С†РёСЏ Р»РёРЅРёРё
 	void Normalize()
 	{
 		if ( !bNormalized )
@@ -530,9 +530,9 @@ public:
 		: p1( _p1 ), p2( _p2 ), dir( p2 - p1 ) {  }
 	CSegment( const float x1, const float y1, const float x2, const float y2 )
 		: p1( x1, y1 ), p2( x2, y2 ), dir( p2 - p1 ) { }
-	// расстояние от точки до отрезка
+	// СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ С‚РѕС‡РєРё РґРѕ РѕС‚СЂРµР·РєР°
 	const float GetDistToPoint( const CVec2 &point ) const;
-	// дать точку на отрезке, ближайшую к заданной
+	// РґР°С‚СЊ С‚РѕС‡РєСѓ РЅР° РѕС‚СЂРµР·РєРµ, Р±Р»РёР¶Р°Р№С€СѓСЋ Рє Р·Р°РґР°РЅРЅРѕР№
 	void GetClosestPoint( const CVec2 &point, CVec2 *result ) const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -554,11 +554,11 @@ public:
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// по касательному вектору (единичной длины), точке касания и радиусу
+// РїРѕ РєР°СЃР°С‚РµР»СЊРЅРѕРјСѓ РІРµРєС‚РѕСЂСѓ (РµРґРёРЅРёС‡РЅРѕР№ РґР»РёРЅС‹), С‚РѕС‡РєРµ РєР°СЃР°РЅРёСЏ Рё СЂР°РґРёСѓСЃСѓ
 inline void GetCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CCircle *c1, CCircle *c2 );
-// найти точки касания для касательной, проведённой из данной точки к окружности
+// РЅР°Р№С‚Рё С‚РѕС‡РєРё РєР°СЃР°РЅРёСЏ РґР»СЏ РєР°СЃР°С‚РµР»СЊРЅРѕР№, РїСЂРѕРІРµРґС‘РЅРЅРѕР№ РёР· РґР°РЅРЅРѕР№ С‚РѕС‡РєРё Рє РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 inline bool FindTangentPoints( const CVec2 &p, const CCircle &c, CVec2 *p1, CVec2 *p2 );
-// ориентированная ( против часовой - положительна ) площадь треугольника, помноженная на два
+// РѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅРЅР°СЏ ( РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ - РїРѕР»РѕР¶РёС‚РµР»СЊРЅР° ) РїР»РѕС‰Р°РґСЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°, РїРѕРјРЅРѕР¶РµРЅРЅР°СЏ РЅР° РґРІР°
 inline float TriangleArea2( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 );
 //
 inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3, const CVec2 &p );
@@ -601,7 +601,7 @@ public:
 	bool IsPointOnPlane( const CVec3 &pt ) const { return n*pt == -d; }
 	bool IsPointOverPlane( const CVec3 &pt ) const { return n*pt > -d; }
 	bool IsPointUnderPlane( const CVec3 &pt ) const { return n*pt < -d; }
-  // протестировать, не лежит ли точка под плоскостью. вернуть 0x80000000 если это так или 0 в противном случае
+  // РїСЂРѕС‚РµСЃС‚РёСЂРѕРІР°С‚СЊ, РЅРµ Р»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РїРѕРґ РїР»РѕСЃРєРѕСЃС‚СЊСЋ. РІРµСЂРЅСѓС‚СЊ 0x80000000 РµСЃР»Рё СЌС‚Рѕ С‚Р°Рє РёР»Рё 0 РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
   DWORD CheckPointUnderPlane( const CVec3 &pt ) const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -691,7 +691,7 @@ public :
 inline operator==( const SHMatrix &a, const SHMatrix &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
 inline operator!=( const SHMatrix &a, const SHMatrix &b ) { return !(a == b); }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// прямое и обратное преобразование вместе
+// РїСЂСЏРјРѕРµ Рё РѕР±СЂР°С‚РЅРѕРµ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІРјРµСЃС‚Рµ
 struct SFBTransform
 {
 	SHMatrix forward, backward;
@@ -953,7 +953,7 @@ struct STriangle
   //
   void Set( const WORD _i1, const WORD _i2, const WORD _i3 ) { i1 = _i1; i2 = _i2; i3 = _i3; }
 };
-// ориентированная ( против часовой - положительна ) площадь треугольника, помноженная на два
+// РѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅРЅР°СЏ ( РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ - РїРѕР»РѕР¶РёС‚РµР»СЊРЅР° ) РїР»РѕС‰Р°РґСЊ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°, РїРѕРјРЅРѕР¶РµРЅРЅР°СЏ РЅР° РґРІР°
 inline float TriangleAAA( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 )
 {
 	return p1.x * ( p2.y - p3.y ) + p2.x * ( p3.y - p1.y ) + p3.x * ( p1.y - p2.y );
@@ -1072,8 +1072,8 @@ inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 	d = -( pt0 * n );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// протестировать, не лежит ли точка под плоскостью.
-// вернуть 0x80000000 если это так или 0 в противном случае
+// РїСЂРѕС‚РµСЃС‚РёСЂРѕРІР°С‚СЊ, РЅРµ Р»РµР¶РёС‚ Р»Рё С‚РѕС‡РєР° РїРѕРґ РїР»РѕСЃРєРѕСЃС‚СЊСЋ.
+// РІРµСЂРЅСѓС‚СЊ 0x80000000 РµСЃР»Рё СЌС‚Рѕ С‚Р°Рє РёР»Рё 0 РІ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ
 inline DWORD SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 {
   float fDist = n*pt + d;
@@ -1948,16 +1948,16 @@ const WORD GetDirectionByVector( float x, float y );
 const CVec2 GetVectorByDirection( const WORD dir );
 const WORD GetZDirectionBy3DVector( const float x, const float y, const float z );
 const WORD GetZDirectionBy3DVector( const CVec2 &vec, const float z );
-// угол между между вектором и OXY
+// СѓРіРѕР» РјРµР¶РґСѓ РјРµР¶РґСѓ РІРµРєС‚РѕСЂРѕРј Рё OXY
 const WORD GetZAngle( const float x, const float y, float z );
-// угол между между вектором и OXY
+// СѓРіРѕР» РјРµР¶РґСѓ РјРµР¶РґСѓ РІРµРєС‚РѕСЂРѕРј Рё OXY
 const WORD GetZAngle( const CVec2 &vec, const float z );
 const WORD GetZAngle( const CVec3 &vPoint );
 const WORD DirsDifference( const WORD dir1, const WORD dir2 );
 const int DifferenceSign( const WORD dir1, const WORD dir2 );
-// в угле от startAngleDir до finishAngleDir против часовой
+// РІ СѓРіР»Рµ РѕС‚ startAngleDir РґРѕ finishAngleDir РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№
 bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir );
-// dir в минимальном угле мжду dir1 и dir2
+// dir РІ РјРёРЅРёРјР°Р»СЊРЅРѕРј СѓРіР»Рµ РјР¶РґСѓ dir1 Рё dir2
 bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline bool IsAlmostZero( const CVec2 &vec )
@@ -2000,15 +2000,15 @@ struct SRect
 
 	//public:
 	void InitRect( const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4 );
-	// задаётся половина реальной длины и ширины (как бы радиусы)
+	// Р·Р°РґР°С‘С‚СЃСЏ РїРѕР»РѕРІРёРЅР° СЂРµР°Р»СЊРЅРѕР№ РґР»РёРЅС‹ Рё С€РёСЂРёРЅС‹ (РєР°Рє Р±С‹ СЂР°РґРёСѓСЃС‹)
 	void InitRect( const CVec2 &center, const CVec2 &dir, const float length, const float width );
-	// задаются длины вперёд и назад, половина ширины
+	// Р·Р°РґР°СЋС‚СЃСЏ РґР»РёРЅС‹ РІРїРµСЂС‘Рґ Рё РЅР°Р·Р°Рґ, РїРѕР»РѕРІРёРЅР° С€РёСЂРёРЅС‹
 	void InitRect( const CVec2 &center, const CVec2 &dir, const float lengthAhead, const float lengthBack, const float width );
 
 	bool IsIntersected( const SRect &rect ) const;
 	bool IsIntersected( const CSegment &segment ) const;
 
-	// границы прямоугольника не принадлежат ему
+	// РіСЂР°РЅРёС†С‹ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР° РЅРµ РїСЂРёРЅР°РґР»РµР¶Р°С‚ РµРјСѓ
 	bool IsPointInside( const CVec2 &point ) const;
 	bool IsIntersectCircle( const CVec2 &circleCenter, const float r ) const;
 	bool IsIntersectCircle( const CCircle &circle ) const { return IsIntersectCircle( circle.center, circle.r ); }
@@ -2021,28 +2021,28 @@ struct SRect
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const float fabs( const SRect rect1, const SRect rect2 );
-// угол, под которым rect виден из точки point
+// СѓРіРѕР», РїРѕРґ РєРѕС‚РѕСЂС‹Рј rect РІРёРґРµРЅ РёР· С‚РѕС‡РєРё point
 const WORD GetVisibleAngle( const CVec2 &point, const SRect rect );
-// точка пересечения луча из точки vPoint по направлению vDir (можно не нормировать) с прямоугольником rect
-// возвращает false, если не пересекается
+// С‚РѕС‡РєР° РїРµСЂРµСЃРµС‡РµРЅРёСЏ Р»СѓС‡Р° РёР· С‚РѕС‡РєРё vPoint РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ vDir (РјРѕР¶РЅРѕ РЅРµ РЅРѕСЂРјРёСЂРѕРІР°С‚СЊ) СЃ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРј rect
+// РІРѕР·РІСЂР°С‰Р°РµС‚ false, РµСЃР»Рё РЅРµ РїРµСЂРµСЃРµРєР°РµС‚СЃСЏ
 const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );
-// вернуть нормализованное значение вектора
+// РІРµСЂРЅСѓС‚СЊ РЅРѕСЂРјР°Р»РёР·РѕРІР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІРµРєС‚РѕСЂР°
 inline const CVec2 Norm( const CVec2 &v )
 {
 	return ( v == VNULL2 ) ? VNULL2 : v/fabs(v);
 }
-// получить углы, необходимые для поворота этой нормали относительно осей X (phi) и Y (theta) 
-// для совпадения её с осью Z
+// РїРѕР»СѓС‡РёС‚СЊ СѓРіР»С‹, РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ РїРѕРІРѕСЂРѕС‚Р° СЌС‚РѕР№ РЅРѕСЂРјР°Р»Рё РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРµР№ X (phi) Рё Y (theta) 
+// РґР»СЏ СЃРѕРІРїР°РґРµРЅРёСЏ РµС‘ СЃ РѕСЃСЊСЋ Z
 inline void GetAngles( const CVec3 &vNormal, float *pfPhi, float *pfTheta )
 {
-	// phi - поворот в плоскости ZY относительно оси X
+	// phi - РїРѕРІРѕСЂРѕС‚ РІ РїР»РѕСЃРєРѕСЃС‚Рё ZY РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРё X
 	// cos( phi ) = Z*N(x=0) = (0, 0, 1) * (0, Ny, Nz) / sqrt( Ny**2 + Nz**2 );
 	{
 		const float fLen2 = fabs2( vNormal.y, vNormal.z );
 		*pfPhi = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
 		*pfPhi = -Sign( vNormal.y ) * acos( Clamp(*pfPhi, -1.0f, 1.0f) );
 	}
-	// theta - поворот в плоскости ZX относительно оси Y
+	// theta - РїРѕРІРѕСЂРѕС‚ РІ РїР»РѕСЃРєРѕСЃС‚Рё ZX РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРё Y
 	// cos( theta ) = Z*N(y=0) = Nz / fabs( Nx, Nz )
 	{
 		const float fLen2 = fabs2( vNormal.x, vNormal.z );

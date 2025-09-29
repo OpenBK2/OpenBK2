@@ -9,7 +9,7 @@ int CExecutorTransportHealInfantry::Segment()
 {
 	if ( IsExecutorValidInternal() )
 	{
-		//медицинские грузовички лечат пехоту в радиусе
+		//РјРµРґРёС†РёРЅСЃРєРёРµ РіСЂСѓР·РѕРІРёС‡РєРё Р»РµС‡Р°С‚ РїРµС…РѕС‚Сѓ РІ СЂР°РґРёСѓСЃРµ
 		for ( CUnitsIter<0,2> iter( pUnit->GetParty(), EDI_FRIEND, pUnit->GetCenterPlain(), SConsts::MED_TRUCK_HEAL_RADIUS );
 					!iter.IsFinished(); iter.Iterate() )
 		{

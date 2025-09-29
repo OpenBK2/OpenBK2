@@ -601,7 +601,7 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 	}
 	else
 	{
-		// враг в зоне огня
+		// РІСЂР°Рі РІ Р·РѕРЅРµ РѕРіРЅСЏ
 		if ( ( bIdle || curTime >= nextShootCheck ) && bEnemyVisible && pGun->CanShootToUnitWOMove( pEnemy ) )
 			FireNow();
 		else if ( curTime >= nextShootCheck && pGun->TooCloseToFire( pEnemy ) )
@@ -612,7 +612,7 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 		else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack )
 			&& ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
 		{
-			// позиция врага сменилась или уже стоим
+			// РїРѕР·РёС†РёСЏ РІСЂР°РіР° СЃРјРµРЅРёР»Р°СЃСЊ РёР»Рё СѓР¶Рµ СЃС‚РѕРёРј
 			const float fRandomDist = 5.0f * SConsts::TILE_SIZE;
 
 			CPtr<IStaticPath> pStaticPath = 
@@ -653,22 +653,22 @@ void CSoldierAttackState::AnalyzeMovingPosition()
 	else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack )
 		&& ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
 	{
-		// в зоне поиска пути к стороне
+		// РІ Р·РѕРЅРµ РїРѕРёСЃРєР° РїСѓС‚Рё Рє СЃС‚РѕСЂРѕРЅРµ
 		if ( pGun->InGoToSideRange( pEnemy ) )
 		{
 			lastEnemyTile = SVector( -1, -1 );
 			state = ESAS_MOVING_TO_SIDE;
 		}
-		// слишком близко
+		// СЃР»РёС€РєРѕРј Р±Р»РёР·РєРѕ
 		else if ( pGun->TooCloseToFire( pEnemy ) )
 		{
 			pUnit->SendAcknowledgement( ACK_NOT_IN_FIRE_RANGE );
 			StopFire();
 		}
-		// позиция врага сменилась или уже стоим, но далеко, чтобы идти к стороне
+		// РїРѕР·РёС†РёСЏ РІСЂР°РіР° СЃРјРµРЅРёР»Р°СЃСЊ РёР»Рё СѓР¶Рµ СЃС‚РѕРёРј, РЅРѕ РґР°Р»РµРєРѕ, С‡С‚РѕР±С‹ РёРґС‚Рё Рє СЃС‚РѕСЂРѕРЅРµ
 		else if ( bIdle || lastEnemyTile != pEnemy->GetCenterTile() )
 		{
-			// путь до расстояния, достаточно близкого до юнита, чтобы оттуда потом бежать к стороне
+			// РїСѓС‚СЊ РґРѕ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ, РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±Р»РёР·РєРѕРіРѕ РґРѕ СЋРЅРёС‚Р°, С‡С‚РѕР±С‹ РѕС‚С‚СѓРґР° РїРѕС‚РѕРј Р±РµР¶Р°С‚СЊ Рє СЃС‚РѕСЂРѕРЅРµ
 			CPtr<IStaticPath> pStaticPath = 
 				CreateStaticPathForAttack( pUnit, pEnemy, pGun->GetWeapon()->fRangeMin, 2 * pGun->GetFireRange( 0 ), 0.0f, true );
 
@@ -712,7 +712,7 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 	vSides[1] = vEnemyCenter + vShift; // 16k
 	vSides[3] = vEnemyCenter - vShift; // 48k
 
-	int vBestSides[2] = { 0, 0 }; // в этом массиве две стороны
+	int vBestSides[2] = { 0, 0 }; // РІ СЌС‚РѕРј РјР°СЃСЃРёРІРµ РґРІРµ СЃС‚РѕСЂРѕРЅС‹
 	int nCount = 2;
 
 	for ( WORD i = 0; i < 2; ++i )
@@ -765,14 +765,14 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 	{
 		const SVector curEnemyTile = pEnemy->GetCenterTile();
 		const WORD wCurEnemyDir = pEnemy->GetDirection();
-		// стоим или пора проверять позицию и враг сдвинулся или повернулся
+		// СЃС‚РѕРёРј РёР»Рё РїРѕСЂР° РїСЂРѕРІРµСЂСЏС‚СЊ РїРѕР·РёС†РёСЋ Рё РІСЂР°Рі СЃРґРІРёРЅСѓР»СЃСЏ РёР»Рё РїРѕРІРµСЂРЅСѓР»СЃСЏ
 		if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack ) &&
 			( bIdle || lastEnemyTile != curEnemyTile || DirsDifference( wCurEnemyDir, wLastEnemyDir ) >= ENEMY_DIR_TOLERANCE ) )
 		{
-			// убежал слишком далеко
+			// СѓР±РµР¶Р°Р» СЃР»РёС€РєРѕРј РґР°Р»РµРєРѕ
 			if ( !pGun->InGoToSideRange( pEnemy ) )
 				state = ESAS_MOVING;
-			// в радиуса поиска пути к стороне
+			// РІ СЂР°РґРёСѓСЃР° РїРѕРёСЃРєР° РїСѓС‚Рё Рє СЃС‚РѕСЂРѕРЅРµ
 			else 
 			{
 				if ( IStaticPath *pStaticPath = BestSidePath() )
@@ -871,7 +871,7 @@ void CSoldierAttackState::Segment()
 		{
 			runUpToEnemy.Segment();			
 
-			// если можно перевыбирать цель, то выбрать цель
+			// РµСЃР»Рё РјРѕР¶РЅРѕ РїРµСЂРµРІС‹Р±РёСЂР°С‚СЊ С†РµР»СЊ, С‚Рѕ РІС‹Р±СЂР°С‚СЊ С†РµР»СЊ
 //			if ( bSwarmAttack )
 //				pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
 
@@ -1269,7 +1269,7 @@ void CSoldierAttackCommonStatObjState::FireNow()
 	pUnit->Stop();
 	if ( pGun->IsOnTurret() )
 		pGun->GetTurret()->Lock( pGun );
-	// выстрелить
+	// РІС‹СЃС‚СЂРµР»РёС‚СЊ
 	pGun->StartPointBurst( pObj->GetAttackCenter( pUnit->GetCenterPlain() ), bAim );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1352,7 +1352,7 @@ void CSoldierParadeState::Segment()
 	if ( pUnit->IsIdle() )
 	{
 		pUnit->SetCommandFinished();
-		// повернуться в нужном направлении
+		// РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ РЅСѓР¶РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
 		pUnit->SetDirectionVec( pUnit->GetFormation()->GetUnitDir( pUnit ) );
 	}
 }
@@ -1436,7 +1436,7 @@ bool CSoldierClearMineRadiusState::FindMineToClear()
 	CStObjCircleIter<false> iter( clearCenter, SConsts::MINE_CLEAR_RADIUS );
 	while ( !iter.IsFinished() )
 	{
-		// мину никто не собирается удалять и она в радиусе осмотра
+		// РјРёРЅСѓ РЅРёРєС‚Рѕ РЅРµ СЃРѕР±РёСЂР°РµС‚СЃСЏ СѓРґР°Р»СЏС‚СЊ Рё РѕРЅР° РІ СЂР°РґРёСѓСЃРµ РѕСЃРјРѕС‚СЂР°
 		if ( (*iter)->GetObjectType() == ESOT_MINE && 
 				!checked_cast<CMineStaticObject*>(*iter)->IsBeingDisarmed() && 
 				fabs2( CVec2((*iter)->GetCenter().x,(*iter)->GetCenter().y) - clearCenter ) <= sqr( float(SConsts::MINE_CLEAR_RADIUS) ) )
@@ -1549,7 +1549,7 @@ void CSoldierAttackUnitInBuildingState::FireNow()
 
 	if ( pGun->IsOnTurret() )
 		pGun->GetTurret()->Lock( pGun );
-	// выстрелить
+	// РІС‹СЃС‚СЂРµР»РёС‚СЊ
 	pGun->StartEnemyBurst( pTarget, bAim );
 	bAim = false;
 }
@@ -1623,7 +1623,7 @@ void CSoldierEnterTransportNowState::Segment()
 		pUnit->SetCommandFinished();
 	else
 	{
-		// проверять не сдвинулся ли транспорт
+		// РїСЂРѕРІРµСЂСЏС‚СЊ РЅРµ СЃРґРІРёРЅСѓР»СЃСЏ Р»Рё С‚СЂР°РЅСЃРїРѕСЂС‚
 		if ( curTime - timeLastTrajectoryUpdate > pUnit->GetBehUpdateDuration() )
 		{
 			if ( vLastTransportCenter != pTransport->GetCenterPlain() || wLastTransportDir != pTransport->GetFrontDirection() )
@@ -1697,8 +1697,8 @@ CSoldierParaDroppingState::CSoldierParaDroppingState( class CSoldier *_pUnit, cl
 	
 	pRememberedStats = checked_cast<const NDb::SInfantryRPGStats*>( pUnit->GetStats() );
 	
-	// подменить падающего солдата паращютистом
-	// запустить анимацию открывания парашюта
+	// РїРѕРґРјРµРЅРёС‚СЊ РїР°РґР°СЋС‰РµРіРѕ СЃРѕР»РґР°С‚Р° РїР°СЂР°С‰СЋС‚РёСЃС‚РѕРј
+	// Р·Р°РїСѓСЃС‚РёС‚СЊ Р°РЅРёРјР°С†РёСЋ РѕС‚РєСЂС‹РІР°РЅРёСЏ РїР°СЂР°С€СЋС‚Р°
 	CPtr<SParadropStartFinishUpdate> pUpdate = new SParadropStartFinishUpdate;
 	pUpdate->bStart = true;
 	pUpdate->pNewSoldierVisObj = theUnitCreation.GetParatrooperVisObj( pUnit->GetPlayer() );
@@ -1734,7 +1734,7 @@ void CSoldierParaDroppingState::Segment()
 
 			break;
 		case ESPDS_CLOSING_PARASHUTE:
-			// дождаться, когда время оставшегося падения меньше или равно времени сбора парашюта
+			// РґРѕР¶РґР°С‚СЊСЃСЏ, РєРѕРіРґР° РІСЂРµРјСЏ РѕСЃС‚Р°РІС€РµРіРѕСЃСЏ РїР°РґРµРЅРёСЏ РјРµРЅСЊС€Рµ РёР»Рё СЂР°РІРЅРѕ РІСЂРµРјРµРЅРё СЃР±РѕСЂР° РїР°СЂР°С€СЋС‚Р°
 			if ( timeToCloseParashute <= curTime )
 			{
 				CPtr<SParadropStartFinishUpdate> pUpdate = new SParadropStartFinishUpdate;
@@ -1761,7 +1761,7 @@ void CSoldierParaDroppingState::Segment()
 		 				!GetAIMap()->IsTileInside( AICellsTiles::GetTile(vCenter) ) ||
 						GetTerrain()->IsLocked( pUnit->GetCenterTile(), EAC_HUMAN ) )
 				{
-					pUnit->Disappear(); // при падении на технику - смерть.
+					pUnit->Disappear(); // РїСЂРё РїР°РґРµРЅРёРё РЅР° С‚РµС…РЅРёРєСѓ - СЃРјРµСЂС‚СЊ.
 				}
 			}
 			break;

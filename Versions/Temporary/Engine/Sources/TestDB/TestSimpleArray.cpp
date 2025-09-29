@@ -45,7 +45,7 @@ static const SSimpleArrayTestData testdata[] =
 	{ "SimpleArrayBinaryFlags", { CVariant(flags[0], sizeof(flags[0])), CVariant(flags[1], sizeof(flags[1])), CVariant(flags[2], sizeof(flags[2])), CVariant(flags[3], sizeof(flags[3])), CVariant(flags[4], sizeof(flags[4])) } },
 	{ "SimpleArrayEnumUnitType", { "UNIT_TYPE_INFANTRY_SNIPER", "UNIT_TYPE_ARMOR_MEDIUM", "UNIT_TYPE_ARMOR_HEAVY", "UNIT_TYPE_AVIA_FIGHTER", "UNIT_TYPE_AUTO_ENGINEER" } },
 	{ "SimpleArrayString", { "Test string 0", "Test string 1", "Test string 2", "Test string 3", "Test string 4" } },
-	{ "SimpleArrayWString", { L"Это очень клёвый wstring 0", L"Это очень клёвый wstring 1", L"Это очень клёвый wstring 2", L"Это очень клёвый wstring 3", L"Это очень клёвый wstring 4" } },
+	{ "SimpleArrayWString", { L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 0", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 1", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 2", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 3", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 4" } },
 	//
 	{ "SimpleArrayIntNocode", { 1, 2, 3, 4, 5 } },
 	{ "SimpleArrayFloatNocode", { 1.1f, 2.2f, 3.3f, 4.4f, 5.5f } },
@@ -54,7 +54,7 @@ static const SSimpleArrayTestData testdata[] =
 	{ "SimpleArrayBinaryFlagsNocode", { CVariant(flags[0], sizeof(flags[0])), CVariant(flags[1], sizeof(flags[1])), CVariant(flags[2], sizeof(flags[2])), CVariant(flags[3], sizeof(flags[3])), CVariant(flags[4], sizeof(flags[4])) } },
 	{ "SimpleArrayEnumUnitTypeNocode", { "UNIT_TYPE_INFANTRY_SNIPER", "UNIT_TYPE_ARMOR_MEDIUM", "UNIT_TYPE_ARMOR_HEAVY", "UNIT_TYPE_AVIA_FIGHTER", "UNIT_TYPE_AUTO_ENGINEER" } },
 	{ "SimpleArrayStringNocode", { "Test string 0", "Test string 1", "Test string 2", "Test string 3", "Test string 4" } },
-	{ "SimpleArrayWStringNocode", { L"Это очень клёвый wstring 0", L"Это очень клёвый wstring 1", L"Это очень клёвый wstring 2", L"Это очень клёвый wstring 3", L"Это очень клёвый wstring 4" } },
+	{ "SimpleArrayWStringNocode", { L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 0", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 1", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 2", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 3", L"Р­С‚Рѕ РѕС‡РµРЅСЊ РєР»С‘РІС‹Р№ wstring 4" } },
 	{ "Weapons", { CDBID("weapons/ussr/heavy/a20.xdb"), CDBID("weapons/ussr/light/ppsh.xdb"), CDBID("weapons/ussr/heavy/a20.xdb"), CDBID("weapons/ussr/light/ppsh.xdb"), CDBID("weapons/ussr/heavy/a20.xdb") } },
 	{ "", { 0, 0, 0, 0, 0 } }
 };

@@ -38,7 +38,7 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 
 	lastScan = 0;
 
-	// 3 - всего три стороны
+	// 3 - РІСЃРµРіРѕ С‚СЂРё СЃС‚РѕСЂРѕРЅС‹
 	closestEnemyDist2.resize( 3, 0.0f );
 	lastHeardPos.resize( 3, VNULL2 );
 	nHeardShots.resize( 3, 0 );
@@ -146,7 +146,7 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 	const int nMyParty = theDipl.GetMyParty();	
 	for ( int nIterParty = 0; nIterParty < 2; ++nIterParty )
 	{
-		// если player - враг, слышал выстрел, не слишком давно, и пора рисовать круг
+		// РµСЃР»Рё player - РІСЂР°Рі, СЃР»С‹С€Р°Р» РІС‹СЃС‚СЂРµР», РЅРµ СЃР»РёС€РєРѕРј РґР°РІРЅРѕ, Рё РїРѕСЂР° СЂРёСЃРѕРІР°С‚СЊ РєСЂСѓРі
 		const bool bEnemy = theDipl.GetDiplStatusForParties( nParty, nIterParty ) == EDI_ENEMY;
 		
 		const bool bVisibleCircle = lastShotTime[nIterParty] != 0 && curTime - lastShotTime[nIterParty] <= SConsts::AUDIBILITY_TIME;
@@ -164,10 +164,10 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 		{
 			lastRevealCircleTime[nIterParty] = curTime;
 
-			// обязательно нужно создать, чтобы общая нумерация объектов не зависела от клиента
+			// РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РЅСѓР¶РЅРѕ СЃРѕР·РґР°С‚СЊ, С‡С‚РѕР±С‹ РѕР±С‰Р°СЏ РЅСѓРјРµСЂР°С†РёСЏ РѕР±СЉРµРєС‚РѕРІ РЅРµ Р·Р°РІРёСЃРµР»Р° РѕС‚ РєР»РёРµРЅС‚Р°
 			CPtr<CRevealCircle> pCircle = new CRevealCircle( GetRevealCircle( 1 - nParty ) );
 			
-			// этон наша сторона и мы для него не видны, 
+			// СЌС‚РѕРЅ РЅР°С€Р° СЃС‚РѕСЂРѕРЅР° Рё РјС‹ РґР»СЏ РЅРµРіРѕ РЅРµ РІРёРґРЅС‹, 
 			if ( nMyParty == nIterParty && !bOwnerVisible )
 			{
 				if ( bIsAA )

@@ -186,19 +186,19 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	//
 	bool bResult = true;
-	// Получаем манипулятор на VisObject
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject
 	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
 	{
 		return ER_SUCCESS;
 	}
-	// Получаем манипулятор модель сезона по умолчанию ( летнюю )
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РјРѕРґРµР»СЊ СЃРµР·РѕРЅР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ ( Р»РµС‚РЅСЋСЋ )
 	CPtr<IManipulator> pModelManipulator = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( pModelManipulator == 0 )
 	{
 		return ER_SUCCESS;
 	}
-	// Получаем ID Геометрии, чтобы вычислить путь до файла c бинарными данными
+	// РџРѕР»СѓС‡Р°РµРј ID Р“РµРѕРјРµС‚СЂРёРё, С‡С‚РѕР±С‹ РІС‹С‡РёСЃР»РёС‚СЊ РїСѓС‚СЊ РґРѕ С„Р°Р№Р»Р° c Р±РёРЅР°СЂРЅС‹РјРё РґР°РЅРЅС‹РјРё
 	string szGeometryName;
 	string szGeometryTypeName;
 	CManipulatorManager::GetParamsFromReference( "Geometry", pModelManipulator, &szGeometryTypeName, &szGeometryName, 0 );
@@ -206,21 +206,21 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	const string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 	string szDestination = NBinResources::GetBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
-	// Проверяем файл на открываемость
+	// РџСЂРѕРІРµСЂСЏРµРј С„Р°Р№Р» РЅР° РѕС‚РєСЂС‹РІР°РµРјРѕСЃС‚СЊ
 	try
 	{
 		if ( !WaitForFile( szDestination, 10000 ) )
 			szDestination = szGeometriesFolder + StrFmt( "%d", pGeometry->GetRecordID() );
 
 		CGrannyFileInfoGuard fileInfo( szDestination );
-		// Записываем высоту объекта (из модели)
+		// Р—Р°РїРёСЃС‹РІР°РµРј РІС‹СЃРѕС‚Сѓ РѕР±СЉРµРєС‚Р° (РёР· РјРѕРґРµР»Рё)
 		SetObjectHeight( pManipulator, fileInfo ); 
 	}
 	catch ( ... ) 
 	{
 		return ER_SUCCESS;
 	}
-	// Получаем каталоги материалов, текстур и файлов текстур
+	// РџРѕР»СѓС‡Р°РµРј РєР°С‚Р°Р»РѕРіРё РјР°С‚РµСЂРёР°Р»РѕРІ, С‚РµРєСЃС‚СѓСЂ Рё С„Р°Р№Р»РѕРІ С‚РµРєСЃС‚СѓСЂ
 	string szMaterialFolder;
 	string szTextureFolder;
 	string szTextureFileFolder;
@@ -248,14 +248,14 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 			szMaterialFolder += string( "_" );
 		}
 	}
-	// Записываем прервый параметр - статический модификатор земли под статическим объектом
-	// Опрашиваем и, если надо, устанавливаем имя файла для статической текстуры:
+	// Р—Р°РїРёСЃС‹РІР°РµРј РїСЂРµСЂРІС‹Р№ РїР°СЂР°РјРµС‚СЂ - СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РјРѕРґРёС„РёРєР°С‚РѕСЂ Р·РµРјР»Рё РїРѕРґ СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚РѕРј
+	// РћРїСЂР°С€РёРІР°РµРј Рё, РµСЃР»Рё РЅР°РґРѕ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РёРјСЏ С„Р°Р№Р»Р° РґР»СЏ СЃС‚Р°С‚РёС‡РµСЃРєРѕР№ С‚РµРєСЃС‚СѓСЂС‹:
 	{
 		bool bNeedStaticDebris = false;
 		CManipulatorManager::GetValue( &bNeedStaticDebris, pManipulator, "StaticDebris.NeedDebris" );
 		if ( bNeedStaticDebris )
 		{
-			// Получаем манипулятор на описатель
+			// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° РѕРїРёСЃР°С‚РµР»СЊ
 			CPtr<IManipulator> pDebrisManipulator = CManipulatorManager::CreateManipulatorFromReference( "StaticDebris.Debris", pManipulator, 0, 0, 0 ); 
 			if ( pDebrisManipulator )
 			{
@@ -263,7 +263,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 				bResult = bResult && CManipulatorManager::GetValue( &nDebrisCount, pDebrisManipulator, "Debris" );
 				bResult = bResult && CManipulatorManager::EnsureArraySize( nDebrisCount, pManipulator, "StaticDebris.Masks" );
 
-				// пробегаем по списку установленных 
+				// РїСЂРѕР±РµРіР°РµРј РїРѕ СЃРїРёСЃРєСѓ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹С… 
 				for ( int nDebrisIndex = 0; nDebrisIndex < nDebrisCount; ++nDebrisIndex )
 				{
 					const string szDebrisPrefix = StrFmt( "Debris.[%d]", nDebrisIndex );
@@ -291,7 +291,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		}
 		else
 		{
-			// Удаляем все файлы с масками
+			// РЈРґР°Р»СЏРµРј РІСЃРµ С„Р°Р№Р»С‹ СЃ РјР°СЃРєР°РјРё
 			int nMasksCount = 0;
 			bResult = bResult && CManipulatorManager::GetValue( &nMasksCount, pManipulator, "StaticDebris.Masks" );
 			for ( int nMasksIndex = 0; nMasksIndex < nMasksCount; ++nMasksIndex )
@@ -311,13 +311,13 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 			pManipulator->RemoveNode( "StaticDebris.Masks", NODE_REMOVEALL_INDEX );
 		}
 	}
-	// Записываем третий параметр - AI проходимость объекта
+	// Р—Р°РїРёСЃС‹РІР°РµРј С‚СЂРµС‚РёР№ РїР°СЂР°РјРµС‚СЂ - AI РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р°
 	bResult = bResult && ExportDynamicDebris( pManipulator, rszObjectName ); 
 	if ( bResult && NeedCreatePassability() )
 	{
 		bool bHasPassability = false;
 		CManipulatorManager::GetValue( &bHasPassability, pManipulator, "HasPassability" );
-		// Удаляем старый массив
+		// РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ РјР°СЃСЃРёРІ
 		bResult = bResult && CManipulatorManager::Remove2DArray( pManipulator, "passability" );
 		//
 		CVec2 vPassabilityOrigin = VNULL2;
@@ -325,7 +325,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		{
 			CArray2D<BYTE> passabilityArray;
 			bResult = bResult && CreateObjectPassability( szDestination, &passabilityArray, &vPassabilityOrigin );
-			// Добавляем новую информацию
+			// Р”РѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ
 			bResult = bResult && CManipulatorManager::Set2DArray( passabilityArray, pManipulator, "passability" );
 
 			NDb::SPassProfile passProfile;

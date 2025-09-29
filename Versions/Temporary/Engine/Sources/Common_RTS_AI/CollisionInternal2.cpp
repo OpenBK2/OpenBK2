@@ -244,7 +244,7 @@ struct SFindCandidates : public SIterateUnitsCallback
 			if ( eCollideType == NCollision::ECT_NONE )
 				return true;
 
-			// код где давим, расчитано на то, что давить будем только пехоту !!!
+			// РєРѕРґ РіРґРµ РґР°РІРёРј, СЂР°СЃС‡РёС‚Р°РЅРѕ РЅР° С‚Рѕ, С‡С‚Рѕ РґР°РІРёС‚СЊ Р±СѓРґРµРј С‚РѕР»СЊРєРѕ РїРµС…РѕС‚Сѓ !!!
 			if ( eCollideType == NCollision::ECT_SECOND_HARD && fDistance == 0.0f && pCand->CanUnitTrampled( pUnit ) )
 			{
 				pCand->UnitTrampled( pUnit );

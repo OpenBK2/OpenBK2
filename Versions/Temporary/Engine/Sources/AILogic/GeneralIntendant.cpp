@@ -119,7 +119,7 @@ float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, co
 	{
 	case FT_TRUCK_REPAIR_BUILDING:
 		{
-			// ó þíèòîâ åñòü ôóíêöèÿ GetCenter, êîòîðàÿ âîçâðàùàåò 3D êîîðäèíàòû þíèòà
+			// Ñƒ ÑŽÐ½Ð¸Ñ‚Ð¾Ð² ÐµÑÑ‚ÑŒ Ñ„ÑƒÐ½ÐºÑ†Ð¸Ñ GetCenter, ÐºÐ¾Ñ‚Ð¾Ñ€Ð°Ñ Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ 3D ÐºÐ¾Ð¾Ñ€Ð´Ð¸Ð½Ð°Ñ‚Ñ‹ ÑŽÐ½Ð¸Ñ‚Ð°
 			const float fDist = fabs2( pStorage->GetCenter() - CVec3( pUnit->GetCenterPlain(),0 ) );
 			if ( fDist == 0.0f )
 				return 1;

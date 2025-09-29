@@ -22,14 +22,14 @@ namespace NMapInfoEditor
 			UINT nPlayer;																								// Player
 			float fHP;																									// Hit points ( 0.0f ... 1.0f )
 			//
-			CVec3 vPosition;																						// Относительная позиция объекта (в AI точках)
-			float fDirection;																						// Относительное направление объекта (в радианах)
+			CVec3 vPosition;																						// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅР°СЏ РїРѕР·РёС†РёСЏ РѕР±СЉРµРєС‚Р° (РІ AI С‚РѕС‡РєР°С…)
+			float fDirection;																						// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р° (РІ СЂР°РґРёР°РЅР°С…)
 			//
-			CVec3 vAdditionalPosition;																	// Дополнительное смещение объекта (применяется при выравнивании на grid) (в AI точках)
-			float fAdditionalDirection;																	// Относительное направление объекта ( применяется при выравнивании на 90 градусов ) (в радианах)
+			CVec3 vAdditionalPosition;																	// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ СЃРјРµС‰РµРЅРёРµ РѕР±СЉРµРєС‚Р° (РїСЂРёРјРµРЅСЏРµС‚СЃСЏ РїСЂРё РІС‹СЂР°РІРЅРёРІР°РЅРёРё РЅР° grid) (РІ AI С‚РѕС‡РєР°С…)
+			float fAdditionalDirection;																	// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р° ( РїСЂРёРјРµРЅСЏРµС‚СЃСЏ РїСЂРё РІС‹СЂР°РІРЅРёРІР°РЅРёРё РЅР° 90 РіСЂР°РґСѓСЃРѕРІ ) (РІ СЂР°РґРёР°РЅР°С…)
 			//
-			CLinkIDList linkedLinkIDIist;																// Список залинкованных объектов
-			UINT nLinkToLinkID;																					// Объект к которому залинкованы
+			CLinkIDList linkedLinkIDIist;																// РЎРїРёСЃРѕРє Р·Р°Р»РёРЅРєРѕРІР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ
+			UINT nLinkToLinkID;																					// РћР±СЉРµРєС‚ Рє РєРѕС‚РѕСЂРѕРјСѓ Р·Р°Р»РёРЅРєРѕРІР°РЅС‹
 			//
 			SMapInfoElement()
 				:	nFrameIndex( INVALID_NODE_ID ),
@@ -88,7 +88,7 @@ namespace NMapInfoEditor
 				}
 				if ( vNewPos != vPos )
 				{
-					// записываем смещение в добавочное смещение
+					// Р·Р°РїРёСЃС‹РІР°РµРј СЃРјРµС‰РµРЅРёРµ РІ РґРѕР±Р°РІРѕС‡РЅРѕРµ СЃРјРµС‰РµРЅРёРµ
 					vAdditionalPosition += ( vNewPos - vPos );
 				}
 			}
@@ -125,11 +125,11 @@ namespace NMapInfoEditor
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		struct SSceneElement
 		{
-			CVec3 vPosition;																						// Относительная позиция визуальной части совпадает с относительной позицией SMapInfoElement (в AI точках)
-			float fDirection;																						// Относительное направление визуальной части с относительным поворотом SMapInfoElement (в радианах)
+			CVec3 vPosition;																						// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅР°СЏ РїРѕР·РёС†РёСЏ РІРёР·СѓР°Р»СЊРЅРѕР№ С‡Р°СЃС‚Рё СЃРѕРІРїР°РґР°РµС‚ СЃ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕР№ РїРѕР·РёС†РёРµР№ SMapInfoElement (РІ AI С‚РѕС‡РєР°С…)
+			float fDirection;																						// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РІРёР·СѓР°Р»СЊРЅРѕР№ С‡Р°СЃС‚Рё СЃ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рј РїРѕРІРѕСЂРѕС‚РѕРј SMapInfoElement (РІ СЂР°РґРёР°РЅР°С…)
 			//
-			CVec3 vAdditionalPosition;																	// Дополнительное смещение объекта (относительно SMapInfoElement) (в AI точках)
-			float fAdditionalDirection;																	// Относительное направление объекта (относительно SMapInfoElement) (в радианах)
+			CVec3 vAdditionalPosition;																	// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРµ СЃРјРµС‰РµРЅРёРµ РѕР±СЉРµРєС‚Р° (РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ SMapInfoElement) (РІ AI С‚РѕС‡РєР°С…)
+			float fAdditionalDirection;																	// РћС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р° (РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ SMapInfoElement) (РІ СЂР°РґРёР°РЅР°С…)
 			//
 			SSceneElement()
 				:	vPosition( VNULL3 ),
@@ -171,18 +171,18 @@ namespace NMapInfoEditor
 		};
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		typedef hash_map<UINT, SMapInfoElement> CMapInfoElementMap;		// Соответствие LinkID объектв в структуре ObjectInfoCollector к данным об объекте
-		typedef hash_map<UINT, SSceneElement> CSceneElementMap;				// Соответствие SceneID визуальной части к данным об визуальной части
-		typedef hash_map<UINT, UINT> CSceneIDToLinkIDMap;							// Хранилище пересчета визуальных составляющих в элементы объекта
+		typedef hash_map<UINT, SMapInfoElement> CMapInfoElementMap;		// РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ LinkID РѕР±СЉРµРєС‚РІ РІ СЃС‚СЂСѓРєС‚СѓСЂРµ ObjectInfoCollector Рє РґР°РЅРЅС‹Рј РѕР± РѕР±СЉРµРєС‚Рµ
+		typedef hash_map<UINT, SSceneElement> CSceneElementMap;				// РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ SceneID РІРёР·СѓР°Р»СЊРЅРѕР№ С‡Р°СЃС‚Рё Рє РґР°РЅРЅС‹Рј РѕР± РІРёР·СѓР°Р»СЊРЅРѕР№ С‡Р°СЃС‚Рё
+		typedef hash_map<UINT, UINT> CSceneIDToLinkIDMap;							// РҐСЂР°РЅРёР»РёС‰Рµ РїРµСЂРµСЃС‡РµС‚Р° РІРёР·СѓР°Р»СЊРЅС‹С… СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёС… РІ СЌР»РµРјРµРЅС‚С‹ РѕР±СЉРµРєС‚Р°
 		//
-		struct SObjectInfoCollector *pObjectInfoCollector;						// родительская структура
-		UINT nObjectInfoID;																						// ID объекта в родительской структуре
-		CVec3 vPosition;																							// Позиция объекта (в AI точках)
-		float fDirection;																							// Направление объекта (в радианах)
+		struct SObjectInfoCollector *pObjectInfoCollector;						// СЂРѕРґРёС‚РµР»СЊСЃРєР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР°
+		UINT nObjectInfoID;																						// ID РѕР±СЉРµРєС‚Р° РІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕР№ СЃС‚СЂСѓРєС‚СѓСЂРµ
+		CVec3 vPosition;																							// РџРѕР·РёС†РёСЏ РѕР±СЉРµРєС‚Р° (РІ AI С‚РѕС‡РєР°С…)
+		float fDirection;																							// РќР°РїСЂР°РІР»РµРЅРёРµ РѕР±СЉРµРєС‚Р° (РІ СЂР°РґРёР°РЅР°С…)
 		//
-		CMapInfoElementMap mapInfoElementMap;													// Набор элементов объекта
-		CSceneElementMap sceneElementMap;															// Набор визуальных составляющих
-		CSceneIDToLinkIDMap sceneIDToLinkIDMap;												// Пересчет визуальных составляющих в элементы объекта
+		CMapInfoElementMap mapInfoElementMap;													// РќР°Р±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РѕР±СЉРµРєС‚Р°
+		CSceneElementMap sceneElementMap;															// РќР°Р±РѕСЂ РІРёР·СѓР°Р»СЊРЅС‹С… СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёС…
+		CSceneIDToLinkIDMap sceneIDToLinkIDMap;												// РџРµСЂРµСЃС‡РµС‚ РІРёР·СѓР°Р»СЊРЅС‹С… СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёС… РІ СЌР»РµРјРµРЅС‚С‹ РѕР±СЉРµРєС‚Р°
 		//
 		virtual ~SObjectInfo() {}	
 		//
@@ -238,15 +238,15 @@ namespace NMapInfoEditor
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// если присутствует объект сцены с указанным ID возвращает true
+		// РµСЃР»Рё РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РѕР±СЉРµРєС‚ СЃС†РµРЅС‹ СЃ СѓРєР°Р·Р°РЅРЅС‹Рј ID РІРѕР·РІСЂР°С‰Р°РµС‚ true
 		virtual bool Pick( UINT nSceneID );
 		virtual bool Pick( const CVec3 &rvPos ) { return false; }
 		virtual bool Pick( const CSelectionSquare &rSelectionSquare ) { return false; }
-		// рисует объект
+		// СЂРёСЃСѓРµС‚ РѕР±СЉРµРєС‚
 		virtual bool Draw( CSceneDrawTool *pEditorSceneDrawTool );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// вспомогательные методы
+		// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ РјРµС‚РѕРґС‹
 		virtual bool UpdateDBLinkedObjects( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		virtual bool MoveLinkedObjects( const SObjectEditInfo *pObjectEditInfo, const CVec3 &rvNewPosition,
 																		bool bUpdateScene, IEditorScene *pEditorScene,
@@ -266,10 +266,10 @@ namespace NMapInfoEditor
 		virtual void FixInvalidPos( bool bUpdateSceneElements );
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// абстрактные методы
+		// Р°Р±СЃС‚СЂР°РєС‚РЅС‹Рµ РјРµС‚РѕРґС‹
 		virtual SObjectInfo* CallDuplicate() const = 0;
 		virtual EObjectInfoType GetObjectInfoType() = 0;
-		// настройщики
+		// РЅР°СЃС‚СЂРѕР№С‰РёРєРё
 		virtual void GetDrawSelectionParameters( DWORD *pdwSceneObject, DWORD *pdwObject, DWORD *pdwObjectLink, DWORD *pdwMainObject )
 		{
 			if ( pdwSceneObject )
@@ -293,49 +293,49 @@ namespace NMapInfoEditor
 		virtual bool KeepZeroHeight() = 0;
 		virtual bool KeepCommonHeight() = 0;
 		virtual bool NeedProcessEditParameters() = 0;
-		// процедуры
-		// загружаем объект из базы
+		// РїСЂРѕС†РµРґСѓСЂС‹
+		// Р·Р°РіСЂСѓР¶Р°РµРј РѕР±СЉРµРєС‚ РёР· Р±Р°Р·С‹
 		virtual bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator ) = 0;
-		// создаем объект
+		// СЃРѕР·РґР°РµРј РѕР±СЉРµРєС‚
 		virtual bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator ) = 0;
-		// заполнить свойствами MaskManipulator
+		// Р·Р°РїРѕР»РЅРёС‚СЊ СЃРІРѕР№СЃС‚РІР°РјРё MaskManipulator
 		virtual void InsertMaskManipulators( CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator );
 		virtual void FillMaskManipulator( CMaskManipulator *pMaskManipulator ) = 0;
 		virtual void GetMask( string *pszMask ) = 0;
 		virtual void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
 		virtual void SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity );
-		// методы имеющие реализацию поумолчанию
-		// заполняет данные объекта, которые можно загрузить когда все объекты загружены
+		// РјРµС‚РѕРґС‹ РёРјРµСЋС‰РёРµ СЂРµР°Р»РёР·Р°С†РёСЋ РїРѕСѓРјРѕР»С‡Р°РЅРёСЋ
+		// Р·Р°РїРѕР»РЅСЏРµС‚ РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р°, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊ РєРѕРіРґР° РІСЃРµ РѕР±СЉРµРєС‚С‹ Р·Р°РіСЂСѓР¶РµРЅС‹
 		virtual bool PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator );
-		// изменяет положение объекта
+		// РёР·РјРµРЅСЏРµС‚ РїРѕР»РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р°
 		virtual bool Move( const SObjectEditInfo *pObjectEditInfo, const CVec3 &rvNewPosition,
 											 bool bMoveLinkedObjects,
 											 bool bUpdateScene, IEditorScene *pEditorScene,
 											 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// изменяет угол объекта
+		// РёР·РјРµРЅСЏРµС‚ СѓРіРѕР» РѕР±СЉРµРєС‚Р°
 		virtual bool Rotate( const SObjectEditInfo *pObjectEditInfo, float fNewDirection,
 												 bool bRotateLinkedObjects,
 												 bool bUpdateScene, IEditorScene *pEditorScene,
 												 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// обновляет позиции в сцене
+		// РѕР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёРё РІ СЃС†РµРЅРµ
 		virtual bool UpdateScene( IEditorScene *pEditorScene );
-		// обновляет позиции в базе данных
+		// РѕР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёРё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 		virtual bool UpdateDB( bool bUpdateLinkedObjects, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// служит для удаления со сцены  ( call only from Remove )
+		// СЃР»СѓР¶РёС‚ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ СЃРѕ СЃС†РµРЅС‹  ( call only from Remove )
 		virtual void RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure );
-		// служит для удаления информмции из базы данных  ( call only from Remove )
+		// СЃР»СѓР¶РёС‚ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РёРЅС„РѕСЂРјРјС†РёРё РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…  ( call only from Remove )
 		virtual bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// вызывается автоматически из SObjectInfoCollector::RemoveObjectInfo()
-		// вызывает UpdateDBLinkedObjects, RemoveLinkTo, RemoveLinks, RemoveFromScene, RemoveFromDB
+		// РІС‹Р·С‹РІР°РµС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РёР· SObjectInfoCollector::RemoveObjectInfo()
+		// РІС‹Р·С‹РІР°РµС‚ UpdateDBLinkedObjects, RemoveLinkTo, RemoveLinks, RemoveFromScene, RemoveFromDB
 		virtual void Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 												 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// проверить на возможность создания линка для этого объекта
+		// РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°РЅРёСЏ Р»РёРЅРєР° РґР»СЏ СЌС‚РѕРіРѕ РѕР±СЉРµРєС‚Р°
 		virtual bool CheckLinkCapability( UINT nLinkToSceneID ) const;
-		// добавить линк на указанный объект
+		// РґРѕР±Р°РІРёС‚СЊ Р»РёРЅРє РЅР° СѓРєР°Р·Р°РЅРЅС‹Р№ РѕР±СЉРµРєС‚
 		virtual bool InsertLink( bool bUpdateDB, UINT nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// Удалить линки у объектов на этоот объкт, которые ссылаются на объект, после вызова этого метода на объект никто не ссылается
+		// РЈРґР°Р»РёС‚СЊ Р»РёРЅРєРё Сѓ РѕР±СЉРµРєС‚РѕРІ РЅР° СЌС‚РѕРѕС‚ РѕР±СЉРєС‚, РєРѕС‚РѕСЂС‹Рµ СЃСЃС‹Р»Р°СЋС‚СЃСЏ РЅР° РѕР±СЉРµРєС‚, РїРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РЅР° РѕР±СЉРµРєС‚ РЅРёРєС‚Рѕ РЅРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ
 		virtual bool RemoveLinks( bool bUpdateLinkedObjects, bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		// Удалить линки у объекта, после вызова этого метода объект ни накого не ссылается
+		// РЈРґР°Р»РёС‚СЊ Р»РёРЅРєРё Сѓ РѕР±СЉРµРєС‚Р°, РїРѕСЃР»Рµ РІС‹Р·РѕРІР° СЌС‚РѕРіРѕ РјРµС‚РѕРґР° РѕР±СЉРµРєС‚ РЅРё РЅР°РєРѕРіРѕ РЅРµ СЃСЃС‹Р»Р°РµС‚СЃСЏ
 		virtual bool RemoveLinkTo( bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		//
 		virtual void UpdateByController( UINT nLinkID, UINT nFlags, IEditorScene *pEditorScene, IManipulator *pManipulator );

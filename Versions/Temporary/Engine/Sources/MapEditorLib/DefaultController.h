@@ -13,11 +13,11 @@ class CDefaultController : public IController
 	
 	// Operation Description it the Undo List
 	CString strDescription;
-	// Метка для последующего удаления Undo Operation из очереди
+	// РњРµС‚РєР° РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµРіРѕ СѓРґР°Р»РµРЅРёСЏ Undo Operation РёР· РѕС‡РµСЂРµРґРё
 	string szTemporaryLabel;
-	// Список масок ( задается манипулятором при создании Controller )
+	// РЎРїРёСЃРѕРє РјР°СЃРѕРє ( Р·Р°РґР°РµС‚СЃСЏ РјР°РЅРёРїСѓР»СЏС‚РѕСЂРѕРј РїСЂРё СЃРѕР·РґР°РЅРёРё Controller )
 	IManipulator::CNameMap nameMap;
-	// Набор изменяемых объектов
+	// РќР°Р±РѕСЂ РёР·РјРµРЅСЏРµРјС‹С… РѕР±СЉРµРєС‚РѕРІ
 	SObjectSet objectSet;
 
 protected:

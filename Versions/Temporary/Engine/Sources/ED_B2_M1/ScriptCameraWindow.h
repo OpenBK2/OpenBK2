@@ -31,9 +31,9 @@ class CScriptCameraWindow : public CResizeDialog, public ICommandHandler
 	inline UINT GetYawTimerID() { return 4; }
 	inline UINT GetPitchTimerID() { return 5; }
 	inline UINT GetFOVTimerID() { return 6; }
-	inline UINT GetYawTimerInterval() { return 500; } // Частота в миллисекундах
-	inline UINT GetPitchTimerInterval() { return 500; } // Частота в миллисекундах
-	inline UINT GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
+	inline UINT GetYawTimerInterval() { return 500; } // Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
+	inline UINT GetPitchTimerInterval() { return 500; } // Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
+	inline UINT GetFOVTimerInterval() { return 500; } // Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
 	void SetYawTimer();
 	void SetPitchTimer();
 	void SetFOVTimer();

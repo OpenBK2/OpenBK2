@@ -36,7 +36,7 @@ void CHungarianMethod::Minimize()
 			matrix[j][i] -= fMin;
 	}
 
-	// шаг 2. Формирование нулей по столбцам
+	// С€Р°Рі 2. Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РЅСѓР»РµР№ РїРѕ СЃС‚РѕР»Р±С†Р°Рј
 	for ( int j = 0; j < nSize; ++j )
 	{
 		float fMin = matrix[j][0];

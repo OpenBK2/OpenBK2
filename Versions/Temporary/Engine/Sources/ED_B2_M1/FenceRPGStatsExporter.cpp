@@ -59,7 +59,7 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const string &rszSegmentsSetName, string *pszGeomFileName )
 {
-	// Получаем манипулятор на VisObject-ы
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject-С‹
 	int nNumVisobjs = 0;
 	if ( !CManipulatorManager::GetValue( &nNumVisobjs, pManipulator, rszSegmentsSetName + ".VisObjes" ) )
 		return false;
@@ -67,8 +67,8 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	if ( nNumVisobjs <= 0 )
 		return false;
 
-	// рассматриваем только первую модель (если их несколько)
-	// т.е. passability у них всех должна быть одинаковая
+	// СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РјРѕРґРµР»СЊ (РµСЃР»Рё РёС… РЅРµСЃРєРѕР»СЊРєРѕ)
+	// С‚.Рµ. passability Сѓ РЅРёС… РІСЃРµС… РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РѕРґРёРЅР°РєРѕРІР°СЏ
 	string szObjName = rszSegmentsSetName + ".VisObjes.[0]";
 
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -79,7 +79,7 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	if ( !pVisObjectManipulator )
 		return false;
 
-	// Получаем манипулятор модель сезона по умолчанию ( летнюю )
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РјРѕРґРµР»СЊ СЃРµР·РѕРЅР° РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ ( Р»РµС‚РЅСЋСЋ )
 	CPtr<IManipulator> pModelManipulator = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( pModelManipulator == 0 )
 		return false;
@@ -111,9 +111,9 @@ bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
 																						const CArray2D<BYTE> &rPassabilityArray, 
 																						const CVec3 &rvPassabilityOrigin )
 {
-	// Записываем третий параметр - AI проходимость объекта
+	// Р—Р°РїРёСЃС‹РІР°РµРј С‚СЂРµС‚РёР№ РїР°СЂР°РјРµС‚СЂ - AI РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊ РѕР±СЉРµРєС‚Р°
 
-	// Удаляем старый массив
+	// РЈРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ РјР°СЃСЃРёРІ
 	bool bResult = CManipulatorManager::Remove2DArray( pManipulator, rszSegmentsSetName + ".passability" );
 	
 	if ( bResult )

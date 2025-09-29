@@ -158,7 +158,7 @@ void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstan
 	const float fScaleCoeff = ( pTerrainSpotInstance->pDescriptor->fScaleCoeff > 0.0f ) ? pTerrainSpotInstance->pDescriptor->fScaleCoeff : 1.0f;
 	const CVec2 vSpotSize( pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nWidth * pTerrainSpotInstance->pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
 												 pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nHeight * pTerrainSpotInstance->pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff ); 
-	// Çàïîëíÿåì ãåîìåòðè÷åñêóþ èíôîðìàöèþ:
+	// Ð—Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ Ð³ÐµÐ¾Ð¼ÐµÑ‚Ñ€Ð¸Ñ‡ÐµÑÐºÑƒÑŽ Ð¸Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸ÑŽ:
 	pTerrainSpotInstance->points[0] = CVec2( 0.0f, 0.0f );
 	pTerrainSpotInstance->points[1] = CVec2( vSpotSize.x, 0.0f );
 	pTerrainSpotInstance->points[2] = CVec2( vSpotSize.x, vSpotSize.y );

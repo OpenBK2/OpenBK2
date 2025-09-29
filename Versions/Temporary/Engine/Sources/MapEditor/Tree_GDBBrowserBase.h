@@ -36,7 +36,7 @@ public:
 	static const int		TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT];
 	static const int		TABGDBB_TREE_COLUMN_WIDTH [TABGDBB_TREE_COLUMN_COUNT];
 
-	// Функция сортировки
+	// Р¤СѓРЅРєС†РёСЏ СЃРѕСЂС‚РёСЂРѕРІРєРё
 	friend int CALLBACK TreeGDBBrowserBaseCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort );
 	int SortItemText( const CString &rstrText0, EGDBOType nType0, const CString &rstrText1, EGDBOType nType1 );
 
@@ -52,14 +52,14 @@ private:
 	{
 		enum EType
 		{
-			TYPE_INSERT					= 0, // несуществующая команда
+			TYPE_INSERT					= 0, // РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰Р°СЏ РєРѕРјР°РЅРґР°
 			TYPE_REMOVE					= 1, // szDestination - to delete item
 			TYPE_COPY						= 2, // szDestinaton - parent item, hSource - to copy item ( with subitems )
 			TYPE_RENAME					= 3, // szDestination - parent item, hSource - to move item ( with subitems )
-			TYPE_COLOR					= 4, // установить цвет обьекта
-			TYPE_CHECK					= 5, // проверить объект на правильное заполнение данных
-			TYPE_EXPORT					= 6, // конвертировать объект
-			TYPE_EXPORT_FORCE		= 7, // конвертировать объект безусловно
+			TYPE_COLOR					= 4, // СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С†РІРµС‚ РѕР±СЊРµРєС‚Р°
+			TYPE_CHECK					= 5, // РїСЂРѕРІРµСЂРёС‚СЊ РѕР±СЉРµРєС‚ РЅР° РїСЂР°РІРёР»СЊРЅРѕРµ Р·Р°РїРѕР»РЅРµРЅРёРµ РґР°РЅРЅС‹С…
+			TYPE_EXPORT					= 6, // РєРѕРЅРІРµСЂС‚РёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚
+			TYPE_EXPORT_FORCE		= 7, // РєРѕРЅРІРµСЂС‚РёСЂРѕРІР°С‚СЊ РѕР±СЉРµРєС‚ Р±РµР·СѓСЃР»РѕРІРЅРѕ
 		};
 		//
 		HTREEITEM hDestination;
@@ -84,19 +84,19 @@ private:
 	//
 	bool bStrongSelection; // selection in open / resent list operations
 	//
-	// Таймер дла отложенного считывания полей структур из базы
+	// РўР°Р№РјРµСЂ РґР»Р° РѕС‚Р»РѕР¶РµРЅРЅРѕРіРѕ СЃС‡РёС‚С‹РІР°РЅРёСЏ РїРѕР»РµР№ СЃС‚СЂСѓРєС‚СѓСЂ РёР· Р±Р°Р·С‹
 	LONG nCreateTreeTimer;
 	bool bCreateTreeSelectionChanged;
 	string szIgnoreSelectionName;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
   inline UINT GetCreateTreeTimerID() { return 100; }
-  inline UINT GetCreateTreeTimerInterval() { return 100; }	// Частота в миллисекундах
-  inline UINT GetCreateTreeTimerCount() { return 1000000; }		// Количество считываний за один раз
+  inline UINT GetCreateTreeTimerInterval() { return 100; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
+  inline UINT GetCreateTreeTimerCount() { return 1000000; }		// РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‡РёС‚С‹РІР°РЅРёР№ Р·Р° РѕРґРёРЅ СЂР°Р·
   void SetCreateTreeTimer();
   void KillCreateTreeTimer();
   void OnCreateTreeTimer();
 
-  //Таймер для отложенного обновления поля поcле редактирования метки
+  //РўР°Р№РјРµСЂ РґР»СЏ РѕС‚Р»РѕР¶РµРЅРЅРѕРіРѕ РѕР±РЅРѕРІР»РµРЅРёСЏ РїРѕР»СЏ РїРѕcР»Рµ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РјРµС‚РєРё
 	LONG nLabelEditSortTimer;
 	HTREEITEM hLabelEditSortTimerItem;
   inline UINT GetLabelEditSortTimerID() { return 101; }
@@ -196,10 +196,10 @@ public:
 
 	bool IsTreeCreated() { return GetViewManipulator() != 0; }
 	void CreateTree();
-	// pszName = 0 необходимо самостоятельно получать имя
+	// pszName = 0 РЅРµРѕР±С…РѕРґРёРјРѕ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ РїРѕР»СѓС‡Р°С‚СЊ РёРјСЏ
 	void SetTreeItemView( HTREEITEM hItem, const string *pszName );
 
-	// Для работы классов потомков
+	// Р”Р»СЏ СЂР°Р±РѕС‚С‹ РєР»Р°СЃСЃРѕРІ РїРѕС‚РѕРјРєРѕРІ
 	bool GetCurrentTreeItemName( string *pszName );
 	bool SetCurrentTreeItemName( const string &rszName, bool bUpdateSelection = true );
 	//
@@ -214,7 +214,7 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 
-	// Создание Undo Operation
+	// РЎРѕР·РґР°РЅРёРµ Undo Operation
 	virtual CFolderController* CreateController() { return CDefaultView::CreateController<CFolderController>( static_cast<CFolderController*>( 0 ) ); }
 	// CDefaultView
 	void SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel );

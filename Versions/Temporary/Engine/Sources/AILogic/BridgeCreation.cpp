@@ -27,13 +27,13 @@ CVec2 CBridgeCreation::SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, clas
 
 	SBridgeSpanSort pr;
 	sort( spans->begin(), spans->end(), pr );
-	// проверить, к какому идти меньше - к первому или к последнему
+	// РїСЂРѕРІРµСЂРёС‚СЊ, Рє РєР°РєРѕРјСѓ РёРґС‚Рё РјРµРЅСЊС€Рµ - Рє РїРµСЂРІРѕРјСѓ РёР»Рё Рє РїРѕСЃР»РµРґРЅРµРјСѓ
 	const CBridgeSpan *s1 = *spans->begin();
 	const CBridgeSpan *s2 = (*spans)[spans->size()-1];
 
 	CVec2 vFrom1to2( CVec2(s2->GetCenter().x,s2->GetCenter().y) - CVec2(s1->GetCenter().x,s1->GetCenter().y) );
 	Normalize( &vFrom1to2 );
-	// найти точки, близко к s1 и s2, лежащие вне моста
+	// РЅР°Р№С‚Рё С‚РѕС‡РєРё, Р±Р»РёР·РєРѕ Рє s1 Рё s2, Р»РµР¶Р°С‰РёРµ РІРЅРµ РјРѕСЃС‚Р°
 	SRect r1, r2;
 	s1->GetBoundRect( &r1 );
 	s2->GetBoundRect( &r2 );
@@ -49,18 +49,18 @@ CVec2 CBridgeCreation::SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, clas
 
 	if (	pPath1->GetLength() <= pPath2->GetLength() && fDiff1 < sqr( SConsts::TILE_SIZE * 10 ) )
 	{
-		// первый span - ближайший.
+		// РїРµСЂРІС‹Р№ span - Р±Р»РёР¶Р°Р№С€РёР№.
 		return v1;
 	}
 	else if ( pPath1->GetLength() >= pPath2->GetLength() && fDiff2 < sqr( SConsts::TILE_SIZE * 10 ) )
 	{
-		// последний span - ближайший.
+		// РїРѕСЃР»РµРґРЅРёР№ span - Р±Р»РёР¶Р°Р№С€РёР№.
 		reverse( spans->begin(), spans->end() );
 		return v2;
 	}
-	else if ( fDiff1 < sqr( SConsts::TILE_SIZE * 10 ) ) // по первому пути хоть дойти можно
+	else if ( fDiff1 < sqr( SConsts::TILE_SIZE * 10 ) ) // РїРѕ РїРµСЂРІРѕРјСѓ РїСѓС‚Рё С…РѕС‚СЊ РґРѕР№С‚Рё РјРѕР¶РЅРѕ
 	{
-		// первый span - ближайший.
+		// РїРµСЂРІС‹Р№ span - Р±Р»РёР¶Р°Р№С€РёР№.
 		return v1;
 	}
 	else if ( fDiff2 < sqr( SConsts::TILE_SIZE * 10 ) )
@@ -81,13 +81,13 @@ CBridgeCreation::CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit 
 : pFullBridge( pBridge ),
 CLongObjectCreation( pUnit->GetPlayer(), bAllowAIModification )
 {
-	// просто отсортировать по координатам все участки
+	// РїСЂРѕСЃС‚Рѕ РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°С‚СЊ РїРѕ РєРѕРѕСЂРґРёРЅР°С‚Р°Рј РІСЃРµ СѓС‡Р°СЃС‚РєРё
 	pBridge->EnumSpans( &spans );
 	NI_ASSERT( spans.size() >= 2, "bridge witout at least 2 spans" );
-	// посчитать длину пути до 2 крайних точек, выбрать к какой ехать.
+	// РїРѕСЃС‡РёС‚Р°С‚СЊ РґР»РёРЅСѓ РїСѓС‚Рё РґРѕ 2 РєСЂР°Р№РЅРёС… С‚РѕС‡РµРє, РІС‹Р±СЂР°С‚СЊ Рє РєР°РєРѕР№ РµС…Р°С‚СЊ.
 	vStartPoint = SortBridgeSpans( &spans, pUnit );
 
-	// разделить на уже построенные и еще не построенные.
+	// СЂР°Р·РґРµР»РёС‚СЊ РЅР° СѓР¶Рµ РїРѕСЃС‚СЂРѕРµРЅРЅС‹Рµ Рё РµС‰Рµ РЅРµ РїРѕСЃС‚СЂРѕРµРЅРЅС‹Рµ.
 	for ( nCurIndex = 0; nCurIndex < spans.size(); ++nCurIndex )
 	{
 		if ( spans[nCurIndex]->GetHitPoints() < 0.0f )
@@ -128,7 +128,7 @@ const CVec2 CBridgeCreation::GetNextPoint( const int nPlace, const int nMaxPlace
 	spans[nCurIndex]->GetBoundRect( &rect );
 
 	CVec2 vertexes[2];
-	// нужно подойти к краю объекта.
+	// РЅСѓР¶РЅРѕ РїРѕРґРѕР№С‚Рё Рє РєСЂР°СЋ РѕР±СЉРµРєС‚Р°.
 	int nVertIndex = 0;
 	for ( int i = 0; i < 4; ++i )
 	{
@@ -153,7 +153,7 @@ void CBridgeCreation::BuildNext()
 	{
 		pFullBridge->UnlockSpan( spans[nCurIndex] );
 	}
-	// перевести сегмент в достроенное состояние
+	// РїРµСЂРµРІРµСЃС‚Рё СЃРµРіРјРµРЅС‚ РІ РґРѕСЃС‚СЂРѕРµРЅРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
 	spans[nCurIndex]->Build();
 	const SHPObjectRPGStats * pStats = spans[nCurIndex]->GetStats();
 	spans[nCurIndex]->SetHitPoints( pStats->fMaxHP );
@@ -162,23 +162,23 @@ void CBridgeCreation::BuildNext()
 
 	if ( GetCurIndex() < GetMaxIndex() )
 	{
-		// проверить, если следуюший сегмент разрушен полностью, то
-		// сделать его полуразрушенным
+		// РїСЂРѕРІРµСЂРёС‚СЊ, РµСЃР»Рё СЃР»РµРґСѓСЋС€РёР№ СЃРµРіРјРµРЅС‚ СЂР°Р·СЂСѓС€РµРЅ РїРѕР»РЅРѕСЃС‚СЊСЋ, С‚Рѕ
+		// СЃРґРµР»Р°С‚СЊ РµРіРѕ РїРѕР»СѓСЂР°Р·СЂСѓС€РµРЅРЅС‹Рј
 		const float fNextSpanHP = spans[nCurIndex]->GetHitPoints();
 		if ( 0 ==  fNextSpanHP )
 		{
 			spans[nCurIndex]->SetHitPoints( spans[nCurIndex]->GetStats()->fMaxHP * 0.1 );
-			spans.clear(); // строительство закончено
+			spans.clear(); // СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІРѕ Р·Р°РєРѕРЅС‡РµРЅРѕ
 			pFullBridge->UnlockAllSpans();
 		}
 		else if ( 0 < fNextSpanHP )
 		{
-			spans.clear(); // строительство закончено
+			spans.clear(); // СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІРѕ Р·Р°РєРѕРЅС‡РµРЅРѕ
 			pFullBridge->UnlockAllSpans();
 		}
 		else
 		{
-			// залокать следующий сегмент
+			// Р·Р°Р»РѕРєР°С‚СЊ СЃР»РµРґСѓСЋС‰РёР№ СЃРµРіРјРµРЅС‚
 			pFullBridge->LockSpan( spans[nCurIndex], wDir );
 		}
 	}

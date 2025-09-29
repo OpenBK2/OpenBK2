@@ -57,7 +57,7 @@ void CGroupLogic::AddUnitToGroup( CCommonUnit *pGroupUnit, const int nGroup )
 {
 	if ( pGroupUnit->nGroup != nGroup )
 	{
-		// если юнит был в какой-то группе, убрать его оттуда
+		// РµСЃР»Рё СЋРЅРёС‚ Р±С‹Р» РІ РєР°РєРѕР№-С‚Рѕ РіСЂСѓРїРїРµ, СѓР±СЂР°С‚СЊ РµРіРѕ РѕС‚С‚СѓРґР°
 		DelUnitFromGroup( pGroupUnit );
 
 		pGroupUnit->nGroup = nGroup;
@@ -91,7 +91,7 @@ void CGroupLogic::DelUnitFromSpecialGroup( CCommonUnit *pUnit )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CGroupLogic::DelGroup( const int nGroup )
 {
-	// известить юнитов
+	// РёР·РІРµСЃС‚РёС‚СЊ СЋРЅРёС‚РѕРІ
 	for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
 	{
 		groupUnits.GetEl( i )->nGroup = 0;
@@ -451,17 +451,17 @@ void CGroupLogic::ProcessAmbushGroups()
 			while ( innerIter != iter->end() )
 			{
 				const int nUniqueId = innerIter->nUniqueId;
-				// уже в другой ambush группе, or deleted from ambush groups, удалить из этой
+				// СѓР¶Рµ РІ РґСЂСѓРіРѕР№ ambush РіСЂСѓРїРїРµ, or deleted from ambush groups, СѓРґР°Р»РёС‚СЊ РёР· СЌС‚РѕР№
 				if ( checkedUnits.find( nUniqueId ) != checkedUnits.end() || 
 						 ambushUnits.find( nUniqueId ) == ambushUnits.end() )
 					innerIter = iter->erase( innerIter );
 				else
 				{
-					// юнит просмотрен
+					// СЋРЅРёС‚ РїСЂРѕСЃРјРѕС‚СЂРµРЅ
 					checkedUnits.insert( nUniqueId );
 
 					CLinkObject *pObject = CLinkObject::GetObjectByUniqueIdSafe( nUniqueId );
-					// юнит умер, удалить из ambush groups
+					// СЋРЅРёС‚ СѓРјРµСЂ, СѓРґР°Р»РёС‚СЊ РёР· ambush groups
 					if ( !IsValidObj( pObject ) )
 					{
 						ambushUnits.erase( nUniqueId );
@@ -536,10 +536,10 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 		command.nObjectID, command.fNumber ) );
 	Singleton<IGameTimer>()->Pause( true, 0 );*/
 
-	// т.к. часть юнитов может исчезнуть, например, когда один из игроков в multiplayer вышел
+	// С‚.Рє. С‡Р°СЃС‚СЊ СЋРЅРёС‚РѕРІ РјРѕР¶РµС‚ РёСЃС‡РµР·РЅСѓС‚СЊ, РЅР°РїСЂРёРјРµСЂ, РєРѕРіРґР° РѕРґРёРЅ РёР· РёРіСЂРѕРєРѕРІ РІ multiplayer РІС‹С€РµР»
  	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
 	{
-		// пойти с сохранением относительной позиции
+		// РїРѕР№С‚Рё СЃ СЃРѕС…СЂР°РЅРµРЅРёРµРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕР№ РїРѕР·РёС†РёРё
 		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO || 
 					command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE || 
 					command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
@@ -582,14 +582,14 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 			DebugTrace( str.c_str() );
 		}
 */
-		// этот рандом вызывать нужно независимо от command.bFromAI - для правильной работы 
-		// мультиплера
+		// СЌС‚РѕС‚ СЂР°РЅРґРѕРј РІС‹Р·С‹РІР°С‚СЊ РЅСѓР¶РЅРѕ РЅРµР·Р°РІРёСЃРёРјРѕ РѕС‚ command.bFromAI - РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ СЂР°Р±РѕС‚С‹ 
+		// РјСѓР»СЊС‚РёРїР»РµСЂР°
 		if ( groupUnits.GetSize(wGroup) != 0 )
 		{
 			int nRandom = NRandom::Random( groupUnits.GetSize(wGroup) );
 			if ( !command.bFromAI )
 			{
-				// выбрать по рандому юнит, который будет говорить аск на подтверждение команды
+				// РІС‹Р±СЂР°С‚СЊ РїРѕ СЂР°РЅРґРѕРјСѓ СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ РіРѕРІРѕСЂРёС‚СЊ Р°СЃРє РЅР° РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РєРѕРјР°РЅРґС‹
 				groups[nRandom]->SendAcknowledgement( ACK_POSITIVE, true );
 			}
 		}
@@ -605,7 +605,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const WORD wGroup, bo
 				pCommand->AddUnit( pUnit );
 			}
 
-			//выравнивание скорости только для команд ACTION_COMMAND_MOVE_TO и ACTION_COMMAND_SWARM_TO
+			//РІС‹СЂР°РІРЅРёРІР°РЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё С‚РѕР»СЊРєРѕ РґР»СЏ РєРѕРјР°РЅРґ ACTION_COMMAND_MOVE_TO Рё ACTION_COMMAND_SWARM_TO
 			if ( NGlobal::GetVar( "adjust_group_speed", 0 ) )
 			{
 				float fDesGroupSpeed = -1.0f;
@@ -711,30 +711,30 @@ void CGroupLogic::Segment()
 	const NTimer::STime roundedCurTime = curTime - curTime % SConsts::AI_SEGMENT_DURATION;
 	_control87( _RC_NEAR, _MCW_RC );
 
-	// states юнитов
+	// states СЋРЅРёС‚РѕРІ
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[0], (CStateSegments*)0 );
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[1], (CStateSegments*)0 );
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, freezeUnits, (CFreezeSegments*)0 );
 
-	// взрывы
+	// РІР·СЂС‹РІС‹
 	theShellsStore.Segment();
 
-	// скорости юнитов в follow
+	// СЃРєРѕСЂРѕСЃС‚Рё СЋРЅРёС‚РѕРІ РІ follow
 	SegmentFollowingUnits();
 
-	// поиск коллизий
+	// РїРѕРёСЃРє РєРѕР»Р»РёР·РёР№
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, firstPathUnits, (CFirstPathSegments*)0 );
 	theScanLimiter.SegmentsFinished();
 
-	// обработка застрявших из-за коллизий юнитов (это обрабатывается в CBasePathUnit::FirstSegment)
+	// РѕР±СЂР°Р±РѕС‚РєР° Р·Р°СЃС‚СЂСЏРІС€РёС… РёР·-Р·Р° РєРѕР»Р»РёР·РёР№ СЋРЅРёС‚РѕРІ (СЌС‚Рѕ РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚СЃСЏ РІ CBasePathUnit::FirstSegment)
 	// NSegmObjs::SegmentWOMove( lastSegmTime, roundedCurTime, secondPathUnits, (CStayTimeSegments*)0 );
-	// нефига перебирать каждый юнит, будем вызывать в сегменте самого юнита
+	// РЅРµС„РёРіР° РїРµСЂРµР±РёСЂР°С‚СЊ РєР°Р¶РґС‹Р№ СЋРЅРёС‚, Р±СѓРґРµРј РІС‹Р·С‹РІР°С‚СЊ РІ СЃРµРіРјРµРЅС‚Рµ СЃР°РјРѕРіРѕ СЋРЅРёС‚Р°
 	//StayTimeSegment();
 
-	// обработка коллизий
+	// РѕР±СЂР°Р±РѕС‚РєР° РєРѕР»Р»РёР·РёР№
 	pCollisionsCollector->HandOutCollisions( GetAIMap() );
 
-	// движение юнитов вдоль пути
+	// РґРІРёР¶РµРЅРёРµ СЋРЅРёС‚РѕРІ РІРґРѕР»СЊ РїСѓС‚Рё
 	// inside CSecondPathSegments there is Float2Int is used, so we have to set processor control word
 	NSegmObjs::Segment( lastSegmTime, roundedCurTime, secondPathUnits, (CSecondPathSegments*)0 );
 
@@ -780,7 +780,7 @@ void CGroupLogic::UnregisterPathSegments( CAIUnit *pUnit )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 {
-	// -1 - нет точки, 0 - cmd.vPos, 1 - центр юнита GetObjectByCmd( cmd ), 2 - центр статич. объекта GetObjectByCmd( cmd )
+	// -1 - РЅРµС‚ С‚РѕС‡РєРё, 0 - cmd.vPos, 1 - С†РµРЅС‚СЂ СЋРЅРёС‚Р° GetObjectByCmd( cmd ), 2 - С†РµРЅС‚СЂ СЃС‚Р°С‚РёС‡. РѕР±СЉРµРєС‚Р° GetObjectByCmd( cmd )
 	int nType = -1;
 
 	switch ( cmd.nCmdType )

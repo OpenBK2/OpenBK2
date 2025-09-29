@@ -17,16 +17,16 @@ namespace NDb
 class CQueueUnit
 {
 	
-	// деки команд
+	// РґРµРєРё РєРѕРјР°РЅРґ
 	static CDecksSet< CObj<CAICommand> > cmds;
 
 	ZDATA
-	// состояние
+	// СЃРѕСЃС‚РѕСЏРЅРёРµ
 	CObj<IUnitState> pState;
 
-	bool bCmdFinished; // состояние само завершилось
+	bool bCmdFinished; // СЃРѕСЃС‚РѕСЏРЅРёРµ СЃР°РјРѕ Р·Р°РІРµСЂС€РёР»РѕСЃСЊ
 
-	CObj<CAICommand> pCmdCurrent; // текущая команда, выполняемая этим юнитом
+	CObj<CAICommand> pCmdCurrent; // С‚РµРєСѓС‰Р°СЏ РєРѕРјР°РЅРґР°, РІС‹РїРѕР»РЅСЏРµРјР°СЏ СЌС‚РёРј СЋРЅРёС‚РѕРј
 
 	NTimer::STime lastChangeStateTime;
 	
@@ -59,34 +59,34 @@ public:
 	virtual IUnitState* GetState() const { return pState; }
 	virtual void SetCurState( interface IUnitState *pState );
 
-	// текущая команда кладётся в голову очереди, а сверху - pCommand
+	// С‚РµРєСѓС‰Р°СЏ РєРѕРјР°РЅРґР° РєР»Р°РґС‘С‚СЃСЏ РІ РіРѕР»РѕРІСѓ РѕС‡РµСЂРµРґРё, Р° СЃРІРµСЂС…Сѓ - pCommand
 	virtual void InsertUnitCommand( class CAICommand *pCommand );
-	// текущая команда прерывается, а в голову очереди кладётся pCommand
+	// С‚РµРєСѓС‰Р°СЏ РєРѕРјР°РЅРґР° РїСЂРµСЂС‹РІР°РµС‚СЃСЏ, Р° РІ РіРѕР»РѕРІСѓ РѕС‡РµСЂРµРґРё РєР»Р°РґС‘С‚СЃСЏ pCommand
 	virtual void PushFrontUnitCommand( class CAICommand *pCommand );
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 	
 	void SetCommandFinished();
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand ) = 0;
-	// может ли команда быть выполнена, исходя из статов юнита
+	// РјРѕР¶РµС‚ Р»Рё РєРѕРјР°РЅРґР° Р±С‹С‚СЊ РІС‹РїРѕР»РЅРµРЅР°, РёСЃС…РѕРґСЏ РёР· СЃС‚Р°С‚РѕРІ СЋРЅРёС‚Р°
 	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand ) = 0;
 	virtual void NotifyAbilityRun( class CAICommand * pCommand ) = 0;
 
 	void Segment();
 	
-	// возвращает команду, лежащую верхней деке команд
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕРјР°РЅРґСѓ, Р»РµР¶Р°С‰СѓСЋ РІРµСЂС…РЅРµР№ РґРµРєРµ РєРѕРјР°РЅРґ
 	class CAICommand* GetNextCommand() const;
 	class CAICommand* GetLastCommand() const;
 
-	// очистить очередь команд и обнулить текущее состояние
+	// РѕС‡РёСЃС‚РёС‚СЊ РѕС‡РµСЂРµРґСЊ РєРѕРјР°РЅРґ Рё РѕР±РЅСѓР»РёС‚СЊ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
 	void KillStatesAndCmdsInfo();
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) = 0;
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) = 0;
 
-	// в очередь перенести текущую команду pUnit и все команды из его очереди  
+	// РІ РѕС‡РµСЂРµРґСЊ РїРµСЂРµРЅРµСЃС‚Рё С‚РµРєСѓС‰СѓСЋ РєРѕРјР°РЅРґСѓ pUnit Рё РІСЃРµ РєРѕРјР°РЅРґС‹ РёР· РµРіРѕ РѕС‡РµСЂРµРґРё  
 	void InitWCommands( CQueueUnit *pUnit );
 	
 	virtual const NTimer::STime GetNextSegmTime() const { return 0; }
-	// обнулить время, которое проходит между вызовами сегментов у юнита
+	// РѕР±РЅСѓР»РёС‚СЊ РІСЂРµРјСЏ, РєРѕС‚РѕСЂРѕРµ РїСЂРѕС…РѕРґРёС‚ РјРµР¶РґСѓ РІС‹Р·РѕРІР°РјРё СЃРµРіРјРµРЅС‚РѕРІ Сѓ СЋРЅРёС‚Р°
 	virtual void NullSegmTime() { }
 	
 	const NTimer::STime GetLastChangeStateTime() const { return lastChangeStateTime; }

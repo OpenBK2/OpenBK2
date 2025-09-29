@@ -17,7 +17,7 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 	saver.Add( 8, &substTable );
 	saver.Add( 9, &vLimit );
 	saver.Add( 10, &soundIDs );
-	// а теперь самое сложное - звуки
+	// Р° С‚РµРїРµСЂСЊ СЃР°РјРѕРµ СЃР»РѕР¶РЅРѕРµ - Р·РІСѓРєРё
 	saver.Add( 12, &interfaceSounds );
 	saver.Add( 13, &soundCellsInBounds  );
 	// saver.Add( 14, &streamingSounds );
@@ -44,7 +44,7 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CMapSounds::CMapSoundCell::SMapSounds::operator&( IBinSaver &saver  )
 {
-	saver.Add( 2, &instanceIDs ); // это не сериализовать
+	saver.Add( 2, &instanceIDs ); // СЌС‚Рѕ РЅРµ СЃРµСЂРёР°Р»РёР·РѕРІР°С‚СЊ
 	saver.Add( 3, &nCount );
 	return 0;
 }

@@ -176,8 +176,8 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 
 	const NDb::SComplexEffect *pEffectTemp = 0;
   
-	// Идущий дальше фокус нужен нам в M1, потому что мы иначе не умеем передавать pWeapon
-	// Фокус{
+	// РРґСѓС‰РёР№ РґР°Р»СЊС€Рµ С„РѕРєСѓСЃ РЅСѓР¶РµРЅ РЅР°Рј РІ M1, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РјС‹ РёРЅР°С‡Рµ РЅРµ СѓРјРµРµРј РїРµСЂРµРґР°РІР°С‚СЊ pWeapon
+	// Р¤РѕРєСѓСЃ{
 
 	const CDBPtr<NDb::SWeaponRPGStats> *ppWeapon = &pInfShot->pWeapon;
 
@@ -188,7 +188,7 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 
 	const CDBPtr<NDb::SWeaponRPGStats> &pWeapon = *ppWeapon;
 	
-	// Фокус}
+	// Р¤РѕРєСѓСЃ}
 
 	pEffectTemp = pWeapon->shells[ pInfShot->cShell ].pEffectGunFire.GetPtr();
 

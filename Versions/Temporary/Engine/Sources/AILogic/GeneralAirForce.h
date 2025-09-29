@@ -12,7 +12,7 @@ namespace NDb
 class CAIUnit;
 class CEnemyRememberer;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// управляет самолетами и иx вылетом для всей стороны
+// СѓРїСЂР°РІР»СЏРµС‚ СЃР°РјРѕР»РµС‚Р°РјРё Рё Рёx РІС‹Р»РµС‚РѕРј РґР»СЏ РІСЃРµР№ СЃС‚РѕСЂРѕРЅС‹
 class CGeneralAirForce : public CCommander
 {
 	friend class CGeneralAirForceLaunchFighters;
@@ -29,15 +29,15 @@ class CGeneralAirForce : public CCommander
 
 	struct SSupportInfo
 	{
-		CVec2 vPoint;												// куда вызвали
-		int nResistanceCellNumber;					// если вызвали пробомбить точку сопротивления, то > 0
+		CVec2 vPoint;												// РєСѓРґР° РІС‹Р·РІР°Р»Рё
+		int nResistanceCellNumber;					// РµСЃР»Рё РІС‹Р·РІР°Р»Рё РїСЂРѕР±РѕРјР±РёС‚СЊ С‚РѕС‡РєСѓ СЃРѕРїСЂРѕС‚РёРІР»РµРЅРёСЏ, С‚Рѕ > 0
 
 		SSupportInfo() : vPoint( VNULL2 ), nResistanceCellNumber( -1 ) { }
 	};
 
 	ZDATA_(CCommander)
 	int nParty;
-	vector<int> players;							// номера игроков, которые находятся под управлением 
+	vector<int> players;							// РЅРѕРјРµСЂР° РёРіСЂРѕРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ РЅР°С…РѕРґСЏС‚СЃСЏ РїРѕРґ СѓРїСЂР°РІР»РµРЅРёРµРј 
 	CFreeIds requestsID;
 
 	AntiAviation antiAviation;

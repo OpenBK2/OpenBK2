@@ -62,9 +62,9 @@ class CWindowSimpleSharedEditor : public CEditorBase, public CDefaultView, publi
 {
 	//friend class CWindowSimpleSharedState;
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedEditor );
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	vector<SEditorState> states;
 	CPtr<CWindowSimpleSharedController> pUndoController;
 	CPtr<IManipulator> pUndoManipulator;
@@ -90,7 +90,7 @@ public:
 	//IView
 	void RemoveViewManipulator();
 
-	// Создание Undo Operation
+	// РЎРѕР·РґР°РЅРёРµ Undo Operation
 	CWindowSimpleSharedController* CreateUndoController() 
 	{ 
 		return CDefaultView::CreateController<CWindowSimpleSharedController>( static_cast<CWindowSimpleSharedController*>( 0 ) ); 

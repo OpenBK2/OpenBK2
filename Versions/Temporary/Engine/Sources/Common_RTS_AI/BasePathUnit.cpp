@@ -185,8 +185,8 @@ void CBasePathUnit::SetDirection( const WORD _wDirection, const bool bNeedUpdate
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 {
-	//DEBUG{ переодически попадаются "подземные юниты" (с z координатой равной 0). выставлять z координату - 
-	//головная боль тех, кто двигает юнит. полная трехмерность ;-)
+	//DEBUG{ РїРµСЂРµРѕРґРёС‡РµСЃРєРё РїРѕРїР°РґР°СЋС‚СЃСЏ "РїРѕРґР·РµРјРЅС‹Рµ СЋРЅРёС‚С‹" (СЃ z РєРѕРѕСЂРґРёРЅР°С‚РѕР№ СЂР°РІРЅРѕР№ 0). РІС‹СЃС‚Р°РІР»СЏС‚СЊ z РєРѕРѕСЂРґРёРЅР°С‚Сѓ - 
+	//РіРѕР»РѕРІРЅР°СЏ Р±РѕР»СЊ С‚РµС…, РєС‚Рѕ РґРІРёРіР°РµС‚ СЋРЅРёС‚. РїРѕР»РЅР°СЏ С‚СЂРµС…РјРµСЂРЅРѕСЃС‚СЊ ;-)
 	//if ( _vCenter.z <= 0.1f )
 	//	DebugTrace( "WARNING: undeground position !!!" );
 	//DEBUG}
@@ -290,7 +290,7 @@ const bool CBasePathUnit::TurnToDirection( const WORD _wDirection, const bool bC
 	}
 	else
 	{
-		// начало поворота или поворот к другому направлению
+		// РЅР°С‡Р°Р»Рѕ РїРѕРІРѕСЂРѕС‚Р° РёР»Рё РїРѕРІРѕСЂРѕС‚ Рє РґСЂСѓРіРѕРјСѓ РЅР°РїСЂР°РІР»РµРЅРёСЋ
 		if ( !bTurning || _wDirection != wLastDirection )
 		{
 			if ( bCanBackward && bCanForward )
@@ -449,7 +449,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 	WORD wFinalDir = GetDirectionByVector( vDir );
 	const WORD wFinalDirBack = wFinalDir + 32768;
 
-	// если выгоднее ехать задом
+	// РµСЃР»Рё РІС‹РіРѕРґРЅРµРµ РµС…Р°С‚СЊ Р·Р°РґРѕРј
 	if ( bCanGoBackward && DirsDifference( GetFrontDirection(), wFinalDirBack ) < DirsDifference( GetFrontDirection(), wFinalDir ) )
 		wFinalDir = wFinalDirBack;
 
@@ -678,7 +678,7 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 		}
 		bNotified = bMaxSlowed = bMinSlowed = false;
 
-		// сдвинулись
+		// СЃРґРІРёРЅСѓР»РёСЃСЊ
 		if ( GetCenterPlain() != vOldCenter || GetFrontDirection() != oldDir )
 			stayTime = 0;
 		else
@@ -779,7 +779,7 @@ IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const
 const bool CBasePathUnit::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn )
 {
 	bool bResult = true;
-	// чтобы удалилось
+	// С‡С‚РѕР±С‹ СѓРґР°Р»РёР»РѕСЃСЊ
 	CPtr<IStaticPath> pTempPath = pStaticPath;
 	NI_VERIFY( pStaticPath, "NULL Static Path passed", bResult = false );
 	if ( CanMoveCritical() && bResult )
@@ -822,7 +822,7 @@ const bool CBasePathUnit::SendAlongPath( IPath *pPath )
 {
 	bool bResult = false;
 
-	// чтобы удалилось
+	// С‡С‚РѕР±С‹ СѓРґР°Р»РёР»РѕСЃСЊ
 	CPtr<IPath> pUnitPath = pPath;
 	if ( CanMoveCritical() )
 	{
@@ -1011,8 +1011,8 @@ const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const bool CBasePathUnit::IsValidDirection( const WORD _wDirection )
 {
-	// GetUnitProfile использует GetFrontDirectionVector для вычисления профайла ПРЯМОУГОЛЬНЫХ юнитов.
-	// это значение не меняется, то есть для ПРЯМОУГОЛЬНЫХ юнитов проверяется валидность текущей позиции, а не запрашиваемой
+	// GetUnitProfile РёСЃРїРѕР»СЊР·СѓРµС‚ GetFrontDirectionVector РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРѕС„Р°Р№Р»Р° РџР РЇРњРћРЈР“РћР›Р¬РќР«РҐ СЋРЅРёС‚РѕРІ.
+	// СЌС‚Рѕ Р·РЅР°С‡РµРЅРёРµ РЅРµ РјРµРЅСЏРµС‚СЃСЏ, С‚Рѕ РµСЃС‚СЊ РґР»СЏ РџР РЇРњРћРЈР“РћР›Р¬РќР«РҐ СЋРЅРёС‚РѕРІ РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РІР°Р»РёРґРЅРѕСЃС‚СЊ С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё, Р° РЅРµ Р·Р°РїСЂР°С€РёРІР°РµРјРѕР№
 	const WORD wTempDirection( wDirection );
 
 	wDirection = _wDirection;

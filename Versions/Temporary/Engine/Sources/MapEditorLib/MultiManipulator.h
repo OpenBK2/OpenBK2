@@ -36,26 +36,26 @@ class CMultiManipulator : public IManipulator
 	bool CheckMultiValue( const string &rszName, const CVariant &rValue, bool *pResult ) const;
 
 public:
-	// Конструирование манипулятора 
+	// РљРѕРЅСЃС‚СЂСѓРёСЂРѕРІР°РЅРёРµ РјР°РЅРёРїСѓР»СЏС‚РѕСЂР° 
 	CMultiManipulator() : pActiveManipulator( 0 ), pPropertyDescManipulator( 0 ), pFirstManipulator( 0 ) {}
 
-	// Добавить манипулятор в список
+	// Р”РѕР±Р°РІРёС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РІ СЃРїРёСЃРѕРє
 	void InsertManipulator( const CDBID &rDBID, IManipulator* pManipulator, bool bActive, bool bPropertyDesc );
-	// Удалить манипулятор из списка
+	// РЈРґР°Р»РёС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РёР· СЃРїРёСЃРєР°
 	void RemoveManipulator( const CDBID &rDBID );
-	// установить активный манипулятор
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ Р°РєС‚РёРІРЅС‹Р№ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ
 	bool SetActiveManipulator( const CDBID &rDBID );
-	// установить манипулятор у которого будут опрашивать свойства полей
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ Сѓ РєРѕС‚РѕСЂРѕРіРѕ Р±СѓРґСѓС‚ РѕРїСЂР°С€РёРІР°С‚СЊ СЃРІРѕР№СЃС‚РІР° РїРѕР»РµР№
 	bool SetPropertyDescManipulator( const CDBID &rDBID );
 	//
 	int IsEmpty() { return manipulatorMap.empty(); }
-	// вернуть текущий активный манипулятор
+	// РІРµСЂРЅСѓС‚СЊ С‚РµРєСѓС‰РёР№ Р°РєС‚РёРІРЅС‹Р№ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ
 	inline const CDBID& GetActiveDBID() { return activeDBID; }
 	inline IManipulator* GetActiveManipulator() { return pActiveManipulator; }
-	// вернуть текущий активный манипулятор
+	// РІРµСЂРЅСѓС‚СЊ С‚РµРєСѓС‰РёР№ Р°РєС‚РёРІРЅС‹Р№ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ
 	inline const CDBID& GetPropertyDescDBID() { return propertyDescDBID; }
 	inline IManipulator* GetPropertyDescManipulator() { return pPropertyDescManipulator; }
-	// вернуть манипулятор, который определяет ID и прочее (при отсутствии первых двух )
+	// РІРµСЂРЅСѓС‚СЊ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ, РєРѕС‚РѕСЂС‹Р№ РѕРїСЂРµРґРµР»СЏРµС‚ ID Рё РїСЂРѕС‡РµРµ (РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РїРµСЂРІС‹С… РґРІСѓС… )
 	inline IManipulator* GetFirstManipulator() { return pFirstManipulator; }
 
 	// IManipulator

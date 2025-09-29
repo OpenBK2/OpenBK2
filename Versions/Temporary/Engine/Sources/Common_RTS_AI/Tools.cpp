@@ -22,7 +22,7 @@ void CBSpline::Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CV
 	c = 1.0f/6.0f * ( -3 * p3 + 3 * p1 );
 	d = 1.0f/6.0f * ( p3 + 4 * p2 + p1 );
 
-	// для построения сплайна
+	// РґР»СЏ РїРѕСЃС‚СЂРѕРµРЅРёСЏ СЃРїР»Р°Р№РЅР°
 	d3x = a * sqr( DELTA ) * DELTA;
 	dx = d3x + b * sqr( DELTA );
 	d2x = 2 * ( 2 * d3x + dx );
@@ -30,7 +30,7 @@ void CBSpline::Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CV
 	d3x *= 6;
 	x = d;
 
-	// для просмотра вперёд
+	// РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР° РІРїРµСЂС‘Рґ
 	fw_d3x = a * sqr( DELTA_FORWARD ) * DELTA_FORWARD;
 	fw_dx = fw_d3x + b * sqr( DELTA_FORWARD );
 	fw_d2x = 2 * ( 2 * fw_d3x + fw_dx );

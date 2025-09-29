@@ -50,7 +50,7 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 		wResultDir = wDirToEnemy + wRandomAngle;
 
 	float fRandomDist;
-	// ползти
+	// РїРѕР»Р·С‚Рё
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.7f )
 	{
 		fRandomDist = NRandom::Random( float( 0.4f * SConsts::TILE_SIZE ), float( 2.0f * SConsts::TILE_SIZE ) );
@@ -66,7 +66,7 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 
 	if ( CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( vPointToRunUp, VNULL2, pOwner, true, GetAIMap() ) )
 	{
-		// путь не слишком длинный и конечная точка не слишком далека от нужной нам
+		// РїСѓС‚СЊ РЅРµ СЃР»РёС€РєРѕРј РґР»РёРЅРЅС‹Р№ Рё РєРѕРЅРµС‡РЅР°СЏ С‚РѕС‡РєР° РЅРµ СЃР»РёС€РєРѕРј РґР°Р»РµРєР° РѕС‚ РЅСѓР¶РЅРѕР№ РЅР°Рј
 		if ( ( bForceStaying && pStaticPath->GetLength() <= 5 ||
  				   !bForceStaying && pStaticPath->GetLength() <= 3 ) &&
 				 fabs2( pStaticPath->GetFinishPoint() - vPointToRunUp ) < sqr( 3.0f * SConsts::TILE_SIZE / 4.0f ) )

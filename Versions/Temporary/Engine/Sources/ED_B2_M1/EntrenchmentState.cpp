@@ -272,7 +272,7 @@ CEntrenchmentDesignTool::CEntrenchmentDesignTool()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEntrenchmentDesignTool::Clear()
 { 
-	// половина острого угла в модели Arc (15градусов)
+	// РїРѕР»РѕРІРёРЅР° РѕСЃС‚СЂРѕРіРѕ СѓРіР»Р° РІ РјРѕРґРµР»Рё Arc (15РіСЂР°РґСѓСЃРѕРІ)
 	const float F_ARC_ANGLE = (15.0f * FP_2PI)/360.0f;
 	fArcDeltaAngle = F_ARC_ANGLE;
 	segments.clear();
@@ -356,17 +356,17 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 
 	if ( nSegIndex == 0 && segments[nSegIndex] == ST_TERMINATOR )
 	{
-		// начальный терминатор
+		// РЅР°С‡Р°Р»СЊРЅС‹Р№ С‚РµСЂРјРёРЅР°С‚РѕСЂ
 		return fAngle;
 	}
 
-	ESegType ePrevSegType = ST_TERMINATOR; // начальный терминатор
+	ESegType ePrevSegType = ST_TERMINATOR; // РЅР°С‡Р°Р»СЊРЅС‹Р№ С‚РµСЂРјРёРЅР°С‚РѕСЂ
 
 	for ( int i = 1; i <= nSegIndex; ++i )
 	{
-		// при переходе от линейного сегмента к поворотному направление меняется на 15 градусов
-		// при последовательных поворотных - на 30
-		// и т.д.
+		// РїСЂРё РїРµСЂРµС…РѕРґРµ РѕС‚ Р»РёРЅРµР№РЅРѕРіРѕ СЃРµРіРјРµРЅС‚Р° Рє РїРѕРІРѕСЂРѕС‚РЅРѕРјСѓ РЅР°РїСЂР°РІР»РµРЅРёРµ РјРµРЅСЏРµС‚СЃСЏ РЅР° 15 РіСЂР°РґСѓСЃРѕРІ
+		// РїСЂРё РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅС‹С… РїРѕРІРѕСЂРѕС‚РЅС‹С… - РЅР° 30
+		// Рё С‚.Рґ.
 		ESegType eSegType = segments[i];
 		switch ( eSegType )
 		{
@@ -427,7 +427,7 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 {
-	// позиция начала сегмента
+	// РїРѕР·РёС†РёСЏ РЅР°С‡Р°Р»Р° СЃРµРіРјРµРЅС‚Р°
 
 	if ( nSegIndex < 0 || nSegIndex >= segments.size() )
 		return VNULL3;
@@ -540,12 +540,12 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	segments.resize( nLock + 1 );
 	//
 	CVec3 vLockPos = GetSegPos( nLock, nLock == 0 );
-	CVec3 vLockDir = GetVecDir( GetSegDir( nLock ) );					// направление последнего блокированного сегмента
-	CVec3 dir = p - vLockPos;							// направление от блока к курсору мыши	
+	CVec3 vLockDir = GetVecDir( GetSegDir( nLock ) );					// РЅР°РїСЂР°РІР»РµРЅРёРµ РїРѕСЃР»РµРґРЅРµРіРѕ Р±Р»РѕРєРёСЂРѕРІР°РЅРЅРѕРіРѕ СЃРµРіРјРµРЅС‚Р°
+	CVec3 dir = p - vLockPos;							// РЅР°РїСЂР°РІР»РµРЅРёРµ РѕС‚ Р±Р»РѕРєР° Рє РєСѓСЂСЃРѕСЂСѓ РјС‹С€Рё	
 	//
 	if ( fabs( dir ) <= FLT_EPSILON )
 	{
-		if ( nLock == 0 )									// первый линейный сегмент вращается вокруг первого терминатора
+		if ( nLock == 0 )									// РїРµСЂРІС‹Р№ Р»РёРЅРµР№РЅС‹Р№ СЃРµРіРјРµРЅС‚ РІСЂР°С‰Р°РµС‚СЃСЏ РІРѕРєСЂСѓРі РїРµСЂРІРѕРіРѕ С‚РµСЂРјРёРЅР°С‚РѕСЂР°
 		{
 			segments.push_back( ST_LINE );
 		}
@@ -555,7 +555,7 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	vDirMarker = dir;
 	DebugTrace( "Angle: %g", atan2( dir.y, dir.x ) * 180 / FP_PI );
 
-	if ( nLock == 0 )									// первый линейный сегмент вращается вокруг первого терминатора
+	if ( nLock == 0 )									// РїРµСЂРІС‹Р№ Р»РёРЅРµР№РЅС‹Р№ СЃРµРіРјРµРЅС‚ РІСЂР°С‰Р°РµС‚СЃСЏ РІРѕРєСЂСѓРі РїРµСЂРІРѕРіРѕ С‚РµСЂРјРёРЅР°С‚РѕСЂР°
 	{
 		fStartDir = atan2( dir.y, dir.x ); 
 		vLockDir = dir;
@@ -564,8 +564,8 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 
 	float fDA = AngleDiff( dir, vLockDir );
 
-	int n = fabs( fDA ) / ( 2.0f * fArcDeltaAngle );			// сколько arc-ов нужно добавить, чтобы (приблизительно)
-	// выйти на текущее направление мыши
+	int n = fabs( fDA ) / ( 2.0f * fArcDeltaAngle );			// СЃРєРѕР»СЊРєРѕ arc-РѕРІ РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ, С‡С‚РѕР±С‹ (РїСЂРёР±Р»РёР·РёС‚РµР»СЊРЅРѕ)
+	// РІС‹Р№С‚Рё РЅР° С‚РµРєСѓС‰РµРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РјС‹С€Рё
 	float fSign = fDA < 0 ? -1.0f : 1.0f;
 	for ( int i = 0; i < n; ++i )
 	{
@@ -659,7 +659,7 @@ void CEntrenchmentDesignTool::GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmen
 			sg.eSegType = NDb::EST_TERMINATOR;
 			if ( i == 0 )
 			{
-				// первый терминатор
+				// РїРµСЂРІС‹Р№ С‚РµСЂРјРёРЅР°С‚РѕСЂ
 				sg.fDirAngle += FP_PI;
 				sg.vAABBCenter = -sg.vAABBCenter; 
 			}
@@ -672,7 +672,7 @@ void CEntrenchmentDesignTool::GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmen
 			break;
 		case ST_RIGHT_ARC:
 			sg.eSegType = NDb::EST_ARC;
-			sg.fDirAngle += FP_PI;	// ST_RIGHT_ARC и ST_LEFT_ARC - одна модель но развернутая на 180 град.
+			sg.fDirAngle += FP_PI;	// ST_RIGHT_ARC Рё ST_LEFT_ARC - РѕРґРЅР° РјРѕРґРµР»СЊ РЅРѕ СЂР°Р·РІРµСЂРЅСѓС‚Р°СЏ РЅР° 180 РіСЂР°Рґ.
 			break;
 		}
 		pEntrenchmentElementsInfo->push_back(sg);
@@ -685,7 +685,7 @@ CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
 		return VNULL3;
 
-	// ! модели окопов ориентированы вдоль оси X 
+	// ! РјРѕРґРµР»Рё РѕРєРѕРїРѕРІ РѕСЂРёРµРЅС‚РёСЂРѕРІР°РЅС‹ РІРґРѕР»СЊ РѕСЃРё X 
 	return segAABBSizes[eSegType]; 
 }
 

@@ -116,7 +116,7 @@ void CSoundCell::Update( ISFX * pSFX )
 		{
 			if( sound->IsTimeToFinish() )
 			{
-				if ( 0 == sound->GetID() ) // этим звуком управляет движок
+				if ( 0 == sound->GetID() ) // СЌС‚РёРј Р·РІСѓРєРѕРј СѓРїСЂР°РІР»СЏРµС‚ РґРІРёР¶РѕРє
 				{
 					it = sounds.erase( it );
 					bSomeSoundErased = true;

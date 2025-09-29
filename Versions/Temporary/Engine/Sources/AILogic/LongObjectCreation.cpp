@@ -91,7 +91,7 @@ bool CLongObjectCreation::CanBuildOnRect( SRect r1, const list<SVector> &tilesUn
 	GetUnitsPreventing( r1, &preventing );
 	UnlockPreventingUnits( preventing );
 
-	// теперь проверить, можно ли строить
+	// С‚РµРїРµСЂСЊ РїСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РЅРѕ Р»Рё СЃС‚СЂРѕРёС‚СЊ
 	for ( list<SVector>::const_iterator it = tilesUnder.begin(); it != tilesUnder.end(); ++it )
 	{
 		if ( 0 != GetTerrain()->GetTileLockInfo( *it ) )

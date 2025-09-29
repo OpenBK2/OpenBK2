@@ -687,7 +687,7 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
 	{
 		toStore.push_back( checked_cast<CXmlResource*>(pObject) );
-		storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+		storedObjects[pObject] = true; // РІР°Р¶РЅРѕ РїСЂРёСЃРІРѕРёС‚СЊ С…РѕС‚СЊ С‡С‚Рѕ-РЅРёР±СѓРґСЊ
 	}
 	void *pServerPtr = pObject;
 	DataChunk( 0, &pServerPtr, 4, 0 );

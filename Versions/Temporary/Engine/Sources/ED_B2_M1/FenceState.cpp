@@ -65,7 +65,7 @@ void CFenceState::InsertFence()
 				CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &(*itTE);
 				pSectionInfo->vPosition.z = 0.0f;
 				//
-				// записываем секцию забора в базу и добавляем во внутренние структуры CMapInfoEditor
+				// Р·Р°РїРёСЃС‹РІР°РµРј СЃРµРєС†РёСЋ Р·Р°Р±РѕСЂР° РІ Р±Р°Р·Сѓ Рё РґРѕР±Р°РІР»СЏРµРј РІРѕ РІРЅСѓС‚СЂРµРЅРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ CMapInfoEditor
 				NMapInfoEditor::SObjectCreateInfo objectCreateInfo;
 				objectCreateInfo.vPosition = pSectionInfo->vPosition;
 				objectCreateInfo.fDirection = pSectionInfo->fDirection;
@@ -107,7 +107,7 @@ bool CFenceState::HandleCommand( UINT nCommandID, DWORD dwData )
 	switch( nCommandID ) 
 	{
 	case ID_TOOLS_FIT_TO_GRID:
-		{ // изменена настройка редактора FitToAIGrid
+		{ // РёР·РјРµРЅРµРЅР° РЅР°СЃС‚СЂРѕР№РєР° СЂРµРґР°РєС‚РѕСЂР° FitToAIGrid
 			designTool.Clear();
 			ClearData();
 			ClearScene();
@@ -568,7 +568,7 @@ void CFenceDesignTool::Complete()
 
 	if ( nNumSections == 0 )
 	{
-		nNumSections = 1; // одиночный кусок забора
+		nNumSections = 1; // РѕРґРёРЅРѕС‡РЅС‹Р№ РєСѓСЃРѕРє Р·Р°Р±РѕСЂР°
 	}
 	bComplete = true;		
 }
@@ -603,8 +603,8 @@ void CFenceDesignTool::GetSectionsInfo( vector<SFenceSectionInfo> *pSectionInfo,
 		}
 		//
 		SFenceSectionInfo segInfo;
-		// fRayDir - угол отсчитывается против часовой стрелки от оси OX
-		// fDirection - AI угол - нужно отсчитывать от OY
+		// fRayDir - СѓРіРѕР» РѕС‚СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРё РѕС‚ РѕСЃРё OX
+		// fDirection - AI СѓРіРѕР» - РЅСѓР¶РЅРѕ РѕС‚СЃС‡РёС‚С‹РІР°С‚СЊ РѕС‚ OY
 		segInfo.fDirection = fRayDir - FP_PI2; 
 		//
 		if ( ePlacementMode == NDb::SFenceRPGStats::FENCE_PLACE_STAGGERED )

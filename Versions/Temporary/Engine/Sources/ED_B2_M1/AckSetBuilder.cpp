@@ -351,7 +351,7 @@ bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szExcelFileName;
 	if ( !CManipulatorManager::GetValue( &szExcelFileName, pBuildDataManipulator, "ExcelFile" ) || szExcelFileName.empty() )
 	{
@@ -390,7 +390,7 @@ bool CAcksBuilder::UpdateAckSets( const string &rszAnimationFolder )
 	string szAckSetTypeName = ACK_SET_TYPE_NAME;
 	string szExcelFileName;
 	string szSourceDir;
-	// Получаем имя файла и RootJoint
+	// РџРѕР»СѓС‡Р°РµРј РёРјСЏ С„Р°Р№Р»Р° Рё RootJoint
 	SBuildDataParams buildDataParams;
 	buildDataParams.nFlags = BDF_CHECK_PROPERTIES;
 	buildDataParams.szObjectTypeName = szAckSetTypeName;

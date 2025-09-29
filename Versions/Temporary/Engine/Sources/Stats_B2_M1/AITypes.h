@@ -19,8 +19,8 @@ enum EDiplomacyInfo
 struct SSegment2Trench
 {
 	ZDATA
-		int nSegmentID;													// маленький кусочек 
-		int nEntrenchID;												// весь окоп
+		int nSegmentID;													// РјР°Р»РµРЅСЊРєРёР№ РєСѓСЃРѕС‡РµРє 
+		int nEntrenchID;												// РІРµСЃСЊ РѕРєРѕРї
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSegmentID); f.Add(3,&nEntrenchID); return 0; } private:
 public:
 	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) { }
@@ -53,7 +53,7 @@ struct SShootArea
 	CVec3 vCenter3D;
 	float fMinR, fMaxR;
 
-	// углы задают конус стрельбы - против часовой стрелки
+	// СѓРіР»С‹ Р·Р°РґР°СЋС‚ РєРѕРЅСѓСЃ СЃС‚СЂРµР»СЊР±С‹ - РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРё
 	WORD wStartAngle;
 	WORD wFinishAngle;
 	
@@ -103,7 +103,7 @@ struct SShootArea
 
 struct SShootAreas
 {
-	// выводить - последовательно, накладывая друг на друга, сначала areas[0], потом areas[1] и т.д.
+	// РІС‹РІРѕРґРёС‚СЊ - РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ, РЅР°РєР»Р°РґС‹РІР°СЏ РґСЂСѓРі РЅР° РґСЂСѓРіР°, СЃРЅР°С‡Р°Р»Р° areas[0], РїРѕС‚РѕРј areas[1] Рё С‚.Рґ.
 	list<SShootArea> areas;
 
 	virtual int operator&( interface IBinSaver &saver )

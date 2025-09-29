@@ -353,7 +353,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
 	{
 		toStore.push_back( pObject );
-		storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+		storedObjects[pObject] = true; // РІР°Р¶РЅРѕ РїСЂРёСЃРІРѕРёС‚СЊ С…РѕС‚СЊ С‡С‚Рѕ-РЅРёР±СѓРґСЊ
 	}
 	RawData( &pObject, 4 );
 
@@ -400,7 +400,7 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 	{
 		if ( pObject != 0 )
 		{
-			storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+			storedObjects[pObject] = true; // РІР°Р¶РЅРѕ РїСЂРёСЃРІРѕРёС‚СЊ С…РѕС‚СЊ С‡С‚Рѕ-РЅРёР±СѓРґСЊ
 			externalObjects[ nID ] = pObject;
 		}
 	}

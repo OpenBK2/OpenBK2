@@ -219,7 +219,7 @@ static void GenVertices( vector<SVertex> *pRes, vector<CVec2> *pSecondTex, const
 	int nLMs = lmaps.size();
 	pRes->resize( nLMs * 4 );
 	pSecondTex->resize( pRes->size() );
-	// Создаем общий вертекс буфер, в котором слиты все кусочки
+	// РЎРѕР·РґР°РµРј РѕР±С‰РёР№ РІРµСЂС‚РµРєСЃ Р±СѓС„РµСЂ, РІ РєРѕС‚РѕСЂРѕРј СЃР»РёС‚С‹ РІСЃРµ РєСѓСЃРѕС‡РєРё
 	int iVert = 0;
 	{
 		//CTRect<int> lmRegion = p->GetLMRegion();

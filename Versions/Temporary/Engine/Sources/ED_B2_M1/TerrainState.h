@@ -7,9 +7,9 @@
 class CTerrainEditor;
 class CTerrainState : public CDefaultInputState
 {
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	list<int> effectIDList;
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CTerrainEditor *pTerrainEditor;
 public:
 	CTerrainState( CTerrainEditor *_pCTerrainEditor );

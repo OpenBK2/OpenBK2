@@ -182,7 +182,7 @@ void SMarkerSet::AddMarker( const CVec3 &rPos,
 
 	SMarkerPoint point;
 
-	point.pos = rPos; // в AI координатах
+	point.pos = rPos; // РІ AI РєРѕРѕСЂРґРёРЅР°С‚Р°С…
 
 	if ( bUseOrigin )
 	{

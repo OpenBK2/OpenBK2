@@ -50,7 +50,7 @@ struct SPropellerInfo
 	const bool IsDefined() const { return bScaledDefined && bDynamicDefined; } 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры
+// СЃРґРµР»Р°С‚СЊ РєРѕРїРёСЋ РјРѕРґРµР»Рё, РµСЃР»Рё szOldModelName Рё szNewModelName СЃРѕРІРїР°РґР°СЋС‚, РїСЂРѕСЃС‚Рѕ РѕС‡РёСЃС‚РёС‚СЊ РјРѕРґРµР»СЊ РѕС‚ Р°РЅРёРјР°С†РёРё, РїСЂРѕРїРёСЃР°С‚СЊ РЅРѕРІС‹Рµ RootMesh Рё RootJoint, РїРѕРїСЂР°РІРёС‚СЊ С‚РµРєСЃС‚СѓСЂС‹
 static bool CopyModel( const string &szOldModelName, const string &szNewName, const string &szRootMesh, const int nStartFrame, const int nEndFrame, const float fSpeed )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -64,10 +64,10 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 	{
 		return false;
 	}
-	//удалить анимацию
+	//СѓРґР°Р»РёС‚СЊ Р°РЅРёРјР°С†РёСЋ
 	pModel->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 	
-	//копировать геометрию
+	//РєРѕРїРёСЂРѕРІР°С‚СЊ РіРµРѕРјРµС‚СЂРёСЋ
 	string szGeometry = "";
 	string szGeometryType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Geometry", pModel, &szGeometryType, &szGeometry, 0 ) )
@@ -86,7 +86,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 	if ( !CManipulatorManager::SetValue( szNewName, pModel, "Geometry", true ) )
 		return false;
 
-	//копировать скелет
+	//РєРѕРїРёСЂРѕРІР°С‚СЊ СЃРєРµР»РµС‚
 	string szSkeleton = "";
 	string szSkeletonType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Skeleton", pModel, &szSkeletonType, &szSkeleton, 0 ) )
@@ -102,7 +102,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 		return false;
 	pSkeleton->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
-	//добавляем новую анимацию
+	//РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ Р°РЅРёРјР°С†РёСЋ
 	const string szAnimationName = szNewName + " Rotation";
 	if ( pFolderCallback->IsUniqueName( "AnimB2", szAnimationName ) && !pFolderCallback->InsertObject( "AnimB2", szAnimationName ) )
 		return false;
@@ -130,7 +130,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 	if ( !CManipulatorManager::SetValue( szTypeAndName, pModel, "Animations.[0]", true ) )
 		return false;
 
-	//выставляем материал
+	//РІС‹СЃС‚Р°РІР»СЏРµРј РјР°С‚РµСЂРёР°Р»
 	CPtr<IManipulator> pOldModel = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", szOldModelName );
 	if ( !pOldModel )
 		return false;
@@ -159,7 +159,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 			return false;
 		if ( stricmp( szFileName.substr( szFileName.length()-5, 5 ).c_str(), "1.tga" ) == 0 )
 		{
-			//наш файл, смотрим параметр прозрачности
+			//РЅР°С€ С„Р°Р№Р», СЃРјРѕС‚СЂРёРј РїР°СЂР°РјРµС‚СЂ РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚Рё
 			if ( !bFound )
 			{
 				szMaterialName = szMaterial;
@@ -208,7 +208,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 	return true;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// создать новый VisObj на основе уже существующего, в новом объекте будут новые модели (изменены корневые кости)
+// СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ VisObj РЅР° РѕСЃРЅРѕРІРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ, РІ РЅРѕРІРѕРј РѕР±СЉРµРєС‚Рµ Р±СѓРґСѓС‚ РЅРѕРІС‹Рµ РјРѕРґРµР»Рё (РёР·РјРµРЅРµРЅС‹ РєРѕСЂРЅРµРІС‹Рµ РєРѕСЃС‚Рё)
 static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName, const string &szRootMesh, const int nStartFrame, const int nEndFrame, const float fSpeed )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -225,13 +225,13 @@ static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName
 	if ( !pVisObj )
 		return false;
 
-	//делаем копии моделей, если в оригинальном объекте модель для сезона новая, в новом объекте также будет новая
+	//РґРµР»Р°РµРј РєРѕРїРёРё РјРѕРґРµР»РµР№, РµСЃР»Рё РІ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРј РѕР±СЉРµРєС‚Рµ РјРѕРґРµР»СЊ РґР»СЏ СЃРµР·РѕРЅР° РЅРѕРІР°СЏ, РІ РЅРѕРІРѕРј РѕР±СЉРµРєС‚Рµ С‚Р°РєР¶Рµ Р±СѓРґРµС‚ РЅРѕРІР°СЏ
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 		return false;
 
-	hash_map<string, int> models; // ID модели - на индекс имени в names
-	vector<string> names; // новые имена моделей
+	hash_map<string, int> models; // ID РјРѕРґРµР»Рё - РЅР° РёРЅРґРµРєСЃ РёРјРµРЅРё РІ names
+	vector<string> names; // РЅРѕРІС‹Рµ РёРјРµРЅР° РјРѕРґРµР»РµР№
 
 	for ( int i = 0; i < nModelCount; ++i )
 	{
@@ -268,7 +268,7 @@ static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName
 static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pManipulator, IManipulator* pSrcManipulator )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
-	// исходный манипулятор должен указывать на данные для вертолета (или не должен быть вообще)
+	// РёСЃС…РѕРґРЅС‹Р№ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РґРѕР»Р¶РµРЅ СѓРєР°Р·С‹РІР°С‚СЊ РЅР° РґР°РЅРЅС‹Рµ РґР»СЏ РІРµСЂС‚РѕР»РµС‚Р° (РёР»Рё РЅРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІРѕРѕР±С‰Рµ)
 	/*
 	if ( pSrcManipulator )
 	{
@@ -279,7 +279,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 	}
 	*/
 	
-	// получаем манипулятор на visObj
+	// РїРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° visObj
 	string szVisObjName;
 	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, &szVisObjName, 0 );
 	if ( !pVisObjectManipulator )
@@ -288,17 +288,17 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 	if ( nPathSeparator != string::npos )
 		szVisObjName = szVisObjName.substr( 0, nPathSeparator );
 
-	// получает манипулятор на model
+	// РїРѕР»СѓС‡Р°РµС‚ РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° model
 	CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pVisObjectManipulator, 0 );
 	if ( !pItModel )
 		return false;
 
-	// получаем манипулятор на geometry
+	// РїРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° geometry
 	CPtr<IManipulator> pGeomManipulator = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
 	if ( !pGeomManipulator )
 		return false;
 
-	// вытаскиваем информацию о пропеллерах
+	// РІС‹С‚Р°СЃРєРёРІР°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїСЂРѕРїРµР»Р»РµСЂР°С…
 	CGrannyBoneAttributesList attribs;
 	hash_map<int, SPropellerInfo> propellers;
 	int nPropellersCount = 0;
@@ -320,7 +320,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 	if ( propellers.empty() )
 		return false;
 
-	// перебираем всю анимацию, смотрим какая из них для пропеллера
+	// РїРµСЂРµР±РёСЂР°РµРј РІСЃСЋ Р°РЅРёРјР°С†РёСЋ, СЃРјРѕС‚СЂРёРј РєР°РєР°СЏ РёР· РЅРёС… РґР»СЏ РїСЂРѕРїРµР»Р»РµСЂР°
 	attribs.clear();
 	string szModelFileName;
 	if ( !CManipulatorManager::GetValue( &szModelFileName, pGeomManipulator, "SrcName" ) )
@@ -360,7 +360,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 		}
 	}
 
-	// проверка что все пропеллеры есть
+	// РїСЂРѕРІРµСЂРєР° С‡С‚Рѕ РІСЃРµ РїСЂРѕРїРµР»Р»РµСЂС‹ РµСЃС‚СЊ
 	for ( int i = 1; i <= nPropellersCount; ++i )
 	{
 		hash_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
@@ -370,8 +370,8 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 			return false;
 	}
 
-	// похоже что моделька от вертолета ...
-	// создаем специфический тип вертолета (M1UnitHelicopter)
+	// РїРѕС…РѕР¶Рµ С‡С‚Рѕ РјРѕРґРµР»СЊРєР° РѕС‚ РІРµСЂС‚РѕР»РµС‚Р° ...
+	// СЃРѕР·РґР°РµРј СЃРїРµС†РёС„РёС‡РµСЃРєРёР№ С‚РёРї РІРµСЂС‚РѕР»РµС‚Р° (M1UnitHelicopter)
 	if ( pFolderCallback->IsUniqueName( "M1UnitHelicopter", rszObjectName ) && !pFolderCallback->InsertObject( "M1UnitHelicopter", rszObjectName ) )
 	{
 		return false;
@@ -416,7 +416,7 @@ bool CMechUnitRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 	NI_ASSERT( pszDescription != 0, "CMechUnitRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
 	
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
 	{
@@ -477,7 +477,7 @@ bool CMechUnitRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	{
 		return false;
 	}
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	string szVisualObject;
 	string szDBType;
 	string szSource;
@@ -499,12 +499,12 @@ bool CMechUnitRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 				CManipulatorManager::CloneDBManipulator( pMechUnitRPGStatsManipulator, pSourceMechUnitRPGStatsManipulator, true );
 			}
 		}
-		// Проставляем основные параметры
+		// РџСЂРѕСЃС‚Р°РІР»СЏРµРј РѕСЃРЅРѕРІРЅС‹Рµ РїР°СЂР°РјРµС‚СЂС‹
 		bResult = bResult && pMechUnitRPGStatsManipulator->SetValue( "GameType", string( "SGVOGT_UNIT" ) );
 		bResult = bResult && pMechUnitRPGStatsManipulator->SetValue( "DBtype", szDBType );
 		bResult = bResult && pMechUnitRPGStatsManipulator->SetValue( "visualObject", szVisualObject );
 
-		// Может это вертолет ???
+		// РњРѕР¶РµС‚ СЌС‚Рѕ РІРµСЂС‚РѕР»РµС‚ ???
 		TryBuildHelicopter( *pszUniqueObjectName, pMechUnitRPGStatsManipulator, pSourceMechUnitRPGStatsManipulator );
 	}
 	return bResult;

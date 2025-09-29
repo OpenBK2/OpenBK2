@@ -16,19 +16,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CFenceDesignTool
 {
-	bool bEnabled;			// готов к работе
-	bool bComplete;			// больше ничего менять нельзя - можно генерить забор
-	CVec3 vRayOrigin;		// точка начала куска забора
-	float fRayDir;			// направление куска
-	bool bFitToAIGrid;	// привязывать к сетке
-	int nNumSections;		// текущее число число секций 
-	float fSectionLen;	// длина одной секции
+	bool bEnabled;			// РіРѕС‚РѕРІ Рє СЂР°Р±РѕС‚Рµ
+	bool bComplete;			// Р±РѕР»СЊС€Рµ РЅРёС‡РµРіРѕ РјРµРЅСЏС‚СЊ РЅРµР»СЊР·СЏ - РјРѕР¶РЅРѕ РіРµРЅРµСЂРёС‚СЊ Р·Р°Р±РѕСЂ
+	CVec3 vRayOrigin;		// С‚РѕС‡РєР° РЅР°С‡Р°Р»Р° РєСѓСЃРєР° Р·Р°Р±РѕСЂР°
+	float fRayDir;			// РЅР°РїСЂР°РІР»РµРЅРёРµ РєСѓСЃРєР°
+	bool bFitToAIGrid;	// РїСЂРёРІСЏР·С‹РІР°С‚СЊ Рє СЃРµС‚РєРµ
+	int nNumSections;		// С‚РµРєСѓС‰РµРµ С‡РёСЃР»Рѕ С‡РёСЃР»Рѕ СЃРµРєС†РёР№ 
+	float fSectionLen;	// РґР»РёРЅР° РѕРґРЅРѕР№ СЃРµРєС†РёРё
 
-	CVec3 GetFencePlace( const CVec3 &p );	// ищет центр ближайшего к p тайла (есди bFitToAIGrd == false тогда просто возвращает p)
-	void Complete();												// завершить текущий кусок
+	CVec3 GetFencePlace( const CVec3 &p );	// РёС‰РµС‚ С†РµРЅС‚СЂ Р±Р»РёР¶Р°Р№С€РµРіРѕ Рє p С‚Р°Р№Р»Р° (РµСЃРґРё bFitToAIGrd == false С‚РѕРіРґР° РїСЂРѕСЃС‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ p)
+	void Complete();												// Р·Р°РІРµСЂС€РёС‚СЊ С‚РµРєСѓС‰РёР№ РєСѓСЃРѕРє
 
 public:
-	bool bRay;					// зафиксирована точка начала куска забора или нет
+	bool bRay;					// Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅР° С‚РѕС‡РєР° РЅР°С‡Р°Р»Р° РєСѓСЃРєР° Р·Р°Р±РѕСЂР° РёР»Рё РЅРµС‚
 	CVec3 vLastPos;
 
 	CFenceDesignTool() : bEnabled( false ) {} 
@@ -71,7 +71,7 @@ class CFenceState : public CMapObjectState
 	void InsertFence();
 	void ClearData();
 	//
-	// выбранный для постановки забор
+	// РІС‹Р±СЂР°РЅРЅС‹Р№ РґР»СЏ РїРѕСЃС‚Р°РЅРѕРІРєРё Р·Р°Р±РѕСЂ
 	struct SSelectedFenceInfo
 	{ 
 		string szRPGStatsTypeName;

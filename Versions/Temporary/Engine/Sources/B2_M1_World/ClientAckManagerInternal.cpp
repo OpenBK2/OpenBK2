@@ -278,7 +278,7 @@ void CClientAckManager::AddAcknowledgement( interface IMOUnit *pUnit, const NDb:
 			return;
 	}
 
-	//выяснить какой тип у этого аска
+	//РІС‹СЏСЃРЅРёС‚СЊ РєР°РєРѕР№ С‚РёРї Сѓ СЌС‚РѕРіРѕ Р°СЃРєР°
 	//NI_ASSERT( acksInfo.find( eAck ) != acksInfo.end(), StrFmt( "unredistered Ack %d, ignored", eAck ) );
 	NI_ASSERT( !pUnit->IsRefInvalid(), "added ack from invalid unit" );
 
@@ -302,17 +302,17 @@ void CClientAckManager::AddAcknowledgement( interface IMOUnit *pUnit, const NDb:
 		break;
 	case NDb::ACKT_NEGATIVE:
 		{
-			// найти все позитивы в очереди и убрать.
+			// РЅР°Р№С‚Рё РІСЃРµ РїРѕР·РёС‚РёРІС‹ РІ РѕС‡РµСЂРµРґРё Рё СѓР±СЂР°С‚СЊ.
 			CAckPredicate  pr( NDb::ACKT_POSITIVE, acksInfo, pConsts );
 			CAcks::iterator positives = remove_if( unitAcks[pUnit].acks.begin(), unitAcks[pUnit].acks.end(), pr );
 			if ( positives == unitAcks[pUnit].acks.end() ) 
 			{
-				// ни одного Positive, Negative игнорировать
+				// РЅРё РѕРґРЅРѕРіРѕ Positive, Negative РёРіРЅРѕСЂРёСЂРѕРІР°С‚СЊ
 			}
 			else
 			{
 				unitAcks[pUnit].acks.erase( positives, unitAcks[pUnit].acks.end() );
-				// добавить этот аск в очередь
+				// РґРѕР±Р°РІРёС‚СЊ СЌС‚РѕС‚ Р°СЃРє РІ РѕС‡РµСЂРµРґСЊ
 				unitAcks[pUnit].acks.push_back( ack );
 			}
 		}
@@ -411,12 +411,12 @@ void CClientAckManager::Update( interface ISoundScene *pSoundScene )
 				SAck &addedAck = *ack.acks.begin();
 				const NDb::SAckParameter *pCurrentAskInfo = GetParam( addedAck.eAck );
 
-				// если время для позитивного не пришло
+				// РµСЃР»Рё РІСЂРµРјСЏ РґР»СЏ РїРѕР·РёС‚РёРІРЅРѕРіРѕ РЅРµ РїСЂРёС€Р»Рѕ
 				if ( !pCurrentAskInfo || pCurrentAskInfo->eAckClass == NDb::ACKT_POSITIVE && ack.timeRun > curTime )
 					continue;
 
-				//проверить не запущен ли уже Ack данного типа.
-				// если играется, то звук не запускать.
+				//РїСЂРѕРІРµСЂРёС‚СЊ РЅРµ Р·Р°РїСѓС‰РµРЅ Р»Рё СѓР¶Рµ Ack РґР°РЅРЅРѕРіРѕ С‚РёРїР°.
+				// РµСЃР»Рё РёРіСЂР°РµС‚СЃСЏ, С‚Рѕ Р·РІСѓРє РЅРµ Р·Р°РїСѓСЃРєР°С‚СЊ.
 				if ( acksPresence.find(addedAck.eAck) == acksPresence.end() ||
 					curTime - acksPresence[int(addedAck.eAck)] >= pCurrentAskInfo->nTimeAfterPrevious )
 				{

@@ -86,7 +86,7 @@ void CBuildingEditor::CreateControls()
 		nID = ID_BUILDING_EDITOR_SHORTCUT_PANE_0;
 		if ( wndShortcutBar.Create( pwndShortcutBar, WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
 		{
-			// списки точек
+			// СЃРїРёСЃРєРё С‚РѕС‡РµРє
 			++nID;
 			CDefault3DTabWindow *p3DTabWindow = new CDefault3DTabWindow();
 			if ( wndShortcutBar.AddNewShortcut( p3DTabWindow ) )
@@ -147,12 +147,12 @@ void CBuildingEditor::DestroyControls()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CBuildingEditor::Create()
 {	
-	// грузим файл с установками редактора
+	// РіСЂСѓР·РёРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё СЂРµРґР°РєС‚РѕСЂР°
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 	//
 	Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, editorSettings.bShowShortcutBar, true );
-	// Создаем стейты редактирования
+	// РЎРѕР·РґР°РµРј СЃС‚РµР№С‚С‹ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	if ( pBuildingState == 0 )
 	{
 		pBuildingState = new CBuildingState( this );
@@ -166,7 +166,7 @@ void CBuildingEditor::Destroy()
 		editorSettings.bShowShortcutBar = pwndShortcutBar->IsVisible();
 		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
 	}
-	// Записываем файл с установками (его могли поменять во время работы редактора)
+	// Р—Р°РїРёСЃС‹РІР°РµРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё (РµРіРѕ РјРѕРіР»Рё РїРѕРјРµРЅСЏС‚СЊ РІРѕ РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ СЂРµРґР°РєС‚РѕСЂР°)
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 	//

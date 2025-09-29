@@ -21,7 +21,7 @@ public:
 	void SetUniqueIdForUnits( const int nUniqueID );
 	void SetLink( const int _nLink );
 	const int GetLink() const { return nLink; }
-	// запомнит ли объект в unitsID2Object
+	// Р·Р°РїРѕРјРЅРёС‚ Р»Рё РѕР±СЉРµРєС‚ РІ unitsID2Object
 	void Mem2UniqueIdObjs();
 	const int GetUniqueId() const { return nUniqueID; }
 
@@ -29,23 +29,23 @@ public:
 	static void ClearLinks();
 	static CLinkObject* GetObjectByLink( const int nLink );
 	static void Segment();
-	// падает, если передан некорректный nUniqueID
+	// РїР°РґР°РµС‚, РµСЃР»Рё РїРµСЂРµРґР°РЅ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ nUniqueID
 	static CLinkObject* GetObjectByUniqueId( const int nUniqueID );
 	
-	// возвращает 0, если передан некорректный nUniqueID	
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ 0, РµСЃР»Рё РїРµСЂРµРґР°РЅ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ nUniqueID	
 	static CLinkObject* GetObjectByUniqueIdSafe( const int nUniqueID );
 	
 	//
 	static bool IsLinkObjectExists( const int nUniqueID );
 	
-	// даёт nSize свободных линков
+	// РґР°С‘С‚ nSize СЃРІРѕР±РѕРґРЅС‹С… Р»РёРЅРєРѕРІ
 	static void GetFreeLinks( list<int> *pLinks, const int nSize );
 	
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// возвращает 0, если передан некорректный nUniqueID	
+// РІРѕР·РІСЂР°С‰Р°РµС‚ 0, РµСЃР»Рё РїРµСЂРµРґР°РЅ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ nUniqueID	
 template<class T>
 inline T* GetObjectByUniqueIdSafe( const int nUniqueID )
 {

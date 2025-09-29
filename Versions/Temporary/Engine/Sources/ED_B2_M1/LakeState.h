@@ -13,7 +13,7 @@ class CLakeState : public CVSOStateEx
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CLakeState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
 	{
 		NI_ASSERT( _pParentState != 0, "CLakeState(): Invalid parameter: _pParentState == 0" );

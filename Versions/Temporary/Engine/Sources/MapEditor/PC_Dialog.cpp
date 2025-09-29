@@ -102,13 +102,13 @@ BOOL CPCDialog::OnInitDialog()
 	CString strHeaderName;
 	tree.MoveWindow( CRect( 0, 0, 0, 0 ) ); //disable visual errors in stingray tree 
 	
-	// первая колонка уже существует
+	// РїРµСЂРІР°СЏ РєРѕР»РѕРЅРєР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 	strHeaderName.LoadString( PC_TREE_COLUMN_NAME[0] );
 	tree.SetColumnHeading( 0, strHeaderName );
 	tree.SetColumnFormat( 0, PC_TREE_COLUMN_FORMAT[0] );
 	tree.SetColumnWidth( 0, ( resizeDialogOptions.nParameters[0] > 0 ) ? resizeDialogOptions.nParameters[0] : PC_TREE_COLUMN_WIDTH[0] );
 	tree.SetColumnImage( 0, 0 );
-	// вставляем другие колонки
+	// РІСЃС‚Р°РІР»СЏРµРј РґСЂСѓРіРёРµ РєРѕР»РѕРЅРєРё
 	for ( int index = 1; index < PC_TREE_COLUMN_COUNT; ++index )
 	{
 		strHeaderName.LoadString( PC_TREE_COLUMN_NAME[index] );

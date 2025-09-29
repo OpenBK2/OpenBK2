@@ -48,7 +48,7 @@ CSquadEditor::~CSquadEditor()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CSquadEditor::Create()
 {
-	// Сначало грузим файл с установками редактора
+	// РЎРЅР°С‡Р°Р»Рѕ РіСЂСѓР·РёРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё СЂРµРґР°РєС‚РѕСЂР°
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
@@ -56,7 +56,7 @@ void CSquadEditor::Create()
 	//
 	Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, editorSettings.bShowShortcutBar, true );
 
-	// Создаем стейты редактирования
+	// РЎРѕР·РґР°РµРј СЃС‚РµР№С‚С‹ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	if ( pSquadState == 0 )
 	{
 		pSquadState = new CSquadState( this );
@@ -70,7 +70,7 @@ void CSquadEditor::Destroy()
 		editorSettings.bShowShortcutBar = pwndShortcutBar->IsVisible();
 		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
 	}
-	// Записываем файл с установками (его могли поменять во время работы редактора)
+	// Р—Р°РїРёСЃС‹РІР°РµРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё (РµРіРѕ РјРѕРіР»Рё РїРѕРјРµРЅСЏС‚СЊ РІРѕ РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ СЂРµРґР°РєС‚РѕСЂР°)
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
@@ -104,7 +104,7 @@ void CSquadEditor::ReloadTerrain()
 {
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	NEditor::LoadBgMap( "SEASON_SUMMER", string(), 0 );
-	// точку куда смотрит камера будем использовать как центр для постановки взвода
+	// С‚РѕС‡РєСѓ РєСѓРґР° СЃРјРѕС‚СЂРёС‚ РєР°РјРµСЂР° Р±СѓРґРµРј РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєР°Рє С†РµРЅС‚СЂ РґР»СЏ РїРѕСЃС‚Р°РЅРѕРІРєРё РІР·РІРѕРґР°
 	vSquadCenterPos = Camera()->GetAnchor();
 	Vis2AI( &vSquadCenterPos );
 	vSquadCenterPos.z = GetTerrainHeight( vSquadCenterPos.x, vSquadCenterPos.y );
@@ -158,7 +158,7 @@ void CSquadEditor::CreateControls()
 		nID = ID_SQUAD_EDITOR_SHORTCUT_PANE_0;
 		if ( wndShortcutBar.Create( pwndShortcutBar, WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
 		{
-			// список типов формаций
+			// СЃРїРёСЃРѕРє С‚РёРїРѕРІ С„РѕСЂРјР°С†РёР№
 			++nID;
 			CDefault3DTabWindow *p3DTabWindow = new CDefault3DTabWindow();
 			if ( wndShortcutBar.AddNewShortcut( p3DTabWindow ) )

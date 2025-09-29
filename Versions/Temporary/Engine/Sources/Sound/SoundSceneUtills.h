@@ -2,7 +2,7 @@
 
 #include "IntPair.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для Hash таблицы
+// РґР»СЏ Hash С‚Р°Р±Р»РёС†С‹
 struct SIntThreeHash
 {
 	size_t operator() ( const struct SIntThree &v ) const;
@@ -17,15 +17,15 @@ struct SUpdatedCell
 		: vCell( vCell ), nFormerRadius( nFormerRadius ), nNewRadius( nNewRadius ) {  }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для сортировки звуков по времени старта
+// РґР»СЏ СЃРѕСЂС‚РёСЂРѕРІРєРё Р·РІСѓРєРѕРІ РїРѕ РІСЂРµРјРµРЅРё СЃС‚Р°СЂС‚Р°
 class CSoundStartTimePredicate
 {
 public:
 	bool operator()( class CSound* one, class CSound *two ) const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//для поиска звуков, начало которых лежит не дальше, чем timeDelta
-// от timeBase
+//РґР»СЏ РїРѕРёСЃРєР° Р·РІСѓРєРѕРІ, РЅР°С‡Р°Р»Рѕ РєРѕС‚РѕСЂС‹С… Р»РµР¶РёС‚ РЅРµ РґР°Р»СЊС€Рµ, С‡РµРј timeDelta
+// РѕС‚ timeBase
 class CSoundsWithinDeltaPredicate
 {
 	NTimer::STime timeToCompare;

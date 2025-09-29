@@ -13,8 +13,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EActionNotify
 {
-	// ( EActionNotify & 1 ) == 1 => идут в UpdateActions
-	// ( EActionNotify & 1 ) == 0 => разбрасvва_тся по различнvм функциям
+	// ( EActionNotify & 1 ) == 1 => РёРґСѓС‚ РІ UpdateActions
+	// ( EActionNotify & 1 ) == 0 => СЂР°Р·Р±СЂР°СЃvРІР°_С‚СЃСЏ РїРѕ СЂР°Р·Р»РёС‡РЅvРј С„СѓРЅРєС†РёСЏРј
 
 	// actions
 	ACTION_NOTIFY_IDLE												= 0x001,
@@ -27,28 +27,28 @@ enum EActionNotify
 	ACTION_NOTIFY_INFANTRY_SHOOT							= 0x170,
 
 	ACTION_NOTIFY_RPG_CHANGED									= 0x030,
-	ACTION_NOTIFY_DIE													= 0x0e1, // умер, update на исчезновение не будет
+	ACTION_NOTIFY_DIE													= 0x0e1, // СѓРјРµСЂ, update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ РЅРµ Р±СѓРґРµС‚
 
 	// Specific soldier actions
 	ACTION_NOTIFY_CRAWL												= 0x031,
 	ACTION_NOTIFY_IDLE_LYING									= 0x041,
 	ACTION_NOTIFY_AIM_LYING										= 0x051,
-	ACTION_NOTIFY_SHOOT_LYING									= 0x050, // только солдатv такое могут
+	ACTION_NOTIFY_SHOOT_LYING									= 0x050, // С‚РѕР»СЊРєРѕ СЃРѕР»РґР°С‚v С‚Р°РєРѕРµ РјРѕРіСѓС‚
 	ACTION_NOTIFY_THROW												= 0x060,
-	ACTION_NOTIFY_DIE_LYING										= 0x061, // умер, update на исчезновение не будет
+	ACTION_NOTIFY_DIE_LYING										= 0x061, // СѓРјРµСЂ, update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ РЅРµ Р±СѓРґРµС‚
 
 	ACTION_NOTIFY_IDLE_TRENCH									= 0x071,
 	ACTION_NOTIFY_AIM_TRENCH									= 0x081,
-	ACTION_NOTIFY_SHOOT_TRENCH								= 0x070, // только солдатv такое могут
-	ACTION_NOTIFY_THROW_TRENCH								= 0x080, // только солдатv такое могут
-	ACTION_NOTIFY_DIE_TRENCH									= 0x090, // умер, update на исчезновение не будет
+	ACTION_NOTIFY_SHOOT_TRENCH								= 0x070, // С‚РѕР»СЊРєРѕ СЃРѕР»РґР°С‚v С‚Р°РєРѕРµ РјРѕРіСѓС‚
+	ACTION_NOTIFY_THROW_TRENCH								= 0x080, // С‚РѕР»СЊРєРѕ СЃРѕР»РґР°С‚v С‚Р°РєРѕРµ РјРѕРіСѓС‚
+	ACTION_NOTIFY_DIE_TRENCH									= 0x090, // СѓРјРµСЂ, update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ РЅРµ Р±СѓРґРµС‚
 
-	ACTION_NOTIFY_SHOOT_BUILDING							=	0x0a0, // только солдатv такое могут
-	ACTION_NOTIFY_THROW_BUILDING							= 0x160, // только солдатv такое могут
-	ACTION_NOTIFY_DIE_BUILDING								=	0x0b0, // умер, update на исчезновение не будет
+	ACTION_NOTIFY_SHOOT_BUILDING							=	0x0a0, // С‚РѕР»СЊРєРѕ СЃРѕР»РґР°С‚v С‚Р°РєРѕРµ РјРѕРіСѓС‚
+	ACTION_NOTIFY_THROW_BUILDING							= 0x160, // С‚РѕР»СЊРєРѕ СЃРѕР»РґР°С‚v С‚Р°РєРѕРµ РјРѕРіСѓС‚
+	ACTION_NOTIFY_DIE_BUILDING								=	0x0b0, // СѓРјРµСЂ, update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ РЅРµ Р±СѓРґРµС‚
 
 	ACTION_NOTIFY_IDLE_TRANSPORT							= 0x0c1,
-	ACTION_NOTIFY_DIE_TRANSPORT								= 0x0d1, // умер, update на исчезновение не будет
+	ACTION_NOTIFY_DIE_TRANSPORT								= 0x0d1, // СѓРјРµСЂ, update РЅР° РёСЃС‡РµР·РЅРѕРІРµРЅРёРµ РЅРµ Р±СѓРґРµС‚
 
 	// Specific cannonry actions
 	ACTION_NOTIFY_INSTALL_ROTATE							= 0x0181,
@@ -76,9 +76,9 @@ enum EActionNotify
 	ACTION_NOTIFY_NEW_ENTRENCHMENT						= 0x1a0,
 	ACTION_NOTIFY_NEW_FORMATION								= 0x1b0,
 
-	ACTION_NOTIFY_ENTRANCE_STATE							= 0x190,	// войти куда-либо
+	ACTION_NOTIFY_ENTRANCE_STATE							= 0x190,	// РІРѕР№С‚Рё РєСѓРґР°-Р»РёР±Рѕ
 
-	// всяческие support-действия типа постановка/снятие мин, ремонт/перезарядка техники и т.д.
+	// РІСЃСЏС‡РµСЃРєРёРµ support-РґРµР№СЃС‚РІРёСЏ С‚РёРїР° РїРѕСЃС‚Р°РЅРѕРІРєР°/СЃРЅСЏС‚РёРµ РјРёРЅ, СЂРµРјРѕРЅС‚/РїРµСЂРµР·Р°СЂСЏРґРєР° С‚РµС…РЅРёРєРё Рё С‚.Рґ.
 	ACTION_NOTIFY_USE_UP											= 0x091,
 	ACTION_NOTIFY_USE_DOWN										= 0x0a1,
 
@@ -153,7 +153,7 @@ enum EActionNotify
 	ACTION_SET_SELECTION_GROUP								= 0x471,		
 	//ACTION_NOTIFY_RU_STORAGE_AREA						= 0x210,
 	ACTION_NOTIFY_CHANGE_SCENARIO_INDEX				= 0x481,
-	// нужен только для отложеннvх updates
+	// РЅСѓР¶РµРЅ С‚РѕР»СЊРєРѕ РґР»СЏ РѕС‚Р»РѕР¶РµРЅРЅvС… updates
 	ACTION_NOTIFY_FEEDBACK										= 0x491,
 	ACTION_NOTIFY_AVAIL_REINF									= 0x4a1,
 	ACTION_NOTIFY_REINF_POINT									= 0x4b1,
@@ -167,8 +167,8 @@ enum EActionNotify
 	ACTION_NOTIFY_TOGGLE_DAY_NIGHT_WINDOWS		= 0x501,
 	ACTION_NOTIFY_BREAK_WINDOW								= 0x511,
 
-	ACTION_NOTIFY_MODIFY_ENTRANCE_STATE				= 0x512,  // разрешить/запретить вvход
-	ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION	= 0x513, // разрешить/запретить вvход
+	ACTION_NOTIFY_MODIFY_ENTRANCE_STATE				= 0x512,  // СЂР°Р·СЂРµС€РёС‚СЊ/Р·Р°РїСЂРµС‚РёС‚СЊ РІvС…РѕРґ
+	ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION	= 0x513, // СЂР°Р·СЂРµС€РёС‚СЊ/Р·Р°РїСЂРµС‚РёС‚СЊ РІvС…РѕРґ
 
 	ACTION_NOTIFY_KEY_BUILDING_CAPTURED				= 0x520,	// A Key Building changed ownership
 	ACTION_NOTIFY_KEY_BUILDING_LOST						= 0x530,	// A Key Building changed ownership
@@ -177,7 +177,7 @@ enum EActionNotify
 	
 	ACTION_NOTIFY_PARADROP_STARTED						= 0x541,
 
-	ACTION_NOTIFY_DAMAGE										  = 0x600,  // нанести повреждение по определенной точке
+	ACTION_NOTIFY_DAMAGE										  = 0x600,  // РЅР°РЅРµСЃС‚Рё РїРѕРІСЂРµР¶РґРµРЅРёРµ РїРѕ РѕРїСЂРµРґРµР»РµРЅРЅРѕР№ С‚РѕС‡РєРµ
 
 	ACTION_NOTIFY_SCAMERA_RUN									= 0x700,  // script camera
 	ACTION_NOTIFY_SCAMERA_RESET								= 0x701,  // script camera reset

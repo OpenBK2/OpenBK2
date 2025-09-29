@@ -116,7 +116,7 @@ CPolygonState::EMoveType CFieldState::GetMoveType()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CFieldState::PrepareControlPoints( CControlPointList *pControlPointList )
 {
-	// подготовить полигон согласно установленным параметрам
+	// РїРѕРґРіРѕС‚РѕРІРёС‚СЊ РїРѕР»РёРіРѕРЅ СЃРѕРіР»Р°СЃРЅРѕ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј РїР°СЂР°РјРµС‚СЂР°Рј
 	UniquePolygon<CControlPointList, CVec3>( pControlPointList, ( AI_TILE_SIZE * 2.0f ) );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -141,7 +141,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 {
 	if ( eEpdateType == UT_FINISH )
 	{
-		// считываем бинарные данные
+		// СЃС‡РёС‚С‹РІР°РµРј Р±РёРЅР°СЂРЅС‹Рµ РґР°РЅРЅС‹Рµ
 		if ( SEditParameters *pEditParameters = GetEditParameters() )
 		{
 			if ( ( pEditParameters->nFieldIndex >= 0 ) && ( pEditParameters->nFieldIndex < pEditParameters->fieldList.size() ) )
@@ -166,7 +166,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 							polygon.push_back( CVec2( itControlPoint->x, itControlPoint->y ) );
 						}
 						NProgress::IteratePosition();	// 2
-						// заполняем землю
+						// Р·Р°РїРѕР»РЅСЏРµРј Р·РµРјР»СЋ
 						if ( pEditParameters->bFillTerrain )
 						{
 							CArray2D<BYTE> tile2DArray;
@@ -200,7 +200,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 							}
 						}
 						NProgress::IteratePosition();	// 3
-						// заполняем высоты
+						// Р·Р°РїРѕР»РЅСЏРµРј РІС‹СЃРѕС‚С‹
 						if ( pEditParameters->bFillHeights )
 						{
 							SHeightPattern heightPattern;
@@ -233,7 +233,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 							}
 						}
 						NProgress::IteratePosition();	// 4
-						// заполняем объекты
+						// Р·Р°РїРѕР»РЅСЏРµРј РѕР±СЉРµРєС‚С‹
 						if ( pEditParameters->bFillObjects )
 						{
 							CArray2D<BYTE> aiTileMap;
@@ -374,10 +374,10 @@ void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *p
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//сервисная функция, определяет точки вхождения в полигон для слоя сетки
-//возвращает количество элементов в pXPosList
-//лист предствавляет из себя набор пар, - начало и конец отрезков входящих в полигон
-//концы отрезков включаются в полигон, для включения точек
+//СЃРµСЂРІРёСЃРЅР°СЏ С„СѓРЅРєС†РёСЏ, РѕРїСЂРµРґРµР»СЏРµС‚ С‚РѕС‡РєРё РІС…РѕР¶РґРµРЅРёСЏ РІ РїРѕР»РёРіРѕРЅ РґР»СЏ СЃР»РѕСЏ СЃРµС‚РєРё
+//РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ pXPosList
+//Р»РёСЃС‚ РїСЂРµРґСЃС‚РІР°РІР»СЏРµС‚ РёР· СЃРµР±СЏ РЅР°Р±РѕСЂ РїР°СЂ, - РЅР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† РѕС‚СЂРµР·РєРѕРІ РІС…РѕРґСЏС‰РёС… РІ РїРѕР»РёРіРѕРЅ
+//РєРѕРЅС†С‹ РѕС‚СЂРµР·РєРѕРІ РІРєР»СЋС‡Р°СЋС‚СЃСЏ РІ РїРѕР»РёРіРѕРЅ, РґР»СЏ РІРєР»СЋС‡РµРЅРёСЏ С‚РѕС‡РµРє
 int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rPolygon, const CTPoint<int> &rXBounds, CXPosList *pXPosList )
 {
 	NI_ASSERT( pXPosList != 0, "GetPolygonLine(), invalid parameter: pXPosList == 0" );
@@ -502,7 +502,7 @@ bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
-	//проверяем
+	//РїСЂРѕРІРµСЂСЏРµРј
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
 		return false;
@@ -513,10 +513,10 @@ bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 	pTile2DArray->SetSizes( indices.maxx - indices.minx, indices.maxy - indices.miny );
 	pTile2DArray->FillEvery( NO_AFFECTED_TILE );
 	//
-	// создаем список тайлов с весами для каждой оболочки
+	// СЃРѕР·РґР°РµРј СЃРїРёСЃРѕРє С‚Р°Р№Р»РѕРІ СЃ РІРµСЃР°РјРё РґР»СЏ РєР°Р¶РґРѕР№ РѕР±РѕР»РѕС‡РєРё
 	CTileSetWeightVectorList tileSetWeightVectorList;
 	CreateTileSetWeightVectorList( &tileSetWeightVectorList, rField );
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
 	{
 		CXPosList xposList;
@@ -527,7 +527,7 @@ bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 			szIndices += StrFmt( "%d ", xposList[i] );
 		}
 		DebugTrace( "%d: %s", xposList.size(), szIndices.c_str() );
-		// проверяем на четность
+		// РїСЂРѕРІРµСЂСЏРµРј РЅР° С‡РµС‚РЅРѕСЃС‚СЊ
 		if ( ( nCount > 0 ) && ( ( nCount & 0x1 ) == 0 ) )
 		{
 			CXPosList::const_iterator startXPosIterator = xposList.begin();
@@ -564,7 +564,7 @@ bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 					if ( fDistance >= 0 )
 					{
 						fDistance /= fTileSize;
-						//определяем слой
+						//РѕРїСЂРµРґРµР»СЏРµРј СЃР»РѕР№
 						float fWidth = 0.0f;
 						for ( int nShellIndex = 0; nShellIndex < rField.tileShells.size(); ++nShellIndex )
 						{
@@ -640,7 +640,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 																			CFieldDistanceMap *pDistances )
 {
 	NI_ASSERT( pHeightPattern != 0, "FillProfilePattern(): Invalid parameter pHeightPattern == 0" );
-	// приводим в порядок входные данные
+	// РїСЂРёРІРѕРґРёРј РІ РїРѕСЂСЏРґРѕРє РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
 	float fHeight = rField.fHeight;
 	float fPositiveRatio = rField.fPositiveRatio;
 	CTPoint<int> patternSize( rField.patternSize.nMin, rField.patternSize.nMax );
@@ -691,7 +691,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
-	//проверяем
+	//РїСЂРѕРІРµСЂСЏРµРј
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
 		return false;
@@ -706,7 +706,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	pHeightPattern->heights.FillZero();
 	CTRect<int> patternRect( 0, 0, pHeightPattern->heights.GetSizeX(), pHeightPattern->heights.GetSizeY() );
 	//
-	// создаем градиент
+	// СЃРѕР·РґР°РµРј РіСЂР°РґРёРµРЅС‚
 	SGradient gradient;
 	{
 		CArray2D<DWORD> image;
@@ -725,12 +725,12 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 		vector<SHeightPattern>::iterator posPattern = patternList.insert( patternList.end(), SHeightPattern() );
 		posPattern->CreateByGradient( 1.0f, nPatternSize * 2, gradient );
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
 	{
 		CXPosList xposList;
 		int nCount = GetPolygonLine( nYIndex, fTileSize, rPolygon, CTPoint<int>( indices.minx, indices.maxx ), &xposList );
-		// проверяем на четность
+		// РїСЂРѕРІРµСЂСЏРµРј РЅР° С‡РµС‚РЅРѕСЃС‚СЊ
 		if ( ( nCount > 0 ) && ( ( nCount & 0x1 ) == 0 ) )
 		{
 			CXPosList::const_iterator startXPosIterator = xposList.begin();
@@ -766,7 +766,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 					
 					if ( fDistance >= 0 )
 					{
-						// обновляем высоты
+						// РѕР±РЅРѕРІР»СЏРµРј РІС‹СЃРѕС‚С‹
 						fDistance = ( fDistance / fTileSize ) + 0.5f;
 						//
 						const int nPatternIndex = NWin32Random::Random( patternList.size() );
@@ -849,11 +849,11 @@ struct CheckTilesFunctional
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
 template<class TYPE>
-bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границы применимости функционалов
-																		 const SMapObjectInfo *pMapObjectInfo,				//казатель на массив обьектов
-																		 int nMapObjectInfoCount,											//число обьектов
-																		 TYPE &rApplyFunctional,											//функционал
-																		 bool isIgnoreInvalidIndices = false )				//пропускать обьекты за краями карты
+bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+																		 const SMapObjectInfo *pMapObjectInfo,				//РєР°Р·Р°С‚РµР»СЊ РЅР° РјР°СЃСЃРёРІ РѕР±СЊРµРєС‚РѕРІ
+																		 int nMapObjectInfoCount,											//С‡РёСЃР»Рѕ РѕР±СЊРµРєС‚РѕРІ
+																		 TYPE &rApplyFunctional,											//С„СѓРЅРєС†РёРѕРЅР°Р»
+																		 bool isIgnoreInvalidIndices = false )				//РїСЂРѕРїСѓСЃРєР°С‚СЊ РѕР±СЊРµРєС‚С‹ Р·Р° РєСЂР°СЏРјРё РєР°СЂС‚С‹
 {
 	IObjectsDB *pIDB = GetSingleton<IObjectsDB>();
 	if ( !pIDB )
@@ -875,27 +875,27 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границ
 			
 			CTRect<int> indices( start.x, start.y, start.x + rPassability.GetSizeX(), start.y + rPassability.GetSizeY() );
 			int result = ValidateRect( rRect, &indices );
-			//нет ни одного тайла
+			//РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ С‚Р°Р№Р»Р°
 			if ( result < 0 )
 			{
 				if ( isIgnoreInvalidIndices )
 				{
-					//скипаем обьект, переходим к следующему
+					//СЃРєРёРїР°РµРј РѕР±СЊРµРєС‚, РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ
 					continue;
 				}
 				else
 				{
-					//возвращаем ошибку
+					//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 					return false;
 				}
 			}
-			//пассабилити выходит за границы массива
+			//РїР°СЃСЃР°Р±РёР»РёС‚Рё РІС‹С…РѕРґРёС‚ Р·Р° РіСЂР°РЅРёС†С‹ РјР°СЃСЃРёРІР°
 			if ( ( result < 1 ) && !isIgnoreInvalidIndices )
 			{
-				//возвращаем ошибку
+				//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 				return false;
 			}
-			//пробегаем по тайлам
+			//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 			for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 			{
 				for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -951,15 +951,15 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
 											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
-	//проверяем
+	//РїСЂРѕРІРµСЂСЏРµРј
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
 		return false;
 	}
-	// создаем список объектов с весами для каждой оболочки
+	// СЃРѕР·РґР°РµРј СЃРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ СЃ РІРµСЃР°РјРё РґР»СЏ РєР°Р¶РґРѕР№ РѕР±РѕР»РѕС‡РєРё
 	CObjectSetWeightVectorList objectSetWeightVectorList;
 	CreateObjectSetWeightVectorList( &objectSetWeightVectorList, rField );
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	IManipulator *pManipulator = pMapInfoEditor->GetViewManipulator();
 	IEditorScene *pScene = EditorScene();
 	CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
@@ -971,7 +971,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	{
 		CXPosList xposList;
 		int nCount = GetPolygonLine( nYIndex, fTileSize, rPolygon, CTPoint<int>( indices.minx, indices.maxx ), &xposList );
-		// проверяем на четность
+		// РїСЂРѕРІРµСЂСЏРµРј РЅР° С‡РµС‚РЅРѕСЃС‚СЊ
 		if ( ( nCount > 0 ) && ( ( nCount & 0x1 ) == 0 ) )
 		{
 			CXPosList::const_iterator startXPosIterator = xposList.begin();
@@ -1007,7 +1007,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 					if ( fDistance >= 0 )
 					{
 						fDistance /= fTileSize;
-						//определяем слой
+						//РѕРїСЂРµРґРµР»СЏРµРј СЃР»РѕР№
 						float fWidth = 0.0f;
 						for ( int nShellIndex = 0; nShellIndex < rField.objectShells.size(); ++nShellIndex )
 						{
@@ -1031,13 +1031,13 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 												tileMapCheckTiles.isPresent = false;
 												if ( ApplyTilesInObjectsPassability( boundingRect, pHPObjectRPGStats, tileMapCheckTiles ) )
 												{
-													//локаем тайлы обьекта
+													//Р»РѕРєР°РµРј С‚Р°Р№Р»С‹ РѕР±СЊРµРєС‚Р°
 													ApplyTilesInObjectsPassability( boundingRect, pHPObjectRPGStats, tileMapModifyTiles );
 													bAddObject = true;
 												}
 											}
 											/**/
-											//добавляем объект
+											//РґРѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚
 											NMapInfoEditor::SObjectCreateInfo objectCreateInfo;
 											objectCreateInfo.vPosition = vPosition;
 											objectCreateInfo.fDirection = fDirection;

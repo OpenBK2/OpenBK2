@@ -456,7 +456,7 @@ class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHe
 	void SendUnitsToTransport();
 	bool IsAllUnitsInside();
 	void SetTransportToWaitState();
-	// все башни транпорта повёрнуты в default положение
+	// РІСЃРµ Р±Р°С€РЅРё С‚СЂР°РЅРїРѕСЂС‚Р° РїРѕРІС‘СЂРЅСѓС‚С‹ РІ default РїРѕР»РѕР¶РµРЅРёРµ
 	bool IsAllTransportTurretsReturned() const;
 public:
   static IUnitState* Instance( class CFormation *pFormation, class CMilitaryCar *pTransport );
@@ -533,7 +533,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// общий код для Repear, Resupply
+// РѕР±С‰РёР№ РєРѕРґ РґР»СЏ Repear, Resupply
 class CFormationServeUnitState: public IEngineerFormationState
 {
 public:
@@ -599,9 +599,9 @@ protected:
 	};
 	ZDATA
 	EFormationServiceUnitState eState;
-	CPtr<CAITransportUnit> pHomeTransport; //транспорт у которого берутся ресурсы на починку
-	float fWorkAccumulator;								//накопление работы в сегментах
-	float fWorkLeft;											// столько ресурсов взяли с собой солдаты
+	CPtr<CAITransportUnit> pHomeTransport; //С‚СЂР°РЅСЃРїРѕСЂС‚ Сѓ РєРѕС‚РѕСЂРѕРіРѕ Р±РµСЂСѓС‚СЃСЏ СЂРµСЃСѓСЂСЃС‹ РЅР° РїРѕС‡РёРЅРєСѓ
+	float fWorkAccumulator;								//РЅР°РєРѕРїР»РµРЅРёРµ СЂР°Р±РѕС‚С‹ РІ СЃРµРіРјРµРЅС‚Р°С…
+	float fWorkLeft;											// СЃС‚РѕР»СЊРєРѕ СЂРµСЃСѓСЂСЃРѕРІ РІР·СЏР»Рё СЃ СЃРѕР±РѕР№ СЃРѕР»РґР°С‚С‹
 	CPtr<CAIUnit> pPreferredUnit;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pHomeTransport); f.Add(4,&fWorkAccumulator); f.Add(5,&fWorkLeft); f.Add(6,&pPreferredUnit); return 0; }
@@ -618,16 +618,16 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//доходит до юнита и запускает каждому члену отряда данную команду
+//РґРѕС…РѕРґРёС‚ РґРѕ СЋРЅРёС‚Р° Рё Р·Р°РїСѓСЃРєР°РµС‚ РєР°Р¶РґРѕРјСѓ С‡Р»РµРЅСѓ РѕС‚СЂСЏРґР° РґР°РЅРЅСѓСЋ РєРѕРјР°РЅРґСѓ
 class CFormationRepairUnitState : public CFormationServeUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationRepairUnitState );
 	
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
-	CPtr<CAIUnit> pUnitInQuiestion;			//юнит, который нужно обслужить
+	CPtr<CAIUnit> pUnitInQuiestion;			//СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РѕР±СЃР»СѓР¶РёС‚СЊ
 	CPtr<CTank> pTank;
-	CVec2 vPointInQuestion;							//где стоит юнит
+	CVec2 vPointInQuestion;							//РіРґРµ СЃС‚РѕРёС‚ СЋРЅРёС‚
 
 	NTimer::STime lastRepearTime;
 	float fRepCost;
@@ -638,12 +638,12 @@ class CFormationRepairUnitState : public CFormationServeUnitState
 	
 	static bool CheckUnit( CAIUnit *pU, CFormationServeUnitState::CFindUnitPredicate * pPred, const float fResurs, const CVec2 &vCenter );
 public:
-	// первое попавшееся наше хранилище для починки
+	// РїРµСЂРІРѕРµ РїРѕРїР°РІС€РµРµСЃСЏ РЅР°С€Рµ С…СЂР°РЅРёР»РёС‰Рµ РґР»СЏ РїРѕС‡РёРЅРєРё
 	class CFindFirstStorageToRepearPredicate : public CStaticObjects::IEnumStoragesPredicate
 	{
 		bool bHasStor;
 		bool bNotEnoughRu;
-		const float fMaxRu;									// такой запас ресурсов
+		const float fMaxRu;									// С‚Р°РєРѕР№ Р·Р°РїР°СЃ СЂРµСЃСѓСЂСЃРѕРІ
 	public:
 		CFindFirstStorageToRepearPredicate( const float fMaxRu ) : fMaxRu( fMaxRu ), bNotEnoughRu( false ), bHasStor( false ) { }
 		virtual bool OnlyConnected() const { return false; }
@@ -677,12 +677,12 @@ class CFormationResupplyUnitState : public CFormationServeUnitState
 	OBJECT_BASIC_METHODS( CFormationResupplyUnitState );
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
-	CPtr<CAIUnit> pUnitInQuiestion;			//юнит, который нужно обслужить
-	CVec2 vPointInQuestion;							//где стоит юнит
+	CPtr<CAIUnit> pUnitInQuiestion;			//СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РѕР±СЃР»СѓР¶РёС‚СЊ
+	CVec2 vPointInQuestion;							//РіРґРµ СЃС‚РѕРёС‚ СЋРЅРёС‚
 	NTimer::STime lastResupplyTime;
 
-	CPtr<CFormation> pSquadInQuestion; // если юнит, который нужно обслужить - формация, то это она
-	int iCurUnitInFormation; // в данный момент обслуживаем этого солдата
+	CPtr<CFormation> pSquadInQuestion; // РµСЃР»Рё СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РѕР±СЃР»СѓР¶РёС‚СЊ - С„РѕСЂРјР°С†РёСЏ, С‚Рѕ СЌС‚Рѕ РѕРЅР°
+	int iCurUnitInFormation; // РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РѕР±СЃР»СѓР¶РёРІР°РµРј СЌС‚РѕРіРѕ СЃРѕР»РґР°С‚Р°
 	bool bSayAck;							// unit being resupplied must say ack when being resupplied
 	bool bNearTruck;
 
@@ -707,8 +707,8 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_RESUPPLY_UNIT; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// загрузка грузовичка ресурсами 
-// подходят к складу, делают Use, при этом в грузовик поступают ресурсы
+// Р·Р°РіСЂСѓР·РєР° РіСЂСѓР·РѕРІРёС‡РєР° СЂРµСЃСѓСЂСЃР°РјРё 
+// РїРѕРґС…РѕРґСЏС‚ Рє СЃРєР»Р°РґСѓ, РґРµР»Р°СЋС‚ Use, РїСЂРё СЌС‚РѕРј РІ РіСЂСѓР·РѕРІРёРє РїРѕСЃС‚СѓРїР°СЋС‚ СЂРµСЃСѓСЂСЃС‹
 class CBuilding;
 class CFormationLoadRuState: public CFormationServeUnitState
 {
@@ -716,7 +716,7 @@ class CFormationLoadRuState: public CFormationServeUnitState
 	
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
-	CPtr<CBuilding> pStorage;			//из этого хранилища берем ресурсы
+	CPtr<CBuilding> pStorage;			//РёР· СЌС‚РѕРіРѕ С…СЂР°РЅРёР»РёС‰Р° Р±РµСЂРµРј СЂРµСЃСѓСЂСЃС‹
 	NTimer::STime lastResupplyTime;
 	int nEntrance;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFormationServeUnitState*)this); f.Add(2,&pUnit); f.Add(3,&pStorage); f.Add(4,&lastResupplyTime); f.Add(5,&nEntrance); return 0; }
@@ -734,7 +734,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// бегут за транспортом и садятся на ходу.
+// Р±РµРіСѓС‚ Р·Р° С‚СЂР°РЅСЃРїРѕСЂС‚РѕРј Рё СЃР°РґСЏС‚СЃСЏ РЅР° С…РѕРґСѓ.
 class CFormationCatchTransportState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationCatchTransportState );
@@ -746,13 +746,13 @@ class CFormationCatchTransportState : public IUnitState
 	};
 	ZDATA
 	CPtr<CFormation> pUnit;
-	CPtr<CAITransportUnit> pTransportToCatch; //cюда будем запрыгивать
+	CPtr<CAITransportUnit> pTransportToCatch; //cСЋРґР° Р±СѓРґРµРј Р·Р°РїСЂС‹РіРёРІР°С‚СЊ
 
-	list< CPtr<CSoldier> > deleted; // это не сериализовать, заполняется и чистится на 1 сегменте.
+	list< CPtr<CSoldier> > deleted; // СЌС‚Рѕ РЅРµ СЃРµСЂРёР°Р»РёР·РѕРІР°С‚СЊ, Р·Р°РїРѕР»РЅСЏРµС‚СЃСЏ Рё С‡РёСЃС‚РёС‚СЃСЏ РЅР° 1 СЃРµРіРјРµРЅС‚Рµ.
 
 	NTimer::STime timeLastUpdate;
 	CVec2 vEnterPoint;
-	float fResursPerSoldier;							// солдаты, забегая в транспорт могут принести ресурсы
+	float fResursPerSoldier;							// СЃРѕР»РґР°С‚С‹, Р·Р°Р±РµРіР°СЏ РІ С‚СЂР°РЅСЃРїРѕСЂС‚ РјРѕРіСѓС‚ РїСЂРёРЅРµСЃС‚Рё СЂРµСЃСѓСЂСЃС‹
 	ECatchState eState;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTransportToCatch); f.Add(4,&deleted); f.Add(5,&timeLastUpdate); f.Add(6,&vEnterPoint); f.Add(7,&fResursPerSoldier); f.Add(8,&eState); return 0; }
 	void UpdatePath( CSoldier * pSold, const bool bForce = false );
@@ -770,7 +770,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// кладут противотанковый еж
+// РєР»Р°РґСѓС‚ РїСЂРѕС‚РёРІРѕС‚Р°РЅРєРѕРІС‹Р№ РµР¶
 class CFormationPlaceAntitankState : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationPlaceAntitankState );
@@ -843,7 +843,7 @@ class CFormationBuildLongObjectState : public IEngineerFormationState
 	CPtr<CAITransportUnit> pHomeTransport;
 				
 	CPtr<CLongObjectCreation> pCreation;
-	float fCompletion;										// степень готовности данного сегмента
+	float fCompletion;										// СЃС‚РµРїРµРЅСЊ РіРѕС‚РѕРІРЅРѕСЃС‚Рё РґР°РЅРЅРѕРіРѕ СЃРµРіРјРµРЅС‚Р°
 	int nCurrentSegment;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&lastTime); f.Add(5,&unitsPreventing); f.Add(6,&fWorkLeft); f.Add(7,&pHomeTransport); f.Add(8,&pCreation); f.Add(9,&fCompletion); f.Add(10,&nCurrentSegment); return 0; }
 	void SendUnitsAway( list<CPtr<CAIUnit> > *pUnitsPreventing );
@@ -889,7 +889,7 @@ class CFormationBuildEntrenchmentState : public IUnitState
 
 	CObj<CEntrenchmentCreation> pCreation;
 	bool bEndPointSelected;
-	float fCompletion;										// степень готовности
+	float fCompletion;										// СЃС‚РµРїРµРЅСЊ РіРѕС‚РѕРІРЅРѕСЃС‚Рё
 	hash_map<int,CVec2> targetPoints;
 	CVec2 vStartPoint;
 	CVec2 vEndPoint;
@@ -913,7 +913,7 @@ public:
 	void SetEndPoint( const CVec2 &vPos );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// отдать себя в качестве обслуживающей команды
+// РѕС‚РґР°С‚СЊ СЃРµР±СЏ РІ РєР°С‡РµСЃС‚РІРµ РѕР±СЃР»СѓР¶РёРІР°СЋС‰РµР№ РєРѕРјР°РЅРґС‹
 class CFormationCaptureArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationCaptureArtilleryState );
@@ -946,7 +946,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_GUN_CAPTURE; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// обслуживание пушек артиллеристами. эта команда отдается самой пушкой.
+// РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ РїСѓС€РµРє Р°СЂС‚РёР»Р»РµСЂРёСЃС‚Р°РјРё. СЌС‚Р° РєРѕРјР°РЅРґР° РѕС‚РґР°РµС‚СЃСЏ СЃР°РјРѕР№ РїСѓС€РєРѕР№.
 class CFormationGunCrewState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationGunCrewState );
@@ -1015,16 +1015,16 @@ class CFormationGunCrewState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pUnit;
 
-	int nReloadPhaze;											// перезагрузка разделена на несколько фаз
+	int nReloadPhaze;											// РїРµСЂРµР·Р°РіСЂСѓР·РєР° СЂР°Р·РґРµР»РµРЅР° РЅР° РЅРµСЃРєРѕР»СЊРєРѕ С„Р°Р·
 	bool b360DegreesRotate;							// gun has no horisontal constraints
 
-	// состояние пушки ( а также инжекс в массиве vGunners статов у пушки)
+	// СЃРѕСЃС‚РѕСЏРЅРёРµ РїСѓС€РєРё ( Р° С‚Р°РєР¶Рµ РёРЅР¶РµРєСЃ РІ РјР°СЃСЃРёРІРµ vGunners СЃС‚Р°С‚РѕРІ Сѓ РїСѓС€РєРё)
 	EGunServeState eGunState;
 	
-	// подсостояния пушки в режиме Operate
+	// РїРѕРґСЃРѕСЃС‚РѕСЏРЅРёСЏ РїСѓС€РєРё РІ СЂРµР¶РёРјРµ Operate
 	EGunOperateSubState eGunOperateSubState;
 
-	vector< SCrewMember > crew; // места с меньшим номером более приоритетны
+	vector< SCrewMember > crew; // РјРµСЃС‚Р° СЃ РјРµРЅСЊС€РёРј РЅРѕРјРµСЂРѕРј Р±РѕР»РµРµ РїСЂРёРѕСЂРёС‚РµС‚РЅС‹
 
 	CPtr<CArtillery> pArtillery;
 	CDBPtr<SMechUnitRPGStats> pStats;
@@ -1035,22 +1035,22 @@ class CFormationGunCrewState : public IUnitState
 
 	bool bReloadInProgress;
 
-	float fReloadPrice; // цена одной перезарядки
-	float fReloadProgress;	// текущее состояние перезарядки
+	float fReloadPrice; // С†РµРЅР° РѕРґРЅРѕР№ РїРµСЂРµР·Р°СЂСЏРґРєРё
+	float fReloadProgress;	// С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїРµСЂРµР·Р°СЂСЏРґРєРё
 
 	SAIAngle wGunTurretDir ; 
 	SAIAngle wGunBaseDir;
-	SAIAngle wTurretHorDir; //  предыдущее направление ствола
-	SAIAngle wTurretVerDir; //  предыдущее направление ствола
+	SAIAngle wTurretHorDir; //  РїСЂРµРґС‹РґСѓС‰РµРµ РЅР°РїСЂР°РІР»РµРЅРёРµ СЃС‚РІРѕР»Р°
+	SAIAngle wTurretVerDir; //  РїСЂРµРґС‹РґСѓС‰РµРµ РЅР°РїСЂР°РІР»РµРЅРёРµ СЃС‚РІРѕР»Р°
 	int nFormationSize;
 	CVec2 vGunPos;
 	
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nReloadPhaze); f.Add(4,&b360DegreesRotate); f.Add(5,&eGunState); f.Add(6,&eGunOperateSubState); f.Add(7,&crew); f.Add(8,&pArtillery); f.Add(9,&pStats); f.Add(10,&freeUnits); f.Add(11,&startTime); f.Add(12,&timeLastUpdate); f.Add(13,&bReloadInProgress); f.Add(14,&fReloadPrice); f.Add(15,&fReloadProgress); f.Add(16,&wGunTurretDir); f.Add(17,&wGunBaseDir); f.Add(18,&wTurretHorDir); f.Add(19,&wTurretVerDir); f.Add(20,&nFormationSize); f.Add(21,&vGunPos); return 0; }
-	// сброс всех распределений - чтобы расставить арттиллеристов как-то по-новому
-	// return true - завершить состояние
+	// СЃР±СЂРѕСЃ РІСЃРµС… СЂР°СЃРїСЂРµРґРµР»РµРЅРёР№ - С‡С‚РѕР±С‹ СЂР°СЃСЃС‚Р°РІРёС‚СЊ Р°СЂС‚С‚РёР»Р»РµСЂРёСЃС‚РѕРІ РєР°Рє-С‚Рѕ РїРѕ-РЅРѕРІРѕРјСѓ
+	// return true - Р·Р°РІРµСЂС€РёС‚СЊ СЃРѕСЃС‚РѕСЏРЅРёРµ
 	bool ClearState();
 
-	// для каждого EGunServeState и по номел=ру юнита выдает нужную анимацию
+	// РґР»СЏ РєР°Р¶РґРѕРіРѕ EGunServeState Рё РїРѕ РЅРѕРјРµР»=СЂСѓ СЋРЅРёС‚Р° РІС‹РґР°РµС‚ РЅСѓР¶РЅСѓСЋ Р°РЅРёРјР°С†РёСЋ
 	SCrewAnimation CalcNeededAnimation( int iUnitNumber ) const;
 	SCrewAnimation CalcAniamtionForMG( int iUnitNumber ) const;
 
@@ -1124,7 +1124,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_USE_SPYGLASS; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для атаки взвода взводом
+// РґР»СЏ Р°С‚Р°РєРё РІР·РІРѕРґР° РІР·РІРѕРґРѕРј
 class CFormationAttackFormationState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackFormationState );
@@ -1244,7 +1244,7 @@ class CCatchFormationState : public IUnitState
 	OBJECT_BASIC_METHODS( CCatchFormationState );
 
 	enum ECatchFormationState { ECFS_NONE, ECFS_FREE, ECFS_IN_BUILDING, ECFS_IN_ENTRENCHMENT, ECFS_IN_TRANSPORT };
-	// формация, которая ловит
+	// С„РѕСЂРјР°С†РёСЏ, РєРѕС‚РѕСЂР°СЏ Р»РѕРІРёС‚
 	ZDATA
 	CPtr<CFormation> pCatchingFormation;
 
@@ -1253,9 +1253,9 @@ class CCatchFormationState : public IUnitState
 	CVec2 lastFormationPos;
 	CPtr<CObjectBase> pLastFormationObject;
 
-	// формация, которую ловят
+	// С„РѕСЂРјР°С†РёСЏ, РєРѕС‚РѕСЂСѓСЋ Р»РѕРІСЏС‚
 	CPtr<CFormation> pFormation;
-	// время для периодических проверок состояния формации
+	// РІСЂРµРјСЏ РґР»СЏ РїРµСЂРёРѕРґРёС‡РµСЃРєРёС… РїСЂРѕРІРµСЂРѕРє СЃРѕСЃС‚РѕСЏРЅРёСЏ С„РѕСЂРјР°С†РёРё
 	NTimer::STime lastUpdateTime;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCatchingFormation); f.Add(3,&eState); f.Add(4,&lastFormationPos); f.Add(5,&pLastFormationObject); f.Add(6,&pFormation); f.Add(7,&lastUpdateTime); return 0; }
 	//

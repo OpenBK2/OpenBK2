@@ -22,9 +22,9 @@ const int N_TX_REINF_RIGHT		= 1;
 const int N_TX_REINF_INACTIVE	= 2;
 const int N_TX_REINF_LIGHT		= 4;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static float s_fBlinkStep = 0.5f; // время показа одного положения мигающей кнопки
-static float s_fBlinkDuration = 10.0f; // время мигания кнопки
-static float s_fBlinkPeriod = 60.0f; // время между миганиями кнопки
+static float s_fBlinkStep = 0.5f; // РІСЂРµРјСЏ РїРѕРєР°Р·Р° РѕРґРЅРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ РјРёРіР°СЋС‰РµР№ РєРЅРѕРїРєРё
+static float s_fBlinkDuration = 10.0f; // РІСЂРµРјСЏ РјРёРіР°РЅРёСЏ РєРЅРѕРїРєРё
+static float s_fBlinkPeriod = 60.0f; // РІСЂРµРјСЏ РјРµР¶РґСѓ РјРёРіР°РЅРёСЏРјРё РєРЅРѕРїРєРё
 static int s_nAutoShowReinf = 1;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 REGISTER_SAVELOAD_CLASS( 0x17163380, CMissionReinf )

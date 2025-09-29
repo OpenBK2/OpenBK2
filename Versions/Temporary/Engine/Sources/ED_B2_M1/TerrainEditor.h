@@ -12,8 +12,8 @@ class CTerrainEditor : public CEditorBase, public CDefaultView, public ICommandH
 {
 	friend class CTerrainState;
 	OBJECT_NOCOPY_METHODS( CTerrainEditor );
-	//Данные специфичные для данного редактрора
-	// Данные общего назначения 
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CTerrainState *pTerrainState;
 	//
 	CTerrainEditor();

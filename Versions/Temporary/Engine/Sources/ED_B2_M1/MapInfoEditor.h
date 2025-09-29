@@ -80,7 +80,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 		objectInfoCollector.Clear();
 		pMapInfo = 0;
 	}
-	// другие переменные
+	// РґСЂСѓРіРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 	UINT nMapInfoToolsToolbarID;
 	UINT nMapInfoViewToolbarID;
 	SECControlBar *pwndMiniMap; // MiniMap docking window
@@ -90,7 +90,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	CMoviesEditorWindow wndMoviesEditor;
 	CDefaultShortcutBar wndShortcutBar;
 	CObj<IEditorScene> pEditorScene;
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CMapInfoState *pMapInfoState;
 	//
 	CMapInfoEditor();
@@ -120,7 +120,7 @@ public:
 
 	void GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo );
 
-	// Создание Undo Operation
+	// РЎРѕР·РґР°РЅРёРµ Undo Operation
 	virtual CMapInfoController* CreateController()
 	{ 
 		CMapInfoController* pMapInfoController = CDefaultView::CreateController<CMapInfoController>( static_cast<CMapInfoController*>( 0 ) );

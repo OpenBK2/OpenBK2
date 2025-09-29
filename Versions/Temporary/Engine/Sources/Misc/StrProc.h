@@ -4,8 +4,8 @@
 namespace NStr
 {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// слить последовательность строк в одну строку, элементы последовательности
-// должны уметь приводиться к string
+// СЃР»РёС‚СЊ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ СЃС‚СЂРѕРє РІ РѕРґРЅСѓ СЃС‚СЂРѕРєСѓ, СЌР»РµРјРµРЅС‚С‹ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚Рё
+// РґРѕР»Р¶РЅС‹ СѓРјРµС‚СЊ РїСЂРёРІРѕРґРёС‚СЊСЃСЏ Рє string
 template< class It >
 string Join( It first, It last, const string &szSeparator = " " )
 {
@@ -27,32 +27,32 @@ string Join( It first, It last, const string &szSeparator = " " )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// разделить строку на массив строк по заданному разделителю
+// СЂР°Р·РґРµР»РёС‚СЊ СЃС‚СЂРѕРєСѓ РЅР° РјР°СЃСЃРёРІ СЃС‚СЂРѕРє РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ СЂР°Р·РґРµР»РёС‚РµР»СЋ
 void SplitString( const string &szString, vector<string> *pVector, const char cSeparator );
 void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator );
-// разделить строку на массив строк по заданному разделителю с учётом скобок любой вложенности
+// СЂР°Р·РґРµР»РёС‚СЊ СЃС‚СЂРѕРєСѓ РЅР° РјР°СЃСЃРёРІ СЃС‚СЂРѕРє РїРѕ Р·Р°РґР°РЅРЅРѕРјСѓ СЂР°Р·РґРµР»РёС‚РµР»СЋ СЃ СѓС‡С‘С‚РѕРј СЃРєРѕР±РѕРє Р»СЋР±РѕР№ РІР»РѕР¶РµРЅРЅРѕСЃС‚Рё
 void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator );
 void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector, const wchar_t cSeparator );
-// отрезать все символы 'cTrim'
-// отрезать все 'cTrim' слева
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ СЃРёРјРІРѕР»С‹ 'cTrim'
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'cTrim' СЃР»РµРІР°
 inline void TrimLeft( string &szString, const char cTrim ) { szString.erase( 0, szString.find_first_not_of( cTrim ) ); }
-// отрезать все 'pszTrim' слева
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'pszTrim' СЃР»РµРІР°
 inline void TrimLeft( string &szString, const char *pszTrim ) { szString.erase( 0, szString.find_first_not_of( pszTrim ) ); }
-// отрезать все whitespaces слева
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ whitespaces СЃР»РµРІР°
 inline void TrimLeft( string &szString ) { TrimLeft(szString, " \t\n\r"); } 
-// отрезать все 'pszTrim' справа
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'pszTrim' СЃРїСЂР°РІР°
 void TrimRight( string &szString, const char *pszTrim );
-// отрезать все 'cTrim' справа
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'cTrim' СЃРїСЂР°РІР°
 void TrimRight( string &szString, const char cTrim );   
-// отрезать все whitespaces справа
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ whitespaces СЃРїСЂР°РІР°
 inline void TrimRight( string &szString ) { TrimRight(szString, " \t\n\r"); }
-// отрезать все 'pszTrim' с обоих концов
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'pszTrim' СЃ РѕР±РѕРёС… РєРѕРЅС†РѕРІ
 inline void TrimBoth( string &szString, const char *pszTrim ) { TrimLeft( szString, pszTrim ); TrimRight( szString, pszTrim ); }
-// отрезать все 'cTrim' с обоих концов
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ 'cTrim' СЃ РѕР±РѕРёС… РєРѕРЅС†РѕРІ
 inline void TrimBoth( string &szString, const char cTrim ) { TrimLeft( szString, cTrim ); TrimRight( szString, cTrim ); }
-// отрезать все whitespaces с обоих концов
+// РѕС‚СЂРµР·Р°С‚СЊ РІСЃРµ whitespaces СЃ РѕР±РѕРёС… РєРѕРЅС†РѕРІ
 inline void TrimBoth( string &szString ) { TrimBoth(szString, " \t\n\r"); }
-// вырезать все символы 'cTrim' из строки
+// РІС‹СЂРµР·Р°С‚СЊ РІСЃРµ СЃРёРјРІРѕР»С‹ 'cTrim' РёР· СЃС‚СЂРѕРєРё
 void TrimInside( string &szString, const char *pszTrim );
 inline void TrimInside( string &szString, const char cTrim ) { szString.erase( remove(szString.begin(), szString.end(), cTrim), szString.end() ); }
 inline void TrimInside( string &szString ) { TrimInside(szString, " \t\n\r"); }
@@ -66,7 +66,7 @@ int FastSerachFirst( const char *pszBegin, const string &szSample, T charsCompar
 template<class T>
 int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// привести к верхнему или нижнему регистру
+// РїСЂРёРІРµСЃС‚Рё Рє РІРµСЂС…РЅРµРјСѓ РёР»Рё РЅРёР¶РЅРµРјСѓ СЂРµРіРёСЃС‚СЂСѓ
 // MSVCMustDie_* are required to keep compiler happy when default calling conversion is __fastcall
 inline int MSVCMustDie_tolower( int a ) { return tolower(a); } 
 inline int MSVCMustDie_toupper( int a ) { return toupper(a); }
@@ -92,7 +92,7 @@ inline void ToUpper( string *pRes, const string &szString )
 // to upper
 __forceinline char ASCII_toupper( const char chr ) { return chr >= 'a' && chr <= 'z' ? chr - 'a' + 'A' : chr; }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// упрощённая и ускоренная версия tolower - работает только на первой половине кодовой таблицы!
+// СѓРїСЂРѕС‰С‘РЅРЅР°СЏ Рё СѓСЃРєРѕСЂРµРЅРЅР°СЏ РІРµСЂСЃРёСЏ tolower - СЂР°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РЅР° РїРµСЂРІРѕР№ РїРѕР»РѕРІРёРЅРµ РєРѕРґРѕРІРѕР№ С‚Р°Р±Р»РёС†С‹!
 __forceinline char ASCII_tolower( const char chr ) { return chr - ( ('A' - 'a') & ( (('A' - chr - 1) & (chr - 'Z' - 1)) >> 7 ) ); }
 inline void ToLowerASCII( string *pRes )
 { 
@@ -118,7 +118,7 @@ inline float ToFloat( const string &szString ) { return ToFloat( szString.c_str(
 double ToDouble( const char *pszString );
 inline double ToDouble( const string &szString ) { return ToDouble( szString.c_str() ); }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// является ли строка представлением числа
+// СЏРІР»СЏРµС‚СЃСЏ Р»Рё СЃС‚СЂРѕРєР° РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµРј С‡РёСЃР»Р°
 inline bool IsBinDigit( const char cChar ) { return ( (cChar == '0') && (cChar == '1') ); }
 inline bool IsOctDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '7') ); }
 inline bool IsDecDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '9') ); }
@@ -128,7 +128,7 @@ bool IsDecNumber( const string &szString );
 bool IsOctNumber( const string &szString );
 bool IsHexNumber( const string &szString );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перевод string => bin и обратно
+// РїРµСЂРµРІРѕРґ string => bin Рё РѕР±СЂР°С‚РЅРѕ
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
 void* StringToBin( const char *pszData, void *pBuffer, int *pnSize );
 const char* BinToString( const void *pData, int nSize, char *pszBuffer );
@@ -143,18 +143,18 @@ __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 		return chr - '0';
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перевод UNICODE => UTF-8 и обратно
+// РїРµСЂРµРІРѕРґ UNICODE => UTF-8 Рё РѕР±СЂР°С‚РЅРѕ
 void UnicodeToUTF8( string *pRes, const wstring &szString );
 void UTF8ToUnicode( wstring *pRes, const string &szString );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перевод MBCS => Unicode и обратно
+// РїРµСЂРµРІРѕРґ MBCS => Unicode Рё РѕР±СЂР°С‚РЅРѕ
 void SetCodePage( const int nCodePage );
 void ToMBCS( string *pRes, const wstring &szSrc );
 inline string ToMBCS( const wstring &szSrc ) { string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
 void ToUnicode( wstring *pRes, const string &szSrc );
 inline wstring ToUnicode( const string &szSrc ) { wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// перевод MBCS => UTF-8 и обратно
+// РїРµСЂРµРІРѕРґ MBCS => UTF-8 Рё РѕР±СЂР°С‚РЅРѕ
 void UTF8ToMBCS( string *pRes, const string &szSrc );
 void MBCSToUTF8( string *pRes, const string &szSrc );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

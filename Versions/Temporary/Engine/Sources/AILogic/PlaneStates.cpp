@@ -360,7 +360,7 @@ void CPlaneDeffensiveFire::AnalyzeBSU()
 				{
 					pDefShootEstimator->Reset( 0, true, 0 );
 					pDefShootEstimator->SetGun( pGun );
-					//выбирать лучшего врага
+					//РІС‹Р±РёСЂР°С‚СЊ Р»СѓС‡С€РµРіРѕ РІСЂР°РіР°
 					for( CPlanesIter planes; !planes.IsFinished(); planes.Iterate() )
 					{
 						CAviation *pEnemy = *planes;
@@ -759,15 +759,15 @@ CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint )
 float CPlaneBombState::RecalcStartAttack() const
 {
 	float fStartAttackDist = 0.0f;
-	// определять по скорости бомбера и скорости падения бомбы
+	// РѕРїСЂРµРґРµР»СЏС‚СЊ РїРѕ СЃРєРѕСЂРѕСЃС‚Рё Р±РѕРјР±РµСЂР° Рё СЃРєРѕСЂРѕСЃС‚Рё РїР°РґРµРЅРёСЏ Р±РѕРјР±С‹
 	CVec3 vSpeed3( pPlane->GetSpeedB2() );
 	const CVec3 vCenter( pPlane->GetPosB2() );
 	const float fTimeToFly = CBombBallisticTraj::GetTimeOfFly( vCenter.z - GetHeights()->GetZ( vCenter ), vSpeed3.z );
 	const CVec3 vOffset =  CBombBallisticTraj::CalcTrajectoryFinish( pPlane->GetPosB2(), vSpeed3, VNULL2, fTimeToFly );
 	fStartAttackDist += fabs( vOffset.x - vCenter.x, vOffset.y - vCenter.y );
 
-	// вычислить поправку на длину очереди (чтобы в цель попала середина очереди)
-	// считаем, что все очереди одинаковой длины и у всех gun одинаковое число патронов
+	// РІС‹С‡РёСЃР»РёС‚СЊ РїРѕРїСЂР°РІРєСѓ РЅР° РґР»РёРЅСѓ РѕС‡РµСЂРµРґРё (С‡С‚РѕР±С‹ РІ С†РµР»СЊ РїРѕРїР°Р»Р° СЃРµСЂРµРґРёРЅР° РѕС‡РµСЂРµРґРё)
+	// СЃС‡РёС‚Р°РµРј, С‡С‚Рѕ РІСЃРµ РѕС‡РµСЂРµРґРё РѕРґРёРЅР°РєРѕРІРѕР№ РґР»РёРЅС‹ Рё Сѓ РІСЃРµС… gun РѕРґРёРЅР°РєРѕРІРѕРµ С‡РёСЃР»Рѕ РїР°С‚СЂРѕРЅРѕРІ
 	const int nGuns = pPlane->GetNGuns();
 	for ( int i = 0; i < nGuns; ++i )
 	{
@@ -797,8 +797,8 @@ void CPlaneBombState::Segment()
 
 		break;
 	case ECBS_GAIN_DISTANCE:
-		// если расстояние до точки бомбометания больше 2 радиусов поворота самолета
-		// + расстояние начала бомбометания - то начать заход на цель, иначе удалиться от цели.
+		// РµСЃР»Рё СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ С‚РѕС‡РєРё Р±РѕРјР±РѕРјРµС‚Р°РЅРёСЏ Р±РѕР»СЊС€Рµ 2 СЂР°РґРёСѓСЃРѕРІ РїРѕРІРѕСЂРѕС‚Р° СЃР°РјРѕР»РµС‚Р°
+		// + СЂР°СЃСЃС‚РѕСЏРЅРёРµ РЅР°С‡Р°Р»Р° Р±РѕРјР±РѕРјРµС‚Р°РЅРёСЏ - С‚Рѕ РЅР°С‡Р°С‚СЊ Р·Р°С…РѕРґ РЅР° С†РµР»СЊ, РёРЅР°С‡Рµ СѓРґР°Р»РёС‚СЊСЃСЏ РѕС‚ С†РµР»Рё.
 		{
 			const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
 			const CPlanePreferences &pref = pPlane->GetPreferencesB2();
@@ -1001,7 +1001,7 @@ void CPlaneParaDropState::Segment()
 		case PPDS_DROPPING:
 			if ( fabs2 ( vLastDrop - pPlane->GetCenterPlain() ) > sqr(SConsts::PLANE_PARADROP_INTERVAL) )
 			{
-				// найти солдата, который сидит в самолете
+				// РЅР°Р№С‚Рё СЃРѕР»РґР°С‚Р°, РєРѕС‚РѕСЂС‹Р№ СЃРёРґРёС‚ РІ СЃР°РјРѕР»РµС‚Рµ
 				CPtr<CSoldier> pDropper = 0;
 				for ( int i = 0; i < pSquad->Size(); ++i )
 				{
@@ -1021,17 +1021,17 @@ void CPlaneParaDropState::Segment()
 					bRepeat = (nDroppingSoldier % 2) == 0;
 					if ( !bRepeat )
 						vLastDrop = pPlane->GetCenterPlain() ;
-					// случайный разброс парашютистов.
+					// СЃР»СѓС‡Р°Р№РЅС‹Р№ СЂР°Р·Р±СЂРѕСЃ РїР°СЂР°С€СЋС‚РёСЃС‚РѕРІ.
 					
 					const CVec2 vDropPoint = vLastDrop + 2.0f * ( nDroppingSoldier % 2 - 0.5f ) * 
 						NRandom::Random( SConsts::PLANE_PARADROP_INTERVAL_PERP_MIN, SConsts::PLANE_PARADROP_INTERVAL_PERP_MAX ) *
 						GetVectorByDirection( pPlane->GetDirection() + 65535 / 4 );
-					// вычислить возможно ли приземление где-нить.
+					// РІС‹С‡РёСЃР»РёС‚СЊ РІРѕР·РјРѕР¶РЅРѕ Р»Рё РїСЂРёР·РµРјР»РµРЅРёРµ РіРґРµ-РЅРёС‚СЊ.
 					bool bSafeLanding = CanDrop( vDropPoint );
 					//
 					if ( bSafeLanding )
 					{
-						// выбросить этого солдата
+						// РІС‹Р±СЂРѕСЃРёС‚СЊ СЌС‚РѕРіРѕ СЃРѕР»РґР°С‚Р°
 						pDropper->SetFree();
 						DRAW_WHITE_CROSS( CVec3( vDropPoint, pPlane->GetCenter().z ) );
 						pDropper->SetCenter( CVec3( vDropPoint, pPlane->GetCenter().z ), false );
@@ -1309,7 +1309,7 @@ void CPlaneFighterPatrolState::Segment()
 			for ( int i = 0; i < nGun; ++i )
 			{
 				CBasicGun *pGun = pPlane->GetGun( i );
-				// атака только пушками
+				// Р°С‚Р°РєР° С‚РѕР»СЊРєРѕ РїСѓС€РєР°РјРё
 				if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
 					!pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 && 
 					pGun->CanShootWOGunTurn( pEnemie, 1 ) )
@@ -1723,7 +1723,7 @@ void CPlaneShturmovikPatrolState::Segment()
 			}
 			else
 			{
-				// если враг живой - атаковать
+				// РµСЃР»Рё РІСЂР°Рі Р¶РёРІРѕР№ - Р°С‚Р°РєРѕРІР°С‚СЊ
 				TryBurstAllGuns();
 				TryInitPathToEnemie( false );
 				TryBurstAllGunsToPoints();
@@ -1878,7 +1878,7 @@ void CPlaneShturmovikPatrolState::TryDropBombs()
 			CBasicGun *pGun = pPlane->GetGun( i );
 			if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			{
-				// атака бомбами.
+				// Р°С‚Р°РєР° Р±РѕРјР±Р°РјРё.
 				if ( !pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 && pGun->GetNAmmo() != 0 )
 				{
 					const CVec3 vSpeed3 ( pPlane->GetSpeedB2() );
@@ -1924,7 +1924,7 @@ CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInFiringSector()
 {
 	const CVec3 vCurPoint( pPlane->GetPosB2() );
 
-	//гнутость ствола найти по честному
+	//РіРЅСѓС‚РѕСЃС‚СЊ СЃС‚РІРѕР»Р° РЅР°Р№С‚Рё РїРѕ С‡РµСЃС‚РЅРѕРјСѓ
 	const int nGuns = pPlane->GetNGuns();
 	float fBentRange = 0;
 	for ( int i = 0; i < nGuns; ++i )
@@ -1955,7 +1955,7 @@ CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
 	const CVec3 vCenter( pPlane->GetPosB2() );
 	const float fMinPossibleDivePoint( vCenter.z / pPlane->GetPreferencesB2().GetPatrolHeight() * fStartAttackDist );
 
-	//гнутость и максимальную дальнобойность найти 
+	//РіРЅСѓС‚РѕСЃС‚СЊ Рё РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РґР°Р»СЊРЅРѕР±РѕР№РЅРѕСЃС‚СЊ РЅР°Р№С‚Рё 
 	const int nGuns = pPlane->GetNGuns();
 	float fGnutost = 0;
 	float fMaxRange = 0;
@@ -2166,7 +2166,7 @@ void CPlaneFlyDeadState::Segment()
 	case EPDS_ESTIMATE:
 		eState = EPDS_WAIT_FINISH_PATH;
 	
-		//break; убран сознательно
+		//break; СѓР±СЂР°РЅ СЃРѕР·РЅР°С‚РµР»СЊРЅРѕ
 	case EPDS_WAIT_FINISH_PATH:
 		if ( deadZone.IsInZone( pPlane->GetCenterPlain()) )
 			pPlane->Disappear();
@@ -2237,7 +2237,7 @@ void CPlaneSuicideState::Segment()
 			eState = EPSS_FLY;
 		}
 
-		// нет тут break, не нужен
+		// РЅРµС‚ С‚СѓС‚ break, РЅРµ РЅСѓР¶РµРЅ
 	case EPSS_FLY:
 		{
 			const CVec3 vPos3( pPlane->GetPosB2() );

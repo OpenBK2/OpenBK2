@@ -283,7 +283,7 @@ void CSortTreeControl::FillClipboard( bool _bClipboardCut )
 		hSelectedItem = GetNextSelectedItem( hSelectedItem );
 	}
 	bClipboardCut = _bClipboardCut;
-	// Записываем данные в Clipboard
+	// Р—Р°РїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ РІ Clipboard
   if ( OpenClipboard() && EmptyClipboard() )
   {
 		HGLOBAL hglbCopy = ::GlobalAlloc( GMEM_MOVEABLE, ( szWindowClipboardText.size() + 1 ) * sizeof( TCHAR ) ); 

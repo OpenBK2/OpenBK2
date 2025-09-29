@@ -369,7 +369,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 
-	// îòêàò è îòäà÷à îðóäèÿ
+	// Ð¾Ñ‚ÐºÐ°Ñ‚ Ð¸ Ð¾Ñ‚Ð´Ð°Ñ‡Ð° Ð¾Ñ€ÑƒÐ´Ð¸Ñ
 	SHMatrix mShootPoint;
 	const int nID = GetID();
 	const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( nID, shot.cPlatform, shot.cGun );

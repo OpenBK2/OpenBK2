@@ -63,7 +63,7 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 	CManipulatorManager::GetValue( &bNeedSurfacePoints, pMan, "NeedSurfacePoints" );
 	if ( bNeedSurfacePoints == false )
 		return true;
-	// Получаем манипулятор на VisObject
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 	if ( pVisObjMan )
 	{
@@ -325,7 +325,7 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 	if ( szIconTextureName.empty() )
 	{
 		string szTextureFolder;
-		// получим каталог с тектурами
+		// РїРѕР»СѓС‡РёРј РєР°С‚Р°Р»РѕРі СЃ С‚РµРєС‚СѓСЂР°РјРё
 		CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 		if ( pVisObjMan == 0 )
 			return;

@@ -366,8 +366,8 @@ bool CInteractiveProcess::Execute( const string &szScript, const string &szRespo
 				pszOutput->append( readBuffer );
 				if ( bResult )
 				{
-					// маркер может быть разбит на две и более посылок, поэтому искать маркер нужно с захватом
-					// некоторого количества (а именно (szResponseEndMark.size() - 1)) уже прочтённых символов
+					// РјР°СЂРєРµСЂ РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°Р·Р±РёС‚ РЅР° РґРІРµ Рё Р±РѕР»РµРµ РїРѕСЃС‹Р»РѕРє, РїРѕСЌС‚РѕРјСѓ РёСЃРєР°С‚СЊ РјР°СЂРєРµСЂ РЅСѓР¶РЅРѕ СЃ Р·Р°С…РІР°С‚РѕРј
+					// РЅРµРєРѕС‚РѕСЂРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° (Р° РёРјРµРЅРЅРѕ (szResponseEndMark.size() - 1)) СѓР¶Рµ РїСЂРѕС‡С‚С‘РЅРЅС‹С… СЃРёРјРІРѕР»РѕРІ
 					int nMarkCharCount = szResponseEndMark.size();
 					int nStartSearchPos = pszOutput->size() - nBytesReadTotal - (nMarkCharCount - 1);
 					nStartSearchPos = max(0, nStartSearchPos);
@@ -394,7 +394,7 @@ bool CInteractiveProcess::Execute( const string &szScript, const string &szRespo
 		}
 		while( bResult && bReadFurther );
 
-		// FIXME: добавить чтение stderr
+		// FIXME: РґРѕР±Р°РІРёС‚СЊ С‡С‚РµРЅРёРµ stderr
 	}
 
 	if ( bResult == false )

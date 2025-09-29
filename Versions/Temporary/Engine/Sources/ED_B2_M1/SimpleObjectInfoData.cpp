@@ -68,9 +68,9 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectInfoCollector != 0, "SSimpleObjectInfo::Load(), pObjectInfoCollector == 0" );
 		NI_ASSERT( pObjectLoadInfo != 0, "SSimpleObjectInfo::Load(), pObjectLoadInfo == 0" );
 		//
-		// Óñòàíàâëèâàåì îáùèå ïàðàìåòðû
+		// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾Ð±Ñ‰Ð¸Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		const string szObjectPrefix = StrFmt( "Objects.[%d]", pObjectLoadInfo->nObjectIndex );
-		// ñîçäàåì SMapInfoElement è çàïîëíÿåì åãî äàííûìè
+		// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ SMapInfoElement Ð¸ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ ÐµÐ³Ð¾ Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸
 		bool bResult = true;
 		{
 			UINT nLinkID = INVALID_NODE_ID;
@@ -110,12 +110,12 @@ namespace NMapInfoEditor
 			mapInfoElement.fDirection = 0.0f;
 			//
 			mapInfoElement.linkedLinkIDIist.clear();
-			// çàíîñèì ýëåìåíò â ñòðóêòóðó äàííûõ îáúåêòà
+			// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð² ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñƒ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 			mapInfoElementMap[nLinkID] = mapInfoElement;
 			pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
 		}
 		//
-		// çàïîëíÿåì ñöåíó è ïðîñòàâëÿåì ññûëêè â mapInfo
+		// Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ ÑÑ†ÐµÐ½Ñƒ Ð¸ Ð¿Ñ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ ÑÑÑ‹Ð»ÐºÐ¸ Ð² mapInfo
 		CreateSceneObjects( pEditorScene, pManipulator, true );
 		return bResult;
 	}
@@ -132,18 +132,18 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// Óñòàíàâëèâàåì îáùèå ïàðàìåòðû
+		// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾Ð±Ñ‰Ð¸Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		vPosition = pObjectCreateInfo->vPosition;
 		fDirection = pObjectCreateInfo->fDirection;
 
-		// Äîáàâëÿåì îáúåêòû áàçû
+		// Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ Ð±Ð°Ð·Ñ‹
 		int nObjectIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nObjectIndex, pManipulator, "Objects" );
 		if ( nObjectIndex == INVALID_NODE_ID )
 		{
 			return false;
 		}
-		// ñîçäàåì SMapInfoElements è çàïîëíÿåì èõ äàííûìè
+		// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ SMapInfoElements Ð¸ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ Ð¸Ñ… Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸
 		bool bResult = true;
 		{
 			SObjectInfo::SMapInfoElement mapInfoElement;
@@ -178,7 +178,7 @@ namespace NMapInfoEditor
 				mapInfoElementMap[nLinkID] = mapInfoElement;
 				pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
 
-				//îáíîâèì ðîëîæåíèå îáúåêòâ ñâñîîòâåòñòâèè ñ íàñòðîéêàìè
+				//Ð¾Ð±Ð½Ð¾Ð²Ð¸Ð¼ Ñ€Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð¸Ðµ Ð¾Ð±ÑŠÐµÐºÑ‚Ð² ÑÐ²ÑÐ¾Ð¾Ñ‚Ð²ÐµÑ‚ÑÑ‚Ð²Ð¸Ð¸ Ñ Ð½Ð°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ°Ð¼Ð¸
 				if ( pObjectCreateInfo->bRotateTo90Degree )
 				{
 					RotateTo90Degree( true );

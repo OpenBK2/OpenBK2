@@ -2,8 +2,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\Common_RTS_AI\Path.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// специфический путь для артиллеристов - напролом сквозь все.
-// этот путь включается только когда артиллеристы уже у пушки.
+// СЃРїРµС†РёС„РёС‡РµСЃРєРёР№ РїСѓС‚СЊ РґР»СЏ Р°СЂС‚РёР»Р»РµСЂРёСЃС‚РѕРІ - РЅР°РїСЂРѕР»РѕРј СЃРєРІРѕР·СЊ РІСЃРµ.
+// СЌС‚РѕС‚ РїСѓС‚СЊ РІРєР»СЋС‡Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РєРѕРіРґР° Р°СЂС‚РёР»Р»РµСЂРёСЃС‚С‹ СѓР¶Рµ Сѓ РїСѓС€РєРё.
 class CArtilleryCrewPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CArtilleryCrewPath );
@@ -34,7 +34,7 @@ public:
 	virtual void Segment( const NTimer::STime timeDiff );
 
 	virtual const CVec2& GetFinishPoint() const { return vEndPoint; }
-//ненужные функции
+//РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit  ) { return true; }
 	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
@@ -54,7 +54,7 @@ public:
 	virtual bool IsWithFormation() const { return true; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// путь для артиллерии, которую буксируют
+// РїСѓС‚СЊ РґР»СЏ Р°СЂС‚РёР»Р»РµСЂРёРё, РєРѕС‚РѕСЂСѓСЋ Р±СѓРєСЃРёСЂСѓСЋС‚
 class CArtilleryBeingTowedPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CArtilleryBeingTowedPath );
@@ -73,7 +73,7 @@ public:
 	virtual bool IsFinished() const { return false; }
 	virtual void Segment( const NTimer::STime timeDiff ) {}
 
-//ненужные функции
+//РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 	{
 		CPtr<IPath> p = pPath;

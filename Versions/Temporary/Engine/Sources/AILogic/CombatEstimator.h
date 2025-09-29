@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIUnit;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для определения комбатной стуации
+// РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РєРѕРјР±Р°С‚РЅРѕР№ СЃС‚СѓР°С†РёРё
 class CCombatEstimator
 {
 	struct SShellInfo
@@ -20,10 +20,10 @@ class CCombatEstimator
 	typedef list<SShellInfo> CShellTimes;
 ZDATA
 	float fDamage;
-	CRegisteredUnits registeredMechUnits;			// вражескте юниты (не пехота)с ненулевой текущей скоростью
-	CRegisteredUnits registeredInfantry;			// вражескте юниты (пехота)с ненулевой текущей скоростью
+	CRegisteredUnits registeredMechUnits;			// РІСЂР°Р¶РµСЃРєС‚Рµ СЋРЅРёС‚С‹ (РЅРµ РїРµС…РѕС‚Р°)СЃ РЅРµРЅСѓР»РµРІРѕР№ С‚РµРєСѓС‰РµР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
+	CRegisteredUnits registeredInfantry;			// РІСЂР°Р¶РµСЃРєС‚Рµ СЋРЅРёС‚С‹ (РїРµС…РѕС‚Р°)СЃ РЅРµРЅСѓР»РµРІРѕР№ С‚РµРєСѓС‰РµР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ
 
-	CShellTimes shellTimes;								// время выстрела
+	CShellTimes shellTimes;								// РІСЂРµРјСЏ РІС‹СЃС‚СЂРµР»Р°
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fDamage); f.Add(3,&registeredMechUnits); f.Add(4,&registeredInfantry); f.Add(5,&shellTimes); return 0; }
 public:

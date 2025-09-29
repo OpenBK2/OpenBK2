@@ -137,7 +137,7 @@ typedef hash_map<SVector, bool, SVectorHash> CSVectorHash;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WORD wDirExclude )
 {
-	// криво! как-то нужно подумать и написать получше
+	// РєСЂРёРІРѕ! РєР°Рє-С‚Рѕ РЅСѓР¶РЅРѕ РїРѕРґСѓРјР°С‚СЊ Рё РЅР°РїРёСЃР°С‚СЊ РїРѕР»СѓС‡С€Рµ
 	list<SVector> tilesUnderRect;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tilesUnderRect );
 
@@ -227,7 +227,7 @@ void CMechUnitEntrenchSelfState::Segment()
 			
 			GetTilesNextToRect( rect, 65535 / 2 + pUnit->GetFrontDirection() );
 			
-			// проверить, не залоканы ли тайлы под TankPit
+			// РїСЂРѕРІРµСЂРёС‚СЊ, РЅРµ Р·Р°Р»РѕРєР°РЅС‹ Р»Рё С‚Р°Р№Р»С‹ РїРѕРґ TankPit
 			bool bCanAdd = true;
 			for ( list<SObjTileInfo> ::iterator i = tiles.begin(); i != tiles.end(); ++i )
 			{
@@ -238,7 +238,7 @@ void CMechUnitEntrenchSelfState::Segment()
 				}
 			}
 			
-			if ( bCanAdd ) // проверить, нет ли под TankPit окопов
+			if ( bCanAdd ) // РїСЂРѕРІРµСЂРёС‚СЊ, РЅРµС‚ Р»Рё РїРѕРґ TankPit РѕРєРѕРїРѕРІ
 				bCanAdd = CheckTrenches( pUnit, rectToCheck );
 			if ( bCanAdd )
 				bCanAdd = CheckInfantry( pUnit, rectToCheck ); 

@@ -17,7 +17,7 @@ protected:
 																		 IManipulator *pBuildDataManipulator ) = 0;
 	virtual bool NeedBuildDataDialog() const { return true; }
 public:
-	// можно поменять значение по умолчанию для следужщего поля: ( *pbCanChangeObjectName ) = false;
+	// РјРѕР¶РЅРѕ РїРѕРјРµРЅСЏС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РґР»СЏ СЃР»РµРґСѓР¶С‰РµРіРѕ РїРѕР»СЏ: ( *pbCanChangeObjectName ) = false;
 	virtual bool InsertObject( string *pszObjectTypeName,
 														 string *pszUniqueObjectName,
 														 bool bFromMainMenu,

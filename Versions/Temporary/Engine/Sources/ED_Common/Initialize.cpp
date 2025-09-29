@@ -8,7 +8,7 @@ BOOL WINAPI DllMain( HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpReserved )
 {
 	if ( ul_reason_for_call == DLL_PROCESS_ATTACH )
 	{
-		// Для подключения ресурсов из DLL
+		// Р”Р»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ СЂРµСЃСѓСЂСЃРѕРІ РёР· DLL
 		theEDCommonInstance = (HINSTANCE)hInst;
 	}
 	return true;

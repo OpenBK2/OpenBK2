@@ -12,7 +12,7 @@ DWORD FadeColor( DWORD dwColor, float fFade )
 		DWORD( (dwColor >> 16 & 0xFF ) * fFade ) << 16 |
 		DWORD( (dwColor >> 24 & 0xFF ) * fFade ) << 24;
 //	return (dwColor & 0x00FFFFFF) |
-//		DWORD( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // âàðèàíò ñ èçìåíåíèåì òîëüêî àëüôû ñìîòðèòñÿ õóæå
+//		DWORD( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚ Ñ Ð¸Ð·Ð¼ÐµÐ½ÐµÐ½Ð¸ÐµÐ¼ Ñ‚Ð¾Ð»ÑŒÐºÐ¾ Ð°Ð»ÑŒÑ„Ñ‹ ÑÐ¼Ð¾Ñ‚Ñ€Ð¸Ñ‚ÑÑ Ñ…ÑƒÐ¶Ðµ
 }
 //////////////////////////////////////////////////////////////////////
 BASIC_REGISTER_CLASS(IWindowPart)

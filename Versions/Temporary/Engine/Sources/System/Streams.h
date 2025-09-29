@@ -58,7 +58,7 @@ public:
 	bool Seek( int nPos ) { return Seek( data.pBuffer + nPos ); }
 	void Trunc() { ASSERT( CanWrite() ); data.pFileEnd = data.pCurrent; }
 	
-	// обычные функции для чтения/записи из/в поток
+	// РѕР±С‹С‡РЅС‹Рµ С„СѓРЅРєС†РёРё РґР»СЏ С‡С‚РµРЅРёСЏ/Р·Р°РїРёСЃРё РёР·/РІ РїРѕС‚РѕРє
 	void Read( void *pDest, int nSize )
 	{
 		ASSERT( CanRead() );
@@ -92,7 +92,7 @@ public:
 	const unsigned char* GetBuffer() const { ASSERT( CanRead() ); return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer; }
 	unsigned char* GetBufferForWrite() const { ASSERT( CanWrite() ); return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer; }
 	//
-	// стандартные операции ввода/вывода
+	// СЃС‚Р°РЅРґР°СЂС‚РЅС‹Рµ РѕРїРµСЂР°С†РёРё РІРІРѕРґР°/РІС‹РІРѕРґР°
 	void ReadString( string &res, int nMaxSize = -1 );
 	void WriteString( const string &res );
 	template<class T> CDataStream& operator>>( T &res ) { Read( &res, sizeof(res) ); return *this; }

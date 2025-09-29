@@ -5,11 +5,11 @@ namespace NHPTimer
 {
 	typedef int64 STime;
 	double GetSeconds( const STime &a );
-	// получить текущее время
+	// РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ
 	void GetTime( STime *pTime );
-	// получить время, прошедшее с момента, записанного в *pTime, при этом в *pTime будет записано текущее время
+	// РїРѕР»СѓС‡РёС‚СЊ РІСЂРµРјСЏ, РїСЂРѕС€РµРґС€РµРµ СЃ РјРѕРјРµРЅС‚Р°, Р·Р°РїРёСЃР°РЅРЅРѕРіРѕ РІ *pTime, РїСЂРё СЌС‚РѕРј РІ *pTime Р±СѓРґРµС‚ Р·Р°РїРёСЃР°РЅРѕ С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ
 	double GetTimePassed( STime *pTime );
-	// получить частоту процессора
+	// РїРѕР»СѓС‡РёС‚СЊ С‡Р°СЃС‚РѕС‚Сѓ РїСЂРѕС†РµСЃСЃРѕСЂР°
 	double GetClockRate();
 	// recalc CPU frequency, call regularly to support SpeedStep processors
 	void UpdateHPTimerFrequency();

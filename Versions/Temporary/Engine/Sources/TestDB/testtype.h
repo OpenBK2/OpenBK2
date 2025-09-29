@@ -119,7 +119,7 @@ namespace NDb
 				nTypeInt( 0 ),
 				fTypeFloat( 0.0f ),
 				bTypeBool( false ),
-				wszTypeWString( L"Очень клёвое default value" ),
+				wszTypeWString( L"РћС‡РµРЅСЊ РєР»С‘РІРѕРµ default value" ),
 				eTypeEnumUnitType( UNIT_TYPE_UNKNOWN )
 			{ }
 			//

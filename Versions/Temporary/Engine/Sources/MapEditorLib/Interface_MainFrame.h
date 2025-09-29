@@ -45,14 +45,14 @@ interface ILogger
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IMainFrame : public ILogger
 {
-	// Наити координаты только что нажатой кнопки на toolbar
+	// РќР°РёС‚Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕР»СЊРєРѕ С‡С‚Рѕ РЅР°Р¶Р°С‚РѕР№ РєРЅРѕРїРєРё РЅР° toolbar
 	virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 																							UINT nButtonID,
 																							CTPoint<int> *pLeftBottomPos ) = 0;
-	// Работа с ChildFrame
+	// Р Р°Р±РѕС‚Р° СЃ ChildFrame
 	virtual class SECWorksheet* CreateChildFrame( UINT nResource ) = 0;
 	virtual bool SetChildFrameWindowContents( class SECWorksheet* pwndChildWindow, class CWnd *pwndContents ) = 0;
-	// Работа с Docking Window
+	// Р Р°Р±РѕС‚Р° СЃ Docking Window
 	virtual class SECControlBar* CreateControlBar( UINT *pnID,
 																								 const CString &rstrTitle,
 																								 const UINT nStyle,
@@ -60,10 +60,10 @@ interface IMainFrame : public ILogger
 																								 const float fRate,
 																								 const int nWidth ) = 0;
 	virtual bool SetControlBarWindowContents( class SECControlBar* pwndDockingWindow, class CWnd *pwndContents ) = 0;
-	// Работа с Menu Bar ( 1 - 20 )
+	// Р Р°Р±РѕС‚Р° СЃ Menu Bar ( 1 - 20 )
 	virtual bool AddMenuResources( vector<UINT> &rMenuIDList ) = 0;
 	virtual void ShowMenu( const UINT nResourceID ) = 0;
-	// Работа с Tool Bar
+	// Р Р°Р±РѕС‚Р° СЃ Tool Bar
 	virtual bool AddToolBarResource( const UINT nStandartResourceID, const UINT nLargeResourceID ) = 0;
 	virtual void CreateToolBar( UINT *pnID,
 															const CString &rstrTitle,
@@ -75,10 +75,10 @@ interface IMainFrame : public ILogger
 															const bool bVisible,
 															const bool bMainToolBar ) = 0;
 	virtual class SECCustomToolBar* GetToolBar( UINT nID ) = 0;
-	// Работа с Элементами оформления
+	// Р Р°Р±РѕС‚Р° СЃ Р­Р»РµРјРµРЅС‚Р°РјРё РѕС„РѕСЂРјР»РµРЅРёСЏ
 	virtual void SetStatusBarText( int nPaneIndex, const string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;
-	// Работа с DB
+	// Р Р°Р±РѕС‚Р° СЃ DB
 	virtual void SaveObjectStorage( int nGDBBrowserID ) = 0;
 	virtual void RestoreObjectStorage() = 0;
 	virtual bool BrowseLink( string *pszResult, const string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit ) = 0;
@@ -98,11 +98,11 @@ interface IMainFrame : public ILogger
 interface IMainFrameContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x140943C1 };
-	// служебный метод ( не используется )
+	// СЃР»СѓР¶РµР±РЅС‹Р№ РјРµС‚РѕРґ ( РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ )
 	virtual void Set( class CMainFrame* _pMainFrame ) = 0;
-	// получить указатель на стандартный инерфейс IManFrame
+	// РїРѕР»СѓС‡РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚Р°РЅРґР°СЂС‚РЅС‹Р№ РёРЅРµСЂС„РµР№СЃ IManFrame
 	virtual IMainFrame* Get() = 0;
-	// получить указательна на главный фрейм приложения ( используется в экстренных случаях )
+	// РїРѕР»СѓС‡РёС‚СЊ СѓРєР°Р·Р°С‚РµР»СЊРЅР° РЅР° РіР»Р°РІРЅС‹Р№ С„СЂРµР№Рј РїСЂРёР»РѕР¶РµРЅРёСЏ ( РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ СЌРєСЃС‚СЂРµРЅРЅС‹С… СЃР»СѓС‡Р°СЏС… )
 	virtual class SECWorkbook* GetSECWorkbook() = 0;
 };
 

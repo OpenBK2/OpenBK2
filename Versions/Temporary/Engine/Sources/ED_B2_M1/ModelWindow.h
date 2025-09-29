@@ -51,28 +51,28 @@ protected:
 
 	LONG nSceneColorTimer;
   inline UINT GetSceneColorID() { return 1; }
-  inline UINT GetSceneColorTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline UINT GetSceneColorTimerInterval() { return 500; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
   void SetSceneColorTimer();
   void KillSceneColorTimer();
   void OnSceneColorTimer();
 	//
 	LONG nTerrainColorTimer;
   inline UINT GetTerrainColorID() { return 2; }
-  inline UINT GetTerrainColorTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline UINT GetTerrainColorTimerInterval() { return 500; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
   void SetTerrainColorTimer();
   void KillTerrainColorTimer();
   void OnTerrainColorTimer();
 	//
 	LONG nTerrainColorOpacityTimer;
   inline UINT GetTerrainColorOpacityID() { return 3; }
-  inline UINT GetTerrainColorOpacityTimerInterval() { return 500; }	// Частота в миллисекундах
+  inline UINT GetTerrainColorOpacityTimerInterval() { return 500; }	// Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
   void SetTerrainColorOpacityTimer();
   void KillTerrainColorOpacityTimer();
   void OnTerrainColorOpacityTimer();
 	//
 	LONG nFOVTimer;
   inline UINT GetFOVID() { return 4; }
-  inline UINT GetFOVTimerInterval() { return 500; } // Частота в миллисекундах
+  inline UINT GetFOVTimerInterval() { return 500; } // Р§Р°СЃС‚РѕС‚Р° РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
   void SetFOVTimer();
   void KillFOVTimer();
   void OnFOVTimer();

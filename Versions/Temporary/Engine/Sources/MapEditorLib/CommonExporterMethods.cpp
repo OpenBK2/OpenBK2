@@ -71,7 +71,7 @@ void MEStartScript( string *pszScriptText, bool bGUIMode )
 	NI_ASSERT( pszScriptText != 0, "MEStartScript() pszScriptText == 0" );
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	// Формируем тело скрипта
+	// Р¤РѕСЂРјРёСЂСѓРµРј С‚РµР»Рѕ СЃРєСЂРёРїС‚Р°
 	pszScriptText->clear();
 }
 
@@ -84,7 +84,7 @@ void MEFinishScript(string *pszScriptText, bool bGUIMode )
 	{
 		( *pszScriptText ) += "quit -a;\r\n";
 	}
-	// Раздваиваем все слеши (их должно быть четное количество в последовательностях
+	// Р Р°Р·РґРІР°РёРІР°РµРј РІСЃРµ СЃР»РµС€Рё (РёС… РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ С‡РµС‚РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РІ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЏС…
 	MakeDoubleSlash( pszScriptText );
 }
 
@@ -93,7 +93,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 
-	// Записываем тело скрипта в файл
+	// Р—Р°РїРёСЃС‹РІР°РµРј С‚РµР»Рѕ СЃРєСЂРёРїС‚Р° РІ С„Р°Р№Р»
 	const string &szUserDataScriptFileName = GetOption( &SUserData::SMayaExportData::szScriptFileName );
 	const string &szUserDataLogFileName = GetOption( &SUserData::SMayaExportData::szLogFileName );
 
@@ -177,7 +177,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 	DWORD dwResult = ERROR_SUCCESS;
 	if ( bNeedExport )
 	{
-		// Запускаем Maya
+		// Р—Р°РїСѓСЃРєР°РµРј Maya
 		const string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
 		const string szGUIMode = bGUIMode ? " " : " -batch ";
 		const string szCommandLine = StrFmt( "%s%s-script \"%s\" -log \"%s\"", 
@@ -203,7 +203,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Получить размер картинки
+// РџРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РєР°СЂС‚РёРЅРєРё
 bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( szImageFileName, CFileStream::WIN_READ_ONLY );
@@ -224,7 +224,7 @@ bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Получить размер картинки
+// РџРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РєР°СЂС‚РёРЅРєРё
 bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( NVFS::GetMainVFS(), szImageFileName );

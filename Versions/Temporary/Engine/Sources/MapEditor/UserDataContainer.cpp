@@ -82,12 +82,12 @@ void CUserDataContainer::Load()
 	string szXMLFilePath;
 	GetXMLFilePath( &szXMLFilePath );
 	LoadXMLResource( szStartFolder + szXMLFilePath, ".xml", "UserData", userData );
-	// загружаем константную часть
+	// Р·Р°РіСЂСѓР¶Р°РµРј РєРѕРЅСЃС‚Р°РЅС‚РЅСѓСЋ С‡Р°СЃС‚СЊ
 	string szConstXMLFilePath;
 	GetConstXMLFilePath( &szConstXMLFilePath );
 	LoadXMLResource(  szStartFolder + szConstXMLFilePath, ".xml", "ConstUserData", userData.constUserData );
 	{
-		// Стартовый каталог
+		// РЎС‚Р°СЂС‚РѕРІС‹Р№ РєР°С‚Р°Р»РѕРі
 		userData.constUserData.szStartFolder = szStartFolder;
 		// check for tokens in folder pathes
 		ReplaceTokens( &userData.constUserData.szObjectRecordIDsFolder );

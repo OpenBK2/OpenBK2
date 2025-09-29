@@ -85,7 +85,7 @@ class CBres
 	}
 
 public:
-	// для того, чтобы выдавал направления
+	// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РІС‹РґР°РІР°Р» РЅР°РїСЂР°РІР»РµРЅРёСЏ
 	void Init( const SVector &start, const SVector &finish)
 	{ 
 		xlen = finish.x - start.x;
@@ -94,7 +94,7 @@ public:
 		Initialize(); 
 	}
 
-	// для того, чтобы выдавал точки
+	// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РІС‹РґР°РІР°Р» С‚РѕС‡РєРё
 	void InitPointByDirection( const SVector& start, const SVector &direction )
 	{ 
 		dir = start;
@@ -104,7 +104,7 @@ public:
 		Initialize(); 
 	}
 
-	// для того, чтобы выдавал точки
+	// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ РІС‹РґР°РІР°Р» С‚РѕС‡РєРё
 	void InitPoint( const SVector &start, const SVector &finish)
 	{
 		dir = start;

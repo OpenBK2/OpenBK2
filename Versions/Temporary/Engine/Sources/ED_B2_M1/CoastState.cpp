@@ -344,11 +344,11 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 						break;
 					}
 				}
-				// ïîçèöèÿ ìîðÿ
+				// Ð¿Ð¾Ð·Ð¸Ñ†Ð¸Ñ Ð¼Ð¾Ñ€Ñ
 				CVec3 vWaterPoint = VNULL3;
 				GetWaterPos( GetMapInfoEditor()->pMapInfo, rVSO.points, &vWaterPoint );
 				bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( "CoastMidPoint", vWaterPoint, pManipulator );
-				// óñòàíàâëèâàåì íàëè÷èå ïîáåðåæüÿ
+				// ÑƒÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð½Ð°Ð»Ð¸Ñ‡Ð¸Ðµ Ð¿Ð¾Ð±ÐµÑ€ÐµÐ¶ÑŒÑ
 				bResult = bResult && pObjectController->AddChangeValueOperation<bool>( "HasCoast", true, pManipulator );
 				//
 				DebugTrace( "CCoastState::InsertVSOToBase(): %g", NHPTimer::GetTimePassed( &time ) );

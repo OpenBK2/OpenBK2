@@ -8,8 +8,8 @@
 #include "..\System\RandomGen.h"
 #include "..\Misc\Win32Random.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Темплейт для создания векторов обьектов с весами,
-//веса могут быть любыми неотрицательными целыми числами
+//РўРµРјРїР»РµР№С‚ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РІРµРєС‚РѕСЂРѕРІ РѕР±СЊРµРєС‚РѕРІ СЃ РІРµСЃР°РјРё,
+//РІРµСЃР° РјРѕРіСѓС‚ Р±С‹С‚СЊ Р»СЋР±С‹РјРё РЅРµРѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё С†РµР»С‹РјРё С‡РёСЃР»Р°РјРё
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NWV
 {
@@ -34,12 +34,12 @@ namespace NWV
 	template <class TYPE, class TRandom>
 	class CWeightVector
 	{
-		std::vector<TYPE> elements; //элементы (должны уметь упаковываться в контейнеры)
-		std::vector<int> weights;		//веса ( разница между соседями - вес текущего элемента )
+		std::vector<TYPE> elements; //СЌР»РµРјРµРЅС‚С‹ (РґРѕР»Р¶РЅС‹ СѓРјРµС‚СЊ СѓРїР°РєРѕРІС‹РІР°С‚СЊСЃСЏ РІ РєРѕРЅС‚РµР№РЅРµСЂС‹)
+		std::vector<int> weights;		//РІРµСЃР° ( СЂР°Р·РЅРёС†Р° РјРµР¶РґСѓ СЃРѕСЃРµРґСЏРјРё - РІРµСЃ С‚РµРєСѓС‰РµРіРѕ СЌР»РµРјРµРЅС‚Р° )
 
 	public:
 		//
-		//конструкторы и операторы присваивания
+		//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 		CWeightVector() {}
 		//
 		CWeightVector( const CWeightVector &rWeightVector ) : elements( rWeightVector.elements ), weights( rWeightVector.weights ) {}
@@ -55,7 +55,7 @@ namespace NWV
 		}
 		
 		//
-		//доступ к элементам через оператор
+		//РґРѕСЃС‚СѓРї Рє СЌР»РµРјРµРЅС‚Р°Рј С‡РµСЂРµР· РѕРїРµСЂР°С‚РѕСЂ
 		const TYPE& operator[]( int nElementIndex ) const
 		{ 
 			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
@@ -71,7 +71,7 @@ namespace NWV
 		}
 		
 		//
-		//доступ к элементам через функции
+		//РґРѕСЃС‚СѓРї Рє СЌР»РµРјРµРЅС‚Р°Рј С‡РµСЂРµР· С„СѓРЅРєС†РёРё
 		const TYPE& Get( int nElementIndex ) const
 		{
 			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
@@ -103,7 +103,7 @@ namespace NWV
 		}
 
 		//
-		//методы аналогичные std::vector методам
+		//РјРµС‚РѕРґС‹ Р°РЅР°Р»РѕРіРёС‡РЅС‹Рµ std::vector РјРµС‚РѕРґР°Рј
 		void push_back( const TYPE &rElement, int nWeight )
 		{
 			elements.push_back( rElement );
@@ -136,7 +136,7 @@ namespace NWV
 		inline bool empty() const { return elements.empty(); }
 
 		//
-		//получить рандомный элемент
+		//РїРѕР»СѓС‡РёС‚СЊ СЂР°РЅРґРѕРјРЅС‹Р№ СЌР»РµРјРµРЅС‚
 		int GetRandomIndex( bool bBinarySearch = true ) const
 		{
 			if ( weights.empty() || weights[ weights.size() - 1 ] == 0 )
@@ -150,7 +150,7 @@ namespace NWV
 
 			if ( bBinarySearch )
 			{
-				//бинарный поиск:
+				//Р±РёРЅР°СЂРЅС‹Р№ РїРѕРёСЃРє:
 				while ( ( nMaxIndex - nMinIndex ) > 1 )
 				{
 					int nElementIndex = ( nMinIndex + nMaxIndex ) / 2;
@@ -164,7 +164,7 @@ namespace NWV
 					}
 				}
 			}
-			//простой поиск
+			//РїСЂРѕСЃС‚РѕР№ РїРѕРёСЃРє
 			while ( nWeight >= weights[nMinIndex] ) ++nMinIndex;
 			return nMinIndex;
 		}

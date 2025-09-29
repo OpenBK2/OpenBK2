@@ -108,10 +108,10 @@ public:
 	virtual void SetB2( const CVec3 &vPos, const CVec3 &vSpeed, const CVec3 &vNormal ) { }
 	//CRAP}
 
-	// текущий самолет уже находится под атакой.
+	// С‚РµРєСѓС‰РёР№ СЃР°РјРѕР»РµС‚ СѓР¶Рµ РЅР°С…РѕРґРёС‚СЃСЏ РїРѕРґ Р°С‚Р°РєРѕР№.
 	virtual bool IsBeingAttackedB2() { return false; }
 
-	// когда враг уже готовится стрелять в самолет. нужно для того, чтобы за 1 самолетом не гонялось несколько.
+	// РєРѕРіРґР° РІСЂР°Рі СѓР¶Рµ РіРѕС‚РѕРІРёС‚СЃСЏ СЃС‚СЂРµР»СЏС‚СЊ РІ СЃР°РјРѕР»РµС‚. РЅСѓР¶РЅРѕ РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ Р·Р° 1 СЃР°РјРѕР»РµС‚РѕРј РЅРµ РіРѕРЅСЏР»РѕСЃСЊ РЅРµСЃРєРѕР»СЊРєРѕ.
 	virtual void NotifyAttackedB2(IPlane & attacker, bool bAttack) { }
 
 	// access to plane's preferences
@@ -150,7 +150,7 @@ public:
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
 	virtual void UpdateTile()	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdateTile" ); }
 
-	// ну и уродство
+	// РЅСѓ Рё СѓСЂРѕРґСЃС‚РІРѕ
 	virtual const int GetUniqueIDPath() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const float GetTurnSpeed() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const float GetMaxSpeedHere( const CVec2 &point, bool bAdjust ) const { NI_ASSERT( false, "WRONG CALL"); return 0; }

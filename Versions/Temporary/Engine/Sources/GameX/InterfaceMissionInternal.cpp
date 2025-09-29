@@ -485,7 +485,7 @@ void CInterfaceMission::MsgNotificationsCameraBack( const SGameMessage &msg )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 {
-	//раздача цветов
+	//СЂР°Р·РґР°С‡Р° С†РІРµС‚РѕРІ
 	int nPlayerCount = pScenarioTracker->GetNPlayers();
 	vector<CVec4> minimapColors;
 	minimapColors.resize( nPlayerCount );
@@ -652,7 +652,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 0.0f );
 
-	pScenarioTracker->ClearMissionScriptVars(); // на случай, если запускали не из ScenarioTracker'а
+	pScenarioTracker->ClearMissionScriptVars(); // РЅР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё Р·Р°РїСѓСЃРєР°Р»Рё РЅРµ РёР· ScenarioTracker'Р°
 	
 	CObj<IProgressHookB2> pProgress;
 	if ( NGlobal::GetVar( "mission_loading_single", 0 ) != 0 )
@@ -833,8 +833,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	if ( pProgress )
 		pProgress->Step(); // step 4
 
-	// вызовем первый раз этот апдейт при загрузке, поскольку первоначальное создание
-	// юнитов занимает ощутимое время
+	// РІС‹Р·РѕРІРµРј РїРµСЂРІС‹Р№ СЂР°Р· СЌС‚РѕС‚ Р°РїРґРµР№С‚ РїСЂРё Р·Р°РіСЂСѓР·РєРµ, РїРѕСЃРєРѕР»СЊРєСѓ РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЃРѕР·РґР°РЅРёРµ
+	// СЋРЅРёС‚РѕРІ Р·Р°РЅРёРјР°РµС‚ РѕС‰СѓС‚РёРјРѕРµ РІСЂРµРјСЏ
 	if ( pProgress )
 		pProgress->LockRange( nUpdateAISubSteps );
 	pWorld->Update();
@@ -844,7 +844,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	Singleton<IAILogic>()->PostMapLoad();
 	pWorld->Update();
 
-	// загрузим всю графику до старта миссии
+	// Р·Р°РіСЂСѓР·РёРј РІСЃСЋ РіСЂР°С„РёРєСѓ РґРѕ СЃС‚Р°СЂС‚Р° РјРёСЃСЃРёРё
 	if ( pProgress )
 		pProgress->LockRange( nDrawSubSteps );
 	Scene()->SwitchScene( SCENE_MISSION );
@@ -1552,7 +1552,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		chatMessages.back().nVisibleTime = 0;
 	}
 
-	// переместим сообщения, долго находившиеся на экране
+	// РїРµСЂРµРјРµСЃС‚РёРј СЃРѕРѕР±С‰РµРЅРёСЏ, РґРѕР»РіРѕ РЅР°С…РѕРґРёРІС€РёРµСЃСЏ РЅР° СЌРєСЂР°РЅРµ
 	for ( list<SChatMessage>::iterator it = chatMessages.begin(); it != chatMessages.end(); ++it )
 	{
 		SChatMessage &el = *it;
@@ -1629,12 +1629,12 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 			const int nWarFogDefault = WARFOG_MIN_VALUE;
 			CArray2D<BYTE> sceneWarFogInfo;
 			sceneWarFogInfo.SetSizes( nWarFogSize + 1, nWarFogSize + 1 );
-			// зальем всю карту
+			// Р·Р°Р»СЊРµРј РІСЃСЋ РєР°СЂС‚Сѓ
 			sceneWarFogInfo.FillEvery( nWarFogDefault );
-			// заполним игровой участок
+			// Р·Р°РїРѕР»РЅРёРј РёРіСЂРѕРІРѕР№ СѓС‡Р°СЃС‚РѕРє
 			if ( bFirst )
 			{
-				// оставим все серым
+				// РѕСЃС‚Р°РІРёРј РІСЃРµ СЃРµСЂС‹Рј
 			}
 			else if ( bWarFogUpdated )
 			{
@@ -1646,7 +1646,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 			else
 				sceneWarFogInfo.FillEvery( 255 );
 
-			// заполним бордюр
+			// Р·Р°РїРѕР»РЅРёРј Р±РѕСЂРґСЋСЂ
 			int nDensity = 0;
 			for ( int i = 0; i < WARFOG_HARD_RECT_WIDTH; ++i )
 			{
@@ -2204,7 +2204,7 @@ bool CInterfaceMission::MsgOnBeforeMouseMove( const SGameMessage &msg )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMission::MsgMessageBoxOk( const SGameMessage &msg )
 {
-	// Пока только уведомления (CVisualNotifications) - не делаем ничего
+	// РџРѕРєР° С‚РѕР»СЊРєРѕ СѓРІРµРґРѕРјР»РµРЅРёСЏ (CVisualNotifications) - РЅРµ РґРµР»Р°РµРј РЅРёС‡РµРіРѕ
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CInterfaceMission::MsgNotificationOpenReinf( const SGameMessage &msg )
@@ -3045,7 +3045,7 @@ void CInterfaceMission::MsgShowGamePaused( const SGameMessage &msg )
 	if ( pPause )
 		pPause->ShowWindow( bUserPaused && !bInterfacePaused );
 	
-	Singleton<ISFX>()->Pause( bUserPaused || bInterfacePaused ); // на паузе выключаются только эффекты, музыка остается
+	Singleton<ISFX>()->Pause( bUserPaused || bInterfacePaused ); // РЅР° РїР°СѓР·Рµ РІС‹РєР»СЋС‡Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ СЌС„С„РµРєС‚С‹, РјСѓР·С‹РєР° РѕСЃС‚Р°РµС‚СЃСЏ
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInterfaceMission::MsgBeginScriptMovieSequence( const SGameMessage &msg )

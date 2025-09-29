@@ -100,7 +100,7 @@ void CSupremeBeing::Segment()
 	{
 		if ( !theDipl.IsNetGame() )
 		{
-			// çàïóñê îòëîæåííûõ çàæäà÷
+			// Ğ·Ğ°Ğ¿ÑƒÑĞº Ğ¾Ñ‚Ğ»Ğ¾Ğ¶ĞµĞ½Ğ½Ñ‹Ñ… Ğ·Ğ°Ğ¶Ğ´Ğ°Ñ‡
 			for ( DelayedTasks::iterator it = delayedTasks.begin(); it != delayedTasks.end(); )
 			{
 				IGeneralDelayedTask * pTask = *it;
@@ -113,7 +113,7 @@ void CSupremeBeing::Segment()
 					++it;
 			}
 
-			// âûçûâàòü íå êàæäûé ñåãìåíò è ğàçíåñòè ïî ñåãìåíòàì.
+			// Ğ²Ñ‹Ğ·Ñ‹Ğ²Ğ°Ñ‚ÑŒ Ğ½Ğµ ĞºĞ°Ğ¶Ğ´Ñ‹Ğ¹ ÑĞµĞ³Ğ¼ĞµĞ½Ñ‚ Ğ¸ Ñ€Ğ°Ğ·Ğ½ĞµÑÑ‚Ğ¸ Ğ¿Ğ¾ ÑĞµĞ³Ğ¼ĞµĞ½Ñ‚Ğ°Ğ¼.
 			for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
 				it->second->Segment();
 		}

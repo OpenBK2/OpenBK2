@@ -93,7 +93,7 @@ public:
 	CTransformStack() : nClipFlagsPtr(0), nClipPlanes(0) {}
 	void SetCamera( const SHMatrix& pos );
 	// aspect = ysize/xsize
-	// vShift это смещение из расчета того, что несмещенный экран простирается от [-1,1]
+	// vShift СЌС‚Рѕ СЃРјРµС‰РµРЅРёРµ РёР· СЂР°СЃС‡РµС‚Р° С‚РѕРіРѕ, С‡С‚Рѕ РЅРµСЃРјРµС‰РµРЅРЅС‹Р№ СЌРєСЂР°РЅ РїСЂРѕСЃС‚РёСЂР°РµС‚СЃСЏ РѕС‚ [-1,1]
 	void MakeProjective( float fAspect, float fFovX = 90, float fZMin = 0.1f, float fZMax = 100, const CVec2 &vShift = CVec2( 0, 0 ) );
 	void MakeProjective( const CVec2 &screenRect, float fFovX = 90, float fZMin = 0.1f, float fZMax = 100, const CVec2 &vShift = CVec2( 0, 0 ) );
 	void MakeParallel( float fWidth, float fHeight, float fZMin = 0.1f, float fZMax = 1000.0f );

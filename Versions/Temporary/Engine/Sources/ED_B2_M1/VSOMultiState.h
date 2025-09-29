@@ -97,7 +97,7 @@ public:
 
 	void UpdateEditParameters( UINT nFlags );
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOMultiState( CMapInfoEditor* _pMapInfoEditor = 0 )
 	{
 		pMapInfoEditor = _pMapInfoEditor;

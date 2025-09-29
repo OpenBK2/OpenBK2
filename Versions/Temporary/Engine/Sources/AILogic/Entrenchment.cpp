@@ -108,7 +108,7 @@ bool CEntrenchmentPart::CanUnregister() const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEntrenchmentPart::Segment()
 {
-	// все действия здесь должны быть const, т.к. они различны на разных компах, для multiplayer
+	// РІСЃРµ РґРµР№СЃС‚РІРёСЏ Р·РґРµСЃСЊ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ const, С‚.Рє. РѕРЅРё СЂР°Р·Р»РёС‡РЅС‹ РЅР° СЂР°Р·РЅС‹С… РєРѕРјРїР°С…, РґР»СЏ multiplayer
 	if ( !bVisible )
 	{
 		for ( list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
@@ -126,11 +126,11 @@ void CEntrenchmentPart::Segment()
 		}
 	}
 
-	// unregister только если виден всеми сторонами - для multiplayer	
+	// unregister С‚РѕР»СЊРєРѕ РµСЃР»Рё РІРёРґРµРЅ РІСЃРµРјРё СЃС‚РѕСЂРѕРЅР°РјРё - РґР»СЏ multiplayer	
 	if ( CanUnregister() )
 		theStatObjs.UnregisterSegment( this );
 
-	// random вызывать всегда - для mutliplayer
+	// random РІС‹Р·С‹РІР°С‚СЊ РІСЃРµРіРґР° - РґР»СЏ mutliplayer
 	nextSegmTime = curTime + NRandom::Random( 500, 2000 );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +234,7 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 : nBusyFireplaces( 0 ), nextSegmTime( 0 )
 {
 	SetAlive( true );
-	NI_ASSERT( nLen != 0, "Окоп из нуля сегментов" );
+	NI_ASSERT( nLen != 0, "РћРєРѕРї РёР· РЅСѓР»СЏ СЃРµРіРјРµРЅС‚РѕРІ" );
 	SetUniqueIdForObjects();
 	
 	insiders.clear();
@@ -291,9 +291,9 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 	if ( pFullEntrenchment )
 		pFullEntrenchment->AddEntrenchmentSection( this );
 
-	NI_ASSERT( fLengthAhead != -1, "Окоп без линейных сегментов и fireplaces" );
+	NI_ASSERT( fLengthAhead != -1, "РћРєРѕРї Р±РµР· Р»РёРЅРµР№РЅС‹С… СЃРµРіРјРµРЅС‚РѕРІ Рё fireplaces" );
 
-	// чтобы центр прямоульника был в середине
+	// С‡С‚РѕР±С‹ С†РµРЅС‚СЂ РїСЂСЏРјРѕСѓР»СЊРЅРёРєР° Р±С‹Р» РІ СЃРµСЂРµРґРёРЅРµ
 	const float fLength = ( fLengthAhead + fLengthBack ) / 2;
 	rect.InitRect( center + vDirPerp * ( -fLengthBack + fLength ), vDirPerp, fLength, fWidth );
 
@@ -355,7 +355,7 @@ void CEntrenchment::AddSoldier( CSoldier *pUnit )
 	{
 		++nBusyFireplaces;
 		
-		// найти ближайшее к центру юнита свободное fireplace 
+		// РЅР°Р№С‚Рё Р±Р»РёР¶Р°Р№С€РµРµ Рє С†РµРЅС‚СЂСѓ СЋРЅРёС‚Р° СЃРІРѕР±РѕРґРЅРѕРµ fireplace 
 		int i = 0;
 		float fBestDist = 1e10;
 		while ( i < fireplaces.size() )
@@ -417,7 +417,7 @@ const CVec2 CEntrenchment::GetFirePlaceCoord( const int nFirePlace )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEntrenchment::ProcessEmptyFireplace( const int nFireplace )
 {
-	// есть юниты в резерве, проверка на нахождение в окопе, т.к. он оттуда может уже собираться выходить
+	// РµСЃС‚СЊ СЋРЅРёС‚С‹ РІ СЂРµР·РµСЂРІРµ, РїСЂРѕРІРµСЂРєР° РЅР° РЅР°С…РѕР¶РґРµРЅРёРµ РІ РѕРєРѕРїРµ, С‚.Рє. РѕРЅ РѕС‚С‚СѓРґР° РјРѕР¶РµС‚ СѓР¶Рµ СЃРѕР±РёСЂР°С‚СЊСЃСЏ РІС‹С…РѕРґРёС‚СЊ
 	if ( !insiders.empty() && insiders.back().nFireplace == -1 && insiders.back().pUnit->IsInEntrenchment() )
 	{
 		CSoldier *pUnit = insiders.back().pUnit;
@@ -446,7 +446,7 @@ void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace 
 	if ( iter != insiders.end() )
 	{
 		int nFireplace = iter->nFireplace;
-		// сидит в fireplace
+		// СЃРёРґРёС‚ РІ fireplace
 		if ( nFireplace != -1 )
 			fireplaces[nFireplace].pUnit = 0;
 
@@ -470,7 +470,7 @@ void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, 
 
 	/*list< CPtr<CSoldier> > dead;	
 	
-	// все убиты
+	// РІСЃРµ СѓР±РёС‚С‹
 	if ( fDamage >= pStats->fMaxHP || theCheats.GetFirstShoot( nPlayerOfShoot ) == 1 )
 	{
 		for ( list<SInsiderInfo>::iterator iter = insiders.begin(); iter != insiders.end(); ++iter )
@@ -694,7 +694,7 @@ void CEntrenchmentTankPit::Die( const float fDamage )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEntrenchmentTankPit::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
-	//не разрушается
+	//РЅРµ СЂР°Р·СЂСѓС€Р°РµС‚СЃСЏ
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************

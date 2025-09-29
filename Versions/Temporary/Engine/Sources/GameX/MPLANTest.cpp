@@ -86,7 +86,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 			return;
 		if ( !bIsServer )
 		{
-			for ( int i = 1; i < nMySlot; ++i ) // Потому что слот 0 - это создатель игры. Он всегда готов:)
+			for ( int i = 1; i < nMySlot; ++i ) // РџРѕС‚РѕРјСѓ С‡С‚Рѕ СЃР»РѕС‚ 0 - СЌС‚Рѕ СЃРѕР·РґР°С‚РµР»СЊ РёРіСЂС‹. РћРЅ РІСЃРµРіРґР° РіРѕС‚РѕРІ:)
 			{
 				hash_map<int,bool>::iterator it = gameClientsReady.find( i );
 				if ( it == gameClientsReady.end() || !it->second )

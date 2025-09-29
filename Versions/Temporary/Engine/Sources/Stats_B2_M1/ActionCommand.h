@@ -8,16 +8,16 @@
 // **
 // ************************************************************************************************************************ //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// общее правило:
-//	команды, которые посылаются от пользователя, нумеруются от 0 до 999
-//	команды, которые посылаются внутри AI нумеруются от 1000 до 32767 и начинаются на 4 таба правее (для того, чтобы было легко отличать)
+// РѕР±С‰РµРµ РїСЂР°РІРёР»Рѕ:
+//	РєРѕРјР°РЅРґС‹, РєРѕС‚РѕСЂС‹Рµ РїРѕСЃС‹Р»Р°СЋС‚СЃСЏ РѕС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РЅСѓРјРµСЂСѓСЋС‚СЃСЏ РѕС‚ 0 РґРѕ 999
+//	РєРѕРјР°РЅРґС‹, РєРѕС‚РѕСЂС‹Рµ РїРѕСЃС‹Р»Р°СЋС‚СЃСЏ РІРЅСѓС‚СЂРё AI РЅСѓРјРµСЂСѓСЋС‚СЃСЏ РѕС‚ 1000 РґРѕ 32767 Рё РЅР°С‡РёРЅР°СЋС‚СЃСЏ РЅР° 4 С‚Р°Р±Р° РїСЂР°РІРµРµ (РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ Р»РµРіРєРѕ РѕС‚Р»РёС‡Р°С‚СЊ)
 
-// при добавлении новой пользовательской команды определить её pointtogo в GetGoPointByCommand для
-// корректной отдачи приказов формациям в окопах и зданиях
+// РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РЅРѕРІРѕР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕР№ РєРѕРјР°РЅРґС‹ РѕРїСЂРµРґРµР»РёС‚СЊ РµС‘ pointtogo РІ GetGoPointByCommand РґР»СЏ
+// РєРѕСЂСЂРµРєС‚РЅРѕР№ РѕС‚РґР°С‡Рё РїСЂРёРєР°Р·РѕРІ С„РѕСЂРјР°С†РёСЏРј РІ РѕРєРѕРїР°С… Рё Р·РґР°РЅРёСЏС…
 
-// если в команде выставлен старший бит 0x8000, то это self-action
+// РµСЃР»Рё РІ РєРѕРјР°РЅРґРµ РІС‹СЃС‚Р°РІР»РµРЅ СЃС‚Р°СЂС€РёР№ Р±РёС‚ 0x8000, С‚Рѕ СЌС‚Рѕ self-action
 
-// значения должны быть не больше, чем 65535!
+// Р·РЅР°С‡РµРЅРёСЏ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РЅРµ Р±РѕР»СЊС€Рµ, С‡РµРј 65535!
 enum EActionCommand
 {
 	ACTION_COMMAND_MOVE_TO									= 0,		// move to location
@@ -30,7 +30,7 @@ enum EActionCommand
 	ACTION_COMMAND_LEAVE										= 7,		// leave building/trench
 	ACTION_COMMAND_ROTATE_TO								= 8,		// rotate to point
 	ACTION_COMMAND_STOP											= 9,		// stop all actions
-	ACTION_COMMAND_PARADE										= 10,		// выстроиться в формацию
+	ACTION_COMMAND_PARADE										= 10,		// РІС‹СЃС‚СЂРѕРёС‚СЊСЃСЏ РІ С„РѕСЂРјР°С†РёСЋ
 	//
 	ACTION_COMMAND_DIE															= 1000,	// (AI only)
 	//
@@ -99,20 +99,20 @@ enum EActionCommand
 	ACTION_COMMAND_DISBAND_FORMATION				= 34,		// disband squad
 	ACTION_COMMAND_FORM_FORMATION						= 35,		// form squad (after disbanding)
 
-	ACTION_COMMAND_WAIT_TO_FORM											= 1033, // (AI only) - ждать, пока другие юниты не придут в нужное состояние, чтобы организовать формацию
+	ACTION_COMMAND_WAIT_TO_FORM											= 1033, // (AI only) - Р¶РґР°С‚СЊ, РїРѕРєР° РґСЂСѓРіРёРµ СЋРЅРёС‚С‹ РЅРµ РїСЂРёРґСѓС‚ РІ РЅСѓР¶РЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ, С‡С‚РѕР±С‹ РѕСЂРіР°РЅРёР·РѕРІР°С‚СЊ С„РѕСЂРјР°С†РёСЋ
 
 	ACTION_COMMAND_SNEAK_ON													= 1034,
 	ACTION_COMMAND_SNEAK_OFF												= 1035,
 
 	ACTION_COMMAND_FOLLOW										= 39,
-	ACTION_COMMAND_FOLLOW_NOW												= 1037, // (AI only) ехать за ведущим
+	ACTION_COMMAND_FOLLOW_NOW												= 1037, // (AI only) РµС…Р°С‚СЊ Р·Р° РІРµРґСѓС‰РёРј
 
-	ACTION_COMMAND_CATCH_FORMATION									= 1038, // (AI only) присоединиться к формации
+	ACTION_COMMAND_CATCH_FORMATION									= 1038, // (AI only) РїСЂРёСЃРѕРµРґРёРЅРёС‚СЊСЃСЏ Рє С„РѕСЂРјР°С†РёРё
 
 	ACTION_COMMAND_RESUPPLY_HR							= 43,
 
-	ACTION_COMMAND_SWARM_ATTACK_UNIT								= 1040, // (AI only) атака с самостоятельным перевыбором цели (например, при swarm)
-	ACTION_MOVE_SWARM_ATTACK_FORMATION							= 1041, // (AI only) атака с самостоятельным перевыбором цели (например, при swarm)
+	ACTION_COMMAND_SWARM_ATTACK_UNIT								= 1040, // (AI only) Р°С‚Р°РєР° СЃ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅС‹Рј РїРµСЂРµРІС‹Р±РѕСЂРѕРј С†РµР»Рё (РЅР°РїСЂРёРјРµСЂ, РїСЂРё swarm)
+	ACTION_MOVE_SWARM_ATTACK_FORMATION							= 1041, // (AI only) Р°С‚Р°РєР° СЃ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅС‹Рј РїРµСЂРµРІС‹Р±РѕСЂРѕРј С†РµР»Рё (РЅР°РїСЂРёРјРµСЂ, РїСЂРё swarm)
 
 	ACTION_COMMAND_ENTRENCH_SELF						= 45,
 	ACTION_COMMAND_SWARM_ATTACK_OBJECT							= 1042,
@@ -141,7 +141,7 @@ enum EActionCommand
 
 	ACTION_COMMAND_CHANGE_MOVEMENT					= 53,					// change movement order - move to point or mode parallel
 
-	ACTION_COMMAND_ROTATE_TO_DIR										= 1055,	// повернуться в направлении, vPos задаёт вектор направления
+	ACTION_COMMAND_ROTATE_TO_DIR										= 1055,	// РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ РЅР°РїСЂР°РІР»РµРЅРёРё, vPos Р·Р°РґР°С‘С‚ РІРµРєС‚РѕСЂ РЅР°РїСЂР°РІР»РµРЅРёСЏ
 	ACTION_COMMAND_USE															= 1056,
 	ACTION_MOVE_ENTER_TRANSPORT_CHEAT_PATH					= 1057, // enter transport ignore locked tiles
 
@@ -218,7 +218,7 @@ enum EActionCommand
 	ACTION_COMMAND_EXACT_BOMBING						= 114,
 	ACTION_MOVE_FIRST_AID														= 1067,
 
-	ACTION_MOVE_BY_FORMATION												= 1071,		//! движение юнитов организованной толпой (колоннами)};
+	ACTION_MOVE_BY_FORMATION												= 1071,		//! РґРІРёР¶РµРЅРёРµ СЋРЅРёС‚РѕРІ РѕСЂРіР°РЅРёР·РѕРІР°РЅРЅРѕР№ С‚РѕР»РїРѕР№ (РєРѕР»РѕРЅРЅР°РјРё)};
 	ACTION_MOVE_DROP_BOMBS_TO_POINT									= 1072,
 	ACTION_MOVE_DROP_BOMBS_TO_TARGET								= 1073,
 

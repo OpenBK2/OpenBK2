@@ -23,7 +23,7 @@ void CAntiArtilleryManager::RemoveAA( CAntiArtillery *pAA )
 	antiArtilleries[pAA->nParty].erase( pAA->GetUniqueId() );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// âûñòðåë èç pAntiArt áûë ñëûøåí ñòðîíîé nParty
+// Ð²Ñ‹ÑÑ‚Ñ€ÐµÐ» Ð¸Ð· pAntiArt Ð±Ñ‹Ð» ÑÐ»Ñ‹ÑˆÐµÐ½ ÑÑ‚Ñ€Ð¾Ð½Ð¾Ð¹ nParty
 bool CAntiArtilleryManager::IsHeardForParty( CAntiArtillery *pAntiArt, const int nParty )
 {
 	const NTimer::STime lastShotTime = pAntiArt->lastShotTime[nParty];

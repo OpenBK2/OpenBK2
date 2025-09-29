@@ -25,7 +25,7 @@ namespace NInput
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// вспомогательные структуры данных
+// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ СЃС‚СЂСѓРєС‚СѓСЂС‹ РґР°РЅРЅС‹С…
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SKeyInfo
@@ -282,7 +282,7 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 // Initialization / Deinitialization / message handling
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Инициализировать DirectInput
+// РРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ DirectInput
 bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampleBufferSize )
 {
 	HRESULT hRes;
@@ -425,7 +425,7 @@ static bool SetCoopLevel()
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// выкачать все event'ы, произошедшие с последней выкачки
+// РІС‹РєР°С‡Р°С‚СЊ РІСЃРµ event'С‹, РїСЂРѕРёР·РѕС€РµРґС€РёРµ СЃ РїРѕСЃР»РµРґРЅРµР№ РІС‹РєР°С‡РєРё
 struct SSeqNumberLessThenFunctional
 {
 	bool operator()( const SInputEvent &sEvent1, const SInputEvent &sEvent2 ) const 
@@ -755,7 +755,7 @@ void StopEmulateInput()
 //	Internal functions
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// получит / отдать контроль над девайсами
+// РїРѕР»СѓС‡РёС‚ / РѕС‚РґР°С‚СЊ РєРѕРЅС‚СЂРѕР»СЊ РЅР°Рґ РґРµРІР°Р№СЃР°РјРё
 static bool SetFocus( bool bFocus )
 {
 	HRESULT hRes;
@@ -793,7 +793,7 @@ static bool SetFocus( bool bFocus )
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// добавить информацию про девайс
+// РґРѕР±Р°РІРёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РїСЂРѕ РґРµРІР°Р№СЃ
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize )
 {
 	HRESULT hRes;
@@ -827,7 +827,7 @@ static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize )
 	return;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Добавить информацию про неизвестный девайс
+// Р”РѕР±Р°РІРёС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РїСЂРѕ РЅРµРёР·РІРµСЃС‚РЅС‹Р№ РґРµРІР°Р№СЃ
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 {
 	HRESULT hRes;
@@ -926,7 +926,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	return;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Занести в hash действия для данного устройства
+// Р—Р°РЅРµСЃС‚Рё РІ hash РґРµР№СЃС‚РІРёСЏ РґР»СЏ РґР°РЅРЅРѕРіРѕ СѓСЃС‚СЂРѕР№СЃС‚РІР°
 static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlType cType, const char *pszName )
 {
 	int nAction = INPUT_KEYID( nDeviceID, nDevAction );

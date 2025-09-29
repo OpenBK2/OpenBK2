@@ -580,7 +580,7 @@ NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUse
 	( IsEnemy() ? pClient->actionsPriority.enemyActions : pClient->actionsPriority.neutralActions );
 	for ( int i = 0; i < priority.size(); ++i )
 	{
-		// åñëè â ñïèñêå âñòðåòèëîñü NDb::USER_ACTION_UNKNOWN, âûáåðåì íåéòðàëüíîå äåéñòâèå ïî óìîë÷àíèþ
+		// ÐµÑÐ»Ð¸ Ð² ÑÐ¿Ð¸ÑÐºÐµ Ð²ÑÑ‚Ñ€ÐµÑ‚Ð¸Ð»Ð¾ÑÑŒ NDb::USER_ACTION_UNKNOWN, Ð²Ñ‹Ð±ÐµÑ€ÐµÐ¼ Ð½ÐµÐ¹Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ð¾Ðµ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ðµ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ
 		if ( priority[i] == NDb::USER_ACTION_UNKNOWN )
 			return NDb::USER_ACTION_UNKNOWN;
 			

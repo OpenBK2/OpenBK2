@@ -383,8 +383,8 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 		{
 			pDifficulty->ShowWindow( true );
 
-			// CRAP - ñïåöèàëüíàÿ çàòû÷êà äëÿ äèçàéíåðîâ, êîòîðûå íå èñïîëüçóþò êîíñòàíòû â êà÷åñòâå óðîâíÿ ñëîæíîñòè
-			// ñòàâèì "very easy", èäóùèé ïîñëåäíèì, â íà÷àëî
+			// CRAP - ÑÐ¿ÐµÑ†Ð¸Ð°Ð»ÑŒÐ½Ð°Ñ Ð·Ð°Ñ‚Ñ‹Ñ‡ÐºÐ° Ð´Ð»Ñ Ð´Ð¸Ð·Ð°Ð¹Ð½ÐµÑ€Ð¾Ð², ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ Ð½Ðµ Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÑŽÑ‚ ÐºÐ¾Ð½ÑÑ‚Ð°Ð½Ñ‚Ñ‹ Ð² ÐºÐ°Ñ‡ÐµÑÑ‚Ð²Ðµ ÑƒÑ€Ð¾Ð²Ð½Ñ ÑÐ»Ð¾Ð¶Ð½Ð¾ÑÑ‚Ð¸
+			// ÑÑ‚Ð°Ð²Ð¸Ð¼ "very easy", Ð¸Ð´ÑƒÑ‰Ð¸Ð¹ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½Ð¸Ð¼, Ð² Ð½Ð°Ñ‡Ð°Ð»Ð¾
 			if ( pCampaign->difficultyLevels.size() == 4 )
 			{
 				const NDb::SDifficultyLevel *pDifficultyLevel = pCampaign->difficultyLevels[3];
@@ -462,7 +462,7 @@ void CampaignSelectionNothing( const string &szID, const vector<wstring> &params
 void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bCustom )
 {
 	int nDifficulty = _nDifficulty;
-	// CRAP - âîçâðàùàåì îáðàòíî îáìåíåííûå ìåñòàìè óðîâíè ñëîæíîñòè
+	// CRAP - Ð²Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÐ¼ Ð¾Ð±Ñ€Ð°Ñ‚Ð½Ð¾ Ð¾Ð±Ð¼ÐµÐ½ÐµÐ½Ð½Ñ‹Ðµ Ð¼ÐµÑÑ‚Ð°Ð¼Ð¸ ÑƒÑ€Ð¾Ð²Ð½Ð¸ ÑÐ»Ð¾Ð¶Ð½Ð¾ÑÑ‚Ð¸
 	if ( pCampaignDB->difficultyLevels.size() == 4 )
 	{
 		if ( nDifficulty == 0 )
@@ -479,7 +479,7 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaignDB, nDifficulty, false, bCustom );
 	
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // óáåðåì ïîäëîæêó ñ ìèññèåé
+//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // ÑƒÐ±ÐµÑ€ÐµÐ¼ Ð¿Ð¾Ð´Ð»Ð¾Ð¶ÐºÑƒ Ñ Ð¼Ð¸ÑÑÐ¸ÐµÐ¹
 
 	string szIntro = pCampaignDB->szIntroMovie;
 	if ( szIntro.empty() )

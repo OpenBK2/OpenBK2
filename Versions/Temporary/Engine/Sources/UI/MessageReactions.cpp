@@ -41,7 +41,7 @@ static int Sqrt( struct lua_State *pState )
 static int OutputStringValue( struct lua_State *state )
 {
 	Script script(state);
-	NI_ASSERT( script.GetTop() == 2, "Script function must have 2 arguments on the stack" );			//два аргумента
+	NI_ASSERT( script.GetTop() == 2, "Script function must have 2 arguments on the stack" );			//РґРІР° Р°СЂРіСѓРјРµРЅС‚Р°
 	string szStr = script.GetObject( -2 );
 	int nValue = script.GetObject( -1 );
 	DebugTrace( "****Debug LUA script: %s %s\n", szStr.c_str(), nValue );

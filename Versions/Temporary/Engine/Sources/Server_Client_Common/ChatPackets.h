@@ -188,7 +188,7 @@ class CChatFriendNotifyPacket : public CNetPacket
 public:
 	ZDATA
 		string szNick;
-		char cChatStatus; // см. EChatStatus
+		char cChatStatus; // СЃРј. EChatStatus
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&cChatStatus); return 0; }
 
 	CChatFriendNotifyPacket() {}

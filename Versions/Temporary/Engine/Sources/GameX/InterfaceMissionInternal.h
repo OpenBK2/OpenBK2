@@ -116,7 +116,7 @@ private:
 		CPtr< IWindow > pIconBgDisabledWnd;
 		CPtr< IWindow > pIconFgDisabledWnd;
 		
-		bool bCurPresent; // присутствует на одной из панелей
+		bool bCurPresent; // РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РЅР° РѕРґРЅРѕР№ РёР· РїР°РЅРµР»РµР№
 
 		CPtr< IWindow > pAutocastBorderWnd;
 		string szHotkeyCmd;
@@ -213,7 +213,7 @@ private:
 	CPtr<IWindow> pPause;
 	CPtr<ITransceiver> pTransceiver;
 	
-	bool bEscMenuPressed; // DEBUG - чтобы не показывать несколько Esc-menu при отладке
+	bool bEscMenuPressed; // DEBUG - С‡С‚РѕР±С‹ РЅРµ РїРѕРєР°Р·С‹РІР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ Esc-menu РїСЂРё РѕС‚Р»Р°РґРєРµ
 	int nGameSpeed;													// game speed before script movie
 	
 	CObj<CMissionReinf> pReinf;
@@ -449,7 +449,7 @@ public:
 	//
 	bool Init();
 	void OnGetFocus( bool bFocus );
-	// переход к этому интерфейсу из другого полноэкранного
+	// РїРµСЂРµС…РѕРґ Рє СЌС‚РѕРјСѓ РёРЅС‚РµСЂС„РµР№СЃСѓ РёР· РґСЂСѓРіРѕРіРѕ РїРѕР»РЅРѕСЌРєСЂР°РЅРЅРѕРіРѕ
 	void StartInterface();
 	//
 	void NewMission( const NDb::SMapInfo *_pMap, interface ITransceiver *pTransceiver, IScenarioTracker *pScenarioTracker, int nPlayer );

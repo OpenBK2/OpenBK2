@@ -77,7 +77,7 @@ CUnitGuns* CArtillery::GetGuns()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CArtillery::CreateAmmoBox()
 {
-	// у пушки должен быть ящик с патронами
+	// Сѓ РїСѓС€РєРё РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЏС‰РёРє СЃ РїР°С‚СЂРѕРЅР°РјРё
 	const SStaticObjectRPGStats* pStats = theUnitCreation.GetShellBox();
 
 	if ( pStats != 0 ) 
@@ -130,7 +130,7 @@ void CArtillery::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell 
 		if ( pBulletStorage && bBulletStorageVisible )
 			HideAmmoBox();
 		pBulletStorage = 0;
-		// пушка умерла, убить артиллеристов
+		// РїСѓС€РєР° СѓРјРµСЂР»Р°, СѓР±РёС‚СЊ Р°СЂС‚РёР»Р»РµСЂРёСЃС‚РѕРІ
 		if ( HasServeCrew() )
 		{
 			while ( IsValidObj( pCrew ) && pCrew->Size() != 0 )
@@ -260,7 +260,7 @@ void CArtillery::SetCrew( class CFormation * _pCrew, const bool bCapture )
 	NI_ASSERT( _pCrew != 0 , "wrong crew !");
 
 	pCrew = _pCrew;
-	ChangePlayer( pCrew->GetPlayer() ); // принять сторону команды
+	ChangePlayer( pCrew->GetPlayer() ); // РїСЂРёРЅСЏС‚СЊ СЃС‚РѕСЂРѕРЅСѓ РєРѕРјР°РЅРґС‹
 	if ( bCapture )
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_GUNSERVE, GetUniqueId() ), pCrew, false );
 
@@ -427,7 +427,7 @@ const float CArtillery::GetMaxSpeedHere( const CVec2 &point, bool bAdjust ) cons
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CArtillery::SetOperable( float _fOperable )
 {
-	// если зенитка инсталлирована, была без расчёта, а он появился, то повернуть ствол
+	// РµСЃР»Рё Р·РµРЅРёС‚РєР° РёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°РЅР°, Р±С‹Р»Р° Р±РµР· СЂР°СЃС‡С‘С‚Р°, Р° РѕРЅ РїРѕСЏРІРёР»СЃСЏ, С‚Рѕ РїРѕРІРµСЂРЅСѓС‚СЊ СЃС‚РІРѕР»
 	if ( fOperable == 0.0f && _fOperable != 0.0f && GetStats()->etype == RPG_TYPE_ART_AAGUN && IsInstalled() )
 	{
 		for ( int i = 0; i < GetNTurrets(); ++i )
@@ -484,10 +484,10 @@ void CArtillery::Segment()
 
 	if ( eCurInstallAction != ACTION_NOTIFY_NONE )
 	{
-		// идёт поворот пушки в позицию для корректного выполнения installAction
+		// РёРґС‘С‚ РїРѕРІРѕСЂРѕС‚ РїСѓС€РєРё РІ РїРѕР·РёС†РёСЋ РґР»СЏ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ РІС‹РїРѕР»РЅРµРЅРёСЏ installAction
 		if ( installActionTime == 0 )
 		{
-			// все пушки повёрнуты или нужно нулевое время на инсталляцию
+			// РІСЃРµ РїСѓС€РєРё РїРѕРІС‘СЂРЅСѓС‚С‹ РёР»Рё РЅСѓР¶РЅРѕ РЅСѓР»РµРІРѕРµ РІСЂРµРјСЏ РЅР° РёРЅСЃС‚Р°Р»Р»СЏС†РёСЋ
 			bool bCanDoInstallAction = true;
 			for ( int i = 0; i < GetNTurrets(); ++i )
 			{
@@ -539,7 +539,7 @@ void CArtillery::Segment()
 			bInstalled = IsInstallAction( eCurInstallAction );
 			updater.AddUpdate( 0, GetFinishInstallUpdate( eCurInstallAction ), this, 0 );
 
-			// нужно повернуть в default position инсталлиравонного орудия
+			// РЅСѓР¶РЅРѕ РїРѕРІРµСЂРЅСѓС‚СЊ РІ default position РёРЅСЃС‚Р°Р»Р»РёСЂР°РІРѕРЅРЅРѕРіРѕ РѕСЂСѓРґРёСЏ
 			if ( bInstalled && ( pStats->etype == RPG_TYPE_ART_AAGUN || pStats->etype == RPG_TYPE_SPG_AAGUN ) && IsOperable() )
 			{
 				for ( int i = 0; i < GetNTurrets(); ++i )
@@ -566,7 +566,7 @@ void CArtillery::Segment()
 		installActionTime = 0;
 
 //		const bool bAAGun = pStats->etype == RPG_TYPE_ART_AAGUN || pStats->etype == RPG_TYPE_SPG_AAGUN;
-		// доворачивать в default позицию только при deinstallation
+		// РґРѕРІРѕСЂР°С‡РёРІР°С‚СЊ РІ default РїРѕР·РёС†РёСЋ С‚РѕР»СЊРєРѕ РїСЂРё deinstallation
 		if ( !IsInstallAction( eCurInstallAction ) )
 		{
 			for ( int i = 0; i < GetNTurrets(); ++i )
@@ -593,10 +593,10 @@ void CArtillery::Segment()
 		}
 	}
 
-	const bool bBoxMustBeShown =	GetNGuns() > 0 && GetNAmmo( 0 ) != 0 &&	// есть ли патроны
+	const bool bBoxMustBeShown =	GetNGuns() > 0 && GetNAmmo( 0 ) != 0 &&	// РµСЃС‚СЊ Р»Рё РїР°С‚СЂРѕРЅС‹
 													IsInstalled() &&
-													pStats->vAmmoPoint != VNULL2 &&			// есть ли ящик вообще
-													IsVisible( theDipl.GetMyParty() ); // видит эту пушку игрок
+													pStats->vAmmoPoint != VNULL2 &&			// РµСЃС‚СЊ Р»Рё СЏС‰РёРє РІРѕРѕР±С‰Рµ
+													IsVisible( theDipl.GetMyParty() ); // РІРёРґРёС‚ СЌС‚Сѓ РїСѓС€РєСѓ РёРіСЂРѕРє
 	if ( bBoxMustBeShown )
 	{
 		if ( bBulletStorageVisible && pBulletStorage )
@@ -617,8 +617,8 @@ void CArtillery::Segment()
 		HideAmmoBox();
 	
 	
-	// артиллеристы должны быть но их нет.
-	// пушка в этом случае нейтральная.
+	// Р°СЂС‚РёР»Р»РµСЂРёСЃС‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РЅРѕ РёС… РЅРµС‚.
+	// РїСѓС€РєР° РІ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ РЅРµР№С‚СЂР°Р»СЊРЅР°СЏ.
 	if ( MustHaveCrewToOperate() && !HasServeCrew()  && ( IsOperable() || IsSelectable() || GetPlayer() != theDipl.GetNeutralPlayer()) )
 	{
 		SetSelectable( false, true );
@@ -670,7 +670,7 @@ void CArtillery::InstallBack( bool bAlreadyDone )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CArtillery::InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone )
 {
-	//bAlreadyDone = true, значит действие сразу должно закончится.
+	//bAlreadyDone = true, Р·РЅР°С‡РёС‚ РґРµР№СЃС‚РІРёРµ СЃСЂР°Р·Сѓ РґРѕР»Р¶РЅРѕ Р·Р°РєРѕРЅС‡РёС‚СЃСЏ.
 	if (	eInstallAction == ACTION_NOTIFY_INSTALL_ROTATE ||
 				eInstallAction == ACTION_NOTIFY_INSTALL_TRANSPORT ||
 				eInstallAction == ACTION_NOTIFY_INSTALL_MOVE )
@@ -849,7 +849,7 @@ const ECollidingType CArtillery::GetCollidingType( CBasePathUnit *pUnit ) const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CArtillery::Stop()
 {
-	// если нулевое время на инсталляцию, произвести все необходимые после остановки манипуляции
+	// РµСЃР»Рё РЅСѓР»РµРІРѕРµ РІСЂРµРјСЏ РЅР° РёРЅСЃС‚Р°Р»Р»СЏС†РёСЋ, РїСЂРѕРёР·РІРµСЃС‚Рё РІСЃРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїРѕСЃР»Рµ РѕСЃС‚Р°РЅРѕРІРєРё РјР°РЅРёРїСѓР»СЏС†РёРё
 	if ( !ShouldSendInstallAction( ACTION_NOTIFY_INSTALL_TRANSPORT ) )
 		InstallAction( ACTION_NOTIFY_INSTALL_TRANSPORT );
 
@@ -937,7 +937,7 @@ void CArtillery::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 {
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
 
-	// в радиусе цели нет
+	// РІ СЂР°РґРёСѓСЃРµ С†РµР»Рё РЅРµС‚
 	if ( *pBestTarget == 0 && 
 			 ( pCurTarget == 0 || pCurTarget->GetStats()->IsInfantry() ) && theDipl.IsAIPlayer( GetPlayer() ) )
 	{

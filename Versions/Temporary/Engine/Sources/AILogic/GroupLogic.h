@@ -63,9 +63,9 @@ CFreeGroupIDs groupIds;
 	// like M1
 	void DivideBySubGroups2( const SAIUnitCmd &command, const int nGroup );
 
-	// скорости юнитов в follow
+	// СЃРєРѕСЂРѕСЃС‚Рё СЋРЅРёС‚РѕРІ РІ follow
 	void SegmentFollowingUnits();
-	// обработка застрявших из-зи коллизий юнитов
+	// РѕР±СЂР°Р±РѕС‚РєР° Р·Р°СЃС‚СЂСЏРІС€РёС… РёР·-Р·Рё РєРѕР»Р»РёР·РёР№ СЋРЅРёС‚РѕРІ
 	void StayTimeSegment();
 
 	void ProcessGridCommand( const CVec2 &vGridCenter, const CVec2 &vGridDir, const int nGroup, bool bPlaceInQueue );
@@ -99,7 +99,7 @@ public:
 	void InsertUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
 	void PushFrontUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
 	
-	// послать updates на shoot areas для всех юнитов в группе
+	// РїРѕСЃР»Р°С‚СЊ updates РЅР° shoot areas РґР»СЏ РІСЃРµС… СЋРЅРёС‚РѕРІ РІ РіСЂСѓРїРїРµ
 	void UpdateAllAreas( const vector<int> &units, const EActionNotify eAction );
 
 	void Segment();

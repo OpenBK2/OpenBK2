@@ -48,7 +48,7 @@ public:
 	//
 	void CreateClipMarker( const CMapClip &rMapClip, const SAdvClipboardPasteSettings &pasteSettings, const CVec3 &vPasteCenter )
 	{
-		// создают полупрозрачные модели объектов для вставки
+		// СЃРѕР·РґР°СЋС‚ РїРѕР»СѓРїСЂРѕР·СЂР°С‡РЅС‹Рµ РјРѕРґРµР»Рё РѕР±СЉРµРєС‚РѕРІ РґР»СЏ РІСЃС‚Р°РІРєРё
 		//
 		CPtr<IEditorScene > pScene = EditorScene();
 		if ( !pScene )

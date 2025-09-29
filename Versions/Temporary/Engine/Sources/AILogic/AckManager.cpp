@@ -97,7 +97,7 @@ void CAckManager::RegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 void CAckManager::UnRegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 {
 	if ( pObject->GetPlayer() != theDipl.GetMyNumber() ) return;
-	// если этот юнит есть в списке, то он удаляется.
+	// РµСЃР»Рё СЌС‚РѕС‚ СЋРЅРёС‚ РµСЃС‚СЊ РІ СЃРїРёСЃРєРµ, С‚Рѕ РѕРЅ СѓРґР°Р»СЏРµС‚СЃСЏ.
 	//NI_ASSERT( eBored <= _ACK_BORED_END && eBored >= _ACK_BORED_BEGIN, "not bored ack passed" );
 	bored[eBored][pObject->GetUniqueId()] = CUnitBoredPresence( pObject, false );
 	if ( bored[eBored].empty() )

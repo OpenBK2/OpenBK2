@@ -72,7 +72,7 @@ public:
 			if ( nCurParty < nParties - 1 )
 			{
 				++nCurParty;
-				// 3 - это количество сторон
+				// 3 - СЌС‚Рѕ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚РѕСЂРѕРЅ
 				nCellId = units.nCell[geomIter.GetY()][geomIter.GetX()] * 2 * 3 + parties[nCurParty] + 1;
 
 				iter = units.unitsInCells[1].begin( nCellId );

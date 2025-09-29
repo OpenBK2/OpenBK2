@@ -27,7 +27,7 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 	NI_ASSERT( pszDescription != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
 	
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
 	if ( (bool)value )
@@ -125,7 +125,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 	CPtr<IManipulator> pMSBManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
 	NI_ASSERT( pMSBManipulator != 0, "CWindowMSButtonSharedBuilder::InternalInsertObject() pMSBManipulator == 0" );
 
-	// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû WindowMSButtonShared
+	// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ WindowMSButtonShared
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.VerAllign.First", string("EPA_LOW_END") );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.VerAllign.Second", true );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.HorAllign.First", string("EPA_LOW_END") );
@@ -134,7 +134,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.Size.First.y", imageSize.y );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.Size.Second", true );
 
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	pBuildDataManipulator->GetValue( "VisualStates", &value );
 	const int nVisualStates = value;
 
@@ -210,7 +210,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 		CPtr<IManipulator> pTexManipulator = pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTexObjectName );
 		NI_ASSERT( pTexManipulator != 0, "CWindowMSButtonSharedBuilder::InternalInsertObject() pTexManipulator == 0" );
 
-		// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû Texture
+		// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Texture
 		bResult = bResult && pTexManipulator->SetValue( "SrcName", szTextureFileName );
 		bResult = bResult && pTexManipulator->SetValue( "Type", string("TEXTURE_2D") );
 		bResult = bResult && pTexManipulator->SetValue( "ConversionType", string("CONVERT_ORDINARY") );
@@ -226,7 +226,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 	CPtr<IManipulator> pBSTManipulator = pResourceManager->CreateObjectManipulator( BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName );
 	NI_ASSERT( pBSTManipulator != 0, "CWindowMSButtonSharedBuilder::InternalInsertObject() pBSTManipulator == 0" );
 
-	// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû BackgroundSimpleTexture
+	// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ BackgroundSimpleTexture
 	if ( !szTextureFileName.empty() )
 	{
 		// set reference to own texture
@@ -241,7 +241,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 	bResult = bResult && pBSTManipulator->SetValue( "TextureX", string("EPA_LOW_END") );
 	bResult = bResult && pBSTManipulator->SetValue( "TextureY", string("EPA_LOW_END") );
 
-	// Ïðîñòàâëÿåì ïàðàìåòðû WindowMSButtonShared
+	// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ WindowMSButtonShared
 	const string backgroundElementName = StrFmt( "VisualStates.[%d].%s.Background", index, szSuffixName );
 	const string szBSTObjectRefName = string(BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME) + TYPE_SEPARATOR_CHAR + szBSTObjectName;
 	pMSBManipulator->SetValue( backgroundElementName, szBSTObjectRefName );

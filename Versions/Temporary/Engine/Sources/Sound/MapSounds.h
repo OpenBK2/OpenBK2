@@ -11,7 +11,7 @@ namespace NDb
 	struct SComplexSoundDesc;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для звуков, прописанных в точке карты
+// РґР»СЏ Р·РІСѓРєРѕРІ, РїСЂРѕРїРёСЃР°РЅРЅС‹С… РІ С‚РѕС‡РєРµ РєР°СЂС‚С‹
 class CMapSounds
 {
 public: 
@@ -51,14 +51,14 @@ public:
 			void Clear() { wInstanceID = 0; wSceneID = 0; wSoundTypeID = 0; }
 		};
 
-		SPlaying playingLoopedSound;							// текущий играющий тип звука (зацикленный)
-		SPlaying playingSound;										// текущий незацикленный звук
+		SPlaying playingLoopedSound;							// С‚РµРєСѓС‰РёР№ РёРіСЂР°СЋС‰РёР№ С‚РёРї Р·РІСѓРєР° (Р·Р°С†РёРєР»РµРЅРЅС‹Р№)
+		SPlaying playingSound;										// С‚РµРєСѓС‰РёР№ РЅРµР·Р°С†РёРєР»РµРЅРЅС‹Р№ Р·РІСѓРє
 
-		// по типам звука списки
+		// РїРѕ С‚РёРїР°Рј Р·РІСѓРєР° СЃРїРёСЃРєРё
 		typedef hash_map<WORD, SMapSounds> CellSounds;
 		CellSounds cellSounds;
 		CellSounds cellLoopedSounds;
-		NTimer::STime timeNextRun;			// время следующего проигрыша звука
+		NTimer::STime timeNextRun;			// РІСЂРµРјСЏ СЃР»РµРґСѓСЋС‰РµРіРѕ РїСЂРѕРёРіСЂС‹С€Р° Р·РІСѓРєР°
 
 		void RemoveSound( CellSounds *pCellSounds, const WORD wInstanceID );
 	public:
@@ -69,9 +69,9 @@ public:
 		void Update( interface ISoundScene * pScene, const RegisteredSounds &registeredSounds );
 	};
 
-	CFreeIds soundIDs;									// для регистрации звуков
-	CFreeIds instanceIDs;								// каждый звук будет миеть уникальный ID
-	RegisteredSounds registeredSounds;	// список названий звуков, которые есть в сцене
+	CFreeIds soundIDs;									// РґР»СЏ СЂРµРіРёСЃС‚СЂР°С†РёРё Р·РІСѓРєРѕРІ
+	CFreeIds instanceIDs;								// РєР°Р¶РґС‹Р№ Р·РІСѓРє Р±СѓРґРµС‚ РјРёРµС‚СЊ СѓРЅРёРєР°Р»СЊРЅС‹Р№ ID
+	RegisteredSounds registeredSounds;	// СЃРїРёСЃРѕРє РЅР°Р·РІР°РЅРёР№ Р·РІСѓРєРѕРІ, РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ РІ СЃС†РµРЅРµ
 
 	// 2d map of sound cells (all sounds are assumed on ground)
 	CArray2D<CMapSoundCell> mapCells;

@@ -109,7 +109,7 @@ namespace NMapInfoEditor
 		{
 			vPosition /= ( nSelectionCount * 1.0f );
 			fDirection /= ( nSelectionCount * 1.0f );
-			// установим относительные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			for ( CObjectSelectionPartMap::iterator itObjectSelectionPart = objectSelectionPartMap.begin(); itObjectSelectionPart != objectSelectionPartMap.end(); ++itObjectSelectionPart )
 			{
 				itObjectSelectionPart->second.vPosition -= vPosition;

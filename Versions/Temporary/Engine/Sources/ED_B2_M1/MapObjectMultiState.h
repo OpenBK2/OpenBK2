@@ -34,7 +34,7 @@ class CMapObjectMultiState : public CMultiInputState, public ICommandHandler
 	};
 
 public:
-	// Структура данных, с помощью которой конфигурационный диалог общается со стейтом
+	// РЎС‚СЂСѓРєС‚СѓСЂР° РґР°РЅРЅС‹С…, СЃ РїРѕРјРѕС‰СЊСЋ РєРѕС‚РѕСЂРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Р№ РґРёР°Р»РѕРі РѕР±С‰Р°РµС‚СЃСЏ СЃРѕ СЃС‚РµР№С‚РѕРј
 	struct SEditParameters
 	{
 		enum EDirectionType
@@ -87,7 +87,7 @@ public:
 
 	void UpdateEditParameters( UINT nFlags );
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapObjectMultiState( CMapInfoEditor* _pMapInfoEditor = 0 )
 	{
 		pMapInfoEditor = _pMapInfoEditor;

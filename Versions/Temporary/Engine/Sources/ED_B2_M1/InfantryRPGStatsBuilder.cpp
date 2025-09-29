@@ -27,7 +27,7 @@ bool CInfantryRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 	NI_ASSERT( pBuildDataManipulator != 0, "CInfantryRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CInfantryRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();	
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
 	{
@@ -88,7 +88,7 @@ bool CInfantryRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	{
 		return false;
 	}
-	// Ñ÷èòûâàåì äàííûå
+	// Ð¡Ñ‡Ð¸Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð´Ð°Ð½Ð½Ñ‹Ðµ
 	string szVisualObject;
 	string szDBType;
 	string szSource;
@@ -109,7 +109,7 @@ bool CInfantryRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 				CManipulatorManager::CloneDBManipulator( pInfantryRPGStatsManipulator, pSourceInfantryRPGStatsManipulator, true );
 			}
 		}
-		// Ïðîñòàâëÿåì îñíîâíûå ïàðàìåòðû
+		// ÐŸÑ€Ð¾ÑÑ‚Ð°Ð²Ð»ÑÐµÐ¼ Ð¾ÑÐ½Ð¾Ð²Ð½Ñ‹Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		bResult = bResult && pInfantryRPGStatsManipulator->SetValue( "GameType", string( "SGVOGT_UNIT" ) );
 		bResult = bResult && pInfantryRPGStatsManipulator->SetValue( "DBtype", szDBType );
 		bResult = bResult && pInfantryRPGStatsManipulator->SetValue( "visualObject", szVisualObject );

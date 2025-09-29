@@ -37,7 +37,7 @@ public:
 	};
 
 private:
-	vector<SReinfPoint> reinfPoints;						// описание reinforcement-ов текущего выбранного игрока
+	vector<SReinfPoint> reinfPoints;						// РѕРїРёСЃР°РЅРёРµ reinforcement-РѕРІ С‚РµРєСѓС‰РµРіРѕ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РёРіСЂРѕРєР°
 
 	bool CreateReinfPoint();
 	bool DeleteSelectedReinfPoint();

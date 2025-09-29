@@ -728,7 +728,7 @@ void CChildFrameWndBase::EnableScrollbars( DWORD dwData )
 			ModifyStyle( WS_VSCROLL | WS_HSCROLL, 0, 1 );
 			ShowScrollBar( SB_BOTH, false );
 		}
-		// необходимо для того чобы показать изменения сразу
+		// РЅРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ С‚РѕРіРѕ С‡РѕР±С‹ РїРѕРєР°Р·Р°С‚СЊ РёР·РјРµРЅРµРЅРёСЏ СЃСЂР°Р·Сѓ
 		WINDOWPLACEMENT windowPlacement;
 		windowPlacement.length = sizeof( WINDOWPLACEMENT );
 		//

@@ -70,7 +70,7 @@ IUnitState* CSoldierRestOnBoardState::Instance( CSoldier *pSoldier, CMilitaryCar
 CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilitaryCar* pTransport )
 : pSoldier( _pSoldier )
 {
-	// åñëè åù¸ íå âíóòðè òðàíñïîðòà
+	// ÐµÑÐ»Ð¸ ÐµÑ‰Ñ‘ Ð½Ðµ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ñ‚Ñ€Ð°Ð½ÑÐ¿Ð¾Ñ€Ñ‚Ð°
 	if ( pTransport != 0 )
 	{
 		if ( pTransport->IsRefValid() && pTransport->IsAlive() )

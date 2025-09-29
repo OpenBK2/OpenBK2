@@ -3,7 +3,7 @@
 #pragma once
 
 
-// Приведения типов
+// РџСЂРёРІРµРґРµРЅРёСЏ С‚РёРїРѕРІ
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class TPoint>
 inline const TPoint GetPointType( const CVec2 &vec, TPoint *pTargetType )
@@ -38,7 +38,7 @@ inline const CVec3 GetPointType<CVec3>( const CVec3 &vec, CVec3 *pVec3 )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//определитель что разность элементов меньше заданного значения
+//РѕРїСЂРµРґРµР»РёС‚РµР»СЊ С‡С‚Рѕ СЂР°Р·РЅРѕСЃС‚СЊ СЌР»РµРјРµРЅС‚РѕРІ РјРµРЅСЊС€Рµ Р·Р°РґР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 template <class TElement>
 struct SInRangeFunctional
 {
@@ -52,7 +52,7 @@ struct SInRangeFunctional
 	}
 };
 
-// геометрия с плавающей точкой
+// РіРµРѕРјРµС‚СЂРёСЏ СЃ РїР»Р°РІР°СЋС‰РµР№ С‚РѕС‡РєРѕР№
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EClassifyEdge
 {
@@ -267,7 +267,7 @@ EClassifyIntersection ClassifyCross( const TPoint &rvBegin0, const TPoint &rvEnd
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Точка в полигоне или нет
+//РўРѕС‡РєР° РІ РїРѕР»РёРіРѕРЅРµ РёР»Рё РЅРµС‚
 template<class TPolygon, class TPoint>
 EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &v )
 {
@@ -424,11 +424,11 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPolygon &rPol
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Периметр полигона
+//РџРµСЂРёРјРµС‚СЂ РїРѕР»РёРіРѕРЅР°
 template<class TPolygon>
 float GetPolygonPerimeter( const TPolygon &rPolygon )
 {
-	//ноль точек
+	//РЅРѕР»СЊ С‚РѕС‡РµРє
 	if ( rPolygon.empty() )
 	{
 		return 0.0f;
@@ -437,7 +437,7 @@ float GetPolygonPerimeter( const TPolygon &rPolygon )
 	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
 	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 	++itCurrentPoint1;
-	//одна точка
+	//РѕРґРЅР° С‚РѕС‡РєР°
 	if ( itCurrentPoint1 == rPolygon.end() )
 	{
 		return 0.0f;
@@ -459,11 +459,11 @@ float GetPolygonPerimeter( const TPolygon &rPolygon )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Площадь полигона
+//РџР»РѕС‰Р°РґСЊ РїРѕР»РёРіРѕРЅР°
 template<class TPolygon>
 float GetSignedPolygonSquare( const TPolygon &rPolygon )
 {
-	//ноль точек
+	//РЅРѕР»СЊ С‚РѕС‡РµРє
 	if ( rPolygon.empty() )
 	{
 		return 0.0f;
@@ -474,13 +474,13 @@ float GetSignedPolygonSquare( const TPolygon &rPolygon )
 	TPolygon::const_iterator itCurrentPoint2 = rPolygon.begin();
 	++itCurrentPoint1;
 	++itCurrentPoint2;
-	//одна точка
+	//РѕРґРЅР° С‚РѕС‡РєР°
 	if ( itCurrentPoint1 == rPolygon.end() )
 	{
 		return 0.0f;
 	}
 	++itCurrentPoint2;
-	//две точки
+	//РґРІРµ С‚РѕС‡РєРё
 	if ( itCurrentPoint2 == rPolygon.end() )
 	{
 		return 0.0f;
@@ -507,11 +507,11 @@ float GetSignedPolygonSquare( const TPolygon &rPolygon )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Центральная точка
+//Р¦РµРЅС‚СЂР°Р»СЊРЅР°СЏ С‚РѕС‡РєР°
 template<class TPolygon, class TPoint>
 bool GetPolygonMassCenter( const TPolygon &rPolygon, TPoint *pvMassCenter )
 {
-	//ноль точек
+	//РЅРѕР»СЊ С‚РѕС‡РµРє
 	if ( rPolygon.empty() )
 	{
 		return false;
@@ -1132,8 +1132,8 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPoint &rPoint, 
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Убирание пар точек из вектора расположенных на расстоянии fRange между друг другом
-//возвращает число удаленных элементов
+//РЈР±РёСЂР°РЅРёРµ РїР°СЂ С‚РѕС‡РµРє РёР· РІРµРєС‚РѕСЂР° СЂР°СЃРїРѕР»РѕР¶РµРЅРЅС‹С… РЅР° СЂР°СЃСЃС‚РѕСЏРЅРёРё fRange РјРµР¶РґСѓ РґСЂСѓРі РґСЂСѓРіРѕРј
+//РІРѕР·РІСЂР°С‰Р°РµС‚ С‡РёСЃР»Рѕ СѓРґР°Р»РµРЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
 template<class TPolygon, class TPoint>
 void UniquePolygon( TPolygon *pPolygon, float fRange )
 {
@@ -1170,7 +1170,7 @@ inline void UpdateBoundingBox( TPoint *pvMin, TPoint *pvMax, const TPoint &rvPoi
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Минимальный прямоугольник в корорый входят все точки полигона
+//РњРёРЅРёРјР°Р»СЊРЅС‹Р№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє РІ РєРѕСЂРѕСЂС‹Р№ РІС…РѕРґСЏС‚ РІСЃРµ С‚РѕС‡РєРё РїРѕР»РёРіРѕРЅР°
 template<class TPolygon>
 void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBox )
 {
@@ -1178,7 +1178,7 @@ void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBo
 						 StrFmt( "Wrong parameter: %x\n", pBoundingBox ) );
 
 	pBoundingBox->Set( 0.0f, 0.0f, 0.0f, 0.0f );
-	//вырожденный случай
+	//РІС‹СЂРѕР¶РґРµРЅРЅС‹Р№ СЃР»СѓС‡Р°Р№
 	if ( !rPolygon.empty() )
 	{
 		TPolygon::const_iterator itPoint = rPolygon.begin();
@@ -1221,7 +1221,7 @@ inline CTRect<float> GetPolygonBoundingBox( const TPolygon &rPolygon )
 //			|
 //	fMinSideDistanceRatio ( 0.0f ... 0.5f )
 //	
-//	rShiftRatio - пределы относительного отклонения новой точки от отрезка
+//	rShiftRatio - РїСЂРµРґРµР»С‹ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕРіРѕ РѕС‚РєР»РѕРЅРµРЅРёСЏ РЅРѕРІРѕР№ С‚РѕС‡РєРё РѕС‚ РѕС‚СЂРµР·РєР°
 //
 template<class TPoint>
 TPoint GetRandomEdgePoint( const TPoint &rvBegin, const TPoint &rvEnd, float fMinSideDistanceRatio, const CTPoint<float> &rShiftRatio, EClassifyEdge classifyEdge )
@@ -1484,13 +1484,13 @@ bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPoly
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 0 - на границе
-// > 0 - внутри
-// < 0 - снарукжи
+// 0 - РЅР° РіСЂР°РЅРёС†Рµ
+// > 0 - РІРЅСѓС‚СЂРё
+// < 0 - СЃРЅР°СЂСѓРєР¶Рё
 template<class TPolygon, class TPoint>
 float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon )
 {
-	//нет точек
+	//РЅРµС‚ С‚РѕС‡РµРє
 	if ( rPolygon.empty() )
 	{
 		return 0.0;
@@ -1499,7 +1499,7 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 	TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
 	TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
 
-	//одна точка
+	//РѕРґРЅР° С‚РѕС‡РєР°
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygon.end() )
 	{
@@ -1508,31 +1508,31 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 	
 	EClassifyPolygon classifyPolygon = ClassifyPolygon( rPolygon, v );
 	
-	//точка на границе полигона
+	//С‚РѕС‡РєР° РЅР° РіСЂР°РЅРёС†Рµ РїРѕР»РёРіРѕРЅР°
 	if ( ( classifyPolygon == CP_BOUNDARY ) || ( classifyPolygon == CP_VERTEX ) )
 	{
 		return 0.0f;
 	}
 
 	float fDistance = fabs( v  - ( *itCurrentPoint0 ) );
-	//определяем минимальное расстояние для стороны и для вертекса стороны
+	//РѕРїСЂРµРґРµР»СЏРµРј РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґР»СЏ СЃС‚РѕСЂРѕРЅС‹ Рё РґР»СЏ РІРµСЂС‚РµРєСЃР° СЃС‚РѕСЂРѕРЅС‹
 	while ( itCurrentPoint0 != rPolygon.end() )
 	{
 		//( *itCurrentPoint0 );
 		//( *itCurrentPoint1 );
 
-		//расстояние до точки ( *itCurrentPoint0 )
+		//СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ С‚РѕС‡РєРё ( *itCurrentPoint0 )
 		const float fVertexDistance = fabs( v - ( *itCurrentPoint0 ) );
 		if ( fVertexDistance < fDistance )
 		{
 			fDistance = fVertexDistance;
 		}
 		
-		//скялярные произведения
+		//СЃРєСЏР»СЏСЂРЅС‹Рµ РїСЂРѕРёР·РІРµРґРµРЅРёСЏ
 		const float dotPoduct_v0_10 = ( v - ( *itCurrentPoint0 ) ) * ( ( *itCurrentPoint1 ) - ( *itCurrentPoint0 ) );
 		const float dotPoduct_v1_01 = ( v - ( *itCurrentPoint1 ) ) * ( ( *itCurrentPoint0 ) - ( *itCurrentPoint1 ) );
 		
-		//проекция внутри отрезка
+		//РїСЂРѕРµРєС†РёСЏ РІРЅСѓС‚СЂРё РѕС‚СЂРµР·РєР°
 		if ( ( dotPoduct_v0_10 > FP_EPSILON ) && ( dotPoduct_v1_01 > FP_EPSILON ) )
 		{
 			const float fEdgeDistance = fVertexDistance * sqrt( 1 - fabs2( dotPoduct_v0_10 / ( fVertexDistance * fabs( ( *itCurrentPoint1 ) - ( *itCurrentPoint0 ) ) ) ) );	
@@ -1559,7 +1559,7 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 	return ( fDistance * ( ( classifyPolygon == CP_INSIDE ) ? ( 1.0f ) : ( -1.0f ) ) );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Целочисленная геометрия
+// Р¦РµР»РѕС‡РёСЃР»РµРЅРЅР°СЏ РіРµРѕРјРµС‚СЂРёСЏ
 //
 //bounds.maxy +----------------------------+
 //            *****************************|
@@ -1574,9 +1574,9 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 //bounds.miny *****************************+
 //            bounds.minx                  bounds.max
 //
-// * - точки входящие в bounds
+// * - С‚РѕС‡РєРё РІС…РѕРґСЏС‰РёРµ РІ bounds
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает только для нормальных Bounds ( min < max )
+// Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅС‹С… Bounds ( min < max )
 template<class TRect>
 inline bool IsValidPoint( const TRect &rBounds, int x, int y )
 {
@@ -1585,7 +1585,7 @@ inline bool IsValidPoint( const TRect &rBounds, int x, int y )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает только для нормальных Bounds ( min < max )
+// Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅС‹С… Bounds ( min < max )
 template<class TRect, class TPoint>
 inline bool IsValidPoint( const TRect &rBounds, const TPoint &rPoint )
 {
@@ -1593,7 +1593,7 @@ inline bool IsValidPoint( const TRect &rBounds, const TPoint &rPoint )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает для любых Bounds ( min < max ) || ( min > max )
+// Р Р°Р±РѕС‚Р°РµС‚ РґР»СЏ Р»СЋР±С‹С… Bounds ( min < max ) || ( min > max )
 template<class TRect>
 inline bool IsValidPointSlow( const TRect &rBounds, const int x, const int y )
 {
@@ -1620,7 +1620,7 @@ inline bool IsValidPointSlow( const TRect &rBounds, const int x, const int y )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает для любых Bounds ( min < max ) || ( min > max )
+// Р Р°Р±РѕС‚Р°РµС‚ РґР»СЏ Р»СЋР±С‹С… Bounds ( min < max ) || ( min > max )
 template<class TRect, class TPoint>
 inline bool IsValidPointSlow( const TRect &rBounds, const TPoint &rPoint )
 {
@@ -1628,16 +1628,16 @@ inline bool IsValidPointSlow( const TRect &rBounds, const TPoint &rPoint )
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает только для нормальных Bounds ( min < max )
-//если вернули 0 - произошел сдвиг точки на границу
-//если вернули 1 - точка не изменилась
+// Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅС‹С… Bounds ( min < max )
+//РµСЃР»Рё РІРµСЂРЅСѓР»Рё 0 - РїСЂРѕРёР·РѕС€РµР» СЃРґРІРёРі С‚РѕС‡РєРё РЅР° РіСЂР°РЅРёС†Сѓ
+//РµСЃР»Рё РІРµСЂРЅСѓР»Рё 1 - С‚РѕС‡РєР° РЅРµ РёР·РјРµРЅРёР»Р°СЃСЊ
 template<class TRect, class TPoint>
 inline int ValidatePoint( const TRect &rBounds, TPoint *pPoint )
 {
 	NI_ASSERT_T( pPoint != 0, StrFmt( "Wrong parameter: %x\n", pPoint ) );
 
 	int nResult = 1;
-	//Определяем границы
+	//РћРїСЂРµРґРµР»СЏРµРј РіСЂР°РЅРёС†С‹
 	if ( pPoint->x < rBounds.minx )
 	{
 		pPoint->x = rBounds.minx;
@@ -1662,10 +1662,10 @@ inline int ValidatePoint( const TRect &rBounds, TPoint *pPoint )
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Работает только для нормальных Bounds ( min < max )
-//если вернули -1 - ни одна точка pIndices не попадает в прямоугольник rBounds
-//если вернули 0 - произошло отсечение по одной из сторон
-//если вернули 1 - pRect не изменялся
+// Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РґР»СЏ РЅРѕСЂРјР°Р»СЊРЅС‹С… Bounds ( min < max )
+//РµСЃР»Рё РІРµСЂРЅСѓР»Рё -1 - РЅРё РѕРґРЅР° С‚РѕС‡РєР° pIndices РЅРµ РїРѕРїР°РґР°РµС‚ РІ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє rBounds
+//РµСЃР»Рё РІРµСЂРЅСѓР»Рё 0 - РїСЂРѕРёР·РѕС€Р»Рѕ РѕС‚СЃРµС‡РµРЅРёРµ РїРѕ РѕРґРЅРѕР№ РёР· СЃС‚РѕСЂРѕРЅ
+//РµСЃР»Рё РІРµСЂРЅСѓР»Рё 1 - pRect РЅРµ РёР·РјРµРЅСЏР»СЃСЏ
 template<class TRect>
 inline int ValidateRect( const TRect &rBounds, TRect *pRect )
 {
@@ -1673,7 +1673,7 @@ inline int ValidateRect( const TRect &rBounds, TRect *pRect )
 	//
 	pRect->Normalize();
 	//
-	//Вырожденный случай не рассматриваем
+	//Р’С‹СЂРѕР¶РґРµРЅРЅС‹Р№ СЃР»СѓС‡Р°Р№ РЅРµ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРј
 	if ( ( pRect->minx >= rBounds.maxx ) ||
 		   ( pRect->miny >= rBounds.maxy ) ||
 			 ( pRect->maxx <= rBounds.minx ) ||
@@ -1683,7 +1683,7 @@ inline int ValidateRect( const TRect &rBounds, TRect *pRect )
 	}
 
 	int nResult = 1;
-	//Определяем границы
+	//РћРїСЂРµРґРµР»СЏРµРј РіСЂР°РЅРёС†С‹
 	if ( pRect->minx < rBounds.minx )
 	{
 		pRect->minx = rBounds.minx;
@@ -1708,7 +1708,7 @@ inline int ValidateRect( const TRect &rBounds, TRect *pRect )
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал коллекционирующий пары чисел (координаты точек)
+//С„СѓРЅРєС†РёРѕРЅР°Р» РєРѕР»Р»РµРєС†РёРѕРЅРёСЂСѓСЋС‰РёР№ РїР°СЂС‹ С‡РёСЃРµР» (РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РµРє)
 template<class TList, class TPoint>
 struct StoreTilesFunctional
 {
@@ -1722,7 +1722,7 @@ struct StoreTilesFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал изменяющий pLockArray на заданное значение
+//С„СѓРЅРєС†РёРѕРЅР°Р» РёР·РјРµРЅСЏСЋС‰РёР№ pLockArray РЅР° Р·Р°РґР°РЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
 template<class TArray, class TElement>
 struct SModifyTilesFunctional
 {
@@ -1742,7 +1742,7 @@ struct SModifyTilesFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал определяющий есть ли тайл заданного значения в pLockArray
+//С„СѓРЅРєС†РёРѕРЅР°Р» РѕРїСЂРµРґРµР»СЏСЋС‰РёР№ РµСЃС‚СЊ Р»Рё С‚Р°Р№Р» Р·Р°РґР°РЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ pLockArray
 template<class TArray, class TElement>
 struct SCheckTilesFunctional
 {
@@ -1767,14 +1767,14 @@ struct SCheckTilesFunctional
 
 /**
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для поля pLockArray, функционалы перечислены выше
-//некоторые функционалы могут изменять массив
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РїРѕР»СЏ pLockArray, С„СѓРЅРєС†РёРѕРЅР°Р»С‹ РїРµСЂРµС‡РёСЃР»РµРЅС‹ РІС‹С€Рµ
+//РЅРµРєРѕС‚РѕСЂС‹Рµ С„СѓРЅРєС†РёРѕРЅР°Р»С‹ РјРѕРіСѓС‚ РёР·РјРµРЅСЏС‚СЊ РјР°СЃСЃРёРІ
 template<class TYPE>
-bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границы применимости функционалов
-																		 const SMapObjectInfo *pMapObjectInfo,				//указатель на массив обьектов
-																		 int nMapObjectInfoCount,											//число обьектов
-																		 TYPE &rApplyFunctional,											//функционал
-																		 bool isIgnoreInvalidIndices = false )				//пропускать обьекты за краями карты
+bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+																		 const SMapObjectInfo *pMapObjectInfo,				//СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РјР°СЃСЃРёРІ РѕР±СЊРµРєС‚РѕРІ
+																		 int nMapObjectInfoCount,											//С‡РёСЃР»Рѕ РѕР±СЊРµРєС‚РѕРІ
+																		 TYPE &rApplyFunctional,											//С„СѓРЅРєС†РёРѕРЅР°Р»
+																		 bool isIgnoreInvalidIndices = false )				//РїСЂРѕРїСѓСЃРєР°С‚СЊ РѕР±СЊРµРєС‚С‹ Р·Р° РєСЂР°СЏРјРё РєР°СЂС‚С‹
 {
 	IObjectsDB *pIDB = GetSingleton<IObjectsDB>();
 	if ( !pIDB )
@@ -1796,27 +1796,27 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границ
 			
 			CTRect<int> indices( start.x, start.y, start.x + rPassability.GetSizeX(), start.y + rPassability.GetSizeY() );
 			int result = ValidateIndices( rRect, &indices );
-			//нет ни одного тайла
+			//РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ С‚Р°Р№Р»Р°
 			if ( result < 0 )
 			{
 				if ( isIgnoreInvalidIndices )
 				{
-					//скипаем обьект, переходим к следующему
+					//СЃРєРёРїР°РµРј РѕР±СЊРµРєС‚, РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ
 					continue;
 				}
 				else
 				{
-					//возвращаем ошибку
+					//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 					return false;
 				}
 			}
-			//пассабилити выходит за границы массива
+			//РїР°СЃСЃР°Р±РёР»РёС‚Рё РІС‹С…РѕРґРёС‚ Р·Р° РіСЂР°РЅРёС†С‹ РјР°СЃСЃРёРІР°
 			if ( ( result < 1 ) && !isIgnoreInvalidIndices )
 			{
-				//возвращаем ошибку
+				//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 				return false;
 			}
-			//пробегаем по тайлам
+			//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 			for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 			{
 				for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -1843,12 +1843,12 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect, const SMapObjectI
 /**/
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для для всех точек сетки входящих в полигон, функционалы перечислены выше
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РґР»СЏ РІСЃРµС… С‚РѕС‡РµРє СЃРµС‚РєРё РІС…РѕРґСЏС‰РёС… РІ РїРѕР»РёРіРѕРЅ, С„СѓРЅРєС†РёРѕРЅР°Р»С‹ РїРµСЂРµС‡РёСЃР»РµРЅС‹ РІС‹С€Рµ
 template<class Type, class TPolygon, class TPoint>
-bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//границы применимости функционалов
-													 const TPolygon &rPolygon,					//полигон
-													 float fTileSize,										//сторона тайла
-													 Type &rApplyFunctional )						//функционал
+bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+													 const TPolygon &rPolygon,					//РїРѕР»РёРіРѕРЅ
+													 float fTileSize,										//СЃС‚РѕСЂРѕРЅР° С‚Р°Р№Р»Р°
+													 Type &rApplyFunctional )						//С„СѓРЅРєС†РёРѕРЅР°Р»
 {
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );
 	CTRect<int> indices( (int)( boundingBox.minx / fTileSize ) - 1,
@@ -1859,7 +1859,7 @@ bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//границы применимости 
 	{
 		return false;
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -1879,12 +1879,12 @@ bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//границы применимости 
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для для всех тайлов входящих в полигон, функционалы перечислены выше
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РґР»СЏ РІСЃРµС… С‚Р°Р№Р»РѕРІ РІС…РѕРґСЏС‰РёС… РІ РїРѕР»РёРіРѕРЅ, С„СѓРЅРєС†РёРѕРЅР°Р»С‹ РїРµСЂРµС‡РёСЃР»РµРЅС‹ РІС‹С€Рµ
 template<class Type, class TPolygon, class TPoint>
-bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//границы применимости функционалов
-													const TPolygon &rPolygon,						//полигон
-													float fTileSize,										//сторона тайла
-													Type &rApplyFunctional )						//функционал
+bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+													const TPolygon &rPolygon,						//РїРѕР»РёРіРѕРЅ
+													float fTileSize,										//СЃС‚РѕСЂРѕРЅР° С‚Р°Р№Р»Р°
+													Type &rApplyFunctional )						//С„СѓРЅРєС†РёРѕРЅР°Р»
 {
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );
 	CTRect<int> indices( (int)( ( boundingBox.minx + ( fTileSize / 2.0f ) ) / fTileSize ),
@@ -1895,7 +1895,7 @@ bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//границы применимости 
 	{
 		return false;
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -1916,21 +1916,21 @@ bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//границы применимости 
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для для всех тайлов входящих в прямоуголник (включительно, как у дорог)
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РґР»СЏ РІСЃРµС… С‚Р°Р№Р»РѕРІ РІС…РѕРґСЏС‰РёС… РІ РїСЂСЏРјРѕСѓРіРѕР»РЅРёРє (РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ, РєР°Рє Сѓ РґРѕСЂРѕРі)
 template<class Type>
-bool ApplyTilesInRange( const CTRect<int> &rRect,	//границы применимости функционалов
-												int nMinX,								//границы прямоугольника
+bool ApplyTilesInRange( const CTRect<int> &rRect,	//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+												int nMinX,								//РіСЂР°РЅРёС†С‹ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР°
 												int nMinY,								//
 												int nMaxX,								//
 												int nMaxY,								//
-												Type &rApplyFunctional )	//функционал
+												Type &rApplyFunctional )	//С„СѓРЅРєС†РёРѕРЅР°Р»
 {
 	CTRect<int> indices( nMinX, nMinY, nMaxX + 1, nMaxY + 1 );
 	if ( ValidateRect( rRect, &indices ) < 0 )
 	{
 		return false;
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -1961,22 +1961,22 @@ bool ApplyTilesInRange( const CTRect<int> &rRect,
 	return ApplyTilesInRange( rRect, rRange.minx, rRange.miny, rRange.maxx, rRange.maxy, rApplyFunctional );
 }
 
-//CRAP{оптимизировать колекционирование тайлов в круге
+//CRAP{РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ РєРѕР»РµРєС†РёРѕРЅРёСЂРѕРІР°РЅРёРµ С‚Р°Р№Р»РѕРІ РІ РєСЂСѓРіРµ
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//в радиусе нет локаных тайлов 
+//РІ СЂР°РґРёСѓСЃРµ РЅРµС‚ Р»РѕРєР°РЅС‹С… С‚Р°Р№Р»РѕРІ 
 template<class Type>
-bool ApplyTilesInCircle( const CTRect<int> &rRect,	//границы применимости функционалов
-												 int nXPosition,						//центр круга
+bool ApplyTilesInCircle( const CTRect<int> &rRect,	//РіСЂР°РЅРёС†С‹ РїСЂРёРјРµРЅРёРјРѕСЃС‚Рё С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ
+												 int nXPosition,						//С†РµРЅС‚СЂ РєСЂСѓРіР°
 												 int nYPosition,						//
-												 int nRadius,								//радиус круга
-												 Type &rApplyFunctional )		//функционал
+												 int nRadius,								//СЂР°РґРёСѓСЃ РєСЂСѓРіР°
+												 Type &rApplyFunctional )		//С„СѓРЅРєС†РёРѕРЅР°Р»
 {
 	CTRect<int> indices( nXPosition - nRadius, nYPosition - nRadius, nXPosition + nRadius + 1, nYPosition + nRadius + 1 );
 	if ( ValidateRect( rRect, &indices )  < 0 )
 	{
 		return false;
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )

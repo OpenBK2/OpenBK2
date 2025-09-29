@@ -57,7 +57,7 @@ class CInterfaceState : public IInterfaceState
 	vector<int> freeIDsForMLHandler;
 	list<wstring> mpChatMessages;
 	vector<wstring> forbiddenWords;
-	wstring wszForbiddenReplacement; // допустимое в обществе ругательство
+	wstring wszForbiddenReplacement; // РґРѕРїСѓСЃС‚РёРјРѕРµ РІ РѕР±С‰РµСЃС‚РІРµ СЂСѓРіР°С‚РµР»СЊСЃС‚РІРѕ
 	bool bForbiddenWordsInitialized;
 	int nTutorialRecommendedMission;
 	bool bAutoShowCommanderScreen;

@@ -7,8 +7,8 @@ class CCommonUnit;
 class CAIUnit;
 class CBasicGun;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// выбор наилучшего воздушного юнита ( для легких зениток ) - для стрельбы сопро-
-//водительным огнем
+// РІС‹Р±РѕСЂ РЅР°РёР»СѓС‡С€РµРіРѕ РІРѕР·РґСѓС€РЅРѕРіРѕ СЋРЅРёС‚Р° ( РґР»СЏ Р»РµРіРєРёС… Р·РµРЅРёС‚РѕРє ) - РґР»СЏ СЃС‚СЂРµР»СЊР±С‹ СЃРѕРїСЂРѕ-
+//РІРѕРґРёС‚РµР»СЊРЅС‹Рј РѕРіРЅРµРј
 class CShootEstimatorLighAA
 {
 	ZDATA
@@ -30,8 +30,8 @@ public:
 		bCanShootNow( false ) { }
 
 	void Init( class CCommonUnit *pUnit );
-	// выбрать оптимальный юнит для данного gun, приоценки времени, чтобы пристрелить, 
-	// учитывается только время поворота gun до этого юнита
+	// РІС‹Р±СЂР°С‚СЊ РѕРїС‚РёРјР°Р»СЊРЅС‹Р№ СЋРЅРёС‚ РґР»СЏ РґР°РЅРЅРѕРіРѕ gun, РїСЂРёРѕС†РµРЅРєРё РІСЂРµРјРµРЅРё, С‡С‚РѕР±С‹ РїСЂРёСЃС‚СЂРµР»РёС‚СЊ, 
+	// СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РІСЂРµРјСЏ РїРѕРІРѕСЂРѕС‚Р° gun РґРѕ СЌС‚РѕРіРѕ СЋРЅРёС‚Р°
 	void Init( class CCommonUnit *pUnit, CBasicGun *pGun );
 	void AddUnit( class CAIUnit *pTarget );
 	class CAIUnit* GetBestUnit();
@@ -50,7 +50,7 @@ class CStandartBehaviour
 	NTimer::STime fleeTraceEnemyTime;
 	int nLastSign;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&camouflateTime); f.Add(3,&underFireAnalyzeTime); f.Add(4,&lastTimeOfRotate); f.Add(5,&fleeTraceEnemyTime); f.Add(6,&nLastSign); return 0; }
-	// отслеживать врага, если нет никого, в кого возможно стрелять и нельзя двигаться, и есть turret
+	// РѕС‚СЃР»РµР¶РёРІР°С‚СЊ РІСЂР°РіР°, РµСЃР»Рё РЅРµС‚ РЅРёРєРѕРіРѕ, РІ РєРѕРіРѕ РІРѕР·РјРѕР¶РЅРѕ СЃС‚СЂРµР»СЏС‚СЊ Рё РЅРµР»СЊР·СЏ РґРІРёРіР°С‚СЊСЃСЏ, Рё РµСЃС‚СЊ turret
 	bool TryToTraceEnemy( class CAIUnit *pUnit );
 public:
 	CStandartBehaviour() : camouflateTime( 0 ), underFireAnalyzeTime( 0 ), nLastSign( 1 ), lastTimeOfRotate( NTimer::STime(-1) ), fleeTraceEnemyTime( 0 ) { }

@@ -26,14 +26,14 @@ public:
 	};
 	//
 	// TYPE_INSERT:
-	// (int)newValue	- ID элемента куда вставлять
+	// (int)newValue	- ID СЌР»РµРјРµРЅС‚Р° РєСѓРґР° РІСЃС‚Р°РІР»СЏС‚СЊ
 	//
 	// TYPE_REMOVE:
-	// (int)newValue	- ID элемента откуда удалять
+	// (int)newValue	- ID СЌР»РµРјРµРЅС‚Р° РѕС‚РєСѓРґР° СѓРґР°Р»СЏС‚СЊ
 	//
 	// TYPE_CHANGE
-	// oldValue				- старое (предыдущее) значение
-	// newValue				- новое (установленное) значение
+	// oldValue				- СЃС‚Р°СЂРѕРµ (РїСЂРµРґС‹РґСѓС‰РµРµ) Р·РЅР°С‡РµРЅРёРµ
+	// newValue				- РЅРѕРІРѕРµ (СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ) Р·РЅР°С‡РµРЅРёРµ
 	struct SVSOUndoData
 	{
 		enum EVSOType
@@ -61,7 +61,7 @@ public:
 	typedef list<SHeightUndoData> CHeightUndoDataList;
 	typedef list<SVSOUndoData> CVSOUndoDataList;
 
-	// список данных подвергнутых изменениям
+	// СЃРїРёСЃРѕРє РґР°РЅРЅС‹С… РїРѕРґРІРµСЂРіРЅСѓС‚С‹С… РёР·РјРµРЅРµРЅРёСЏРј
 	CTileUndoDataList tileUndoDataList;
 	CHeightUndoDataList heightUndoDataList;
 	CVSOUndoDataList vsoUndoDataList;

@@ -18,11 +18,11 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 {
 	friend class CBuildingEditor;
 
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CBuildingEditor *pBuildingEditor;
 	bool bNeedLoadEnterConfig;
 
-	// Методы общего назначения
+	// РњРµС‚РѕРґС‹ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ
 	bool IsMultiInputState( int nStateIndex )
 	{
 		return (nStateIndex == IS_POINTS);
@@ -31,7 +31,7 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 	void LoadEnterConfig();
 
 public:
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CBuildingState( CBuildingEditor *_pBuildingEditor );
 			
 	enum EInputStates

@@ -67,7 +67,7 @@ void CParatrooperPath::Init()
 	const int height = vStartPoint.z - GetHeights()->GetZ( finishP.x,finishP.y );
 	const float fallTime = height/SConsts::PARATROOPER_FALL_SPEED;
 	vHorSpeed = (finishP-curP)/fallTime;
-	fSpeedLen = SConsts::TILE_SIZE / 3600.0f; // скорость парашютиста всегда такая, для анимации
+	fSpeedLen = SConsts::TILE_SIZE / 3600.0f; // СЃРєРѕСЂРѕСЃС‚СЊ РїР°СЂР°С€СЋС‚РёСЃС‚Р° РІСЃРµРіРґР° С‚Р°РєР°СЏ, РґР»СЏ Р°РЅРёРјР°С†РёРё
 
 	vFinishPoint2D.x = vFinishPoint.x;
 	vFinishPoint2D.y = vFinishPoint.y;

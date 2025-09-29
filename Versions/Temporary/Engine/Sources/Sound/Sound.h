@@ -9,18 +9,18 @@ namespace NDb
 	enum ESoundType;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//звук
+//Р·РІСѓРє
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSound : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CSound );
 	int wID;														// 
-	CPtr<ISound> pSample;								// звук, который нужно играть
-	CPtr<CSubstSound> pSubstitute;						// звук, который играется вместо pSample
+	CPtr<ISound> pSample;								// Р·РІСѓРє, РєРѕС‚РѕСЂС‹Р№ РЅСѓР¶РЅРѕ РёРіСЂР°С‚СЊ
+	CPtr<CSubstSound> pSubstitute;						// Р·РІСѓРє, РєРѕС‚РѕСЂС‹Р№ РёРіСЂР°РµС‚СЃСЏ РІРјРµСЃС‚Рѕ pSample
 
-	NDb::ESoundType eCombatType;				// поведение звука во время боя
-	NTimer::STime timeBegin;						// начало проигрыша звука. 
-	NTimer::STime timeToPlay;						// время начала звука
+	NDb::ESoundType eCombatType;				// РїРѕРІРµРґРµРЅРёРµ Р·РІСѓРєР° РІРѕ РІСЂРµРјСЏ Р±РѕСЏ
+	NTimer::STime timeBegin;						// РЅР°С‡Р°Р»Рѕ РїСЂРѕРёРіСЂС‹С€Р° Р·РІСѓРєР°. 
+	NTimer::STime timeToPlay;						// РІСЂРµРјСЏ РЅР°С‡Р°Р»Р° Р·РІСѓРєР°
 	NTimer::STime timeBeginDim;
 
 	CDBPtr<NDb::SSoundDesc> pDesc;
@@ -31,9 +31,9 @@ class CSound : public CObjectBase
 
 	int nMaxRadius, nMinRadius;
 
-	bool bStartedMark;											// звук запустили уже
-	bool bFinishedMark;											// звук уже отыграл
-	bool bDimMark;												  // начать затухание звука
+	bool bStartedMark;											// Р·РІСѓРє Р·Р°РїСѓСЃС‚РёР»Рё СѓР¶Рµ
+	bool bFinishedMark;											// Р·РІСѓРє СѓР¶Рµ РѕС‚С‹РіСЂР°Р»
+	bool bDimMark;												  // РЅР°С‡Р°С‚СЊ Р·Р°С‚СѓС…Р°РЅРёРµ Р·РІСѓРєР°
 	NTimer::STime timeLastPosUpdate;
 public:
 	CSound() {  }
@@ -44,14 +44,14 @@ public:
 	int operator&( IBinSaver &saver );
 
 
-	// сктолько самплов уже отыграло
+	// СЃРєС‚РѕР»СЊРєРѕ СЃР°РјРїР»РѕРІ СѓР¶Рµ РѕС‚С‹РіСЂР°Р»Рѕ
 	unsigned int GetSamplesPassed();
 	bool IsTimeToFinish() const;
 
-	//время проигрыша этого звука
+	//РІСЂРµРјСЏ РїСЂРѕРёРіСЂС‹С€Р° СЌС‚РѕРіРѕ Р·РІСѓРєР°
 	NTimer::STime GetPlayTime() const { return timeToPlay; }
 
-	// замена звука
+	// Р·Р°РјРµРЅР° Р·РІСѓРєР°
 	bool IsSubstituted() const { return pSubstitute != 0; }
 	CSubstSound * GetSubst();
 	void Substitute( CSubstSound *_pSubstitute, NTimer::STime nStartTime );
@@ -59,23 +59,23 @@ public:
 
 	bool IsLooped() const { return bLooped; }
 
-	//начало проигрыша этого звука
+	//РЅР°С‡Р°Р»Рѕ РїСЂРѕРёРіСЂС‹С€Р° СЌС‚РѕРіРѕ Р·РІСѓРєР°
 	void MarkStarted();
 	bool IsMarkedStarted() const { return bStartedMark; }
-	//конец проигрыша звука
+	//РєРѕРЅРµС† РїСЂРѕРёРіСЂС‹С€Р° Р·РІСѓРєР°
 	bool IsMarkedFinished() const { return bFinishedMark; }
 	void MarkFinished( bool bFinished = true ) { bFinishedMark=bFinished; }
-	// для затухания звука при удалении
+	// РґР»СЏ Р·Р°С‚СѓС…Р°РЅРёСЏ Р·РІСѓРєР° РїСЂРё СѓРґР°Р»РµРЅРёРё
 	void MarkToDim( const NTimer::STime time );
 	bool IsMarkedForDim() const { return bDimMark; }
-	// из-за затухания (по времени) или из-за расстояния громкость может быть не полной.
+	// РёР·-Р·Р° Р·Р°С‚СѓС…Р°РЅРёСЏ (РїРѕ РІСЂРµРјРµРЅРё) РёР»Рё РёР·-Р·Р° СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РіСЂРѕРјРєРѕСЃС‚СЊ РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµ РїРѕР»РЅРѕР№.
 	float GetVolume( const NTimer::STime time, const float fDist  ) const;
 
 	void SetBeginTime( const NTimer::STime time );
 	const NTimer::STime & GetBeginTime() const {return timeBegin;}
 
 
-	int GetRadiusMax() const;								// дистанция (в клетках) на котрой этот звук слышен
+	int GetRadiusMax() const;								// РґРёСЃС‚Р°РЅС†РёСЏ (РІ РєР»РµС‚РєР°С…) РЅР° РєРѕС‚СЂРѕР№ СЌС‚РѕС‚ Р·РІСѓРє СЃР»С‹С€РµРЅ
 	ISound * GetSound();
 	ESoundMixType GetMixType() const { return eMixType; }
 	const int GetID() { return wID; }

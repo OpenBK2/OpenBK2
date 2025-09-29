@@ -863,7 +863,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 		{
 			ApplySamplerState( n, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
 			ApplySamplerState( n, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-			// если кто-то решил потратить fillrate`а, то нужно использовать как минимум trilinear
+			// РµСЃР»Рё РєС‚Рѕ-С‚Рѕ СЂРµС€РёР» РїРѕС‚СЂР°С‚РёС‚СЊ fillrate`Р°, С‚Рѕ РЅСѓР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєР°Рє РјРёРЅРёРјСѓРј trilinear
 			if ( filter == FILTER_LINEAR )
 				ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_POINT );
 			else
@@ -1595,7 +1595,7 @@ bool InitZBuffer( D3DFORMAT format )
 	D3DASSERT( hr, "GetRenderTarget failed" );
 	hr = pDevice->GetDepthStencilSurface( pScreenDepth.GetAddr() );
 	D3DASSERT( hr, "GetDepthStencilSurface failed" );
-	// обрядовый ритуал, без которого nVidia не работает
+	// РѕР±СЂСЏРґРѕРІС‹Р№ СЂРёС‚СѓР°Р», Р±РµР· РєРѕС‚РѕСЂРѕРіРѕ nVidia РЅРµ СЂР°Р±РѕС‚Р°РµС‚
 	for ( int k = 0; k < nScreenRegisters; ++ k )
 	{
 		NWin32Helper::com_ptr<IDirect3DSurface9> pTB;

@@ -58,7 +58,7 @@ void CModelEditor::CreateControls()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	// ñîçäàåì minimap docking window
+	// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ minimap docking window
 	UINT nID = ID_MODEL_EDITOR_DW;
 	CString strPaneLabel;
 	strPaneLabel.LoadString( theEDB2M1Instance, IDS_MODEL_TOOL_WINDOW_NAME  );
@@ -121,7 +121,7 @@ void CModelEditor::PreDestroyControls()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CModelEditor::DestroyControls()
 {
-	// ðàçðóøàåì shortcut docking window 
+	// Ñ€Ð°Ð·Ñ€ÑƒÑˆÐ°ÐµÐ¼ shortcut docking window 
 	if ( pwndTool != 0 )
 	{
 		if ( ::IsWindow( pwndTool->m_hWnd ) )

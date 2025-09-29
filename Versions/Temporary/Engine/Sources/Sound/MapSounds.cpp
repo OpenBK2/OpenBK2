@@ -135,7 +135,7 @@ void CMapSounds::SetSoundScene( struct ISoundScene *_pSoundScene )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 {
-	// новое
+	// РЅРѕРІРѕРµ
 	soundIDs.Clear();
 	mapCells.SetSizes( nSizeX / SSoundSceneConsts::MAP_SOUND_CELL + 1, nSizeY / SSoundSceneConsts::MAP_SOUND_CELL + 1 );
 	cells.clear();
@@ -156,25 +156,25 @@ void CMapSounds::RemoveSound( const WORD wInstanceID )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 WORD CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pStats )
 {
-	// определить к какой клетке он относится.
+	// РѕРїСЂРµРґРµР»РёС‚СЊ Рє РєР°РєРѕР№ РєР»РµС‚РєРµ РѕРЅ РѕС‚РЅРѕСЃРёС‚СЃСЏ.
 	const SIntThree vCellPos( vPos.x / SSoundSceneConsts::MAP_SOUND_CELL, vPos.y / SSoundSceneConsts::MAP_SOUND_CELL, vPos.z / SSoundSceneConsts::MAP_SOUND_CELL );
 	// check, can we add this sound, or it out of bounds
 	if ( vCellPos.x < 0 || vCellPos.x >= mapCells.GetSizeX() )
 		return 0;
 	if ( vCellPos.y < 0 || vCellPos.y >= mapCells.GetSizeY() )
 		return 0;
-	// зарегистрировать звук
+	// Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊ Р·РІСѓРє
 	if ( !registeredSounds.IsPresent( pStats ) )
 	{
 		const WORD wNewID = soundIDs.Get();
 		registeredSounds.Add( pStats, wNewID );
 	}
-	// wSoundID - зарегистрированный звук.
+	// wSoundID - Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Р№ Р·РІСѓРє.
 	const WORD wSoundID = registeredSounds.ToT2( pStats );
 	const WORD wInstanceID = instanceIDs.Get();
-	// добавить его в эту клетку.
+	// РґРѕР±Р°РІРёС‚СЊ РµРіРѕ РІ СЌС‚Сѓ РєР»РµС‚РєСѓ.
 	mapCells[vCellPos.y][vCellPos.x].AddSound( wSoundID, vPos, registeredSounds, wInstanceID, pStats->bLooped );
-	// добавить в карту клекта - ID звука.
+	// РґРѕР±Р°РІРёС‚СЊ РІ РєР°СЂС‚Сѓ РєР»РµРєС‚Р° - ID Р·РІСѓРєР°.
 	cells[wInstanceID] = vCellPos;
 	return wInstanceID;
 }

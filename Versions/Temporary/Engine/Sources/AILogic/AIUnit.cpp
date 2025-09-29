@@ -150,10 +150,10 @@ void CAIUnit::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforceme
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRect, const CVec2 &explCoord, const int nRandPiercing, const int nRandArmor ) const
 {
-	// попали по комбат системе
+	// РїРѕРїР°Р»Рё РїРѕ РєРѕРјР±Р°С‚ СЃРёСЃС‚РµРјРµ
 	if ( combatRect.IsPointInside( explCoord ) )
 	{
-		// пробили
+		// РїСЂРѕР±РёР»Рё
 		if ( nRandPiercing >= nRandArmor && !IsSavedByCover() )
 			return SAINotifyHitInfo::EHT_HIT;
 		else
@@ -184,12 +184,12 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 		const CVec3 vExplCoord3D( pExpl->GetExplCoordinates() );
 		const CVec2 vExplCoord( vExplCoord3D.x, vExplCoord3D.y );
 
-		// попали визуально
+		// РїРѕРїР°Р»Рё РІРёР·СѓР°Р»СЊРЅРѕ
 		// DebugTrace( "Player %d: %2.3f, %s", player, fabs( GetCenterPlain() - vExplCoord ), unitRect.IsPointInside( vExplCoord ) ? "true" : "false" );
 		if ( fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE && unitRect.IsPointInside( vExplCoord ) )
 		{
 			const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect );
-			// если бьёт снизу, or with ignore AABBCoef ability on, то не сжимать
+			// РµСЃР»Рё Р±СЊС‘С‚ СЃРЅРёР·Сѓ, or with ignore AABBCoef ability on, С‚Рѕ РЅРµ СЃР¶РёРјР°С‚СЊ
 			CAIUnit *pWhoFired = pExpl->GetWhoFire();
 			if ( nArmorDir != 1 && (IsValidObj(pWhoFired) && !pWhoFired->IsIgnoreAABBCoeff()) )
 				unitRect.Compress( GetRemissiveCoeff() ); 
@@ -251,7 +251,7 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CAIUnit::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
-	// нет точного попадания
+	// РЅРµС‚ С‚РѕС‡РЅРѕРіРѕ РїРѕРїР°РґР°РЅРёСЏ
 	if ( !ProcessCumulativeExpl( pExpl, nArmorDir, true ) )
 	{
 		ProcessAreaDamage( pExpl, nArmorDir, fRadius, fSmallRadius );
@@ -582,7 +582,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 			// remember time to switch off visibility 
 			if ( bCountToDissapear[party] )
 			{
-				// прошло достаточно большое время после ухода в невидимость (чтобы не мигал)
+				// РїСЂРѕС€Р»Рѕ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±РѕР»СЊС€РѕРµ РІСЂРµРјСЏ РїРѕСЃР»Рµ СѓС…РѕРґР° РІ РЅРµРІРёРґРёРјРѕСЃС‚СЊ (С‡С‚РѕР±С‹ РЅРµ РјРёРіР°Р»)
 				if ( lastTimeOfVis[party] + SConsts::RESIDUAL_VISIBILITY_TIME < curTime )
 				{
 					bCountToDissapear[party] = false;
@@ -595,7 +595,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 				bCountToDissapear[party] = true;
 			}
 		}
-		// виден 
+		// РІРёРґРµРЅ 
 		else 
 		{
 			bCountToDissapear[party] = false;
@@ -723,7 +723,7 @@ void CAIUnit::FreezeSegment()
 		pUnitInfoForGeneral->Segment();
 	}
 
-	// обработка TankPit
+	// РѕР±СЂР°Р±РѕС‚РєР° TankPit
 	if ( !IsValidObj( pTankPit ) )
 	{
 		pTankPit = 0;
@@ -853,7 +853,7 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DISAPPEAR ), this, false );
 				bDisappear = true;
 			}
-			// убить либо удалить с карты
+			// СѓР±РёС‚СЊ Р»РёР±Рѕ СѓРґР°Р»РёС‚СЊ СЃ РєР°СЂС‚С‹
 			if ( !GetStats()->IsAviation() && GetTerrain()->IsBridge( GetCenterTile() ) )
 			{
 				STerrainModeSetter modeSetter( ELM_STATIC, GetTerrain() );
@@ -873,7 +873,7 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DIE, fDamage, bFromExpl ), checked_cast<CAIUnit*>( this ), false );
 			}
 		}
-		else // юнит не умер
+		else // СЋРЅРёС‚ РЅРµ СѓРјРµСЂ
 		{
 			const SUnitBaseRPGStats *pStats = GetStats();
 			if ( !pStats->IsAviation() )
@@ -1298,7 +1298,7 @@ IObstacle* CAIUnit::LookForObstacle()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const float CAIUnit::GetTargetScanRadius()
 {
-	// дальнобойное AI орудие
+	// РґР°Р»СЊРЅРѕР±РѕР№РЅРѕРµ AI РѕСЂСѓРґРёРµ
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && GetFirstArtilleryGun() != 0 && !DoesReservePosExist() )
 		return GetFirstArtilleryGun()->GetFireRange( 0 );
 	else if ( GetStats()->etype == RPG_TYPE_OFFICER )
@@ -1342,7 +1342,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 		CAIUnit *pTarget = *iter;
 		if ( IsValidObj( pTarget ) && pTarget->IsNoticableByUnit( this, fRange ) && pTarget->GetState()->GetName() != EUSN_PARTROOP )
 		{
-			// для вражеской артиллерии добавить всех артиллеристов
+			// РґР»СЏ РІСЂР°Р¶РµСЃРєРѕР№ Р°СЂС‚РёР»Р»РµСЂРёРё РґРѕР±Р°РІРёС‚СЊ РІСЃРµС… Р°СЂС‚РёР»Р»РµСЂРёСЃС‚РѕРІ
 			bool bDoNotAddThisUnit = false;
 			if ( pTarget->GetStats()->IsArtillery() )
 			{
@@ -1372,7 +1372,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 		}
 	}
 
-	// по юнитам в домиках
+	// РїРѕ СЋРЅРёС‚Р°Рј РІ РґРѕРјРёРєР°С…
 	if ( bIterateBuildings )
 	{
 		for ( CStObjCircleIter<true> iter( GetCenterPlain(), fRange ); theScanLimiter.CanScan() && !iter.IsFinished(); iter.Iterate() )
@@ -1394,7 +1394,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 	*pBestTarget = GetBestShootEstimatedUnit();
 	*pGun = GetBestShootEstimatedGun();
 
-	// зенитная артиллерия
+	// Р·РµРЅРёС‚РЅР°СЏ Р°СЂС‚РёР»Р»РµСЂРёСЏ
 	if ( bIteratePlanes && *pBestTarget == 0 && CanShootToPlanes() )
 	{
 		CShootEstimatorLighAA estimatorAA;
@@ -1466,10 +1466,10 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 	bool bHadTarget = pCurTarget != 0;
 
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
-	// цель вне конуса обстрела есть
+	// С†РµР»СЊ РІРЅРµ РєРѕРЅСѓСЃР° РѕР±СЃС‚СЂРµР»Р° РµСЃС‚СЊ
 	if ( (*pBestTarget) != 0 )
 	{
-		// цель уже под сильным огнём
+		// С†РµР»СЊ СѓР¶Рµ РїРѕРґ СЃРёР»СЊРЅС‹Рј РѕРіРЅС‘Рј
 		const float fDamagePower = (*pBestTarget)->GetTakenDamagePower();
 
 		if ( fDamagePower != 0 )
@@ -1534,10 +1534,10 @@ BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated,
 		SetTargetScanRandom();
 	//		CAICommand *pCommand = GetCurCmd();
 
-		// если огонь по всему
+		// РµСЃР»Рё РѕРіРѕРЅСЊ РїРѕ РІСЃРµРјСѓ
 		if ( GetBehaviourFire() == SBehaviour::EFAtWill )
 		{
-			// найдена цель
+			// РЅР°Р№РґРµРЅР° С†РµР»СЊ
 			CAIUnit *pTarget = 0;
 			CBasicGun *pGun = 0;
 
@@ -1551,7 +1551,7 @@ BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated,
 				return 3;
 			else if ( !pTarget && bScanForObstacles )
 			{
-				// нет врагов, пострелять по препятствиям, если нужно
+				// РЅРµС‚ РІСЂР°РіРѕРІ, РїРѕСЃС‚СЂРµР»СЏС‚СЊ РїРѕ РїСЂРµРїСЏС‚СЃС‚РІРёСЏРј, РµСЃР»Рё РЅСѓР¶РЅРѕ
 				IObstacle *pObstacle = LookForObstacle();
 				if ( pObstacle )
 				{

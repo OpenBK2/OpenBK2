@@ -16,11 +16,11 @@
 struct SUnitStartCmdWindowData
 {
 	//
-	struct SCmd // данные для создания row в списке команд
+	struct SCmd // РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ row РІ СЃРїРёСЃРєРµ РєРѕРјР°РЅРґ
 	{
-		int nIndex;					// индекс команды в MapInfo.startCommandList[]
-		string szType;			// тип команды
-		string szTarget;	// местоназначение команды - имя юнита или координаты
+		int nIndex;					// РёРЅРґРµРєСЃ РєРѕРјР°РЅРґС‹ РІ MapInfo.startCommandList[]
+		string szType;			// С‚РёРї РєРѕРјР°РЅРґС‹
+		string szTarget;	// РјРµСЃС‚РѕРЅР°Р·РЅР°С‡РµРЅРёРµ РєРѕРјР°РЅРґС‹ - РёРјСЏ СЋРЅРёС‚Р° РёР»Рё РєРѕРѕСЂРґРёРЅР°С‚С‹
 		//
 		SCmd()
 			:	nIndex(-1),
@@ -41,8 +41,8 @@ struct SUnitStartCmdWindowData
 		ORDER_UP_CMD,
 		SEL_CHANGE
 	};
-	EAction eLastAction;							// последнее событие интерфейса пользователя
-	vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
+	EAction eLastAction;							// РїРѕСЃР»РµРґРЅРµРµ СЃРѕР±С‹С‚РёРµ РёРЅС‚РµСЂС„РµР№СЃР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+	vector<int> selectedCommands;		// SCmd::nIndex РІС‹Р±СЂР°РЅРЅС‹С… РІ СЃРїРёСЃРєРµ РєРѕРјР°РЅРґ
 	//
 	SUnitStartCmdWindowData() 
 	{

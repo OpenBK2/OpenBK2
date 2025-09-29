@@ -12,7 +12,7 @@ struct SFileStats
 	const char *pszName;
 	//! file size
 	int nSize;
-	//! права доступа (на чтение (1) или на запись (2))
+	//! РїСЂР°РІР° РґРѕСЃС‚СѓРїР° (РЅР° С‡С‚РµРЅРёРµ (1) РёР»Рё РЅР° Р·Р°РїРёСЃСЊ (2))
 	DWORD dwAccess;
 	//! creation time
 	SWin32Time ctime;

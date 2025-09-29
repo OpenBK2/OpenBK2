@@ -690,7 +690,7 @@ void CSelector::AssignSelectionToGroup( int nIndex )
 void CSelector::AssignGroupToSelection( int nIndex, bool bAddToCurrent )
 {
 	if ( groups[nIndex].GetList().empty() )
-		return; // выбор группы без юнитов не должен делать ничего, просто игнорируется
+		return; // РІС‹Р±РѕСЂ РіСЂСѓРїРїС‹ Р±РµР· СЋРЅРёС‚РѕРІ РЅРµ РґРѕР»Р¶РµРЅ РґРµР»Р°С‚СЊ РЅРёС‡РµРіРѕ, РїСЂРѕСЃС‚Рѕ РёРіРЅРѕСЂРёСЂСѓРµС‚СЃСЏ
 		
 	if ( !bAddToCurrent ) 
 	{
@@ -1390,7 +1390,7 @@ int CSelector::operator&( IBinSaver &saver )
 	saver.Add( 12, &bUnloadMode );
 //	saver.Add( 13, &uaAllUnitActions );
 	saver.Add( 14, &bSupportSingleSelection );
-//	saver.Add( 15, &uaAllCommonActions ); // создается каждый раз заново
+//	saver.Add( 15, &uaAllCommonActions ); // СЃРѕР·РґР°РµС‚СЃСЏ РєР°Р¶РґС‹Р№ СЂР°Р· Р·Р°РЅРѕРІРѕ
 	saver.Add( 17, &slots );
 	saver.Add( 18, &nMaxUnitSlots );
 	saver.Add( 19, &nMaxUnitPerSlot );

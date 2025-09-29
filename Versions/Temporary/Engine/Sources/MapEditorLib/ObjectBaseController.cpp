@@ -148,7 +148,7 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 					bResult = pObjectManipulator->InsertNode( szName, (int)( oldValue ) );
 				}
 			}
-			//создаем заново массивы
+			//СЃРѕР·РґР°РµРј Р·Р°РЅРѕРІРѕ РјР°СЃСЃРёРІС‹
 			for ( CArrayDataList::const_iterator itArrayData = arrayList.begin(); itArrayData != arrayList.end(); ++itArrayData )
 			{
 				for ( int nNodeIndex = 0; nNodeIndex < itArrayData->nCount; ++nNodeIndex )
@@ -173,7 +173,7 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 					}
 				}
 			}
-			//проставляем удаленные элементы
+			//РїСЂРѕСЃС‚Р°РІР»СЏРµРј СѓРґР°Р»РµРЅРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
 			for ( CValueDataList::const_iterator itValueData = valueList.begin(); itValueData != valueList.end(); ++itValueData )
 			{
 				if ( pNameMap && !pNameMap->empty() )

@@ -3,7 +3,7 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Возвращает результат в AI точках
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІ AI С‚РѕС‡РєР°С…
 float GetDistanceTo3DLine( const CVec3 &rvPoint, CVec2 &rvScreenPos );
 void Get2DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos );
 void Get3DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos );

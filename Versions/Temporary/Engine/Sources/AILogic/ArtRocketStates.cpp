@@ -169,7 +169,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			{
 				pArtillery->UnsetFollowState();				
 				pArtillery->ResetHoldSector();
-				if ( pArtillery->IsInTankPit() )// сначала выйти из TankPit, потом поехать куда послали
+				if ( pArtillery->IsInTankPit() )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
@@ -185,7 +185,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_ROTATE_TO:
 			pArtillery->ResetHoldSector();
-			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
@@ -197,7 +197,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_ROTATE_TO_DIR:
 			pArtillery->ResetHoldSector();
-			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
@@ -251,7 +251,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_SWARM_TO:
-			// сначала выйти из TankPit, потом поехать куда послали			
+			// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё			
 			pArtillery->ResetHoldSector();
 			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )
 			{

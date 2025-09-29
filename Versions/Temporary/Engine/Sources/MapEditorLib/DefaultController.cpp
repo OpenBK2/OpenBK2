@@ -12,13 +12,13 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {
-	// самостоятельно выполнить команду
+	// СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ РєРѕРјР°РЅРґСѓ
 	bool bResult = true;
 	if ( bUpdateManipulator )
 	{ 
 		bResult = UndoWithoutUpdateViews();
 	}
-	// Обновить Views
+	// РћР±РЅРѕРІРёС‚СЊ Views
 	if ( bResult &&	bUpdateViews )
 	{
 		CViewSet viewSet;
@@ -34,13 +34,13 @@ bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CDefaultController::Redo(  bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {
-	// самостоятельно выполнить команду
+	// СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ РІС‹РїРѕР»РЅРёС‚СЊ РєРѕРјР°РЅРґСѓ
 	bool bResult = true;
 	if ( bUpdateManipulator )
 	{
 		bResult = RedoWithoutUpdateViews();
 	}
-	// Обновить Views
+	// РћР±РЅРѕРІРёС‚СЊ Views
 	if ( bResult && bUpdateViews )
 	{
 		CViewSet viewSet;
@@ -59,15 +59,15 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 {
 	if ( pNameMap )
 	{
-		// если мы что-то маскируем
+		// РµСЃР»Рё РјС‹ С‡С‚Рѕ-С‚Рѕ РјР°СЃРєРёСЂСѓРµРј
 		if ( !rManipulatorNameMap.empty() )
 		{
-			// попробуем найти все полные пути
+			// РїРѕРїСЂРѕР±СѓРµРј РЅР°Р№С‚Рё РІСЃРµ РїРѕР»РЅС‹Рµ РїСѓС‚Рё
 			for ( IManipulator::CNameMap::const_iterator posName = nameMap.begin(); posName != nameMap.end(); ++posName )
 			{
 				( *pNameMap )[posName->first + rszName] = 0;
 			}
-			// это может быть прямая команда
+			// СЌС‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСЂСЏРјР°СЏ РєРѕРјР°РЅРґР°
 			for ( IManipulator::CNameMap::const_iterator posName = rManipulatorNameMap.begin(); posName != rManipulatorNameMap.end(); ++posName )
 			{
 				if ( rszName.compare( 0, posName->first.size(), posName->first ) == 0 )
@@ -76,10 +76,10 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 					( *pNameMap )[szName] = 0;
 				}
 			}
-			// это может быть команда от маскировочного манипулятора
+			// СЌС‚Рѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕРјР°РЅРґР° РѕС‚ РјР°СЃРєРёСЂРѕРІРѕС‡РЅРѕРіРѕ РјР°РЅРёРїСѓР»СЏС‚РѕСЂР°
 			( *pNameMap )[rszName] = 0;
 		}
-		// если мы ничего не маскируем
+		// РµСЃР»Рё РјС‹ РЅРёС‡РµРіРѕ РЅРµ РјР°СЃРєРёСЂСѓРµРј
 		else
 		{
 			if ( nameMap.empty() )

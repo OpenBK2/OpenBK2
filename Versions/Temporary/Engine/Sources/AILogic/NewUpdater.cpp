@@ -206,7 +206,7 @@ void CEventUpdater::AddUpdate( EFeedBack eFeedBack, int nParam, CObjectBase *pPa
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam )
 {
-	CPtr<SAIBasicUpdate> pUpdate = _pUpdate; // чтоб не потерялся
+	CPtr<SAIBasicUpdate> pUpdate = _pUpdate; // С‡С‚РѕР± РЅРµ РїРѕС‚РµСЂСЏР»СЃСЏ
 	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT )
 	{
 		if ( pObj && pObj->IsRefValid() )

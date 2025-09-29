@@ -46,7 +46,7 @@ protected:
 
 protected:
 	bool IsInFocus() const { return bInFocus; }
-	// Выводит экран помощи при выполнении всех условий показа
+	// Р’С‹РІРѕРґРёС‚ СЌРєСЂР°РЅ РїРѕРјРѕС‰Рё РїСЂРё РІС‹РїРѕР»РЅРµРЅРёРё РІСЃРµС… СѓСЃР»РѕРІРёР№ РїРѕРєР°Р·Р°
 	bool CheckedShowHelpScreen( bool bForced );
 	// 
 	virtual bool IsShowHelpScreenOnInit() { return true; }
@@ -64,7 +64,7 @@ protected:
 
 	bool ProcessEvent( const struct SGameMessage &msg );
 
-	// Пауза вне игры, обусловленная интерфейсом
+	// РџР°СѓР·Р° РІРЅРµ РёРіСЂС‹, РѕР±СѓСЃР»РѕРІР»РµРЅРЅР°СЏ РёРЅС‚РµСЂС„РµР№СЃРѕРј
 	void PauseIntermission( bool bPause );
 	
 	const string& GetBindSection() const { return szBindSection; }

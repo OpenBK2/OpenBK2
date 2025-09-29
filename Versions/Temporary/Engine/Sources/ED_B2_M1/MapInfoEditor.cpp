@@ -110,13 +110,13 @@ void CMapInfoEditor::CreateControls()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 
-	// Сначала грузим файл с установками редактора
+	// РЎРЅР°С‡Р°Р»Р° РіСЂСѓР·РёРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё СЂРµРґР°РєС‚РѕСЂР°
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 	}
 
-	// создаем minimap docking window
+	// СЃРѕР·РґР°РµРј minimap docking window
 	//const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	UINT nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
@@ -133,7 +133,7 @@ void CMapInfoEditor::CreateControls()
 	
 	CString strPaneLabel;
 	nID = ID_MAPINFO_EDITOR_SHORTCUT_DW;
-	// создаем shortcut docking window
+	// СЃРѕР·РґР°РµРј shortcut docking window
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "ShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.8f, 265 ) )
 	{
 		nID = ID_MAPINFO_EDITOR_SHORTCUT_PANE_0;
@@ -381,7 +381,7 @@ void CMapInfoEditor::CreateControls()
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create shotrcut window: %g", NHPTimer::GetTimePassed( &time ) );
 
-	// создаем movies editor docking window
+	// СЃРѕР·РґР°РµРј movies editor docking window
 	//const bool bShowMoviesEditor = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
 	//if ( bShowMoviesEditor )
 	nID = ID_MOVIES_EDITOR_DW;
@@ -480,7 +480,7 @@ void CMapInfoEditor::PreDestroyControls()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMapInfoEditor::DestroyControls()
 {
-	// разрушаем shortcut docking window 
+	// СЂР°Р·СЂСѓС€Р°РµРј shortcut docking window 
 	if ( pwndShortcutBar != 0 )
 	{
 		if ( ::IsWindow( pwndShortcutBar->m_hWnd ) )
@@ -492,7 +492,7 @@ void CMapInfoEditor::DestroyControls()
 	}
 	wndShortcutBar.DestroyWindow();
 
-	// разрушаем minimap docking window
+	// СЂР°Р·СЂСѓС€Р°РµРј minimap docking window
 	const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	if ( bShowMiniMap )
@@ -509,7 +509,7 @@ void CMapInfoEditor::DestroyControls()
 		wndMiniMap.Destroy();
 	}
 
-	// разрушаем Movies Editor docking window
+	// СЂР°Р·СЂСѓС€Р°РµРј Movies Editor docking window
 	const bool bShowMoviesEditor = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
 	if ( bShowMoviesEditor )
 	{
@@ -533,7 +533,7 @@ void CMapInfoEditor::DestroyControls()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMapInfoEditor::Create()
 {
-	// Сначала грузим файл с установками редактора
+	// РЎРЅР°С‡Р°Р»Р° РіСЂСѓР·РёРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё СЂРµРґР°РєС‚РѕСЂР°
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
@@ -606,7 +606,7 @@ void CMapInfoEditor::Destroy()
 			editorSettings.bShowMapInfoViewToolbar = pToolbar->IsVisible();
 			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
 		}
-		// Записываем файл с установками (его могли поменять во время работы редактора)
+		// Р—Р°РїРёСЃС‹РІР°РµРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё (РµРіРѕ РјРѕРіР»Рё РїРѕРјРµРЅСЏС‚СЊ РІРѕ РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ СЂРµРґР°РєС‚РѕСЂР°)
 		{
 			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 			pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
@@ -1783,7 +1783,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		//
 		if ( !objectList.empty() )
 		{
-			// Добавляем объекты
+			// Р”РѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹
 			hash_map<int, int> objectIndexToLinkIDMap;
 			objectList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
@@ -1817,7 +1817,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					NI_ASSERT( 0, StrFmt( "Empty object %d", *itIndex ) );
 					continue;
 				}
-				// создаем записи в mapInfo в зависимости от типа объекта
+				// СЃРѕР·РґР°РµРј Р·Р°РїРёСЃРё РІ mapInfo РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РёРїР° РѕР±СЉРµРєС‚Р°
 				if ( ( szRPGStatsTypeName == "MineRPGStats" )					||
 						 ( szRPGStatsTypeName == "BuildingRPGStats" )			||
 						 ( szRPGStatsTypeName == "MechUnitRPGStats" )			||
@@ -1850,7 +1850,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					}
 				}
 			}
-			// мосты
+			// РјРѕСЃС‚С‹
 			bridgeList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = bridgeList.begin(); itIndex != bridgeList.end(); ++itIndex )
 			{
@@ -1866,7 +1866,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					pBridgeInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
 				}
 			}
-			// окопы
+			// РѕРєРѕРїС‹
 			entrenchmentList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = entrenchmentList.begin(); itIndex != entrenchmentList.end(); ++itIndex )
 			{
@@ -1900,7 +1900,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					nObjectIDToRemoveList.push_back( nLinkID );
 				}
 			}
-			// Удаляем объекты
+			// РЈРґР°Р»СЏРµРј РѕР±СЉРµРєС‚С‹
 			for ( list<int>::iterator itObjectNameToRemove = nObjectIDToRemoveList.begin(); itObjectNameToRemove != nObjectIDToRemoveList.end(); ++itObjectNameToRemove )
 			{
 				if ( const NMapInfoEditor::SObjectInfo* pObjectInfo = objectInfoCollector.GetObjectInfoByLinkID( *itObjectNameToRemove ) )
@@ -1909,7 +1909,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				}
 			}
 		}
-		// обновляем объекты
+		// РѕР±РЅРѕРІР»СЏРµРј РѕР±СЉРµРєС‚С‹
 		if ( !changedObjectList.empty() )
 		{
 			for( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo = changedObjectList.begin();
@@ -1924,8 +1924,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		if ( !spotList.empty() )
 		{
 			//NDb::SMapInfo *pMutablMapInfo = const_cast<NDb::SMapInfo*>( pMapInfo );
-			// Добавляем spots
-			// Добавляем объекты
+			// Р”РѕР±Р°РІР»СЏРµРј spots
+			// Р”РѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹
 			hash_map<int, int> spotIndexToLinkIDMap;
 			spotList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
@@ -1991,7 +1991,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &spotList, *itIndex );
 			}
 			removedSpotBackList.clear();
-			// Удаляем spots
+			// РЈРґР°Р»СЏРµРј spots
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
 			{
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, 0, false );
@@ -2001,7 +2001,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				}
 			}
 		}
-		// обновляем spots
+		// РѕР±РЅРѕРІР»СЏРµРј spots
 		if ( !changedSpotList.empty() )
 		{
 			for( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo = changedSpotList.begin();
@@ -2174,7 +2174,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	// warfog
 	if ( editorSettings.viewFilterData.bShowWarfog )
 	{
-		// заполним бордюр
+		// Р·Р°РїРѕР»РЅРёРј Р±РѕСЂРґСЋСЂ
 		int nDensity = 0;
 		const int nBorderWidth = 4;
 		const int nWarfogMinValue = 255;
@@ -2254,7 +2254,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	if ( !pTableManipulator )
 		return;
 
-	// получить idшники типов объектов, которые должны быть скрыты фильтром
+	// РїРѕР»СѓС‡РёС‚СЊ idС€РЅРёРєРё С‚РёРїРѕРІ РѕР±СЉРµРєС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЃРєСЂС‹С‚С‹ С„РёР»СЊС‚СЂРѕРј
 	hash_map<string,bool> filterSettings;
 	for ( int t = 0; t < editorSettings.viewFilterData.objTypeFilter.size(); ++t )
 	{
@@ -2269,7 +2269,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	for ( NMapInfoEditor::SObjectInfoCollector::CObjectInfoMap::iterator itObjectInfo = objectInfoCollector.objectInfoMap.begin(); 
 		itObjectInfo != objectInfoCollector.objectInfoMap.end(); ++itObjectInfo )
 	{
-		// по объектам
+		// РїРѕ РѕР±СЉРµРєС‚Р°Рј
 		NMapInfoEditor::SObjectInfo *pOI = itObjectInfo ->second;
 		if ( !pOI )
 			continue;
@@ -2278,7 +2278,7 @@ void CMapInfoEditor::ApplyViewFilter()
 					itSceneIDToElemID = pOI->sceneIDToLinkIDMap.begin();
 					itSceneIDToElemID != pOI->sceneIDToLinkIDMap.end(); ++itSceneIDToElemID )
 		{
-			// по элементам объекта
+			// РїРѕ СЌР»РµРјРµРЅС‚Р°Рј РѕР±СЉРµРєС‚Р°
 			int nSceneID = itSceneIDToElemID->first;
 			int nElemID = itSceneIDToElemID->second;
 			NMapInfoEditor::SObjectInfo::CMapInfoElementMap::iterator itElement = pOI->mapInfoElementMap.find( nElemID );
@@ -2344,7 +2344,7 @@ void CMapInfoEditor::RunGame()
 // basement storage  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
-		// удаляемые объекты убираем из добавляемых
+		// СѓРґР°Р»СЏРµРјС‹Рµ РѕР±СЉРµРєС‚С‹ СѓР±РёСЂР°РµРј РёР· РґРѕР±Р°РІР»СЏРµРјС‹С…
 		for ( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			{
@@ -2362,7 +2362,7 @@ void CMapInfoEditor::RunGame()
 				}
 			}
 		}
-		// добавляемые и убираемые объекты убираем из обновляемых
+		// РґРѕР±Р°РІР»СЏРµРјС‹Рµ Рё СѓР±РёСЂР°РµРјС‹Рµ РѕР±СЉРµРєС‚С‹ СѓР±РёСЂР°РµРј РёР· РѕР±РЅРѕРІР»СЏРµРјС‹С…
 		for ( hash_map<UINT,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
 			hash_map<UINT,UINT>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
@@ -2379,21 +2379,21 @@ void CMapInfoEditor::RunGame()
 				changedObjectMap.erase( posObjectIndex );
 			}
 		}
-		// добавляем объекты
+		// РґРѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹
 		for( hash_map<UINT,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.InsertObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
-		// удаляем объекты
+		// СѓРґР°Р»СЏРµРј РѕР±СЉРµРєС‚С‹
 		for( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.RemoveObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
-		// добавляем мосты
+		// РґРѕР±Р°РІР»СЏРµРј РјРѕСЃС‚С‹
 		for( hash_map<UINT,int>::const_iterator itBridgeIndex = insertedBridgeMap.begin(); itBridgeIndex != insertedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
-		// удаляем мосты
+		// СѓРґР°Р»СЏРµРј РјРѕСЃС‚С‹
 		for( hash_map<UINT,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}

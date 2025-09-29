@@ -6,11 +6,11 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 	SUnitBaseRPGStats::ToAIUnits( bInEditor );
 	if ( !bInEditor )
 	{
-		// градусы/сек <=> угол 65536/тик
+		// РіСЂР°РґСѓСЃС‹/СЃРµРє <=> СѓРіРѕР» 65536/С‚РёРє
 		fRotateSpeed *= float( (65536.0 / 360.0) / 1000.0 );
 		fTiltSpeed *= float( (65536.0 / 360.0) / 1000.0 );
 		fTiltAcceleration *= float( (65536.0 / 360.0) / 1000.0 / 1000.0 );
-		// метры <=> AI точки
+		// РјРµС‚СЂС‹ <=> AI С‚РѕС‡РєРё
 		fTurnRadius *= float( 32.0f );
 		fMaxHeight *= float( 32.0f );
 		// move entrance point in front direction outside bounding box
@@ -20,7 +20,7 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 
 	// armor
 	FOR_EACH_ARR_VAL( armors, ToAIUnits, armors.size(), bInEditor ); 
-	// проинициализировать min/max Armor
+	// РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ min/max Armor
 	if ( !armors.empty() ) 
 	{
 		nMinArmor = armors[0].nMin;

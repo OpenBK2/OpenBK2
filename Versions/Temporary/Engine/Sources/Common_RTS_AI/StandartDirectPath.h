@@ -27,16 +27,16 @@ public:
 	const CVec2& GetFinishPoint() const { return vFinishPoint; }
 	const CVec2& GetStartPoint() const { return vStartPoint; }
 
-	//! восстановить путь из новой точки ( vPoint )
+	//! РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РїСѓС‚СЊ РёР· РЅРѕРІРѕР№ С‚РѕС‡РєРё ( vPoint )
 	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) {}
-	//! пересчитать путь из новой точки ( vPoint )
+	//! РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ РїСѓС‚СЊ РёР· РЅРѕРІРѕР№ С‚РѕС‡РєРё ( vPoint )
 	void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) {}
-	//! добавить тайлы в начало пути
+	//! РґРѕР±Р°РІРёС‚СЊ С‚Р°Р№Р»С‹ РІ РЅР°С‡Р°Р»Рѕ РїСѓС‚Рё
 	void InsertTiles( const list<SVector> &tiles );
-	//! можно ли проехать весь путь задом
+	//! РјРѕР¶РЅРѕ Р»Рё РїСЂРѕРµС…Р°С‚СЊ РІРµСЃСЊ РїСѓС‚СЊ Р·Р°РґРѕРј
 	const bool CanGoBackward( const CBasePathUnit *pUnit ) const { return true; }
 	const bool ShouldCheckTurn() const { return false; }
-	//! можно ли для этого пути построить сложный разворот
+	//! РјРѕР¶РЅРѕ Р»Рё РґР»СЏ СЌС‚РѕРіРѕ РїСѓС‚Рё РїРѕСЃС‚СЂРѕРёС‚СЊ СЃР»РѕР¶РЅС‹Р№ СЂР°Р·РІРѕСЂРѕС‚
 	const bool CanBuildComplexTurn() const { return false; }
 
 	void MarkPath( const int nID, const NDebugInfo::EColor color ) const;

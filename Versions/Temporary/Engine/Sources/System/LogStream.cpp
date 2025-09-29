@@ -6,9 +6,9 @@ int nID = 0;
 bool bConsoleUpdated = false;
 list<SConsoleLine> consoleLines;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-CLogStream csSystem( CONSOLE_STREAM_CONSOLE );	// Ответы на консольные комманды
-CLogStream csScript( CONSOLE_STREAM_CONSOLE );//CONSOLE_STREAM_SCRIPT );		// сообщения скрипта
-// максимальное кол-во строк в консоле
+CLogStream csSystem( CONSOLE_STREAM_CONSOLE );	// РћС‚РІРµС‚С‹ РЅР° РєРѕРЅСЃРѕР»СЊРЅС‹Рµ РєРѕРјРјР°РЅРґС‹
+CLogStream csScript( CONSOLE_STREAM_CONSOLE );//CONSOLE_STREAM_SCRIPT );		// СЃРѕРѕР±С‰РµРЅРёСЏ СЃРєСЂРёРїС‚Р°
+// РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»-РІРѕ СЃС‚СЂРѕРє РІ РєРѕРЅСЃРѕР»Рµ
 const int CONSOLE_MAX_SIZE = 256;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Console stream

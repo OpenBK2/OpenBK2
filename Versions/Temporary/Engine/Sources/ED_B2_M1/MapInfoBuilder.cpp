@@ -162,7 +162,7 @@ bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, str
 //CRAP{ PLAIN_TEXT
 bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	int nPlayerCount = 0;
 	if ( !CManipulatorManager::GetValue( &nPlayerCount, pBuildDataManipulator, "Players" ) ||
 			 ( nPlayerCount < MIN_PLAYER_COUNT ) ||
@@ -231,7 +231,7 @@ bool CMapInfoBuilder::InternalInsertObject( string *pszObjectTypeName,
 	const string szFullObjectName = *pszUniqueObjectName;
 	string szMapInfoFolder;
 	CStringManager::SplitFileName( &szMapInfoFolder, 0, 0, szFullObjectName );
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	CTPoint<int> size( 0, 0 );
 	string szSeasonName;
 	string szDayTimeName;
@@ -256,20 +256,20 @@ bool CMapInfoBuilder::InternalInsertObject( string *pszObjectTypeName,
 	{
 		CPtr<IManipulator> pMapInfoManipulator = pRM->CreateObjectManipulator( *pszObjectTypeName, szFullObjectName );
 		NI_ASSERT( pMapInfoManipulator != 0, "CMapInfoBuilder::InternalInsertObject() pMapInfoManipulator == 0" );
-		// Проставляем сезон & daytime
+		// РџСЂРѕСЃС‚Р°РІР»СЏРµРј СЃРµР·РѕРЅ & daytime
 		bResult = bResult && pMapInfoManipulator->SetValue( "Season", szSeasonName );
 		bResult = bResult && pMapInfoManipulator->SetValue( "DayTime", szDayTimeName );
-		// Проставляем размеры
+		// РџСЂРѕСЃС‚Р°РІР»СЏРµРј СЂР°Р·РјРµСЂС‹
 		bResult = bResult && pMapInfoManipulator->SetValue( "NumPatchesX", size.x );
 		bResult = bResult && pMapInfoManipulator->SetValue( "NumPatchesY", size.y );
-		// Проставляем свет
+		// РџСЂРѕСЃС‚Р°РІР»СЏРµРј СЃРІРµС‚
 		bResult = bResult && pMapInfoManipulator->SetValue( "Light", szLightName );
 		bResult = bResult && pMapInfoManipulator->SetValue( "PreLight", szPreLightName );
 		// tileset
 		bResult = bResult && pMapInfoManipulator->SetValue( "TerraSet", szTilesetName );
 		// ocean water
 		bResult = bResult && pMapInfoManipulator->SetValue( "OceanWater", szOceanWater );
-		// Добавляем информацию о игроках
+		// Р”РѕР±Р°РІР»СЏРµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РёРіСЂРѕРєР°С…
 		const int nNeutralPlayerIndex = nPlayerCount - 1;
 		const int nNumFriendlyPlayers = int( (nPlayerCount - 1) / 2 );
 
@@ -297,7 +297,7 @@ bool CMapInfoBuilder::InternalInsertObject( string *pszObjectTypeName,
 				if ( !bResult ) break;
 			}
 		}
-		// Добавляем информацию о дипломатических отношениях
+		// Р”РѕР±Р°РІР»СЏРµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РґРёРїР»РѕРјР°С‚РёС‡РµСЃРєРёС… РѕС‚РЅРѕС€РµРЅРёСЏС…
 		int nExistingDiplomaciesNumber = 0;
 		bResult = bResult && CManipulatorManager::GetValue( &nExistingDiplomaciesNumber, pMapInfoManipulator, "Diplomacies" );
 		if ( bResult )

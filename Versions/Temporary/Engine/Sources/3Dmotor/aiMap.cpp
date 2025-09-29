@@ -21,7 +21,7 @@ const int N_MIN_FLOOR = -3;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NAI
 {
-CBasicShare<CDBPtr<NDb::SAIGeometry>, CLoadAIGeometryFromGranny, SDBPtrHash> shareAIModel(107); // используется также в MakeBuilding для определения какие куски присутсвуют в геометрии
+CBasicShare<CDBPtr<NDb::SAIGeometry>, CLoadAIGeometryFromGranny, SDBPtrHash> shareAIModel(107); // РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚Р°РєР¶Рµ РІ MakeBuilding РґР»СЏ РѕРїСЂРµРґРµР»РµРЅРёСЏ РєР°РєРёРµ РєСѓСЃРєРё РїСЂРёСЃСѓС‚СЃРІСѓСЋС‚ РІ РіРµРѕРјРµС‚СЂРёРё
 CBasicShare<CDBPtr<NDb::SAIGeometry>, CFileSkinPointsLoadFromGranny, SDBPtrHash> shareSkinPoints(108);
 //CBasicShare<int, CLoadTwoBSPTrees> shareBSPTrees(117);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1014,7 +1014,7 @@ bool CAIMap::GetHLPosFromHull( CVec3 *pRes, CConvexHull *pHull, int nUserID ) co
 	}
 	else if ( nUserID == MUST_BE_IN_OBJECT )
 	{
-		// надо найти точку, которая точно находится внутри объекта
+		// РЅР°РґРѕ РЅР°Р№С‚Рё С‚РѕС‡РєСѓ, РєРѕС‚РѕСЂР°СЏ С‚РѕС‡РЅРѕ РЅР°С…РѕРґРёС‚СЃСЏ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
 		bool bIntersect= false;
 		int nTimes = 10;
 		while ( nTimes > 0 && !bIntersect )

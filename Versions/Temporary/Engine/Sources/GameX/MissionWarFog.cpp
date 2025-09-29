@@ -88,7 +88,7 @@ void SInterfaceMissionWarFogInfo::Update( NTimer::STime nGameTime )
 	if ( !bIsWarFog && !bIsNoise )
 		return;
 
-	// сгенерим новый фог
+	// СЃРіРµРЅРµСЂРёРј РЅРѕРІС‹Р№ С„РѕРі
 	CArray2D<float> fog;
 	fog.SetSizes( nSizeX, nSizeY );
 	for ( int x = 0; x < nSizeX; ++x )
@@ -154,7 +154,7 @@ void SInterfaceMissionWarFogInfo::GetNoise( CArray2D<float> *pNoise, NTimer::STi
 	{
 		bIsNoise = true;
 		noiseTime = time;
-		// сгенерим произвольные опорные шумы
+		// СЃРіРµРЅРµСЂРёРј РїСЂРѕРёР·РІРѕР»СЊРЅС‹Рµ РѕРїРѕСЂРЅС‹Рµ С€СѓРјС‹
 		CPerlinNoise perlin;
 		perlin.CreateTiled( nSizeX, nSizeY, CLOUDS_NOISE_OCTS_NUM, CLOUDS_NOISE_PERS, CLOUDS_NOISE_SCALE );
 		baseNoise1 = perlin.GetPerlinNoise();
@@ -214,7 +214,7 @@ void SInterfaceMissionWarFogInfo::CycleMove( CArray2D<float> *pDst, const CArray
 	else
 		vPos.y = nSizeY + fmod( vPos.y, nSizeY );
 
-	// считаем площадь сегментов сдвинутой клетки
+	// СЃС‡РёС‚Р°РµРј РїР»РѕС‰Р°РґСЊ СЃРµРіРјРµРЅС‚РѕРІ СЃРґРІРёРЅСѓС‚РѕР№ РєР»РµС‚РєРё
 	const float fDX = vPos.x - floorf( vPos.x );
 	const float fDY = vPos.y - floorf( vPos.y );
 	const float f11 = (1.0f - fDX) * (1.0f - fDY);

@@ -11,7 +11,7 @@ class CArtillery;
 class CEntrenchmentTankPit;
 class CSupportAAGun;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// просто военная машинка, базовый класс
+// РїСЂРѕСЃС‚Рѕ РІРѕРµРЅРЅР°СЏ РјР°С€РёРЅРєР°, Р±Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ
 class CMilitaryCar : public CAIUnit
 {
 	typedef hash_map<int/*unitID*/, int/*board number*/> CBoardOrder;
@@ -21,18 +21,18 @@ class CMilitaryCar : public CAIUnit
 	ZDATA_(CAIUnit)
 	CDBPtr<SMechUnitRPGStats> pStats;
 
-	// орудийные стволы
+	// РѕСЂСѓРґРёР№РЅС‹Рµ СЃС‚РІРѕР»С‹
 	CPtr<CUnitGuns> pGuns;
 
-	// вращающаяся пушка
+	// РІСЂР°С‰Р°СЋС‰Р°СЏСЃСЏ РїСѓС€РєР°
 	vector< CObj<CTurret> > turrets;
 	
-	// пассажиры
+	// РїР°СЃСЃР°Р¶РёСЂС‹
 	list<CPtr<CSoldier> > pass;
 	
 	CPtr<CFormation> pLockingUnit;
 	float fDispersionBonus;
-	NTimer::STime timeLastHeal;						// последнее время лечения
+	NTimer::STime timeLastHeal;						// РїРѕСЃР»РµРґРЅРµРµ РІСЂРµРјСЏ Р»РµС‡РµРЅРёСЏ
 	
 	// mech units, currently On The Way to board
 	hash_map<int, CPtr<CAIUnit> > boarding;
@@ -45,7 +45,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAIUnit*)this); f.Add(2,&pStats); f.Add(3,&pGuns); f.Add(4,&turrets); f.Add(5,&pass); f.Add(6,&pLockingUnit); f.Add(7,&fDispersionBonus); f.Add(8,&timeLastHeal); f.Add(9,&boarding); f.Add(10,&onBoard); f.Add(11,&boardOrder); f.Add(12,&bCanUnload); f.Add(13,&supportAAGuns); return 0; }
 private:
 	//
-	// координаты пассажира n
+	// РєРѕРѕСЂРґРёРЅР°С‚С‹ РїР°СЃСЃР°Р¶РёСЂР° n
 	const CVec2 GetPassengerCoordinates( const int n );
 protected:
 	virtual void InitGuns();
@@ -56,7 +56,7 @@ protected:
 	virtual DWORD InitSupportAntiAircraftGuns();
 
 public:
-	// эту функцию переопределяем в подклассах
+	// СЌС‚Сѓ С„СѓРЅРєС†РёСЋ РїРµСЂРµРѕРїСЂРµРґРµР»СЏРµРј РІ РїРѕРґРєР»Р°СЃСЃР°С…
 	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
 
 	virtual const CVec2 GetGunCenter( const int nGun ) const;
@@ -67,7 +67,7 @@ public:
 	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }	
 	virtual IStatesFactory* GetStatesFactory() const =0;
 
-	// расстояние от центра до точки, откуда можно напрямую бежать к entrance point
+	// СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ С†РµРЅС‚СЂР° РґРѕ С‚РѕС‡РєРё, РѕС‚РєСѓРґР° РјРѕР¶РЅРѕ РЅР°РїСЂСЏРјСѓСЋ Р±РµР¶Р°С‚СЊ Рє entrance point
 	virtual float GetDistanceToLandPoint() const;
 	const bool IsIdle() const;
 	virtual BYTE GetNAvailableSeats() const { return pStats->nPassangers - pass.size(); }
@@ -77,7 +77,7 @@ public:
 
 	const CVec2 GetEntrancePoint() const;
 
-	// удалить всех пассажиров
+	// СѓРґР°Р»РёС‚СЊ РІСЃРµС… РїР°СЃСЃР°Р¶РёСЂРѕРІ
 	virtual void ClearAllPassengers();
 	virtual void DelPassenger( const int n );
 	virtual void DelPassenger( class CSoldier *pSoldier );
@@ -142,7 +142,7 @@ public:
 	virtual const int GetUnitPriority() const
 	{
 		const int nType = SConsts::GetUnitPriority( pStats->eUnitType );
-		//наверное в будущес стоит это раскоментить
+		//РЅР°РІРµСЂРЅРѕРµ РІ Р±СѓРґСѓС‰РµСЃ СЃС‚РѕРёС‚ СЌС‚Рѕ СЂР°СЃРєРѕРјРµРЅС‚РёС‚СЊ
 		//NI_ASSERT( nType != -1, StrFmt( "Unknown unit type: %d", pStats->eUnitType ) );
 		const int nArmor = pStats->armors[0].fMin;
 		return ( ( nType & 0x0000FFFF ) << 16 ) | ( nArmor & 0x0000FFFF );
@@ -152,14 +152,14 @@ public:
 	void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// может сидеть в TankPit. при любой команде, которая может привести к движению этого юнита
-// нужно сначала выполнить команду выхода из TankPit.
+// РјРѕР¶РµС‚ СЃРёРґРµС‚СЊ РІ TankPit. РїСЂРё Р»СЋР±РѕР№ РєРѕРјР°РЅРґРµ, РєРѕС‚РѕСЂР°СЏ РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РґРІРёР¶РµРЅРёСЋ СЌС‚РѕРіРѕ СЋРЅРёС‚Р°
+// РЅСѓР¶РЅРѕ СЃРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅРёС‚СЊ РєРѕРјР°РЅРґСѓ РІС‹С…РѕРґР° РёР· TankPit.
 class CTank : public CMilitaryCar
 {
 	OBJECT_BASIC_METHODS( CTank );
 	
 	ZDATA_(CMilitaryCar)
-	bool bTrackDamaged; // true если у танка перебита гусеница
+	bool bTrackDamaged; // true РµСЃР»Рё Сѓ С‚Р°РЅРєР° РїРµСЂРµР±РёС‚Р° РіСѓСЃРµРЅРёС†Р°
 	
 	SAIAngle wDangerousDir;
 	bool bDangerousDirSet;
@@ -177,7 +177,7 @@ public:
 	virtual IStatesFactory* GetStatesFactory() const;
 
 	bool IsTrackDamaged() const { return bTrackDamaged; }
-	void RepairTrack() ;// починили гусеницу
+	void RepairTrack() ;// РїРѕС‡РёРЅРёР»Рё РіСѓСЃРµРЅРёС†Сѓ
 
 	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual const bool CanMove() const;
@@ -205,32 +205,32 @@ public:
 	virtual bool CanMoveAfterUserCommand() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// транспорт, перевозит марериальные ресурсы, 
-// может цеплять пушки
+// С‚СЂР°РЅСЃРїРѕСЂС‚, РїРµСЂРµРІРѕР·РёС‚ РјР°СЂРµСЂРёР°Р»СЊРЅС‹Рµ СЂРµСЃСѓСЂСЃС‹, 
+// РјРѕР¶РµС‚ С†РµРїР»СЏС‚СЊ РїСѓС€РєРё
 class CAITransportUnit : public CMilitaryCar
 {
 	OBJECT_BASIC_METHODS( CAITransportUnit );
 	typedef list< CPtr<CFormation> > CExternLoaders;
 
 	ZDATA_(CMilitaryCar)
-	float fResursUnits; // количество RU, которые есть у грузовичка
+	float fResursUnits; // РєРѕР»РёС‡РµСЃС‚РІРѕ RU, РєРѕС‚РѕСЂС‹Рµ РµСЃС‚СЊ Сѓ РіСЂСѓР·РѕРІРёС‡РєР°
 	CPtr<CArtillery> pTowedArtillery;
 	CPtr<CAIUnit> pMustTow;			// artillery, that this truck must tow (for general intendant)
-	CExternLoaders externLoaders; // дошоняющие гранспорт грузчики
+	CExternLoaders externLoaders; // РґРѕС€РѕРЅСЏСЋС‰РёРµ РіСЂР°РЅСЃРїРѕСЂС‚ РіСЂСѓР·С‡РёРєРё
 	CPtr<CFormation> pTowedArtilleryCrew;	// when artillery is attached the crew.
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&fResursUnits); f.Add(3,&pTowedArtillery); f.Add(4,&pMustTow); f.Add(5,&externLoaders); f.Add(6,&pTowedArtilleryCrew); return 0; }
-	// для группового подцепления артиллерии, 
-	// выбирает юнит из нашей группы, ближайший к артиллерии и возвращает его nUniqueId
+	// РґР»СЏ РіСЂСѓРїРїРѕРІРѕРіРѕ РїРѕРґС†РµРїР»РµРЅРёСЏ Р°СЂС‚РёР»Р»РµСЂРёРё, 
+	// РІС‹Р±РёСЂР°РµС‚ СЋРЅРёС‚ РёР· РЅР°С€РµР№ РіСЂСѓРїРїС‹, Р±Р»РёР¶Р°Р№С€РёР№ Рє Р°СЂС‚РёР»Р»РµСЂРёРё Рё РІРѕР·РІСЂР°С‰Р°РµС‚ РµРіРѕ nUniqueId
 	const int GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake );
 public:
 	void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector );
 
-	// для процесса ремонта. грузчики расходуют RU в процессе починки и перезарядки
+	// РґР»СЏ РїСЂРѕС†РµСЃСЃР° СЂРµРјРѕРЅС‚Р°. РіСЂСѓР·С‡РёРєРё СЂР°СЃС…РѕРґСѓСЋС‚ RU РІ РїСЂРѕС†РµСЃСЃРµ РїРѕС‡РёРЅРєРё Рё РїРµСЂРµР·Р°СЂСЏРґРєРё
 	float GetResursUnitsLeft() const { return fResursUnits; }
 	void SetResursUnitsLeft( float _fResursUnits );
 	void DecResursUnitsLeft( float dRU );
 
-	// буксировка
+	// Р±СѓРєСЃРёСЂРѕРІРєР°
 	virtual bool IsTowing() const;
 	virtual class CArtillery* GetTowedArtillery() const { return pTowedArtillery; }
 	void SetTowedArtillery( class CArtillery *pTowedArtillery);

@@ -12,17 +12,17 @@ class CMapInfoState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMapInfoEditor;
 
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CMapInfoEditor *pMapInfoEditor;
 	CPtr<CMaskManipulator> pMaskManipulator;
-	// Методы общего назначения
+	// РњРµС‚РѕРґС‹ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ
 	bool IsMultiInputState( int nStateIndex );
 	void LoadEnterConfig();
 	void SaveEnterConfig();
 	void SetShowStatistic( bool _bShowStatistic );
 	void ShowStatistic();
 
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CMapInfoState( CMapInfoEditor *_pMapInfoEditor );
 public:
 	enum EInputStates

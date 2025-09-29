@@ -83,13 +83,13 @@ public:
 			CString strHeaderName;
 			//tree.MoveWindow( CRect( 0, 0, 0, 0 ) ); //disable visual errors in stingray tree 
 			
-			// первая колонка уже существует
+			// РїРµСЂРІР°СЏ РєРѕР»РѕРЅРєР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
 			strHeaderName.LoadString( CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME[0] );
 			pwndNewTab->SetColumnHeading( 0, strHeaderName );
 			pwndNewTab->SetColumnFormat( 0, CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[0] );
 			pwndNewTab->SetColumnWidth( 0, CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_WIDTH[0] );
 			pwndNewTab->SetColumnImage( 0, 0 );
-			// вставляем другие колонки
+			// РІСЃС‚Р°РІР»СЏРµРј РґСЂСѓРіРёРµ РєРѕР»РѕРЅРєРё
 			for ( int index = 1; index < TABGDBB_TREE_COLUMN_COUNT; ++index )
 			{
 				strHeaderName.LoadString( CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME[index] );

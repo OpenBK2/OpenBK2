@@ -34,7 +34,7 @@ enum EMPUIMessageType
 	// UI<-->MP: update player info in Game Room
 	EMUI_UPDATE_SLOT,
 
-	// MP-->UI: уведомления и команды об основных состояниях
+	// MP-->UI: СѓРІРµРґРѕРјР»РµРЅРёСЏ Рё РєРѕРјР°РЅРґС‹ РѕР± РѕСЃРЅРѕРІРЅС‹С… СЃРѕСЃС‚РѕСЏРЅРёСЏС…
 	EMUI_GAME_ROOM_INIT,				// entering game room: success/fail, host/client, game info, reason for failure
 	EMUI_WAITING_FOR_PLAYERS,		// either at the start of game, or when lagging
 	EMUI_WAITING_INFO,

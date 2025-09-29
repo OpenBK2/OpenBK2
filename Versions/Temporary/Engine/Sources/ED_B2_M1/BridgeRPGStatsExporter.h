@@ -33,9 +33,9 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	//
 	void EnlargeArray( CArray2D<BYTE> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource );
 	void EnlargeArray( CArray2D<BYTE> *pDestination, const CTPoint<int>  &rSourceSize );
-	// расширяем массив по стороне X
+	// СЂР°СЃС€РёСЂСЏРµРј РјР°СЃСЃРёРІ РїРѕ СЃС‚РѕСЂРѕРЅРµ X
 	void EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, int nAITileCount );
-	// расширяем массив по стороне Y
+	// СЂР°СЃС€РёСЂСЏРµРј РјР°СЃСЃРёРІ РїРѕ СЃС‚РѕСЂРѕРЅРµ Y
 	void EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount );
 	//
 	void SetArrayInfo( CArray2D<BYTE> *pDestination, const CArray2D<BYTE> &rSource, LOCK_TYPE lockType );

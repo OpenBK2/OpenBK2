@@ -415,7 +415,7 @@ CMineStaticObject* CStaticObjects::AddNewMine( const SMineRPGStats *pStats, cons
 
 	AddToAreaMap( pObj );
 	
-	// ставим только наши мины
+	// СЃС‚Р°РІРёРј С‚РѕР»СЊРєРѕ РЅР°С€Рё РјРёРЅС‹
 	if ( theDipl.GetDiplStatus( theDipl.GetMyNumber(), player ) == EDI_FRIEND )
 		pObj->RegisterInWorld();
 
@@ -437,7 +437,7 @@ void CStaticObjects::AddToAreaMap( CExistingObject *pObj )
 	list<SVector> tiles;
 	pObj->GetCoveredTiles( &tiles );
 	
-	// чтобы не удалился после update
+	// С‡С‚РѕР±С‹ РЅРµ СѓРґР°Р»РёР»СЃСЏ РїРѕСЃР»Рµ update
 	if ( tiles.empty() )
 		AddObjectToAreaMapTile( pObj, AICellsTiles::GetTile( CVec2(pObj->GetCenter().x,pObj->GetCenter().y) ) );
 	else
@@ -514,7 +514,7 @@ void CStaticObjects::Segment()
 
 	deletedObjects.clear();
 
-	// горящие объекты
+	// РіРѕСЂСЏС‰РёРµ РѕР±СЉРµРєС‚С‹
 	list<int> burningList;
 	for ( hash_set<int>::const_iterator iter = burningObjects.begin(); iter != burningObjects.end(); ++iter )
 		burningList.push_back( *iter );

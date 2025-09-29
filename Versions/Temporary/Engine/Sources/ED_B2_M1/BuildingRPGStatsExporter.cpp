@@ -2,8 +2,8 @@
 
 	Locator name				Description						
 	---------------				-----------------------			
-	LDoor						вход/выход для людей			
-	LWindow						огневые точки
+	LDoor						РІС…РѕРґ/РІС‹С…РѕРґ РґР»СЏ Р»СЋРґРµР№			
+	LWindow						РѕРіРЅРµРІС‹Рµ С‚РѕС‡РєРё
 	----------------------------------------------------------------------------------------------------------------------
 
 	Locator					Field (BuildingRPGStats)							Type
@@ -45,7 +45,7 @@ REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-//	генерить пыль при разрушении (по периметру с шагом в 1 тайл)
+//	РіРµРЅРµСЂРёС‚СЊ РїС‹Р»СЊ РїСЂРё СЂР°Р·СЂСѓС€РµРЅРёРё (РїРѕ РїРµСЂРёРјРµС‚СЂСѓ СЃ С€Р°РіРѕРј РІ 1 С‚Р°Р№Р»)
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static bool Passable( const CArray2D<BYTE> &rPassability, int nX, int nY )
@@ -61,7 +61,7 @@ static bool Passable( const CArray2D<BYTE> &rPassability, int nX, int nY )
 enum ESmoke
 {
 	ESD_NONE = 0,
-	// направление эффекта (из одной точки может вылетать несколько в разном направлении)
+	// РЅР°РїСЂР°РІР»РµРЅРёРµ СЌС„С„РµРєС‚Р° (РёР· РѕРґРЅРѕР№ С‚РѕС‡РєРё РјРѕР¶РµС‚ РІС‹Р»РµС‚Р°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ РІ СЂР°Р·РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё)
 	ESD_0 =		(1<<0),	
 	ESD_45 =	(1<<1),	
 	ESD_90 =	(1<<2),	
@@ -107,7 +107,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 	int nSizeY = passability.GetSizeY();
 
 	//
-	// определение точек периметра и вычисление direction 
+	// РѕРїСЂРµРґРµР»РµРЅРёРµ С‚РѕС‡РµРє РїРµСЂРёРјРµС‚СЂР° Рё РІС‹С‡РёСЃР»РµРЅРёРµ direction 
 	// 
 	CArray2D<int> direction;
 	direction.SetSizes( nSizeX+1, nSizeY+1 ); 
@@ -166,8 +166,8 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 	}
 
 
-	// т.к. точки должны быть с шагом в 1 визуальный тайл, то нужно
-	// уменьшить число точек в периметре (в визульном тайле 4 AI-тайла)
+	// С‚.Рє. С‚РѕС‡РєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ СЃ С€Р°РіРѕРј РІ 1 РІРёР·СѓР°Р»СЊРЅС‹Р№ С‚Р°Р№Р», С‚Рѕ РЅСѓР¶РЅРѕ
+	// СѓРјРµРЅСЊС€РёС‚СЊ С‡РёСЃР»Рѕ С‚РѕС‡РµРє РІ РїРµСЂРёРјРµС‚СЂРµ (РІ РІРёР·СѓР»СЊРЅРѕРј С‚Р°Р№Р»Рµ 4 AI-С‚Р°Р№Р»Р°)
 	CArray2D<int> visDirection;
 	visDirection.SetSizes( nSizeX+1, nSizeY+1 ); 
 	for ( int x = 0; x < nSizeX+1; ++x )
@@ -182,7 +182,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 	{
 		for ( int y = 0; y < nSizeY; y += 2 )
 		{
-			// оставляем одну из 4-х точек периметра в визуальном тайле
+			// РѕСЃС‚Р°РІР»СЏРµРј РѕРґРЅСѓ РёР· 4-С… С‚РѕС‡РµРє РїРµСЂРёРјРµС‚СЂР° РІ РІРёР·СѓР°Р»СЊРЅРѕРј С‚Р°Р№Р»Рµ
 			for ( int ix = 0; ix < 2; ++ix )
 			{
 				for ( int iy = 0; iy < 2; ++iy )
@@ -198,7 +198,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 		}
 	}
 
-	// генерация точек
+	// РіРµРЅРµСЂР°С†РёСЏ С‚РѕС‡РµРє
 	RemoveSmokePoints( pBuildingRPGStatsManipulator );
 
 	for ( int x = 0; x < nSizeX; ++x )
@@ -208,7 +208,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 			if ( visDirection[y][x] == ESD_NONE )
 				continue;
 
-			// углы
+			// СѓРіР»С‹
 			if ( (visDirection[y][x] & ESD_0) && (visDirection[y][x] & ESD_90) )
 				visDirection[y][x] = ESD_45;
 			if ( (visDirection[y][x] & ESD_90) && (visDirection[y][x] & ESD_180) )
@@ -227,7 +227,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 					int nOy = y;
 					float fAngle = ( ( 45.0f * h ) / 360.0f ) * 0xFFFF;
 					AddSmokePoint( pBuildingRPGStatsManipulator, nOx, nOy, fAngle );
-					// оставляем только одно направление вылета из этой точки
+					// РѕСЃС‚Р°РІР»СЏРµРј С‚РѕР»СЊРєРѕ РѕРґРЅРѕ РЅР°РїСЂР°РІР»РµРЅРёРµ РІС‹Р»РµС‚Р° РёР· СЌС‚РѕР№ С‚РѕС‡РєРё
 					break;
 				}
 			}
@@ -268,7 +268,7 @@ float QuatToDirection( const CQuat &qRot )
 	mRot.RotateVector( &vRot, V3_AXIS_Z );
 	float fAngle = atan2( vRot.y, vRot.x ); // -pi...+pi
 
-	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
+	// СѓРіРѕР» РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РІ AI СЃРёСЃС‚РµРјРµ РѕС‚С‡СЃС‡РµС‚Р° (РѕС‚СЃС‡РёС‚С‹РІР°РµС‚СЃСЏ РїСЂРѕС‚РёРІ С‡Р°СЃРѕРІРѕР№ СЃС‚СЂРµР»РєРё РѕС‚ (0,1,0))
 	if ( fAngle < 0 ) // 0..2pi
 		fAngle += FP_2PI;
 
@@ -282,7 +282,7 @@ float QuatToDirection( const CQuat &qRot )
 		fAngle -= FP_PI2;
 	}
 
-	// в AI еденицах
+	// РІ AI РµРґРµРЅРёС†Р°С…
 	const float F_EPS_ANGLE = 0.01f;
 	if ( fabs(fAngle) < F_EPS_ANGLE )
 	{
@@ -296,7 +296,7 @@ float QuatToDirection( const CQuat &qRot )
 	return fDir;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// обновить анимации для объекта
+// РѕР±РЅРѕРІРёС‚СЊ Р°РЅРёРјР°С†РёРё РґР»СЏ РѕР±СЉРµРєС‚Р°
 const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, const string &szRefName, const vector<SAnimationInfo> &frames, const int nStage )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -305,7 +305,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 	{
 		return false;
 	}
-  hash_set<string> models; //имена моделей, которым надо подправить анимацию
+  hash_set<string> models; //РёРјРµРЅР° РјРѕРґРµР»РµР№, РєРѕС‚РѕСЂС‹Рј РЅР°РґРѕ РїРѕРґРїСЂР°РІРёС‚СЊ Р°РЅРёРјР°С†РёСЋ
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 	{
@@ -340,7 +340,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 
 		pSkeleton->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
-		// воссоздать анимации для скелета
+		// РІРѕСЃСЃРѕР·РґР°С‚СЊ Р°РЅРёРјР°С†РёРё РґР»СЏ СЃРєРµР»РµС‚Р°
 		for ( int i = nStage; i >= 0; --i )
 		{
 			string szSrcName = "";
@@ -385,7 +385,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры
+// СЃРґРµР»Р°С‚СЊ РєРѕРїРёСЋ РјРѕРґРµР»Рё, РµСЃР»Рё szOldModelName Рё szNewModelName СЃРѕРІРїР°РґР°СЋС‚, РїСЂРѕСЃС‚Рѕ РѕС‡РёСЃС‚РёС‚СЊ РјРѕРґРµР»СЊ РѕС‚ Р°РЅРёРјР°С†РёРё, РїСЂРѕРїРёСЃР°С‚СЊ РЅРѕРІС‹Рµ RootMesh Рё RootJoint, РїРѕРїСЂР°РІРёС‚СЊ С‚РµРєСЃС‚СѓСЂС‹
 const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, const string &szNewName, const string &szRoot )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -396,10 +396,10 @@ const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, c
 	if ( !pModel )
 		return false;
 
-	//удалить анимацию
+	//СѓРґР°Р»РёС‚СЊ Р°РЅРёРјР°С†РёСЋ
 	pModel->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
-	//копировать геометрию
+	//РєРѕРїРёСЂРѕРІР°С‚СЊ РіРµРѕРјРµС‚СЂРёСЋ
 	string szGeometry = "";
 	string szGeometryType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Geometry", pModel, &szGeometryType, &szGeometry, 0 ) )
@@ -418,7 +418,7 @@ const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, c
 	if ( !CManipulatorManager::SetValue( szNewName, pModel, "Geometry", true ) )
 		return false;
 
-	//копировать скелет
+	//РєРѕРїРёСЂРѕРІР°С‚СЊ СЃРєРµР»РµС‚
 	string szSkeleton = "";
 	string szSkeletonType = "";
 	if ( !CManipulatorManager::GetParamsFromReference( "Skeleton", pModel, &szSkeletonType, &szSkeleton, 0 ) )
@@ -434,12 +434,12 @@ const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, c
 		return false;
 	pSkeleton->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
 
-	//при первом проходе оставляем материалы пустыми, необходимо переэкспортить модельку
+	//РїСЂРё РїРµСЂРІРѕРј РїСЂРѕС…РѕРґРµ РѕСЃС‚Р°РІР»СЏРµРј РјР°С‚РµСЂРёР°Р»С‹ РїСѓСЃС‚С‹РјРё, РЅРµРѕР±С…РѕРґРёРјРѕ РїРµСЂРµСЌРєСЃРїРѕСЂС‚РёС‚СЊ РјРѕРґРµР»СЊРєСѓ
 	pModel->RemoveNode( "Materials", NODE_REMOVEALL_INDEX );
 	return true;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// создать новый VisObj на основе уже существующего
+// СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ VisObj РЅР° РѕСЃРЅРѕРІРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ
 const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, const string &szObjectName, const string &szRoot )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -454,13 +454,13 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, 
 	if ( !pVisObj )
 		return false;
 
-	//делаем копии моделей, если в оригинальном объекте модель для сезона новая, в новом объекте также будет новая
+	//РґРµР»Р°РµРј РєРѕРїРёРё РјРѕРґРµР»РµР№, РµСЃР»Рё РІ РѕСЂРёРіРёРЅР°Р»СЊРЅРѕРј РѕР±СЉРµРєС‚Рµ РјРѕРґРµР»СЊ РґР»СЏ СЃРµР·РѕРЅР° РЅРѕРІР°СЏ, РІ РЅРѕРІРѕРј РѕР±СЉРµРєС‚Рµ С‚Р°РєР¶Рµ Р±СѓРґРµС‚ РЅРѕРІР°СЏ
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 		return false;
 
-	hash_map<string, int> models; // имя модели - на индекс имени в names
-	vector<string> names; // новые имена моделей
+	hash_map<string, int> models; // РёРјСЏ РјРѕРґРµР»Рё - РЅР° РёРЅРґРµРєСЃ РёРјРµРЅРё РІ names
+	vector<string> names; // РЅРѕРІС‹Рµ РёРјРµРЅР° РјРѕРґРµР»РµР№
 
 	for ( int i = 0; i < nModelCount; ++i )
 	{
@@ -531,7 +531,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 	CManipulatorManager::GetValue( &nExistingSlots, pManipulator, "slots" );
 	slotsUsed.resize( nExistingSlots, false );
 
-	// Получаем манипулятор на VisObject
+	// РџРѕР»СѓС‡Р°РµРј РјР°РЅРёРїСѓР»СЏС‚РѕСЂ РЅР° VisObject
 	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
 		return false;
@@ -716,7 +716,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 			if ( ReadAttributes( &attribs, pGFI, szSectionName, true ) )
 			{
 				pManipulator->RemoveNode( szNodePrefix + "Window.NightDamageLevels", NODE_REMOVEALL_INDEX );
-				// подготовка массивов
+				// РїРѕРґРіРѕС‚РѕРІРєР° РјР°СЃСЃРёРІРѕРІ
 				int nStageCount = 0;
 				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )  
 				{
@@ -735,7 +735,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 					for ( int i = nStageCount; i < nLevelsCount; ++i )
 						pManipulator->RemoveNode( szNodePrefix + "Window.DayDamageLevels", i );
 				}
-				// заполнение информации об анимациях
+				// Р·Р°РїРѕР»РЅРµРЅРёРµ РёРЅС„РѕСЂРјР°С†РёРё РѕР± Р°РЅРёРјР°С†РёСЏС…
 				vector<SAnimationInfo> vFrames;
 				vFrames.resize( nStageCount );
 				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )
@@ -756,7 +756,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 					}
 				}
 
-				// создание необходимой структуры
+				// СЃРѕР·РґР°РЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕР№ СЃС‚СЂСѓРєС‚СѓСЂС‹
 				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr ) 
 				{
 					if ( PatMat( itAttr->szBoneName.c_str(), "*lstage??" ) )						// Process destruction stages
@@ -769,13 +769,13 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 						ProcessVisObj( pManipulator, szVisObjPath, szVisObjName, szSectionName, vFrames, nStageNumber );
 					}
 				}
-				{ // DayObj - целый объект
+				{ // DayObj - С†РµР»С‹Р№ РѕР±СЉРµРєС‚
 					const string szVisObjName = szObjectName + PATH_SEPARATOR_CHAR + szSectionName + PATH_SEPARATOR_CHAR + "whole";
 					const string szVisObjPath = szNodePrefix + "Window.DayObj";
 					ProcessVisObj( pManipulator, szVisObjPath, szVisObjName, szSectionName, vFrames, -1 );
 				}
 				/*
-				{ // DestroyedObj - разрушенный объект
+				{ // DestroyedObj - СЂР°Р·СЂСѓС€РµРЅРЅС‹Р№ РѕР±СЉРµРєС‚
 					const string szVisObjName = szObjectName + PATH_SEPARATOR_CHAR + szSectionName + PATH_SEPARATOR_CHAR + "destroyed";
 					const string szVisObjPath = szNodePrefix + "Window.DestroyedObj";
 					ProcessVisObj( pManipulator, pFolderCallback, szVisObjPath, szVisObjName, szSectionName, vFrames, nStageCount );
@@ -914,7 +914,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 		{
 			return false;
 		}
-		// чтение аттрибутов каждого mesh'а: поиск transparent и reflective
+		// С‡С‚РµРЅРёРµ Р°С‚С‚СЂРёР±СѓС‚РѕРІ РєР°Р¶РґРѕРіРѕ mesh'Р°: РїРѕРёСЃРє transparent Рё reflective
 		CGrannyBoneAttributesList attribs;
 		ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel( pModel ), "", true );
 		hash_map<string, int> attributes;
@@ -1003,7 +1003,7 @@ EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator* pManipulato
 	if ( exportType == ET_AFTER_REF )
 		UpdateSectionMaterials( pManipulator, rszObjectName );
 
-	// точки вылета пыли
+	// С‚РѕС‡РєРё РІС‹Р»РµС‚Р° РїС‹Р»Рё
 	if ( exportType != ET_BEFORE_REF )
 		CreateDestructionDustPoints( pManipulator );
 	

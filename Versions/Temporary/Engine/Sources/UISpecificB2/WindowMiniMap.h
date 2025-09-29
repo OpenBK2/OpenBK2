@@ -166,9 +166,9 @@ private:
 	CVec2 GetCWindowSize() const;
 	bool CalculateScreenToMapSlow( const CVec2 &vPos, CVec2 *pvRes );
 
-	// преобразовать координаты экрана (курсора мыши) в координаты 0..AISize.x x 0 .. AISize.y
+	// РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ СЌРєСЂР°РЅР° (РєСѓСЂСЃРѕСЂР° РјС‹С€Рё) РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ 0..AISize.x x 0 .. AISize.y
 	bool ScreenToMap( const CVec2 &vScreenPos, CVec2 *pvRes );
-	// преобразовать координаты 0..1 в координаты minimap'а, т.е. 0..MiniMap.Width x 0..MiniMap.Height
+	// РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ 0..1 РІ РєРѕРѕСЂРґРёРЅР°С‚С‹ minimap'Р°, С‚.Рµ. 0..MiniMap.Width x 0..MiniMap.Height
 	bool MapToScreen( const CVec2 &vMapPos, CVec2 *pvRes ) const;
 	void RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes );
 	float RadiusMapToScreen( float fRadius );

@@ -711,7 +711,7 @@ int __cdecl main( int argc, char *argv[] )
   //
   hWnd = GetDesktopWindow();
 
-	// ��� ������� �������� � ���� WORD � � ������� MBCS
+	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ WORD пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ MBCS
 	vector<WORD> chars;
 	if ( !szCharsSrcName.empty() && NFile::DoesFileExist( szCharsSrcName ) )
 	{

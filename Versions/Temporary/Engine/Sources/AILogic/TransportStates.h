@@ -64,7 +64,7 @@ public:
 	void AddFormationToWait( class CFormation *pFormation );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//состояние выгрузки солдат из транспорта (& mech units )
+//СЃРѕСЃС‚РѕСЏРЅРёРµ РІС‹РіСЂСѓР·РєРё СЃРѕР»РґР°С‚ РёР· С‚СЂР°РЅСЃРїРѕСЂС‚Р° (& mech units )
 //
 class CTransportLandState : public IUnitState, public CStatusUpdatesHelper
 {
@@ -122,10 +122,10 @@ class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 	ETransportLoadRuState eState;
 
 	CPtr<CBuilding> pStorage;
-	CPtr<CFormation> pLoaderSquad; // толпа грузчиков
+	CPtr<CFormation> pLoaderSquad; // С‚РѕР»РїР° РіСЂСѓР·С‡РёРєРѕРІ
 	CPtr<CAITransportUnit> pTransport;
 	int nEntrance;
-	bool bSubState;												// является ли этот стейт сабстейтом
+	bool bSubState;												// СЏРІР»СЏРµС‚СЃСЏ Р»Рё СЌС‚РѕС‚ СЃС‚РµР№С‚ СЃР°Р±СЃС‚РµР№С‚РѕРј
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pStorage); f.Add(4,&pLoaderSquad); f.Add(5,&pTransport); f.Add(6,&nEntrance); f.Add(7,&bSubState); return 0; }
 private:
@@ -171,14 +171,14 @@ class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
 	ZDATA_( CStatusUpdatesHelper )
 	ETransportServeState eState;
 	CVec2 vServePoint; //senter of serving circle
-	CPtr<CAIUnit> pResupplyUnit;	//юнит, который перезаряжают
-	NTimer::STime timeLastUpdate ;//время последнего апдейта поведения.
+	CPtr<CAIUnit> pResupplyUnit;	//СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ РїРµСЂРµР·Р°СЂСЏР¶Р°СЋС‚
+	NTimer::STime timeLastUpdate ;//РІСЂРµРјСЏ РїРѕСЃР»РµРґРЅРµРіРѕ Р°РїРґРµР№С‚Р° РїРѕРІРµРґРµРЅРёСЏ.
 
 	CPtr<IStaticPath> pStaticPath ;
 	bool bWaitForPath;
 protected:
 	bool bUpdatedActionsBegin;
-	CPtr<CFormation> pLoaderSquad; // толпа грузчиков
+	CPtr<CFormation> pLoaderSquad; // С‚РѕР»РїР° РіСЂСѓР·С‡РёРєРѕРІ
 	CPtr<CAIUnit> pPreferredUnit;			// unit that is served first
 	CPtr<CAITransportUnit> pTransport;
 	bool bSendFinishFeedback;
@@ -246,7 +246,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_UNIT; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// погрузка пушки
+// РїРѕРіСЂСѓР·РєР° РїСѓС€РєРё
 class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportHookArtilleryState );
@@ -276,7 +276,7 @@ class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHel
 	
 	NTimer::STime timeLast;
 
-	SAIAngle wDesiredTransportDir; // куда бдет направлен транспорт при погрузке
+	SAIAngle wDesiredTransportDir; // РєСѓРґР° Р±РґРµС‚ РЅР°РїСЂР°РІР»РµРЅ С‚СЂР°РЅСЃРїРѕСЂС‚ РїСЂРё РїРѕРіСЂСѓР·РєРµ
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pTransport); f.Add(3,&eState); f.Add(4,&pArtillery); f.Add(5,&vArtilleryPoint); f.Add(6,&timeLast); f.Add(7,&wDesiredTransportDir); return 0; }
 private:
@@ -302,7 +302,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// отцепление ариллерии
+// РѕС‚С†РµРїР»РµРЅРёРµ Р°СЂРёР»Р»РµСЂРёРё
 class CTransportUnhookArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportUnhookArtilleryState );
@@ -321,7 +321,7 @@ class CTransportUnhookArtilleryState : public IUnitState, public CStatusUpdatesH
 	ETransportUnhookGunState eState;
 	CPtr<CAITransportUnit> pTransport;
 	CVec2 vDestPoint;
-	int nAttempt; // количество попыток поставить артиллерию
+	int nAttempt; // РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїС‹С‚РѕРє РїРѕСЃС‚Р°РІРёС‚СЊ Р°СЂС‚РёР»Р»РµСЂРёСЋ
 	bool bInterrupted;
 	bool bNow;														// unhook gun right at the current place
 public:
@@ -379,9 +379,9 @@ protected:
 	virtual bool HaveToSendEngeneersNow()  = 0;
 	virtual void SendEngineers() = 0;
 	virtual bool IsEndPointNeeded() const = 0;
-	// хватает ли инженерам ресурсов, чтобы строить
+	// С…РІР°С‚Р°РµС‚ Р»Рё РёРЅР¶РµРЅРµСЂР°Рј СЂРµСЃСѓСЂСЃРѕРІ, С‡С‚РѕР±С‹ СЃС‚СЂРѕРёС‚СЊ
 	virtual bool IsEnoughResources() const = 0;
-	// все ли инженеры построили
+	// РІСЃРµ Р»Рё РёРЅР¶РµРЅРµСЂС‹ РїРѕСЃС‚СЂРѕРёР»Рё
 	virtual bool IsWorkDone() const = 0;
 	virtual bool MustSayNegative() const { return false; }
 	virtual void NotifyGoToStorage() { }

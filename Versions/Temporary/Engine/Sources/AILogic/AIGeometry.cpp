@@ -13,7 +13,7 @@ const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegm
 	const float fDiff2 = fabs( vSegmentEnd - vNormal );
 	const float fDiff3 = fabs( vSegmentEnd - vSegmentStart );
 	
-	if ( fDiff3 < fDiff2 + fDiff1 ) // нормаль от точки не падает на отрезок
+	if ( fDiff3 < fDiff2 + fDiff1 ) // РЅРѕСЂРјР°Р»СЊ РѕС‚ С‚РѕС‡РєРё РЅРµ РїР°РґР°РµС‚ РЅР° РѕС‚СЂРµР·РѕРє
 	{
 		const float fDist1 = fabs( vSegmentStart - vPoint );
 		const float fDist2 = fabs( vSegmentEnd - vPoint );

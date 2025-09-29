@@ -6,10 +6,10 @@
 #include "BasePathUnit.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const float MIN_LENGTH_FOR_LARGE_TURN = 1024.0f;  //! минимальное расстояние с которого начинает строиться большой разворот
-const float MIN_LENGTH_FOR_SMALL_TURN = 256.0f;   //! минимальное расстояние с которого начинает строиться серий маленьких разворотов
-const float THRESHOLD_FOR_LARGE_TURN = 0.95f;			//! минимальное значение косинуса угла между обратным направлением юнита и сплайном, при котором возможет большой разворот
-const WORD  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разнице в угле нужно гладко поворачиваться 
+const float MIN_LENGTH_FOR_LARGE_TURN = 1024.0f;  //! РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚ СЃС‚СЂРѕРёС‚СЊСЃСЏ Р±РѕР»СЊС€РѕР№ СЂР°Р·РІРѕСЂРѕС‚
+const float MIN_LENGTH_FOR_SMALL_TURN = 256.0f;   //! РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ СЃ РєРѕС‚РѕСЂРѕРіРѕ РЅР°С‡РёРЅР°РµС‚ СЃС‚СЂРѕРёС‚СЊСЃСЏ СЃРµСЂРёР№ РјР°Р»РµРЅСЊРєРёС… СЂР°Р·РІРѕСЂРѕС‚РѕРІ
+const float THRESHOLD_FOR_LARGE_TURN = 0.95f;			//! РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РєРѕСЃРёРЅСѓСЃР° СѓРіР»Р° РјРµР¶РґСѓ РѕР±СЂР°С‚РЅС‹Рј РЅР°РїСЂР°РІР»РµРЅРёРµРј СЋРЅРёС‚Р° Рё СЃРїР»Р°Р№РЅРѕРј, РїСЂРё РєРѕС‚РѕСЂРѕРј РІРѕР·РјРѕР¶РµС‚ Р±РѕР»СЊС€РѕР№ СЂР°Р·РІРѕСЂРѕС‚
+const WORD  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! РїСЂРё РєР°РєРѕР№ СЂР°Р·РЅРёС†Рµ РІ СѓРіР»Рµ РЅСѓР¶РЅРѕ РіР»Р°РґРєРѕ РїРѕРІРѕСЂР°С‡РёРІР°С‚СЊСЃСЏ 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CPushTileFunctional
 {
@@ -68,7 +68,7 @@ WORD CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const WORD wStartAng
 	return CheckArcTiles( checkFunc, vUnit, wStartAngle, wDiffAngle, fRadius, bClockWise, bForward, GetAIMap() );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// построить большой разворот
+// РїРѕСЃС‚СЂРѕРёС‚СЊ Р±РѕР»СЊС€РѕР№ СЂР°Р·РІРѕСЂРѕС‚
 bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint )
 {
 	if ( GetUnit()->GetMovementPlane() != PLANE_WATER || GetUnit()->GetTurnRadius() == 0.0f )
@@ -253,13 +253,13 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CStandartSmoothMechPath::AddSmoothTurn()
 {
-	// Для небольшого поворота, просто сглаживание
+	// Р”Р»СЏ РЅРµР±РѕР»СЊС€РѕРіРѕ РїРѕРІРѕСЂРѕС‚Р°, РїСЂРѕСЃС‚Рѕ СЃРіР»Р°Р¶РёРІР°РЅРёРµ
 	if ( !BuildSmoothTurn( GetUnit()->GetDirectionVector(), true ) )
 	{
-		// Поворот достаточно большой, необходимо хитро разворачиваться, сначала по большому полукругу
+		// РџРѕРІРѕСЂРѕС‚ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ Р±РѕР»СЊС€РѕР№, РЅРµРѕР±С…РѕРґРёРјРѕ С…РёС‚СЂРѕ СЂР°Р·РІРѕСЂР°С‡РёРІР°С‚СЊСЃСЏ, СЃРЅР°С‡Р°Р»Р° РїРѕ Р±РѕР»СЊС€РѕРјСѓ РїРѕР»СѓРєСЂСѓРіСѓ
 		if ( !BuildLargeTurn( GetUnit()->GetFrontDirection(), GetDirectionByVector( GetSplineDX() ), GetPath()->GetFinishPoint() ) )
 		{
-			// Ну и напоследок через серею маленьких разворотов
+			// РќСѓ Рё РЅР°РїРѕСЃР»РµРґРѕРє С‡РµСЂРµР· СЃРµСЂРµСЋ РјР°Р»РµРЅСЊРєРёС… СЂР°Р·РІРѕСЂРѕС‚РѕРІ
 			if ( !BuildSmallTurns( GetUnit()->GetFrontDirection(), GetDirectionByVector( GetSplineDX() ), GetPath()->GetFinishPoint(), true ) )
 			{
 			}
@@ -273,7 +273,7 @@ bool CStandartSmoothMechPath::CheckTurn( const WORD wNewDir )
 	const WORD wUnitDir = GetUnit()->GetDirection();
 	const WORD wRightDirsDiff = DirsDifference( wUnitDir, wNewDir );
 	const WORD wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
-	// поворот небольшой
+	// РїРѕРІРѕСЂРѕС‚ РЅРµР±РѕР»СЊС€РѕР№
 	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING || 
 		bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
 		return true;
@@ -495,7 +495,7 @@ bool CStandartSmoothMechPath::UpdateDirection()
 {
 	if ( GetSplineDX() != VNULL2 )
 	{
-		// слишком велика разница между старым и новым направлениями, нужно повернуться
+		// СЃР»РёС€РєРѕРј РІРµР»РёРєР° СЂР°Р·РЅРёС†Р° РјРµР¶РґСѓ СЃС‚Р°СЂС‹Рј Рё РЅРѕРІС‹Рј РЅР°РїСЂР°РІР»РµРЅРёСЏРјРё, РЅСѓР¶РЅРѕ РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ
 		const WORD wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
 		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff	> DIR_DIFF_TO_SMOOTH_TURNING ) )
 		{
@@ -517,14 +517,14 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 		return GetUnit()->GetCenterPlain();
 	}
 
-	// пропустить сегмент, если хотим останавливаться
+	// РїСЂРѕРїСѓСЃС‚РёС‚СЊ СЃРµРіРјРµРЅС‚, РµСЃР»Рё С…РѕС‚РёРј РѕСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊСЃСЏ
 	if ( bSkipNextSegment )
 	{
 		bSkipNextSegment = false;
 		return GetUnit()->GetCenterPlain();
 	}
 
-	// если есть окружности, по которым ехать, используем их !!!
+	// РµСЃР»Рё РµСЃС‚СЊ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё, РїРѕ РєРѕС‚РѕСЂС‹Рј РµС…Р°С‚СЊ, РёСЃРїРѕР»СЊР·СѓРµРј РёС… !!!
 	if ( !circles.empty() ) 
 	{
 		const float fLength = circles.front().Iterate( fSpeed * timeDiff );
@@ -551,7 +551,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	}
 
 	const CVec2 vCenter = GetUnit()->GetCenterPlain();
-	// если едем задом, проверить - нельзя ли развернуться, чтобы поехать передом
+	// РµСЃР»Рё РµРґРµРј Р·Р°РґРѕРј, РїСЂРѕРІРµСЂРёС‚СЊ - РЅРµР»СЊР·СЏ Р»Рё СЂР°Р·РІРµСЂРЅСѓС‚СЊСЃСЏ, С‡С‚РѕР±С‹ РїРѕРµС…Р°С‚СЊ РїРµСЂРµРґРѕРј
 	if ( !GetUnit()->IsGoForward() )
 	{
 		if ( lastCheckToRightTurn >= (NTimer::STime)( NRandom::Random( 200, 500 ) ) )
@@ -617,17 +617,17 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 
 	CVec2 vResult( vCenter );
 	if ( fabs( GetSplinePoint() - vCenter ) > fRemain )
-		// прошли чуть дальше, нужно точно отсчитать fRemain
+		// РїСЂРѕС€Р»Рё С‡СѓС‚СЊ РґР°Р»СЊС€Рµ, РЅСѓР¶РЅРѕ С‚РѕС‡РЅРѕ РѕС‚СЃС‡РёС‚Р°С‚СЊ fRemain
 		vResult = vCenter + Norm( GetSplinePoint() - vCenter ) * fRemain;
 	else
-		// так и не прошли по сплайну, сколько надо
+		// С‚Р°Рє Рё РЅРµ РїСЂРѕС€Р»Рё РїРѕ СЃРїР»Р°Р№РЅСѓ, СЃРєРѕР»СЊРєРѕ РЅР°РґРѕ
 		vResult = GetSplinePoint();
 
-	// для юнитов с ненулевой скоростью поворота
-	// до конца пути осталось совсем немного
+	// РґР»СЏ СЋРЅРёС‚РѕРІ СЃ РЅРµРЅСѓР»РµРІРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РїРѕРІРѕСЂРѕС‚Р°
+	// РґРѕ РєРѕРЅС†Р° РїСѓС‚Рё РѕСЃС‚Р°Р»РѕСЃСЊ СЃРѕРІСЃРµРј РЅРµРјРЅРѕРіРѕ
 	float fDist = fabs2( vResult - GetPath()->GetFinishPoint() );
 	{
-		// нет гомосекам!!!
+		// РЅРµС‚ РіРѕРјРѕСЃРµРєР°Рј!!!
 		SUnitProfile unitProfile( GetUnit()->GetUnitProfile() );
 		if ( fDist <= sqr( 2.5f * unitProfile.GetHalfLength() ) )
 		{

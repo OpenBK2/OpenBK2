@@ -36,7 +36,7 @@ public:
 	virtual void Segment();
 	virtual const NTimer::STime GetNextSegmentTime() const { return nextSegmTime; }
 
-	// сдетонировать, если при наезде данного юнита мина взрывается; true - если сдетонировала
+	// СЃРґРµС‚РѕРЅРёСЂРѕРІР°С‚СЊ, РµСЃР»Рё РїСЂРё РЅР°РµР·РґРµ РґР°РЅРЅРѕРіРѕ СЋРЅРёС‚Р° РјРёРЅР° РІР·СЂС‹РІР°РµС‚СЃСЏ; true - РµСЃР»Рё СЃРґРµС‚РѕРЅРёСЂРѕРІР°Р»Р°
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) { }
 	virtual void Die( const float fDamage ) { }
 	virtual EStaticObjType GetObjectType() const { return ESOT_SMOKE_SCREEN; }

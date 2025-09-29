@@ -12,7 +12,7 @@ namespace NDb
 };
 interface ICollisionsCollector;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для унификации создания самолетов
+// РґР»СЏ СѓРЅРёС„РёРєР°С†РёРё СЃРѕР·РґР°РЅРёСЏ СЃР°РјРѕР»РµС‚РѕРІ
 interface IPlaneCreation 
 {
 	virtual const CVec2 &GetDestPoint() const = 0;
@@ -36,7 +36,7 @@ public:
 		virtual const CVec2 &GetDestPoint() const { return vDestPoint; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для создания маленьких самолетов
+// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РјР°Р»РµРЅСЊРєРёС… СЃР°РјРѕР»РµС‚РѕРІ
 class CLightPlaneCreation : public CPlaneCreation
 {
 public:
@@ -49,7 +49,7 @@ public:
 			CVec2 * pvOffset, const bool bRandom = false );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для создания тяжелых самолетов
+// РґР»СЏ СЃРѕР·РґР°РЅРёСЏ С‚СЏР¶РµР»С‹С… СЃР°РјРѕР»РµС‚РѕРІ
 class CHeavyPlaneCreation : public CPlaneCreation
 {
 	bool bNeedFormation;
@@ -68,8 +68,8 @@ public:
 struct SLocalInGameUnitCreationInfo
 {
 	ZDATA
-	CDBPtr<SSquadRPGStats> pParatrooper;										// название парашютистов
-	string szPartyName;												// название страны
+	CDBPtr<SSquadRPGStats> pParatrooper;										// РЅР°Р·РІР°РЅРёРµ РїР°СЂР°С€СЋС‚РёСЃС‚РѕРІ
+	string szPartyName;												// РЅР°Р·РІР°РЅРёРµ СЃС‚СЂР°РЅС‹
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pParatrooper); f.Add(3,&szPartyName); return 0; }
 	SLocalInGameUnitCreationInfo & operator=( const struct SMapPlayerInfo &rSUnitCreation );
 	SLocalInGameUnitCreationInfo( const struct SMapPlayerInfo &rSUnitCreation );
@@ -95,7 +95,7 @@ private:
 
 	vector<SLocalInGameUnitCreationInfo> inGameUnits;
 	// consts
-	// читается из xml, сохранять не нужно
+	// С‡РёС‚Р°РµС‚СЃСЏ РёР· xml, СЃРѕС…СЂР°РЅСЏС‚СЊ РЅРµ РЅСѓР¶РЅРѕ
 	vector<CDBPtr<NDb::SPartyDependentInfo> > partyDependentInfo;
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 	CDBPtr<NDb::SMapInfo> pCurrentMap;
@@ -108,9 +108,9 @@ private:
 
 public:
 	CUnitCreation();
-	// для редактора
+	// РґР»СЏ СЂРµРґР°РєС‚РѕСЂР°
 	void Init();
-	// для игры
+	// РґР»СЏ РёРіСЂС‹
 	void SetConsts( const NDb::SAIGameConsts *pConsts );
 	void Init( const NDb::SMapInfo *pMapInfo, ICollisionsCollector *pCollisionsCollector );
 	void Clear();
@@ -146,7 +146,7 @@ public:
 	class CAIUnit *CreateTorpedo( class CAIUnit *pOwner, const NDb::SWeaponRPGStats *pWeaponStats, const class CVec2 &vSource, const class CVec2 &vTarget );
 
 	CExistingObject * CreatePlayerFlag( int nPlayer, CStaticObject *pSample );
-	// послать Юре формацию, чтобы ее можно было селектить и вообще чтобы она на клиенте существовала
+	// РїРѕСЃР»Р°С‚СЊ Р®СЂРµ С„РѕСЂРјР°С†РёСЋ, С‡С‚РѕР±С‹ РµРµ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃРµР»РµРєС‚РёС‚СЊ Рё РІРѕРѕР±С‰Рµ С‡С‚РѕР±С‹ РѕРЅР° РЅР° РєР»РёРµРЅС‚Рµ СЃСѓС‰РµСЃС‚РІРѕРІР°Р»Р°
 	void SendFormationToWorld( CFormation * pUnit, const bool bSelectable ) const;
 
 	//void LockAppearPoint( const int nPlayer, const bool bLocked );

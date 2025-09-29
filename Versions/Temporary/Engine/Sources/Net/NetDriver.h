@@ -6,9 +6,9 @@ typedef unsigned int APPLICATION_ID;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SNetDriverConsts
 {
-	// время, после которого drop клиента
+	// РІСЂРµРјСЏ, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ drop РєР»РёРµРЅС‚Р°
 	int fTimeout;
-	// время, после которого удаление сервера из serverslist
+	// РІСЂРµРјСЏ, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ СѓРґР°Р»РµРЅРёРµ СЃРµСЂРІРµСЂР° РёР· serverslist
 	float fServerListTimeout;
 
 	SNetDriverConsts() : fTimeout( 60 ), fServerListTimeout( 20 ) {}

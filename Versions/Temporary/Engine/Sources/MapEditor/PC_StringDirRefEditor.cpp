@@ -65,7 +65,7 @@ void CPCStringDirRefEditor::GetValue( CVariant *pValue )
 				{
 					( *pValue ) = szPath;
 					//
-					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
+					// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєР°С‚Р°Р»РѕРі РєСѓРґР° Р±СѓРґРµРј Р·Р°РіР»СЏРґС‹РІР°С‚СЊ РїСЂРё РїРѕСЃР»РµРґСѓСЋС‰РµРј РІС‹Р·РѕРІРµ РґРёР°Р»РѕРіР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°
 					const string szFullPath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szPath;
 					string szObjectNamePrefix;
 					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullPath );
@@ -186,7 +186,7 @@ void CPCStringDirRefEditor::OnBrowse()
 				{
 					szPath = szFullPath.substr( szDataFolder.size() );
 					SetWindowText( szPath.c_str() );
-					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
+					// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РєР°С‚Р°Р»РѕРі РєСѓРґР° Р±СѓРґРµРј Р·Р°РіР»СЏРґС‹РІР°С‚СЊ РїСЂРё РїРѕСЃР»РµРґСѓСЋС‰РµРј РІС‹Р·РѕРІРµ РґРёР°Р»РѕРіР° РѕС‚РєСЂС‹С‚РёСЏ С„Р°Р№Р»Р°
 					rFilePathMap[FOLDER_PATH_LABEL] = szFullPath;
 				}
 			}

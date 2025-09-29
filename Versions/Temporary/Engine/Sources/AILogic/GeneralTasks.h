@@ -8,7 +8,7 @@
 #include "Resistance.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ****
-// защита патча.
+// Р·Р°С‰РёС‚Р° РїР°С‚С‡Р°.
 // ****
 class CGeneral;
 class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator, public IEnemyEnumerator 
@@ -29,7 +29,7 @@ class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator,
 	bool bWaitForFinish;								// wait for finish the task
 	NTimer::STime timeLastUpdate;				
 
-	CommonUnits infantryInTrenches;				// списки юнитов по типам
+	CommonUnits infantryInTrenches;				// СЃРїРёСЃРєРё СЋРЅРёС‚РѕРІ РїРѕ С‚РёРїР°Рј
 	CommonUnits infantryFree;
 	CommonUnits tanksMobile;
 	CommonUnits stationaryUnits;

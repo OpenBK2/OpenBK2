@@ -126,11 +126,11 @@ const int CUnits::GetVisIndex( CAIUnit *pUnit )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bWithLeveledCelles )
 {
-	// если юнит единственный в свой ячейке, записать ячейку в список
+	// РµСЃР»Рё СЋРЅРёС‚ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ РІ СЃРІРѕР№ СЏС‡РµР№РєРµ, Р·Р°РїРёСЃР°С‚СЊ СЏС‡РµР№РєСѓ РІ СЃРїРёСЃРѕРє
 	if ( ++nUnitsCell[cell.y][cell.x] == 1 )
 		nCell[cell.y][cell.x] = cellsIds.Get();
 	
-	// добавить юнит в список стоящих на этой ячейке
+	// РґРѕР±Р°РІРёС‚СЊ СЋРЅРёС‚ РІ СЃРїРёСЃРѕРє СЃС‚РѕСЏС‰РёС… РЅР° СЌС‚РѕР№ СЏС‡РµР№РєРµ
 	const int newId = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + BYTE( pUnit->GetStats()->IsInfantry() ) ) + 1;
 
 	if ( newId >= unitsInCells[0].GetListsNum() || newId >= unitsInCells[1].GetListsNum() )
@@ -231,7 +231,7 @@ void CUnits::AddUnitToMap( CAIUnit *pUnit )
 	if ( nUnitID >= posUnitInCell.size() )
 		posUnitInCell.resize( nUnitID * 1.5 );
 
-	// нужно добавить в ячейку
+	// РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РІ СЏС‡РµР№РєСѓ
 	if ( !pUnit->IsInSolidPlace() )
 		AddUnitToCell( pUnit, true );
 
@@ -261,7 +261,7 @@ void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
 		return;
 	const int nUnitID = pos->second;
 
-	// ещё не удалён из ячеек
+	// РµС‰С‘ РЅРµ СѓРґР°Р»С‘РЅ РёР· СЏС‡РµРµРє
 	if ( units.GetEl( nUnitID ) != 0 )
 	{
 		DelUnitFromCell( pUnit, true );
@@ -370,7 +370,7 @@ void CUnits::ChangePlayer( CAIUnit *pUnit, const BYTE cNewPlayer )
 {
 	if ( pUnit && pUnit->IsAlive() && pUnit->GetPlayer() != cNewPlayer )
 	{
-		// чтобы не удалился		
+		// С‡С‚РѕР±С‹ РЅРµ СѓРґР°Р»РёР»СЃСЏ		
 		CObj<CAIUnit> pSaveUnit = pUnit;
 		DeleteUnitFromMap( pUnit );
 		FullUnitDelete( pUnit );

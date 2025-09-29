@@ -140,8 +140,8 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectLoadInfo != 0, "SEntrenchmentInfo::Load(), pObjectLoadInfo == 0" );
 		//
 		segmentLinkIDListList.clear();
-		// ”ÒÚ‡Ì‡‚ÎË‚‡ÂÏ Ó·˘ËÂ Ô‡‡ÏÂÚ˚
-		vPosition = VNULL3; // ·Û‰ÂÚ Á‡ÔÓÎÌˇÚ¸Òˇ ‚ CreateSceneObject()
+		// –£—Å—Ç–∞–Ω–∞–≤–ª–∏–≤–∞–µ–º –æ–±—â–∏–µ –ø–∞—Ä–∞–º–µ—Ç—Ä—ã
+		vPosition = VNULL3; // –±—É–¥–µ—Ç –∑–∞–ø–æ–ª–Ω—è—Ç—å—Å—è –≤ CreateSceneObject()
 		fDirection = 0.0f;
 		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", pObjectLoadInfo->nObjectIndex );
 		nEntrenchmentID = pObjectInfoCollector->trenchIDCollector.LockID();
@@ -158,10 +158,10 @@ namespace NMapInfoEditor
 			CSegmentLinkIDListList::iterator itSegmentLinkIDList = segmentLinkIDListList.insert( segmentLinkIDListList.end(), CSegmentLinkIDList() );
 			CManipulatorManager::GetArray<CSegmentLinkIDList, int>( &( *itSegmentLinkIDList ), pManipulator, szEntrenchmentPrefix + StrFmt( ".sections.[%d].data", nSectionIndex ) );
 			//
-			// ƒÓ·‡‚ÎˇÂÏ Ó·˙ÂÍÚ˚ ·‡Á˚
+			// –î–æ–±–∞–≤–ª—è–µ–º –æ–±—ä–µ–∫—Ç—ã –±–∞–∑—ã
 			for ( CSegmentLinkIDList::const_iterator itSegmentLinkID = itSegmentLinkIDList->begin(); itSegmentLinkID != itSegmentLinkIDList->end(); ++itSegmentLinkID )
 			{
-				// ÔÓÎÛ˜‡ÂÏ ‡ÒÔÓÎÓÊÂÌÌËÂ Ó·˙ÂÍÚ‡ ‚ ·‡ÁÂ ‰‡ÌÌ˚ı
+				// –ø–æ–ª—É—á–∞–µ–º —Ä–∞—Å–ø–æ–ª–æ–∂–µ–Ω–Ω–∏–µ –æ–±—ä–µ–∫—Ç–∞ –≤ –±–∞–∑–µ –¥–∞–Ω–Ω—ã—Ö
 				const UINT nLinkID = *itSegmentLinkID;
 				const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
 				NI_ASSERT( nObjectIndex != INVALID_NODE_ID, StrFmt( "Invalid trench index for LinkID: %d", nLinkID ) );
@@ -170,7 +170,7 @@ namespace NMapInfoEditor
 					continue;
 				}
 				const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
-				// ÒÓÁ‰‡ÂÏ SMapInfoElement Ë Á‡ÔÓÎÌˇÂÏ Â„Ó ‰‡ÌÌ˚ÏË
+				// —Å–æ–∑–¥–∞–µ–º SMapInfoElement –∏ –∑–∞–ø–æ–ª–Ω—è–µ–º –µ–≥–æ –¥–∞–Ω–Ω—ã–º–∏
 				SObjectInfo::SMapInfoElement mapInfoElement;
 				string szRPGStatsTypeName;
 				string szRPGStatsName;
@@ -190,7 +190,7 @@ namespace NMapInfoEditor
 				{
 					continue;
 				}
-				// Á‡ÌÓÒËÏ ˝ÎÂÏÂÌÚ ‚ ÒÚÛÍÚÛÛ ‰‡ÌÌ˚ı Ó·˙ÂÍÚ‡
+				// –∑–∞–Ω–æ—Å–∏–º —ç–ª–µ–º–µ–Ω—Ç –≤ —Å—Ç—Ä—É–∫—Ç—É—Ä—É –¥–∞–Ω–Ω—ã—Ö –æ–±—ä–µ–∫—Ç–∞
 				mapInfoElementMap[nLinkID] = mapInfoElement;
 				pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
 			}
@@ -233,7 +233,7 @@ namespace NMapInfoEditor
 	{
 		MakeAbsolute();
 
-		// ‚˚˜ËÒÎˇÂÏ ÓÚÌÓÒËÚÂÎ¸Ì˚Â ÍÓÓ‰ËÌ‡Ú˚ Ë Û„ÓÎ ˝ÎÂÏÂÌÚÓ‚ Ó·˙ÂÍÚ‡
+		// –≤—ã—á–∏—Å–ª—è–µ–º –æ—Ç–Ω–æ—Å–∏—Ç–µ–ª—å–Ω—ã–µ –∫–æ–æ—Ä–¥–∏–Ω–∞—Ç—ã –∏ —É–≥–æ–ª —ç–ª–µ–º–µ–Ω—Ç–æ–≤ –æ–±—ä–µ–∫—Ç–∞
 		int nEntrenchmentElementCount = 0;
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
@@ -253,7 +253,7 @@ namespace NMapInfoEditor
 				itMapInfoElement->second.fDirection -= fDirection;
 			}
 		}
-		// Á‡ÔÓÎÌˇÂÏ ÒˆÂÌÛ Ë ÔÓÒÚ‡‚ÎˇÂÏ ÒÒ˚ÎÍË ‚ mapInfo
+		// –∑–∞–ø–æ–ª–Ω—è–µ–º —Å—Ü–µ–Ω—É –∏ –ø—Ä–æ—Å—Ç–∞–≤–ª—è–µ–º —Å—Å—ã–ª–∫–∏ –≤ mapInfo
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			const UINT nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
@@ -263,7 +263,7 @@ namespace NMapInfoEditor
 			vObjectScenePosition.z = GetTerrainHeight( vObjectScenePosition.x, vObjectScenePosition.y );
 			const float fObjectSceneDirection = fDirection + itMapInfoElement->second.fDirection;
 			//
-			//	ÔÓ‚ÂÌÛÚ¸ ‚ ‚ÂÚËÍ‡Î¸ÌÓÈ ÔÎÓÒÍÓÒÚË Ë ÔÓÏ‡Ò¯Ú‡·ËÓ‚‡Ú¸
+			//	–ø–æ–≤–µ—Ä–Ω—É—Ç—å –≤ –≤–µ—Ä—Ç–∏–∫–∞–ª—å–Ω–æ–π –ø–ª–æ—Å–∫–æ—Å—Ç–∏ –∏ –ø—Ä–æ–º–∞—Å—à—Ç–∞–±–∏—Ä–æ–≤–∞—Ç—å
 			//
 			CVec3 vTerrainPos = VNULL3;
 			CQuat qRot = QNULL;
@@ -303,7 +303,7 @@ namespace NMapInfoEditor
 			SObjectInfo::SSceneElement sceneElement;
 			sceneElement.vPosition = itMapInfoElement->second.vPosition;
 			sceneElement.fDirection = itMapInfoElement->second.fDirection;
-			// Á‡ÌÓÒËÏ ˝ÎÂÏÂÌÚ ‚ ÒÚÛÍÚÛÛ ‰‡ÌÌ˚ı Ó·˙ÂÍÚ‡
+			// –∑–∞–Ω–æ—Å–∏–º —ç–ª–µ–º–µ–Ω—Ç –≤ —Å—Ç—Ä—É–∫—Ç—É—Ä—É –¥–∞–Ω–Ω—ã—Ö –æ–±—ä–µ–∫—Ç–∞
 			sceneElementMap[nSceneID] = sceneElement;
 			sceneIDToLinkIDMap[nSceneID] = itMapInfoElement->first;
 			//
@@ -361,7 +361,7 @@ namespace NMapInfoEditor
 				vCenterPoint.z = GetTerrainHeight( vCenterPoint.x, vCenterPoint.y );
 				vCenterPoint -= CVec3( pSgInfo->vAABBCenter.x, pSgInfo->vAABBCenter.y, 0 );
 				//
-				//	ÔÓ‚ÂÌÛÚ¸ ‚ ‚ÂÚËÍ‡Î¸ÌÓÈ ÔÎÓÒÍÓÒÚË Ë ÔÓÏ‡Ò¯Ú‡·ËÓ‚‡Ú¸
+				//	–ø–æ–≤–µ—Ä–Ω—É—Ç—å –≤ –≤–µ—Ä—Ç–∏–∫–∞–ª—å–Ω–æ–π –ø–ª–æ—Å–∫–æ—Å—Ç–∏ –∏ –ø—Ä–æ–º–∞—Å—à—Ç–∞–±–∏—Ä–æ–≤–∞—Ç—å
 				//
 				CVec3 vTerrainPos = VNULL3;
 				DWORD dwNormal = Vec3ToDWORD( V3_AXIS_Z );
@@ -369,7 +369,7 @@ namespace NMapInfoEditor
 				CVec3 vScale = CVec3( 1.0f, 1.0f, 1.0f );
 				float fDirection = pSgInfo->fDirAngle;
 				SEntrenchmentInfo::GetEntrenchmentSegmentPositionOnTerrain(	&vTerrainPos, &qRot, &dwNormal, &vScale, pSgInfo->vAABBSize.x, vCenterPoint, fDirection );
-				vTerrainPos.z = 0;		 // ‚ ·‡ÁÂ ı‡ÌËÚÒˇ ‚˚ÒÓÚ‡ ÒÂ„ÏÂÌÚ‡ ÓÚÌÓÒËÚÂÎ¸ÌÓ ‚˚ÒÓÚ˚ ÚÂÂÈÌ‡ 
+				vTerrainPos.z = 0;		 // –≤ –±–∞–∑–µ —Ö—Ä–∞–Ω–∏—Ç—Å—è –≤—ã—Å–æ—Ç–∞ —Å–µ–≥–º–µ–Ω—Ç–∞ –æ—Ç–Ω–æ—Å–∏—Ç–µ–ª—å–Ω–æ –≤—ã—Å–æ—Ç—ã —Ç–µ—Ä—Ä–µ–π–Ω–∞ 
 				//
 				int nObjectIndex = INVALID_NODE_ID;
 				CManipulatorManager::GetValue( &nObjectIndex, pManipulator, "Objects" );
@@ -397,7 +397,7 @@ namespace NMapInfoEditor
 					//
 					pObjectInfoCollector->linkIDToIndexCollector.Insert( nLinkID, nObjectIndex, false );
 					//
-					// ÒÓÁ‰‡ÂÏ SMapInfoElement Ë Á‡ÔÓÎÌˇÂÏ ˝„Ó ‰‡ÌÌ˚ÏË
+					// —Å–æ–∑–¥–∞–µ–º SMapInfoElement –∏ –∑–∞–ø–æ–ª–Ω—è–µ–º —ç–≥–æ –¥–∞–Ω–Ω—ã–º–∏
 					SObjectInfo::SMapInfoElement mapInfoElement;
 					mapInfoElement.szRPGStatsTypeName = pObjectCreateInfo->szRPGStatsTypeName;
 					mapInfoElement.rpgStatsDBID = pObjectCreateInfo->rpgStatsDBID;
@@ -433,7 +433,7 @@ namespace NMapInfoEditor
 				++nEntrenchmentElementIndex;
 			}
 
-			//ƒÓ·‡‚ÎˇÂÏ ËÌÙÓÏ‡ˆË˛ ‚ ÒÂÍˆË˛ ÓÍÓÔÓ‚
+			//–î–æ–±–∞–≤–ª—è–µ–º –∏–Ω—Ñ–æ—Ä–º–∞—Ü–∏—é –≤ —Å–µ–∫—Ü–∏—é –æ–∫–æ–ø–æ–≤
 			int nEntrenchmentIndex = INVALID_NODE_ID;
 			bResult = bResult && CManipulatorManager::GetValue( &nEntrenchmentIndex, pManipulator, "Entrenchments" );
 			const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
@@ -474,9 +474,9 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SEntrenchmentInfo::GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegInfo *pSegInfo, const SObjectInfo *pMOI, const NDb::SEntrenchmentRPGStats *pEntrenchmentStats, const SMapInfoElement *pElement )
 	{
-		// ÙÛÌÍˆËˇ ‚ÓÒÒÚ‡Ì‡‚ÎË‚‡ÂÚ ‰‡ÌÌ˚Â ÍÓÚÓ˚Â ÌÛÊÌ˚ ‰Îˇ ÔÓÒÚ‡ÌÓ‚ÍË ÒÂ„ÏÂÌÚ‡ ÓÍÓÔ‡ ‚ Â‰‡ÍÚÓÂ SEntrenchmentSegInfo
-		// ÔÓ SMapInfoElement ‰‡ÌÌÓ„Ó ÒÂ„ÏÂÌÚ‡
-		// (ˆÂÌÚ ÒÂ„ÏÂÌÚ‡ + ÔÓ‚ÓÓÚ + ‰ÎËÌ‡ ÒÂ„ÏÂÌÚ‡ ) ---> ( Ì‡˜‡Î¸Ì‡ˇ Ë ÍÓÌÂ˜Ì‡ˇ ÚÓ˜ÍË ÒÂ„ÏÂÌÚ‡ )
+		// —Ñ—É–Ω–∫—Ü–∏—è –≤–æ—Å—Å—Ç–∞–Ω–∞–≤–ª–∏–≤–∞–µ—Ç –¥–∞–Ω–Ω—ã–µ –∫–æ—Ç–æ—Ä—ã–µ –Ω—É–∂–Ω—ã –¥–ª—è –ø–æ—Å—Ç–∞–Ω–æ–≤–∫–∏ —Å–µ–≥–º–µ–Ω—Ç–∞ –æ–∫–æ–ø–∞ –≤ —Ä–µ–¥–∞–∫—Ç–æ—Ä–µ SEntrenchmentSegInfo
+		// –ø–æ SMapInfoElement –¥–∞–Ω–Ω–æ–≥–æ —Å–µ–≥–º–µ–Ω—Ç–∞
+		// (—Ü–µ–Ω—Ç—Ä —Å–µ–≥–º–µ–Ω—Ç–∞ + –ø–æ–≤–æ—Ä–æ—Ç + –¥–ª–∏–Ω–∞ —Å–µ–≥–º–µ–Ω—Ç–∞ ) ---> ( –Ω–∞—á–∞–ª—å–Ω–∞—è –∏ –∫–æ–Ω–µ—á–Ω–∞—è —Ç–æ—á–∫–∏ —Å–µ–≥–º–µ–Ω—Ç–∞ )
 		//
 		if ( !pSegInfo || !pMOI || !pEntrenchmentStats || !pElement )
 			return false;

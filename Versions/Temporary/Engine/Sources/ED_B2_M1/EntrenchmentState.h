@@ -17,10 +17,10 @@ class CEntrenchmentDesignTool
 public:
 	enum ESegType 
 	{
-		ST_TERMINATOR	= 0,	// терминатор
-		ST_LINE				= 1,	// линейный сегмент
-		ST_LEFT_ARC		= 2,	// поворот налево
-		ST_RIGHT_ARC	= 3,	// поворот направо
+		ST_TERMINATOR	= 0,	// С‚РµСЂРјРёРЅР°С‚РѕСЂ
+		ST_LINE				= 1,	// Р»РёРЅРµР№РЅС‹Р№ СЃРµРіРјРµРЅС‚
+		ST_LEFT_ARC		= 2,	// РїРѕРІРѕСЂРѕС‚ РЅР°Р»РµРІРѕ
+		ST_RIGHT_ARC	= 3,	// РїРѕРІРѕСЂРѕС‚ РЅР°РїСЂР°РІРѕ
 		ST_COUNT			= 4,	// count
 	};
 	///
@@ -28,18 +28,18 @@ private:
 	///
 	static const DWORD segColors[ST_COUNT];
 
-	float fArcDeltaAngle;									// половина острого угла конуса в модели Arc
-	CVec3 segAABBSizes[ST_COUNT];					// размеры соответствующих типов сегментов
-	CVec2 segAABBCentr[ST_COUNT];					// центры соответствующих типов сегментов 
+	float fArcDeltaAngle;									// РїРѕР»РѕРІРёРЅР° РѕСЃС‚СЂРѕРіРѕ СѓРіР»Р° РєРѕРЅСѓСЃР° РІ РјРѕРґРµР»Рё Arc
+	CVec3 segAABBSizes[ST_COUNT];					// СЂР°Р·РјРµСЂС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С‚РёРїРѕРІ СЃРµРіРјРµРЅС‚РѕРІ
+	CVec2 segAABBCentr[ST_COUNT];					// С†РµРЅС‚СЂС‹ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёС… С‚РёРїРѕРІ СЃРµРіРјРµРЅС‚РѕРІ 
 	///
-	bool bComplete;										// окоп завершен (оба терминатора поставлены)
+	bool bComplete;										// РѕРєРѕРї Р·Р°РІРµСЂС€РµРЅ (РѕР±Р° С‚РµСЂРјРёРЅР°С‚РѕСЂР° РїРѕСЃС‚Р°РІР»РµРЅС‹)
 	///
-	CVec3 vStartPos;									// позиция стартового терминатора
-	float fStartDir;									// направление стартового терминатора 	
-	vector<ESegType> segments;				// типы сегментов составляющие окоп
-	int nLock;												// блок (все сегменты с индексом <= блока считаются нередактируемыми)
+	CVec3 vStartPos;									// РїРѕР·РёС†РёСЏ СЃС‚Р°СЂС‚РѕРІРѕРіРѕ С‚РµСЂРјРёРЅР°С‚РѕСЂР°
+	float fStartDir;									// РЅР°РїСЂР°РІР»РµРЅРёРµ СЃС‚Р°СЂС‚РѕРІРѕРіРѕ С‚РµСЂРјРёРЅР°С‚РѕСЂР° 	
+	vector<ESegType> segments;				// С‚РёРїС‹ СЃРµРіРјРµРЅС‚РѕРІ СЃРѕСЃС‚Р°РІР»СЏСЋС‰РёРµ РѕРєРѕРї
+	int nLock;												// Р±Р»РѕРє (РІСЃРµ СЃРµРіРјРµРЅС‚С‹ СЃ РёРЅРґРµРєСЃРѕРј <= Р±Р»РѕРєР° СЃС‡РёС‚Р°СЋС‚СЃСЏ РЅРµСЂРµРґР°РєС‚РёСЂСѓРµРјС‹РјРё)
 	///
-	CVec3 vDirMarker;									// вектор напраления от блока к курсору мыши
+	CVec3 vDirMarker;									// РІРµРєС‚РѕСЂ РЅР°РїСЂР°Р»РµРЅРёСЏ РѕС‚ Р±Р»РѕРєР° Рє РєСѓСЂСЃРѕСЂСѓ РјС‹С€Рё
 	///
 	void DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, DWORD clr );
 	CVec3 GetSegPos( int nSegIndex, bool bStart );
@@ -84,7 +84,7 @@ class CEntrenchmentState : public CMapObjectState
 	///
 	CEntrenchmentDesignTool	designTool;
 	///
-	/// выбранный для постановки окоп
+	/// РІС‹Р±СЂР°РЅРЅС‹Р№ РґР»СЏ РїРѕСЃС‚Р°РЅРѕРІРєРё РѕРєРѕРї
 	struct SSelectedEntrenchmentInfo
 	{ 
 		string szRPGStatsTypeName;

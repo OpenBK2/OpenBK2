@@ -58,7 +58,7 @@ private:
 	//int nUpdateSize;               // recommended update size
 	// bool bHasNewPacketToAck;
 	//
-	// пакет, сформированный из CUpdateRequest
+	// РїР°РєРµС‚, СЃС„РѕСЂРјРёСЂРѕРІР°РЅРЅС‹Р№ РёР· CUpdateRequest
 	class CUpdate 
 	{
 	public: 

@@ -66,16 +66,16 @@ BOOL CScintillaEditorWindow::CreateEx(  CWnd* pwndParent, DWORD dwStyleEx, DWORD
 		return FALSE;
 	}
 	
-	//Настраеваем метод посылки команд
+	//РќР°СЃС‚СЂР°РµРІР°РµРј РјРµС‚РѕРґ РїРѕСЃС‹Р»РєРё РєРѕРјР°РЅРґ
 	pfnScintilla = ( int( * )( void*, int, int, int ) )( SendMessage( SCI_GETDIRECTFUNCTION, 0, 0 ) );
 	pScintilla = ( void* )( SendMessage( SCI_GETDIRECTPOINTER, 0, 0 ) );
 
-	//Скрываем по умолчанию все Margins
+	//РЎРєСЂС‹РІР°РµРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІСЃРµ Margins
 	Command( SCI_SETMARGINWIDTHN, 0, 0 );
 	Command( SCI_SETMARGINWIDTHN, 1, 0 );
 	Command( SCI_SETMARGINWIDTHN, 2, 0 );
 
-	//Ставим по умолчанию CRLF
+	//РЎС‚Р°РІРёРј РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ CRLF
 	Command( SCI_SETEOLMODE, SC_EOL_CRLF );
 
 	// set word wrap

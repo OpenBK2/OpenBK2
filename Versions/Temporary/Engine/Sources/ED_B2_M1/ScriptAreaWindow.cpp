@@ -259,7 +259,7 @@ void CScriptAreaWindow::OnRadioRectangle()
 void CScriptAreaWindow::NotifyHandler()
 {
 	if ( bIsDataBeginSet )
-		return;	// чтобы сообщения не шли в момент установки свойств контролов
+		return;	// С‡С‚РѕР±С‹ СЃРѕРѕР±С‰РµРЅРёСЏ РЅРµ С€Р»Рё РІ РјРѕРјРµРЅС‚ СѓСЃС‚Р°РЅРѕРІРєРё СЃРІРѕР№СЃС‚РІ РєРѕРЅС‚СЂРѕР»РѕРІ
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_AREA_STATE, ID_SCRIPT_AREA_WINDOW_UI_EVENT, 0 );
 }

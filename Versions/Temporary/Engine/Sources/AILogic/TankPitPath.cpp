@@ -22,7 +22,7 @@ bool CTankPitPath::IsFinished() const
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTankPitPath::Segment( const NTimer::STime timeDiff )
 {
-	if ( vEndPoint == vCurPoint ) // уже дошли
+	if ( vEndPoint == vCurPoint ) // СѓР¶Рµ РґРѕС€Р»Рё
 		fSpeedLen = 0;
 	else if ( pUnit )
 	{
@@ -30,7 +30,7 @@ void CTankPitPath::Segment( const NTimer::STime timeDiff )
 		float fPassedLenght = fSpeedLen*timeDiff;
 		CVec2 vDir = vEndPoint - vCurPoint;
 		float fDistToGo = fabs( vDir );
-		if ( fDistToGo >= fPassedLenght )// еще нужно идти
+		if ( fDistToGo >= fPassedLenght )// РµС‰Рµ РЅСѓР¶РЅРѕ РёРґС‚Рё
 		{
 			Normalize( &vDir );	
 			vDir *= fPassedLenght ;

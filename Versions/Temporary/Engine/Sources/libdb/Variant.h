@@ -30,7 +30,7 @@ private:
 	EVariantType m_eType;
 
 	/**
-	контейнер для указателя на блок памяти
+	РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ СѓРєР°Р·Р°С‚РµР»СЏ РЅР° Р±Р»РѕРє РїР°РјСЏС‚Рё
 	*/
 	struct SBlob
 	{
@@ -128,7 +128,7 @@ private:
 	void Copy(const CVariant &var);
 
 public:
-	//конструкторы
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
 	CVariant() : m_eType( VT_NULL ), m_pblob(NULL) {}
 	CVariant( const CVariant &var );
 	CVariant& operator=( const CVariant &var );
@@ -139,7 +139,7 @@ public:
 		m_pblob->m_bDelete = bDeleteInDestructor;
 		m_pblob->m_nSize = nBlobSize;
 	}
-	//конструкторы с приведением типов
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ СЃ РїСЂРёРІРµРґРµРЅРёРµРј С‚РёРїРѕРІ
 	CVariant( const int nVal )          : m_eType( VT_INT ), m_int( nVal ) {}
 	CVariant( const float fVal )        : m_eType( VT_FLOAT ), m_float(fVal) {}
 	CVariant( const string &szVal )     : m_eType( VT_STR ), m_pstr( new string(szVal) ) {}
@@ -158,9 +158,9 @@ public:
 	//
 	CVariant( const GUID &guid )				: m_eType( VT_POINTER ), m_pblob( new SBlob((void*)&guid, sizeof(guid)) ) {}
 private:
-	//CVariant не может определить размер блока по указателю, поэтому без указания размера
-	//конструктор от void* не имеет смысла
-	// Намеренно его закрываем, чтобы не происходило неявного преобразования void * к bool
+	//CVariant РЅРµ РјРѕР¶РµС‚ РѕРїСЂРµРґРµР»РёС‚СЊ СЂР°Р·РјРµСЂ Р±Р»РѕРєР° РїРѕ СѓРєР°Р·Р°С‚РµР»СЋ, РїРѕСЌС‚РѕРјСѓ Р±РµР· СѓРєР°Р·Р°РЅРёСЏ СЂР°Р·РјРµСЂР°
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РѕС‚ void* РЅРµ РёРјРµРµС‚ СЃРјС‹СЃР»Р°
+	// РќР°РјРµСЂРµРЅРЅРѕ РµРіРѕ Р·Р°РєСЂС‹РІР°РµРј, С‡С‚РѕР±С‹ РЅРµ РїСЂРѕРёСЃС…РѕРґРёР»Рѕ РЅРµСЏРІРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ void * Рє bool
 	CVariant( void *pVar )                  : m_eType( VT_POINTER ) {}
 public:
 	CVariant( const void *pVar, int nBlobSize )   : m_eType( VT_POINTER ), m_pblob( new SBlob(pVar, nBlobSize) ) {}
@@ -173,7 +173,7 @@ public:
 	//
 	EVariantType GetType() const { return m_eType; }
 	bool IsNull() const { return m_eType == VT_NULL; }
-	//приведение типов
+	//РїСЂРёРІРµРґРµРЅРёРµ С‚РёРїРѕРІ
 	operator int() const;
 	operator float() const;
 	//operator const string&() const;
@@ -181,7 +181,7 @@ public:
 	//operator const char*() const;
 	//operator const wchar_t*() const;
 	operator bool() const;
-	//получение значений
+	//РїРѕР»СѓС‡РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№
 	bool             GetBool() const;
 	int              GetInt() const;
 	float            GetFloat() const;
@@ -198,8 +198,8 @@ public:
 
 	size_t GetBlobSize() const;
 	//
-  bool operator!=( const CVariant &var ) const; //не точное сравнение ( с приведением типов )
-	bool operator==( const CVariant &var ) const; //точное совпадение согласно типам
+  bool operator!=( const CVariant &var ) const; //РЅРµ С‚РѕС‡РЅРѕРµ СЃСЂР°РІРЅРµРЅРёРµ ( СЃ РїСЂРёРІРµРґРµРЅРёРµРј С‚РёРїРѕРІ )
+	bool operator==( const CVariant &var ) const; //С‚РѕС‡РЅРѕРµ СЃРѕРІРїР°РґРµРЅРёРµ СЃРѕРіР»Р°СЃРЅРѕ С‚РёРїР°Рј
 
 	int operator & ( IBinSaver &saver );
 	int operator & ( IXmlSaver &saver );

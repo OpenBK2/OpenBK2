@@ -36,7 +36,7 @@ private:
 	void OnBrowse();
 	
 public:
-	// Необходимо для работы Multiedit Text Editor
+	// РќРµРѕР±С…РѕРґРёРјРѕ РґР»СЏ СЂР°Р±РѕС‚С‹ Multiedit Text Editor
 	static bool GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc );
 	static bool GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc );
 };

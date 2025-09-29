@@ -15,13 +15,13 @@ struct SAIUnitCmd
 		CVec2 vPos;														// for ground pointing commands
 		int nObjectID;														// when client send object pointing command this filed is object's id
 		bool bFromExplosion;										// for death from explosion
-		// команда ACTION_COMMAND_CALL_BOMBERS - число бомберов
-		// команда ACTION_COMMAND_ENTER:		 0 - войти в здание, 1 - войти в окоп
-		// команда ACTION_COMMAND_ATTACK_OBJECT: 0 - атаковать не окоп, 1 - атаковать окоп
+		// РєРѕРјР°РЅРґР° ACTION_COMMAND_CALL_BOMBERS - С‡РёСЃР»Рѕ Р±РѕРјР±РµСЂРѕРІ
+		// РєРѕРјР°РЅРґР° ACTION_COMMAND_ENTER:		 0 - РІРѕР№С‚Рё РІ Р·РґР°РЅРёРµ, 1 - РІРѕР№С‚Рё РІ РѕРєРѕРї
+		// РєРѕРјР°РЅРґР° ACTION_COMMAND_ATTACK_OBJECT: 0 - Р°С‚Р°РєРѕРІР°С‚СЊ РЅРµ РѕРєРѕРї, 1 - Р°С‚Р°РєРѕРІР°С‚СЊ РѕРєРѕРї
 		// ACTION_COMMAND_DROP_BOMBS_TO_TARGET: 0 - unit, 1 - building
 		float fNumber;
 		int nNumber;
-		bool bFromAI;			// если true, то команда пришла от клиента или от генерала
+		bool bFromAI;			// РµСЃР»Рё true, С‚Рѕ РєРѕРјР°РЅРґР° РїСЂРёС€Р»Р° РѕС‚ РєР»РёРµРЅС‚Р° РёР»Рё РѕС‚ РіРµРЅРµСЂР°Р»Р°
 		// CRAP{ may be here we can act in other way - our goal is to get rid of old int-ids
 		// CDBPtr<NDb::SHPObjectRPGStats> pTarget; 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCmdType); f.Add(3,&vPos); f.Add(4,&nObjectID); f.Add(5,&bFromExplosion); f.Add(6,&fNumber); f.Add(7,&nNumber); f.Add(8,&bFromAI); return 0; }

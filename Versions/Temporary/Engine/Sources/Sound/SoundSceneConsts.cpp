@@ -6,11 +6,11 @@
 //*															SSoundSceneConsts										*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float SSoundSceneConsts::SS_SOUND_CELL_SIZE;									// длина стороны в порции
+float SSoundSceneConsts::SS_SOUND_CELL_SIZE;									// РґР»РёРЅР° СЃС‚РѕСЂРѕРЅС‹ РІ РїРѕСЂС†РёРё
 float SSoundSceneConsts::SS_TILE_SIZE;
-NTimer::STime SSoundSceneConsts::SS_MIX_DELTA;							// максимальная разница во времени 
-NTimer::STime SSoundSceneConsts::SS_UPDATE_PERIOD;					// в милисекундах
-NTimer::STime SSoundSceneConsts::SS_SOUND_DIM_TIME;								// время затухания звука при удалении
+NTimer::STime SSoundSceneConsts::SS_MIX_DELTA;							// РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЂР°Р·РЅРёС†Р° РІРѕ РІСЂРµРјРµРЅРё 
+NTimer::STime SSoundSceneConsts::SS_UPDATE_PERIOD;					// РІ РјРёР»РёСЃРµРєСѓРЅРґР°С…
+NTimer::STime SSoundSceneConsts::SS_SOUND_DIM_TIME;								// РІСЂРµРјСЏ Р·Р°С‚СѓС…Р°РЅРёСЏ Р·РІСѓРєР° РїСЂРё СѓРґР°Р»РµРЅРёРё
 NTimer::STime SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE_RANDOM;//for changing looped sounds from time to time
 NTimer::STime SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE;			//for changing not looped sounds from time to time
 int SSoundSceneConsts::SS_AMBIENT_TERRAIN_SOUNDS;						//number of playing terrain sounds simualteniously 

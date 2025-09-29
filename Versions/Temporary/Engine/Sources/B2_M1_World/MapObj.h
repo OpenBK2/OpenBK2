@@ -457,7 +457,7 @@ public:
 	virtual int GetFreeMechPlaces() const = 0;
 	// firing... (from container of by himself)
 	virtual void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason ) = 0;
-	// нужно ли показывать пассажиров
+	// РЅСѓР¶РЅРѕ Р»Рё РїРѕРєР°Р·С‹РІР°С‚СЊ РїР°СЃСЃР°Р¶РёСЂРѕРІ
 	virtual bool NeedShowInterrior() const = 0;
 	virtual void AIUpdateModifyEntranceState( bool bOpen ) = 0;
 	virtual bool IsOpen() const = 0;

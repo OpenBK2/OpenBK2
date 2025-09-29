@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CVSODataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
-	// получаем материал
+	// РїРѕР»СѓС‡Р°РµРј РјР°С‚РµСЂРёР°Р»
 	CPtr<IManipulator> pMaterialManipulator = 0;
 	if ( rszObjectTypeName == "RoadDesc" )
 	{

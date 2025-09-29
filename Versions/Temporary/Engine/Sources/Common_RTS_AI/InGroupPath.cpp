@@ -12,7 +12,7 @@ REGISTER_SAVELOAD_CLASS( 0x310CBCC3, CInGroupPath )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const NTimer::STime PERIOD_OF_PATH_TO_FORMATION_SEARCH = 100;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const int MAX_DIST_TO_GO = 8; // пытаться закончить собственный путь если он завел от нормальной точки дальше чем на MAX_DIST_TO_GO тайлов
+const int MAX_DIST_TO_GO = 8; // РїС‹С‚Р°С‚СЊСЃСЏ Р·Р°РєРѕРЅС‡РёС‚СЊ СЃРѕР±СЃС‚РІРµРЅРЅС‹Р№ РїСѓС‚СЊ РµСЃР»Рё РѕРЅ Р·Р°РІРµР» РѕС‚ РЅРѕСЂРјР°Р»СЊРЅРѕР№ С‚РѕС‡РєРё РґР°Р»СЊС€Рµ С‡РµРј РЅР° MAX_DIST_TO_GO С‚Р°Р№Р»РѕРІ
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInGroupPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit, CAIMap *_pAIMap )
 {
@@ -59,17 +59,17 @@ void CInGroupPathBasis::CutDriveToFormationPath( IStaticPath *pPath )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2 &vDesPos, const CVec2 &vFormPos )
 {
-	// помещается в нужную точку
+	// РїРѕРјРµС‰Р°РµС‚СЃСЏ РІ РЅСѓР¶РЅСѓСЋ С‚РѕС‡РєСѓ
 	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), vDesPos, pUnit->GetAIPassabilityClass(), pAIMap ) != FREE_NONE )
 	{
 		CPtr<IStaticPath> pPath = CreateStaticPathToPoint( newCenter, vDesPos, VNULL2, pUnit, false, pAIMap );
-		// можно дойти
+		// РјРѕР¶РЅРѕ РґРѕР№С‚Рё
 		if ( pPath != 0 )
 		{
 
 			CPtr<IStaticPath> pCheckPath = CreateStaticPathToPoint( pPath->GetFinishPoint(), vFormPos, VNULL2, pUnit, false, pAIMap );
 
-			// от нужной точки можно дойти до центра формации и путь не слишком длинный
+			// РѕС‚ РЅСѓР¶РЅРѕР№ С‚РѕС‡РєРё РјРѕР¶РЅРѕ РґРѕР№С‚Рё РґРѕ С†РµРЅС‚СЂР° С„РѕСЂРјР°С†РёРё Рё РїСѓС‚СЊ РЅРµ СЃР»РёС€РєРѕРј РґР»РёРЅРЅС‹Р№
 			if ( true /* pCheckPath != 0 && ( pCheckPath->GetLength() * pAIMap->GetTileSize() <= 2.0f * fabs( pSmoothGroupPath->GetUnitShift( pUnit ) ) ) */ )
 			{
 				//CutDriveToFormationPath( pPath );
@@ -115,7 +115,7 @@ void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), newCenter, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 	{
 		const bool bDrive = DriveToFormation( pUnit->GetCenterPlain(), false );
-		// идти никуда не может, а формация остановилась
+		// РёРґС‚Рё РЅРёРєСѓРґР° РЅРµ РјРѕР¶РµС‚, Р° С„РѕСЂРјР°С†РёСЏ РѕСЃС‚Р°РЅРѕРІРёР»Р°СЃСЊ
 		if ( !bDrive && !pFormation->IsMoving() )
 		{
 			bFinished = true;
@@ -134,7 +134,7 @@ void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), vCenterAhead, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
 	{
 		const bool bDrive = DriveToFormation( newCenter, false );
-		// идти никуда не может, а формация остановилась
+		// РёРґС‚Рё РЅРёРєСѓРґР° РЅРµ РјРѕР¶РµС‚, Р° С„РѕСЂРјР°С†РёСЏ РѕСЃС‚Р°РЅРѕРІРёР»Р°СЃСЊ
 		if ( !bDrive && !pFormation->IsMoving() )
 		{
 			bFinished = true;
@@ -196,7 +196,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 {
 	CVec2 vCenter = pUnit->GetCenterPlain();
 
-	// не смогли найти пути до формации (юнит где-то заблокался)
+	// РЅРµ СЃРјРѕРіР»Рё РЅР°Р№С‚Рё РїСѓС‚Рё РґРѕ С„РѕСЂРјР°С†РёРё (СЋРЅРёС‚ РіРґРµ-С‚Рѕ Р·Р°Р±Р»РѕРєР°Р»СЃСЏ)
 	if ( timeToSearchPathToBack > 0 )
 	{
 		if ( timeToSearchPathToBack < timeDiff )
@@ -221,14 +221,14 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	CVec2 result = pSmoothGroupPath->GetValidUnitCenter( pUnit );
 	const float lineShift = pSmoothGroupPath->GetUnitPathShift( pUnit );
 
-	// стоим впереди
+	// СЃС‚РѕРёРј РІРїРµСЂРµРґРё
 	if ( lineShift > 0 )
 		result += pFormation->GetDirectionVector() * lineShift;
 
 	const float fDist = fabs( result - vCenter );
 	const float fDiff = fDist - fSpeed * timeDiff;
 
-	// точка по направлению к нужному положению
+	// С‚РѕС‡РєР° РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЋ Рє РЅСѓР¶РЅРѕРјСѓ РїРѕР»РѕР¶РµРЅРёСЋ
 	if ( fDiff > 0 )
 	{
 		const CVec2 vDelta( result - vCenter );
@@ -250,7 +250,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 
 	if ( pAIMap->GetTile( result ) != pAIMap->GetTile( vCenter ) )
 	{
-		// далеко от нужного положения
+		// РґР°Р»РµРєРѕ РѕС‚ РЅСѓР¶РЅРѕРіРѕ РїРѕР»РѕР¶РµРЅРёСЏ
 		const bool bCanGoToPoint = 
 			( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), result, pUnit->GetAIPassabilityClass(), pAIMap ) != FREE_NONE );
 		if ( lineShift <= 0 && fDiff > 6 * pAIMap->GetTileSize() && bCanGoToPoint )
@@ -273,7 +273,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 			}
 		}
 
-		// всё ещё путь с формацией
+		// РІСЃС‘ РµС‰С‘ РїСѓС‚СЊ СЃ С„РѕСЂРјР°С†РёРµР№
 		if ( !bGoByOwnPath )
 		{
 			const CVec2 vUnitPosition( pSmoothGroupPath->GetValidUnitCenter( pUnit ) );
@@ -289,7 +289,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 		}
 	}
 
-	// прошли слишком мало
+	// РїСЂРѕС€Р»Рё СЃР»РёС€РєРѕРј РјР°Р»Рѕ
 	if ( bGoByOwnPath && fabs2( vCenter - result ) < sqr( pFormation->GetMaxSpeedHere() * timeDiff / 1.5f ) )
 		return vCenter;
 	else if ( result != vCenter && !bFinished )

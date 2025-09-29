@@ -304,13 +304,13 @@ void CP2PTracker::ReceiveAddClient( const UCID peer, const UCID clientAddr, PEER
 	{
 		if ( !pTest->IsActive() )
 		{
-			// pWho бредит - этого парня мы как раз кикаем
+			// pWho Р±СЂРµРґРёС‚ - СЌС‚РѕРіРѕ РїР°СЂРЅСЏ РјС‹ РєР°Рє СЂР°Р· РєРёРєР°РµРј
 			SendRemoveClient( peer, clientAddr );
 			return;
 		}
 	}
 	else
-		AddNewClient( clientAddr, _addrInfo, bIsBroadcast ); // это что-то новое, нужно добавить в свой список
+		AddNewClient( clientAddr, _addrInfo, bIsBroadcast ); // СЌС‚Рѕ С‡С‚Рѕ-С‚Рѕ РЅРѕРІРѕРµ, РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РІ СЃРІРѕР№ СЃРїРёСЃРѕРє
 	// now to remove buddy we need to receive kick messages from every client pWho talked about him
 	AddKickApprove( clientAddr, peer );
 	SPeer *pWho = GetClient( peer );
@@ -482,7 +482,7 @@ void CP2PTracker::KickClient( const UCID addr, bool bIsBroadcast )
 		pVictim->bActive = false;
 		for ( hash_map<UCID,SPeer>::iterator i1 = clients.begin(); i1 != clients.end(); ++i1 )
 		{
-			ApproveKick( (i1->second).addr, addr ); // мертвые не кусаются и вряд ли пришлют подтверждение о kick
+			ApproveKick( (i1->second).addr, addr ); // РјРµСЂС‚РІС‹Рµ РЅРµ РєСѓСЃР°СЋС‚СЃСЏ Рё РІСЂСЏРґ Р»Рё РїСЂРёС€Р»СЋС‚ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Рѕ kick
 			if ( bIsBroadcast && ( i1->second.IsActive() ) )
 				SendRemoveClient( i1->second.addr, addr );
 		}

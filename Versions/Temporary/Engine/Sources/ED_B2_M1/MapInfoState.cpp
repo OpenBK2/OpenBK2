@@ -394,7 +394,7 @@ void CMapInfoState::Enter()
 	NI_ASSERT( pScene != 0, "CMapInfoState::Enter(): pScene == 0" );
 	IManipulator *pMapInfoManipulator = pMapInfoEditor->GetViewManipulator();
 	NI_ASSERT( pMapInfoManipulator != 0, "CMapInfoState::Enter(): GetViewManipulator() == 0" );
-	// Загружаем Terrain
+	// Р—Р°РіСЂСѓР¶Р°РµРј Terrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	NProgress::IteratePosition(); // 2
 	NI_ASSERT( pMapInfoEditor != 0, "CMapInfoState::Enter(), pMapInfoEditor == 0" );
@@ -414,7 +414,7 @@ void CMapInfoState::Enter()
 		DebugTrace( "CMapInfoState::Enter(): load NDb::MapInfo: %g", NHPTimer::GetTimePassed( &time ) );
 		//
 		//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( pMapInfoEditor->pMapInfo );
-		// Заполняем информацию об terrain
+		// Р—Р°РїРѕР»РЅСЏРµРј РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± terrain
 		if ( pMapInfoEditor->pMapInfo )
 		{
 			pScene->SetLight( pMapInfoEditor->pMapInfo->pLight );
@@ -465,7 +465,7 @@ void CMapInfoState::Enter()
 		const int nObjectCount = pMapInfoEditor->pMapInfo->objects.size();
 		const int nSpotCount = pMapInfoEditor->pMapInfo->spots.size();
 		//
-		// Заполняем массив LinkID объектов
+		// Р—Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ LinkID РѕР±СЉРµРєС‚РѕРІ
 		for ( UINT nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 		{
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
@@ -490,7 +490,7 @@ void CMapInfoState::Enter()
 		NProgress::IteratePosition(); // 9
 		DebugTrace( "CMapInfoState::Enter(): get object LinkIDs: %g", NHPTimer::GetTimePassed( &time ) );
 		//
-		//Споты
+		//РЎРїРѕС‚С‹
 		for ( int nSpotIndex = 0; nSpotIndex < nSpotCount; ++nSpotIndex )
 		{
 			if ( pMapInfoEditor->pMapInfo->spots[nSpotIndex].pDescriptor == 0 )
@@ -523,7 +523,7 @@ void CMapInfoState::Enter()
 			}
 			CDBID objectRPGStatsDBID = pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject->GetDBID();
 			string szObjectRPGStatsTypeName = NDb::GetClassTypeName( objectRPGStatsDBID );
-			// создаем записи в mapInfo в зависимости от типа объекта
+			// СЃРѕР·РґР°РµРј Р·Р°РїРёСЃРё РІ mapInfo РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ С‚РёРїР° РѕР±СЉРµРєС‚Р°
 			if ( ( szObjectRPGStatsTypeName == "MineRPGStats" )					||
 					 ( szObjectRPGStatsTypeName == "BuildingRPGStats" )			||
 					 ( szObjectRPGStatsTypeName == "MechUnitRPGStats" )			||
@@ -556,7 +556,7 @@ void CMapInfoState::Enter()
 		NProgress::IteratePosition(); // 11
 		DebugTrace( "CMapInfoState::Enter(): process objects: %g", NHPTimer::GetTimePassed( &time ) );
 		//
-		//Споты
+		//РЎРїРѕС‚С‹
 		for ( int nSpotIndex = 0; nSpotIndex < nSpotCount; ++nSpotIndex )
 		{
 			if ( pMapInfoEditor->pMapInfo->spots[nSpotIndex].pDescriptor == 0 )
@@ -581,7 +581,7 @@ void CMapInfoState::Enter()
 		NProgress::IteratePosition(); // 12
 		DebugTrace( "CMapInfoState::Enter(): process spots: %g", NHPTimer::GetTimePassed( &time ) );
 		//
-		// Мосты
+		// РњРѕСЃС‚С‹
 		int nBidgeCount = 0;
 		CManipulatorManager::GetValue( &nBidgeCount, pMapInfoManipulator, "Bridges" );
 		for ( UINT nBridgeIndex = 0; nBridgeIndex < nBidgeCount; ++nBridgeIndex )
@@ -599,7 +599,7 @@ void CMapInfoState::Enter()
 		NProgress::IteratePosition(); // 13
 		DebugTrace( "CMapInfoState::Enter(): process bridges: %g", NHPTimer::GetTimePassed( &time ) );
 		//
-		// Окопы
+		// РћРєРѕРїС‹
 		const int nEntrenchmentCount = pMapInfoEditor->pMapInfo->entrenchments.size();
 		for ( UINT nEntrenchmentIndex = 0; nEntrenchmentIndex < nEntrenchmentCount; ++nEntrenchmentIndex )
 		{
@@ -635,23 +635,23 @@ void CMapInfoState::Enter()
 	// TODO: progress bar
 	//pProgress->SetProgressPosition( 100 );
 
-	// загружаем данные в панели
+	// Р·Р°РіСЂСѓР¶Р°РµРј РґР°РЅРЅС‹Рµ РІ РїР°РЅРµР»Рё
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_FIELD_STATE,			ID_UPDATE_EDIT_PARAMETERS, MITFEP_ALL );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3, ID_SET_EDIT_PARAMETERS, MITHV3EP_ALL );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,		ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_ALL );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_VSO_MULTI_STATE,					ID_UPDATE_EDIT_PARAMETERS, MIVSOSEP_ALL );
 	//
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_STATE, this );
-	// Обновляем сцену
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_RESET_CAMERA, false );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-	// Очищаем буфер Undo / Redo
+	// РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ Undo / Redo
 	Singleton<IControllerContainer>()->RemoveTemporaryControllers( CMapInfoController::TEMPORARY_LABEL );
 	pMapInfoEditor->SetModified( false );
 		NProgress::IteratePosition(); // 17
 	// Loading view filter from 
 	pMapInfoEditor->ApplyViewFilter();
-	// загружаем состояние панелей
+	// Р·Р°РіСЂСѓР¶Р°РµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РїР°РЅРµР»РµР№
 	LoadEnterConfig();
 	NProgress::IteratePosition(); // 18
 	//
@@ -668,7 +668,7 @@ void CMapInfoState::Enter()
 void CMapInfoState::Leave()
 {
 	CMultiInputState::Leave();
-	// сохраняем состояние панелей
+	// СЃРѕС…СЂР°РЅСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РїР°РЅРµР»РµР№
 	SaveEnterConfig();
 	//
 	NI_ASSERT( pMapInfoEditor != 0, "CMapInfoState::Leave(), pMapInfoEditor == 0" );
@@ -679,7 +679,7 @@ void CMapInfoState::Leave()
 	pMapInfoEditor->editorSettings.vLastMapCameraAnchor = Camera()->GetAnchor();
 	//
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_STATE );
-	// Выгружаем MapInfo
+	// Р’С‹РіСЂСѓР¶Р°РµРј MapInfo
 	pMapInfoEditor->ClearMapInfoData();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	//
@@ -691,8 +691,8 @@ void CMapInfoState::Leave()
 		pMapInfoEditor->wndMiniMap.LoadMap( 0 );
 	}
 
-	// Обновляем сцену
-	// Очищаем буфер Undo / Redo
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
+	// РћС‡РёС‰Р°РµРј Р±СѓС„РµСЂ Undo / Redo
 	Singleton<IControllerContainer>()->RemoveTemporaryControllers( CMapInfoController::TEMPORARY_LABEL );
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_MOUSE_CAPTURE, 0 );

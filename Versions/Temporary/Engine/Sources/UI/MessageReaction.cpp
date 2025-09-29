@@ -11,7 +11,7 @@
 //#include "..\Input\Input.h"
 
 #include "WindowTabControl.h"
-// здесь генерируется отдельный ID, который потом прописывается в в файле include_?????????????.h
+// Р·РґРµСЃСЊ РіРµРЅРµСЂРёСЂСѓРµС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹Р№ ID, РєРѕС‚РѕСЂС‹Р№ РїРѕС‚РѕРј РїСЂРѕРїРёСЃС‹РІР°РµС‚СЃСЏ РІ РІ С„Р°Р№Р»Рµ include_?????????????.h
 REGISTER_SAVELOAD_CLASS(0x11075CC0, CARSetGlobalVar)
 REGISTER_SAVELOAD_CLASS(0x11075CC1, CARRemoveGlobalVar)
 REGISTER_SAVELOAD_CLASS(0x11075CC3, CMessageReactionB2)

@@ -54,7 +54,7 @@ void CPCStringNewRefEditor::OnNew()
 {
 	if ( !GetPropertyDesc()->refTypes.empty() )
 	{
-		// Получаем списко возможных типов объекта
+		// РџРѕР»СѓС‡Р°РµРј СЃРїРёСЃРєРѕ РІРѕР·РјРѕР¶РЅС‹С… С‚РёРїРѕРІ РѕР±СЉРµРєС‚Р°
 		CString strText;
 		GetWindowText( strText );
 		string szObjectName = strText;
@@ -82,7 +82,7 @@ void CPCStringNewRefEditor::OnNew()
 				}
 			}
 		}
-		// получаем имя объекта
+		// РїРѕР»СѓС‡Р°РµРј РёРјСЏ РѕР±СЉРµРєС‚Р°
 		//CString strNewName;
 		//strNewName.LoadString( IDS_TREE_GDB_BROWSE_NEW_RESOURCE );
 		//

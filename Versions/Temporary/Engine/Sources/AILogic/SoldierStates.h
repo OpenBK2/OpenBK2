@@ -48,7 +48,7 @@ class CSoldierRestState : public IUnitState
 	bool bScanned;
 	CVec2 guardPoint;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nextMove); f.Add(4,&bScanned); f.Add(5,&guardPoint); return 0; }
-	//float fDistToGuardPoint; // не используется
+	//float fDistToGuardPoint; // РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ
 	const bool CheckGuardPoint() const;
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit );
@@ -67,7 +67,7 @@ public:
 
 	class CAIUnit* GetTarget() const { return 0; }
 
-	// в 1 - некоторое малое время, чтобы произошло обновление, не 0 - т.к. это говорит о первом запуске сегмента
+	// РІ 1 - РЅРµРєРѕС‚РѕСЂРѕРµ РјР°Р»РѕРµ РІСЂРµРјСЏ, С‡С‚РѕР±С‹ РїСЂРѕРёР·РѕС€Р»Рѕ РѕР±РЅРѕРІР»РµРЅРёРµ, РЅРµ 0 - С‚.Рє. СЌС‚Рѕ РіРѕРІРѕСЂРёС‚ Рѕ РїРµСЂРІРѕРј Р·Р°РїСѓСЃРєРµ СЃРµРіРјРµРЅС‚Р°
 	void SetNullLastMoveTime() { nextMove = 1; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,11 +105,11 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 	bool IsBruteMoving();
 	interface IStaticPath* BestSidePath();
 
-	// атака в лоб - ехать на юнит и, когда можно стрелять, стрелять
+	// Р°С‚Р°РєР° РІ Р»РѕР± - РµС…Р°С‚СЊ РЅР° СЋРЅРёС‚ Рё, РєРѕРіРґР° РјРѕР¶РЅРѕ СЃС‚СЂРµР»СЏС‚СЊ, СЃС‚СЂРµР»СЏС‚СЊ
 	void AnalyzeBruteMovingPosition();
-	// идти на юнит до какого-то до него расстояния, а потом зайти со стороны
+	// РёРґС‚Рё РЅР° СЋРЅРёС‚ РґРѕ РєР°РєРѕРіРѕ-С‚Рѕ РґРѕ РЅРµРіРѕ СЂР°СЃСЃС‚РѕСЏРЅРёСЏ, Р° РїРѕС‚РѕРј Р·Р°Р№С‚Рё СЃРѕ СЃС‚РѕСЂРѕРЅС‹
 	void AnalyzeMovingPosition();
-	// зайти на юнит со стороны
+	// Р·Р°Р№С‚Рё РЅР° СЋРЅРёС‚ СЃРѕ СЃС‚РѕСЂРѕРЅС‹
 	void AnalyzeMovingToSidePosition();
 
 	void FireNow();
@@ -413,7 +413,7 @@ class CSoldierEnterTransportNowState : public IUnitState
 
 	CPtr<CAIUnit> pUnit;
 	CPtr<CMilitaryCar> pTransport;
-	// последний апдейт траектории (нужно для движущегося транспорта)
+	// РїРѕСЃР»РµРґРЅРёР№ Р°РїРґРµР№С‚ С‚СЂР°РµРєС‚РѕСЂРёРё (РЅСѓР¶РЅРѕ РґР»СЏ РґРІРёР¶СѓС‰РµРіРѕСЃСЏ С‚СЂР°РЅСЃРїРѕСЂС‚Р°)
 	NTimer::STime timeLastTrajectoryUpdate;
 	CVec2 vLastTransportCenter;
 	SAIAngle wLastTransportDir;
@@ -494,7 +494,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// юнит должен атаковать взвод. по 1 солдату.
+// СЋРЅРёС‚ РґРѕР»Р¶РµРЅ Р°С‚Р°РєРѕРІР°С‚СЊ РІР·РІРѕРґ. РїРѕ 1 СЃРѕР»РґР°С‚Сѓ.
 class CSoldierAttackFormationState: public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackFormationState );
@@ -539,9 +539,9 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для атаки самолетов. в этом стейте юнит следит не приближаются ли
-// к нему наземные цели. если какая-то цель наземная появилась в радиусе видимости,
-// то происходит переключение на нее.
+// РґР»СЏ Р°С‚Р°РєРё СЃР°РјРѕР»РµС‚РѕРІ. РІ СЌС‚РѕРј СЃС‚РµР№С‚Рµ СЋРЅРёС‚ СЃР»РµРґРёС‚ РЅРµ РїСЂРёР±Р»РёР¶Р°СЋС‚СЃСЏ Р»Рё
+// Рє РЅРµРјСѓ РЅР°Р·РµРјРЅС‹Рµ С†РµР»Рё. РµСЃР»Рё РєР°РєР°СЏ-С‚Рѕ С†РµР»СЊ РЅР°Р·РµРјРЅР°СЏ РїРѕСЏРІРёР»Р°СЃСЊ РІ СЂР°РґРёСѓСЃРµ РІРёРґРёРјРѕСЃС‚Рё,
+// С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚ РїРµСЂРµРєР»СЋС‡РµРЅРёРµ РЅР° РЅРµРµ.
 #include "PredictedAntiAviationFire.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CSoldierAttackAviationState : public IUnitAttackingState

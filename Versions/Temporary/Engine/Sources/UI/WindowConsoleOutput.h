@@ -27,10 +27,10 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 	CPtr<IML> pUpperSign;
 
 	typedef vector<SColorString> CColorStrings;
-	CColorStrings vectorOfStrings;		//все строчки в консоли
+	CColorStrings vectorOfStrings;		//РІСЃРµ СЃС‚СЂРѕС‡РєРё РІ РєРѕРЅСЃРѕР»Рё
 
-	int nBeginString;						//начальная отображаемая строка из списка строк
-															//0 считается самой свежей строчкой
+	int nBeginString;						//РЅР°С‡Р°Р»СЊРЅР°СЏ РѕС‚РѕР±СЂР°Р¶Р°РµРјР°СЏ СЃС‚СЂРѕРєР° РёР· СЃРїРёСЃРєР° СЃС‚СЂРѕРє
+															//0 СЃС‡РёС‚Р°РµС‚СЃСЏ СЃР°РјРѕР№ СЃРІРµР¶РµР№ СЃС‚СЂРѕС‡РєРѕР№
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 public:

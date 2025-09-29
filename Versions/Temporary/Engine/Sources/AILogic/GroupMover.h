@@ -51,8 +51,8 @@ class CGroupMover : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CGroupMover )
 	ZDATA
 		CVec2 vPosition;
-		TGroup group;					// собственно юниты которых надо двигать
-		TSubGroups subGroups;	// подгруппы по котором строятся пути, необходимо чтобы одинаковые (aiClass, nBoundTileRadius) ехали по одному пути
+		TGroup group;					// СЃРѕР±СЃС‚РІРµРЅРЅРѕ СЋРЅРёС‚С‹ РєРѕС‚РѕСЂС‹С… РЅР°РґРѕ РґРІРёРіР°С‚СЊ
+		TSubGroups subGroups;	// РїРѕРґРіСЂСѓРїРїС‹ РїРѕ РєРѕС‚РѕСЂРѕРј СЃС‚СЂРѕСЏС‚СЃСЏ РїСѓС‚Рё, РЅРµРѕР±С…РѕРґРёРјРѕ С‡С‚РѕР±С‹ РѕРґРёРЅР°РєРѕРІС‹Рµ (aiClass, nBoundTileRadius) РµС…Р°Р»Рё РїРѕ РѕРґРЅРѕРјСѓ РїСѓС‚Рё
 		bool bNeedCalcPositions;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPosition); f.Add(3,&group); f.Add(4,&subGroups); f.Add(5,&bNeedCalcPositions); return 0; }

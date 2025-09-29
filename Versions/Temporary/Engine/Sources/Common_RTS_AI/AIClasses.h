@@ -14,7 +14,7 @@ enum EAIClasses
 	EAC_WATER = EAC_RIVER | EAC_SEA, 
 	EAC_TERRAIN = EAC_WHELL | EAC_TRACK | EAC_HUMAN,
 
-	EAC_ANY   = EAC_WATER | EAC_TERRAIN, // в Terrain.cpp считается, что EAC_ANY имеет самое большое значение (нужно в classIndices  !!!!
+	EAC_ANY   = EAC_WATER | EAC_TERRAIN, // РІ Terrain.cpp СЃС‡РёС‚Р°РµС‚СЃСЏ, С‡С‚Рѕ EAC_ANY РёРјРµРµС‚ СЃР°РјРѕРµ Р±РѕР»СЊС€РѕРµ Р·РЅР°С‡РµРЅРёРµ (РЅСѓР¶РЅРѕ РІ classIndices  !!!!
 
 	EAC_FORCE_DWORD = 0x7FFFFFFF,
 };
@@ -30,11 +30,11 @@ inline const int GetClassIndex( const BYTE aiClass )
 	case EAC_SEA:      return 4;
 	case EAC_WATER:    return 5;
 	case EAC_TERRAIN:  return 6;
-	case EAC_ANY:      return 7;  // это для амфибий
-	case EAC_COUNT:    return 8;  // на EAC_COUNT необходимо вернуть количество индексов, это нужно для 
-                                // инициализации массивов толщины юнитов
+	case EAC_ANY:      return 7;  // СЌС‚Рѕ РґР»СЏ Р°РјС„РёР±РёР№
+	case EAC_COUNT:    return 8;  // РЅР° EAC_COUNT РЅРµРѕР±С…РѕРґРёРјРѕ РІРµСЂРЅСѓС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅРґРµРєСЃРѕРІ, СЌС‚Рѕ РЅСѓР¶РЅРѕ РґР»СЏ 
+                                // РёРЅРёС†РёР°Р»РёР·Р°С†РёРё РјР°СЃСЃРёРІРѕРІ С‚РѕР»С‰РёРЅС‹ СЋРЅРёС‚РѕРІ
 	default:
-// при вычислении пути от колонны разнотипных юнитов можно легко получить EAC_WHELL | EAC_TRACK
+// РїСЂРё РІС‹С‡РёСЃР»РµРЅРёРё РїСѓС‚Рё РѕС‚ РєРѕР»РѕРЅРЅС‹ СЂР°Р·РЅРѕС‚РёРїРЅС‹С… СЋРЅРёС‚РѕРІ РјРѕР¶РЅРѕ Р»РµРіРєРѕ РїРѕР»СѓС‡РёС‚СЊ EAC_WHELL | EAC_TRACK
 //		NI_ASSERT( 0, StrFmt( "Unknown (%d) AIClass for passability", aiClass ) );
 		return -1;
 	}

@@ -15,7 +15,7 @@ class CPolygonSelectState : public CDefaultInputState
 	
 	class CPolygonState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CPolygonSelectState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
@@ -39,7 +39,7 @@ class CPolygonEditState : public CDefaultInputState
 	
 	class CPolygonState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CPolygonEditState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
@@ -65,7 +65,7 @@ class CPolygonAddState : public CDefaultInputState
 	
 	class CPolygonState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CPolygonAddState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
@@ -130,19 +130,19 @@ public:
 	};
 	//
 protected:
-	// Для перекрытия метода Draw
-	// для работы SelectState
-	// для работы AddState
-	// для работы EditState
-	CPolygonIDList pickPolygonIDList;							// список ID выделенных полигонов
-	CControlPointList controlPointList;						// контрольные точки полигона при добавлении,
-																								// сохраняем начальное положение контрольных точек при редактировании
-	int nSelectedIndex;														// текущий выделенный полигон (индекс его ID в массиве выделенных полигонов) 
-	int nSelectedControlPoint;										// текущая выделенная точка в полигоне
+	// Р”Р»СЏ РїРµСЂРµРєСЂС‹С‚РёСЏ РјРµС‚РѕРґР° Draw
+	// РґР»СЏ СЂР°Р±РѕС‚С‹ SelectState
+	// РґР»СЏ СЂР°Р±РѕС‚С‹ AddState
+	// РґР»СЏ СЂР°Р±РѕС‚С‹ EditState
+	CPolygonIDList pickPolygonIDList;							// СЃРїРёСЃРѕРє ID РІС‹РґРµР»РµРЅРЅС‹С… РїРѕР»РёРіРѕРЅРѕРІ
+	CControlPointList controlPointList;						// РєРѕРЅС‚СЂРѕР»СЊРЅС‹Рµ С‚РѕС‡РєРё РїРѕР»РёРіРѕРЅР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё,
+																								// СЃРѕС…СЂР°РЅСЏРµРј РЅР°С‡Р°Р»СЊРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ РєРѕРЅС‚СЂРѕР»СЊРЅС‹С… С‚РѕС‡РµРє РїСЂРё СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРё
+	int nSelectedIndex;														// С‚РµРєСѓС‰РёР№ РІС‹РґРµР»РµРЅРЅС‹Р№ РїРѕР»РёРіРѕРЅ (РёРЅРґРµРєСЃ РµРіРѕ ID РІ РјР°СЃСЃРёРІРµ РІС‹РґРµР»РµРЅРЅС‹С… РїРѕР»РёРіРѕРЅРѕРІ) 
+	int nSelectedControlPoint;										// С‚РµРєСѓС‰Р°СЏ РІС‹РґРµР»РµРЅРЅР°СЏ С‚РѕС‡РєР° РІ РїРѕР»РёРіРѕРЅРµ
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
 
-	// Вынесены в этот раздел для успешной работы класов - наследников
+	// Р’С‹РЅРµСЃРµРЅС‹ РІ СЌС‚РѕС‚ СЂР°Р·РґРµР» РґР»СЏ СѓСЃРїРµС€РЅРѕР№ СЂР°Р±РѕС‚С‹ РєР»Р°СЃРѕРІ - РЅР°СЃР»РµРґРЅРёРєРѕРІ
 	inline void ValidateSelectedIndex()
 	{
 		if ( ( nSelectedIndex < 0 ) || ( nSelectedIndex >= pickPolygonIDList.size() ) )
@@ -172,35 +172,35 @@ protected:
 
 	//virtual void OnSetFocus( class CWnd* pNewWnd );
 	// CPolygonState
-	// Сразу ли обновлять полигон после постановки или вклучать фазу редактирования
+	// РЎСЂР°Р·Сѓ Р»Рё РѕР±РЅРѕРІР»СЏС‚СЊ РїРѕР»РёРіРѕРЅ РїРѕСЃР»Рµ РїРѕСЃС‚Р°РЅРѕРІРєРё РёР»Рё РІРєР»СѓС‡Р°С‚СЊ С„Р°Р·Сѓ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	virtual bool SkipEnterAfterInsert() = 0;
-	// Возможно какое либо редактирование
+	// Р’РѕР·РјРѕР¶РЅРѕ РєР°РєРѕРµ Р»РёР±Рѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 	virtual bool CanEdit() = 0;
-	// Можно ли создать новый полигон
+	// РњРѕР¶РЅРѕ Р»Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РїРѕР»РёРіРѕРЅ
 	virtual bool CanInsertPolygon() = 0;
-	// Замкнут полигон или не замкнут
+	// Р—Р°РјРєРЅСѓС‚ РїРѕР»РёРіРѕРЅ РёР»Рё РЅРµ Р·Р°РјРєРЅСѓС‚
 	virtual bool IsClosedPolygon() = 0;
-	// Нарисовать draw tool или добавить к ним чеще чего-нибудь и потом нарисовать
+	// РќР°СЂРёСЃРѕРІР°С‚СЊ draw tool РёР»Рё РґРѕР±Р°РІРёС‚СЊ Рє РЅРёРј С‡РµС‰Рµ С‡РµРіРѕ-РЅРёР±СѓРґСЊ Рё РїРѕС‚РѕРј РЅР°СЂРёСЃРѕРІР°С‚СЊ
 	virtual bool IsDrawSceneDrawTool() = 0;
-	// Получить способ редактирования
+	// РџРѕР»СѓС‡РёС‚СЊ СЃРїРѕСЃРѕР± СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 	virtual EMoveType GetMoveType() = 0;
-	// Получить минимальное и максимальное количество control points
+	// РџРѕР»СѓС‡РёС‚СЊ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ control points
 	virtual void GetBounds( int *pnMinCount, int *pnMaxCount ) = 0;
-	// Получить контрольные точки указанного полигона
+	// РџРѕР»СѓС‡РёС‚СЊ РєРѕРЅС‚СЂРѕР»СЊРЅС‹Рµ С‚РѕС‡РєРё СѓРєР°Р·Р°РЅРЅРѕРіРѕ РїРѕР»РёРіРѕРЅР°
 	virtual CControlPointList* GetControlPoints( int nPolygonID ) = 0;
-	// Обработать массив контрольных точек перед добавлением полигона
+	// РћР±СЂР°Р±РѕС‚Р°С‚СЊ РјР°СЃСЃРёРІ РєРѕРЅС‚СЂРѕР»СЊРЅС‹С… С‚РѕС‡РµРє РїРµСЂРµРґ РґРѕР±Р°РІР»РµРЅРёРµРј РїРѕР»РёРіРѕРЅР°
 	virtual bool PrepareControlPoints( CControlPointList *pControlPointList ) = 0;
-	// По точке получить выделенные полигоны (набор их ID)
+	// РџРѕ С‚РѕС‡РєРµ РїРѕР»СѓС‡РёС‚СЊ РІС‹РґРµР»РµРЅРЅС‹Рµ РїРѕР»РёРіРѕРЅС‹ (РЅР°Р±РѕСЂ РёС… ID)
 	virtual void PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList ) = 0;
-	// Обновить полигон (были изменены его контрольгные точки)
+	// РћР±РЅРѕРІРёС‚СЊ РїРѕР»РёРіРѕРЅ (Р±С‹Р»Рё РёР·РјРµРЅРµРЅС‹ РµРіРѕ РєРѕРЅС‚СЂРѕР»СЊРіРЅС‹Рµ С‚РѕС‡РєРё)
 	virtual void UpdatePolygon( int nPolygonID, EUpdateType eEpdateType ) = 0;
-	// Добавить полигон (возвращает ID добавленного полигона)
+	// Р”РѕР±Р°РІРёС‚СЊ РїРѕР»РёРіРѕРЅ (РІРѕР·РІСЂР°С‰Р°РµС‚ ID РґРѕР±Р°РІР»РµРЅРЅРѕРіРѕ РїРѕР»РёРіРѕРЅР°)
 	virtual UINT InsertPolygon( const CControlPointList &rControlPointList ) = 0;
-	// Удалить полигон по указанному ID
+	// РЈРґР°Р»РёС‚СЊ РїРѕР»РёРіРѕРЅ РїРѕ СѓРєР°Р·Р°РЅРЅРѕРјСѓ ID
 	virtual void RemovePolygon( int nPolygonID ) = 0;
 public:
 	//
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CPolygonState() : nSelectedIndex( INVALID_NODE_ID ), nSelectedControlPoint( INVALID_NODE_ID )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();

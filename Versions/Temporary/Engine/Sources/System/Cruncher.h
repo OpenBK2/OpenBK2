@@ -11,9 +11,9 @@ class CNetCompressor
 	unsigned int nNext[ N_COMPRESS_HISTORY ];  // list of same pairs
 	unsigned int nHashTable[ 1024 ];//8192 ];
 	CBitLocker data;
-	int nCurrent;       // позиция на место которой должна быть записана текущая буква
-	int nBlockStart;    // позиция начала блока повторения
-	int nBlockLength;   // длина текущего блока повторения
+	int nCurrent;       // РїРѕР·РёС†РёСЏ РЅР° РјРµСЃС‚Рѕ РєРѕС‚РѕСЂРѕР№ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ Р·Р°РїРёСЃР°РЅР° С‚РµРєСѓС‰Р°СЏ Р±СѓРєРІР°
+	int nBlockStart;    // РїРѕР·РёС†РёСЏ РЅР°С‡Р°Р»Р° Р±Р»РѕРєР° РїРѕРІС‚РѕСЂРµРЅРёСЏ
+	int nBlockLength;   // РґР»РёРЅР° С‚РµРєСѓС‰РµРіРѕ Р±Р»РѕРєР° РїРѕРІС‚РѕСЂРµРЅРёСЏ
 	//unsigned char cPrevLetter;
 	unsigned int cPrevLetter;
 	//

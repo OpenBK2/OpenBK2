@@ -16,7 +16,7 @@ class CEditorContainer : public IEditorContainer
 
 	string GetBaseObjectType( const string &rszExtendObjectTypeName );
 
-	// Методы умеют обрадаться с уже созданными редакторами и ChildFrame
+	// РњРµС‚РѕРґС‹ СѓРјРµСЋС‚ РѕР±СЂР°РґР°С‚СЊСЃСЏ СЃ СѓР¶Рµ СЃРѕР·РґР°РЅРЅС‹РјРё СЂРµРґР°РєС‚РѕСЂР°РјРё Рё ChildFrame
 	void DestroyActiveEditor( const string &rszNewEditorTypeName, const string &rszNewChildFrameTypeName, bool bDestroyChildFrame );
 	void CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const string &rszNewChildFrameTypeName );
 

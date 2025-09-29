@@ -18,29 +18,29 @@ class CArtillery : public CAIUnit
 
 	int nInitialPlayer;
 
-	// орудийные стволы
+	// РѕСЂСѓРґРёР№РЅС‹Рµ СЃС‚РІРѕР»С‹
 	CPtr<CMechUnitGuns> pGuns;
 
-	// вращающаяся пушка
+	// РІСЂР°С‰Р°СЋС‰Р°СЏСЃСЏ РїСѓС€РєР°
 	vector< CObj<CTurret> > turrets;
 
 	EActionNotify eCurInstallAction, eNextInstallAction;
-	// в каком из install/uninstall мы сейчас находимся
+	// РІ РєР°РєРѕРј РёР· install/uninstall РјС‹ СЃРµР№С‡Р°СЃ РЅР°С…РѕРґРёРјСЃСЏ
 	EActionNotify eCurrentStateOfInstall;
 
 	bool bInstalled;
 	NTimer::STime installActionTime;
-	bool bInstallActionInstant;						// для того, чтобы артиллерию можно было создать в непроинсталлированном состоянии
+	bool bInstallActionInstant;						// РґР»СЏ С‚РѕРіРѕ, С‡С‚РѕР±С‹ Р°СЂС‚РёР»Р»РµСЂРёСЋ РјРѕР¶РЅРѕ Р±С‹Р»Рѕ СЃРѕР·РґР°С‚СЊ РІ РЅРµРїСЂРѕРёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°РЅРЅРѕРј СЃРѕСЃС‚РѕСЏРЅРёРё
 
 	CPtr<IStaticPath> pStaticPathToSend;
 	CVec2 vShift;
 	CPtr<IPath> pIPathToSend;
 
-	CPtr<CFormation> pCapturingUnit;			// взвод, который бежит захватывать пушку.
-	CPtr<CFormation> pCrew;								// взвод, который пушку обслуживает
-	float fOperable; // часть команды, которая обслуживает пушку
+	CPtr<CFormation> pCapturingUnit;			// РІР·РІРѕРґ, РєРѕС‚РѕСЂС‹Р№ Р±РµР¶РёС‚ Р·Р°С…РІР°С‚С‹РІР°С‚СЊ РїСѓС€РєСѓ.
+	CPtr<CFormation> pCrew;								// РІР·РІРѕРґ, РєРѕС‚РѕСЂС‹Р№ РїСѓС€РєСѓ РѕР±СЃР»СѓР¶РёРІР°РµС‚
+	float fOperable; // С‡Р°СЃС‚СЊ РєРѕРјР°РЅРґС‹, РєРѕС‚РѕСЂР°СЏ РѕР±СЃР»СѓР¶РёРІР°РµС‚ РїСѓС€РєСѓ
 
-	CPtr<CAIUnit> pSlaveTransport; // транспорт, который работает на эту пушку
+	CPtr<CAIUnit> pSlaveTransport; // С‚СЂР°РЅСЃРїРѕСЂС‚, РєРѕС‚РѕСЂС‹Р№ СЂР°Р±РѕС‚Р°РµС‚ РЅР° СЌС‚Сѓ РїСѓС€РєСѓ
 	CPtr<CAIUnit> pHookingTransport;	// transport, that is hooking this artillery.
 	
 	CObj<CArtilleryBulletStorage> pBulletStorage;
@@ -48,10 +48,10 @@ class CArtillery : public CAIUnit
 	NTimer::STime lastCheckToInstall;
 
 	NTimer::STime behUpdateDuration;
-	// создаёт ammo box для AI, но не посылает его на визуализацию
+	// СЃРѕР·РґР°С‘С‚ ammo box РґР»СЏ AI, РЅРѕ РЅРµ РїРѕСЃС‹Р»Р°РµС‚ РµРіРѕ РЅР° РІРёР·СѓР°Р»РёР·Р°С†РёСЋ
 	void CreateAmmoBox();
 
-	// видет ли ammo box игроку
+	// РІРёРґРµС‚ Р»Рё ammo box РёРіСЂРѕРєСѓ
 	void ShowAmmoBox();
 	void HideAmmoBox();
 
@@ -101,9 +101,9 @@ public:
 	virtual bool IsUninstalled() const { return !bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE; }
 	bool IsInInstallAction() const { return eCurInstallAction != ACTION_NOTIFY_NONE || eNextInstallAction != ACTION_NOTIFY_NONE; }
 
-	void InstallBack( bool bAlreadyDone ); // инсталлировать артиллерию обратно, если она не деинсталлирована - то ошибка.
+	void InstallBack( bool bAlreadyDone ); // РёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°С‚СЊ Р°СЂС‚РёР»Р»РµСЂРёСЋ РѕР±СЂР°С‚РЅРѕ, РµСЃР»Рё РѕРЅР° РЅРµ РґРµРёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°РЅР° - С‚Рѕ РѕС€РёР±РєР°.
 	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false );
-	// проинсталлировать прямо сейчас
+	// РїСЂРѕРёРЅСЃС‚Р°Р»Р»РёСЂРѕРІР°С‚СЊ РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ
 	void ForceInstallAction();
 
 	virtual const bool NeedDeinstall() const;
@@ -128,7 +128,7 @@ public:
 
 	virtual bool TurnToUnit( const CVec2 &targCenter );
 
-	// обслуживание пушки артиллеристами
+	// РѕР±СЃР»СѓР¶РёРІР°РЅРёРµ РїСѓС€РєРё Р°СЂС‚РёР»Р»РµСЂРёСЃС‚Р°РјРё
 	virtual void ChangePlayer( const BYTE cPlayer );
 	virtual void SetCrew( class CFormation * _pCrew, const bool bCapture = true );
 	virtual void DelCrew();
@@ -140,10 +140,10 @@ public:
 
 	virtual void Disappear();
 
-	//для буксировки
+	//РґР»СЏ Р±СѓРєСЃРёСЂРѕРІРєРё
 	virtual CVec2 GetTowPoint();
 	
-	//CRAP { к майлстоуну заплатка
+	//CRAP { Рє РјР°Р№Р»СЃС‚РѕСѓРЅСѓ Р·Р°РїР»Р°С‚РєР°
 	virtual void SetSlaveTransport( class CAIUnit* _pSlaveTransport ){ pSlaveTransport = _pSlaveTransport; }
 	virtual bool HasSlaveTransport();
 	virtual class CAIUnit* GetSlaveTransport() { return pSlaveTransport; }
@@ -154,10 +154,10 @@ public:
 	virtual const float GetMaxSpeedHere( const CVec2 &point, bool bAdjust = true ) const;
 	virtual const float GetRotateSpeed() const;
 
-	// разрещает / запрещает  всем Gun у данной пушки стрелять
+	// СЂР°Р·СЂРµС‰Р°РµС‚ / Р·Р°РїСЂРµС‰Р°РµС‚  РІСЃРµРј Gun Сѓ РґР°РЅРЅРѕР№ РїСѓС€РєРё СЃС‚СЂРµР»СЏС‚СЊ
 	virtual void DoAllowShoot( bool allow );
 
-	// у всех пушек очищает флаг на ожидание перезарядки
+	// Сѓ РІСЃРµС… РїСѓС€РµРє РѕС‡РёС‰Р°РµС‚ С„Р»Р°Рі РЅР° РѕР¶РёРґР°РЅРёРµ РїРµСЂРµР·Р°СЂСЏРґРєРё
 	virtual void ClearWaitForReload();
 	
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;

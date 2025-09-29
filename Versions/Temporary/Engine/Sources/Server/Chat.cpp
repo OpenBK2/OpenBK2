@@ -173,7 +173,7 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 		if ( szOldChannelName == szChannelName )
 			return true;
 		channelClients[szOldChannelName].remove( nID );
-	// Важно, чтобы сам клиент не получал ни одно из уведомлений
+	// Р’Р°Р¶РЅРѕ, С‡С‚РѕР±С‹ СЃР°Рј РєР»РёРµРЅС‚ РЅРµ РїРѕР»СѓС‡Р°Р» РЅРё РѕРґРЅРѕ РёР· СѓРІРµРґРѕРјР»РµРЅРёР№
 		NotifyClientLeaveChannel( nID, szOldChannelName );
 		// Joining new channel
 		NotifyClientJoinChannel( nID, szChannelName );

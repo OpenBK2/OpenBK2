@@ -874,7 +874,7 @@ CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffec
 			{
 				CreateMeshInfo( pModel, &meshInfo, true );
 
-				// FIXME: не поддерживается SModelInstance::fCycleLength
+				// FIXME: РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ SModelInstance::fCycleLength
 				//
 
 				const NAnimation::SGrannySkeletonHandle skelId( pModel->pSkeleton, 0 );
@@ -894,7 +894,7 @@ CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffec
 				}
 				pSkelAnimator->SetGlobalTransform( pMSR );
 
-				// FIXME: давать свой SBound, когда возможно, это ускорит рассчёт того, что в кадр попадает
+				// FIXME: РґР°РІР°С‚СЊ СЃРІРѕР№ SBound, РєРѕРіРґР° РІРѕР·РјРѕР¶РЅРѕ, СЌС‚Рѕ СѓСЃРєРѕСЂРёС‚ СЂР°СЃСЃС‡С‘С‚ С‚РѕРіРѕ, С‡С‚Рѕ РІ РєР°РґСЂ РїРѕРїР°РґР°РµС‚
 				vector<CPtr<CFuncBase<float> > > transparencyAnimators;
 				CreateAnimatedTransparencyChannels( &transparencyAnimators, meshInfo, pModel, pSkelAnimator );
  				pRes->AddPart( CreateMesh( meshInfo, 0, 0, NGScene::CMeshAnimStuff( pModel, pSkelAnimator, &transparencyAnimators ), fullRoomInfo, pFader ) );
@@ -1827,7 +1827,7 @@ void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResu
 	for ( int i = 0; i < meshInfo.parts.size(); ++i )
 	{
 		const NGScene::IGameView::SPartInfo &partInfo = meshInfo.parts[i];
-		// уступка B2(M1), у которых meshNames всегда пустой
+		// СѓСЃС‚СѓРїРєР° B2(M1), Сѓ РєРѕС‚РѕСЂС‹С… meshNames РІСЃРµРіРґР° РїСѓСЃС‚РѕР№
 		if ( partInfo.nOrigMeshIndex < pModel->pGeometry->meshNames.size() )
 		{
 			szChannelName = pModel->pGeometry->meshNames[ partInfo.nOrigMeshIndex ];

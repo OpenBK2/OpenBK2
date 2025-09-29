@@ -210,9 +210,9 @@ private:
 	int CalcAbilityGroups();
 	void UpdateAbilityIcons( const vector< CPtr<CMOSelectable> > &objects ) const;
 	
-	// уведомим об изменениях самой селекции
+	// СѓРІРµРґРѕРјРёРј РѕР± РёР·РјРµРЅРµРЅРёСЏС… СЃР°РјРѕР№ СЃРµР»РµРєС†РёРё
 	void SendUpdateSelection();
-	// уведомим об изменениях внутри селекции
+	// СѓРІРµРґРѕРјРёРј РѕР± РёР·РјРµРЅРµРЅРёСЏС… РІРЅСѓС‚СЂРё СЃРµР»РµРєС†РёРё
 	void SendUpdateSelectionInterior();
 
 	void UpdateUnitsIcons( bool bPreselection );
@@ -235,8 +235,8 @@ public:
 	//
 	int GetSelection() const	{ return objList.size(); }
 	int GetSelection( vector<CMOSelectable*> *pBuffer ) const;
-	// возвращает все объекты, имеющие собственные координаты
-	// на экране (разбивая подразделения на юниты при необходимости)
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЃРµ РѕР±СЉРµРєС‚С‹, РёРјРµСЋС‰РёРµ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
+	// РЅР° СЌРєСЂР°РЅРµ (СЂР°Р·Р±РёРІР°СЏ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ РЅР° СЋРЅРёС‚С‹ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё)
 	void GetSelectionMembers( vector<CMOSelectable*> *pBuffer ) const; 
 	//
 	bool CanSelect( const CMapObj *pMO ) const { return (pMO && pMO->CanSelect()); }
@@ -267,8 +267,8 @@ public:
 	void UnHideForGroups( CMOSelectable *pMO );
 	void ReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable *pMO );
 	int FindSelectionGroup( CMOSelectable *pMO ) const;
-	// возвращает все объекты в группе, имеющие собственные координаты
-	// на экране (разбивая подразделения на юниты при необходимости)
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЃРµ РѕР±СЉРµРєС‚С‹ РІ РіСЂСѓРїРїРµ, РёРјРµСЋС‰РёРµ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
+	// РЅР° СЌРєСЂР°РЅРµ (СЂР°Р·Р±РёРІР°СЏ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ РЅР° СЋРЅРёС‚С‹ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё)
 	void GetGroupMembers( int nIndex, vector<CMOSelectable*> *pMembers );
 
 	bool DoGroupCommand( class CCommandsSender *pCommandsSender, const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );
@@ -284,11 +284,11 @@ public:
 	void UnselectSlot( int nSlot );
 
 	void Empty();
-	// получить список action'ов, теоретически доступных для unit'ов в текущем выделении
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє action'РѕРІ, С‚РµРѕСЂРµС‚РёС‡РµСЃРєРё РґРѕСЃС‚СѓРїРЅС‹С… РґР»СЏ unit'РѕРІ РІ С‚РµРєСѓС‰РµРј РІС‹РґРµР»РµРЅРёРё
 	void GetActions( CUserActions *pActions );
-	// получить список action'ов, недоступных для unit'ов в текущем выделении
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє action'РѕРІ, РЅРµРґРѕСЃС‚СѓРїРЅС‹С… РґР»СЏ unit'РѕРІ РІ С‚РµРєСѓС‰РµРј РІС‹РґРµР»РµРЅРёРё
 	void GetDisabledActions( CUserActions *pActions );
-	// получить список разрешенных действий (не совсем то же, что все действия без недоступных)
+	// РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЂР°Р·СЂРµС€РµРЅРЅС‹С… РґРµР№СЃС‚РІРёР№ (РЅРµ СЃРѕРІСЃРµРј С‚Рѕ Р¶Рµ, С‡С‚Рѕ РІСЃРµ РґРµР№СЃС‚РІРёСЏ Р±РµР· РЅРµРґРѕСЃС‚СѓРїРЅС‹С…)
 	void GetEnabledActions( CUserActions *pActions );
 	void GetEnabledSuperActiveActions( CUserActions *pActions );
 	void SetMaxUnits( const int nMaxUnitSlots, const nMaxUnitPerSlot );
@@ -304,8 +304,8 @@ public:
 	
 	const CMOSelectable* GetFirstSlotUnit( int nSlot ) const;
 	
-	// убирает недопустимые действия для использования на указанном объекте 
-	// (проверка на сухопутные, воздушные, морские юниты)
+	// СѓР±РёСЂР°РµС‚ РЅРµРґРѕРїСѓСЃС‚РёРјС‹Рµ РґРµР№СЃС‚РІРёСЏ РґР»СЏ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РЅР° СѓРєР°Р·Р°РЅРЅРѕРј РѕР±СЉРµРєС‚Рµ 
+	// (РїСЂРѕРІРµСЂРєР° РЅР° СЃСѓС…РѕРїСѓС‚РЅС‹Рµ, РІРѕР·РґСѓС€РЅС‹Рµ, РјРѕСЂСЃРєРёРµ СЋРЅРёС‚С‹)
 	void FilterActions( CUserActions *pActionsBy, CMapObj *pMO ) const;
 
 	void AfterLoad();

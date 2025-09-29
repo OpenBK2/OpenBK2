@@ -3,11 +3,11 @@
 #include "SFX.h"
 #include "ITerrainSounds.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для звуков, исходящих от Terrain и от протяженных объектов.
+// РґР»СЏ Р·РІСѓРєРѕРІ, РёСЃС…РѕРґСЏС‰РёС… РѕС‚ Terrain Рё РѕС‚ РїСЂРѕС‚СЏР¶РµРЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ.
 class CTerrainSounds
 {
 public:
-	// для хранения звука и его обработки
+	// РґР»СЏ С…СЂР°РЅРµРЅРёСЏ Р·РІСѓРєР° Рё РµРіРѕ РѕР±СЂР°Р±РѕС‚РєРё
 	class CTerrainSound 
 	{
 		public: int operator&( IBinSaver &saver ); private:;
@@ -48,7 +48,7 @@ public:
 		void StartCycledSounds( ISFX *pSFX, bool bNonPeacefulOnly );
 
 		NTimer::STime GetRestartTime() { return timeRestart; }
-		// если изменилось положение камеры IsNeedUpdate вернет true
+		// РµСЃР»Рё РёР·РјРµРЅРёР»РѕСЃСЊ РїРѕР»РѕР¶РµРЅРёРµ РєР°РјРµСЂС‹ IsNeedUpdate РІРµСЂРЅРµС‚ true
 		void Update(	const struct SSoundTerrainInfo& info, 
 			const CVec3 &vCameraAnchor, const float fViewSize, const float fRelativeVolume );
 		void SetMustPlay( bool _bMustPlay ) ;

@@ -204,13 +204,13 @@ public:
 	void DrawPolyline( const TPointList &rPolintList, DWORD dwColor, bool bClosed, bool bDepthCheck )
 	{
 		TPointList::const_iterator itTestPoint = rPolintList.begin();
-		// нет точек
+		// РЅРµС‚ С‚РѕС‡РµРє
 		if ( itTestPoint == rPolintList.end() )
 		{
 			return; 
 		}
 		++itTestPoint;
-		// одна точка
+		// РѕРґРЅР° С‚РѕС‡РєР°
 		if ( itTestPoint == rPolintList.end() )
 		{
 			return;
@@ -236,13 +236,13 @@ public:
 	void Draw3DPolyline( const TPointList &rPolintList, DWORD dwColor, bool bClosed, bool bDepthCheck )
 	{
 		TPointList::const_iterator itTestPoint = rPolintList.begin();
-		// нет точек
+		// РЅРµС‚ С‚РѕС‡РµРє
 		if ( itTestPoint == rPolintList.end() )
 		{
 			return; 
 		}
 		++itTestPoint;
-		// одна точка
+		// РѕРґРЅР° С‚РѕС‡РєР°
 		if ( itTestPoint == rPolintList.end() )
 		{
 			return;

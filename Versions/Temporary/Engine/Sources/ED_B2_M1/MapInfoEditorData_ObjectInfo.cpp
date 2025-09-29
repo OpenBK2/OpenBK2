@@ -333,10 +333,10 @@ namespace NMapInfoEditor
 			{
 				CVec2 vOrigin = pObjectBaseRPGStats->vOrigin;
 				RotatePoint( &vOrigin, itMapInfoElement->second.GetDirection( fDirection ) );
-				// позиция без учета добавочных смещений
+				// РїРѕР·РёС†РёСЏ Р±РµР· СѓС‡РµС‚Р° РґРѕР±Р°РІРѕС‡РЅС‹С… СЃРјРµС‰РµРЅРёР№
 				CVec3 vNewPosition = vPosition + itMapInfoElement->second.vPosition;
 				FitAIOrigin2AIGrid( &vNewPosition, vOrigin );
-				// записываем смещение в добавочное смещение
+				// Р·Р°РїРёСЃС‹РІР°РµРј СЃРјРµС‰РµРЅРёРµ РІ РґРѕР±Р°РІРѕС‡РЅРѕРµ СЃРјРµС‰РµРЅРёРµ
 				itMapInfoElement->second.vAdditionalPosition = vNewPosition - ( vPosition + itMapInfoElement->second.vPosition );
 				itMapInfoElement->second.vAdditionalPosition.z = 0.0f;
 			}
@@ -357,7 +357,7 @@ namespace NMapInfoEditor
 			const NDb::SObjectBaseRPGStats *pObjectBaseRPGStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( pHPObjectRPGStats );
 			if ( ( pObjectBaseRPGStats != 0 ) && ( !pObjectBaseRPGStats->passability.IsEmpty() ) )
 			{
-				// поворот без учета добавочных поворотов
+				// РїРѕРІРѕСЂРѕС‚ Р±РµР· СѓС‡РµС‚Р° РґРѕР±Р°РІРѕС‡РЅС‹С… РїРѕРІРѕСЂРѕС‚РѕРІ
 				float fNewDirection = fDirection + itMapInfoElement->second.fDirection;
 				fNewDirection = ToDegree( fNewDirection ) / 90.0f;
 				fNewDirection = floor( fNewDirection );
@@ -441,7 +441,7 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfo::CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure )
 	{
-		// заполняем сцену и проставляем ссылки в mapInfo
+		// Р·Р°РїРѕР»РЅСЏРµРј СЃС†РµРЅСѓ Рё РїСЂРѕСЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєРё РІ mapInfo
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
@@ -521,7 +521,7 @@ namespace NMapInfoEditor
 								sceneElement.vAdditionalPosition = vAdditionalPosition;
 								sceneElement.fDirection = itMapInfoElement->second.GetDirection( 0.0f );
 								sceneElement.fAdditionalDirection = fAdditionalDirection;
-								// заносим элемент в структуру данных объекта
+								// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 								sceneElementMap[nSceneID] = sceneElement;
 								sceneIDToLinkIDMap[nSceneID] = itMapInfoElement->first;
 								//
@@ -581,7 +581,7 @@ namespace NMapInfoEditor
 				SObjectInfo::SSceneElement sceneElement;
 				sceneElement.vPosition = itMapInfoElement->second.GetPosition( VNULL3 );
 				sceneElement.fDirection = itMapInfoElement->second.GetDirection( 0.0f );
-				// заносим элемент в структуру данных объекта
+				// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 				sceneElementMap[nSceneID] = sceneElement;
 				sceneIDToLinkIDMap[nSceneID] = itMapInfoElement->first;
 				//
@@ -640,7 +640,7 @@ namespace NMapInfoEditor
 			{
 				FitToGrid( false );
 			}
-			// Устанавливаем общую высоту
+			// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕР±С‰СѓСЋ РІС‹СЃРѕС‚Сѓ
 			if ( KeepCommonHeight() )
 			{
 				SetCommonHeight( false );
@@ -691,7 +691,7 @@ namespace NMapInfoEditor
 		//
 		ClearAdditionalPosition( false );
 		ClearAdditionalDirection( false );
-		// Перемешаем объекты
+		// РџРµСЂРµРјРµС€Р°РµРј РѕР±СЉРµРєС‚С‹
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			RotatePoint( &( itMapInfoElement->second.vPosition ), fAdditionalDirection, VNULL3 );
@@ -708,7 +708,7 @@ namespace NMapInfoEditor
 			{
 				FitToGrid( false );
 			}
-			// Устанавливаем общую высоту
+			// РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РѕР±С‰СѓСЋ РІС‹СЃРѕС‚Сѓ
 			if ( KeepCommonHeight() )
 			{
 				SetCommonHeight( false );
@@ -850,7 +850,7 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// удаляем стартовые команды
+		// СѓРґР°Р»СЏРµРј СЃС‚Р°СЂС‚РѕРІС‹Рµ РєРѕРјР°РЅРґС‹
 		for ( SObjectInfo::CMapInfoElementMap::const_iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			int nCommandCount = 0;
@@ -896,7 +896,7 @@ namespace NMapInfoEditor
 				}
 			}
 		}
-		// коллекционируем индексы объектов для удаления:
+		// РєРѕР»Р»РµРєС†РёРѕРЅРёСЂСѓРµРј РёРЅРґРµРєСЃС‹ РѕР±СЉРµРєС‚РѕРІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ:
 		list<int> objectIndexList;
 		for ( SObjectInfo::CMapInfoElementMap::const_iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
@@ -954,7 +954,7 @@ namespace NMapInfoEditor
 		bool bLinkCapability = false;
 		if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoBySceneID( nLinkToSceneID ) )
 		{
-			// Получаем RPGStatsID
+			// РџРѕР»СѓС‡Р°РµРј RPGStatsID
 			if ( const SMapInfoElement *pLinkToMapInfoElement = pLinkToObjectInfo->GetMapInfoElementBySceneID( nLinkToSceneID ) )
 			{
 				const string szLinkToObjectRPGStatsTypeName = pLinkToMapInfoElement->szRPGStatsTypeName;
@@ -989,7 +989,7 @@ namespace NMapInfoEditor
 		bool bResult = true;
 		if ( CheckLinkCapability( nLinkToSceneID ) )
 		{
-			// удалим старый линк
+			// СѓРґР°Р»РёРј СЃС‚Р°СЂС‹Р№ Р»РёРЅРє
 			bResult = RemoveLinkTo( bUpdateDB, pObjectController, pManipulator );
 			//
 			if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoBySceneID( nLinkToSceneID ) )
@@ -1075,7 +1075,7 @@ namespace NMapInfoEditor
 						}
 					}
 				}
-				// стираем из базы данных
+				// СЃС‚РёСЂР°РµРј РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 				if ( bUpdateDB )
 				{
 					const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
@@ -1086,7 +1086,7 @@ namespace NMapInfoEditor
 						break;
 					}
 				}
-				// обнyляем ссылку
+				// РѕР±РЅyР»СЏРµРј СЃСЃС‹Р»РєСѓ
 				itMapInfoElement->second.nLinkToLinkID = INVALID_NODE_ID;
 			}
 		}
@@ -1125,7 +1125,7 @@ namespace NMapInfoEditor
 				CManipulatorManager::GetValue( &nLinkToLinkID, pManipulator, szObjectPrefix + ".Link.LinkWith" );
 				if ( nLinkToLinkID == INVALID_NODE_ID )
 				{
-					// удаляем линк
+					// СѓРґР°Р»СЏРµРј Р»РёРЅРє
 					if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoByLinkID( pMapInfoElement->nLinkToLinkID ) )
 					{
 						for ( SObjectInfo::CMapInfoElementMap::iterator itLinkToMapInfoElement = pLinkToObjectInfo->mapInfoElementMap.begin(); itLinkToMapInfoElement != pLinkToObjectInfo->mapInfoElementMap.end(); ++itLinkToMapInfoElement )
@@ -1148,7 +1148,7 @@ namespace NMapInfoEditor
 				}
 				else
 				{
-					// добавляем линк
+					// РґРѕР±Р°РІР»СЏРµРј Р»РёРЅРє
 					if ( SObjectInfo *pLinkToObjectInfo = pObjectInfoCollector->GetObjectInfoByLinkID( nLinkToLinkID ) )
 					{
 						if ( SMapInfoElement* pLinkToMapInfoElement = pLinkToObjectInfo->GetMapInfoElementByLinkID( nLinkToLinkID ) )
@@ -1255,7 +1255,7 @@ namespace NMapInfoEditor
 		pObjectInfoCollector->objectInfoMap[nObjectInfoID] = this;
 		//
 		bool bResult = true;
-		// Добавляем объекты базы
+		// Р”РѕР±Р°РІР»СЏРµРј РѕР±СЉРµРєС‚С‹ Р±Р°Р·С‹
 		for ( SObjectInfo::CMapInfoElementMap::iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			int nObjectIndex = INVALID_NODE_ID;

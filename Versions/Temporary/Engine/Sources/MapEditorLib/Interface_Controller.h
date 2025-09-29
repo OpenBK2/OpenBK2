@@ -3,8 +3,8 @@
 #pragma once
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-typedef hash_map<CDBID, int> CObjectNameSet;	// важно наличие
-typedef list<CDBID> CObjectNameList;					// важна последовательность
+typedef hash_map<CDBID, int> CObjectNameSet;	// РІР°Р¶РЅРѕ РЅР°Р»РёС‡РёРµ
+typedef list<CDBID> CObjectNameList;					// РІР°Р¶РЅР° РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SObjectSet
 {
@@ -32,48 +32,48 @@ struct SSelectionSet
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Операция Undo сама знает что надо отменить
-// Должна уметь выполнять обратную операцию
+// РћРїРµСЂР°С†РёСЏ Undo СЃР°РјР° Р·РЅР°РµС‚ С‡С‚Рѕ РЅР°РґРѕ РѕС‚РјРµРЅРёС‚СЊ
+// Р”РѕР»Р¶РЅР° СѓРјРµС‚СЊ РІС‹РїРѕР»РЅСЏС‚СЊ РѕР±СЂР°С‚РЅСѓСЋ РѕРїРµСЂР°С†РёСЋ
 interface IView;
 interface IController : public CObjectBase
 {
-	// Выполнить Undo ( кроме указанного View )
+	// Р’С‹РїРѕР»РЅРёС‚СЊ Undo ( РєСЂРѕРјРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ View )
 	virtual bool Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude ) = 0;
-	// Выполнить Redo ( кроме указанного View )
+	// Р’С‹РїРѕР»РЅРёС‚СЊ Redo ( РєСЂРѕРјРµ СѓРєР°Р·Р°РЅРЅРѕРіРѕ View )
 	virtual bool Redo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude ) = 0;
-	// Пустой или не пустой контроллер (если он пустой он не запоминается в Container)
+	// РџСѓСЃС‚РѕР№ РёР»Рё РЅРµ РїСѓСЃС‚РѕР№ РєРѕРЅС‚СЂРѕР»Р»РµСЂ (РµСЃР»Рё РѕРЅ РїСѓСЃС‚РѕР№ РѕРЅ РЅРµ Р·Р°РїРѕРјРёРЅР°РµС‚СЃСЏ РІ Container)
 	virtual bool IsEmpty() const = 0;
-	// Применение этогй операции влечет за собой очистку буфера UNDO в Containter
+	// РџСЂРёРјРµРЅРµРЅРёРµ СЌС‚РѕРіР№ РѕРїРµСЂР°С†РёРё РІР»РµС‡РµС‚ Р·Р° СЃРѕР±РѕР№ РѕС‡РёСЃС‚РєСѓ Р±СѓС„РµСЂР° UNDO РІ Containter
 	virtual bool IsAbsolute() const = 0;
-	// Получить краткое описание
+	// РџРѕР»СѓС‡РёС‚СЊ РєСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ
 	virtual void GetDescription( CString *pstrDescription ) const = 0;
-	// Если Undo Operation временная, то ее можно удалить по этому ID
+	// Р•СЃР»Рё Undo Operation РІСЂРµРјРµРЅРЅР°СЏ, С‚Рѕ РµРµ РјРѕР¶РЅРѕ СѓРґР°Р»РёС‚СЊ РїРѕ СЌС‚РѕРјСѓ ID
 	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) const = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Управляющий операциями Undo
-// Складывает из в буфера и умеет из перекладывать
+// РЈРїСЂР°РІР»СЏСЋС‰РёР№ РѕРїРµСЂР°С†РёСЏРјРё Undo
+// РЎРєР»Р°РґС‹РІР°РµС‚ РёР· РІ Р±СѓС„РµСЂР° Рё СѓРјРµРµС‚ РёР· РїРµСЂРµРєР»Р°РґС‹РІР°С‚СЊ
 typedef list<CString> CDescriptionList;
 interface IControllerContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C2 };
 	//
-	// Добавить операцию
+	// Р”РѕР±Р°РІРёС‚СЊ РѕРїРµСЂР°С†РёСЋ
 	virtual void Add( IController *pOperation ) = 0;
-	// Очистить буфер
+	// РћС‡РёСЃС‚РёС‚СЊ Р±СѓС„РµСЂ
 	virtual void Clear() = 0;
-	// Есть ли для операции Undo данные
+	// Р•СЃС‚СЊ Р»Рё РґР»СЏ РѕРїРµСЂР°С†РёРё Undo РґР°РЅРЅС‹Рµ
 	virtual bool CanUndo() const = 0;
-	// Есть ли для операции Redo данные
+	// Р•СЃС‚СЊ Р»Рё РґР»СЏ РѕРїРµСЂР°С†РёРё Redo РґР°РЅРЅС‹Рµ
 	virtual bool CanRedo() const = 0;
-	// Undo na nCount операций	
+	// Undo na nCount РѕРїРµСЂР°С†РёР№	
 	virtual bool Undo( int nCount ) = 0;
-	// Redo na nCount операций
+	// Redo na nCount РѕРїРµСЂР°С†РёР№
 	virtual bool Redo( int nCount ) = 0;
-	//Получить список описаний
+	//РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РѕРїРёСЃР°РЅРёР№
 	virtual int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const = 0;
-	// Удалить временные Undo Operations
+	// РЈРґР°Р»РёС‚СЊ РІСЂРµРјРµРЅРЅС‹Рµ Undo Operations
 	virtual int RemoveTemporaryControllers( const string &rszTemporaryLabel ) = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -7,10 +7,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
-//*								  Орудийные стволы																*
+//*								  РћСЂСѓРґРёР№РЅС‹Рµ СЃС‚РІРѕР»С‹																*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// пушка на турельке
+// РїСѓС€РєР° РЅР° С‚СѓСЂРµР»СЊРєРµ
 class CTurretGun : public CBasicGun
 {
 	OBJECT_BASIC_METHODS( CTurretGun );
@@ -27,12 +27,12 @@ class CTurretGun : public CBasicGun
 	bool TurnArtilleryToEnemy( const CVec2 &vEnemyCenter );
 	bool TurnByBestWay( const WORD wDirToEnemy );
 	
-	// эта функция считает угол, под которым нужно повернуть турель, чтобы обстреливать
-	// заданную точку. с учетом вертикальных ограничений.
+	// СЌС‚Р° С„СѓРЅРєС†РёСЏ СЃС‡РёС‚Р°РµС‚ СѓРіРѕР», РїРѕРґ РєРѕС‚РѕСЂС‹Рј РЅСѓР¶РЅРѕ РїРѕРІРµСЂРЅСѓС‚СЊ С‚СѓСЂРµР»СЊ, С‡С‚РѕР±С‹ РѕР±СЃС‚СЂРµР»РёРІР°С‚СЊ
+	// Р·Р°РґР°РЅРЅСѓСЋ С‚РѕС‡РєСѓ. СЃ СѓС‡РµС‚РѕРј РІРµСЂС‚РёРєР°Р»СЊРЅС‹С… РѕРіСЂР°РЅРёС‡РµРЅРёР№.
 	WORD CalcVerticalAngle( const class CVec3 &pt ) const;
 protected:
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
-	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
+	// РјРѕР¶РЅРѕ Р»Рё РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ point ( РЅРµ РІСЂР°С‰Р°СЏ РЅРё turret РЅРё base ), РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ - СѓРіРѕР» addAngle
 	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const;
 	virtual void Rest();
 	virtual bool AnalyzeTurning();
@@ -47,10 +47,10 @@ public:
 
 	virtual void StopFire();
 
-	// можно ли дострельнуть по высоте
+	// РјРѕР¶РЅРѕ Р»Рё РґРѕСЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ РІС‹СЃРѕС‚Рµ
 	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;
 
-	// куда в данный момент смотрит gun
+	// РєСѓРґР° РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ СЃРјРѕС‚СЂРёС‚ gun
 	virtual const WORD GetGlobalDir() const;
 	virtual void TurnToRelativeDir( const WORD wAngle );
 
@@ -69,7 +69,7 @@ public:
 	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// пушка на базовой платформе
+// РїСѓС€РєР° РЅР° Р±Р°Р·РѕРІРѕР№ РїР»Р°С‚С„РѕСЂРјРµ
 class CBaseGun : public CBasicGun
 {
 	OBJECT_BASIC_METHODS( CBaseGun );
@@ -79,7 +79,7 @@ public:
 
 protected:
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff );
-	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle
+	// РјРѕР¶РЅРѕ Р»Рё РїСЂСЏРјРѕ СЃРµР№С‡Р°СЃ СЃС‚СЂРµР»СЊРЅСѓС‚СЊ РїРѕ point ( РЅРµ РІСЂР°С‰Р°СЏ РЅРё turret РЅРё base ), РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ - СѓРіРѕР» addAngle
 	virtual bool IsGoodAngle( const CVec2 &point, const WORD addAngle, const float z, const BYTE cDeltaAngle ) const;
 	virtual void Rest() { }
 	virtual bool AnalyzeTurning();
@@ -95,7 +95,7 @@ public:
 
 	virtual void StopFire();
 
-	// куда в данный момент смотрит gun
+	// РєСѓРґР° РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ СЃРјРѕС‚СЂРёС‚ gun
 	virtual const WORD GetGlobalDir() const;
 	virtual void TurnToRelativeDir( const WORD wAngle ) { }
 

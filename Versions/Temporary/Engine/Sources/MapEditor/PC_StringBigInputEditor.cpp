@@ -48,7 +48,7 @@ void CPCStringBigInputEditor::OnBrowse()
 	//
 	if ( szEditor == "lua" )
 	{
-		// редактор LUA-скриптов
+		// СЂРµРґР°РєС‚РѕСЂ LUA-СЃРєСЂРёРїС‚РѕРІ
 		CScriptEditor scriptEditor( 0, GetTargetWindow() );
 		scriptEditor.SetText( value.GetStringRecode() );
 		scriptEditor.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );

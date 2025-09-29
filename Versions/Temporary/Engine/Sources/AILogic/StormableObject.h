@@ -14,10 +14,10 @@ class CStormableObject
 {
 
 	ZDATA
-	CListsSet< CPtr<CSoldier> > attackers; // атакующие для каждой из сторон
-	vector<int> nAttackers; // количество атакующих для каждой из сторон
-	int nActiveAttackers;				 // количество тех атакующих, которые уже участвуют в бое
-	bool bAttackers;						 // есть ли атакующие
+	CListsSet< CPtr<CSoldier> > attackers; // Р°С‚Р°РєСѓСЋС‰РёРµ РґР»СЏ РєР°Р¶РґРѕР№ РёР· СЃС‚РѕСЂРѕРЅ
+	vector<int> nAttackers; // РєРѕР»РёС‡РµСЃС‚РІРѕ Р°С‚Р°РєСѓСЋС‰РёС… РґР»СЏ РєР°Р¶РґРѕР№ РёР· СЃС‚РѕСЂРѕРЅ
+	int nActiveAttackers;				 // РєРѕР»РёС‡РµСЃС‚РІРѕ С‚РµС… Р°С‚Р°РєСѓСЋС‰РёС…, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ СѓС‡Р°СЃС‚РІСѓСЋС‚ РІ Р±РѕРµ
+	bool bAttackers;						 // РµСЃС‚СЊ Р»Рё Р°С‚Р°РєСѓСЋС‰РёРµ
 
 	vector<NTimer::STime> startTimes;
 

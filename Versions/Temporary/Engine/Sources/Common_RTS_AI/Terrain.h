@@ -132,20 +132,20 @@ class CTerrain : public CObjectBase
 	typedef list<STmpLockInfo2> CTmpLockInfoBuf2;
 	typedef list<STmpLockInfo> CTmpLockInfoBuf;
 
-	vector< CArray2D<BYTE> > unitsBuf;  // юниты, для воды и для суши
+	vector< CArray2D<BYTE> > unitsBuf;  // СЋРЅРёС‚С‹, РґР»СЏ РІРѕРґС‹ Рё РґР»СЏ СЃСѓС€Рё
 	CUnitsRects unitsRects;
 	CArray2D<BYTE> passTypes;
 	vector<float> passabilities;
-	// 0 - статич. объекты, 0xff - статич. и динамич. объекты
+	// 0 - СЃС‚Р°С‚РёС‡. РѕР±СЉРµРєС‚С‹, 0xff - СЃС‚Р°С‚РёС‡. Рё РґРёРЅР°РјРёС‡. РѕР±СЉРµРєС‚С‹
 	ELockMode eMode;
 	CArray2D<EAIClasses> buf;
 	CArray2D4Bit terrainTypes;
 	hash_map< int, pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
-	// по типу terrain - его ai проходимость
+	// РїРѕ С‚РёРїСѓ terrain - РµРіРѕ ai РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊ
 	vector<DWORD> passClasses;
-	// по номеру тайла terrain - его тип
+	// РїРѕ РЅРѕРјРµСЂСѓ С‚Р°Р№Р»Р° terrain - РµРіРѕ С‚РёРї
 	vector<BYTE> terrSubTypes;
-	CArray2D1Bit digImpossible;		// невозможность строительства окопов на тайле
+	CArray2D1Bit digImpossible;		// РЅРµРІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃС‚СЂРѕРёС‚РµР»СЊСЃС‚РІР° РѕРєРѕРїРѕРІ РЅР° С‚Р°Р№Р»Рµ
 	CArray2D1Bit bridgeTiles;
 	CArray2D<BYTE> soil;
 	vector<BYTE> tileDigImpossible;
@@ -172,8 +172,8 @@ class CTerrain : public CObjectBase
 	//void Load3DRoads( const struct STerrainInfo &terrainInfo );
 	void InitExplosionTerrainTypes();
 
-	// залокано только для индеска этого класса, без учёта AI_CLASS_ANY
-	// если проверяется для AI_CLASS_ANY, то учитывается и локание юнитов
+	// Р·Р°Р»РѕРєР°РЅРѕ С‚РѕР»СЊРєРѕ РґР»СЏ РёРЅРґРµСЃРєР° СЌС‚РѕРіРѕ РєР»Р°СЃСЃР°, Р±РµР· СѓС‡С‘С‚Р° AI_CLASS_ANY
+	// РµСЃР»Рё РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РґР»СЏ AI_CLASS_ANY, С‚Рѕ СѓС‡РёС‚С‹РІР°РµС‚СЃСЏ Рё Р»РѕРєР°РЅРёРµ СЋРЅРёС‚РѕРІ
 	bool IsLockedByUnits( const int x, const int y, const EAIClasses aiClass ) const;
 	bool IsLocked4Class( const int x, const int y, const EAIClasses aiClass ) const;
 	//
@@ -225,9 +225,9 @@ public:
 	void AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
 	void AddMarineTiles( const list<SVector> coastTiles, const BYTE coastSoilType, const list<SVector> waterTiles, const BYTE waterSoilType );
 
-	// залокано конкретно для этого класса статическим объектом
+	// Р·Р°Р»РѕРєР°РЅРѕ РєРѕРЅРєСЂРµС‚РЅРѕ РґР»СЏ СЌС‚РѕРіРѕ РєР»Р°СЃСЃР° СЃС‚Р°С‚РёС‡РµСЃРєРёРј РѕР±СЉРµРєС‚РѕРј
 	bool IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const;
-	// залокано с учётом eMode
+	// Р·Р°Р»РѕРєР°РЅРѕ СЃ СѓС‡С‘С‚РѕРј eMode
 	bool IsLocked( const int x, const int y, const EAIClasses aiClass ) const;
 	// give lock by static objects info
 	EAIClasses GetTileLockInfo( const int x, const int y ) const;
@@ -249,7 +249,7 @@ public:
 
 	const ETerrainTypes GetTerrainType( const int nX, const int nY ) const;
 
-	// true - если был произведён unlock при вызове, false - если уже до этого был сделан unlock
+	// true - РµСЃР»Рё Р±С‹Р» РїСЂРѕРёР·РІРµРґС‘РЅ unlock РїСЂРё РІС‹Р·РѕРІРµ, false - РµСЃР»Рё СѓР¶Рµ РґРѕ СЌС‚РѕРіРѕ Р±С‹Р» СЃРґРµР»Р°РЅ unlock
 	bool TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater );
 	void RemoveTemporaryUnlocking( const int id );
 
@@ -260,13 +260,13 @@ public:
 	// terrain passability
 	const float GetPass( const int nX, const int nY ) const;
 
-	// разлокивает тайл в соответствии с проходимостью terrain
+	// СЂР°Р·Р»РѕРєРёРІР°РµС‚ С‚Р°Р№Р» РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊСЋ terrain
 	void RemoveTerrainPassability( const int nX, const int nY );
-	// в прямоугольнике либо убирает террайн, либо ставит старый
+	// РІ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРµ Р»РёР±Рѕ СѓР±РёСЂР°РµС‚ С‚РµСЂСЂР°Р№РЅ, Р»РёР±Рѕ СЃС‚Р°РІРёС‚ СЃС‚Р°СЂС‹Р№
 	void UpdateTerrainPassabilityRect( const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, bool bRemove );
-	// локает тайл и проставаляет проходимость в соответствии с terrain nTerrainType, 
+	// Р»РѕРєР°РµС‚ С‚Р°Р№Р» Рё РїСЂРѕСЃС‚Р°РІР°Р»СЏРµС‚ РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊ РІ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ terrain nTerrainType, 
 	void SetTerrainPassability( const int nX, const int nY, const int nTerrainType );
-	// по номеру тайла выдаёт тип terrain
+	// РїРѕ РЅРѕРјРµСЂСѓ С‚Р°Р№Р»Р° РІС‹РґР°С‘С‚ С‚РёРї terrain
 	const int GetTerrainPassTypeByTileNum( const int nTile ) { return terrSubTypes[nTile]; }
 
 	const bool CanDigEntrenchment( const int x, const int y ) const;
@@ -318,7 +318,7 @@ public:
 	void DumpUnitsBuf( const string &szFileName );
 	void DumpLockInfo() const;
 
-	//сгладить lock для всех maxes'ов
+	//СЃРіР»Р°РґРёС‚СЊ lock РґР»СЏ РІСЃРµС… maxes'РѕРІ
 	void SmoothLock();
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

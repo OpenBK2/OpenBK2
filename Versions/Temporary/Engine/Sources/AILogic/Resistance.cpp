@@ -52,7 +52,7 @@ const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime
 		return 0.0f;
 	else
 	{
-		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
+		// РєРѕСЌС„С„РёС†РёРµРЅС‚, РѕР±РµСЃРїРµС‡РёРІР°СЋС‰РёР№ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ С‚РѕРіРѕ, С‡С‚Рѕ СЋРЅРёС‚ СѓС€С‘Р»
 		const float fTimeCoeff = GetCoeffByDeltaTime( deltaTime, fTimeToForgetUnit, pUnit->NeedDeinstall(), pUnit->CanMove() );
 		const float fWeight = GetWeightOfUnit( pUnit->GetStats() );
 		const float fFreeCoeff = pUnit->GetCover();
@@ -69,11 +69,11 @@ const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime
 		return 0.0f;
 	else
 	{
-		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
+		// РєРѕСЌС„С„РёС†РёРµРЅС‚, РѕР±РµСЃРїРµС‡РёРІР°СЋС‰РёР№ РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ С‚РѕРіРѕ, С‡С‚Рѕ СЋРЅРёС‚ СѓС€С‘Р»
 		const float fTimeCoeff = GetCoeffByDeltaTime( deltaTime, fTimeToForget, pUnit->NeedDeinstall(), pUnit->CanMove() );
-		// коэффициент, отвечающий за точность круга антиартиллерии
+		// РєРѕСЌС„С„РёС†РёРµРЅС‚, РѕС‚РІРµС‡Р°СЋС‰РёР№ Р·Р° С‚РѕС‡РЅРѕСЃС‚СЊ РєСЂСѓРіР° Р°РЅС‚РёР°СЂС‚РёР»Р»РµСЂРёРё
 //		const float fAccuracyCoeff = Max( 1.0f, fDistToLastVisibleAntiArt / 320.0f );
-		// вес юнита
+		// РІРµСЃ СЋРЅРёС‚Р°
 		const float fWeight = GetWeightOfUnit( theUnitCreation.Get152mmML20Stats() );
 
 		return 
@@ -115,13 +115,13 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 
 		CVec2 vNewPos;
 		float fNewWeight;
-		// считаем по видимой позиции
+		// СЃС‡РёС‚Р°РµРј РїРѕ РІРёРґРёРјРѕР№ РїРѕР·РёС†РёРё
 		if ( lastVisibleTimeDelta <= lastAntiArtTimeDelta || fDistToLastVisibleAntiArt == -1.0f )
 		{
 			vNewPos = vLastVisiblePos;
 			fNewWeight = GetWeightByVisiblePos( pInfo->GetOwner(), lastVisibleTimeDelta );
 		}
-		// считаем по позиции круга антиартиллерийской борьбы
+		// СЃС‡РёС‚Р°РµРј РїРѕ РїРѕР·РёС†РёРё РєСЂСѓРіР° Р°РЅС‚РёР°СЂС‚РёР»Р»РµСЂРёР№СЃРєРѕР№ Р±РѕСЂСЊР±С‹
 		else
 		{
 			vNewPos = vLastVisibleAntiArtCenter;

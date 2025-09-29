@@ -598,8 +598,8 @@ bool CMapClip::LoadSpotsFromDB( IManipulator *pManipulator )
 	{
 		const string szSpotProperty = StrFmt( "TerraSpots.[%d].", i );
 		SClipboardTerraSpot spot;
-		spot.spotInstance.pDescriptor = 0; // дескриптор будет получен позже по DescID
-		spot.spotInstance.nSpotID = 0; // не имеет значения
+		spot.spotInstance.pDescriptor = 0; // РґРµСЃРєСЂРёРїС‚РѕСЂ Р±СѓРґРµС‚ РїРѕР»СѓС‡РµРЅ РїРѕР·Р¶Рµ РїРѕ DescID
+		spot.spotInstance.nSpotID = 0; // РЅРµ РёРјРµРµС‚ Р·РЅР°С‡РµРЅРёСЏ
 		bResult = bResult && CManipulatorManager::GetValue( &spot.szType, pManipulator, ( szSpotProperty + "Type" ) );
 		bResult = bResult && CManipulatorManager::GetValue( &spot.nTypeID, pManipulator, ( szSpotProperty + "TypeID" ) );
 		bResult = bResult && CManipulatorManager::GetValue( &spot.nDescID, pManipulator, ( szSpotProperty + "DescID" ) );

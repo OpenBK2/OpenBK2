@@ -158,7 +158,7 @@ int CWindowEditLine::GetSelection( const int _nX )
 		nCur += it->Width();
 		if ( nCur > nX )
 		{
-			if ( nX - nPrev < nCur - nX && i > 0 )			//ближе к левой букве чем к правой
+			if ( nX - nPrev < nCur - nX && i > 0 )			//Р±Р»РёР¶Рµ Рє Р»РµРІРѕР№ Р±СѓРєРІРµ С‡РµРј Рє РїСЂР°РІРѕР№
 				i--;
 			break;
 		}
@@ -167,7 +167,7 @@ int CWindowEditLine::GetSelection( const int _nX )
 	}
 	
 
-	//if ( nCur <= nX && i > 0 )		//нажато правее края текста
+	//if ( nCur <= nX && i > 0 )		//РЅР°Р¶Р°С‚Рѕ РїСЂР°РІРµРµ РєСЂР°СЏ С‚РµРєСЃС‚Р°
 		//i--;
 	NI_ASSERT( i >= 0 && i <= wszFullText.size(), "Error in CWindowEditLine::GetSelection()" );
 	return i;
@@ -217,7 +217,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 	{
 	case NDb::ETET_GAME_SPY:
 		{
-			//проверим, что символ удовлетворяет требованиям GameSpy NickName
+			//РїСЂРѕРІРµСЂРёРј, С‡С‚Рѕ СЃРёРјРІРѕР» СѓРґРѕРІР»РµС‚РІРѕСЂСЏРµС‚ С‚СЂРµР±РѕРІР°РЅРёСЏРј GameSpy NickName
 			static const wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
@@ -230,7 +230,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 		break;
 	case NDb::ETET_FILENAME:
 		{
-			//проверим, что символ удовлетворяет требованиям FileName symbols
+			//РїСЂРѕРІРµСЂРёРј, С‡С‚Рѕ СЃРёРјРІРѕР» СѓРґРѕРІР»РµС‚РІРѕСЂСЏРµС‚ С‚СЂРµР±РѕРІР°РЅРёСЏРј FileName symbols
 			static const wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
@@ -457,7 +457,7 @@ void CWindowEditLine::OnLeft( const struct SGameMessage &msg )
 	nBeginSel = nEndSel = -1;
 	if ( nBeginText+nCursorPos == 0 )
 		return;
-	//на одну позицию влево
+	//РЅР° РѕРґРЅСѓ РїРѕР·РёС†РёСЋ РІР»РµРІРѕ
 	nCursorPos--;
 	EnsureCursorVisible();
 }
@@ -471,7 +471,7 @@ void CWindowEditLine::OnCtrlLeft( const struct SGameMessage &msg )
 	if ( nBeginText+nCursorPos == 0 )
 		return;
 
-	//Если нажата crtl и стрелка влево, то сдвигаемся влево на одно слово
+	//Р•СЃР»Рё РЅР°Р¶Р°С‚Р° crtl Рё СЃС‚СЂРµР»РєР° РІР»РµРІРѕ, С‚Рѕ СЃРґРІРёРіР°РµРјСЃСЏ РІР»РµРІРѕ РЅР° РѕРґРЅРѕ СЃР»РѕРІРѕ
 	while( nBeginText+nCursorPos > 0 && isspace(wszFullText[nBeginText+nCursorPos-1]) )
 		nCursorPos--;
 	if ( nBeginText+nCursorPos > 0 )
@@ -494,7 +494,7 @@ void CWindowEditLine::OnRight( const struct SGameMessage &msg )
 	nBeginSel = nEndSel = -1;
 	if ( nBeginText+nCursorPos == wszFullText.size() )
 		return;
-	//на одну позицию вправо
+	//РЅР° РѕРґРЅСѓ РїРѕР·РёС†РёСЋ РІРїСЂР°РІРѕ
 	nCursorPos++;
 	EnsureCursorVisible();
 }
@@ -504,7 +504,7 @@ void CWindowEditLine::OnCtrlRight( const struct SGameMessage &msg )
 	if ( !IsFocused() )
 		return;
 
-	//Если нажата crtl и стрелка вправо, то сдвигаемся вправо на одно слово
+	//Р•СЃР»Рё РЅР°Р¶Р°С‚Р° crtl Рё СЃС‚СЂРµР»РєР° РІРїСЂР°РІРѕ, С‚Рѕ СЃРґРІРёРіР°РµРјСЃСЏ РІРїСЂР°РІРѕ РЅР° РѕРґРЅРѕ СЃР»РѕРІРѕ
 	if ( nBeginText+nCursorPos < wszFullText.size() )
 	{
 		if ( isalpha(wszFullText[nBeginText+nCursorPos]) )
@@ -525,7 +525,7 @@ void CWindowEditLine::OnHome( const struct SGameMessage &msg )
 	if ( !IsFocused() )
 		return;
 	nBeginSel = nEndSel = -1;
-	//на начало строки
+	//РЅР° РЅР°С‡Р°Р»Рѕ СЃС‚СЂРѕРєРё
 	nBeginText = 0;
 	nCursorPos = 0;
 	EnsureCursorVisible();
@@ -537,7 +537,7 @@ void CWindowEditLine::OnEnd( const struct SGameMessage &msg )
 		return;
 
 	nBeginSel = nEndSel = -1;
-	//на конец строки
+	//РЅР° РєРѕРЅРµС† СЃС‚СЂРѕРєРё
 	nCursorPos = wszFullText.size() - nBeginText;
 	EnsureCursorVisible();
 }
@@ -563,7 +563,7 @@ bool CWindowEditLine::OnChar( const SGameMessage &msg )
 	if ( msg.nParam1 < 32 )
 		return false;
 
-	//Если печатный символ, то просто выводим его
+	//Р•СЃР»Рё РїРµС‡Р°С‚РЅС‹Р№ СЃРёРјРІРѕР», С‚Рѕ РїСЂРѕСЃС‚Рѕ РІС‹РІРѕРґРёРј РµРіРѕ
 	AddChar( chr );
 	NotifyTextChanged();
 	return false;
@@ -649,12 +649,12 @@ int CWindowEditLine::operator&( IBinSaver &saver )
 	saver.Add( 1, static_cast<CWindow*>( this ) );
 	saver.Add( 2, &pGfxText );
 	saver.Add( 3, &timeSegment );							// for counting segment times
-	saver.Add( 4, &nCursorPos );									//позиция курсора в текущей редактируемой строке
-	saver.Add( 5, &bShowCursor );								//для мигания курсора
-	saver.Add( 7, &nBeginSel );								//начало выделения
-	saver.Add( 8, &nEndSel );									//конец выделения
-	saver.Add( 10, &m_nBeginDragSel );						//начало выделения мышкой
-	saver.Add( 16, &nBeginText );		//с этой позиции начинается отображение текста szFullText
+	saver.Add( 4, &nCursorPos );									//РїРѕР·РёС†РёСЏ РєСѓСЂСЃРѕСЂР° РІ С‚РµРєСѓС‰РµР№ СЂРµРґР°РєС‚РёСЂСѓРµРјРѕР№ СЃС‚СЂРѕРєРµ
+	saver.Add( 5, &bShowCursor );								//РґР»СЏ РјРёРіР°РЅРёСЏ РєСѓСЂСЃРѕСЂР°
+	saver.Add( 7, &nBeginSel );								//РЅР°С‡Р°Р»Рѕ РІС‹РґРµР»РµРЅРёСЏ
+	saver.Add( 8, &nEndSel );									//РєРѕРЅРµС† РІС‹РґРµР»РµРЅРёСЏ
+	saver.Add( 10, &m_nBeginDragSel );						//РЅР°С‡Р°Р»Рѕ РІС‹РґРµР»РµРЅРёСЏ РјС‹С€РєРѕР№
+	saver.Add( 16, &nBeginText );		//СЃ СЌС‚РѕР№ РїРѕР·РёС†РёРё РЅР°С‡РёРЅР°РµС‚СЃСЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ С‚РµРєСЃС‚Р° szFullText
 	saver.Add( 18, &wszFullText );
 	saver.Add( 27, &bRegistered );												// message sink registered
 	saver.Add( 28, &pShared );
@@ -735,7 +735,7 @@ void CWindowEditLine::Visit( interface IUIVisitor *pVisitor )
 	textRect.bottom = textRect.top + nH;
 
 
-	// рисуем выделение
+	// СЂРёСЃСѓРµРј РІС‹РґРµР»РµРЅРёРµ
 	if ( nBeginSel != -1 && nBeginSel != nEndSel )
 	{
 		CRectLayout rectLayout;
@@ -756,10 +756,10 @@ void CWindowEditLine::Visit( interface IUIVisitor *pVisitor )
 		pVisitor->VisitUIRect( 0, 0, rectLayout );
 	}
 	
-	// рисуем текст
+	// СЂРёСЃСѓРµРј С‚РµРєСЃС‚
 	pVisitor->VisitUIText( pGfxText, textRect.GetLeftTop(), textRect );
 
-	// рисуем курсор
+	// СЂРёСЃСѓРµРј РєСѓСЂСЃРѕСЂ
 	if ( IsFocused() && bShowCursor )
 	{
 		CRectLayout rectLayout;
@@ -822,7 +822,7 @@ void CWindowEditLine::EnsureCursorVisible()
 	if ( nCursorPos <= 0 && nBeginText > 0 )
 	{
 		NI_ASSERT( pInstance->bTextScroll, "Edit box error: nCursorPos < 0 and pInstance->bTextScroll == true" );
-		//курсор левее левого края edit box, подвинем текст вправо, чтобы курсор стал видимым
+		//РєСѓСЂСЃРѕСЂ Р»РµРІРµРµ Р»РµРІРѕРіРѕ РєСЂР°СЏ edit box, РїРѕРґРІРёРЅРµРј С‚РµРєСЃС‚ РІРїСЂР°РІРѕ, С‡С‚РѕР±С‹ РєСѓСЂСЃРѕСЂ СЃС‚Р°Р» РІРёРґРёРјС‹Рј
 		nBeginText += nCursorPos;
 		nCursorPos = 0;
 		if ( nBeginText < 0 )
@@ -842,7 +842,7 @@ void CWindowEditLine::EnsureCursorVisible()
 	}
 	else if ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )
 	{
-		//курсор правее правого края edit box, подвинем текст влево, чтобы курсор стал видимым
+		//РєСѓСЂСЃРѕСЂ РїСЂР°РІРµРµ РїСЂР°РІРѕРіРѕ РєСЂР°СЏ edit box, РїРѕРґРІРёРЅРµРј С‚РµРєСЃС‚ РІР»РµРІРѕ, С‡С‚РѕР±С‹ РєСѓСЂСЃРѕСЂ СЃС‚Р°Р» РІРёРґРёРјС‹Рј
 		while ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )		//2 is the width of cursor
 		{
 			if ( pInstance->bTextScroll )
@@ -906,7 +906,7 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 	wstring wszTmp = wszFullText.c_str() + nBeginText;
 	SetTextToGfx( wszTmp );
 
-	//сперва проверим ограничение на максимальную длину текста
+	//СЃРїРµСЂРІР° РїСЂРѕРІРµСЂРёРј РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РґР»РёРЅСѓ С‚РµРєСЃС‚Р°
 	if ( pInstance->nMaxLength != -1 && rectsList.size() > pInstance->nMaxLength )
 		return false;
 

@@ -33,10 +33,10 @@ void CTerrainState::Enter()
 	
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CTerrainInterfaceCommand( new CTerrainInterface() ) ) );
 
-	// Загружаем Terrain
+	// Р—Р°РіСЂСѓР¶Р°РµРј Terrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, false );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_RESET_CAMERA, 0 );
-	// Обновляем сцену
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	//
 	CDefaultInputState::Enter();
@@ -50,9 +50,9 @@ void CTerrainState::Leave()
 	NI_ASSERT( pScene != 0, "CTerrainState::Enter(): pScene == 0" );
 	//
 	CDefaultInputState::Leave();
-	// Выгружаем Terrain
+	// Р’С‹РіСЂСѓР¶Р°РµРј Terrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
-	// Обновляем сцену
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

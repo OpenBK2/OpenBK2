@@ -7,7 +7,7 @@
 class CEditorTestEditor;
 class CEditorTestState : public CDefaultInputState
 {
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CEditorTestEditor *pEditorTestEditor;
 public:
 	CEditorTestState( CEditorTestEditor *_pCEditorTestEditor );

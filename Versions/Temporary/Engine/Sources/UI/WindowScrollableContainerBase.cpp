@@ -62,8 +62,8 @@ void CWindowScrollableContainerBase::InitByDesc( const struct NDb::SUIDesc *_pDe
 	NI_ASSERT( pContainer, "Can't create container" );
 	if ( pContainer )
 	{
-		pContainer->SetName( "" ); // ñëóæåáíûå ýëåìåíòû íå äîëæíû áûòü èìåíîâàíû
-		while ( pContainer->GetNumChildren() > 0 ) // êëîíèðîâàííûõ äåòåé ó ñëóæåáíîãî ýëåìåíòà áûòü íå äîëæíî
+		pContainer->SetName( "" ); // ÑÐ»ÑƒÐ¶ÐµÐ±Ð½Ñ‹Ðµ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ñ‹ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ñ‹ Ð±Ñ‹Ñ‚ÑŒ Ð¸Ð¼ÐµÐ½Ð¾Ð²Ð°Ð½Ñ‹
+		while ( pContainer->GetNumChildren() > 0 ) // ÐºÐ»Ð¾Ð½Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… Ð´ÐµÑ‚ÐµÐ¹ Ñƒ ÑÐ»ÑƒÐ¶ÐµÐ±Ð½Ð¾Ð³Ð¾ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð° Ð±Ñ‹Ñ‚ÑŒ Ð½Ðµ Ð´Ð¾Ð»Ð¶Ð½Ð¾
 		{
 			pContainer->RemoveChild( pContainer->GetChild( 0 ) );
 		}

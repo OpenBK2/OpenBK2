@@ -33,7 +33,7 @@ interface IObjectCollectorCallback
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IObjectDataExtractor : public CObjectBase
 {
-	// возвращает данные объекта, в качестве возвращаемого значение - битовая маска, что заполнено
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р°, РІ РєР°С‡РµСЃС‚РІРµ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёРµ - Р±РёС‚РѕРІР°СЏ РјР°СЃРєР°, С‡С‚Рѕ Р·Р°РїРѕР»РЅРµРЅРѕ
 	virtual UINT GetObjectData( class CBitmap *pNormalBitmap,
 															class CBitmap *pSmallBitmap,
 															CString *pstrLabel,
@@ -73,9 +73,9 @@ interface IObjectFilterCollector : public CObjectBase
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Коллекционирование объектов по меткам
-// Создание ImageList на коллекцию
-// Применение фильтров
+// РљРѕР»Р»РµРєС†РёРѕРЅРёСЂРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚РѕРІ РїРѕ РјРµС‚РєР°Рј
+// РЎРѕР·РґР°РЅРёРµ ImageList РЅР° РєРѕР»Р»РµРєС†РёСЋ
+// РџСЂРёРјРµРЅРµРЅРёРµ С„РёР»СЊС‚СЂРѕРІ
 interface IObjectCollector : public CObjectBase
 {
 	enum { tidTypeID = 0x14126380 };
@@ -98,7 +98,7 @@ interface IObjectCollector : public CObjectBase
 	virtual void RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback ) = 0;
 	virtual void ClearCallbackList() = 0;
 	//
-	// возвращает количество объектов
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±СЉРµРєС‚РѕРІ
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const string &rszObjectTypeName ) = 0;
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter ) = 0;
 	virtual bool GetObjectParams( SObjectParams* pObjectParams, const string &rszObjectTypeName, const string &rszObjectName ) = 0;

@@ -3,7 +3,7 @@ virtual const char* GetParentName() const { return szTypeName.c_str(); }
 
 enum EUnitRPGType eType;
 
-// преобразовать из человеческих единиц в AI
+// РїСЂРµРѕР±СЂР°Р·РѕРІР°С‚СЊ РёР· С‡РµР»РѕРІРµС‡РµСЃРєРёС… РµРґРёРЅРёС† РІ AI
 void ToAIUnits( bool bInEditor ) {}
 
 virtual void PostLoad( bool bInEditor )

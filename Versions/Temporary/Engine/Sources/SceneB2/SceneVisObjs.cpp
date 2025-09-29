@@ -138,7 +138,7 @@ void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMesh
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CScene::CheckObjExist( int nObjectID ) const
 {
-	//ïğîâåğêà íà ïîâòîğíîå ñîçäàíèå îáúåêòîâ òîëüêî äëÿ FastDebug
+	//Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ĞºĞ° Ğ½Ğ° Ğ¿Ğ¾Ğ²Ñ‚Ğ¾Ñ€Ğ½Ğ¾Ğµ ÑĞ¾Ğ·Ğ´Ğ°Ğ½Ğ¸Ğµ Ğ¾Ğ±ÑŠĞµĞºÑ‚Ğ¾Ğ² Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ Ğ´Ğ»Ñ FastDebug
 #if !defined(_BETARELEASE) && !defined(_FINALRELEASE)
 	if ( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end() )
 		return false;

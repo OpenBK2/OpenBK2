@@ -263,7 +263,7 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 {
 	int nSelected = _nSelected;
 	
-	// Принудительно выберем элемент, если ничего не поселекчено
+	// РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ РІС‹Р±РµСЂРµРј СЌР»РµРјРµРЅС‚, РµСЃР»Рё РЅРёС‡РµРіРѕ РЅРµ РїРѕСЃРµР»РµРєС‡РµРЅРѕ
 	if ( nSelected == -1 )
 	{
 		for ( int i = 0; i < objectives.size(); ++i )

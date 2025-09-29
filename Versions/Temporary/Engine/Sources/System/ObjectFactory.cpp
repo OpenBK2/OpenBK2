@@ -17,7 +17,7 @@ void StartRegister()
 		pSSClasses = new CClassFactory<CObjectBase>;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ñîçäàòü îáúåêò ïî åãî typeID
+// ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ Ð¾Ð±ÑŠÐµÐºÑ‚ Ð¿Ð¾ ÐµÐ³Ð¾ typeID
 CObjectBase *MakeObject( int nTypeID )
 {
 //	NI_ASSERT( pSSClasses->IsRegistered( nTypeID ), StrFmt("Unregistered object of type 0x%x - no new-function", nTypeID) );

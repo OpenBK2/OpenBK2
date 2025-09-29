@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIMap;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// большой статический путь, вдоль которого идут юниты
+// Р±РѕР»СЊС€РѕР№ СЃС‚Р°С‚РёС‡РµСЃРєРёР№ РїСѓС‚СЊ, РІРґРѕР»СЊ РєРѕС‚РѕСЂРѕРіРѕ РёРґСѓС‚ СЋРЅРёС‚С‹
 class CCommonStaticPath : public IStaticPath
 {
 	OBJECT_BASIC_METHODS( CCommonStaticPath );
@@ -13,7 +13,7 @@ class CCommonStaticPath : public IStaticPath
 	ZDATA
 		vector<SVector> path;
 		int nLen;
-		// в тайловых координатах
+		// РІ С‚Р°Р№Р»РѕРІС‹С… РєРѕРѕСЂРґРёРЅР°С‚Р°С…
 		SVector startTile, finishTile;
 		CVec2 finishPoint;
 		CPtr<CAIMap> pAIMap;
@@ -22,11 +22,11 @@ public:
 	CCommonStaticPath()	: nLen( -1 ), startTile( -1, -1 ), finishTile( -1, -1 ), finishPoint( VNULL2 )	{ }
 	CCommonStaticPath( class CCommonPathFinder *pStaticPathFinder, CAIMap *pAIMap );
 	
-	// передвинуть начальный тайл на path[nStart]
+	// РїРµСЂРµРґРІРёРЅСѓС‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Р№ С‚Р°Р№Р» РЅР° path[nStart]
 	void MoveStartTileTo( const int nStart );
-	// сделать конечным тайл на path[nFinish - 1]
+	// СЃРґРµР»Р°С‚СЊ РєРѕРЅРµС‡РЅС‹Рј С‚Р°Р№Р» РЅР° path[nFinish - 1]
 	void MoveFinishTileTo( const int nFinish );
-	// передвинуть конечную точку на vMove
+	// РїРµСЂРµРґРІРёРЅСѓС‚СЊ РєРѕРЅРµС‡РЅСѓСЋ С‚РѕС‡РєСѓ РЅР° vMove
 	void MoveFinishPointBy( const CVec2 &vMove );
 	
 	const int GetLength() const	{ return nLen; }

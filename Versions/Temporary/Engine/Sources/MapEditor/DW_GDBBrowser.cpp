@@ -252,7 +252,7 @@ void CDWGDBBrowser::CreateTabs()
 	{
 		return;
 	}
-	// соберем таблицы которые уже заполнены
+	// СЃРѕР±РµСЂРµРј С‚Р°Р±Р»РёС†С‹ РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ Р·Р°РїРѕР»РЅРµРЅС‹
 	/**
 	{
 		hash_map<string, CTreeGDBBrowser*> existingTabs;
@@ -274,11 +274,11 @@ void CDWGDBBrowser::CreateTabs()
 		}
 	}	
 	/**/
-	//создаем таблицы
+	//СЃРѕР·РґР°РµРј С‚Р°Р±Р»РёС†С‹
 	{
 		bCreateControls = true;
 		wndContents.RemoveAllTabs();
-		// Необходимо сначало добавить все панели, а потом устанавливать активную
+		// РќРµРѕР±С…РѕРґРёРјРѕ СЃРЅР°С‡Р°Р»Рѕ РґРѕР±Р°РІРёС‚СЊ РІСЃРµ РїР°РЅРµР»Рё, Р° РїРѕС‚РѕРј СѓСЃС‚Р°РЅР°РІР»РёРІР°С‚СЊ Р°РєС‚РёРІРЅСѓСЋ
 		CTreeGDBBrowser* pwndActiveTreeGBDBrowser = 0;
 		for ( list<string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 		{
@@ -533,7 +533,7 @@ void CDWGDBBrowser::New( const string &rszObjectTypeName )
 	{
 		if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
 		{
-			// Экспортируем вновь созданный объект
+			// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј РІРЅРѕРІСЊ СЃРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚
 			if ( bNeedExport )
 			{
 				pExporterContainer->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );

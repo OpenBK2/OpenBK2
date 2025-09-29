@@ -61,7 +61,7 @@ void CModelState::Enter()
 {
 	if ( pModelEditor != 0 )
 	{
-		// Сначала грузим файл с установками редактора
+		// РЎРЅР°С‡Р°Р»Р° РіСЂСѓР·РёРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё СЂРµРґР°РєС‚РѕСЂР°
 		{
 			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 			if ( pModelEditor->GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )
@@ -104,7 +104,7 @@ void CModelState::Enter()
 		ResetCamera( false );
 		UpdateModels( true );
 		UpdateLight();
-		// Обновляем сцену
+		// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CModelInterfaceCommand( new CModelInterface() ) ) );
 	}
@@ -133,7 +133,7 @@ void CModelState::Leave()
 		SaveCamera( false );
 		UpdateAIGeometry( true );
 		ClearScene( true );
-		// Записываем файл с установками (его могли поменять во время работы редактора)
+		// Р—Р°РїРёСЃС‹РІР°РµРј С„Р°Р№Р» СЃ СѓСЃС‚Р°РЅРѕРІРєР°РјРё (РµРіРѕ РјРѕРіР»Рё РїРѕРјРµРЅСЏС‚СЊ РІРѕ РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹ СЂРµРґР°РєС‚РѕСЂР°)
 		{
 			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 			if ( pModelEditor->GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )
@@ -1528,7 +1528,7 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 template<class TPolygon, class TPoint>
 int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, const TPoint &rvEnd, bool bPolygon, vector<float> *pIntersectionPointList )
 {
-	//ноль точек
+	//РЅРѕР»СЊ С‚РѕС‡РµРє
 	if ( rPolygon.empty() )
 	{
 		return CI_UNKNOWN;
@@ -1536,7 +1536,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 	TPolygon::const_iterator itSourcePoint0 = rPolygon.begin();
 	TPolygon::const_iterator itSourcePoint1 = rPolygon.begin();
 	++itSourcePoint1;
-	//одна точка
+	//РѕРґРЅР° С‚РѕС‡РєР°
 	if ( itSourcePoint1 == rPolygon.end() )
 	{
 		return CI_UNKNOWN;

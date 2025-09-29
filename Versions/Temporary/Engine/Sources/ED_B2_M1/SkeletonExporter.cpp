@@ -186,13 +186,13 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 				//
 				if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) ) 
 				{
-					// Óäàëèì àíèìàöèþ èç ñïèñêà íåñóùåñòâóþùèõ àíèìàöèé
+					// Ð£Ð´Ð°Ð»Ð¸Ð¼ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸ÑŽ Ð¸Ð· ÑÐ¿Ð¸ÑÐºÐ° Ð½ÐµÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÑŽÑ‰Ð¸Ñ… Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ð¹
 					string szTypeAndName;
 					CStringManager::GetRefValueFromTypeAndName( &szTypeAndName, szAnimationTypeName, szAnimationName, TYPE_SEPARATOR_CHAR );
 					CAnimationRefMap::iterator posAnimationName = animations.find( szAnimationName );
 					if ( posAnimationName != animations.end() )
 						animations.erase( posAnimationName );
-					// Çàïèøåì ñâîéñòâà èíèìàöèè
+					// Ð—Ð°Ð¿Ð¸ÑˆÐµÐ¼ ÑÐ²Ð¾Ð¹ÑÑ‚Ð²Ð° Ð¸Ð½Ð¸Ð¼Ð°Ñ†Ð¸Ð¸
 					bResult = bResult && pAnimationManipulator->SetValue( "SrcName", szSrcName );
 					bResult = bResult && pAnimationManipulator->SetValue( "RootJoint", szRootJoint );
 					bResult = bResult && pAnimationManipulator->SetValue( "Type", szAnimationType );
@@ -204,7 +204,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const string &szObjName,
 					bResult = bResult && pAnimationManipulator->SetValue( "Looped", bLooped );
 					bResult = bResult && pAnimationManipulator->SetValue( "ActionFrame", nActionFrame );
 					bResult = bResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
-					// Äîáàâèì àíèìàöèþ â ñêåëåò
+					// Ð”Ð¾Ð±Ð°Ð²Ð¸Ð¼ Ð°Ð½Ð¸Ð¼Ð°Ñ†Ð¸ÑŽ Ð² ÑÐºÐµÐ»ÐµÑ‚
 					bResult = bResult && pManipulator->InsertNode( "Animations" );
 					bResult = bResult && pManipulator->SetValue( StrFmt( "Animations.[%d]", nAnimationRefCount ), szTypeAndName );
 				}

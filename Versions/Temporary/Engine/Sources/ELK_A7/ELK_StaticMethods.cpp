@@ -640,7 +640,7 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 	const string szFontCharset = SKnownEnum<NDb::SFont::ECharset>::ToString( eFontCharset );
 	if ( bUsedChars )
 	{
-		// Создаем файлы с наборами символов
+		// РЎРѕР·РґР°РµРј С„Р°Р№Р»С‹ СЃ РЅР°Р±РѕСЂР°РјРё СЃРёРјРІРѕР»РѕРІ
 		NFile::DeleteDirectory( NFile::GetTempPath() + string( TEMP_FONT_SUB_FOLDER ) );
 		for ( CSymbolSetMap::iterator itSymbolSet = pSymbolMap->begin(); itSymbolSet != pSymbolMap->end(); ++itSymbolSet )
 		{
@@ -677,13 +677,13 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 			}
 		}
 	}
-	// Копируем Шрифты
+	// РљРѕРїРёСЂСѓРµРј РЁСЂРёС„С‚С‹
 	NFile::EnumerateFiles( rszDataBaseFolder + FONT_XDB_SUB_FOLDER, "*.*", CCopyFileFunctional( rszDataBaseFolder + FONT_XDB_SUB_FOLDER, rszPAKPath + FONT_XDB_SUB_FOLDER ), true );
 	NFile::EnumerateFiles( rszDataBaseFolder + FONT_BIN_SUB_FOLDER, "*.*", CCopyFileFunctional( rszDataBaseFolder + FONT_BIN_SUB_FOLDER, rszPAKPath + FONT_BIN_SUB_FOLDER ), true );
 	NFile::CopyFile( rszDataBaseFolder + DBINDEX_FILE_NAME, rszPAKPath + DBINDEX_FILE_NAME );
 	NFile::CopyFile( rszDataBaseFolder + DBTYPES_FILE_NAME, rszPAKPath + DBTYPES_FILE_NAME );
 
-	// инициализируем ресурсную систему для работы экспортеров
+	// РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј СЂРµСЃСѓСЂСЃРЅСѓСЋ СЃРёСЃС‚РµРјСѓ РґР»СЏ СЂР°Р±РѕС‚С‹ СЌРєСЃРїРѕСЂС‚РµСЂРѕРІ
 	NSingleton::RegisterSingleton( new CUserDataContainer(), IUserDataContainer::tidTypeID );
 	if( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
 	{
@@ -702,7 +702,7 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 			NSingleton::RegisterSingleton( new CExporterContainer(), IExporterContainer::tidTypeID );
 			Singleton<IExporterContainer>()->Create( "Font" );
 			Singleton<IExporterContainer>()->Create( "Texture" );
-			// Экспортируем шрифты
+			// Р­РєСЃРїРѕСЂС‚РёСЂСѓРµРј С€СЂРёС„С‚С‹
 			if ( CPtr<IManipulator> pFontFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( FONT_TYPE ) )
 			{
 				if ( CPtr<IManipulatorIterator> pFontIterator = pFontFolderManipulator->Iterate( true, ECT_NO_CACHE ) )
@@ -738,7 +738,7 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 	}
 	NSingleton::UnRegisterSingleton( IUserDataContainer::tidTypeID );
 	NLog::ClearLog();
-	// удаляем временные файлы
+	// СѓРґР°Р»СЏРµРј РІСЂРµРјРµРЅРЅС‹Рµ С„Р°Р№Р»С‹
 	NFile::DeleteDirectory( NFile::GetTempPath() + string( TEMP_FONT_SUB_FOLDER ) );
 	DeleteFile( ( rszPAKPath + DBINDEX_FILE_NAME ).c_str() );
 	DeleteFile( ( rszPAKPath + DBTYPES_FILE_NAME ).c_str() );
@@ -839,7 +839,7 @@ bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bo
 
 		hash_set<string> usedPaths;
 
-		//переводим TXT в ELK
+		//РїРµСЂРµРІРѕРґРёРј TXT РІ ELK
 		for ( list<string>::const_iterator itName = enumFilesInDataStorageParameterList[0].fileNameList.begin(); itName != enumFilesInDataStorageParameterList[0].fileNameList.end(); ++itName )
 		{
 			CFileStream stream( NVFS::GetMainVFS(), ( *itName ) );
@@ -914,7 +914,7 @@ bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bo
 			}
 		}
 
-		//обновляем дескрипшны
+		//РѕР±РЅРѕРІР»СЏРµРј РґРµСЃРєСЂРёРїС€РЅС‹
 		for ( int nParameterIndex = 1; nParameterIndex < enumFilesInDataStorageParameterList.size(); ++nParameterIndex )
 		{
 			for ( list<string>::const_iterator itName = enumFilesInDataStorageParameterList[nParameterIndex].fileNameList.begin(); itName != enumFilesInDataStorageParameterList[nParameterIndex].fileNameList.end(); ++itName )
@@ -1397,7 +1397,7 @@ bool CELK::UpdateELK( const string &rszPath, const string &rszPAKFileName, class
 	}
 	else
 	{
-		//ищем все новые апдейты и их последние версии
+		//РёС‰РµРј РІСЃРµ РЅРѕРІС‹Рµ Р°РїРґРµР№С‚С‹ Рё РёС… РїРѕСЃР»РµРґРЅРёРµ РІРµСЂСЃРёРё
 		for ( NFile::CFileIterator _NFileIterator( StrFmt( _T( "%s*%s" ), szFolder.c_str(), UPD_EXTENTION ) ); !_NFileIterator.IsEnd(); ++_NFileIterator )
 		{
 			int nNumber = -1;

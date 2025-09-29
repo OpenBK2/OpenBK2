@@ -28,15 +28,15 @@ class CBridgeSpan : public CGivenPassabilityStObject
 	ZDATA_(CGivenPassabilityStObject)
 	CDBPtr<SBridgeRPGStats> pStats;
 
-	ZSKIP//CArray2D<BYTE> unlockTypes;	// разлоканные типы террэйна, 0 - если нечего было разлокивать
+	ZSKIP//CArray2D<BYTE> unlockTypes;	// СЂР°Р·Р»РѕРєР°РЅРЅС‹Рµ С‚РёРїС‹ С‚РµСЂСЂСЌР№РЅР°, 0 - РµСЃР»Рё РЅРµС‡РµРіРѕ Р±С‹Р»Рѕ СЂР°Р·Р»РѕРєРёРІР°С‚СЊ
 	CObj<CFullBridge> pFullBridge;
-	bool bNewBuilt;												// этот мост построили во время тгры
-	bool bLocked;													// залочены ли тайл
+	bool bNewBuilt;												// СЌС‚РѕС‚ РјРѕСЃС‚ РїРѕСЃС‚СЂРѕРёР»Рё РІРѕ РІСЂРµРјСЏ С‚РіСЂС‹
+	bool bLocked;													// Р·Р°Р»РѕС‡РµРЅС‹ Р»Рё С‚Р°Р№Р»
 
-	list<SObjTileInfo> oldTilesInfo;      // информация о залоканых тайлах, где теперь стоит мост
-	int nOldHeightsID;										// информация о высотах, где теперь стоит мост
+	list<SObjTileInfo> oldTilesInfo;      // РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ Р·Р°Р»РѕРєР°РЅС‹С… С‚Р°Р№Р»Р°С…, РіРґРµ С‚РµРїРµСЂСЊ СЃС‚РѕРёС‚ РјРѕСЃС‚
+	int nOldHeightsID;										// РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹СЃРѕС‚Р°С…, РіРґРµ С‚РµРїРµСЂСЊ СЃС‚РѕРёС‚ РјРѕСЃС‚
 
-	// умирает данный сегмент, начинает удалять все вокруг.
+	// СѓРјРёСЂР°РµС‚ РґР°РЅРЅС‹Р№ СЃРµРіРјРµРЅС‚, РЅР°С‡РёРЅР°РµС‚ СѓРґР°Р»СЏС‚СЊ РІСЃРµ РІРѕРєСЂСѓРі.
 	bool bDeletingAround;
 
 	int nScriptID;
@@ -61,7 +61,7 @@ public:
 	CBridgeSpan() : nScriptID( -1 ) { }
 	CBridgeSpan( const SBridgeRPGStats *pStats, const CVec3 &center, const float fHP, const WORD _nDir, const int nFrameIndex );
 	
-	void Build();													// построить сегмент моста, залокать как положено, послать в мир.
+	void Build();													// РїРѕСЃС‚СЂРѕРёС‚СЊ СЃРµРіРјРµРЅС‚ РјРѕСЃС‚Р°, Р·Р°Р»РѕРєР°С‚СЊ РєР°Рє РїРѕР»РѕР¶РµРЅРѕ, РїРѕСЃР»Р°С‚СЊ РІ РјРёСЂ.
 
 	const SBridgeRPGStats * GetBridgeStats() const { return pStats; }
 	virtual const SHPObjectRPGStats* GetStats() const { return pStats; }
@@ -106,8 +106,8 @@ class CFullBridge : public CLinkObject
 	OBJECT_BASIC_METHODS( CFullBridge );
 	public: int operator&( IBinSaver &saver ); private:
 	
-	list<CBridgeSpan*> spans;					// построенные части моста
-	list<CBridgeSpan*> projectedSpans;	// части моста, которые находятся в проекте
+	list<CBridgeSpan*> spans;					// РїРѕСЃС‚СЂРѕРµРЅРЅС‹Рµ С‡Р°СЃС‚Рё РјРѕСЃС‚Р°
+	list<CBridgeSpan*> projectedSpans;	// С‡Р°СЃС‚Рё РјРѕСЃС‚Р°, РєРѕС‚РѕСЂС‹Рµ РЅР°С…РѕРґСЏС‚СЃСЏ РІ РїСЂРѕРµРєС‚Рµ
 
 	bool bGivingDamage;
 public:

@@ -16,9 +16,9 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SScriptAreaWindowData
 {
-	NDb::EScriptAreaTypes eAreaType;	// какая радио-кнопка выбрана в диалоге
+	NDb::EScriptAreaTypes eAreaType;	// РєР°РєР°СЏ СЂР°РґРёРѕ-РєРЅРѕРїРєР° РІС‹Р±СЂР°РЅР° РІ РґРёР°Р»РѕРіРµ
 	//
-	struct SScriptArea	// данные для создания row в списке областей
+	struct SScriptArea	// РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ row РІ СЃРїРёСЃРєРµ РѕР±Р»Р°СЃС‚РµР№
 	{
 		string szName;
 		int nScriptAreaID;
@@ -26,16 +26,16 @@ struct SScriptAreaWindowData
 		//
 		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
 	};
-	vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
-	vector<UINT> selectedScriptAreaIDList;		// ID поселекченных областей
+	vector<SScriptArea> scriptAreaList;				// СЃРѕРґРµСЂР¶РёРјРѕРµ Р»РёСЃС‚-РєРѕРЅС‚СЂРѕР»Р°
+	vector<UINT> selectedScriptAreaIDList;		// ID РїРѕСЃРµР»РµРєС‡РµРЅРЅС‹С… РѕР±Р»Р°СЃС‚РµР№
 	//
-	enum EChangeMask	// что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
+	enum EChangeMask	// С‡С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ ( GET ) РёР»Рё С‡С‚Рѕ РЅСѓР¶РЅРѕ РёР·РјРµРЅРёС‚СЊ РІ РґРёР°Р»РѕРіРµ ( SET )
 	{
 		CHANGE_NONE				= 0x00000000,
-		CHANGE_AREAS			= 0x00000001,	// обновить список областей ( SET )
-		CHANGE_SELECTION	= 0x00000002,	// обновить selection ( GET+SET )
-		CHANGE_DEL_SEL		= 0x00000004,	// удалить выделенные области ( GET )
-		CHANGE_AREA_TYPE	= 0x00000008,	// какая радио-кнопка выбрана в диалоге ( GET + SET )
+		CHANGE_AREAS			= 0x00000001,	// РѕР±РЅРѕРІРёС‚СЊ СЃРїРёСЃРѕРє РѕР±Р»Р°СЃС‚РµР№ ( SET )
+		CHANGE_SELECTION	= 0x00000002,	// РѕР±РЅРѕРІРёС‚СЊ selection ( GET+SET )
+		CHANGE_DEL_SEL		= 0x00000004,	// СѓРґР°Р»РёС‚СЊ РІС‹РґРµР»РµРЅРЅС‹Рµ РѕР±Р»Р°СЃС‚Рё ( GET )
+		CHANGE_AREA_TYPE	= 0x00000008,	// РєР°РєР°СЏ СЂР°РґРёРѕ-РєРЅРѕРїРєР° РІС‹Р±СЂР°РЅР° РІ РґРёР°Р»РѕРіРµ ( GET + SET )
 		CHANGE_SET_ALL		= ( CHANGE_AREAS | CHANGE_SELECTION | CHANGE_AREA_TYPE ),
 	};
 	EChangeMask eChangeMask; 

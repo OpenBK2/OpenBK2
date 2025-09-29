@@ -43,7 +43,7 @@ bool CDynamicDebrisSetBuilder::InternalInsertObject( string *pszObjectTypeName,
 	{
 		return false;
 	}
-	// Считываем данные
+	// РЎС‡РёС‚С‹РІР°РµРј РґР°РЅРЅС‹Рµ
 	
 	bool bResult = true;
 	return bResult;

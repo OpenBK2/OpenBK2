@@ -8,7 +8,7 @@ BASIC_REGISTER_CLASS( IStaticPathFinder );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, bool bIgnoreObstacles )
 {
-	// видно в любой стороны
+	// РІРёРґРЅРѕ РІ Р»СЋР±РѕР№ СЃС‚РѕСЂРѕРЅС‹
 	if ( !( pTarget->GetStats()->IsInfantry() && 
 				  checked_cast<CSoldier*>(pTarget)->IsInBuilding() && ( checked_cast<CSoldier*>(pTarget)->GetMinAngle() !=0 || checked_cast<CSoldier*>(pTarget)->GetMaxAngle() != 65535 ) ) )
 	{
@@ -37,7 +37,7 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 				CPtr<IStaticPath> pGarbage = pPath;
 				return 0;
 			}
-			// путь не найден
+			// РїСѓС‚СЊ РЅРµ РЅР°Р№РґРµРЅ
 			else if ( fabs2( pPath->GetFinishPoint() - pTarget->GetCenterPlain() ) > sqr( fRangeMax ) )
 			{
 				CPtr<IStaticPath> pGarbage = pPath;
@@ -85,7 +85,7 @@ IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarg
 	{
 		CVec2 finishDir = pPath->GetFinishPoint() - pTarget->GetCenterPlain();
 		const WORD wFinishDir = GetDirectionByVector( finishDir );
-		// нельзя дойти до точки, откуда можно будет атаковать
+		// РЅРµР»СЊР·СЏ РґРѕР№С‚Рё РґРѕ С‚РѕС‡РєРё, РѕС‚РєСѓРґР° РјРѕР¶РЅРѕ Р±СѓРґРµС‚ Р°С‚Р°РєРѕРІР°С‚СЊ
 		if ( DirsDifference( wFinishDir, wAttackDir ) > wHalfAngle || fabs2( pPath->GetFinishPoint() - pTarget->GetCenterPlain() ) > sqr( fRangeMax ) )
 		{
 			CPtr<IStaticPath> pGarbage = pPath;			
@@ -104,7 +104,7 @@ IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarg
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking )
 {
-	// чтобы удалилось
+	// С‡С‚РѕР±С‹ СѓРґР°Р»РёР»РѕСЃСЊ
 	CPtr<IPointChecking> pGarbage = pPointChecking;
 
 	IStaticPath *pPath = pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), AICellsTiles::GetPointByTile( vTargetTile ), pPointChecking );

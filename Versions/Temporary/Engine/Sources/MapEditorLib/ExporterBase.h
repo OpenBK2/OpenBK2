@@ -21,14 +21,14 @@ class CExporterBase : public IExporter
 	};
 	typedef list<SInvalidLink> CInvalidLinkList;
 	//
-	// типы подвергнувшиеся StartExport ( их необходимо будет пропустить через FinishExport )
+	// С‚РёРїС‹ РїРѕРґРІРµСЂРіРЅСѓРІС€РёРµСЃСЏ StartExport ( РёС… РЅРµРѕР±С…РѕРґРёРјРѕ Р±СѓРґРµС‚ РїСЂРѕРїСѓСЃС‚РёС‚СЊ С‡РµСЂРµР· FinishExport )
 	CObjectTypeNameList objectTypeNameList;
-	// результаты вызовов StartExport
+	// СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІС‹Р·РѕРІРѕРІ StartExport
 	CResultMap startExportResultMap;
-	// обьекты уже проконверченные ( для разрешения циклических ссылок, формат: ObjectTypeName:ObjectName )
-	// результаты вызовов ExportObject
+	// РѕР±СЊРµРєС‚С‹ СѓР¶Рµ РїСЂРѕРєРѕРЅРІРµСЂС‡РµРЅРЅС‹Рµ ( РґР»СЏ СЂР°Р·СЂРµС€РµРЅРёСЏ С†РёРєР»РёС‡РµСЃРєРёС… СЃСЃС‹Р»РѕРє, С„РѕСЂРјР°С‚: ObjectTypeName:ObjectName )
+	// СЂРµР·СѓР»СЊС‚Р°С‚С‹ РІС‹Р·РѕРІРѕРІ ExportObject
 	CResultMap exportObjectResultMap;
-	// Список незаполненных ссылок
+	// РЎРїРёСЃРѕРє РЅРµР·Р°РїРѕР»РЅРµРЅРЅС‹С… СЃСЃС‹Р»РѕРє
 	CInvalidLinkList invalidLinkList;	
 	//
 	bool GetObjectTypeNameSet( IManipulator* pManipulator,

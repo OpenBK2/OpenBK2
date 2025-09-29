@@ -12,9 +12,9 @@ class CEditorTestEditor : public CEditorBase, public CDefaultView
 	friend class CEditortestState;
 
 	OBJECT_NOCOPY_METHODS( CEditorTestEditor );
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	CTPoint<int> terrainSize;
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CEditorTestState *pEditorTestState;
 	//
 	CEditorTestEditor();

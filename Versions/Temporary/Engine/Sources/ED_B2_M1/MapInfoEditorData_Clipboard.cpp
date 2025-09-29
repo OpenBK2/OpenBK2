@@ -58,7 +58,7 @@ namespace NMapInfoEditor
 		{
 			vPosition /= ( nClipboardPartCount * 1.0f );
 		}
-		// установим относительные координаты
+		// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 		for ( CObjectClipboardPartList::const_iterator itObjectClipboardPart = objectClipboardPartlist.begin(); itObjectClipboardPart != objectClipboardPartlist.end(); ++itObjectClipboardPart )
 		{
 			if ( ( *itObjectClipboardPart ) )

@@ -332,7 +332,7 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 		MakeCurrentHP();
 		MakeCurrentFuel();
 
-		MakeCurrent3DObjects(); // TODO: можно оптимизировать и вызывать только на смерть пехотинца из отряда
+		MakeCurrent3DObjects(); // TODO: РјРѕР¶РЅРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ Рё РІС‹Р·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РЅР° СЃРјРµСЂС‚СЊ РїРµС…РѕС‚РёРЅС†Р° РёР· РѕС‚СЂСЏРґР°
 	}
 	
 //	if ( bMembersUpdated )

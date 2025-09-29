@@ -113,7 +113,7 @@ void CEditorContainer::DestroyActiveEditor( const string &rszNewEditorTypeName, 
 					posEditor->second->Destroy();
 					szActiveTypeName.clear();
 				}
-				// удаляем Child Frame
+				// СѓРґР°Р»СЏРµРј Child Frame
 				if ( !rszNewChildFrameTypeName.empty() && Singleton<IChildFrameContainer>()->IsActive( rszNewChildFrameTypeName ) )
 				{
 					Singleton<IChildFrameContainer>()->Leave();
@@ -134,13 +134,13 @@ void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObje
 	{
 		return;
 	}
-	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
+	// РЎРѕР·РґР°РµРј Р·Р°СЂР°РЅРµРµ РЅРѕРІС‹Р№ СЂРµРґР°РєС‚РѕСЂ С‡С‚РѕР±С‹ РѕРїСЂРѕСЃРёС‚СЊ С‚РёРї ChildFrame
 	const string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	NI_ASSERT( posEditor != editorMap.end(), "CEditorContainer::CreateNewEditor(): posEditor = editorMap.end()" );
 	if ( posEditor->second )
 	{
-		// Создаем Child Frame
+		// РЎРѕР·РґР°РµРј Child Frame
 		string szChildFrameTypeName;
 		posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 		if ( !szChildFrameTypeName.empty() )
@@ -210,7 +210,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 		NProgress::Destroy();	
 		return 0;
 	}
-	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
+	// РЎРѕР·РґР°РµРј Р·Р°СЂР°РЅРµРµ РЅРѕРІС‹Р№ СЂРµРґР°РєС‚РѕСЂ С‡С‚РѕР±С‹ РѕРїСЂРѕСЃРёС‚СЊ С‚РёРї ChildFrame
 	const string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	if( posEditor == editorMap.end() )
@@ -225,13 +225,13 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 		string szChildFrameTypeName;
 		posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 
-		// Разрушаем старый редактор и закрываем ChildFrame (если необходимо)
+		// Р Р°Р·СЂСѓС€Р°РµРј СЃС‚Р°СЂС‹Р№ СЂРµРґР°РєС‚РѕСЂ Рё Р·Р°РєСЂС‹РІР°РµРј ChildFrame (РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ)
 		DestroyActiveEditor( rObjectSet.szObjectTypeName, szChildFrameTypeName, true );
 		if ( posEditor->second->ShowProgress() )
 		{
 			NProgress::SetPosition( 1 );
 		}
-		// Создаем новый редактор и новый ChildFrame (если необходимо)
+		// РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ СЂРµРґР°РєС‚РѕСЂ Рё РЅРѕРІС‹Р№ ChildFrame (РµСЃР»Рё РЅРµРѕР±С…РѕРґРёРјРѕ)
 		CreateNewEditor( _pManipulator, rObjectSet, szChildFrameTypeName );
 		if ( posEditor->second->ShowProgress() )
 		{
@@ -281,7 +281,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 				{
 					DebugTrace( "Leave Editor Input State: <%s>", szActiveTypeName.c_str() );
 					pInputState->Leave();
-					// Перегружаем Child Frame
+					// РџРµСЂРµРіСЂСѓР¶Р°РµРј Child Frame
 					string szChildFrameTypeName;
 					posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 					if ( !szChildFrameTypeName.empty() )

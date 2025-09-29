@@ -74,7 +74,7 @@ void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 		pParentState->ClearPickVSOIDList();
 		//
 		pParentState->PickVSO( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickVSOIDList ) );
-		// Выделяем верхний VSO
+		// Р’С‹РґРµР»СЏРµРј РІРµСЂС…РЅРёР№ VSO
 		if ( !pParentState->pickVSOIDList.empty() )
 		{
 			pParentState->nSelectedIndex = 0;
@@ -84,7 +84,7 @@ void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 		{
 			if ( pParentState->CanInsertVSO() )
 			{
-				// Начинаем строить новый VSO ( добавляем первую точку )
+				// РќР°С‡РёРЅР°РµРј СЃС‚СЂРѕРёС‚СЊ РЅРѕРІС‹Р№ VSO ( РґРѕР±Р°РІР»СЏРµРј РїРµСЂРІСѓСЋ С‚РѕС‡РєСѓ )
 				pParentState->PrepareInsertVSO();
 				pParentState->ClearStartVSOPointList();
 				pParentState->startVSOInstance.controlPoints.push_back( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
@@ -102,7 +102,7 @@ void CVSOSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint 
 	{
 		pParentState->pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
 		//
-		// Активируем STATE редактирования VSO
+		// РђРєС‚РёРІРёСЂСѓРµРј STATE СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ VSO
 		if ( !pParentState->pickVSOIDList.empty() )
 		{
 			pParentState->ValidateSelectedIndex();
@@ -127,7 +127,7 @@ void CVSOSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 	{
 		pParentState->pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
 		//
-		// Переключаемся между VSO ( если они один над другим )
+		// РџРµСЂРµРєР»СЋС‡Р°РµРјСЃСЏ РјРµР¶РґСѓ VSO ( РµСЃР»Рё РѕРЅРё РѕРґРёРЅ РЅР°Рґ РґСЂСѓРіРёРј )
 		if ( !pParentState->pickVSOIDList.empty() )
 		{
 			++( pParentState->nSelectedIndex );
@@ -208,7 +208,7 @@ void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 						break;
 					}
 				}
-				// Необходимо обновить eventInfoList[CStoreInputState::ISE_LBUTTONDOWN];
+				// РќРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ eventInfoList[CStoreInputState::ISE_LBUTTONDOWN];
 				pParentState->pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
 			}
 			else if ( pParentState->currentSelection.IsCenterPointType() )
@@ -231,7 +231,7 @@ void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 							const CVec3 vDirection( rViewMatrix._13, rViewMatrix._23, rViewMatrix._33 );
 							const CVec3 vOrigin( rViewMatrix._14, rViewMatrix._24, rViewMatrix._34 );
 							const CVec3 vCenterPoint = pSelectedVSO->points[pParentState->currentSelection.nIndex].vPos;
-							// fNear - сократили
+							// fNear - СЃРѕРєСЂР°С‚РёР»Рё
 							const float fDY = ( nDY * tan( fFOV / 2.0f ) /* *fNear */ ) / ( dimensions.x * 1.0f );
 							const float fDZ = 2.0f * vUPVector.z * fDY * fabs( vOrigin.x - vCenterPoint.x, vOrigin.y - vCenterPoint.y ) / ( fabs( vDirection.x, vDirection.y ) /* *fNear */ );
 							vNewZ = pParentState->currentSelection.vDifference.z + fDZ;
@@ -433,7 +433,7 @@ void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			return;
 		}
-		// Необходимо выделить другой VSO если мы попали мимо текущего выделенного VSO
+		// РќРµРѕР±С…РѕРґРёРјРѕ РІС‹РґРµР»РёС‚СЊ РґСЂСѓРіРѕР№ VSO РµСЃР»Рё РјС‹ РїРѕРїР°Р»Рё РјРёРјРѕ С‚РµРєСѓС‰РµРіРѕ РІС‹РґРµР»РµРЅРЅРѕРіРѕ VSO
 		const CVSOState::CVSOIDList pickVSOIDList = pParentState->pickVSOIDList;
 		const int nSelectedIndex = pParentState->nSelectedIndex;
 		const int nSelectedVSOID = pParentState->GetSelectedVSOID();
@@ -454,7 +454,7 @@ void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 					break;
 				}
 			}	
-			// Выделяем другой - первый обьект
+			// Р’С‹РґРµР»СЏРµРј РґСЂСѓРіРѕР№ - РїРµСЂРІС‹Р№ РѕР±СЊРµРєС‚
 			if ( bOldVSONotPresent )
 			{
 				pParentState->nSelectedIndex = 0;
@@ -466,7 +466,7 @@ void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 		{
 			return;
 		}
-		// нет других обьектов ( или есть старый выделенный обьект )- возвращаем старый
+		// РЅРµС‚ РґСЂСѓРіРёС… РѕР±СЊРµРєС‚РѕРІ ( РёР»Рё РµСЃС‚СЊ СЃС‚Р°СЂС‹Р№ РІС‹РґРµР»РµРЅРЅС‹Р№ РѕР±СЊРµРєС‚ )- РІРѕР·РІСЂР°С‰Р°РµРј СЃС‚Р°СЂС‹Р№
 		if ( bReturnOldVSO )
 		{
 			pParentState->pickVSOIDList = pickVSOIDList;
@@ -510,7 +510,7 @@ void CVSOEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 {
 	if ( pParentState->CanEdit() )
 	{
-		// Небходимо оба проапдейтить
+		// РќРµР±С…РѕРґРёРјРѕ РѕР±Р° РїСЂРѕР°РїРґРµР№С‚РёС‚СЊ
 		pParentState->pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
 		pParentState->pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
 		if ( CVSOMultiState::SEditParameters *pEditParameters = pParentState->pParentState->GetEditParameters() )
@@ -946,7 +946,7 @@ void CVSOState::Enter()
 	ClearStartVSOPointList();
 	leftButtonVSOSelectionParamList.clear();
 	rightButtonVSOSelectionParamList.clear();
-	// Создаем заново параметры селектора
+	// РЎРѕР·РґР°РµРј Р·Р°РЅРѕРІРѕ РїР°СЂР°РјРµС‚СЂС‹ СЃРµР»РµРєС‚РѕСЂР°
 	if ( CanEditPoints( CVSOManager::SVSOSelection::ST_NORMALE ) )
 	{
 		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
@@ -1002,7 +1002,7 @@ void CVSOState::Leave()
 	SetActiveInputState( IS_SELECT, true, false );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_STATE );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
-	// Не надо
+	// РќРµ РЅР°РґРѕ
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
 }
@@ -1121,7 +1121,7 @@ void CVSOState::EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMous
 		ClearPickVSOIDList();
 		//
 		PickVSO( pStoreInputState->lastEventInfo.vTerrainPos, &( pickVSOIDList ) );
-		// Выделяем верхний VSO
+		// Р’С‹РґРµР»СЏРµРј РІРµСЂС…РЅРёР№ VSO
 		if ( !pickVSOIDList.empty() )
 		{
 			nSelectedIndex = 0;

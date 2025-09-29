@@ -202,7 +202,7 @@ bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<S
 		}
 		else if ( bHasDefaultValue )
 		{
-			// ïàðàìåòðû ïî óìîë÷àíèþ
+			// Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹ Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ
 			switch( cTypeID )
 			{
 				case 'n':
@@ -617,13 +617,13 @@ int Script::operator&( IBinSaver &f )
 		f.Add( 2, &m_ownState );
 		ASSERT( m_ownState );
 		m_state = lua_open(0);
-		f.Add( 3, m_state ); // âñå ïðàâèëüíî, àìïåðñåíä íå íóæåí
+		f.Add( 3, m_state ); // Ð²ÑÐµ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾, Ð°Ð¼Ð¿ÐµÑ€ÑÐµÐ½Ð´ Ð½Ðµ Ð½ÑƒÐ¶ÐµÐ½
 	}
 	else
 	{
-		ASSERT( m_ownState ); // íå óìååì ñåðèàëàéçèòü, åñëè ñòåéò íå ñâîé
+		ASSERT( m_ownState ); // Ð½Ðµ ÑƒÐ¼ÐµÐµÐ¼ ÑÐµÑ€Ð¸Ð°Ð»Ð°Ð¹Ð·Ð¸Ñ‚ÑŒ, ÐµÑÐ»Ð¸ ÑÑ‚ÐµÐ¹Ñ‚ Ð½Ðµ ÑÐ²Ð¾Ð¹
 		f.Add( 2, &m_ownState );
-		f.Add( 3, m_state ); // âñå ïðàâèëüíî, àìïåðñåíä íå íóæåí
+		f.Add( 3, m_state ); // Ð²ÑÐµ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾, Ð°Ð¼Ð¿ÐµÑ€ÑÐµÐ½Ð´ Ð½Ðµ Ð½ÑƒÐ¶ÐµÐ½
 	}
 	return 0; 
 }

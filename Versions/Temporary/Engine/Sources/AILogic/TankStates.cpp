@@ -189,7 +189,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			else
 			{
 				pUnit->ResetHoldSector();
-				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 					//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pUnit );
@@ -290,7 +290,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		else if ( !pUnit->NeedDeinstall() )
 		{
 			pUnit->ResetHoldSector();
-			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
@@ -321,7 +321,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		else 
 		{
 			pUnit->ResetHoldSector();
-			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
@@ -375,7 +375,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			else
 			{
 				pUnit->ResetHoldSector();
-				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// сначала выйти из TankPit, потом поехать куда послали
+				if ( pUnit->IsInTankPit() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) )// СЃРЅР°С‡Р°Р»Р° РІС‹Р№С‚Рё РёР· TankPit, РїРѕС‚РѕРј РїРѕРµС…Р°С‚СЊ РєСѓРґР° РїРѕСЃР»Р°Р»Рё
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pUnit );
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
@@ -547,7 +547,7 @@ pGun( pUnit->GetFirstArtilleryGun() ), pFriendFormation( 0 )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CMechUnitSupportFireState::CheckArea()
 {
-	// по юнитам
+	// РїРѕ СЋРЅРёС‚Р°Рј
 	pUnit->ResetShootEstimator( 0, false, pUnit->GetForbiddenGuns() );
 	for ( CUnitsIter<1,2> iter( pUnit->GetParty(), EDI_ENEMY, pFriend->GetCenterPlain(), fSearchRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
@@ -558,13 +558,13 @@ void CMechUnitSupportFireState::CheckArea()
 			pUnit->AddUnitToShootEstimator( pTarget );
 	}
 
-	// враг найден
+	// РІСЂР°Рі РЅР°Р№РґРµРЅ
 	if ( pEnemy = pUnit->GetBestShootEstimatedUnit() )
 	{
 		eState = ESFS_SHOOT_UNIT;
 		pGun->StartEnemyBurst( pEnemy, true );
 	}
-	// по объектам
+	// РїРѕ РѕР±СЉРµРєС‚Р°Рј
 	else
 	{
 		for ( CStObjCircleIter<true> iter( pFriend->GetCenterPlain(), fSearchRadius ); !iter.IsFinished() && pObj == 0; iter.Iterate() )

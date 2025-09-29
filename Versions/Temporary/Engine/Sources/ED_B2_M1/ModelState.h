@@ -39,7 +39,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 	friend class CModelEditor;
 	friend class CModelWindow;
 
-	// Структура данных, с помощью которой конфигурационный диалог общается со стейтом
+	// РЎС‚СЂСѓРєС‚СѓСЂР° РґР°РЅРЅС‹С…, СЃ РїРѕРјРѕС‰СЊСЋ РєРѕС‚РѕСЂРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Р№ РґРёР°Р»РѕРі РѕР±С‰Р°РµС‚СЃСЏ СЃРѕ СЃС‚РµР№С‚РѕРј
 	struct SEditParameters
 	{
 		enum EAnimType
@@ -86,7 +86,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 		ET_RPGSTATS,
 	};
 
-	//Данные специфичные для данного редактрора
+	//Р”Р°РЅРЅС‹Рµ СЃРїРµС†РёС„РёС‡РЅС‹Рµ РґР»СЏ РґР°РЅРЅРѕРіРѕ СЂРµРґР°РєС‚СЂРѕСЂР°
 	int nModelSceneID;
 	list<int> animModelSceneIDList;
 	CObj<CObjectBase> pPlane;
@@ -94,7 +94,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 
 	SModelEditorType eModelEditorType;
 	//
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CModelEditor *pModelEditor;
 	SEditParameters editParameters;
 	//

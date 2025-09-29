@@ -311,7 +311,7 @@ bool CClients::IsBadNick( const string &szNick )
 	if ( szNick.empty() )
 		return true;
 	// TODO:
-	// Нужна проверка ника на соответствие требованиям
+	// РќСѓР¶РЅР° РїСЂРѕРІРµСЂРєР° РЅРёРєР° РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‚СЂРµР±РѕРІР°РЅРёСЏРј
 
 	return	false;
 }

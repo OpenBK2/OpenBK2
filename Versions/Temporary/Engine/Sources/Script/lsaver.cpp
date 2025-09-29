@@ -17,8 +17,8 @@ void lua_StartSerialize( lua_State *pL )
 //////////////////////////////////////////////////////////////////////////
 static void lua_GetID( CLuaFuncID *pID, lua_CFunction func )
 {
-	// Çäåñü ìîæíî äîáàâèòü âûáîð èìåíè ñ ïðàâèëüíûì ïðåôèêñîì
-	// ýêçåìïëÿðà lua-ìàøèíû (pLUASaverState->szName)
+	// Ð—Ð´ÐµÑÑŒ Ð¼Ð¾Ð¶Ð½Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²Ñ‹Ð±Ð¾Ñ€ Ð¸Ð¼ÐµÐ½Ð¸ Ñ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ñ‹Ð¼ Ð¿Ñ€ÐµÑ„Ð¸ÐºÑÐ¾Ð¼
+	// ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€Ð° lua-Ð¼Ð°ÑˆÐ¸Ð½Ñ‹ (pLUASaverState->szName)
 	int nFunc = reinterpret_cast<int>( func );
 	CLuaFuncToIDMap::iterator i = luaFuncToIDMap.find( nFunc );
 	ASSERT( i != luaFuncToIDMap.end() );  // unregistered lua C function!
@@ -27,8 +27,8 @@ static void lua_GetID( CLuaFuncID *pID, lua_CFunction func )
 //////////////////////////////////////////////////////////////////////////
 static void lua_GetID( CLuaFuncID *pID, lua_Hook func )
 {
-	// Çäåñü ìîæíî äîáàâèòü âûáîð èìåíè ñ ïðàâèëüíûì ïðåôèêñîì
-	// ýêçåìïëÿðà lua-ìàøèíû (pLUASaverState->szName)
+	// Ð—Ð´ÐµÑÑŒ Ð¼Ð¾Ð¶Ð½Ð¾ Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð²Ñ‹Ð±Ð¾Ñ€ Ð¸Ð¼ÐµÐ½Ð¸ Ñ Ð¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ñ‹Ð¼ Ð¿Ñ€ÐµÑ„Ð¸ÐºÑÐ¾Ð¼
+	// ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€Ð° lua-Ð¼Ð°ÑˆÐ¸Ð½Ñ‹ (pLUASaverState->szName)
 	int nFunc = reinterpret_cast<int>( func );
 	CLuaFuncToIDMap::iterator i = luaFuncToIDMap.find( nFunc );
 	ASSERT( i != luaFuncToIDMap.end() );  // unregistered lua C function!

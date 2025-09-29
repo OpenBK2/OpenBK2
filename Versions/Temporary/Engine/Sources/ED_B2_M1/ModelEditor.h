@@ -23,7 +23,7 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	bool bPreviousCameraHandleType;
 	float fFOV;
 
-	// Данные общего назначения 
+	// Р”Р°РЅРЅС‹Рµ РѕР±С‰РµРіРѕ РЅР°Р·РЅР°С‡РµРЅРёСЏ 
 	CModelState *pModelState;
 	CModelEditorSettings editorSettings;
 	//

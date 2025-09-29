@@ -330,10 +330,10 @@ bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 	ClientEntered( pPacket->nClientID );
 	ClientEnterToLobby( pPacket->nClientID );
 
-	// Сообщение о том, что вход в лобби прошел успешно 
+	// РЎРѕРѕР±С‰РµРЅРёРµ Рѕ С‚РѕРј, С‡С‚Рѕ РІС…РѕРґ РІ Р»РѕР±Р±Рё РїСЂРѕС€РµР» СѓСЃРїРµС€РЅРѕ 
 	PushPacket( new CEnterLobbyPacket( pPacket->nClientID, pPacket->nLobbyID ) );
 	//
-	return false; // Оставляем пакет для других лобби
+	return false; // РћСЃС‚Р°РІР»СЏРµРј РїР°РєРµС‚ РґР»СЏ РґСЂСѓРіРёС… Р»РѕР±Р±Рё
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CGameLobby::ProcessLeaveLobby( CLeaveLobbyPacket *pPacket )

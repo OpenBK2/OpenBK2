@@ -25,11 +25,11 @@ class CPredictedAntiAviationFire
 	{
 		SAAS_ESITMATING,
 
-		SAAS_START_TRASING,										// для стрельбы сопроводительным огнем
+		SAAS_START_TRASING,										// РґР»СЏ СЃС‚СЂРµР»СЊР±С‹ СЃРѕРїСЂРѕРІРѕРґРёС‚РµР»СЊРЅС‹Рј РѕРіРЅРµРј
 		SAAS_TRASING,
 		SAAS_FIRING,
 
-		SAAS_START_AIMING_TO_PREDICTED_POINT,	// для стрельбы заградительным огнем
+		SAAS_START_AIMING_TO_PREDICTED_POINT,	// РґР»СЏ СЃС‚СЂРµР»СЊР±С‹ Р·Р°РіСЂР°РґРёС‚РµР»СЊРЅС‹Рј РѕРіРЅРµРј
 		SAAS_AIM_TO_PREDICTED_POINT,					
 		SAAS_START_FIRE_TO_PREDICTED_POINT,
 		SAAS_FIRING_TO_PREDICTED_POINT,
@@ -49,7 +49,7 @@ class CPredictedAntiAviationFire
 	CPtr<CAviation> pPlane;
 	bool bAttacking;											// true when desided to aim and shoot
 
-	SPredict aimPoint;		// точка прицеливания при стрельбе заградительным огнем
+	SPredict aimPoint;		// С‚РѕС‡РєР° РїСЂРёС†РµР»РёРІР°РЅРёСЏ РїСЂРё СЃС‚СЂРµР»СЊР±Рµ Р·Р°РіСЂР°РґРёС‚РµР»СЊРЅС‹Рј РѕРіРЅРµРј
 	NTimer::STime timeOfStartBurst;
 	NTimer::STime timeLastAimUpdate;
 	Guns nGuns;

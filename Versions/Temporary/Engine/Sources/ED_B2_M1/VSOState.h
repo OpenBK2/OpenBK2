@@ -41,7 +41,7 @@ class CVSOSelectState : public CDefaultInputState
 	
 	class CVSOState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOSelectState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
@@ -65,7 +65,7 @@ class CVSOEditState : public CDefaultInputState
 	
 	class CVSOState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOEditState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
@@ -93,7 +93,7 @@ class CVSOAddState : public CDefaultInputState
 	
 	class CVSOState* pParentState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOAddState() : pParentState( 0 )
   {
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
@@ -151,7 +151,7 @@ public:
 	//
 
 private:
-	// общие внутренние переменные
+	// РѕР±С‰РёРµ РІРЅСѓС‚СЂРµРЅРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 	class CVSOMultiState* pParentState;
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
@@ -180,7 +180,7 @@ private:
 	}
 
 protected:
-	// Вынесены в этот раздел для успешной работы класов - наследников
+	// Р’С‹РЅРµСЃРµРЅС‹ РІ СЌС‚РѕС‚ СЂР°Р·РґРµР» РґР»СЏ СѓСЃРїРµС€РЅРѕР№ СЂР°Р±РѕС‚С‹ РєР»Р°СЃРѕРІ - РЅР°СЃР»РµРґРЅРёРєРѕРІ
 	inline void ValidateSelectedIndex()
 	{
 		if ( pickVSOIDList.empty() )
@@ -215,61 +215,61 @@ protected:
 	virtual void OnSetFocus( class CWnd* pNewWnd );
 
 	// CVSOState
-	// При постановке нового VSO необходимо использовать эту функуцию
+	// РџСЂРё РїРѕСЃС‚Р°РЅРѕРІРєРµ РЅРѕРІРѕРіРѕ VSO РЅРµРѕР±С…РѕРґРёРјРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ СЌС‚Сѓ С„СѓРЅРєСѓС†РёСЋ
 	virtual void UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges );
-	// Возможно какое либо редактирование
+	// Р’РѕР·РјРѕР¶РЅРѕ РєР°РєРѕРµ Р»РёР±Рѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ
 	virtual bool CanEdit() = 0;
-	// Нарисовать draw tool или добавить к ним чеще чего-нибудь и потом нарисовать
+	// РќР°СЂРёСЃРѕРІР°С‚СЊ draw tool РёР»Рё РґРѕР±Р°РІРёС‚СЊ Рє РЅРёРј С‡РµС‰Рµ С‡РµРіРѕ-РЅРёР±СѓРґСЊ Рё РїРѕС‚РѕРј РЅР°СЂРёСЃРѕРІР°С‚СЊ
 	virtual bool IsDrawSceneDrawTool() = 0;
-	// Настройка режима редактирования
-	// Существует возможность редактировать следующие точки
+	// РќР°СЃС‚СЂРѕР№РєР° СЂРµР¶РёРјР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
+	// РЎСѓС‰РµСЃС‚РІСѓРµС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ СЃР»РµРґСѓСЋС‰РёРµ С‚РѕС‡РєРё
 	virtual bool CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType ) = 0;
-	// Края VSO должны сходится в 0
+	// РљСЂР°СЏ VSO РґРѕР»Р¶РЅС‹ СЃС…РѕРґРёС‚СЃСЏ РІ 0
 	virtual bool EdgesMustBeZero() = 0;
-	// Края VSO должны быть за пределами карты
+	// РљСЂР°СЏ VSO РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ Р·Р° РїСЂРµРґРµР»Р°РјРё РєР°СЂС‚С‹
 	virtual bool IsEdgesMustBeOut() = 0;
-	// VSOPoints генерятся покругу (от последнего к первому)
+	// VSOPoints РіРµРЅРµСЂСЏС‚СЃСЏ РїРѕРєСЂСѓРіСѓ (РѕС‚ РїРѕСЃР»РµРґРЅРµРіРѕ Рє РїРµСЂРІРѕРјСѓ)
 	virtual bool IsClose() = 0;
-	// VSOPoints доходят строго до последней контрольной точки
+	// VSOPoints РґРѕС…РѕРґСЏС‚ СЃС‚СЂРѕРіРѕ РґРѕ РїРѕСЃР»РµРґРЅРµР№ РєРѕРЅС‚СЂРѕР»СЊРЅРѕР№ С‚РѕС‡РєРё
 	virtual bool IsComplete() = 0;
-	// VSO не пересекаются с другими VSO
+	// VSO РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ СЃ РґСЂСѓРіРёРјРё VSO
 	virtual bool NoIntersection() = 0;
-	// VSO не пересекаются сам с собой
+	// VSO РЅРµ РїРµСЂРµСЃРµРєР°СЋС‚СЃСЏ СЃР°Рј СЃ СЃРѕР±РѕР№
 	virtual bool NoSelfIntersection() = 0;
-	// Получить минимальное и максимальное количество control points
+	// РџРѕР»СѓС‡РёС‚СЊ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ control points
 	virtual void GetControlPointBounds( int *pnMinCount, int *pnMaxCount ) = 0;
-	// Шаг семплирования
+	// РЁР°Рі СЃРµРјРїР»РёСЂРѕРІР°РЅРёСЏ
 	virtual float GetDefaultStep() = 0;
-	// Ширина полуоси
+	// РЁРёСЂРёРЅР° РїРѕР»СѓРѕСЃРё
 	virtual float GetDefaultWidth() = 0;
-	// Высота в точке
+	// Р’С‹СЃРѕС‚Р° РІ С‚РѕС‡РєРµ
 	virtual float GetDefaultHeight() = 0;
-	// Прозрачность в точке
+	// РџСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ РІ С‚РѕС‡РєРµ
 	virtual float GetDefaultOpacity() = 0;
-	// Шаг семплирования
+	// РЁР°Рі СЃРµРјРїР»РёСЂРѕРІР°РЅРёСЏ
 	virtual float GetDefaultStepOut() = 0;
-	// По точке получить заселекченные ID VSO
+	// РџРѕ С‚РѕС‡РєРµ РїРѕР»СѓС‡РёС‚СЊ Р·Р°СЃРµР»РµРєС‡РµРЅРЅС‹Рµ ID VSO
 	virtual void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList ) = 0;
-	// Можно ли создать новую структуру VSO
+	// РњРѕР¶РЅРѕ Р»Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІСѓСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ VSO
 	virtual bool CanInsertVSO() = 0;
-	// Можно ли обновить указанный VSO
+	// РњРѕР¶РЅРѕ Р»Рё РѕР±РЅРѕРІРёС‚СЊ СѓРєР°Р·Р°РЅРЅС‹Р№ VSO
 	virtual bool CanUpdateVSO( int nVSOID ) = 0;
-	// Можно ли удалить указанный VSO
+	// РњРѕР¶РЅРѕ Р»Рё СѓРґР°Р»РёС‚СЊ СѓРєР°Р·Р°РЅРЅС‹Р№ VSO
 	virtual bool CanRemoveVSO( int nVSOID ) = 0;
-	// Получить доступ к VSO
+	// РџРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРї Рє VSO
 	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex ) = 0;
-	// Обновить геометрические данные ( они были изменены )
+	// РћР±РЅРѕРІРёС‚СЊ РіРµРѕРјРµС‚СЂРёС‡РµСЃРєРёРµ РґР°РЅРЅС‹Рµ ( РѕРЅРё Р±С‹Р»Рё РёР·РјРµРЅРµРЅС‹ )
 	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags ) = 0;
-	// Подготовить данные для вставки
+	// РџРѕРґРіРѕС‚РѕРІРёС‚СЊ РґР°РЅРЅС‹Рµ РґР»СЏ РІСЃС‚Р°РІРєРё
 	virtual void PrepareInsertVSO() = 0;
-	// Добавить VSO	( возвращает nVSOID добавленного VSO
+	// Р”РѕР±Р°РІРёС‚СЊ VSO	( РІРѕР·РІСЂР°С‰Р°РµС‚ nVSOID РґРѕР±Р°РІР»РµРЅРЅРѕРіРѕ VSO
 	virtual int InsertVSO( const vector<CVec3> &rControlPointList ) = 0;
-	// Удалить VSO
+	// РЈРґР°Р»РёС‚СЊ VSO
 	virtual void RemoveVSO( int nVSOID ) = 0;
 
 public:
 	//
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOState( class CVSOMultiState *_pParentState = 0 ) : pParentState( _pParentState ), nSelectedIndex( INVALID_NODE_ID ), mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();

@@ -13,7 +13,7 @@ class CRiverState : public CVSOStateEx
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
 	
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CRiverState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
 	{
 		NI_ASSERT( _pParentState != 0, "CRiverState(): Invalid parameter: _pParentState == 0" );
@@ -74,7 +74,7 @@ class CRiverState : public CVSOState
 	friend class CVSOMultiState;
 	
 	bool bVSOChanged;
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CRiverState( class CVSOMultiState *_pParentState = 0 ) : CVSOState( _pParentState )
 	{
 		NI_ASSERT( _pParentState != 0, "CRiverState(): Invalid parameter: _pParentState == 0" );

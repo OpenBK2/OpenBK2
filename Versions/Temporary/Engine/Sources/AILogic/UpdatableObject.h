@@ -53,9 +53,9 @@ public:
 
 	virtual const int GetUnitState() const { return 0; }
 
-	// обязательно должна быть константной, чтобы не было расхождений в multiplayerb
+	// РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РєРѕРЅСЃС‚Р°РЅС‚РЅРѕР№, С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ СЂР°СЃС…РѕР¶РґРµРЅРёР№ РІ multiplayerb
 	virtual const bool IsVisible( const BYTE cParty ) const { NI_ASSERT( false, "wrong call" ); return false; }
-	// виден ли игроком
+	// РІРёРґРµРЅ Р»Рё РёРіСЂРѕРєРѕРј
 	virtual const bool IsVisibleByPlayer();
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { NI_ASSERT( false, "wrong call" );  }
 	virtual const bool IsVisibleForDiplomacyUpdate() { return true; }

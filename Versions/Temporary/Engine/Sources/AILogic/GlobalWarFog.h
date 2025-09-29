@@ -112,7 +112,7 @@ class CGlobalWarFog : public CAIObjectBase
 	bool bFullSmooth;
 	*/
 	
-	vector<SSpiralPoint> spiral;   // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
+	vector<SSpiralPoint> spiral;   // S(РєСЂСѓРіР°) * sizeof( SSpiralPoint ) = S(РєСЂСѓРіР°) * 18
 	CArray2D<int> spiralCoords;    // MaxRadius * MaxRadius
 	vector<int> lengths;           // MaxRadius * sizeof( int )
 	ZDATA

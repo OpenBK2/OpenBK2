@@ -11,7 +11,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	struct SCommandRange
 	{
 		// CRAP{ HASH_SET
-		typedef hash_map<UINT, int> CCommandIDSet; // важно наличие
+		typedef hash_map<UINT, int> CCommandIDSet; // РІР°Р¶РЅРѕ РЅР°Р»РёС‡РёРµ
 		// CRAP} HASH_SET
 		CCommandIDSet commandIDSet;
 

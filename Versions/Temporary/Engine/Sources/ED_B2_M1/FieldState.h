@@ -27,16 +27,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CFieldState : public CPolygonState
 {
-	// Friend классы
+	// Friend РєР»Р°СЃСЃС‹
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CFieldWindow;
 
-	// константы
+	// РєРѕРЅСЃС‚Р°РЅС‚С‹
 	static const char FIELD_TYPE_NAME[];
 
 public:
-	// Структура данных, с помощью которой конфигурационный диалог общается со стейтом
+	// РЎС‚СЂСѓРєС‚СѓСЂР° РґР°РЅРЅС‹С…, СЃ РїРѕРјРѕС‰СЊСЋ РєРѕС‚РѕСЂРѕР№ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Р№ РґРёР°Р»РѕРі РѕР±С‰Р°РµС‚СЃСЏ СЃРѕ СЃС‚РµР№С‚РѕРј
 	struct SEditParameters
 	{
 		typedef vector<string> CFieldList;

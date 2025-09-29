@@ -4,7 +4,7 @@ virtual const char* GetParentName() const { return szParentName.c_str(); }
 
 //
 virtual void ToAIUnits( bool bInEditor ) {}
-// проверка статсов на корректность
+// РїСЂРѕРІРµСЂРєР° СЃС‚Р°С‚СЃРѕРІ РЅР° РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ
 virtual bool Validate() { return true; }
 //
 virtual void PostLoad( bool bInEditor )

@@ -22,7 +22,7 @@ class CFormation : public CCommonUnit
 {
 	OBJECT_BASIC_METHODS( CFormation );
 
-	// для хранения данных о переносимом миномете
+	// РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С… Рѕ РїРµСЂРµРЅРѕСЃРёРјРѕРј РјРёРЅРѕРјРµС‚Рµ
 	class CCarryedMortar
 	{
 		ZDATA
@@ -123,21 +123,21 @@ protected:
 public:
 	CFormation();
 	void Init( const SSquadRPGStats *pStats, const CVec2 &center, const int z, const WORD dir, ICollisionsCollector *pCollisionsCollector );
-	// передвигает центр формации в её центр масс и инициализирует geomInfo
+	// РїРµСЂРµРґРІРёРіР°РµС‚ С†РµРЅС‚СЂ С„РѕСЂРјР°С†РёРё РІ РµС‘ С†РµРЅС‚СЂ РјР°СЃСЃ Рё РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ geomInfo
 	void ChangeGeometry( const int nGeometry );
 	const int GetGeometriesCount() const;
 	const int GetCurrentGeometry() const;
 
 	const NDb::SSquadRPGStats *GetStats() const { return pStats; }
 
-	// добавить новый юнит в формацию, порядковый номер его в статах - nSlot, местоположение юнита инициализируется
+	// РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ СЋРЅРёС‚ РІ С„РѕСЂРјР°С†РёСЋ, РїРѕСЂСЏРґРєРѕРІС‹Р№ РЅРѕРјРµСЂ РµРіРѕ РІ СЃС‚Р°С‚Р°С… - nSlot, РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ СЋРЅРёС‚Р° РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ
 	void AddNewUnitToSlot( class CSoldier *pUnit, const bool bSendToWorld );
 
-	// добавить новый юнит на позицию nPos в списке юнитов объекта formation, причём местоположение юнита не инициализируется
+	// РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ СЋРЅРёС‚ РЅР° РїРѕР·РёС†РёСЋ nPos РІ СЃРїРёСЃРєРµ СЋРЅРёС‚РѕРІ РѕР±СЉРµРєС‚Р° formation, РїСЂРёС‡С‘Рј РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРµ СЋРЅРёС‚Р° РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚СЃСЏ
 	void AddSoldier( class CSoldier *pUnit );
 	void DeleteSoldier( class CSoldier *pUnit );
 
-	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units 
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ РІ СЃС‚Р°С‚Р°С… С„РѕСЂРјР°С†РёРё РґР»СЏ СЋРЅРёС‚Р° СЃ РїРѕСЂСЏРґРєРѕРІС‹Рј РЅРѕРјРµСЂРѕРј cSlot РІ РјР°СЃСЃРёРІРµ units 
 	const int GetUnitSlotInStats( const BYTE cSlot ) const;
 	virtual const float GetPassability() const { return fPass; }
 
@@ -145,7 +145,7 @@ public:
 
 	virtual const bool IsIdle() const;
 	virtual const bool IsTurning() const { return false; }
-	// все ли юниты находятся в rest состоянии?
+	// РІСЃРµ Р»Рё СЋРЅРёС‚С‹ РЅР°С…РѕРґСЏС‚СЃСЏ РІ rest СЃРѕСЃС‚РѕСЏРЅРёРё?
 	bool IsEveryUnitResting() const;
 	bool IsAnyUnitResting() const;
 	bool IsEveryUnitInTransport() const;
@@ -233,7 +233,7 @@ public:
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
-	// установить центр формации в центр тяжести юнитов
+	// СѓСЃС‚Р°РЅРѕРІРёС‚СЊ С†РµРЅС‚СЂ С„РѕСЂРјР°С†РёРё РІ С†РµРЅС‚СЂ С‚СЏР¶РµСЃС‚Рё СЋРЅРёС‚РѕРІ
 	void BalanceCenter();
 
 	virtual const int GetMinArmor() const { return 0; }
@@ -248,7 +248,7 @@ public:
 
 	virtual EUnitAckType GetGunsRejectReason() const;
 
-	// используется только для отложенных updates
+	// РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РѕС‚Р»РѕР¶РµРЅРЅС‹С… updates
 	virtual const bool IsVisible( const int nParty ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
@@ -263,16 +263,16 @@ public:
 	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType );
 	virtual void RegisterAsBored( const enum EUnitAckType eBoredType );
 
-	// устанавливает солдату бонусы от формации
+	// СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ СЃРѕР»РґР°С‚Сѓ Р±РѕРЅСѓСЃС‹ РѕС‚ С„РѕСЂРјР°С†РёРё
 	void SetGeometryPropertiesToSoldier( class CSoldier *pSoldier, const bool bChangeWarFog );
 
-	// для переноса миномета
+	// РґР»СЏ РїРµСЂРµРЅРѕСЃР° РјРёРЅРѕРјРµС‚Р°
 	void SetCarryedMortar( class CAIUnit *pMortar );
 	bool HasMortar() const ;							// true when formation carryes a mortar
 	CAIUnit* InstallCarryedMortar();
 
 	virtual void ResetTargetScan();
-	// просканировать, если пора; если нашли цель, то атаковать
+	// РїСЂРѕСЃРєР°РЅРёСЂРѕРІР°С‚СЊ, РµСЃР»Рё РїРѕСЂР°; РµСЃР»Рё РЅР°С€Р»Рё С†РµР»СЊ, С‚Рѕ Р°С‚Р°РєРѕРІР°С‚СЊ
 	virtual BYTE AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding );
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 
@@ -303,7 +303,7 @@ public:
 	void SetInUnitsID( const int nID ) { nInUnitsID = nID; }
 	const int GetInUnitsID() const { return nInUnitsID; }
 
-	// доступ к положениям отдельных юнитов
+	// РґРѕСЃС‚СѓРї Рє РїРѕР»РѕР¶РµРЅРёСЏРј РѕС‚РґРµР»СЊРЅС‹С… СЋРЅРёС‚РѕРІ
 	const CVec2 GetUnitCoord( const CBasePathUnit *pSoldier ) const;
 	const CVec2 GetUnitDir( const CBasePathUnit *pSoldier ) const;
 
@@ -315,7 +315,7 @@ public:
 	void MoveGeometries2Center();
 
 	virtual const SRect & GetUnitRect() const;
-	// от нового CBasePathUnit
+	// РѕС‚ РЅРѕРІРѕРіРѕ CBasePathUnit
 	virtual const EAIClasses GetAIPassabilityClass() const { return EAC_HUMAN; }
 	virtual const float GetTurnRadius() const { return 0.0f; }
 	virtual const bool IsRound() const { return true; }
@@ -332,7 +332,7 @@ public:
 	virtual const float GetSmoothTurnThreshold() const { return 0.6f; }
 	virtual const int GetBoundTileRadius() const { return nBoundTileRadius; }
 
-	// возвращает - поехал или нет
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ - РїРѕРµС…Р°Р» РёР»Рё РЅРµС‚
 	virtual const bool SendAlongPath( interface IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
 	virtual const bool SendAlongPath( IPath *pPath );
 

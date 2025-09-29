@@ -131,7 +131,7 @@ void CMPTransceiver::DoSegments()
 	{
 		if ( IsSegmentPackFinished() )
 		{
-			// ïðèáàâëÿåòñÿ MAX_LATENCY, ò.ê. ìîäóëü îò îòðèöàòåëüíûõ ÷èñåë ñ÷èòàåòñÿ íåïðàâèëüíî
+			// Ð¿Ñ€Ð¸Ð±Ð°Ð²Ð»ÑÐµÑ‚ÑÑ MAX_LATENCY, Ñ‚.Ðº. Ð¼Ð¾Ð´ÑƒÐ»ÑŒ Ð¾Ñ‚ Ð¾Ñ‚Ñ€Ð¸Ñ†Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ñ… Ñ‡Ð¸ÑÐµÐ» ÑÑ‡Ð¸Ñ‚Ð°ÐµÑ‚ÑÑ Ð½ÐµÐ¿Ñ€Ð°Ð²Ð¸Ð»ÑŒÐ½Ð¾
 			const int nPastSegment = ( nSegment - nLatency + pConsts->nMaxLatency ) % pConsts->nMaxLatency;
 			if ( nCommonSegment < nLatency || IsSegmentFinishedByAll( nPastSegment ) )
 			{

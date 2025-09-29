@@ -12,7 +12,7 @@ struct SVectorStripeObjectPoint
 	float fRadius;												// curvature radius
 	float fWidth;													// width at this point
 	bool	bKeyPoint;											// key point of the sampling
-	float fOpacity;												// прозрачность ( 0..1 ) только для key point
+	float fOpacity;												// РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ ( 0..1 ) С‚РѕР»СЊРєРѕ РґР»СЏ key point
 
 	//----------------------------------------------------------------------------------------------------
 	SVectorStripeObjectPoint()
@@ -36,13 +36,13 @@ struct SVectorStripeObjectDesc
 	//----------------------------------------------------------------------------------------------------
 	struct SLayer
 	{
-		BYTE opacityCenter;									// прозрачность в центре потока
-		BYTE opacityBorder;									// прозрачность по краям
-		float fStreamSpeed;									// условная скорость потока
-		float fTextureStep;									// шаг текстурирования по тайлам
-		int nNumCells;											// ширина потока в ячейках (в тайлах)
+		BYTE opacityCenter;									// РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ РІ С†РµРЅС‚СЂРµ РїРѕС‚РѕРєР°
+		BYTE opacityBorder;									// РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ РїРѕ РєСЂР°СЏРј
+		float fStreamSpeed;									// СѓСЃР»РѕРІРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕС‚РѕРєР°
+		float fTextureStep;									// С€Р°Рі С‚РµРєСЃС‚СѓСЂРёСЂРѕРІР°РЅРёСЏ РїРѕ С‚Р°Р№Р»Р°Рј
+		int nNumCells;											// С€РёСЂРёРЅР° РїРѕС‚РѕРєР° РІ СЏС‡РµР№РєР°С… (РІ С‚Р°Р№Р»Р°С…)
 		bool bAnimated;											// animated layer
-		string szTexture;							// текстура потока (или директория, если это анимированная текстура)
+		string szTexture;							// С‚РµРєСЃС‚СѓСЂР° РїРѕС‚РѕРєР° (РёР»Рё РґРёСЂРµРєС‚РѕСЂРёСЏ, РµСЃР»Рё СЌС‚Рѕ Р°РЅРёРјРёСЂРѕРІР°РЅРЅР°СЏ С‚РµРєСЃС‚СѓСЂР°)
 		float fDisturbance;									// mesh disturbance
 		float fRelWidth;										// relative width
 
@@ -57,7 +57,7 @@ struct SVectorStripeObjectDesc
 	int	eType;														// type
 	int nPriority;												// priority
 	float fPassability;										// passability
-	DWORD dwAIClasses;										// AI классы, которые не могут ходить по этой дороге
+	DWORD dwAIClasses;										// AI РєР»Р°СЃСЃС‹, РєРѕС‚РѕСЂС‹Рµ РЅРµ РјРѕРіСѓС‚ С…РѕРґРёС‚СЊ РїРѕ СЌС‚РѕР№ РґРѕСЂРѕРіРµ
 
 	enum ESoilParams
 	{ 
@@ -66,15 +66,15 @@ struct SVectorStripeObjectDesc
 		ESP_RAIL	= 0x20,
 		ESP_SPLASH = 0x40,
 	};
-	BYTE cSoilParams;											// параметры почвы - следы, пыль и т.д.
+	BYTE cSoilParams;											// РїР°СЂР°РјРµС‚СЂС‹ РїРѕС‡РІС‹ - СЃР»РµРґС‹, РїС‹Р»СЊ Рё С‚.Рґ.
 	
 	//----------------------------------------------------------------------------------------------------
 	// layers
 	SLayer bottom;												// bottom central layer
 	vector<SLayer> bottomBorders;		// bottom layer border parts
 	vector<SLayer> layers;						// additional layers
-	NImage::SColor miniMapCenterColor;						// цвет обьекта на минимапе ( центральная часть )
-	NImage::SColor miniMapBorderColor;						// цвет обьекта на минимапе ( край )
+	NImage::SColor miniMapCenterColor;						// С†РІРµС‚ РѕР±СЊРµРєС‚Р° РЅР° РјРёРЅРёРјР°РїРµ ( С†РµРЅС‚СЂР°Р»СЊРЅР°СЏ С‡Р°СЃС‚СЊ )
+	NImage::SColor miniMapBorderColor;						// С†РІРµС‚ РѕР±СЊРµРєС‚Р° РЅР° РјРёРЅРёРјР°РїРµ ( РєСЂР°Р№ )
 	
 	//----------------------------------------------------------------------------------------------------
 	// ambient sound

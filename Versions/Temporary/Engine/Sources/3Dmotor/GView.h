@@ -139,7 +139,7 @@ class IGameView : public CObjectBase
 public:
 	struct SDrawInfo
 	{
-		CTransformStack *pTS; // pTS νΰ βερό ύκπΰν
+		CTransformStack *pTS; // pTS Π½Π° Π²ΠµΡΡ ΡΠΊΡ€Π°Π½
 		NGfx::CTexture *pTarget; // render to texture if not 0
 		CVec2 vOrigin, vSize; // in [0,1] diapason
 		SRTClearParams rtClear;

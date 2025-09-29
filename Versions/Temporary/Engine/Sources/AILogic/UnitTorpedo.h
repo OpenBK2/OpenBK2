@@ -102,7 +102,7 @@ public:
 	virtual void Segment( const NTimer::STime timeDiff );
 	int operator&( IBinSaver &saver );
 
-	//ненужные функции
+	//РЅРµРЅСѓР¶РЅС‹Рµ С„СѓРЅРєС†РёРё
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; }
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { return false; }
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }

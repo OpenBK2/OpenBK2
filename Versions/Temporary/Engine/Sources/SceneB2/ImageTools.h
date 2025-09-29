@@ -38,7 +38,7 @@ namespace NImageTools
 		{
 			err = deflate( &stream, Z_FINISH );
 			deflateEnd( &stream );
-			//CRAP{ ÿş¢õüº-ªş øışóôğ ÿ¨ø ¨ğ¸ÿğúşòúõ òş÷ò¨ğ•ğõª¸  "buffer error" ò¸õ¸ªş "stream end"...
+			//CRAP{ ÑÑÑÑ…ÑŒÑ”-Ğ„Ñ ÑˆÑÑÑƒÑ„Ñ€ ÑĞÑˆ ĞÑ€Ñ‘ÑÑ€ÑŠÑÑ‚ÑŠÑ… Ñ‚ÑÑ‡Ñ‚ĞÑ€â€¢Ñ€Ñ…Ğ„Ñ‘Â  "buffer error" Ñ‚Ñ‘Ñ…Ñ‘Ğ„Ñ "stream end"...
 			if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
 				err = Z_OK;
 			// CRAP}
@@ -88,7 +88,7 @@ namespace NImageTools
 		{
 			err = inflate( &stream, Z_FINISH );
 			inflateEnd( &stream );
-			// CRAP{ ÿş¢õüº-ªş øışóôğ ÿ¨ø ¨ğ¸ÿğúşòúõ òş÷ò¨ğ•ğõª¸  "buffer error" ò¸õ¸ªş "stream end"...
+			// CRAP{ ÑÑÑÑ…ÑŒÑ”-Ğ„Ñ ÑˆÑÑÑƒÑ„Ñ€ ÑĞÑˆ ĞÑ€Ñ‘ÑÑ€ÑŠÑÑ‚ÑŠÑ… Ñ‚ÑÑ‡Ñ‚ĞÑ€â€¢Ñ€Ñ…Ğ„Ñ‘Â  "buffer error" Ñ‚Ñ‘Ñ…Ñ‘Ğ„Ñ "stream end"...
 			if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
 				err = Z_OK;
 			// CRAP}

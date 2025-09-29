@@ -38,7 +38,7 @@ interface IDebugInfoManager : public CObjectBase
 	virtual int CreateSegment( const int nID, const CSegment &segment, const int nThickness, const NDebugInfo::EColor eColor ) = 0;
 	virtual void DeleteObject( const int nID ) = 0;
 	
-	//возвращает последовательно цвета: Красный, Синий, Зеленый, Красный ...
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ С†РІРµС‚Р°: РљСЂР°СЃРЅС‹Р№, РЎРёРЅРёР№, Р—РµР»РµРЅС‹Р№, РљСЂР°СЃРЅС‹Р№ ...
 	virtual NDebugInfo::EColor GetCycleColor() = 0;
 
 	virtual int DrawLine( const int nID, const NDebugInfo::SArrowHead &arrowStart, const NDebugInfo::SArrowHead &arrowEnd, const CVec4 &vColor, const bool bDepthCheck ) = 0;
@@ -47,7 +47,7 @@ interface IDebugInfoManager : public CObjectBase
 	virtual int DrawRect( const int nID, const SRect &rect, const float fZ, const CVec4 &vColor, const bool bDepthCheck ) = 0;
 	virtual int DrawRect( const int nID, const SRect &rect, const float fZ, const NDebugInfo::EColor eColor ) = 0;
 	virtual void RemoveLine( const int nID ) = 0;
-	//показать оси из точки (0; 0; 0), Красная - X, Зеленая - Y, Синяя - Z
+	//РїРѕРєР°Р·Р°С‚СЊ РѕСЃРё РёР· С‚РѕС‡РєРё (0; 0; 0), РљСЂР°СЃРЅР°СЏ - X, Р—РµР»РµРЅР°СЏ - Y, РЎРёРЅСЏСЏ - Z
 	virtual void ShowAxes( const bool bShow ) = 0;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

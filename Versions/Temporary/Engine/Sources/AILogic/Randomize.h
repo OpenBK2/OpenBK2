@@ -4,7 +4,7 @@
 #pragma ONCE
 #include "..\System\RandomGen.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// равномерно в круге с центром в 0 и радиусом fR
+// СЂР°РІРЅРѕРјРµСЂРЅРѕ РІ РєСЂСѓРіРµ СЃ С†РµРЅС‚СЂРѕРј РІ 0 Рё СЂР°РґРёСѓСЃРѕРј fR
 inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
 {
 	*pvRand = VNULL2;
@@ -16,7 +16,7 @@ inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
 	} while ( sqr( pvRand->x ) + sqr( pvRand->y ) > sqr( fR ) );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// равномерно по углу и по радиусу в круге с центром в 0 и радиусом fR
+// СЂР°РІРЅРѕРјРµСЂРЅРѕ РїРѕ СѓРіР»Сѓ Рё РїРѕ СЂР°РґРёСѓСЃСѓ РІ РєСЂСѓРіРµ СЃ С†РµРЅС‚СЂРѕРј РІ 0 Рё СЂР°РґРёСѓСЃРѕРј fR
 inline void RandQuadrInCircle(	const float fR, 
 																CVec2 *pvRand, 
 																const float fRatio=0.0f,
@@ -32,7 +32,7 @@ inline void RandQuadrInCircle(	const float fR,
 		pvRand->x = dir.x * fRandR;
 		pvRand->y = dir.y * fRandR;
 	}
-	else // для вытянутых траекторий
+	else // РґР»СЏ РІС‹С‚СЏРЅСѓС‚С‹С… С‚СЂР°РµРєС‚РѕСЂРёР№
 	{
 		Normalize( &vTrajLine );
 		*pvRand = vTrajLine* fRandR * dir.x * fRatio +

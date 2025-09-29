@@ -167,7 +167,7 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 						bBad = true;
 					else
 					{
-						// до конца пути осталось немного, лучше остановиться
+						// РґРѕ РєРѕРЅС†Р° РїСѓС‚Рё РѕСЃС‚Р°Р»РѕСЃСЊ РЅРµРјРЅРѕРіРѕ, Р»СѓС‡С€Рµ РѕСЃС‚Р°РЅРѕРІРёС‚СЊСЃСЏ
 						const float fDist2 = fabs2( vCenter - pPath->GetFinishPoint() );
 						if ( fDist2 <= sqr( 3 * GetUnit()->GetUnitProfile().GetHalfLength() ) )
 							FinishPath();
@@ -218,7 +218,7 @@ int CStandartSmoothPathBasis::InitSpline()
 
 	int inc = 0;
 /*{LOG
-в условии был ||, что приводило с плохому проезжанию зубцов, плюс изабивлся от ужасного вызова IsPathBroken
+РІ СѓСЃР»РѕРІРёРё Р±С‹Р» ||, С‡С‚Рѕ РїСЂРёРІРѕРґРёР»Рѕ СЃ РїР»РѕС…РѕРјСѓ РїСЂРѕРµР·Р¶Р°РЅРёСЋ Р·СѓР±С†РѕРІ, РїР»СЋСЃ РёР·Р°Р±РёРІР»СЃСЏ РѕС‚ СѓР¶Р°СЃРЅРѕРіРѕ РІС‹Р·РѕРІР° IsPathBroken
 LOG}*/
 	if ( IsPathBroken( -1 ) && IsPathBroken( 0 ) )
 	{

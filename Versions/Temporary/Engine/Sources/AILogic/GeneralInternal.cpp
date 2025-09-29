@@ -154,7 +154,7 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 			{
 				pAirForce->Give( pUnit );
 			}
-			// дальнобойные орудия
+			// РґР°Р»СЊРЅРѕР±РѕР№РЅС‹Рµ РѕСЂСѓРґРёСЏ
 			else if ( pUnit->GetFirstArtilleryGun() != 0 )
 			{
 				if ( pUnit->GetStats()->IsArtillery() || pUnit->GetStats()->IsSPG() || pUnit->GetStats()->etype == RPG_TYPE_TRAIN_SUPER )
@@ -169,7 +169,7 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 					{
 						if ( pStats->etype == RPG_TYPE_TRN_CIVILIAN_AUTO ) 
 						{
-							// такая байда нафиг не нужна генералу
+							// С‚Р°РєР°СЏ Р±Р°Р№РґР° РЅР°С„РёРі РЅРµ РЅСѓР¶РЅР° РіРµРЅРµСЂР°Р»Сѓ
 						}
 						else if ( pStats->etype == RPG_TYPE_TRN_MILITARY_AUTO )
 						{
@@ -211,7 +211,7 @@ void CGeneral::EraseLastSeen()
 	if ( curProcessed == enemys.end() ) 
 		curProcessed = enemys.begin();
 
-	// убрать всех врагов, которых видели давно.
+	// СѓР±СЂР°С‚СЊ РІСЃРµС… РІСЂР°РіРѕРІ, РєРѕС‚РѕСЂС‹С… РІРёРґРµР»Рё РґР°РІРЅРѕ.
 	for ( ; curProcessed != enemys.end() && nStep > 0; ++curProcessed )
 	{
 		--nStep;
@@ -243,7 +243,7 @@ void CGeneral::Segment()
 		
 		pAirForce->Segment();
 
-		// бомбардировака областей
+		// Р±РѕРјР±Р°СЂРґРёСЂРѕРІР°РєР° РѕР±Р»Р°СЃС‚РµР№
 		BombardmentSegment();
 		pGeneralArtillery->Segment();
 		if ( pIntendant )
@@ -264,7 +264,7 @@ void CGeneral::GiveCommandToBombardment()
 	
 	const float fComparativeWeight = 
 		cBombardmentType == 1 ? SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS : SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE;
-	// количество областей, среди которых кидать рандом
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±Р»Р°СЃС‚РµР№, СЃСЂРµРґРё РєРѕС‚РѕСЂС‹С… РєРёРґР°С‚СЊ СЂР°РЅРґРѕРј
 	int cnt = 0;
 	CResistancesContainer::iterator iter = resContainer.begin();
 	while ( cnt < 10 && !iter.IsFinished() && (*iter).GetWeight() >= fComparativeWeight )
@@ -276,7 +276,7 @@ void CGeneral::GiveCommandToBombardment()
 		iter.Iterate();
 	}
 
-	// можно бомбить
+	// РјРѕР¶РЅРѕ Р±РѕРјР±РёС‚СЊ
 	if ( cnt > 0 )
 	{
 		const int nRegion = NRandom::Random( 1, cnt );
@@ -303,7 +303,7 @@ void CGeneral::GiveCommandToBombardment()
 			CAIUnit *pUnit = *unitsIter;
 			CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-			// если послать бомберов или если это враг и его видели не так давно
+			// РµСЃР»Рё РїРѕСЃР»Р°С‚СЊ Р±РѕРјР±РµСЂРѕРІ РёР»Рё РµСЃР»Рё СЌС‚Рѕ РІСЂР°Рі Рё РµРіРѕ РІРёРґРµР»Рё РЅРµ С‚Р°Рє РґР°РІРЅРѕ
 			if ( cBombardmentType == 1 || curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 			{
 				if ( pInfo->IsLastVisibleAntiArt() )
@@ -332,14 +332,14 @@ void CGeneral::GiveCommandToBombardment()
 					CAIUnit *pUnit = *unitsIter;
 					CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-					// если это враг и его видели не так давно		
+					// РµСЃР»Рё СЌС‚Рѕ РІСЂР°Рі Рё РµРіРѕ РІРёРґРµР»Рё РЅРµ С‚Р°Рє РґР°РІРЅРѕ		
 					if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 					{
 						const float fDist = fabs( pUnit->GetCenterPlain() - vCenter );
 						if ( fDist > fMaxDistance )
 							fMaxDistance = fDist;
 
-						// "забыть" о невидимых юнитах в этом радиусе
+						// "Р·Р°Р±С‹С‚СЊ" Рѕ РЅРµРІРёРґРёРјС‹С… СЋРЅРёС‚Р°С… РІ СЌС‚РѕРј СЂР°РґРёСѓСЃРµ
 						if ( !pUnit->IsVisible( nParty ) )
 							pUnit->SetLastVisibleTime( 0 );
 					}
@@ -368,9 +368,9 @@ const float Func( const float fX, const float fBound )
 	// x <= f  -->  exp( k * ( x - f ) )
 	// x > f   -->  2 - exp( -k * ( x - f ) )
 
-	// точка смены - пятерная минимальная
+	// С‚РѕС‡РєР° СЃРјРµРЅС‹ - РїСЏС‚РµСЂРЅР°СЏ РјРёРЅРёРјР°Р»СЊРЅР°СЏ
 	const float f = 5.0f;
-	// угол касательной в точке f
+	// СѓРіРѕР» РєР°СЃР°С‚РµР»СЊРЅРѕР№ РІ С‚РѕС‡РєРµ f
 	const float k = 2.0f;
 
 	float func;
@@ -379,7 +379,7 @@ const float Func( const float fX, const float fBound )
 	else
 		func = 2 - exp( -k * ( fX - f ) );
 
-	// сдвиг функции в ноль в нуле и в fBound в бесконечности
+	// СЃРґРІРёРі С„СѓРЅРєС†РёРё РІ РЅРѕР»СЊ РІ РЅСѓР»Рµ Рё РІ fBound РІ Р±РµСЃРєРѕРЅРµС‡РЅРѕСЃС‚Рё
 	func = ( func - exp( -k*f ) ) / ( 2 - exp( -k*f ) ) * fBound;
 
 	return func;
@@ -389,7 +389,7 @@ void CGeneral::Bombardment()
 {
 	const float fComparativeWeight = 
 		cBombardmentType == 1 ? SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS : SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE;
-	// количество областей, среди которых кидать рандом
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ РѕР±Р»Р°СЃС‚РµР№, СЃСЂРµРґРё РєРѕС‚РѕСЂС‹С… РєРёРґР°С‚СЊ СЂР°РЅРґРѕРј
 	int cnt = 0;
 	CResistancesContainer::iterator iter = resContainer.begin();
 	while ( cnt < 10 && !iter.IsFinished() && (*iter).GetWeight() >= fComparativeWeight )
@@ -401,7 +401,7 @@ void CGeneral::Bombardment()
 		iter.Iterate();
 	}
 
-	// можно бомбить
+	// РјРѕР¶РЅРѕ Р±РѕРјР±РёС‚СЊ
 	if ( cnt > 0 )
 	{
 		const int nRegion = NRandom::Random( 1, cnt );
@@ -428,7 +428,7 @@ void CGeneral::Bombardment()
 			CAIUnit *pUnit = *unitsIter;
 			CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-			// если послать бомберов или если это враг и его видели не так давно
+			// РµСЃР»Рё РїРѕСЃР»Р°С‚СЊ Р±РѕРјР±РµСЂРѕРІ РёР»Рё РµСЃР»Рё СЌС‚Рѕ РІСЂР°Рі Рё РµРіРѕ РІРёРґРµР»Рё РЅРµ С‚Р°Рє РґР°РІРЅРѕ
 			if ( cBombardmentType == 1 || curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 			{
 				if ( pInfo->IsLastVisibleAntiArt() )
@@ -458,10 +458,10 @@ void CGeneral::Bombardment()
 						CAIUnit *pUnit = *unitsIter;
 						CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-						// если это враг и его видели не так давно		
+						// РµСЃР»Рё СЌС‚Рѕ РІСЂР°Рі Рё РµРіРѕ РІРёРґРµР»Рё РЅРµ С‚Р°Рє РґР°РІРЅРѕ		
 						if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 						{
-							// "забыть" о невидимых юнитах в этом радиусе
+							// "Р·Р°Р±С‹С‚СЊ" Рѕ РЅРµРІРёРґРёРјС‹С… СЋРЅРёС‚Р°С… РІ СЌС‚РѕРј СЂР°РґРёСѓСЃРµ
 							if ( !pUnit->IsVisible( nParty ) )
 								pUnit->SetLastVisibleTime( 0 );
 						}
@@ -477,14 +477,14 @@ void CGeneral::Bombardment()
 					CAIUnit *pUnit = *unitsIter;
 					CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-					// если это враг и его видели не так давно		
+					// РµСЃР»Рё СЌС‚Рѕ РІСЂР°Рі Рё РµРіРѕ РІРёРґРµР»Рё РЅРµ С‚Р°Рє РґР°РІРЅРѕ		
 					if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 					{
 						const float fDist = fabs( pUnit->GetCenterPlain() - vCenter );
 						if ( fDist > fMaxDistance )
 							fMaxDistance = fDist;
 
-						// "забыть" о невидимых юнитах в этом радиусе
+						// "Р·Р°Р±С‹С‚СЊ" Рѕ РЅРµРІРёРґРёРјС‹С… СЋРЅРёС‚Р°С… РІ СЌС‚РѕРј СЂР°РґРёСѓСЃРµ
 						if ( !pUnit->IsVisible( nParty ) )
 							pUnit->SetLastVisibleTime( 0 );
 					}
@@ -530,10 +530,10 @@ void CGeneral::BombardmentSegment()
 					Func( fRatio, 1 - SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE )
 					+ 
 					SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE;
-				// делится на 1000, т.к. проверка раз в секунду
+				// РґРµР»РёС‚СЃСЏ РЅР° 1000, С‚.Рє. РїСЂРѕРІРµСЂРєР° СЂР°Р· РІ СЃРµРєСѓРЅРґСѓ
 				const float fProbNow = fProbability >= 1.0f ? 1.0f : 1 - exp( 1.0f/((float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f) * log( 1.0f - fProbability ) );
 
-				// нужно стрелять
+				// РЅСѓР¶РЅРѕ СЃС‚СЂРµР»СЏС‚СЊ
 				const float fRand = NRandom::Random( 0.0f, 1.0f );
 				if ( fRand < fProbNow )
 				{
@@ -562,9 +562,9 @@ bool CGeneral::IsMobileReinforcement( int nGroupID ) const
 void CGeneral::GiveNewUnits( const list<CCommonUnit*> &pUnits, bool bFromReinforcement )
 {
 	typedef hash_map<int, bool> Formations;
-	Formations formations; // добавляемые формации
+	Formations formations; // РґРѕР±Р°РІР»СЏРµРјС‹Рµ С„РѕСЂРјР°С†РёРё
 	
-	// забрать все юниты, кроме солдат. солдат забирать формациями	
+	// Р·Р°Р±СЂР°С‚СЊ РІСЃРµ СЋРЅРёС‚С‹, РєСЂРѕРјРµ СЃРѕР»РґР°С‚. СЃРѕР»РґР°С‚ Р·Р°Р±РёСЂР°С‚СЊ С„РѕСЂРјР°С†РёСЏРјРё	
 	for ( list<CCommonUnit*>::const_iterator iter = pUnits.begin(); iter != pUnits.end(); ++iter )
 	{
 		CCommonUnit *pUnit = *iter;
@@ -581,7 +581,7 @@ void CGeneral::GiveNewUnits( const list<CCommonUnit*> &pUnits, bool bFromReinfor
 		}
 	}
 
-	// забрать формации
+	// Р·Р°Р±СЂР°С‚СЊ С„РѕСЂРјР°С†РёРё
 	for( Formations::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
 		if ( CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first ) )
@@ -614,7 +614,7 @@ void CGeneral::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 {
-	// создать список мобильных отрядов
+	// СЃРѕР·РґР°С‚СЊ СЃРїРёСЃРѕРє РјРѕР±РёР»СЊРЅС‹С… РѕС‚СЂСЏРґРѕРІ
 	for ( int i = 0; i < mapInfo.mobileScriptIDs.size(); ++i )
 		mobileReinforcementGroupIDs.insert( mapInfo.mobileScriptIDs[i] );
 	nMaxAllowedMobileTanks = mapInfo.nMaxMobileTanks;
@@ -627,7 +627,7 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 	{
 		switch( mapInfo.parcels[i].eType )
 		{
-		case EPATCH_DEFENCE:								// защита патчей 
+		case EPATCH_DEFENCE:								// Р·Р°С‰РёС‚Р° РїР°С‚С‡РµР№ 
 			{
 				CGeneralTaskToDefendPatch * pTask  = new CGeneralTaskToDefendPatch;
 				pTask->Init( mapInfo.parcels[i], this );
@@ -638,7 +638,7 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 		case EPATCH_REINFORCE:
 			{
 				bReinforceCreated = true;
-				// манипулирование резервами
+				// РјР°РЅРёРїСѓР»РёСЂРѕРІР°РЅРёРµ СЂРµР·РµСЂРІР°РјРё
 				CGeneralTaskToHoldReinforcement * pTask = new CGeneralTaskToHoldReinforcement;
 				pTask->Init( mapInfo.parcels[i] );
 				// notify Intendant about points to hold reinforcement.
@@ -653,7 +653,7 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 	// there is no reinforcement positions. create one, MUST HAVE at leas one
 	if ( !bReinforceCreated )
 	{
-		// манипулирование резервами
+		// РјР°РЅРёРїСѓР»РёСЂРѕРІР°РЅРёРµ СЂРµР·РµСЂРІР°РјРё
 		CGeneralTaskToHoldReinforcement * pTask = new CGeneralTaskToHoldReinforcement;
 		pTask->Init();
 		pTask->AskForWorker( this, 0, true );

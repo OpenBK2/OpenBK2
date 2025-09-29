@@ -84,11 +84,11 @@ namespace NMapInfoEditor
 		{
 			return false;
 		}
-		// Óñòàíàâëèâàåì îáùèå ïàðàìåòðû
+		// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾Ð±Ñ‰Ð¸Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		const string szSpotPrefix = StrFmt( "Spots.[%d]", pSpotLoadInfo->nObjectIndex );
-		// Äîáàâëÿåì îáúåêòû áàçû
+		// Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ Ð±Ð°Ð·Ñ‹
 		nLinkID = INVALID_NODE_ID;
-		// ñîçäàåì SMapInfoElement è çàïîëíÿåì åãî äàííûìè
+		// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ SMapInfoElement Ð¸ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ ÐµÐ³Ð¾ Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸
 		bool bResult = true;
 		{
 			if ( pSpotLoadInfo->bAdditionalDataFilled )
@@ -115,7 +115,7 @@ namespace NMapInfoEditor
 			sceneElement.vPosition = VNULL3;
 			sceneElement.vAdditionalPosition = vAdditionalPosition;
 			sceneElement.fDirection = 0.0f;
-			// çàíîñèì ýëåìåíò â ñòðóêòóðó äàííûõ îáúåêòà
+			// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð² ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñƒ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 			sceneElementMap[nSceneID] = sceneElement;
 			pObjectInfoCollector->sceneIDMap[nSceneID] = nObjectInfoID;
 			pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
@@ -137,20 +137,20 @@ namespace NMapInfoEditor
 		}
 		//
 		NI_ASSERT( ( pSpotSreateInfo->spotSquare.size() == 4 ), "SSpotInfo::Create(), pSpotSreateInfo->spotSquare.size() != 4" );
-		// Óñòàíàâëèâàåì îáùèå ïàðàìåòðû
+		// Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾Ð±Ñ‰Ð¸Ðµ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ñ‹
 		szRPGStatsTypeName = pSpotSreateInfo->szRPGStatsTypeName;
 		rpgStatsDBID = pSpotSreateInfo->rpgStatsDBID;
 		spotSquare = pSpotSreateInfo->spotSquare;
 		nLinkID = pObjectInfoCollector->linkIDCollector.LockID();
 		//
-		// Äîáàâëÿåì îáúåêòû áàçû
+		// Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ Ð±Ð°Ð·Ñ‹
 		int nSpotIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nSpotIndex, pManipulator, "Spots" );
 		if ( nSpotIndex == INVALID_NODE_ID )
 		{
 			return false;
 		}
-		// ñîçäàåì SMapInfoElements è çàïîëíÿåì èõ äàííûìè
+		// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ SMapInfoElements Ð¸ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ Ð¸Ñ… Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸
 		bool bResult = true;
 		{
 			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
@@ -191,7 +191,7 @@ namespace NMapInfoEditor
 				sceneElement.vPosition = VNULL3;
 				sceneElement.vAdditionalPosition = vAdditionalPosition;
 				sceneElement.fDirection = 0.0f;
-				// çàíîñèì ýëåìåíò â ñòðóêòóðó äàííûõ îáúåêòà
+				// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð² ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñƒ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 				sceneElementMap[nSceneID] = sceneElement;
 				pObjectInfoCollector->sceneIDMap[nSceneID] = nObjectInfoID;
 				pObjectInfoCollector->linkIDMap[nLinkID] = nObjectInfoID;
@@ -444,14 +444,14 @@ namespace NMapInfoEditor
 		//
 		MakeAbsoluteSpotSquare();
 		//
-		// Äîáàâëÿåì îáúåêòû áàçû
+		// Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¾Ð±ÑŠÐµÐºÑ‚Ñ‹ Ð±Ð°Ð·Ñ‹
 		int nSpotIndex = INVALID_NODE_ID;
 		CManipulatorManager::GetValue( &nSpotIndex, pManipulator, "Spots" );
 		if ( nSpotIndex == INVALID_NODE_ID )
 		{
 			return false;
 		}
-		// ñîçäàåì SMapInfoElements è çàïîëíÿåì èõ äàííûìè
+		// ÑÐ¾Ð·Ð´Ð°ÐµÐ¼ SMapInfoElements Ð¸ Ð·Ð°Ð¿Ð¾Ð»Ð½ÑÐµÐ¼ Ð¸Ñ… Ð´Ð°Ð½Ð½Ñ‹Ð¼Ð¸
 		bool bResult = true;
 		{
 			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
@@ -483,7 +483,7 @@ namespace NMapInfoEditor
 				sceneElement.vPosition = VNULL3;
 				sceneElement.vAdditionalPosition = vAdditionalPosition;
 				sceneElement.fDirection = 0.0f;
-				// çàíîñèì ýëåìåíò â ñòðóêòóðó äàííûõ îáúåêòà
+				// Ð·Ð°Ð½Ð¾ÑÐ¸Ð¼ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚ Ð² ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñƒ Ð´Ð°Ð½Ð½Ñ‹Ñ… Ð¾Ð±ÑŠÐµÐºÑ‚Ð°
 				//
 				nObjectInfoID = pObjectInfoCollector->objectInfoIDCollector.LockID();
 				pObjectInfoCollector->objectInfoMap[nObjectInfoID] = this;

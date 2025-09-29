@@ -63,9 +63,9 @@ void Trace2DFloatArray( const CArray2DType &rArray, const string &rszAdditionalM
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Берёт опцию из mayaExportData секции UserData.
-// Производится lookup сначала в пользовательском наборе установок, затем в общем
-// таким образом локальные установки пользователя имеют приоритет.
+// Р‘РµСЂС‘С‚ РѕРїС†РёСЋ РёР· mayaExportData СЃРµРєС†РёРё UserData.
+// РџСЂРѕРёР·РІРѕРґРёС‚СЃСЏ lookup СЃРЅР°С‡Р°Р»Р° РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРј РЅР°Р±РѕСЂРµ СѓСЃС‚Р°РЅРѕРІРѕРє, Р·Р°С‚РµРј РІ РѕР±С‰РµРј
+// С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј Р»РѕРєР°Р»СЊРЅС‹Рµ СѓСЃС‚Р°РЅРѕРІРєРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёРјРµСЋС‚ РїСЂРёРѕСЂРёС‚РµС‚.
 //
 template<class T> const T & GetOption( const T SUserData::SMayaExportData::* pField )
 {
@@ -106,17 +106,17 @@ bool WaitForFile( const string &szFileName, const double fMaxWaitTime /* = 10000
 bool ExecuteMayaScript( const string &szScript );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Non-interactive Maya Export (granny or particles)
-// Сформировать первые строки скрипта экспорта результатов работы Maya в данные игры
+// РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ РїРµСЂРІС‹Рµ СЃС‚СЂРѕРєРё СЃРєСЂРёРїС‚Р° СЌРєСЃРїРѕСЂС‚Р° СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ СЂР°Р±РѕС‚С‹ Maya РІ РґР°РЅРЅС‹Рµ РёРіСЂС‹
 void MEStartScript( string *pszScriptText, bool bGUIMode );
-// Завершить формирование скрипта экспорта результатов работы Maya в данные игры
+// Р—Р°РІРµСЂС€РёС‚СЊ С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ СЃРєСЂРёРїС‚Р° СЌРєСЃРїРѕСЂС‚Р° СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ СЂР°Р±РѕС‚С‹ Maya РІ РґР°РЅРЅС‹Рµ РёРіСЂС‹
 void MEFinishScript( string *pszScriptText, bool bGUIMode );
-// Выполнить скрипт Maya
-// bNeedExport - есть необходимость выполнять скрит ( если false - только сохранить скрипт на диск )
+// Р’С‹РїРѕР»РЅРёС‚СЊ СЃРєСЂРёРїС‚ Maya
+// bNeedExport - РµСЃС‚СЊ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІС‹РїРѕР»РЅСЏС‚СЊ СЃРєСЂРёС‚ ( РµСЃР»Рё false - С‚РѕР»СЊРєРѕ СЃРѕС…СЂР°РЅРёС‚СЊ СЃРєСЂРёРїС‚ РЅР° РґРёСЃРє )
 bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Получить размер картинки
+// РџРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РєР°СЂС‚РёРЅРєРё
 bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize  );
-// Получить размер картинки
+// РџРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РєР°СЂС‚РёРЅРєРё
 bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize  );
 
 bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName );

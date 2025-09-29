@@ -34,7 +34,7 @@ const float KEY_OBJECT_TEXTURE_POINT_Y = 6.0f;
 const int EVENT_ITEMS_INTERVAL = 5;
 const char* EVENT_NAME_PREFIX = "Btn";
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const int CLIENT_UNIQUE_ID_MAP_POINTER = -10000; // look for other CLIENT_UNIQUE_ID_xxx (криво, но менять поздно)
+const int CLIENT_UNIQUE_ID_MAP_POINTER = -10000; // look for other CLIENT_UNIQUE_ID_xxx (РєСЂРёРІРѕ, РЅРѕ РјРµРЅСЏС‚СЊ РїРѕР·РґРЅРѕ)
 
 #define MP_MARKER_POINTER_ID 1000
 #define MP_MARKER_EXPIRE 120000

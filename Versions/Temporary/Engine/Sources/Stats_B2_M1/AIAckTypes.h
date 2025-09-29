@@ -3,7 +3,7 @@
 struct SAIAcknowledgment
 {
 	int nAck;
-	int	nObjUniqueID; // кто звучит
+	int	nObjUniqueID; // РєС‚Рѕ Р·РІСѓС‡РёС‚
 	int nSet;								// number of acknowledgement set
 
 	SAIAcknowledgment() : nAck( 0 ), nObjUniqueID( -1 ), nSet( 0 ) { }
@@ -11,12 +11,12 @@ struct SAIAcknowledgment
 		: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), nSet( _nSet ) { }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для посылки клиенту изменения состояния Bored у юнита
+// РґР»СЏ РїРѕСЃС‹Р»РєРё РєР»РёРµРЅС‚Сѓ РёР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ Bored Сѓ СЋРЅРёС‚Р°
 struct SAIBoredAcknowledgement
 {
 	int nAck;
-	int	nObjUniqueID; // кто звучит
-	bool bPresent;			// новое состояние
+	int	nObjUniqueID; // РєС‚Рѕ Р·РІСѓС‡РёС‚
+	bool bPresent;			// РЅРѕРІРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
 
 	SAIBoredAcknowledgement() : nAck( 0 ), nObjUniqueID( -1 ), bPresent( false ) { }
 	SAIBoredAcknowledgement( int _nAck, const int _nObjUniqueID, bool _bPresent )

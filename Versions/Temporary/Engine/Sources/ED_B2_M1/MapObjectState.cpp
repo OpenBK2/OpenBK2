@@ -80,7 +80,7 @@ void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &
 			//
 			if ( !( pParentState->GetObjectInfoCollector()->IsInSelection( selectedObjectSceneIDList ) ) )
 			{
-				// выделили объект, необходимо обновить Selection и перейти в стейт редактирования
+				// РІС‹РґРµР»РёР»Рё РѕР±СЉРµРєС‚, РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ Selection Рё РїРµСЂРµР№С‚Рё РІ СЃС‚РµР№С‚ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
 				if ( ( nFlags & MK_SHIFT ) > 0 )
 				{
 					pParentState->GetObjectInfoCollector()->InsertToSelection( selectedObjectSceneIDList, false );
@@ -400,13 +400,13 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 				const UINT nNewSelectedObjectSceneID = pParentState->GetNextSceneID( pParentState->nSelectedSceneID, &sceneIDList );
 				if ( nNewSelectedObjectSceneID != pParentState->nSelectedSceneID )
 				{
-					// удаляем старый объект
+					// СѓРґР°Р»СЏРµРј СЃС‚Р°СЂС‹Р№ РѕР±СЉРµРєС‚
 					if ( ( nFlags & MK_SHIFT ) == 0 )
 					{
 						list<UINT> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->RemoveFromSelection( selectedObjectSceneIDList );
-						// записываем его положение в базу:
+						// Р·Р°РїРёСЃС‹РІР°РµРј РµРіРѕ РїРѕР»РѕР¶РµРЅРёРµ РІ Р±Р°Р·Сѓ:
 						const UINT nMapObjectInfoID = pParentState->GetObjectInfoCollector()->Pick( pParentState->nSelectedSceneID );
 						if ( nMapObjectInfoID != INVALID_NODE_ID )
 						{
@@ -424,7 +424,7 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 						}
 					}
 					pParentState->nSelectedSceneID = nNewSelectedObjectSceneID;
-					// вставляем новывй
+					// РІСЃС‚Р°РІР»СЏРµРј РЅРѕРІС‹РІР№
 					{
 						list<UINT> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
@@ -457,7 +457,7 @@ void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMo
 			{
 				pParentState->RotateSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, false, bSave );
 			}
-			// проверяем на наличие линка
+			// РїСЂРѕРІРµСЂСЏРµРј РЅР° РЅР°Р»РёС‡РёРµ Р»РёРЅРєР°
 			if ( ( nFlags & MK_SHIFT ) > 0 )
 			{
 				if ( IEditorScene *pScene = EditorScene() )
@@ -500,7 +500,7 @@ void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMo
 	}
 	else if ( ( nFlags & MK_RBUTTON ) > 0 )
 	{
-		// поднимаем опускаем
+		// РїРѕРґРЅРёРјР°РµРј РѕРїСѓСЃРєР°РµРј
 		if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_OUT ) ||
 				 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER )  ||
 				 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
@@ -637,7 +637,7 @@ void CMapObjectEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 			{	
-				// для правильной работы поднимания / опускания юнитов.
+				// РґР»СЏ РїСЂР°РІРёР»СЊРЅРѕР№ СЂР°Р±РѕС‚С‹ РїРѕРґРЅРёРјР°РЅРёСЏ / РѕРїСѓСЃРєР°РЅРёСЏ СЋРЅРёС‚РѕРІ.
 				pParentState->pStoreInputState->OnRButtonDown( pParentState->pStoreInputState->lastEventInfo.nFlags, pParentState->pStoreInputState->lastEventInfo.point );
 				pParentState->SetSelectionHeightsToZero( false );
 				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
@@ -1168,7 +1168,7 @@ void CMapObjectState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_STATE );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
 
-	// Не надо
+	// РќРµ РЅР°РґРѕ
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	GetObjectInfoCollector()->ClearShootAreas();
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
@@ -1227,7 +1227,7 @@ void CMapObjectState::PostDraw( class CPaintDC *pPaintDC )
 		{
 			if ( !selector.IsTerrainSelector() )
 			{
-				// нарисовать рамку
+				// РЅР°СЂРёСЃРѕРІР°С‚СЊ СЂР°РјРєСѓ
 				CRect selectorRect( selector.frameRect.minx, selector.frameRect.miny, selector.frameRect.maxx, selector.frameRect.maxy );
 				selectorRect.NormalizeRect();
 				//

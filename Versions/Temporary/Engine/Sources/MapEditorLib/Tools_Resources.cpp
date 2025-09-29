@@ -52,19 +52,19 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 	if ( pszPath )
 	{
 		NStr::ReplaceAllChars( pszPath, '/', '\\' );
-		// Проверяем наличие слеша в конце пути
+		// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ СЃР»РµС€Р° РІ РєРѕРЅС†Рµ РїСѓС‚Рё
 		string szPathPrefix = rszPathPrefix;
 		if ( ( szPathPrefix.size() > 0 ) && ( szPathPrefix[szPathPrefix.size() - 1] != '\\' ) )
 		{
 			szPathPrefix += "\\";
 		}
-		// Проверяем наличие отсутствия слеша в начале имени
+		// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РѕС‚СЃСѓС‚СЃС‚РІРёСЏ СЃР»РµС€Р° РІ РЅР°С‡Р°Р»Рµ РёРјРµРЅРё
 		string szPath = ( *pszPath );
 		if ( ( szPath.size() > 0 ) && ( szPath[0] == '\\' ) )
 		{
 			szPath = szPath.substr( 1 );
 		}
-		// Если это каталог - необходимо проверить наличие последнего слеша
+		// Р•СЃР»Рё СЌС‚Рѕ РєР°С‚Р°Р»РѕРі - РЅРµРѕР±С…РѕРґРёРјРѕ РїСЂРѕРІРµСЂРёС‚СЊ РЅР°Р»РёС‡РёРµ РїРѕСЃР»РµРґРЅРµРіРѕ СЃР»РµС€Р°
 		if ( !bFile )
 		{
 			if ( ( szPath.size() > 0 ) && ( szPath[szPath.size() - 1] != '\\' ) )
@@ -73,12 +73,12 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 			}
 		}
 		
-		// Расширяем имя файла до полного или отрезаем ненужное
+		// Р Р°СЃС€РёСЂСЏРµРј РёРјСЏ С„Р°Р№Р»Р° РґРѕ РїРѕР»РЅРѕРіРѕ РёР»Рё РѕС‚СЂРµР·Р°РµРј РЅРµРЅСѓР¶РЅРѕРµ
 		string szLCPathPrefix = szPathPrefix;
 		string szLCPath = szPath;
 		NStr::ToLowerASCII( &szLCPathPrefix );
 		NStr::ToLowerASCII( &szLCPath );
-		// Имя по которому будет проверятся наличие фала на диске
+		// РРјСЏ РїРѕ РєРѕС‚РѕСЂРѕРјСѓ Р±СѓРґРµС‚ РїСЂРѕРІРµСЂСЏС‚СЃСЏ РЅР°Р»РёС‡РёРµ С„Р°Р»Р° РЅР° РґРёСЃРєРµ
 		string szCheckPath;
 		//
 		if ( !szPathPrefix.empty() ) 

@@ -50,7 +50,7 @@ public:
 
 	virtual const SHPObjectRPGStats* GetStats() const = 0;
 	
-	// расположение объекта
+	// СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р°
 	virtual const CVec3& GetCenter() const = 0;
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const = 0;
 	virtual void GetBoundRect( SRect *pRect ) const = 0;
@@ -58,13 +58,13 @@ public:
 	virtual bool IsPointInside( const CVec2 &point ) const = 0;
 	virtual const WORD GetDir() const = 0;
 
-	// hit points и damage
+	// hit points Рё damage
 	virtual const float GetHitPoints() const = 0;
 	virtual void SetHitPoints( const float fNewHP ) { NI_ASSERT(false, "wrong call,CStaticObject::SetHitPoints"); }
 
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit ) = 0;
 
-	// сегмент для обработки некоторой внутренней логики объекта
+	// СЃРµРіРјРµРЅС‚ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РЅРµРєРѕС‚РѕСЂРѕР№ РІРЅСѓС‚СЂРµРЅРЅРµР№ Р»РѕРіРёРєРё РѕР±СЉРµРєС‚Р°
 	virtual void Segment() = 0;
 	virtual const NTimer::STime GetNextSegmentTime() const { return 0; }
 
@@ -75,12 +75,12 @@ public:
 	virtual const int GetNDefenders() const = 0;
 	virtual class CSoldier* GetUnit( const int n ) const = 0;
 	
-	// для suspended updates
+	// РґР»СЏ suspended updates
 	virtual const bool IsVisible( const BYTE cParty ) const;
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 
-	// может ли юнит класса eClass проехать сквозь объект
+	// РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ РєР»Р°СЃСЃР° eClass РїСЂРѕРµС…Р°С‚СЊ СЃРєРІРѕР·СЊ РѕР±СЉРµРєС‚
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,10 +88,10 @@ public:
 //*													ILoadableObject													*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// объект, внутри которого могут быть юниты
+// РѕР±СЉРµРєС‚, РІРЅСѓС‚СЂРё РєРѕС‚РѕСЂРѕРіРѕ РјРѕРіСѓС‚ Р±С‹С‚СЊ СЋРЅРёС‚С‹
 interface ILoadableObject
 {
-	// итерирование по fire slots
+	// РёС‚РµСЂРёСЂРѕРІР°РЅРёРµ РїРѕ fire slots
 	virtual void StartIterate() = 0;
 	virtual void Iterate() = 0;
 	virtual bool IsIterateFinished() = 0;
@@ -118,7 +118,7 @@ public:
 	static bool IsProhibited()  { return bProhibited; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// объект, реально находящийся на карте
+// РѕР±СЉРµРєС‚, СЂРµР°Р»СЊРЅРѕ РЅР°С…РѕРґСЏС‰РёР№СЃСЏ РЅР° РєР°СЂС‚Рµ
 class CExistingObject : public CStaticObject
 {
 	typedef unsigned long ulong;
@@ -158,17 +158,17 @@ public:
 	void SetTrampled() { bTrampled = true; }
 	bool IsTrampled() const { return bTrampled; }
 
-	// информация об объекте
+	// РёРЅС„РѕСЂРјР°С†РёСЏ РѕР± РѕР±СЉРµРєС‚Рµ
 	const int GetFrameIndex() const { return nFrameIndex; }
 
-	// hit points и damage
+	// hit points Рё damage
 	const float GetHitPoints() const { return fHP; }
 	void SetHitPoints( const float fNewHP ) { fHP = fNewHP; SetAlive( fHP > 0.0f ); }
 
-	// выполнение необходимых действий при обращении HitPoints в ноль
+	// РІС‹РїРѕР»РЅРµРЅРёРµ РЅРµРѕР±С…РѕРґРёРјС‹С… РґРµР№СЃС‚РІРёР№ РїСЂРё РѕР±СЂР°С‰РµРЅРёРё HitPoints РІ РЅРѕР»СЊ
 	virtual void Die( const float fDamage ) = 0;
 
-	// расположение объекта
+	// СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РѕР±СЉРµРєС‚Р°
 	virtual void SetNewPlacement( const CVec3 &center, const WORD dir );
 
 	virtual void LockTiles() = 0;
@@ -176,17 +176,17 @@ public:
 	virtual void UnlockTiles() = 0;
 	virtual void SetTransparencies() = 0;
 	virtual void RemoveTransparencies() = 0;
-	// поставить прозрачность ещё раз, если она сейчас поставлена
+	// РїРѕСЃС‚Р°РІРёС‚СЊ РїСЂРѕР·СЂР°С‡РЅРѕСЃС‚СЊ РµС‰С‘ СЂР°Р·, РµСЃР»Рё РѕРЅР° СЃРµР№С‡Р°СЃ РїРѕСЃС‚Р°РІР»РµРЅР°
 	virtual void RestoreTransparenciesImmidiately() = 0;
 	
-	// для updater-а
+	// РґР»СЏ updater-Р°
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats ) = 0;
 
 	virtual void Delete();
 
-	// для iterator-а
+	// РґР»СЏ iterator-Р°
 	virtual bool IsGlobalUpdated() const { return mark == globalMark; }
 	virtual void SetGlobalUpdated();
 	// for debug
@@ -194,16 +194,16 @@ public:
 
 	static void UpdateGlobalMark();
 	
-	// true при попадании
+	// true РїСЂРё РїРѕРїР°РґР°РЅРёРё
 	virtual bool ProcessCumulativeExpl( class CExplosion *pExpl, const int nArmorDir, const bool bFromExpl );
 	virtual bool ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
 	virtual bool ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius ) { return false; }
 
-	// сегмент для горения объекта
+	// СЃРµРіРјРµРЅС‚ РґР»СЏ РіРѕСЂРµРЅРёСЏ РѕР±СЉРµРєС‚Р°
 	virtual void BurnSegment();
-	// попадание по объекту с damage (вызывать только после списывания damage)
+	// РїРѕРїР°РґР°РЅРёРµ РїРѕ РѕР±СЉРµРєС‚Сѓ СЃ damage (РІС‹Р·С‹РІР°С‚СЊ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЃРїРёСЃС‹РІР°РЅРёСЏ damage)
 	virtual void WasHit();
-	// минимальное количество HP для объекта (для всех 0, кроме ключувых зданий)
+	// РјРёРЅРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ HP РґР»СЏ РѕР±СЉРµРєС‚Р° (РґР»СЏ РІСЃРµС… 0, РєСЂРѕРјРµ РєР»СЋС‡СѓРІС‹С… Р·РґР°РЅРёР№)
 	virtual const float GetMinHP() const { return 0.0f; }
 	
 	//if object falls on destruction
@@ -222,7 +222,7 @@ public:
 //*											CGivenPassabilityStObject										*
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// объект с заданной проходимостью
+// РѕР±СЉРµРєС‚ СЃ Р·Р°РґР°РЅРЅРѕР№ РїСЂРѕС…РѕРґРёРјРѕСЃС‚СЊСЋ
 class CGivenPassabilityStObject : public CExistingObject
 {
 	ZDATA_(CExistingObject)
@@ -274,7 +274,7 @@ public:
 	virtual void SetTransparencies() { SetTransparenciesInt( GetUniqueId() ); }
 	virtual void RemoveTransparencies() { RemoveTransparenciesInt( GetUniqueId() ); }
 	virtual void RestoreTransparenciesImmidiately();
-	// true если объект можно добавить в данную точку
+	// true РµСЃР»Рё РѕР±СЉРµРєС‚ РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РІ РґР°РЅРЅСѓСЋ С‚РѕС‡РєСѓ
 	static bool CheckStaticObject( const SObjectBaseRPGStats * pStats, const CVec2 & vPos, const WORD wDir, const int nFrameIndex );
 	virtual const int GetNEntrancePoints() const { return 0; }
 	virtual void GetEntranceData( CVec2 *pvPoint, WORD *pwDir, int nIndex ) const { return; }

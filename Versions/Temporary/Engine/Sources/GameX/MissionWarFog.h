@@ -33,7 +33,7 @@
 	SInterfaceMissionWarFogInfo();
 private:	
 	void GetWarFog( CArray2D<float> *pWarFog, NTimer::STime time );
-	// возвращает переходный шум между опорными, генерирует опорные шумы при необходимости
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ РїРµСЂРµС…РѕРґРЅС‹Р№ С€СѓРј РјРµР¶РґСѓ РѕРїРѕСЂРЅС‹РјРё, РіРµРЅРµСЂРёСЂСѓРµС‚ РѕРїРѕСЂРЅС‹Рµ С€СѓРјС‹ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё
 	void GetNoise( CArray2D<float> *pNoise, NTimer::STime time );
 	void Blend( CArray2D<float> *pDst, const CArray2D<float> &src1, const CArray2D<float> &src2, float fDelta );
 	void CycleMove( CArray2D<float> *pDst, const CArray2D<float> &src, const CVec2 &vPos );

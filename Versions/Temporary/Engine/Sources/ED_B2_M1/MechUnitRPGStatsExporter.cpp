@@ -2,58 +2,58 @@
 
 	*
 	*
-	*				ЛОКАТОРЫ
+	*				Р›РћРљРђРўРћР Р«
 	*
 	*
 
 
 	Unit				Locator name							Description										Comments
 	----------- ---------------						-----------------------				----------------------
-	поезд				MainGun										пушка													только у бронепоезда
-							MachineGun								пулемет	
-							MachineGun_Turret_Coax		пулемет спаренный с пушкой	
-							MachineGun_Turret_Back		пулемет сзади на башне	
-							MachineGun_Turret_Cupola	пулемет на командирской башенке	
-							MachineGun_Basis					курсовой пулемет на корпусе	
-							Smoke											точки дымления								у паровозов пар по бокам
-							FatalitySmoke							точки фатального дымления	
-							Exhaust										точки выхлопа	
-							TowingPoint								точки сцепки впереди	
-							HookPoint									точки сцепки сзади	
-							FrontWheel								центры осей передних колес	
-							BackWheel									центры осей задних колес	
-							People										точки захода людей	
-							Steam											дым из трубы паровоза	
+	РїРѕРµР·Рґ				MainGun										РїСѓС€РєР°													С‚РѕР»СЊРєРѕ Сѓ Р±СЂРѕРЅРµРїРѕРµР·РґР°
+							MachineGun								РїСѓР»РµРјРµС‚	
+							MachineGun_Turret_Coax		РїСѓР»РµРјРµС‚ СЃРїР°СЂРµРЅРЅС‹Р№ СЃ РїСѓС€РєРѕР№	
+							MachineGun_Turret_Back		РїСѓР»РµРјРµС‚ СЃР·Р°РґРё РЅР° Р±Р°С€РЅРµ	
+							MachineGun_Turret_Cupola	РїСѓР»РµРјРµС‚ РЅР° РєРѕРјР°РЅРґРёСЂСЃРєРѕР№ Р±Р°С€РµРЅРєРµ	
+							MachineGun_Basis					РєСѓСЂСЃРѕРІРѕР№ РїСѓР»РµРјРµС‚ РЅР° РєРѕСЂРїСѓСЃРµ	
+							Smoke											С‚РѕС‡РєРё РґС‹РјР»РµРЅРёСЏ								Сѓ РїР°СЂРѕРІРѕР·РѕРІ РїР°СЂ РїРѕ Р±РѕРєР°Рј
+							FatalitySmoke							С‚РѕС‡РєРё С„Р°С‚Р°Р»СЊРЅРѕРіРѕ РґС‹РјР»РµРЅРёСЏ	
+							Exhaust										С‚РѕС‡РєРё РІС‹С…Р»РѕРїР°	
+							TowingPoint								С‚РѕС‡РєРё СЃС†РµРїРєРё РІРїРµСЂРµРґРё	
+							HookPoint									С‚РѕС‡РєРё СЃС†РµРїРєРё СЃР·Р°РґРё	
+							FrontWheel								С†РµРЅС‚СЂС‹ РѕСЃРµР№ РїРµСЂРµРґРЅРёС… РєРѕР»РµСЃ	
+							BackWheel									С†РµРЅС‚СЂС‹ РѕСЃРµР№ Р·Р°РґРЅРёС… РєРѕР»РµСЃ	
+							People										С‚РѕС‡РєРё Р·Р°С…РѕРґР° Р»СЋРґРµР№	
+							Steam											РґС‹Рј РёР· С‚СЂСѓР±С‹ РїР°СЂРѕРІРѕР·Р°	
 
-	пушка				MainGun										пушка	
-							Explosion									точки попадания - взрыв	
-							Smoke											точки дымления	
-							TowingPoint								точки буксировки	
-							Gunner										точки расположения людей	
-							Ammo											точки расположения ящиков со снарядами	
+	РїСѓС€РєР°				MainGun										РїСѓС€РєР°	
+							Explosion									С‚РѕС‡РєРё РїРѕРїР°РґР°РЅРёСЏ - РІР·СЂС‹РІ	
+							Smoke											С‚РѕС‡РєРё РґС‹РјР»РµРЅРёСЏ	
+							TowingPoint								С‚РѕС‡РєРё Р±СѓРєСЃРёСЂРѕРІРєРё	
+							Gunner										С‚РѕС‡РєРё СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ Р»СЋРґРµР№	
+							Ammo											С‚РѕС‡РєРё СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ СЏС‰РёРєРѕРІ СЃРѕ СЃРЅР°СЂСЏРґР°РјРё	
 
-	самолет			MainGun										бомболюк	
-							MachineGun								пулемет	
-							Cannon										пушка	
-							Smoke											точки дымления	
-							People										точки выхода людей	
+	СЃР°РјРѕР»РµС‚			MainGun										Р±РѕРјР±РѕР»СЋРє	
+							MachineGun								РїСѓР»РµРјРµС‚	
+							Cannon										РїСѓС€РєР°	
+							Smoke											С‚РѕС‡РєРё РґС‹РјР»РµРЅРёСЏ	
+							People										С‚РѕС‡РєРё РІС‹С…РѕРґР° Р»СЋРґРµР№	
 
-	автомобиль	Explosion									точки попадания - взрыв	
-							Smoke											точки дымления	
-							Exhaust										точки выхлопа	
-							TowingPoint								точки буксировки	
-							People										точки захода людей	
+	Р°РІС‚РѕРјРѕР±РёР»СЊ	Explosion									С‚РѕС‡РєРё РїРѕРїР°РґР°РЅРёСЏ - РІР·СЂС‹РІ	
+							Smoke											С‚РѕС‡РєРё РґС‹РјР»РµРЅРёСЏ	
+							Exhaust										С‚РѕС‡РєРё РІС‹С…Р»РѕРїР°	
+							TowingPoint								С‚РѕС‡РєРё Р±СѓРєСЃРёСЂРѕРІРєРё	
+							People										С‚РѕС‡РєРё Р·Р°С…РѕРґР° Р»СЋРґРµР№	
 
-	танки и САУ	MainGun										пушка	
-							MachineGun								пулемет	
-							MachineGun_Turret_Coax		пулемет спаренный с пушкой	
-							MachineGun_Turret_Back		пулемет сзади на башне	
-							MachineGun_Turret_Cupola	пулемет на командирской башенке	
-							MachineGun_Basis					курсовой пулемет на корпусе	
-							Smoke											точки дымления	
-							FatalitySmoke							точки фатального дымления	
-							Exhaust										точки выхлопа	
-							Explosion									точки попадания - взрыв	
+	С‚Р°РЅРєРё Рё РЎРђРЈ	MainGun										РїСѓС€РєР°	
+							MachineGun								РїСѓР»РµРјРµС‚	
+							MachineGun_Turret_Coax		РїСѓР»РµРјРµС‚ СЃРїР°СЂРµРЅРЅС‹Р№ СЃ РїСѓС€РєРѕР№	
+							MachineGun_Turret_Back		РїСѓР»РµРјРµС‚ СЃР·Р°РґРё РЅР° Р±Р°С€РЅРµ	
+							MachineGun_Turret_Cupola	РїСѓР»РµРјРµС‚ РЅР° РєРѕРјР°РЅРґРёСЂСЃРєРѕР№ Р±Р°С€РµРЅРєРµ	
+							MachineGun_Basis					РєСѓСЂСЃРѕРІРѕР№ РїСѓР»РµРјРµС‚ РЅР° РєРѕСЂРїСѓСЃРµ	
+							Smoke											С‚РѕС‡РєРё РґС‹РјР»РµРЅРёСЏ	
+							FatalitySmoke							С‚РѕС‡РєРё С„Р°С‚Р°Р»СЊРЅРѕРіРѕ РґС‹РјР»РµРЅРёСЏ	
+							Exhaust										С‚РѕС‡РєРё РІС‹С…Р»РѕРїР°	
+							Explosion									С‚РѕС‡РєРё РїРѕРїР°РґР°РЅРёСЏ - РІР·СЂС‹РІ	
 
 
 	-------------------------------------------------------------------------------------------------------------
@@ -62,9 +62,9 @@
 	-----------------------		------------------------------			----------------------------------
 	Ammo											AmmoPoint														Vec2
 	BackWheel									BackWheel														Vec2
-	Cannon	(самолеты)				<?>																	string
+	Cannon	(СЃР°РјРѕР»РµС‚С‹)				<?>																	string
 	Exhaust										exhaustPoints												string[0+]
-	Explosion									скорее всего не исп.								-
+	Explosion									СЃРєРѕСЂРµРµ РІСЃРµРіРѕ РЅРµ РёСЃРї.								-
 	FatalitySmoke							FatalitySmokePoint									string
 	FrontWheel								FrontWheel													Vec2
 	Gunner										Gunners															Vec2[0+][0+]
@@ -82,14 +82,14 @@
 
 	*
 	*
-	*							КОНСТРЕЙНЫ
+	*							РљРћРќРЎРўР Р•Р™РќР«
 	*
 	*
 
-	Поле в MechUnitRPGStatus					Смысл																						Откуда берется 
+	РџРѕР»Рµ РІ MechUnitRPGStatus					РЎРјС‹СЃР»																						РћС‚РєСѓРґР° Р±РµСЂРµС‚СЃСЏ 
 	------------------------------		--------------------------------------------		----------------------------
-	platforms[i].constraint						constraint for procedural animation							rot Z limit для Turret
-	platforms[i].constraintVertical		ограничение на вертикальную наводку ствола			rot X limit для GunCarriage
+	platforms[i].constraint						constraint for procedural animation							rot Z limit РґР»СЏ Turret
+	platforms[i].constraintVertical		РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° РІРµСЂС‚РёРєР°Р»СЊРЅСѓСЋ РЅР°РІРѕРґРєСѓ СЃС‚РІРѕР»Р°			rot X limit РґР»СЏ GunCarriage
 	--------------------------------------------------------------------------------------------------------------
 
 */
@@ -134,27 +134,27 @@ void CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, co
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SGunInfo
 {
-	int nDirection;			// поворот пушки односительно оси юнита в горизонтальной плоскости
-											// MAYA: rotation соответствующего локатора вокруг Z
-											// хранится в виде числа 0..64к
+	int nDirection;			// РїРѕРІРѕСЂРѕС‚ РїСѓС€РєРё РѕРґРЅРѕСЃРёС‚РµР»СЊРЅРѕ РѕСЃРё СЋРЅРёС‚Р° РІ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕР№ РїР»РѕСЃРєРѕСЃС‚Рё
+											// MAYA: rotation СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµРіРѕ Р»РѕРєР°С‚РѕСЂР° РІРѕРєСЂСѓРі Z
+											// С…СЂР°РЅРёС‚СЃСЏ РІ РІРёРґРµ С‡РёСЃР»Р° 0..64Рє
 	
-	string szShootPoint;	// имя пушки ( MAYA: имя локатора пушки, обязательно начинается с L: LMainGun, LMachineGun01 и т.п. )
+	string szShootPoint;	// РёРјСЏ РїСѓС€РєРё ( MAYA: РёРјСЏ Р»РѕРєР°С‚РѕСЂР° РїСѓС€РєРё, РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РЅР°С‡РёРЅР°РµС‚СЃСЏ СЃ L: LMainGun, LMachineGun01 Рё С‚.Рї. )
 	
-	string szRecoilPoint;	// имя части пушки, которая участвует в отдаче (есть не у всех пушек)
-												// MAYA: имя родительского трансформа пушки	(имя которого строго MainBarrel??)
+	string szRecoilPoint;	// РёРјСЏ С‡Р°СЃС‚Рё РїСѓС€РєРё, РєРѕС‚РѕСЂР°СЏ СѓС‡Р°СЃС‚РІСѓРµС‚ РІ РѕС‚РґР°С‡Рµ (РµСЃС‚СЊ РЅРµ Сѓ РІСЃРµС… РїСѓС€РµРє)
+												// MAYA: РёРјСЏ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ С‚СЂР°РЅСЃС„РѕСЂРјР° РїСѓС€РєРё	(РёРјСЏ РєРѕС‚РѕСЂРѕРіРѕ СЃС‚СЂРѕРіРѕ MainBarrel??)
 	
-	float fRecoilLength;	// если пушка вложена в RecoilPoint, то (trans_limit_Y_max - trans_limit_Y_min)
+	float fRecoilLength;	// РµСЃР»Рё РїСѓС€РєР° РІР»РѕР¶РµРЅР° РІ RecoilPoint, С‚Рѕ (trans_limit_Y_max - trans_limit_Y_min)
 	
-	bool bRecoil;					// есть ли отдача (true если fRecoilLength != 0)
+	bool bRecoil;					// РµСЃС‚СЊ Р»Рё РѕС‚РґР°С‡Р° (true РµСЃР»Рё fRecoilLength != 0)
 	
-	string szRotatePoint;	// точка вертикального поворота (есть не у всех пушек)
-												// MAYA: в родительский  трансформ с именем GunCarriage??
+	string szRotatePoint;	// С‚РѕС‡РєР° РІРµСЂС‚РёРєР°Р»СЊРЅРѕРіРѕ РїРѕРІРѕСЂРѕС‚Р° (РµСЃС‚СЊ РЅРµ Сѓ РІСЃРµС… РїСѓС€РµРє)
+												// MAYA: РІ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№  С‚СЂР°РЅСЃС„РѕСЂРј СЃ РёРјРµРЅРµРј GunCarriage??
 
 	
-	string szPlatform;		// платформа, к которой прикреплена пушка
-												// MAYA: родительский трансформ 
-												//		 имя платформы может быть только 
-												//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
+	string szPlatform;		// РїР»Р°С‚С„РѕСЂРјР°, Рє РєРѕС‚РѕСЂРѕР№ РїСЂРёРєСЂРµРїР»РµРЅР° РїСѓС€РєР°
+												// MAYA: СЂРѕРґРёС‚РµР»СЊСЃРєРёР№ С‚СЂР°РЅСЃС„РѕСЂРј 
+												//		 РёРјСЏ РїР»Р°С‚С„РѕСЂРјС‹ РјРѕР¶РµС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ 
+												//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 Рё С‚.Рї.
 	
 	
 	SGunInfo()
@@ -166,7 +166,7 @@ struct SGunInfo
 
 	bool operator<( const SGunInfo &rOther )
 	{
-		// MainGun всегда первый, MachineGun00 < MachineGun01 и т.д.
+		// MainGun РІСЃРµРіРґР° РїРµСЂРІС‹Р№, MachineGun00 < MachineGun01 Рё С‚.Рґ.
 
 		int nMainGunIdx = -1;
 		bool bIsMainGun = false;
@@ -209,7 +209,7 @@ struct SGunInfo
 				return false;
 			else
 			{
-				// два мэйнгана на одной платформе
+				// РґРІР° РјСЌР№РЅРіР°РЅР° РЅР° РѕРґРЅРѕР№ РїР»Р°С‚С„РѕСЂРјРµ
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, "There are two main guns on one platform\n" );
 				pLogger->Log( LT_ERROR, StrFmt("\tPlatform: %s\n", szPlatform.c_str()) );
@@ -268,21 +268,21 @@ struct SGunInfo
 struct SPlatformInfo
 {
 	//
-	//		имя платформы может быть только 
-	//			Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
+	//		РёРјСЏ РїР»Р°С‚С„РѕСЂРјС‹ РјРѕР¶РµС‚ Р±С‹С‚СЊ С‚РѕР»СЊРєРѕ 
+	//			Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 Рё С‚.Рї.
 	//
-	//		Basis или Basis_a - платформы верхнего уровня
-	//		Turret??		  - другие платформы (прилинкованные к Basis)
+	//		Basis РёР»Рё Basis_a - РїР»Р°С‚С„РѕСЂРјС‹ РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ
+	//		Turret??		  - РґСЂСѓРіРёРµ РїР»Р°С‚С„РѕСЂРјС‹ (РїСЂРёР»РёРЅРєРѕРІР°РЅРЅС‹Рµ Рє Basis)
 	//
-	string szRotatePoint;	// имя платформы ( MAYA: имя трансформа )
+	string szRotatePoint;	// РёРјСЏ РїР»Р°С‚С„РѕСЂРјС‹ ( MAYA: РёРјСЏ С‚СЂР°РЅСЃС„РѕСЂРјР° )
 
-	float constraint[2];	// горизонтальный констрейн ( MAYA: rot_limit_Z у трансформа платформы )
+	float constraint[2];	// РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂРµР№РЅ ( MAYA: rot_limit_Z Сѓ С‚СЂР°РЅСЃС„РѕСЂРјР° РїР»Р°С‚С„РѕСЂРјС‹ )
 
-	float constraintVertical[2]; // вертикальный констрейн 
-								 // 0+ пушек имеют в качестве одного из родительских трансформов
-								 // трансформ GunCarriage??
-								 // только у одного из этих трансформов rot_limit_X != 0
-								 // именно этот rot_limit_X и кладется в constraintVertical
+	float constraintVertical[2]; // РІРµСЂС‚РёРєР°Р»СЊРЅС‹Р№ РєРѕРЅСЃС‚СЂРµР№РЅ 
+								 // 0+ РїСѓС€РµРє РёРјРµСЋС‚ РІ РєР°С‡РµСЃС‚РІРµ РѕРґРЅРѕРіРѕ РёР· СЂРѕРґРёС‚РµР»СЊСЃРєРёС… С‚СЂР°РЅСЃС„РѕСЂРјРѕРІ
+								 // С‚СЂР°РЅСЃС„РѕСЂРј GunCarriage??
+								 // С‚РѕР»СЊРєРѕ Сѓ РѕРґРЅРѕРіРѕ РёР· СЌС‚РёС… С‚СЂР°РЅСЃС„РѕСЂРјРѕРІ rot_limit_X != 0
+								 // РёРјРµРЅРЅРѕ СЌС‚РѕС‚ rot_limit_X Рё РєР»Р°РґРµС‚СЃСЏ РІ constraintVertical
 
 	vector<SGunInfo> guns;
 	//
@@ -343,7 +343,7 @@ struct SConstraintInfo
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
-	// расположение стрелков у пушек в 3-х возможных моделях пушки (стрельба+разворот+транспортировка)
+	// СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ СЃС‚СЂРµР»РєРѕРІ Сѓ РїСѓС€РµРє РІ 3-С… РІРѕР·РјРѕР¶РЅС‹С… РјРѕРґРµР»СЏС… РїСѓС€РєРё (СЃС‚СЂРµР»СЊР±Р°+СЂР°Р·РІРѕСЂРѕС‚+С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂРѕРІРєР°)
 	pManipulator->RemoveNode( "Gunners", NODE_REMOVEALL_INDEX );	
 	pManipulator->InsertNode( "Gunners" );
 	pManipulator->InsertNode( "Gunners" );
@@ -356,7 +356,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 	int nIdx = 0;
 	for ( CLocatorQInfoConstIter i = lc.begin(); i != lc.end(); ++i, ++nIdx )
 	{
-		if ( i->nQIdx < 10 ) // стрельба
+		if ( i->nQIdx < 10 ) // СЃС‚СЂРµР»СЊР±Р°
 		{	
 			pManipulator->InsertNode( "Gunners.[0].gunners" );
 			char pszGunnerDBA[64]={0};
@@ -364,7 +364,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );  
 			++gunnersNumber[0];
 		}
-		else if ( i->nQIdx < 20 ) // разворот
+		else if ( i->nQIdx < 20 ) // СЂР°Р·РІРѕСЂРѕС‚
 		{
 			pManipulator->InsertNode( "Gunners.[1].gunners" );
 			char pszGunnerDBA[64]={0};
@@ -372,7 +372,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );  
 			++gunnersNumber[1];
 		}
-		else if ( i->nQIdx < 30 ) // транспортировка
+		else if ( i->nQIdx < 30 ) // С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂРѕРІРєР°
 		{
 			pManipulator->InsertNode( "Gunners.[2].gunners" );
 			char pszGunnerDBA[64]={0};
@@ -388,7 +388,7 @@ static string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
 								const char *pszNamePattern )
 {
 	//
-	//	ищет родительский локатор, обладающий определенным именем
+	//	РёС‰РµС‚ СЂРѕРґРёС‚РµР»СЊСЃРєРёР№ Р»РѕРєР°С‚РѕСЂ, РѕР±Р»Р°РґР°СЋС‰РёР№ РѕРїСЂРµРґРµР»РµРЅРЅС‹Рј РёРјРµРЅРµРј
 	//
 	SSkeletonLocatorInfo curLoc = rGunLocator;
 	while ( (curLoc.nParentIdx != -1) )
@@ -411,7 +411,7 @@ static string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
 									const vector<SPlatformInfo> &rPlatformsInfo )
 {
 	//
-	//	возвращает имя платформы к которой привязан локатор
+	//	РІРѕР·РІСЂР°С‰Р°РµС‚ РёРјСЏ РїР»Р°С‚С„РѕСЂРјС‹ Рє РєРѕС‚РѕСЂРѕР№ РїСЂРёРІСЏР·Р°РЅ Р»РѕРєР°С‚РѕСЂ
 	//
 	SSkeletonLocatorInfo curLoc = rGunLocator;
 	while ( (curLoc.nParentIdx != -1) )
@@ -480,10 +480,10 @@ const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const vector
 static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	//
-	// функция считает № платформы: 
-	//		Basis или Basis_a, Basis?? - платформы верхнего уровня
+	// С„СѓРЅРєС†РёСЏ СЃС‡РёС‚Р°РµС‚ в„– РїР»Р°С‚С„РѕСЂРјС‹: 
+	//		Basis РёР»Рё Basis_a, Basis?? - РїР»Р°С‚С„РѕСЂРјС‹ РІРµСЂС…РЅРµРіРѕ СѓСЂРѕРІРЅСЏ
 	//
-	//		Turret*		  - другие платформы (прилинкованные к Basis)
+	//		Turret*		  - РґСЂСѓРіРёРµ РїР»Р°С‚С„РѕСЂРјС‹ (РїСЂРёР»РёРЅРєРѕРІР°РЅРЅС‹Рµ Рє Basis)
 	//		
 	pPlatforms->clear();
 	bool bHasBasis = false;
@@ -509,7 +509,7 @@ static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkele
 		}
 	}
 
-	// если есть и Basis и базис Basis_a, Basis удаляется
+	// РµСЃР»Рё РµСЃС‚СЊ Рё Basis Рё Р±Р°Р·РёСЃ Basis_a, Basis СѓРґР°Р»СЏРµС‚СЃСЏ
 	if ( bHasBasis && bHasBasisA )
 	{
 		for ( CPlatformsInfoIter j = pPlatforms->begin(); j != pPlatforms->end(); ++j )
@@ -902,10 +902,10 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 						const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 						const vector<SPlatformInfo> &rPlatformsInfo )
 {
-	// имя пушки?
+	// РёРјСЏ РїСѓС€РєРё?
 	pGunInfo->szShootPoint = rGunLocator.szName;
 	
-	// платформа?
+	// РїР»Р°С‚С„РѕСЂРјР°?
 	pGunInfo->szPlatform = GetLocatorPlatform( rGunLocator, rLocatorsInfo, rPlatformsInfo );
 	if ( pGunInfo->szPlatform.empty() )
 	{
@@ -913,12 +913,12 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 		pLogger->Log( LT_ERROR, "Can't find platform for gun\n" );
 		pLogger->Log( LT_ERROR, StrFmt("\tGun: %s\n", rGunLocator.szName.c_str()) );
 	}
-	// возможная причина - пушка прикреплена к basis, хотя в модели есть basis_a
+	// РІРѕР·РјРѕР¶РЅР°СЏ РїСЂРёС‡РёРЅР° - РїСѓС€РєР° РїСЂРёРєСЂРµРїР»РµРЅР° Рє basis, С…РѕС‚СЏ РІ РјРѕРґРµР»Рё РµСЃС‚СЊ basis_a
 
-	// точка вертикального поворота
+	// С‚РѕС‡РєР° РІРµСЂС‚РёРєР°Р»СЊРЅРѕРіРѕ РїРѕРІРѕСЂРѕС‚Р°
 	pGunInfo->szRotatePoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*GunCarriage*" );
 
-	// часть пушки, которая участвует в отдаче 
+	// С‡Р°СЃС‚СЊ РїСѓС€РєРё, РєРѕС‚РѕСЂР°СЏ СѓС‡Р°СЃС‚РІСѓРµС‚ РІ РѕС‚РґР°С‡Рµ 
 	pGunInfo->szRecoilPoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*MainBarrel*" );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -991,7 +991,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 		}
 	}
 
-	// добавить новые пушки
+	// РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Рµ РїСѓС€РєРё
 	int nIdx = 0;
 	int nNewElemIdx = nNumElems;
 	for ( vector<SGunInfo>::const_iterator i = rGuns.begin(); i != rGuns.end(); ++i, ++nIdx )
@@ -1084,7 +1084,7 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformInfo> &rPlatforms )
 { 
-	// обновить существующие платформы
+	// РѕР±РЅРѕРІРёС‚СЊ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРµ РїР»Р°С‚С„РѕСЂРјС‹
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
 		return;
@@ -1109,7 +1109,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 			const SPlatformInfo *pP = j;
 			if ( szLocatorName != pP->szRotatePoint )
 			{
-				// pP это видимо новая платформа
+				// pP СЌС‚Рѕ РІРёРґРёРјРѕ РЅРѕРІР°СЏ РїР»Р°С‚С„РѕСЂРјР°
 				continue;
 			}
 
@@ -1122,7 +1122,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 		}
 	}
 
-	// добавить новые платформы
+	// РґРѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Рµ РїР»Р°С‚С„РѕСЂРјС‹
 	int nIdx = 0;
 	int nNewElemIdx = nNumElems;
 	for ( vector<SPlatformInfo>::const_iterator i = rPlatforms.begin(); i != rPlatforms.end(); ++i, ++nIdx )
@@ -1150,14 +1150,14 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
-	// собрать данные о кол-ве платформ
+	// СЃРѕР±СЂР°С‚СЊ РґР°РЅРЅС‹Рµ Рѕ РєРѕР»-РІРµ РїР»Р°С‚С„РѕСЂРј
 	vector<SPlatformInfo> platformsInfo;
 	GetPlatforms( &platformsInfo, rLocatorsInfo );
 	std::sort( platformsInfo.begin(), platformsInfo.end() );
 
 	vector<SGunInfo> gunsInfo;
 
-	// собрать данные о пушках
+	// СЃРѕР±СЂР°С‚СЊ РґР°РЅРЅС‹Рµ Рѕ РїСѓС€РєР°С…
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
 	{
 		if (	PatMat( i->szName.c_str(), "LMainGun*" ) || 
@@ -1170,7 +1170,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// раскидать пушки по платформам
+	// СЂР°СЃРєРёРґР°С‚СЊ РїСѓС€РєРё РїРѕ РїР»Р°С‚С„РѕСЂРјР°Рј
 	for ( vector<SGunInfo>::iterator i = gunsInfo.begin(); i != gunsInfo.end(); ++i )
 	{
 		for ( vector<SPlatformInfo>::iterator j = platformsInfo.begin(); j != platformsInfo.end(); ++j )
@@ -1183,16 +1183,16 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// сортировка пушек 
+	// СЃРѕСЂС‚РёСЂРѕРІРєР° РїСѓС€РµРє 
 	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 		std::sort( i->guns.begin(), i->guns.end() );
 
 
-	// ограничения
+	// РѕРіСЂР°РЅРёС‡РµРЅРёСЏ
 	vector<SConstraintInfo> constraints;
 	GetModelConstraints( &constraints, pManipulator ); 
 
-	// ограничения на горизонтальные повороты платформ
+	// РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РЅР° РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Рµ РїРѕРІРѕСЂРѕС‚С‹ РїР»Р°С‚С„РѕСЂРј
 	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
@@ -1211,7 +1211,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// ограничения на вертикальный поворот платформы
+	// РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РЅР° РІРµСЂС‚РёРєР°Р»СЊРЅС‹Р№ РїРѕРІРѕСЂРѕС‚ РїР»Р°С‚С„РѕСЂРјС‹
 	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
@@ -1220,7 +1220,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 			const SGunInfo *pG = j;
 			if ( pG->szRotatePoint.empty() )
 			{
-				// у пушки нет GunCarriage
+				// Сѓ РїСѓС€РєРё РЅРµС‚ GunCarriage
 				continue;
 			}
 
@@ -1230,7 +1230,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 				const SConstraintInfo *pC = k;
 				if ( pC->szName == pG->szRotatePoint )
 				{
-					// нам нужен ненулевой констрейн на поворот вокруг X
+					// РЅР°Рј РЅСѓР¶РµРЅ РЅРµРЅСѓР»РµРІРѕР№ РєРѕРЅСЃС‚СЂРµР№РЅ РЅР° РїРѕРІРѕСЂРѕС‚ РІРѕРєСЂСѓРі X
 					if ( pC->bRotConstrMinEnable[0] && pC->bRotConstrMaxEnable[0] )
 					{
 						pP->constraintVertical[0] = pC->rotLimitMin[0];
@@ -1246,7 +1246,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// ограничения на откат
+	// РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РЅР° РѕС‚РєР°С‚
 	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
@@ -1261,7 +1261,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 				const SConstraintInfo *pC = k;
 				if ( pC->szName == pG->szRecoilPoint )
 				{
-					// нам нужен констрейн на движение вдоль Y
+					// РЅР°Рј РЅСѓР¶РµРЅ РєРѕРЅСЃС‚СЂРµР№РЅ РЅР° РґРІРёР¶РµРЅРёРµ РІРґРѕР»СЊ Y
 					if ( pC->bTransConstrMinEnable[1] && pC->bTransConstrMaxEnable[1] )
 					{
 						pG->fRecoilLength = pC->transLimitMax[1] - pC->transLimitMin[1];
@@ -1273,7 +1273,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// направление пушки
+	// РЅР°РїСЂР°РІР»РµРЅРёРµ РїСѓС€РєРё
 	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
@@ -1300,7 +1300,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 		}
 	}
 
-	// записать в базу
+	// Р·Р°РїРёСЃР°С‚СЊ РІ Р±Р°Р·Сѓ
 	UpdatePlatforms( pManipulator, platformsInfo );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1393,32 +1393,32 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 	allModelsLocators.insert( allModelsLocators.end(), animateModelLocators.begin(), animateModelLocators.end() );
 	allModelsLocators.insert(	allModelsLocators.end(), transportableModelLocators.begin(), transportableModelLocators.end() );
 
-	// задние колеса для поезда или вагона
+	// Р·Р°РґРЅРёРµ РєРѕР»РµСЃР° РґР»СЏ РїРѕРµР·РґР° РёР»Рё РІР°РіРѕРЅР°
 	SetPointValueForVec2Field( pManipulator, "LBackWheel", "BackWheel", visualObjectLocators );
-	// передние коляеса для поезда или вагона
+	// РїРµСЂРµРґРЅРёРµ РєРѕР»СЏРµСЃР° РґР»СЏ РїРѕРµР·РґР° РёР»Рё РІР°РіРѕРЅР°
 	SetPointValueForVec2Field( pManipulator, "LFrontWheel", "FrontWheel", visualObjectLocators );
 
-	// точка зацепления у вагонов сзади
+	// С‚РѕС‡РєР° Р·Р°С†РµРїР»РµРЅРёСЏ Сѓ РІР°РіРѕРЅРѕРІ СЃР·Р°РґРё
 	SetPointValueForVec2Field( pManipulator, "LHookPoint", "HookPoint", visualObjectLocators );
-	// точка зацепления у вагонов спереди или точка крепления пушки при транспортировке
+	// С‚РѕС‡РєР° Р·Р°С†РµРїР»РµРЅРёСЏ Сѓ РІР°РіРѕРЅРѕРІ СЃРїРµСЂРµРґРё РёР»Рё С‚РѕС‡РєР° РєСЂРµРїР»РµРЅРёСЏ РїСѓС€РєРё РїСЂРё С‚СЂР°РЅСЃРїРѕСЂС‚РёСЂРѕРІРєРµ
 	SetPointValueForVec2Field( pManipulator, "LTowingPoint", "TowPoint", visualObjectLocators );
 
-	// точки вылета партиклов при поражении объекта
+	// С‚РѕС‡РєРё РІС‹Р»РµС‚Р° РїР°СЂС‚РёРєР»РѕРІ РїСЂРё РїРѕСЂР°Р¶РµРЅРёРё РѕР±СЉРµРєС‚Р°
 	SetPointValueForStringField( pManipulator, "LFatalitySmoke", "FatalitySmokePoint", allModelsLocators );
 	SetPointsValuesForStringArray( pManipulator, "LSmoke??", "damagePoints", visualObjectLocators );
 
-	// выхлопные трубы
+	// РІС‹С…Р»РѕРїРЅС‹Рµ С‚СЂСѓР±С‹
 	SetPointsValuesForStringArray( pManipulator, "LExhaust??", "exhaustPoints", allModelsLocators );
 
-	// точки захода людей в машины
+	// С‚РѕС‡РєРё Р·Р°С…РѕРґР° Р»СЋРґРµР№ РІ РјР°С€РёРЅС‹
 	SetPointsValuesForVec2Array( pManipulator, "LPeople??", "PeoplePoints", allModelsLocators );
 
-	// ящик для снарядов у орудия
+	// СЏС‰РёРє РґР»СЏ СЃРЅР°СЂСЏРґРѕРІ Сѓ РѕСЂСѓРґРёСЏ
 	SetPointValueForVec2Field( pManipulator, "LAmmo", "AmmoPoint", visualObjectLocators );
-	// канониры
+	// РєР°РЅРѕРЅРёСЂС‹
 	SetGunnersPoints( pManipulator, allModelsLocators );
 
-	// пушки - пулеметы - бомболюки - констрейны
+	// РїСѓС€РєРё - РїСѓР»РµРјРµС‚С‹ - Р±РѕРјР±РѕР»СЋРєРё - РєРѕРЅСЃС‚СЂРµР№РЅС‹
 	SetupPlatformsAndGuns( pManipulator, visualObjectLocators );
 
 	CalculteGunsAndPlatformPositions( pManipulator, visualObjectLocators );

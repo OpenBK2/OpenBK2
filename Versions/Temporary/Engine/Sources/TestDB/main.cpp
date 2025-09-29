@@ -30,7 +30,7 @@ namespace NDb
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char *argv[] )
 {
-	CreateMutex( 0, TRUE, "XML_DATABASE_TEST" ); // ïðè âûõîäå ñèñòåìà ñàìà óíè÷òîæèò ýòîò mutex
+	CreateMutex( 0, TRUE, "XML_DATABASE_TEST" ); // Ð¿Ñ€Ð¸ Ð²Ñ‹Ñ…Ð¾Ð´Ðµ ÑÐ¸ÑÑ‚ÐµÐ¼Ð° ÑÐ°Ð¼Ð° ÑƒÐ½Ð¸Ñ‡Ñ‚Ð¾Ð¶Ð¸Ñ‚ ÑÑ‚Ð¾Ñ‚ mutex
 	if ( GetLastError() == ERROR_ALREADY_EXISTS )
 		return 0xDEAD;
 	//
@@ -150,8 +150,8 @@ int main( int argc, char *argv[] )
 		pObjMan->SetValue( "Jx.Tremble.y", 9876.4f );
 		pObjMan->SetValue( "Name", L"This is a nice test!" );
 		//
-		pObjMan->SetAttribute( "Owner", L"Þðèé Áëàæåâè÷" );
-		pObjMan->SetAttribute( "MOD", L"Ìîé ëþáèìûé MOD" );
+		pObjMan->SetAttribute( "Owner", L"Ð®Ñ€Ð¸Ð¹ Ð‘Ð»Ð°Ð¶ÐµÐ²Ð¸Ñ‡" );
+		pObjMan->SetAttribute( "MOD", L"ÐœÐ¾Ð¹ Ð»ÑŽÐ±Ð¸Ð¼Ñ‹Ð¹ MOD" );
 		pObjMan->SetAttribute( "Color", L"0xff00ff00" );
 		pObjMan->SetAttribute( "ObjectRecordID", L"1234" );
 		//

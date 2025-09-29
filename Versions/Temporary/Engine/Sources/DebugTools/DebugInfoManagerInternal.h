@@ -158,10 +158,10 @@ public:
 	int DrawRect( const int nID, const SRect &rect, const float fZ, const NDebugInfo::EColor eColor );
 	void RemoveLine( const int nID );
 
-	//показать оси из точки (0; 0; 0), Красная - X, Зеленая - Y, Синяя - Z
+	//РїРѕРєР°Р·Р°С‚СЊ РѕСЃРё РёР· С‚РѕС‡РєРё (0; 0; 0), РљСЂР°СЃРЅР°СЏ - X, Р—РµР»РµРЅР°СЏ - Y, РЎРёРЅСЏСЏ - Z
 	void ShowAxes( const bool bShow );
 
-	//возвращает последовательно цвета: Красный, Синий, Зеленый, Красный ...
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ С†РІРµС‚Р°: РљСЂР°СЃРЅС‹Р№, РЎРёРЅРёР№, Р—РµР»РµРЅС‹Р№, РљСЂР°СЃРЅС‹Р№ ...
 	NDebugInfo::EColor GetCycleColor();
 
 	const NDebugInfo::SDebugInfoUpdate *GetUpdate() const;

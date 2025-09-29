@@ -58,7 +58,7 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 		return false;
 	else if ( pFireplaceSoldier == 0 )
 		return true;
-	// íå âûòåñíÿòü ñîëäàòà èç fireplace, åñëè ìû óæå ñèäèì â fireplace èëè îí óáèò
+	// Ð½Ðµ Ð²Ñ‹Ñ‚ÐµÑÐ½ÑÑ‚ÑŒ ÑÐ¾Ð»Ð´Ð°Ñ‚Ð° Ð¸Ð· fireplace, ÐµÑÐ»Ð¸ Ð¼Ñ‹ ÑƒÐ¶Ðµ ÑÐ¸Ð´Ð¸Ð¼ Ð² fireplace Ð¸Ð»Ð¸ Ð¾Ð½ ÑƒÐ±Ð¸Ñ‚
 	else if ( !pFireplaceSoldier->IsAlive() || pSoldier->IsInFirePlace() )
 		return false;
 	else if ( pSoldier->GetStats()->etype != RPG_TYPE_OFFICER && pFireplaceSoldier->GetStats()->etype == RPG_TYPE_OFFICER )

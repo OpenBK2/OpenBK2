@@ -36,7 +36,7 @@ protected:
 	virtual bool UpdateVSOInBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
 
 public:
-	//конструкторы и операторы присваивания
+	//РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹ Рё РѕРїРµСЂР°С‚РѕСЂС‹ РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
 	CVSOStateEx( class CVSOMultiState *_pParentState = 0 ) : CVSOState( _pParentState ), bVSOChanged( false )
 	{
 		NI_ASSERT( _pParentState != 0, "CVSOStateEx(): Invalid parameter: _pParentState == 0" );

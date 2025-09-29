@@ -11,9 +11,9 @@ class CSinglePlayerTransceiver : public ITransceiver
 	OBJECT_NOCOPY_METHODS( CSinglePlayerTransceiver );
 
 	ZDATA
-		// история команд
+		// РёСЃС‚РѕСЂРёСЏ РєРѕРјР°РЅРґ
 		CPtr<ICommandsHistory> pCmdsHistory;
-	// общий номер сегмента - для истории команд
+	// РѕР±С‰РёР№ РЅРѕРјРµСЂ СЃРµРіРјРµРЅС‚Р° - РґР»СЏ РёСЃС‚РѕСЂРёРё РєРѕРјР°РЅРґ
 	long nCommonSegment;
 	bool bCommandsFromHistory;
 	CPtr<IAILogic> pAI;

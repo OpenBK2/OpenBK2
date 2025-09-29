@@ -634,7 +634,7 @@ bool CVSOManager::Update( NDb::SVSOInstance *pVSO,
 													bool bComplete )
 {
 	NI_ASSERT( pVSO != 0, "CVSOManager::Update(): Wrong parameter: pVSO == 0" );
-	//сохряняем ширины
+	//СЃРѕС…СЂСЏРЅСЏРµРј С€РёСЂРёРЅС‹
 	SBackupKeyPoints backupKeyPoints;
 	if ( bResampleCurve )
 	{
@@ -995,7 +995,7 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOC
 	rCircleBegin.GetPointsSequence( vBeginTangentPoint, nSegmentsCountBegin, pPointsSequence );
 	list<CVec2> endPointsSequence;
 	rCircleEnd.GetPointsSequence( vEndTangentPoint, nSegmentsCountEnd, &endPointsSequence );
-	// в обратном порядке
+	// РІ РѕР±СЂР°С‚РЅРѕРј РїРѕСЂСЏРґРєРµ
 	for ( list<CVec2>::const_iterator itPoint = endPointsSequence.begin(); itPoint!= endPointsSequence.end(); ++itPoint )
 	{
 		pPointsSequence->push_front( *itPoint );
@@ -1222,7 +1222,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 											 &currentPath1, rLockedPolygons, pUsedPoints,
 											 nDepth - 1 ) )
 				{
-					//слить оболочки
+					//СЃР»РёС‚СЊ РѕР±РѕР»РѕС‡РєРё
 					pPointsSequence->insert( pPointsSequence->end(), currentPath0.begin(), currentPath0.end() );
 					currentPath1.erase( currentPath1.begin() );
 					pPointsSequence->insert( pPointsSequence->end(), currentPath1.begin(), currentPath1.end() );
@@ -1246,7 +1246,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//первый VSO продолжается на 2 controlPoints, край уводится в 0
+//РїРµСЂРІС‹Р№ VSO РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ РЅР° 2 controlPoints, РєСЂР°Р№ СѓРІРѕРґРёС‚СЃСЏ РІ 0
 bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 												 NDb::SVSOInstance *pVSO1, bool bVSO1Begin )
 {
@@ -1358,7 +1358,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 	{
 		backupKeyPoints0.InsertToFront( fWidthToAdd0, DEFAULT_HEIGHT, pVSO0->points.front().fOpacity );
 		backupKeyPoints0.InsertToFront( fWidthToAdd1, DEFAULT_HEIGHT, 0.0f );
-		// push_front отсутствует у vector
+		// push_front РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ Сѓ vector
 		pVSO0->controlPoints.insert( pVSO0->controlPoints.begin(), vPointToAdd0 );
 		pVSO0->controlPoints.insert( pVSO0->controlPoints.begin(), vPointToAdd1 );
 	}
@@ -1382,7 +1382,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//вернуть первую не нулевую высоту или высоту на конце ( true )
+//РІРµСЂРЅСѓС‚СЊ РїРµСЂРІСѓСЋ РЅРµ РЅСѓР»РµРІСѓСЋ РІС‹СЃРѕС‚Сѓ РёР»Рё РІС‹СЃРѕС‚Сѓ РЅР° РєРѕРЅС†Рµ ( true )
 float CVSOManager::GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst )
 {
 	float fHeight = 0.0f;

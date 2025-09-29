@@ -15,7 +15,7 @@ void CScene::SetFadedObjects( const list<int> &objects )
 	{
 		data[eScene]->fadeModes[*it] = true;
 	}
-	// включим 	
+	// РІРєР»СЋС‡РёРј 	
 	for ( hash_map<int, bool>::iterator it = data[eScene]->fadeModes.begin(); it != data[eScene]->fadeModes.end(); ++it )
 	{
 		if ( old_fade.find( it->first ) == old_fade.end() )
@@ -23,7 +23,7 @@ void CScene::SetFadedObjects( const list<int> &objects )
 			FadeObject( it->first, true );
 		}
 	}
-	// выключим старое
+	// РІС‹РєР»СЋС‡РёРј СЃС‚Р°СЂРѕРµ
 	for ( hash_map<int, bool>::iterator it = old_fade.begin(); it != old_fade.end(); ++it )
 	{
 		if ( data[eScene]->fadeModes.find( it->first ) == data[eScene]->fadeModes.end() )

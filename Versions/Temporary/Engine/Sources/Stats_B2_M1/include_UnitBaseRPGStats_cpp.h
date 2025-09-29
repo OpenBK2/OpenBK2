@@ -61,12 +61,12 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	if ( !bInEditor )
 	{
 		fSight *= 1.0f;
-		// киломерты/час <=> точки/тик
+		// РєРёР»РѕРјРµСЂС‚С‹/С‡Р°СЃ <=> С‚РѕС‡РєРё/С‚РёРє
 		fSpeed *= float( ( 1000.0 * 32.0f ) / ( 3600.0 * 1000.0 ) );
 		//
 		fCamouflage /= 100.0f;
 	}
-	// сек. <=> тик
+	// СЃРµРє. <=> С‚РёРє
 	nUninstallRotate = fUninstallRotate * 1000.0f;
 	nUninstallTransport = fUninstallTransport * 1000.0f;
 	FOR_EACH_VAL( aabb_as, ToAIUnits, bInEditor );

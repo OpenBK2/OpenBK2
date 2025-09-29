@@ -5,12 +5,12 @@ struct SSoundSceneConsts
 {
 	static void Load();
 
-	static float SS_SOUND_CELL_SIZE;									// длина стороны в порции
+	static float SS_SOUND_CELL_SIZE;									// РґР»РёРЅР° СЃС‚РѕСЂРѕРЅС‹ РІ РїРѕСЂС†РёРё
 	static float SS_TILE_SIZE;
-	static NTimer::STime SS_MIX_DELTA;							// максимальная разница во времени 
-	// появления звуков при SFX_MIX_IF_TIME_EQUALS
-	static NTimer::STime SS_UPDATE_PERIOD;					// в милисекундах
-	static NTimer::STime SS_SOUND_DIM_TIME;								// время затухания звука при удалении
+	static NTimer::STime SS_MIX_DELTA;							// РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЂР°Р·РЅРёС†Р° РІРѕ РІСЂРµРјРµРЅРё 
+	// РїРѕСЏРІР»РµРЅРёСЏ Р·РІСѓРєРѕРІ РїСЂРё SFX_MIX_IF_TIME_EQUALS
+	static NTimer::STime SS_UPDATE_PERIOD;					// РІ РјРёР»РёСЃРµРєСѓРЅРґР°С…
+	static NTimer::STime SS_SOUND_DIM_TIME;								// РІСЂРµРјСЏ Р·Р°С‚СѓС…Р°РЅРёСЏ Р·РІСѓРєР° РїСЂРё СѓРґР°Р»РµРЅРёРё
 
 	static NTimer::STime SS_AMBIENT_SOUND_CHANGE_RANDOM;//for changing looped sounds from time to time
 	static NTimer::STime SS_AMBIENT_SOUND_CHANGE;			//for changing not looped sounds from time to time

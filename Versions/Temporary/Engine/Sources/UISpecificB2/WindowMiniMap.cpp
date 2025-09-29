@@ -69,7 +69,7 @@ bool IsSegmentsIntersected( const CVec2 &p11, const CVec2 &p12, const CVec2 &p21
 bool CMiniMapLayer::NeedUpdate()
 { 
 	const int nTime = Singleton<IGameTimer>()->GetAbsTime();
-	if ( bNeedUpdate && ( ( nTime < nLastUpdateTime ) || ( nTime > nLastUpdateTime + 300 ) ) )	 // Ну а зачем минимап обновлять чаще?
+	if ( bNeedUpdate && ( ( nTime < nLastUpdateTime ) || ( nTime > nLastUpdateTime + 300 ) ) )	 // РќСѓ Р° Р·Р°С‡РµРј РјРёРЅРёРјР°Рї РѕР±РЅРѕРІР»СЏС‚СЊ С‡Р°С‰Рµ?
 	{
 		nLastUpdateTime = nTime;
 		return true; 

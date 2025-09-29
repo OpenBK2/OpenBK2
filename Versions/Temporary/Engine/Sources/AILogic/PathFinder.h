@@ -6,9 +6,9 @@ interface IStaticPathFinder : public CAIObjectBase
 {
 	virtual void SetPathParameters( const int nBoundTileRadius, const BYTE aiClass, interface IPointChecking *pChecking, const CVec2 &startPoint, const CVec2 &finishPoint, const int upperLimit, const bool longPath, const SVector &lastKnownGoodTile ) = 0;
 
-	// поиск пути без каких-либо улучшений
+	// РїРѕРёСЃРє РїСѓС‚Рё Р±РµР· РєР°РєРёС…-Р»РёР±Рѕ СѓР»СѓС‡С€РµРЅРёР№
 	virtual bool CalculatePath() = 0;	
-	// поиск пути в точку без циклов
+	// РїРѕРёСЃРє РїСѓС‚Рё РІ С‚РѕС‡РєСѓ Р±РµР· С†РёРєР»РѕРІ
 	virtual void CalculatePathWOCycles() = 0;
 	virtual void SmoothPath() = 0;
 	

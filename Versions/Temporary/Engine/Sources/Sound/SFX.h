@@ -42,7 +42,7 @@ interface ISound : public CObjectBase
 	
 	virtual void SetMinMax( const float fMinDist, const float fMaxDist ) = 0;
 	
-	// продолжительность звука в самплах
+	// РїСЂРѕРґРѕР»Р¶РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р·РІСѓРєР° РІ СЃР°РјРїР»Р°С…
 	virtual unsigned int GetLenght() =0;
 	virtual unsigned int GetSampleRate() =0;
 };
@@ -81,7 +81,7 @@ interface ISFX : public CObjectBase
 	
 	virtual bool IsPlaying( ISound *pSound ) = 0;
 
-	// текущая позиция прогирыша
+	// С‚РµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ РїСЂРѕРіРёСЂС‹С€Р°
 	virtual unsigned int GetCurrentPosition( ISound * pSound ) = 0;
 	virtual void SetCurrentPosition( ISound * pSound, unsigned int pos ) = 0;
 };

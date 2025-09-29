@@ -179,7 +179,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 	if ( N )
 		pTiles->clear();
 
-	// выход за пределы карты
+	// РІС‹С…РѕРґ Р·Р° РїСЂРµРґРµР»С‹ РєР°СЂС‚С‹
 	if ( !N )
 	{
 		const int nSizeX = GetSizeX() * GetTileSize();
@@ -353,7 +353,7 @@ inline void CAIMap::GetTilesCoveredByRect( const SRect &rect, TContainter *pTile
 	ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для GetTilesCoveredByRectSides
+// РґР»СЏ GetTilesCoveredByRectSides
 template<typename TContainter>
 class CTilesCollector
 {

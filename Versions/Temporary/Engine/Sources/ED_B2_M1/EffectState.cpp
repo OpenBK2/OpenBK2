@@ -75,7 +75,7 @@ void CEffectState::Enter()
 			effectIDList.push_back( nEffectID );
 		}
 	}
-	// Обновляем сцену
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	//
 	CDefaultInputState::Enter();
@@ -89,13 +89,13 @@ void CEffectState::Leave()
 	NI_ASSERT( pScene != 0, "CEffectState::Enter(): pScene == 0" );
 	//
 	CDefaultInputState::Leave();
-	// Выгружаем Эффект
+	// Р’С‹РіСЂСѓР¶Р°РµРј Р­С„С„РµРєС‚
 	for ( list<int>::const_iterator itEffectID = effectIDList.begin(); itEffectID != effectIDList.end(); ++itEffectID )
 	{
 		pScene->RemoveObject( *itEffectID );
 	}
 	effectIDList.clear();
-	// Обновляем сцену
+	// РћР±РЅРѕРІР»СЏРµРј СЃС†РµРЅСѓ
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

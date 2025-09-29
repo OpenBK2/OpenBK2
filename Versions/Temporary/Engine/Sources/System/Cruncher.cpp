@@ -271,12 +271,12 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 		c = nC;
 		cBuffer[ nCurrent ] = c;
 		cBuffer[ nCurrent + N_COMPRESS_HISTORY ] = c;
-		// если в рассмотрении находится какая-либо серия
+		// РµСЃР»Рё РІ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё РЅР°С…РѕРґРёС‚СЃСЏ РєР°РєР°СЏ-Р»РёР±Рѕ СЃРµСЂРёСЏ
 		if ( nBlockStart < 0 )
 		{
 			short nCmpWith;
 			int nShift, nNextCandidate;
-			// попытаемся положить начало новой серии
+			// РїРѕРїС‹С‚Р°РµРјСЃСЏ РїРѕР»РѕР¶РёС‚СЊ РЅР°С‡Р°Р»Рѕ РЅРѕРІРѕР№ СЃРµСЂРёРё
 			nCmpWith = *((short*)( pszData - 1 ));
 			nBlockStart = nPrevious;
 			// lets try candidates

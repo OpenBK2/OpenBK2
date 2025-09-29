@@ -12,15 +12,15 @@ class CCollisionsCollector;
 class CCommonPathFinder;
 interface IPointChecking;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! параметры для выравнивания скорости
+//! РїР°СЂР°РјРµС‚СЂС‹ РґР»СЏ РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ СЃРєРѕСЂРѕСЃС‚Рё
 enum EAdjustSpeedParam
 {
-	ADJUST_SLOW,	//! уменьшить скорость в указанное количество раз
-	ADJUST_FAST,	//! увеличить скорость в указанное количество раз
-	ADJUST_SET,		//! задать скорость
+	ADJUST_SLOW,	//! СѓРјРµРЅСЊС€РёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ РІ СѓРєР°Р·Р°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·
+	ADJUST_FAST,	//! СѓРІРµР»РёС‡РёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ РІ СѓРєР°Р·Р°РЅРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЂР°Р·
+	ADJUST_SET,		//! Р·Р°РґР°С‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! "плоскость" движения юнита
+//! "РїР»РѕСЃРєРѕСЃС‚СЊ" РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р°
 enum EMovementPlane
 {
 	PLANE_TERRAIN,
@@ -28,7 +28,7 @@ enum EMovementPlane
 	PLANE_AIR,
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! варианты с кем может коллизиться юнит
+//! РІР°СЂРёР°РЅС‚С‹ СЃ РєРµРј РјРѕР¶РµС‚ РєРѕР»Р»РёР·РёС‚СЊСЃСЏ СЋРЅРёС‚
 enum ECollidingType
 {
 	ECT_ALL,
@@ -38,14 +38,14 @@ enum ECollidingType
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CBasePathUnit;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! callback для итерирования по юнитам
+//! callback РґР»СЏ РёС‚РµСЂРёСЂРѕРІР°РЅРёСЏ РїРѕ СЋРЅРёС‚Р°Рј
 struct SIterateUnitsCallback
 {
 	virtual bool Iterate( CBasePathUnit *unit ) const = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! Абстрактный класс, представляющий "перемещаемые" юниты. Все что может двигаться в AI, должно наследоваться от
-//! CBasePathUnit. Также предоставляет необходимую статическую информации о юните для функций поиска пути.
+//! РђР±СЃС‚СЂР°РєС‚РЅС‹Р№ РєР»Р°СЃСЃ, РїСЂРµРґСЃС‚Р°РІР»СЏСЋС‰РёР№ "РїРµСЂРµРјРµС‰Р°РµРјС‹Рµ" СЋРЅРёС‚С‹. Р’СЃРµ С‡С‚Рѕ РјРѕР¶РµС‚ РґРІРёРіР°С‚СЊСЃСЏ РІ AI, РґРѕР»Р¶РЅРѕ РЅР°СЃР»РµРґРѕРІР°С‚СЊСЃСЏ РѕС‚
+//! CBasePathUnit. РўР°РєР¶Рµ РїСЂРµРґРѕСЃС‚Р°РІР»СЏРµС‚ РЅРµРѕР±С…РѕРґРёРјСѓСЋ СЃС‚Р°С‚РёС‡РµСЃРєСѓСЋ РёРЅС„РѕСЂРјР°С†РёРё Рѕ СЋРЅРёС‚Рµ РґР»СЏ С„СѓРЅРєС†РёР№ РїРѕРёСЃРєР° РїСѓС‚Рё.
 class CBasePathUnit
 {
 	CBasePathUnit *pLastPushUnit;
@@ -56,25 +56,25 @@ class CBasePathUnit
 		ZONSERIALIZE
 		ZSKIP
 
-		SAIAngle wDirection;					//! направление куда едем
-		SAIAngle wFrontDirection;			//! направление переда
+		SAIAngle wDirection;					//! РЅР°РїСЂР°РІР»РµРЅРёРµ РєСѓРґР° РµРґРµРј
+		SAIAngle wFrontDirection;			//! РЅР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂРµРґР°
 
-		SAIAngle wLastDirection;			//! предыдущее направление
-		bool bGoForward;					//! едем передом
+		SAIAngle wLastDirection;			//! РїСЂРµРґС‹РґСѓС‰РµРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
+		bool bGoForward;					//! РµРґРµРј РїРµСЂРµРґРѕРј
 
-		bool bTurning;						//! поворачиваем
-		bool bTurnCalled;					//! на этом сегменте поворачивались
+		bool bTurning;						//! РїРѕРІРѕСЂР°С‡РёРІР°РµРј
+		bool bTurnCalled;					//! РЅР° СЌС‚РѕРј СЃРµРіРјРµРЅС‚Рµ РїРѕРІРѕСЂР°С‡РёРІР°Р»РёСЃСЊ
 
-		CVec3 vCenter;						//! положение юнита (с учетом высоты)
-		SVector vTile;						//! положение юнита на плоскости карты в AI тайлах
+		CVec3 vCenter;						//! РїРѕР»РѕР¶РµРЅРёРµ СЋРЅРёС‚Р° (СЃ СѓС‡РµС‚РѕРј РІС‹СЃРѕС‚С‹)
+		SVector vTile;						//! РїРѕР»РѕР¶РµРЅРёРµ СЋРЅРёС‚Р° РЅР° РїР»РѕСЃРєРѕСЃС‚Рё РєР°СЂС‚С‹ РІ AI С‚Р°Р№Р»Р°С…
 		SVector vLastKnownGoodTile;
 
-		float fSpeed;							//! скорость юнита
-		float fDesiredSpeed;			//! желаемая скорость движения
+		float fSpeed;							//! СЃРєРѕСЂРѕСЃС‚СЊ СЋРЅРёС‚Р°
+		float fDesiredSpeed;			//! Р¶РµР»Р°РµРјР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ
 
-		bool bLocking;						//! юнит залокал тайлы под собой
-		bool bOnLockedTiles;			//! юнит на залоканых тайлах
-		bool bIdle;								//! нет пути по которому нужно ехать
+		bool bLocking;						//! СЋРЅРёС‚ Р·Р°Р»РѕРєР°Р» С‚Р°Р№Р»С‹ РїРѕРґ СЃРѕР±РѕР№
+		bool bOnLockedTiles;			//! СЋРЅРёС‚ РЅР° Р·Р°Р»РѕРєР°РЅС‹С… С‚Р°Р№Р»Р°С…
+		bool bIdle;								//! РЅРµС‚ РїСѓС‚Рё РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РЅСѓР¶РЅРѕ РµС…Р°С‚СЊ
 		bool bFixUnlocking;				
 
 		int nCollisionsCount;
@@ -123,13 +123,13 @@ class CBasePathUnit
 	void SetNextSecondPathSegmTime( const NTimer::STime time ) { nextSecondPathSegmTime = time; }
 
 protected:
-	//! обновить позицию юнита, это должен делать кто-то из AI
+	//! РѕР±РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ СЋРЅРёС‚Р°, СЌС‚Рѕ РґРѕР»Р¶РµРЅ РґРµР»Р°С‚СЊ РєС‚Рѕ-С‚Рѕ РёР· AI
 	//virtual void UpdatePlacement( const CVec3 &vOldPosition )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )	= 0;
 	virtual void UpdateTile() = 0;
-	//! создать путь при инициализации юнита (для формации создаются свои пути)
+	//! СЃРѕР·РґР°С‚СЊ РїСѓС‚СЊ РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё СЋРЅРёС‚Р° (РґР»СЏ С„РѕСЂРјР°С†РёРё СЃРѕР·РґР°СЋС‚СЃСЏ СЃРІРѕРё РїСѓС‚Рё)
 	virtual ISmoothPath *CreateSmoothPath();
-	//! проверить, не сломали ли чего-нибудь
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, РЅРµ СЃР»РѕРјР°Р»Рё Р»Рё С‡РµРіРѕ-РЅРёР±СѓРґСЊ
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const = 0;
 	virtual void NullSegmTime() = 0;
 	virtual void AdjustSpeed();
@@ -142,132 +142,132 @@ public:
 	CBasePathUnit();
 	void Init( const CVec3 &vCenter, const WORD wDirection, CAIMap *pAIMap, ICollisionsCollector *pCollisionsCollector, CCommonPathFinder *pPathFinder );
 
-	//! информация о позиции юнита в пространстве (3D)
+	//! РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕР·РёС†РёРё СЋРЅРёС‚Р° РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ (3D)
 	const CVec3 & GetCenter() const {	return vCenter; }
-	//! информация о позиции юнита на плоскости (2D)
+	//! РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕР·РёС†РёРё СЋРЅРёС‚Р° РЅР° РїР»РѕСЃРєРѕСЃС‚Рё (2D)
 	// hack to increase FPS :)
 	const CVec2 & GetCenterPlain() const { return *( reinterpret_cast<const CVec2 *>( &vCenter ) ); }
 
 	CCommonPathFinder* GetPathFinder() const { return pPathFinder; }
 	
-	//! информация о позиции юнита в AI тайлах
+	//! РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕР·РёС†РёРё СЋРЅРёС‚Р° РІ AI С‚Р°Р№Р»Р°С…
 	const SVector GetCenterTile() const { return vTile; }
-	//! последнйи тайл, на котором юнит ни кому не мешался
+	//! РїРѕСЃР»РµРґРЅР№Рё С‚Р°Р№Р», РЅР° РєРѕС‚РѕСЂРѕРј СЋРЅРёС‚ РЅРё РєРѕРјСѓ РЅРµ РјРµС€Р°Р»СЃСЏ
 	const SVector GetLastKnownGoodTile() const { return vLastKnownGoodTile; }
 
-	//! проверить, что юнит не будет выходить за пределы карты в новой позиции
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ СЋРЅРёС‚ РЅРµ Р±СѓРґРµС‚ РІС‹С…РѕРґРёС‚СЊ Р·Р° РїСЂРµРґРµР»С‹ РєР°СЂС‚С‹ РІ РЅРѕРІРѕР№ РїРѕР·РёС†РёРё
 	const bool IsValidCenter( const CVec3 &vCenter );
-	//! изменить центр юнита, bNeedUpdate - показывает необходимость вызова UpdatePlacement
+	//! РёР·РјРµРЅРёС‚СЊ С†РµРЅС‚СЂ СЋРЅРёС‚Р°, bNeedUpdate - РїРѕРєР°Р·С‹РІР°РµС‚ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚СЊ РІС‹Р·РѕРІР° UpdatePlacement
 	virtual void SetCenter( const CVec3 &vCenter, const bool bNeedUpdate = true );
   
-	//! проверить, что юнит не будет выходить за пределы карты в новом направлении
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ СЋРЅРёС‚ РЅРµ Р±СѓРґРµС‚ РІС‹С…РѕРґРёС‚СЊ Р·Р° РїСЂРµРґРµР»С‹ РєР°СЂС‚С‹ РІ РЅРѕРІРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
 	const bool IsValidDirection( const WORD wDirection );
-	//! проверить, что юнит не будет выходить за пределы карты в новом направлении (направление задается вектором)
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ СЋРЅРёС‚ РЅРµ Р±СѓРґРµС‚ РІС‹С…РѕРґРёС‚СЊ Р·Р° РїСЂРµРґРµР»С‹ РєР°СЂС‚С‹ РІ РЅРѕРІРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё (РЅР°РїСЂР°РІР»РµРЅРёРµ Р·Р°РґР°РµС‚СЃСЏ РІРµРєС‚РѕСЂРѕРј)
 	const bool IsValidDirection( const CVec2 &vDirection ) { return IsValidDirection( GetDirectionByVector( vDirection ) ); }
-	//! получить направление движения юнита, 
+	//! РїРѕР»СѓС‡РёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р°, 
 	const WORD GetDirection() const { return wDirection; }
 	const float GetDir() const { return float(wFrontDirection) / 65536.0f * FP_2PI; }
 
-	//! куда смотрит перед юнита
+	//! РєСѓРґР° СЃРјРѕС‚СЂРёС‚ РїРµСЂРµРґ СЋРЅРёС‚Р°
 	const WORD GetFrontDirection() const { return wFrontDirection; }
-	//! получить напраление движения юнита в векторе
+	//! РїРѕР»СѓС‡РёС‚СЊ РЅР°РїСЂР°Р»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р° РІ РІРµРєС‚РѕСЂРµ
 	const CVec2 GetDirectionVector() const { return GetVectorByDirection( GetDirection() ); }
-	//! получить, куда собирается ехать юнит (например на поворотах может несколько отличаться от направления движения)
+	//! РїРѕР»СѓС‡РёС‚СЊ, РєСѓРґР° СЃРѕР±РёСЂР°РµС‚СЃСЏ РµС…Р°С‚СЊ СЋРЅРёС‚ (РЅР°РїСЂРёРјРµСЂ РЅР° РїРѕРІРѕСЂРѕС‚Р°С… РјРѕР¶РµС‚ РЅРµСЃРєРѕР»СЊРєРѕ РѕС‚Р»РёС‡Р°С‚СЊСЃСЏ РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ)
 	const CVec2 GetMoveDirection() const;
-	//! куда смотрит перед юнита в векторе
+	//! РєСѓРґР° СЃРјРѕС‚СЂРёС‚ РїРµСЂРµРґ СЋРЅРёС‚Р° РІ РІРµРєС‚РѕСЂРµ
 	const CVec2 GetFrontDirectionVector() const { return GetVectorByDirection( GetFrontDirection() ); }
-	//! установить направление движения юнита
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р°
 	virtual void SetDirection( const WORD wDirection, const bool bNeedUpdate = true );
-	//! установить направление движения юнита вектором
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р° РІРµРєС‚РѕСЂРѕРј
 	void SetDirectionVec( const CVec2 &vDirection ) { SetDirection( GetDirectionByVector( vDirection ) ); }
-	//! повернуться в указанном направлении
+	//! РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
 	virtual const bool TurnToDirection( const WORD wDirection, const bool bCanBackward, const bool bCanForward );
-	//! повернуться на указанную точку
+	//! РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РЅР° СѓРєР°Р·Р°РЅРЅСѓСЋ С‚РѕС‡РєСѓ
 	virtual const bool TurnToTarget( const CVec2 &vTarget );
 
-	//! можно ли передом повернуться в указанном направлении
+	//! РјРѕР¶РЅРѕ Р»Рё РїРµСЂРµРґРѕРј РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
 	virtual const bool CanTurnToFrontDir( const WORD wDirection ) const;
-	//! можно ли повернуться в указанном направлении
+	//! РјРѕР¶РЅРѕ Р»Рё РїРѕРІРµСЂРЅСѓС‚СЊСЃСЏ РІ СѓРєР°Р·Р°РЅРЅРѕРј РЅР°РїСЂР°РІР»РµРЅРёРё
 	virtual const bool CanTurnTo( const WORD wDirection, const bool bCanRebuildPath = true );
-	//! можно ли развернуться на 180 градусов
+	//! РјРѕР¶РЅРѕ Р»Рё СЂР°Р·РІРµСЂРЅСѓС‚СЊСЃСЏ РЅР° 180 РіСЂР°РґСѓСЃРѕРІ
 	bool CanMake180DegreesTurn( SRect rect ) const;
 
-	//! проверить, можно ли развернуться в направлении vDir, fRectCoeff - коеффициент "растяжения" профайла юнита
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, РјРѕР¶РЅРѕ Р»Рё СЂР°Р·РІРµСЂРЅСѓС‚СЊСЃСЏ РІ РЅР°РїСЂР°РІР»РµРЅРёРё vDir, fRectCoeff - РєРѕРµС„С„РёС†РёРµРЅС‚ "СЂР°СЃС‚СЏР¶РµРЅРёСЏ" РїСЂРѕС„Р°Р№Р»Р° СЋРЅРёС‚Р°
 	virtual const bool CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
-	//! установить скорость
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ
 	void SetSpeed( const float _fSpeed ) { fSpeed = _fSpeed; }
-	//! установить скорость, при помощи параметры eAdjust можно определить как именно менять скорость
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ, РїСЂРё РїРѕРјРѕС‰Рё РїР°СЂР°РјРµС‚СЂС‹ eAdjust РјРѕР¶РЅРѕ РѕРїСЂРµРґРµР»РёС‚СЊ РєР°Рє РёРјРµРЅРЅРѕ РјРµРЅСЏС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ
 	void SetSpeed( const EAdjustSpeedParam eAdjust, const float fValue );
-	//! получить текущую скорость
+	//! РїРѕР»СѓС‡РёС‚СЊ С‚РµРєСѓС‰СѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ
 	const float GetSpeed() const { return fSpeed; }
-	//! задать желаемую скорость
+	//! Р·Р°РґР°С‚СЊ Р¶РµР»Р°РµРјСѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ
 	void SetDesiredSpeed( const float _fSpeed ) {	fDesiredSpeed = _fSpeed; }
-	//! желаемая скорость
+	//! Р¶РµР»Р°РµРјР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ
 	const float GetDesiredSpeed() const { return fDesiredSpeed; }
-	//! установить желаемую скорость равную максимальной
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ Р¶РµР»Р°РµРјСѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ СЂР°РІРЅСѓСЋ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№
 	void ResetDesiredSpeed() { fDesiredSpeed = GetMaxPossibleSpeed(); }
-	//! максимальная скорость движения в указанной точке. bAdjust - выровнять скорость с учетом желаемой
+	//! РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ РІ СѓРєР°Р·Р°РЅРЅРѕР№ С‚РѕС‡РєРµ. bAdjust - РІС‹СЂРѕРІРЅСЏС‚СЊ СЃРєРѕСЂРѕСЃС‚СЊ СЃ СѓС‡РµС‚РѕРј Р¶РµР»Р°РµРјРѕР№
 	const float GetMaxSpeedHere( const CVec2 &vPosition, const bool bAdjust ) const;
-	//! максимальная скорость движения в точке, где находиться центр юнита. Результат выравнивается с учетом желаемой скорости
+	//! РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ РІ С‚РѕС‡РєРµ, РіРґРµ РЅР°С…РѕРґРёС‚СЊСЃСЏ С†РµРЅС‚СЂ СЋРЅРёС‚Р°. Р РµР·СѓР»СЊС‚Р°С‚ РІС‹СЂР°РІРЅРёРІР°РµС‚СЃСЏ СЃ СѓС‡РµС‚РѕРј Р¶РµР»Р°РµРјРѕР№ СЃРєРѕСЂРѕСЃС‚Рё
 	const float GetMaxSpeedHere() const { return GetMaxSpeedHere( GetCenterPlain(), true ); }
-	//! юнит никуда не собирается ехать
+	//! СЋРЅРёС‚ РЅРёРєСѓРґР° РЅРµ СЃРѕР±РёСЂР°РµС‚СЃСЏ РµС…Р°С‚СЊ
 	virtual const bool IsIdle() const { return bIdle; }
-	//! юнит никуда не едет
+	//! СЋРЅРёС‚ РЅРёРєСѓРґР° РЅРµ РµРґРµС‚
 	virtual const bool IsMoving() const { return /* GetSmoothPath()->IsUnitMoving() || */ GetSpeed() != 0.0f; }
-	//! юнит поворацивается
+	//! СЋРЅРёС‚ РїРѕРІРѕСЂР°С†РёРІР°РµС‚СЃСЏ
 	virtual const bool IsTurning() const { return bTurning; }
-	//! юнит едет передом
+	//! СЋРЅРёС‚ РµРґРµС‚ РїРµСЂРµРґРѕРј
 	virtual const bool IsGoForward() const { return bGoForward; }
-	//! установить направление движения юнита (передом или задом)
+	//! СѓСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р° (РїРµСЂРµРґРѕРј РёР»Рё Р·Р°РґРѕРј)
 	void SetGoForward( const bool bGoForward );
-	//! принудительно заставить юнит двигаться передом
+	//! РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ Р·Р°СЃС‚Р°РІРёС‚СЊ СЋРЅРёС‚ РґРІРёРіР°С‚СЊСЃСЏ РїРµСЂРµРґРѕРј
 	void ForceGoForward() { bGoForward = true; }  
 
-	//! получить "плоскость" движения юнита (вода/земля)
+	//! РїРѕР»СѓС‡РёС‚СЊ "РїР»РѕСЃРєРѕСЃС‚СЊ" РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р° (РІРѕРґР°/Р·РµРјР»СЏ)
 	virtual const EMovementPlane GetMovementPlane() const { return eMovementPlane; }
-	//! получить наиболее вероятную "плоскость" движения юнита в заданном AI тайле (вода/земля)
+	//! РїРѕР»СѓС‡РёС‚СЊ РЅР°РёР±РѕР»РµРµ РІРµСЂРѕСЏС‚РЅСѓСЋ "РїР»РѕСЃРєРѕСЃС‚СЊ" РґРІРёР¶РµРЅРёСЏ СЋРЅРёС‚Р° РІ Р·Р°РґР°РЅРЅРѕРј AI С‚Р°Р№Р»Рµ (РІРѕРґР°/Р·РµРјР»СЏ)
 	virtual const EMovementPlane GetProbablePlane( const SVector &vPos ) const;
 
-	//! остановить юнит
+	//! РѕСЃС‚Р°РЅРѕРІРёС‚СЊ СЋРЅРёС‚
 	virtual void Stop();
-	//! остановить поворот юнита
+	//! РѕСЃС‚Р°РЅРѕРІРёС‚СЊ РїРѕРІРѕСЂРѕС‚ СЋРЅРёС‚Р°
 	virtual void StopTurning() { bTurning = false; }
 
-	//! залокать тайлы под юнитом
+	//! Р·Р°Р»РѕРєР°С‚СЊ С‚Р°Р№Р»С‹ РїРѕРґ СЋРЅРёС‚РѕРј
 	void LockTiles();
-	//! залокать тайлы под юнитом (в том числе и под пехотой)
+	//! Р·Р°Р»РѕРєР°С‚СЊ С‚Р°Р№Р»С‹ РїРѕРґ СЋРЅРёС‚РѕРј (РІ С‚РѕРј С‡РёСЃР»Рµ Рё РїРѕРґ РїРµС…РѕС‚РѕР№)
 	void ForceLockTiles();
-	//! разлокать тайлы под юнитом
+	//! СЂР°Р·Р»РѕРєР°С‚СЊ С‚Р°Р№Р»С‹ РїРѕРґ СЋРЅРёС‚РѕРј
 	void UnlockTiles();
 	void StaticLockTiles() const;
-	//! блокирует ли юнит тайлы под собой
+	//! Р±Р»РѕРєРёСЂСѓРµС‚ Р»Рё СЋРЅРёС‚ С‚Р°Р№Р»С‹ РїРѕРґ СЃРѕР±РѕР№
 	const bool IsLockingTiles() const { return bLocking; }
-	//! запретить залокивание тайлов (не работает для ForceLockTiles)
+	//! Р·Р°РїСЂРµС‚РёС‚СЊ Р·Р°Р»РѕРєРёРІР°РЅРёРµ С‚Р°Р№Р»РѕРІ (РЅРµ СЂР°Р±РѕС‚Р°РµС‚ РґР»СЏ ForceLockTiles)
 	void FixUnlocking() { bFixUnlocking = true; }
-	//! разрешить залокивание тайлов (не работает для ForceLockTiles)
+	//! СЂР°Р·СЂРµС€РёС‚СЊ Р·Р°Р»РѕРєРёРІР°РЅРёРµ С‚Р°Р№Р»РѕРІ (РЅРµ СЂР°Р±РѕС‚Р°РµС‚ РґР»СЏ ForceLockTiles)
 	void UnfixUnlocking() { bFixUnlocking = false; }
-	//! может ли юнит локать тайлы
+	//! РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ Р»РѕРєР°С‚СЊ С‚Р°Р№Р»С‹
 	virtual const bool CanLockTiles() const { return !bLocking; }
-	//! проверить, будет ли указанный профайл (profile) стоять на залоканных тайлах
+	//! РїСЂРѕРІРµСЂРёС‚СЊ, Р±СѓРґРµС‚ Р»Рё СѓРєР°Р·Р°РЅРЅС‹Р№ РїСЂРѕС„Р°Р№Р» (profile) СЃС‚РѕСЏС‚СЊ РЅР° Р·Р°Р»РѕРєР°РЅРЅС‹С… С‚Р°Р№Р»Р°С…
 	const bool IsOnLockedTiles( const SUnitProfile &profile ) const;
-	//! восстановить залоканость тайлов, вызывается после load'а
+	//! РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ Р·Р°Р»РѕРєР°РЅРѕСЃС‚СЊ С‚Р°Р№Р»РѕРІ, РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ load'Р°
 	void RestoreLock();
 	 
-	//! первый сегмент перемещения юнита: разрешение коллизий
+	//! РїРµСЂРІС‹Р№ СЃРµРіРјРµРЅС‚ РїРµСЂРµРјРµС‰РµРЅРёСЏ СЋРЅРёС‚Р°: СЂР°Р·СЂРµС€РµРЅРёРµ РєРѕР»Р»РёР·РёР№
 	virtual void FirstSegment( const NTimer::STime timeDiff );
-	//! второй сегмент перемещения юнита: движение вдоль пути
+	//! РІС‚РѕСЂРѕР№ СЃРµРіРјРµРЅС‚ РїРµСЂРµРјРµС‰РµРЅРёСЏ СЋРЅРёС‚Р°: РґРІРёР¶РµРЅРёРµ РІРґРѕР»СЊ РїСѓС‚Рё
 	virtual void SecondSegment( const NTimer::STime timeDiff );
-	//! промежуток времени, через который стоит вызвать второй сегмент для юнита
+	//! РїСЂРѕРјРµР¶СѓС‚РѕРє РІСЂРµРјРµРЅРё, С‡РµСЂРµР· РєРѕС‚РѕСЂС‹Р№ СЃС‚РѕРёС‚ РІС‹Р·РІР°С‚СЊ РІС‚РѕСЂРѕР№ СЃРµРіРјРµРЅС‚ РґР»СЏ СЋРЅРёС‚Р°
 	virtual const NTimer::STime GetNextSecondPathSegmTime() const { return nextSecondPathSegmTime; }
 	void CallUpdatePlacement();
 
-	//! гладкий путь, полученный при создании юнита
+	//! РіР»Р°РґРєРёР№ РїСѓС‚СЊ, РїРѕР»СѓС‡РµРЅРЅС‹Р№ РїСЂРё СЃРѕР·РґР°РЅРёРё СЋРЅРёС‚Р°
 	virtual ISmoothPath *GetDefaultPath() const { return pDefaultPath; }
-	//! гладкий путь, по которому движется юнит в данный момент
+	//! РіР»Р°РґРєРёР№ РїСѓС‚СЊ, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РґРІРёР¶РµС‚СЃСЏ СЋРЅРёС‚ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚
 	virtual ISmoothPath *GetSmoothPath() const { return pSmoothPath; }
-	//! коллизия в которой участвует юнит 
+	//! РєРѕР»Р»РёР·РёСЏ РІ РєРѕС‚РѕСЂРѕР№ СѓС‡Р°СЃС‚РІСѓРµС‚ СЋРЅРёС‚ 
 	virtual ICollision *GetCollision() const { return pCurrentCollision; }
-	//! задать коллизию для юнита
+	//! Р·Р°РґР°С‚СЊ РєРѕР»Р»РёР·РёСЋ РґР»СЏ СЋРЅРёС‚Р°
 	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
 	virtual void SetCollisionOld( ICollisionOld *pCollision, IPath *pPath ) {}
 
@@ -289,10 +289,10 @@ public:
 	virtual void RestoreSmoothPath();
 
 	const bool IsPathFinished() const { return GetSmoothPath()->IsFinished(); }  
-	//! эта функция ДОЛЖНА быть переопределена в классах - потомках
+	//! СЌС‚Р° С„СѓРЅРєС†РёСЏ Р”РћР›Р–РќРђ Р±С‹С‚СЊ РїРµСЂРµРѕРїСЂРµРґРµР»РµРЅР° РІ РєР»Р°СЃСЃР°С… - РїРѕС‚РѕРјРєР°С…
 	virtual const int GetUniqueID() const = 0;
 
-	//! различные статы юнита, по необходимости (т.е. скорее всего) переопределяются потомками
+	//! СЂР°Р·Р»РёС‡РЅС‹Рµ СЃС‚Р°С‚С‹ СЋРЅРёС‚Р°, РїРѕ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё (С‚.Рµ. СЃРєРѕСЂРµРµ РІСЃРµРіРѕ) РїРµСЂРµРѕРїСЂРµРґРµР»СЏСЋС‚СЃСЏ РїРѕС‚РѕРјРєР°РјРё
 	virtual const float GetMaxPossibleSpeed() const = 0;
 	virtual const EAIClasses GetAIPassabilityClass() const = 0;
 	virtual const float GetTurnRadius() const = 0;
@@ -315,39 +315,39 @@ public:
 	virtual const bool IsAviation() const { return false; }
 	
 
-	//! может ли юнит двигаться
+	//! РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ РґРІРёРіР°С‚СЊСЃСЏ
 	virtual const bool CanMove() const { return true; }
-	//! может ли юнит двигаться если ОЧЕНЬ надо
+	//! РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ РґРІРёРіР°С‚СЊСЃСЏ РµСЃР»Рё РћР§Р•РќР¬ РЅР°РґРѕ
 	virtual const bool CanMoveCritical() const { return true; }
-	//! может ли юнит поворачиваться
+	//! РјРѕР¶РµС‚ Р»Рё СЋРЅРёС‚ РїРѕРІРѕСЂР°С‡РёРІР°С‚СЊСЃСЏ
 	virtual const bool CanRotate() const { return true; }
 
 
-	//! юнит задавлен другим юнитом (pTramplerUnit - юнит, который задавил this)
+	//! СЋРЅРёС‚ Р·Р°РґР°РІР»РµРЅ РґСЂСѓРіРёРј СЋРЅРёС‚РѕРј (pTramplerUnit - СЋРЅРёС‚, РєРѕС‚РѕСЂС‹Р№ Р·Р°РґР°РІРёР» this)
 	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit ) = 0;
 	
-	//! юнит может быть задавлен другим юнитом (pTramplerUnit - тот кто собирается давить this)
-	//! что-то вроде this - пехота и враг для pTramplerUnit
+	//! СЋРЅРёС‚ РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РІР»РµРЅ РґСЂСѓРіРёРј СЋРЅРёС‚РѕРј (pTramplerUnit - С‚РѕС‚ РєС‚Рѕ СЃРѕР±РёСЂР°РµС‚СЃСЏ РґР°РІРёС‚СЊ this)
+	//! С‡С‚Рѕ-С‚Рѕ РІСЂРѕРґРµ this - РїРµС…РѕС‚Р° Рё РІСЂР°Рі РґР»СЏ pTramplerUnit
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const = 0;
 
 	virtual const bool IsDangerousDirExist() const = 0;
 	virtual const WORD GetDangerousDir() const = 0;
 
-	//! с кем может коллизиться юнит
+	//! СЃ РєРµРј РјРѕР¶РµС‚ РєРѕР»Р»РёР·РёС‚СЊСЃСЏ СЋРЅРёС‚
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_ALL; }
 
-	//! провести итерацию по юнитам CUnitsIter< 0, 0 >, для каждого юнита будет вызвана функция iterFunc,
-	//! итерирование продолжается до тех пор пока есть юниты и пока iterFunc возвращает true. Возвращаемое
-	//! значение равно последнему значение iterFunc, сам юнит (this) никогда не пройдет через итератор
+	//! РїСЂРѕРІРµСЃС‚Рё РёС‚РµСЂР°С†РёСЋ РїРѕ СЋРЅРёС‚Р°Рј CUnitsIter< 0, 0 >, РґР»СЏ РєР°Р¶РґРѕРіРѕ СЋРЅРёС‚Р° Р±СѓРґРµС‚ РІС‹Р·РІР°РЅР° С„СѓРЅРєС†РёСЏ iterFunc,
+	//! РёС‚РµСЂРёСЂРѕРІР°РЅРёРµ РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ РґРѕ С‚РµС… РїРѕСЂ РїРѕРєР° РµСЃС‚СЊ СЋРЅРёС‚С‹ Рё РїРѕРєР° iterFunc РІРѕР·РІСЂР°С‰Р°РµС‚ true. Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ
+	//! Р·РЅР°С‡РµРЅРёРµ СЂР°РІРЅРѕ РїРѕСЃР»РµРґРЅРµРјСѓ Р·РЅР°С‡РµРЅРёРµ iterFunc, СЃР°Рј СЋРЅРёС‚ (this) РЅРёРєРѕРіРґР° РЅРµ РїСЂРѕР№РґРµС‚ С‡РµСЂРµР· РёС‚РµСЂР°С‚РѕСЂ
 	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const = 0;
 
 	virtual void TurnToDirectionContinuesly( const WORD _wDirection );
 
-	//! послать юнит вдоль пути, возвращает true, если юнит поехал
+	//! РїРѕСЃР»Р°С‚СЊ СЋРЅРёС‚ РІРґРѕР»СЊ РїСѓС‚Рё, РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЋРЅРёС‚ РїРѕРµС…Р°Р»
 	virtual const bool SendAlongPath( IPath *pPath );
-	//! послать юнит вдоль пути, возвращает true, если юнит поехал
+	//! РїРѕСЃР»Р°С‚СЊ СЋРЅРёС‚ РІРґРѕР»СЊ РїСѓС‚Рё, РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЋРЅРёС‚ РїРѕРµС…Р°Р»
 	virtual const bool SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
-	//! послать юнит вдоль пути, возвращает true, если юнит поехал
+	//! РїРѕСЃР»Р°С‚СЊ СЋРЅРёС‚ РІРґРѕР»СЊ РїСѓС‚Рё, РІРѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё СЋРЅРёС‚ РїРѕРµС…Р°Р»
 	virtual void SendAlongSmoothPath( ISmoothPath *pPath );
 
 	virtual IStaticPath *CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking );
@@ -358,7 +358,7 @@ public:
 	virtual const bool IsStaticUnit() const = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! CBasePathUnit не является потомком CObjectBase, поэтому для его сериализации нельзя использовать operator&, необходимо
-//! пользоваться SerializeBasePathUnit( ... )
+//! CBasePathUnit РЅРµ СЏРІР»СЏРµС‚СЃСЏ РїРѕС‚РѕРјРєРѕРј CObjectBase, РїРѕСЌС‚РѕРјСѓ РґР»СЏ РµРіРѕ СЃРµСЂРёР°Р»РёР·Р°С†РёРё РЅРµР»СЊР·СЏ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ operator&, РЅРµРѕР±С…РѕРґРёРјРѕ
+//! РїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ SerializeBasePathUnit( ... )
 void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

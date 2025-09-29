@@ -15,7 +15,7 @@ interface IInterfaceBase : virtual public CObjectBase
 	//
 	virtual void Step( bool bAppActive ) = 0;
 	virtual bool ProcessEvent( const struct SGameMessage &msg ) = 0;
-	// переход к этому интерфейсу из другого полноэкранного
+	// РїРµСЂРµС…РѕРґ Рє СЌС‚РѕРјСѓ РёРЅС‚РµСЂС„РµР№СЃСѓ РёР· РґСЂСѓРіРѕРіРѕ РїРѕР»РЅРѕСЌРєСЂР°РЅРЅРѕРіРѕ
 	virtual void StartInterface() {}
 	// call it after load form save file
 	virtual void AfterLoad() {}

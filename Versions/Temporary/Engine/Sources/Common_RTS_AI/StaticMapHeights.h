@@ -18,10 +18,10 @@ class CStaticMapHeights : public CObjectBase
 	};
 	typedef hash_map< int, SOldHeights > CHeightsMap;
 
-	// высоты по узлам визуальной сетки
+	// РІС‹СЃРѕС‚С‹ РїРѕ СѓР·Р»Р°Рј РІРёР·СѓР°Р»СЊРЅРѕР№ СЃРµС‚РєРё
 	CArray2D<float> heights;
 	CBetaSpline3D betaSpline3D;
-	// высоты по центрам AI тайлов
+	// РІС‹СЃРѕС‚С‹ РїРѕ С†РµРЅС‚СЂР°Рј AI С‚Р°Р№Р»РѕРІ
 	CArray2D<float> tileHeights;
 	int nStaticMapSizeX;
 	int nStaticMapSizeY;
@@ -44,13 +44,13 @@ public:
 	// map size - in AI TILES
 	
 	// update given range of height
-	// для UpdateHeights массив "heghts" должен быть размером с карту
+	// РґР»СЏ UpdateHeights РјР°СЃСЃРёРІ "heghts" РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СЂР°Р·РјРµСЂРѕРј СЃ РєР°СЂС‚Сѓ
 	void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heghts );
 	void FinalizeUpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2 );
 	void FinalizeUpdateHeights();
 
-	// для UpdateLocalHeights массив "heghts" задает высоты только для фрагмента и в координатах AI
-	// НЕТ ОБНОВЛЕНИЯ КРАЯ КАРТЫ ВЫСОТ, возвращает ID, который необходимо использовать в RestoreHeights;
+	// РґР»СЏ UpdateLocalHeights РјР°СЃСЃРёРІ "heghts" Р·Р°РґР°РµС‚ РІС‹СЃРѕС‚С‹ С‚РѕР»СЊРєРѕ РґР»СЏ С„СЂР°РіРјРµРЅС‚Р° Рё РІ РєРѕРѕСЂРґРёРЅР°С‚Р°С… AI
+	// РќР•Рў РћР‘РќРћР’Р›Р•РќРРЇ РљР РђРЇ РљРђР РўР« Р’Р«РЎРћРў, РІРѕР·РІСЂР°С‰Р°РµС‚ ID, РєРѕС‚РѕСЂС‹Р№ РЅРµРѕР±С…РѕРґРёРјРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ RestoreHeights;
 	// int UpdateLocalHeights( const int nX1, const int nY1, const CArray2D<float> &heghts );
 	int UpdateLocalHeights( const int nX1, const int nY1, const CArray2D<bool> &bridge, const float fBridgeHeight );
 	void RestoreHeights( const int nID );

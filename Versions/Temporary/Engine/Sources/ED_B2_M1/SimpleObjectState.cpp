@@ -320,13 +320,13 @@ void CSimpleObjectState::InsertObjectEnter()
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
 		}
-		// вставляем объект
+		// РІСЃС‚Р°РІР»СЏРµРј РѕР±СЉРµРєС‚
 		if ( !rpgStatsDBID.IsEmpty() )
 		{
 			string szSeason;
 			CManipulatorManager::GetValue( &szSeason, pManipulator, "Season" );
 			const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
-			// заполняем сцену и проставляем ссылки в mapInfo
+			// Р·Р°РїРѕР»РЅСЏРµРј СЃС†РµРЅСѓ Рё РїСЂРѕСЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєРё РІ mapInfo
 			CWaitCursor waitCursor;
 			const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( rpgStatsDBID ) );
 			if ( !pHPObjectRPGStats )
@@ -533,7 +533,7 @@ void CMapObjectAddState::InsertMapObject()
 		pParentState->pickMapObjectIDList.push_back( nNewMapObjectID );
 		pParentState->nSelectedIndex = 0;
 		//
-		// Запоманаем первоначальное расположение контрольных точек
+		// Р—Р°РїРѕРјР°РЅР°РµРј РїРµСЂРІРѕРЅР°С‡Р°Р»СЊРЅРѕРµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РєРѕРЅС‚СЂРѕР»СЊРЅС‹С… С‚РѕС‡РµРє
 		if ( CMapObjectState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedMapObjectID() ) )
 		{
 			pParentState->controlPointList = ( *pControlPointList );

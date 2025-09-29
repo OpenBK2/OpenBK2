@@ -73,8 +73,8 @@ private:
 	CReinforcementPositions reinforcementPositions;
 	CEnabledReinforcements enabledReinforcements;
 	bool bReinfEnabled;
-	NTimer::STime reinfTimeRecycleStart; // момент времени, с которого ждать разрешения на следующий вызов подкреплений
-	NTimer::STime reinfTimeRecycleEnd; // промежуток времени, через который будут разрешены подкрепления
+	NTimer::STime reinfTimeRecycleStart; // РјРѕРјРµРЅС‚ РІСЂРµРјРµРЅРё, СЃ РєРѕС‚РѕСЂРѕРіРѕ Р¶РґР°С‚СЊ СЂР°Р·СЂРµС€РµРЅРёСЏ РЅР° СЃР»РµРґСѓСЋС‰РёР№ РІС‹Р·РѕРІ РїРѕРґРєСЂРµРїР»РµРЅРёР№
+	NTimer::STime reinfTimeRecycleEnd; // РїСЂРѕРјРµР¶СѓС‚РѕРє РІСЂРµРјРµРЅРё, С‡РµСЂРµР· РєРѕС‚РѕСЂС‹Р№ Р±СѓРґСѓС‚ СЂР°Р·СЂРµС€РµРЅС‹ РїРѕРґРєСЂРµРїР»РµРЅРёСЏ
 	float fReinfRecycleProgress;
 	int nReinfCallsLeft;
 	CKeyBuildings keyBuildings;

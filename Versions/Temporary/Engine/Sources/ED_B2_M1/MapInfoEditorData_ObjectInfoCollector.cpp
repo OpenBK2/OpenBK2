@@ -432,10 +432,10 @@ namespace NMapInfoEditor
 		//
 		if ( !selectionObjectInfoIDset.empty() )
 		{
-			// установим абсолютные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј Р°Р±СЃРѕР»СЋС‚РЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeAbsolute();
 			//
-			// добавим элементы
+			// РґРѕР±Р°РІРёРј СЌР»РµРјРµРЅС‚С‹
 			for ( CObjectInfoIDSet::const_iterator itSelectionObjectInfoID = selectionObjectInfoIDset.begin(); itSelectionObjectInfoID != selectionObjectInfoIDset.end(); ++itSelectionObjectInfoID )
 			{
 				if ( SObjectInfo *pObjectInfo = GetObjectInfo( itSelectionObjectInfoID->first ) )
@@ -443,11 +443,11 @@ namespace NMapInfoEditor
 					SObjectSelectionPart objectSelectionPart;
 					objectSelectionPart.vPosition = pObjectInfo->vPosition;
 					objectSelectionPart.fDirection = pObjectInfo->fDirection;
-					// заносим элемент в структуру данных объекта
+					// Р·Р°РЅРѕСЃРёРј СЌР»РµРјРµРЅС‚ РІ СЃС‚СЂСѓРєС‚СѓСЂСѓ РґР°РЅРЅС‹С… РѕР±СЉРµРєС‚Р°
 					objectSelection.objectSelectionPartMap[itSelectionObjectInfoID->first] = objectSelectionPart;
 				}
 			}
-			// установим относительные координаты
+			// СѓСЃС‚Р°РЅРѕРІРёРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 			objectSelection.MakeRelative();
 		}
 	}
@@ -989,14 +989,14 @@ namespace NMapInfoEditor
 																						 bool bUpdateScene, IEditorScene *pEditorScene,
 																						 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
-		//убрать полупрозрачное изображение
+		//СѓР±СЂР°С‚СЊ РїРѕР»СѓРїСЂРѕР·СЂР°С‡РЅРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 		HideClipboard( pEditorScene, pManipulator );
 
-		//поправить координаты объектов (сделать абсолютными)
+		//РїРѕРїСЂР°РІРёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕР±СЉРµРєС‚РѕРІ (СЃРґРµР»Р°С‚СЊ Р°Р±СЃРѕР»СЋС‚РЅС‹РјРё)
 		objectClipboard.vPosition = rvPastePosition;
 		objectClipboard.MakeAbsolute();
 
-		// копируем
+		// РєРѕРїРёСЂСѓРµРј
 		SObjectClipboard objectClipboardToPaste;
 		for ( CObjectClipboardPartList::const_iterator itObjectClipboardPart = objectClipboard.objectClipboardPartlist.begin(); itObjectClipboardPart != objectClipboard.objectClipboardPartlist.end(); ++itObjectClipboardPart )
 		{
@@ -1006,10 +1006,10 @@ namespace NMapInfoEditor
 			}
 		}
 
-		//поправить координаты объектов (сделать относительными)
+		//РїРѕРїСЂР°РІРёС‚СЊ РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕР±СЉРµРєС‚РѕРІ (СЃРґРµР»Р°С‚СЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹РјРё)
 		objectClipboard.MakeRelative();
 
-		//собрать старые LinkID, выдаем новые
+		//СЃРѕР±СЂР°С‚СЊ СЃС‚Р°СЂС‹Рµ LinkID, РІС‹РґР°РµРј РЅРѕРІС‹Рµ
 		CLinkIDMap new2OldLinkIDMap;
 		CLinkIDMap old2NewLinkIDMap;
 		for ( CObjectClipboardPartList::const_iterator itObjectClipboardPart = objectClipboardToPaste.objectClipboardPartlist.begin(); itObjectClipboardPart != objectClipboardToPaste.objectClipboardPartlist.end(); ++itObjectClipboardPart )
@@ -1020,7 +1020,7 @@ namespace NMapInfoEditor
 			}
 		}
 
-		//добавить объекты в структуры базового класса
+		//РґРѕР±Р°РІРёС‚СЊ РѕР±СЉРµРєС‚С‹ РІ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р±Р°Р·РѕРІРѕРіРѕ РєР»Р°СЃСЃР°
 		bool bResult = true;
 		for ( CObjectClipboardPartList::const_iterator itObjectClipboardPart = objectClipboardToPaste.objectClipboardPartlist.begin(); itObjectClipboardPart != objectClipboardToPaste.objectClipboardPartlist.end(); ++itObjectClipboardPart )
 		{

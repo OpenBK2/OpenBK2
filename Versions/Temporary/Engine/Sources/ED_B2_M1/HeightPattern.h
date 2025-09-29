@@ -37,7 +37,7 @@ struct SHeightPattern
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал создающий паттерн по градиенту
+//С„СѓРЅРєС†РёРѕРЅР°Р» СЃРѕР·РґР°СЋС‰РёР№ РїР°С‚С‚РµСЂРЅ РїРѕ РіСЂР°РґРёРµРЅС‚Сѓ
 struct SCreateHeightPatternByGradientFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -79,7 +79,7 @@ struct SCreateHeightPatternByValueFunctional
 };
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал создающий паттерн заравнивания
+//С„СѓРЅРєС†РёРѕРЅР°Р» СЃРѕР·РґР°СЋС‰РёР№ РїР°С‚С‚РµСЂРЅ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ
 struct SCreateHeightPatternToLevelFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -106,7 +106,7 @@ struct SCreateHeightPatternToLevelFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал создающий паттерн заравнивания, все высоты приводятся к положительным величинам
+//С„СѓРЅРєС†РёРѕРЅР°Р» СЃРѕР·РґР°СЋС‰РёР№ РїР°С‚С‚РµСЂРЅ Р·Р°СЂР°РІРЅРёРІР°РЅРёСЏ, РІСЃРµ РІС‹СЃРѕС‚С‹ РїСЂРёРІРѕРґСЏС‚СЃСЏ Рє РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј РІРµР»РёС‡РёРЅР°Рј
 struct SCreateHeightPatternToLevelOverZeroFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -145,7 +145,7 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал создающий паттерн в высотами
+//С„СѓРЅРєС†РёРѕРЅР°Р» СЃРѕР·РґР°СЋС‰РёР№ РїР°С‚С‚РµСЂРЅ РІ РІС‹СЃРѕС‚Р°РјРё
 struct SCreateHeightPatternFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -169,7 +169,7 @@ struct SCreateHeightPatternFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//функционал определяющий среднее значение высоты
+//С„СѓРЅРєС†РёРѕРЅР°Р» РѕРїСЂРµРґРµР»СЏСЋС‰РёР№ СЃСЂРµРґРЅРµРµ Р·РЅР°С‡РµРЅРёРµ РІС‹СЃРѕС‚С‹
 struct SCalculateAverageHeightFunctional
 {
 	float fTotalHeight;
@@ -193,12 +193,12 @@ struct SCalculateAverageHeightFunctional
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для всех элементов SHeightPattern.heights
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ SHeightPattern.heights
 template<class TYPE>
 bool ApplyHightPatterns( const CTRect<int> &rRect,
 												 const std::vector<SHeightPattern> &rPatterns,
-												 TYPE &rApplyFunctional,								//функционал
-												 bool isIgnoreInvalidIndices = false )	//пропускать обьекты за краями карты
+												 TYPE &rApplyFunctional,								//С„СѓРЅРєС†РёРѕРЅР°Р»
+												 bool isIgnoreInvalidIndices = false )	//РїСЂРѕРїСѓСЃРєР°С‚СЊ РѕР±СЊРµРєС‚С‹ Р·Р° РєСЂР°СЏРјРё РєР°СЂС‚С‹
 {
 	for ( int nPatternIndex = 0; nPatternIndex < rPatterns.size(); ++nPatternIndex )
 	{
@@ -207,27 +207,27 @@ bool ApplyHightPatterns( const CTRect<int> &rRect,
 												 rPatterns[nPatternIndex].pos.x + rPatterns[nPatternIndex].heights.GetSizeX(),
 												 rPatterns[nPatternIndex].pos.y + rPatterns[nPatternIndex].heights.GetSizeY() );
 		const int nResult = ValidateRect( rRect, &indices );
-		//нет ни одного вертекса
+		//РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІРµСЂС‚РµРєСЃР°
 		if ( nResult < 0 )
 		{
 			if ( isIgnoreInvalidIndices )
 			{
-				//скипаем обьект, переходим к следующему
+				//СЃРєРёРїР°РµРј РѕР±СЊРµРєС‚, РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ
 				continue;
 			}
 			else
 			{
-				//возвращаем ошибку
+				//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 				return false;
 			}
 		}
-		//некоторые вертексы лишние
+		//РЅРµРєРѕС‚РѕСЂС‹Рµ РІРµСЂС‚РµРєСЃС‹ Р»РёС€РЅРёРµ
 		if ( ( nResult == 0 ) && !isIgnoreInvalidIndices )
 		{
-			//возвращаем ошибку
+			//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 			return false;
 		}
-		//пробегаем по тайлам
+		//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 		for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 		{
 			for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -243,7 +243,7 @@ bool ApplyHightPatterns( const CTRect<int> &rRect,
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов для всех элементов SHeightPattern.heights
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РґР»СЏ РІСЃРµС… СЌР»РµРјРµРЅС‚РѕРІ SHeightPattern.heights
 template<class TYPE>
 bool ApplyHeightPattern( const CTRect<int> &rRect,
 												 const SHeightPattern &rPattern,
@@ -255,27 +255,27 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 											 rPattern.pos.x + rPattern.heights.GetSizeX(),
 											 rPattern.pos.y + rPattern.heights.GetSizeY() );
 	const int nResult = ValidateRect( rRect, &indices );
-	//нет ни одного вертекса
+	//РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІРµСЂС‚РµРєСЃР°
 	if ( nResult < 0 )
 	{
 		if ( isIgnoreInvalidIndices )
 		{
-			//скипаем обьект
+			//СЃРєРёРїР°РµРј РѕР±СЊРµРєС‚
 			return true;
 		}
 		else
 		{
-			//возвращаем ошибку
+			//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 			return false;
 		}
 	}
-	//некоторые вертексы лишние
+	//РЅРµРєРѕС‚РѕСЂС‹Рµ РІРµСЂС‚РµРєСЃС‹ Р»РёС€РЅРёРµ
 	if ( ( nResult == 0 ) && !isIgnoreInvalidIndices )
 	{
-		//возвращаем ошибку
+		//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 		return false;
 	}
-	//пробегаем по тайлам
+	//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 	for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -291,7 +291,7 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Специальнй случай - применение функционала в цепочке точек (не нужно создавать несколько функционалов)
+//РЎРїРµС†РёР°Р»СЊРЅР№ СЃР»СѓС‡Р°Р№ - РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»Р° РІ С†РµРїРѕС‡РєРµ С‚РѕС‡РµРє (РЅРµ РЅСѓР¶РЅРѕ СЃРѕР·РґР°РІР°С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ)
 template<class TYPE>
 bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
 																SHeightPattern *pHeightPattern,
@@ -311,27 +311,27 @@ bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
 												 pHeightPattern->pos.x + pHeightPattern->heights.GetSizeX(),
 												 pHeightPattern->pos.y + pHeightPattern->heights.GetSizeY() );
 		const int nResult = ValidateRect( rRect, &indices );
-		//нет ни одного вертекса
+		//РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІРµСЂС‚РµРєСЃР°
 		if ( nResult < 0 )
 		{
 			if ( isIgnoreInvalidIndices )
 			{
-				//скипаем обьект, переходим к следующему
+				//СЃРєРёРїР°РµРј РѕР±СЊРµРєС‚, РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµРјСѓ
 				continue;
 			}
 			else
 			{
-				//возвращаем ошибку
+				//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 				return false;
 			}
 		}
-		//некоторые вертексы лишние
+		//РЅРµРєРѕС‚РѕСЂС‹Рµ РІРµСЂС‚РµРєСЃС‹ Р»РёС€РЅРёРµ
 		if ( ( nResult == 0 ) && !isIgnoreInvalidIndices )
 		{
-			//возвращаем ошибку
+			//РІРѕР·РІСЂР°С‰Р°РµРј РѕС€РёР±РєСѓ
 			return false;
 		}
-		//пробегаем по тайлам
+		//РїСЂРѕР±РµРіР°РµРј РїРѕ С‚Р°Р№Р»Р°Рј
 		for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
 		{
 			for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
@@ -363,7 +363,7 @@ bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//применение функционалов внутри эллипса для полея heights
+//РїСЂРёРјРµРЅРµРЅРёРµ С„СѓРЅРєС†РёРѕРЅР°Р»РѕРІ РІРЅСѓС‚СЂРё СЌР»Р»РёРїСЃР° РґР»СЏ РїРѕР»РµСЏ heights
 template<class TYPE>
 static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 {

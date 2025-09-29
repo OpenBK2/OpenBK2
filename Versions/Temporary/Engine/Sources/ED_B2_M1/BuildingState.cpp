@@ -91,7 +91,7 @@ void CBuildingState::Enter()
 																												ID_SCENE_ENABLE_GAME_INPUT, 
 																												reinterpret_cast<DWORD>(new CBuildingInterfaceCommand(new CBuildingInterface())) );
 	
-	// читаем установки MapInfoEditor, чтобы выбрать террейн
+	// С‡РёС‚Р°РµРј СѓСЃС‚Р°РЅРѕРІРєРё MapInfoEditor, С‡С‚РѕР±С‹ РІС‹Р±СЂР°С‚СЊ С‚РµСЂСЂРµР№РЅ
 
 	//UINT nMapID = -1;
 	//if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
@@ -106,7 +106,7 @@ void CBuildingState::Enter()
 	//	vCameraAnchor.y = 16.0f * VIS_TILE_SIZE;
 	//}
 
-	//pBuildingEditor->ReloadTerrain( nMapID, vCameraAnchor ); // не нужно, так как выполняется в CBuildingEditor::ChangeSeason
+	//pBuildingEditor->ReloadTerrain( nMapID, vCameraAnchor ); // РЅРµ РЅСѓР¶РЅРѕ, С‚Р°Рє РєР°Рє РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ РІ CBuildingEditor::ChangeSeason
 	pBuildingEditor->ChangeSeason( (NDb::ESeason)typeSeasonMnemonics.GetValue(pBuildingEditor->GetCurrSeason()) );
 	//
 	LoadEnterConfig();

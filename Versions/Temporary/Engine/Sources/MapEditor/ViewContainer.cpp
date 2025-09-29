@@ -101,7 +101,7 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSe
 				bResult = true;
 			}
 		}
-		// удаление ненужного View
+		// СѓРґР°Р»РµРЅРёРµ РЅРµРЅСѓР¶РЅРѕРіРѕ View
 		if ( pViewSet )
 		{
 			CViewSet::iterator posExludeView = pViewSet->find( pViewToExlude );

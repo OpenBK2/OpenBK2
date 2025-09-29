@@ -24,20 +24,20 @@ class CRotatingFireplacesObject
 public:
 	CRotatingFireplacesObject() { }
 
-	// вызывается после того, как юнита полностью добавили в объект
-	// nFireplace - номер fireplace в том случае, если солдат добавляется в fireplace
+	// РІС‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ С‚РѕРіРѕ, РєР°Рє СЋРЅРёС‚Р° РїРѕР»РЅРѕСЃС‚СЊСЋ РґРѕР±Р°РІРёР»Рё РІ РѕР±СЉРµРєС‚
+	// nFireplace - РЅРѕРјРµСЂ fireplace РІ С‚РѕРј СЃР»СѓС‡Р°Рµ, РµСЃР»Рё СЃРѕР»РґР°С‚ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ fireplace
 	void AddUnit( class CSoldier *pSoldier, const int nFireplace );
 	void DeleteUnit( class CSoldier *pSoldier );
 
 	virtual void Segment();
 
-	// можно ли менять слот у этого слодата
+	// РјРѕР¶РЅРѕ Р»Рё РјРµРЅСЏС‚СЊ СЃР»РѕС‚ Сѓ СЌС‚РѕРіРѕ СЃР»РѕРґР°С‚Р°
 	virtual bool CanRotateSoldier( class CSoldier *pSoldier ) const = 0;
-	// поставить солдата в place вместо сидящего там
+	// РїРѕСЃС‚Р°РІРёС‚СЊ СЃРѕР»РґР°С‚Р° РІ place РІРјРµСЃС‚Рѕ СЃРёРґСЏС‰РµРіРѕ С‚Р°Рј
 	virtual void ExchangeUnitToFireplace( class CSoldier *pSoldier, int nFirePlace ) = 0;
-	// количество fireplaces
+	// РєРѕР»РёС‡РµСЃС‚РІРѕ fireplaces
 	virtual const int GetNFirePlaces() const = 0;
-	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
+	// СЃРѕР»РґР°С‚, СЃРёРґСЏС‰РёР№ РІ fireplace, РµСЃР»Рё fireplace РїСѓСЃС‚, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµС‚ 0
 	virtual class CSoldier* GetSoldierInFireplace( const int nFireplace) const = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

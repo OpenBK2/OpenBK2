@@ -6,12 +6,12 @@
 class CBasePathUnit;
 class CAIMap;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! вот бы избавиться от этого...
+//! РІРѕС‚ Р±С‹ РёР·Р±Р°РІРёС‚СЊСЃСЏ РѕС‚ СЌС‚РѕРіРѕ...
 interface IMemento : public CAIObjectBase
 {
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! путь юнита
+//! РїСѓС‚СЊ СЋРЅРёС‚Р°
 interface IPath : public CAIObjectBase
 {
 	virtual bool IsFinished() const = 0;
@@ -22,25 +22,25 @@ interface IPath : public CAIObjectBase
 	virtual const CVec2& GetFinishPoint() const = 0;
 	virtual const CVec2& GetStartPoint() const = 0;
 
-	//! восстановить путь из новой точки ( vPoint )
+	//! РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РїСѓС‚СЊ РёР· РЅРѕРІРѕР№ С‚РѕС‡РєРё ( vPoint )
 	virtual void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) = 0;
-	//! пересчитать путь из новой точки ( vPoint )
+	//! РїРµСЂРµСЃС‡РёС‚Р°С‚СЊ РїСѓС‚СЊ РёР· РЅРѕРІРѕР№ С‚РѕС‡РєРё ( vPoint )
 	virtual void RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) = 0;
-	//! добавить тайлы в начало пути
+	//! РґРѕР±Р°РІРёС‚СЊ С‚Р°Р№Р»С‹ РІ РЅР°С‡Р°Р»Рѕ РїСѓС‚Рё
 	virtual void InsertTiles( const list<SVector> &tiles ) = 0;
-	//! можно ли проехать весь путь задом
+	//! РјРѕР¶РЅРѕ Р»Рё РїСЂРѕРµС…Р°С‚СЊ РІРµСЃСЊ РїСѓС‚СЊ Р·Р°РґРѕРј
 	virtual const bool CanGoBackward( const CBasePathUnit *pUnit ) const = 0;
 	virtual const bool ShouldCheckTurn() const = 0;
-	//! можно ли для этого пути построить сложный разворот
+	//! РјРѕР¶РЅРѕ Р»Рё РґР»СЏ СЌС‚РѕРіРѕ РїСѓС‚Рё РїРѕСЃС‚СЂРѕРёС‚СЊ СЃР»РѕР¶РЅС‹Р№ СЂР°Р·РІРѕСЂРѕС‚
 	virtual const bool CanBuildComplexTurn() const = 0;
 
 	virtual void MarkPath( const int nID, const NDebugInfo::EColor color ) const = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//! сглаженный путь юнита, именно вдоль этого пути и происходит движение юнита
+//! СЃРіР»Р°Р¶РµРЅРЅС‹Р№ РїСѓС‚СЊ СЋРЅРёС‚Р°, РёРјРµРЅРЅРѕ РІРґРѕР»СЊ СЌС‚РѕРіРѕ РїСѓС‚Рё Рё РїСЂРѕРёСЃС…РѕРґРёС‚ РґРІРёР¶РµРЅРёРµ СЋРЅРёС‚Р°
 interface ISmoothPath : public CAIObjectBase
 {
-	// возвращает - пошёл юнит по пути или нет
+	// РІРѕР·РІСЂР°С‰Р°РµС‚ - РїРѕС€С‘Р» СЋРЅРёС‚ РїРѕ РїСѓС‚Рё РёР»Рё РЅРµС‚
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) = 0;
 	virtual bool Init( IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) = 0;
 

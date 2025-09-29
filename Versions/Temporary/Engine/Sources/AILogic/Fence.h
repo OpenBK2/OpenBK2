@@ -10,7 +10,7 @@ class CFence : public CCommonStaticObject
 		CDBPtr<SFenceRPGStats> pStats;
 		SVector leftTile, rightTile;
 		NDb::SFenceRPGStats::ETypesOfLife eLifeType;
-		// соседние заборы
+		// СЃРѕСЃРµРґРЅРёРµ Р·Р°Р±РѕСЂС‹
 		list< CPtr<CFence> > neighFences;
 		int nCreator;													// diplomacy of creator
 		bool bSuspendAppear;
