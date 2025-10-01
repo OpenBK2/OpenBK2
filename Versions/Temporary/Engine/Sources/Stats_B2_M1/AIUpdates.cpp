@@ -1,11 +1,6 @@
 #include "StdAfx.h"
 
 #include "AIUpdates.h"
-void ForceLink111()
-{
-	static string s = "";
-	s = "d";
-}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 REGISTER_SAVELOAD_CLASS( 0x120B7301, SAIActionUpdate )
 REGISTER_SAVELOAD_CLASS( 0x120B7381, SAIPlacementUpdate )

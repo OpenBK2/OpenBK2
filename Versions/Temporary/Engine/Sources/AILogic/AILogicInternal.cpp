@@ -999,11 +999,9 @@ void CAILogic::LogCheckSum( ICheckSumLog *_pCheckSumLog )
 	CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &tmpCheckSum, _pCheckSumLog, curTime );
 	this->operator&( *pCheckSumSaver );
 }
-void ForceLink111();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, const NDb::SAIGameConsts *_pConsts, IAIScenarioTracker *_pScenarioTracker )
 {
-	ForceLink111();
 	// set control word for FP co-processor
 	// _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24
 	// 0xa001f
