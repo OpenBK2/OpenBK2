@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\misc\HPTimer.h"
 //
@@ -36,15 +39,15 @@ namespace NWinFrame
 		DWORD dwFlags;
 	};
 	// WinFrame interface
-	bool GetMessage( SWindowsMsg *pRes );
-	bool IsAppActive();
-	bool IsExit();
+	SYSTEM_EXPORT bool (GetMessage)( SWindowsMsg *pRes );
+	SYSTEM_EXPORT bool IsAppActive();
+	SYSTEM_EXPORT bool IsExit();
 	void Exit();
-	void ResetExit(); // b2`s cheat to show movie on exit
-	HWND GetWnd();
-	void PumpMessages();
+	SYSTEM_EXPORT void ResetExit(); // b2`s cheat to show movie on exit
+	SYSTEM_EXPORT HWND GetWnd();
+	SYSTEM_EXPORT void PumpMessages();
 	bool __declspec(dllexport) SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon );
-	void SetCursor( HCURSOR _hCursor );
+	SYSTEM_EXPORT void SetCursor( HCURSOR _hCursor );
 	void ShowCursor( bool bShow );
 	void EnableCursorManagement( bool bEnable );
 };

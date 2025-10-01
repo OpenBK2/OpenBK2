@@ -1,5 +1,8 @@
 #include "StdAfx.h"
 
+#include "GameX_export.h"
+#include "../Main/Main_export.h"
+
 #include "../misc/2darray.h"
 #include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
@@ -33,7 +36,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NMain
 {
-	bool Initialize();
+	MAIN_EXPORT bool Initialize();
 }
 void HookUISpecificB2();
 void ReferenceCheatForReleaseLinkerUISpecificB2()
@@ -55,7 +58,7 @@ void UnInitDataDependentSingletons()
 	NSingleton::UnRegisterSingleton( IClientAckManager::tidTypeID );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Initialize()
+GAMEX_EXPORT bool Initialize()
 {
 	try
 	{

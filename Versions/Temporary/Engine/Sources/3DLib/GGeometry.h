@@ -4,6 +4,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "3DLib_export.h"
+
 #include "..\3Dmotor\GPixelFormat.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGScene
@@ -48,7 +50,7 @@ inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 }
 #pragma warning( default: 4701 )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CObjectInfo : public CObjectBase
+class _3DLIB_EXPORT CObjectInfo : public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CObjectInfo);
 public:
@@ -170,7 +172,7 @@ public:
 };
 void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter );
 void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions );
-void SplitWrapping( CObjectInfo::SData *pData );
+_3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 }

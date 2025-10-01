@@ -1,4 +1,7 @@
 #pragma once
+
+#include "UISpecificB2_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\ui\commandparam.h"
 #include "..\ui\dbuserinterface.h"
@@ -9,8 +12,8 @@
 #include "../Stats_B2_M1/DBAnimB2.h"
 #include "../Misc/Progress.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
-IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample );
+UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
+UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SMiniMapUnitInfo
 {

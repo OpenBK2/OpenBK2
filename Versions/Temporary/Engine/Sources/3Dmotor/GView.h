@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 #include "GSkeleton.h"
 #include "..\System\Time.hpp"
 #include "GRenderModes.h"
@@ -223,23 +226,23 @@ public:
 		return res;
 	}
 };
-IGameView* CreateNewView();
+_3DMOTOR_EXPORT IGameView* CreateNewView();
 IGameView* CreateNewFastInterfaceView();
 // wrappers to Gfx to exclude interface on Gfx dependency, realisation in GScene.cpp
-bool Is3DActive();
-void SetWireframe( bool bWire );
+_3DMOTOR_EXPORT bool Is3DActive();
+_3DMOTOR_EXPORT void SetWireframe( bool bWire );
 bool GetWireframe();
-void Flip();
-void GetRenderStats( SRenderStats *pStats );
-float GetFrameTime();
-int CalcTouchedTextureSize();
-void ClearScreen( const CVec3 &vColor );
+_3DMOTOR_EXPORT void Flip();
+_3DMOTOR_EXPORT void GetRenderStats( SRenderStats *pStats );
+_3DMOTOR_EXPORT float GetFrameTime();
+_3DMOTOR_EXPORT int CalcTouchedTextureSize();
+_3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
 CVec2 GetScreenRect();
 // p - CreateMesh() result, fFade is in [0,1], 0 - invisible, 1 - normal
-void SetFade( CObjectBase *p, float fFade );
+_3DMOTOR_EXPORT void SetFade( CObjectBase *p, float fFade );
 void SetPriority( CObjectBase *_p, int _nPriority );
-void StopParticlesGeneration( CObjectBase *_p, STime tStop );
-void StopDynamicLighting( CObjectBase *_p );
+_3DMOTOR_EXPORT void StopParticlesGeneration( CObjectBase *_p, STime tStop );
+_3DMOTOR_EXPORT void StopDynamicLighting( CObjectBase *_p );
 // mode switch
 void SetNextLightmapViewMode( IGameView *p );
 void SetNextTranspRenderMode( IGameView *p );

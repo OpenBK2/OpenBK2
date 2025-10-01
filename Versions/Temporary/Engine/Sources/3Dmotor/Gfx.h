@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 #include "GPixelFormat.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGfx
@@ -69,21 +72,21 @@ struct SRenderTargetsInfo
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // general
-bool Init3D( HWND hWnd );
-void Done3D();
+_3DMOTOR_EXPORT bool Init3D( HWND hWnd );
+_3DMOTOR_EXPORT void Done3D();
 HWND GetHWND();
-bool Is3DActive();
-void SetGamma( bool bGamma );
-void SetGammaRamp( const vector<NGfx::SPixel8888> &ramp );
+_3DMOTOR_EXPORT bool Is3DActive();
+_3DMOTOR_EXPORT void SetGamma( bool bGamma );
+_3DMOTOR_EXPORT void SetGammaRamp( const vector<NGfx::SPixel8888> &ramp );
 bool SetMode( const SVideoMode &m_, const SRenderTargetsInfo &_rtInfo );
-void GetModesList( list<SVideoMode> *pRes, int nBpp = 32 );
+_3DMOTOR_EXPORT void GetModesList( list<SVideoMode> *pRes, int nBpp = 32 );
 int GetMaxAnisotropicLevel();
-CVec2 GetScreenRect();
+_3DMOTOR_EXPORT CVec2 GetScreenRect();
 void Flip();
-void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
+_3DMOTOR_EXPORT void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
 void MakeScreenShotHQ( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
 void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
-void CheckBackBufferSize();
+_3DMOTOR_EXPORT void CheckBackBufferSize();
 int GetDeviceCreationID();
 const SSystemInfo& GetSystemInfo();
 bool Is16BitMode();

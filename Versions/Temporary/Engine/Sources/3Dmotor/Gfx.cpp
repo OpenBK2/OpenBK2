@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "../3DLib/3DLib_export.h"
+
 #include <D3D9.h>
 #include <ddraw.h>
 #include <dxerr.h>
@@ -39,7 +42,7 @@ bool bInitOk = true;
 bool b16BitMode = false, bDXTSupported = true, b8888Supported = true, b16BitTextures = false;
 static bool b16BitModeOnly = false, bVSync = false;
 int nUseAnisotropy = 1;
-EXTERNVAR int nVCacheSize;
+_3DLIB_EXPORT EXTERNVAR int nVCacheSize;
 static SVideoMode videoMode;
 static D3DPRESENT_PARAMETERS pp;
 static unsigned char nGammaCorrectionR[256], nGammaCorrectionG[256], nGammaCorrectionB[256];

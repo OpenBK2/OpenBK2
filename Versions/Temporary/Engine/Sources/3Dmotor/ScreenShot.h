@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "GSceneUtils.h"
 #include "..\Misc\2DArray.h"
@@ -15,7 +18,7 @@ namespace NGfx
 namespace NGScene
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CScreenshotTexture: public CPtrFuncBase<NGfx::CTexture>
+class _3DMOTOR_EXPORT CScreenshotTexture: public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_BASIC_METHODS(CScreenshotTexture);
 public:

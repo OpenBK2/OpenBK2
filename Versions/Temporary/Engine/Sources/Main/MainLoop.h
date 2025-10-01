@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Main_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // **
@@ -29,18 +32,18 @@ interface IInterfaceCommand : public CObjectBase
 
 namespace NMainLoop
 {
-bool StepApp( bool bActive ); // return false on exit state
-void ResetStack();
-void Command( IInterfaceCommand *pCommand );
-void Command( int nCommandID, const char *pszConfiguration );
-const string& GetBaseDir();
+MAIN_EXPORT bool StepApp( bool bActive ); // return false on exit state
+MAIN_EXPORT void ResetStack();
+MAIN_EXPORT void Command( IInterfaceCommand *pCommand );
+MAIN_EXPORT void Command( int nCommandID, const char *pszConfiguration );
+MAIN_EXPORT const string& GetBaseDir();
 void InitMainLoop();
-void PushInterface( IInterfaceBase *pInterface );
-void PopInterface();
-IInterfaceBase *GetTopInterface();
-IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface );
+MAIN_EXPORT void PushInterface( IInterfaceBase *pInterface );
+MAIN_EXPORT void PopInterface();
+MAIN_EXPORT IInterfaceBase *GetTopInterface();
+MAIN_EXPORT IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface );
 void SetInputEnabled( bool bEnabled );
-void Serialize( IBinSaver &saver, interface IProgressHook *pHook = 0 );
+MAIN_EXPORT void Serialize( IBinSaver &saver, interface IProgressHook *pHook = 0 );
 void AfterLoad();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

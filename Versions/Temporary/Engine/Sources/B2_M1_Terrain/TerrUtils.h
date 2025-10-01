@@ -1,4 +1,7 @@
 #pragma once
+
+#include "B2_M1_Terrain_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <math.h>
 #include "DBVSO.h"
@@ -719,16 +722,16 @@ inline void AddIntersection( vector<SIntersectPoint> *pIntersection, const CVec3
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // whether "rV" is inside "rPoly"
-bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders = false );
-bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV );
-void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
-void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
+B2_M1_TERRAIN_EXPORT bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders = false );
+B2_M1_TERRAIN_EXPORT bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV );
+B2_M1_TERRAIN_EXPORT void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
+B2_M1_TERRAIN_EXPORT void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 );
 void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
 void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const bool bSetFlag );
-bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 );
-void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints );
+B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 );
+B2_M1_TERRAIN_EXPORT void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
 bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, bool bIncludeBorders = false );

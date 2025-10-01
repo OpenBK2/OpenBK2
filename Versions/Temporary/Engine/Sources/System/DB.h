@@ -1,6 +1,9 @@
 #pragma once
 
 #include "XmlResource.h"
+
+#include "System_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // database object identification
 class CDBID
@@ -139,7 +142,7 @@ namespace NDb
 		virtual void MoveFirst() = 0;
 	};
 	//
-	IDBIterator *CreateDBIterator( int nTypeID );
+	SYSTEM_EXPORT IDBIterator *CreateDBIterator( int nTypeID );
 	// add database resource file
 	void AddResources( const string &szFile );
 	// finish adding - resolve all references
@@ -147,7 +150,8 @@ namespace NDb
 	// clear database resources
 	void RemoveAllResources();
 	// get specific entry from DB
-	CResource *GetObject( const CDBID &dbid );
+	// conflict with #define GetObject GetObjectA (Windows SDK)
+	SYSTEM_EXPORT CResource *(GetObject)( const CDBID &dbid );
 	//
 	void SetDBMode( EDBMode eMode );
 	inline const string &GetFileName( const CDBID &dbid ) { return dbid.ToString(); }
@@ -167,10 +171,10 @@ namespace NDb
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define BASIC_REGISTER_DATABASE_CLASS(classname) \
 BASIC_REGISTER_CLASS(classname)	\
-template<> const NDb::CResource* CastToDBResourceImpl<classname >( const classname *p, const void* ) { return p; }  \
-template<> const classname* CastToDBUserObjectImpl<classname >( const NDb::CResource *p, const classname*, const void* ) { return dynamic_cast<const classname*>( p ); }
+template<> __declspec(dllexport) const NDb::CResource* CastToDBResourceImpl<classname >( const classname *p, const void* ) { return p; }  \
+template<> __declspec(dllexport) const classname* CastToDBUserObjectImpl<classname >( const NDb::CResource *p, const classname*, const void* ) { return dynamic_cast<const classname*>( p ); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-template<class TUserObj> const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const void* );
+template<class TUserObj> __declspec(dllimport) const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const void* );
 template<class TUserObj> const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const NDb::CResource* ) { return p; }
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const void * );
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const NDb::CResource* ) { return dynamic_cast<const TUserObj*>( p ); }

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Stats_B2_M1_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -132,7 +135,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct STypedDeployTemplate
+	struct STATS_B2_M1_EXPORT STypedDeployTemplate
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -152,7 +155,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SReinforcementPosition
+	struct STATS_B2_M1_EXPORT SReinforcementPosition
 	{
 	private:
 		mutable DWORD __dwCheckSum;

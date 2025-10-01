@@ -1,9 +1,12 @@
 #pragma once
+
+#include "libdb_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
-DWORD GetDefaultCheckSum();
-DWORD CalcCheckSum( const DWORD dwLastCheckSum, const BYTE *pBuf, const int nLen );
+LIBDB_EXPORT DWORD GetDefaultCheckSum();
+LIBDB_EXPORT DWORD CalcCheckSum( const DWORD dwLastCheckSum, const BYTE *pBuf, const int nLen );
 
 class CCheckSum
 {

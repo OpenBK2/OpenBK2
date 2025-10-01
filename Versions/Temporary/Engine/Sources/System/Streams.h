@@ -1,4 +1,5 @@
 #pragma once
+#include "System_export.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NVFS
 {
@@ -6,9 +7,9 @@ namespace NVFS
 	interface IFileCreator;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CDataStream
+class SYSTEM_EXPORT CDataStream
 {
-	struct SData
+	struct SYSTEM_EXPORT SData
 	{
 		unsigned char *pBuffer, *pBufferEnd, *pFileEnd, *pCurrent;
 		int nFlags;
@@ -108,7 +109,7 @@ public:
 	void SetBroken() { data.nFlags |= F_Broken; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CMemoryStream : public CDataStream
+class SYSTEM_EXPORT CMemoryStream : public CDataStream
 {
 protected:
 	void CopyMemoryStream( const CMemoryStream &src );
@@ -144,7 +145,7 @@ public:
 	//void CloseFile();
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CFileStream : public CDataStream
+class SYSTEM_EXPORT CFileStream : public CDataStream
 {
 public:
 	enum EWinMode { WIN_READ_ONLY, WIN_CREATE };

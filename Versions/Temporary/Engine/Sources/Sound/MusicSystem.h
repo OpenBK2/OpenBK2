@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Sound_export.h"
+
 namespace NDb
 {
 	struct SVoice;
@@ -58,4 +60,4 @@ interface IMusicSystem : public CObjectBase
 	virtual void OnResetTimer() = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IMusicSystem * CreateMusicSystem();
+SOUND_EXPORT IMusicSystem * CreateMusicSystem();

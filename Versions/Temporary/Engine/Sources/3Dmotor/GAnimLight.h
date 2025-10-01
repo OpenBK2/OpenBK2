@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\System\Time.hpp"
 #include "GParticleFormat.h"
@@ -69,7 +72,7 @@ public:
 	TKeyVector<float> radius;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CLightLoader: public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLightInfo>
+class _3DMOTOR_EXPORT CLightLoader: public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLightInfo>
 {
 	OBJECT_BASIC_METHODS(CLightLoader);
 	virtual CFileRequest* CreateRequest();
@@ -77,7 +80,7 @@ class CLightLoader: public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLig
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAnimLight;
-class CLightAnimator: public CPtrFuncBase<CAnimLight>
+class _3DMOTOR_EXPORT CLightAnimator: public CPtrFuncBase<CAnimLight>
 {
 	OBJECT_BASIC_METHODS(CLightAnimator);
 protected:

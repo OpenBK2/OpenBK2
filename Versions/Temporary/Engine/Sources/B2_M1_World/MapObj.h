@@ -1,4 +1,7 @@
 #pragma once
+
+#include "B2_M1_World_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "../misc/2darray.h"
 #include "../zlib/zconf.h"
@@ -51,7 +54,7 @@ enum EObjectStatusArmor
 	EOS_ARMOR_COUNT,
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct SObjectStatus
+struct B2_M1_WORLD_EXPORT SObjectStatus
 {
 	struct SWeapon
 	{
@@ -125,8 +128,8 @@ struct SAbilityInfo
 };
 typedef hash_map< NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash > CAbilityInfo;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbility, const SAbilityInfo &abilityInfo );
-void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities );
+B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbility, const SAbilityInfo &abilityInfo );
+B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
@@ -175,7 +178,7 @@ enum EActionsType
 	ACTIONS_ALL
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CMapObj : public IB2MapObj
+class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 {
 	// CPtr<CObjectBase> pAIObj;
 	CDBPtr<NDb::SHPObjectRPGStats> pStats;
@@ -360,7 +363,7 @@ public:
 	virtual int operator&( IBinSaver &saver );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CMOSelectable : public CMapObj
+class B2_M1_WORLD_EXPORT CMOSelectable : public CMapObj
 {
 	bool bSelected;
 	bool bCanSelect;
@@ -536,7 +539,7 @@ bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISk
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void GetPlacementFromUpdate( CVec3 *pvPos, CQuat *pqRot, const SAINewUnitUpdate *pUpdate );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator, bool bLooped, float fSpeed = 1.0f );
-bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator );
+B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator, bool bLooped, float fSpeed = 1.0f );
+B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

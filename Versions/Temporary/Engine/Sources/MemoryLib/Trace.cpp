@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "MemoryLib_export.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "SymAccess.h"
@@ -169,7 +172,7 @@ struct SCompareAllocStats
 extern int nDumbAllocBlockSizes[24];
 void DumpMemoryBlockUtilization();
 static bool s_bDumpExcelCompatible = true;
-void DumpMemoryStats()
+MEMORYLIB_EXPORT void DumpMemoryStats()
 {
 	if ( pAllocs == 0 )
 	{

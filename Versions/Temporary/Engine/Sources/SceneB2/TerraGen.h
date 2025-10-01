@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SceneB2_export.h"
+
 #include "VersionInfo.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
@@ -184,7 +186,7 @@ namespace NScene
 	extern const string SZ_TERRA_BIN_FILE_NAME;
 	//
 	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath );
-	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath );
+	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const string &szMapFilePath );
 	bool SaveTerrain( ITerraManager *pTerraManager, const string &szMapFilePath );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

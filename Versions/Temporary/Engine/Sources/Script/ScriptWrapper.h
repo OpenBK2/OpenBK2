@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Script_export.h"
+
 #include "RegFunction.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IScriptWrapper : public CObjectBase
@@ -14,10 +16,10 @@ interface IScriptWrapper : public CObjectBase
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-IScriptWrapper* CreateScriptWrapper();
+SCRIPT_EXPORT IScriptWrapper* CreateScriptWrapper();
 //
 namespace NScript
 {
-void RegisterCommonFunctionsToSaveLoad();
-void AddScriptFunctionsToSaveLoad( const SRegFunction *pRegList );
+SCRIPT_EXPORT void RegisterCommonFunctionsToSaveLoad();
+SCRIPT_EXPORT void AddScriptFunctionsToSaveLoad( const SRegFunction *pRegList );
 }

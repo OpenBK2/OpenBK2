@@ -1,10 +1,13 @@
 #pragma once
+
+#include "Stats_B2_M1_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "RPGStats.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand );
-EActionCommand GetCommandByAbility( NDb::EUnitSpecialAbility specialAbility );
+STATS_B2_M1_EXPORT NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand );
+STATS_B2_M1_EXPORT EActionCommand GetCommandByAbility( NDb::EUnitSpecialAbility specialAbility );
 NDb::EUserAction GetActionByCommand( EActionCommand actionCommand );
-EActionCommand GetCommandByAction( NDb::EUserAction action );
-NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility );
+STATS_B2_M1_EXPORT EActionCommand GetCommandByAction( NDb::EUserAction action );
+STATS_B2_M1_EXPORT NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

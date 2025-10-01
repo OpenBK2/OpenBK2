@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3Dmotor_export.h"
+
 //
 #include "GPixelFormat.h"
 struct SPShader;
@@ -176,7 +179,7 @@ public:
 	virtual void Flush() = 0;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CRenderContext
+class _3DMOTOR_EXPORT CRenderContext
 {
 	enum ERenderTargetMode
 	{

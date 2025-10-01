@@ -1,5 +1,8 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
+
+#include "Input_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef DWORD STime;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,17 +42,17 @@ struct SMessage
 		: nAction(_nAction), ePOVAxis(_ePOVAxis), cType(_cType), nParam(_nParam), bState(_bState), tTime(_tTime) {}
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool InitInput( HWND hWnd, bool bDebugMouse = false, bool bNonExclusiveMode = false, int nSampleBufferSize = -1 );
-bool DoneInput();
+INPUT_EXPORT bool InitInput( HWND hWnd, bool bDebugMouse = false, bool bNonExclusiveMode = false, int nSampleBufferSize = -1 );
+INPUT_EXPORT bool DoneInput();
 
-void PumpMessages( bool bFocus );
+INPUT_EXPORT void PumpMessages( bool bFocus );
 bool GetMessage( SMessage *pMsg );
-bool IsDInputDiscardableKey( const SMessage &mMsg );
-STime GetLastEventTime();
+INPUT_EXPORT bool IsDInputDiscardableKey( const SMessage &mMsg );
+INPUT_EXPORT STime GetLastEventTime();
 	
-int GetControlID( const string &sCommand );
+INPUT_EXPORT int GetControlID( const string &sCommand );
 void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity );
-string GetControlLocalName( int nAction );
+INPUT_EXPORT string GetControlLocalName( int nAction );
 
 void StartSaveInput( CDataStream *pStream );
 void StopSaveInput();
@@ -57,7 +60,7 @@ void StartEmulateInput( CDataStream *pStream );
 void StopEmulateInput();
 bool IsMouseDisabledDebug();
 //
-bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
+INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////

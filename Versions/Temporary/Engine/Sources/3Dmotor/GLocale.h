@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "FontFormat.h"
 #include "..\System\DG.h"
@@ -52,7 +55,7 @@ public:
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //! Локаль
-class CTextLocaleInfo: public CObjectBase
+class _3DMOTOR_EXPORT CTextLocaleInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CTextLocaleInfo);
 private:

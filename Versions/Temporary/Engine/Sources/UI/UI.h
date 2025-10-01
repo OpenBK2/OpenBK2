@@ -2,6 +2,9 @@
 #define _interfaceBase_h_included_
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
+
+#include "UI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "commandparam.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,23 +80,23 @@ interface IUIInitialization : public CObjectBase
 	virtual void Set2DGameView( NGScene::I2DGameView* pView ) = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
-IUIInitialization* CreateUIInitialization();
+UI_EXPORT IUIInitialization* CreateUIInitialization();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // UI operates in fixed resolution. to draw on screen it cals these functions.
-CRectLayout &VirtualToScreen( class CRectLayout *pRects );
-CVec2 &VirtualToScreen( CVec2 *src );
-CTRect<float> &VirtualToScreen( CTRect<float> *src );
-CTPoint<float> &VirtualToScreen( CTPoint<float> *src );
-void VirtualToScreen( const CTRect<float> &src, CTRect<float> *pRes );
-void VirtualToScreen( const CTPoint<float> &src, CTPoint<float> *pRes );
-int VirtualToScreenX( float fX );
-int VirtualToScreenY( float fY );
+UI_EXPORT CRectLayout &VirtualToScreen( class CRectLayout *pRects );
+UI_EXPORT CVec2 &VirtualToScreen( CVec2 *src );
+UI_EXPORT CTRect<float> &VirtualToScreen( CTRect<float> *src );
+UI_EXPORT CTPoint<float> &VirtualToScreen( CTPoint<float> *src );
+UI_EXPORT void VirtualToScreen( const CTRect<float> &src, CTRect<float> *pRes );
+UI_EXPORT void VirtualToScreen( const CTPoint<float> &src, CTPoint<float> *pRes );
+UI_EXPORT int VirtualToScreenX( float fX );
+UI_EXPORT int VirtualToScreenY( float fY );
 
 int ScreenToVirtualX( float fX );
 int ScreenToVirtualY( float fY );
-void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos );
-void ScreenToVirtual( const CTPoint<int> &vPos, CTPoint<int> *pScreenPos );
-CVec2 ScreenToVirtual( const CVec2 &vPos );
+UI_EXPORT void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos );
+UI_EXPORT void ScreenToVirtual( const CTPoint<int> &vPos, CTPoint<int> *pScreenPos );
+UI_EXPORT CVec2 ScreenToVirtual( const CVec2 &vPos );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // window notify about being clicked
 interface IClickNotify : virtual public CObjectBase
@@ -560,7 +563,7 @@ interface IDebugSingleton : public CObjectBase
 	virtual interface IStatsSystemWindow * GetStatsWindow() = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
-IDebugSingleton *CreateDebugSingleton();
+UI_EXPORT IDebugSingleton *CreateDebugSingleton();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IPlayer : virtual public IWindow
 {

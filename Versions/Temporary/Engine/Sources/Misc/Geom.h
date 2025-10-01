@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Misc_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <math.h>
 #include "tools.h"
@@ -14,7 +17,7 @@
 // ************************************************************************************************************************ //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 2D vector
-class CVec2
+class MISC_EXPORT CVec2
 {
 public:
   union
@@ -150,7 +153,7 @@ inline DWORD Vec3ToDWORD( const CVec3 &v ) { return DWORD( floatToByte( v.x ) ) 
 inline const CVec3 DWORDToVec3( DWORD dwVector ) { return CVec3( byteToFloat( dwVector & 0xff ), byteToFloat( (dwVector >> 8) & 0xff ), byteToFloat( (dwVector >> 16) & 0xff ) ); }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 4D vector
-class CVec4
+class MISC_EXPORT CVec4
 {
 public:
   union
@@ -733,7 +736,7 @@ public:
 	void DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const;
 	void DecompAngleAxis( float *pfAngle, float *pfAxisX, float *pfAxisY, float *pfAxisZ ) const;
 	void DecompEulerMatrix( SHMatrix *pMatrix ) const;
-	void DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll );
+	MISC_EXPORT void DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll );
 	void DecompReversedEulerMatrix( SHMatrix *pMatrix ) const;
   // internal data non-math modification
   bool Normalize() { return ::Normalize(x, y, z, w); }
@@ -1943,22 +1946,22 @@ inline void MakeMatrix( SHMatrix *pMatrix, const CVec3 &pos, const CQuat &rot, c
 	pMatrix->_44 = 1.0f;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const WORD GetDirectionByVector( const CVec2 &vec );
-const WORD GetDirectionByVector( float x, float y );
-const CVec2 GetVectorByDirection( const WORD dir );
+MISC_EXPORT const WORD GetDirectionByVector( const CVec2 &vec );
+MISC_EXPORT const WORD GetDirectionByVector( float x, float y );
+MISC_EXPORT const CVec2 GetVectorByDirection( const WORD dir );
 const WORD GetZDirectionBy3DVector( const float x, const float y, const float z );
 const WORD GetZDirectionBy3DVector( const CVec2 &vec, const float z );
 // угол между между вектором и OXY
-const WORD GetZAngle( const float x, const float y, float z );
+MISC_EXPORT const WORD GetZAngle( const float x, const float y, float z );
 // угол между между вектором и OXY
-const WORD GetZAngle( const CVec2 &vec, const float z );
-const WORD GetZAngle( const CVec3 &vPoint );
-const WORD DirsDifference( const WORD dir1, const WORD dir2 );
-const int DifferenceSign( const WORD dir1, const WORD dir2 );
+MISC_EXPORT const WORD GetZAngle( const CVec2 &vec, const float z );
+MISC_EXPORT const WORD GetZAngle( const CVec3 &vPoint );
+MISC_EXPORT const WORD DirsDifference( const WORD dir1, const WORD dir2 );
+MISC_EXPORT const int DifferenceSign( const WORD dir1, const WORD dir2 );
 // в угле от startAngleDir до finishAngleDir против часовой
-bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir );
+MISC_EXPORT bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir );
 // dir в минимальном угле мжду dir1 и dir2
-bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 );
+MISC_EXPORT bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline bool IsAlmostZero( const CVec2 &vec )
 {
@@ -1986,7 +1989,7 @@ enum ESide
 	SIDE_BOTTOM	  = 5,
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct SRect
+struct MISC_EXPORT SRect
 {
 	union
 	{
@@ -2023,12 +2026,12 @@ struct SRect
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const float fabs( const SRect rect1, const SRect rect2 );
+MISC_EXPORT const float fabs( const SRect rect1, const SRect rect2 );
 // угол, под которым rect виден из точки point
-const WORD GetVisibleAngle( const CVec2 &point, const SRect rect );
+MISC_EXPORT const WORD GetVisibleAngle( const CVec2 &point, const SRect rect );
 // точка пересечения луча из точки vPoint по направлению vDir (можно не нормировать) с прямоугольником rect
 // возвращает false, если не пересекается
-const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );
+MISC_EXPORT const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );
 // вернуть нормализованное значение вектора
 inline const CVec2 Norm( const CVec2 &v )
 {

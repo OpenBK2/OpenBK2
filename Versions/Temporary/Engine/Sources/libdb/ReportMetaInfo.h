@@ -1,4 +1,7 @@
 #pragma once
+
+#include "libdb_export.h"
+
 #include "Type.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NFile
@@ -12,11 +15,11 @@ namespace NMetaInfo
 {
 struct SStructMetaInfo;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void StartMetaInfoReport( const string &szTypeName, const int nTypeID, const int nStructSize );
-void FinishMetaInfoReport();
+LIBDB_EXPORT void StartMetaInfoReport( const string &szTypeName, const int nTypeID, const int nStructSize );
+LIBDB_EXPORT void FinishMetaInfoReport();
 void AddOnStack( SStructMetaInfo *pInfo );
-void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType );
-void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType, 
+LIBDB_EXPORT void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType );
+LIBDB_EXPORT void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType,
 	                   int nContainedSize, NTypeDef::ETypeType eContainedType );
 void DropMetaInfo();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,7 +192,7 @@ template <class TYPE>
 		sizeof(TYPE), GetSimpleTypeDef( (TYPE*)0 ) );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-struct STerminalClassReporter
+struct LIBDB_EXPORT STerminalClassReporter
 {
 	IXmlSaver &saver;
 	STerminalClassReporter( CResource *pRes, IXmlSaver &_saver );

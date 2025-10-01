@@ -1,14 +1,17 @@
 #pragma once
+
+#include "System_export.h"
+
 #define UNICODE_SIGNATURE 0xfeff
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NText
 {
 	//! get text from resources by filename
-	const wstring &GetText( const string &szTextFileName );
+	SYSTEM_EXPORT const wstring &GetText( const string &szTextFileName );
 	//! reload text to resources (discard cached information)
 	void Reload( const string &szTextFileName );
 	//! load unicode text from stream to wstring
-	bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream );
+	SYSTEM_EXPORT bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CRAP{ for transition-to-text-files period only

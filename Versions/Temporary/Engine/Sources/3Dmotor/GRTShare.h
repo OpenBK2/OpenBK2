@@ -1,5 +1,7 @@
 #pragma once
 
+#include "3Dmotor_export.h"
+
 namespace NGfx
 {
 	class CTexture;
@@ -9,7 +11,7 @@ namespace NGfx
 namespace NGScene
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CRTPtr
+class _3DMOTOR_EXPORT CRTPtr
 {
 	CObj<NGfx::CTexture> pRes;
 	ZDATA

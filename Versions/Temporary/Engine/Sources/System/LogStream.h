@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EConsoleColor
 {
@@ -15,7 +17,7 @@ enum EConsoleColor
 	CC_ORANGE
 };
 
-class CLogStream
+class SYSTEM_EXPORT CLogStream
 {
 	wstring wsStreamBuffer;
 	const int nStream;
@@ -53,4 +55,4 @@ inline CLogStream& endl( CLogStream& sStream )
 	return sStream;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-EXTERNVAR CLogStream csSystem, csScript;
+EXTERNVAR SYSTEM_EXPORT CLogStream csSystem, csScript;

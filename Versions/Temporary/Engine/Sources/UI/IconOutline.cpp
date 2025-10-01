@@ -13,7 +13,7 @@
 namespace NGScene
 {
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTexShare;
-EXTERNVAR CTexShare shareTextures;
+EXTERNVAR _3DMOTOR_EXPORT CTexShare shareTextures;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SRLBuilder : public NGScene::ILayoutFakeView

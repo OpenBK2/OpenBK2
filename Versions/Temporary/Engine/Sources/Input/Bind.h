@@ -2,6 +2,9 @@
 #define __BIND_H__
 
 #include "Input.h"
+
+#include "Input_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NInput
 {
@@ -42,7 +45,7 @@ struct SBind
 	EMappingType eType;
 	vector<string> controlsSet;
 };
-class CBind
+class INPUT_EXPORT CBind
 {
 	float fDelta;
 	SCommand* pBindCommand;
@@ -60,12 +63,12 @@ public:
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const vector<string>& GetSections();
-void SetSection( const string &_szSection, bool bUpdate = true );
-void SetSection( const vector<string> &sections, bool bUpdate = true );
+INPUT_EXPORT void SetSection( const string &_szSection, bool bUpdate = true );
+INPUT_EXPORT void SetSection( const vector<string> &sections, bool bUpdate = true );
 ////
 void Bind( const string &szCmd, const SBind &sCmdBind );
 void Unbind( const string &szCmd );
-void GetBind( const string &szCmd, list<SBind> *pRes );
+INPUT_EXPORT void GetBind( const string &szCmd, list<SBind> *pRes );
 void UpdateBinds();
 ////
 float GetControlCoeff( const string &szControl );
@@ -74,12 +77,12 @@ void SetControlCoeff( const string &szControl, float fCoeff );
 float GetCommandCoeff( const string &szControl );
 void SetCommandCoeff( const string &szControl, float fCoeff );
 ////
-bool GetEvent( SGameMessage *pGameMessage );
+INPUT_EXPORT bool GetEvent( SGameMessage *pGameMessage );
 void MakeEvent( SGameMessage *pMSG,  const string &szGameMessage, int nParam1, int nParam2, EControlType ct );
-void PostEvent( const string &szGameMessage, int nParam1, int nParam2 );
-void PostWinEvent( const string &szGameMessage, int nParam1, int nParam2 );
+INPUT_EXPORT void PostEvent( const string &szGameMessage, int nParam1, int nParam2 );
+INPUT_EXPORT void PostWinEvent( const string &szGameMessage, int nParam1, int nParam2 );
 void PurgeEvents();
-void PurgeUIEvents();
+INPUT_EXPORT void PurgeUIEvents();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\Misc\2DArray.h"
 #include "aiInterval.h"
@@ -16,7 +19,7 @@ namespace NAI
 const float F_INF = 1e30f;
 const int N_F_INF = 0x7149f2ca;//1e30f//*(const int*)&F_INF;
 struct SConvexHull;
-class CFastRenderer: public CRasterizer<CFastRenderer>
+class _3DMOTOR_EXPORT CFastRenderer: public CRasterizer<CFastRenderer>
 {
 public:	
 	struct SResult

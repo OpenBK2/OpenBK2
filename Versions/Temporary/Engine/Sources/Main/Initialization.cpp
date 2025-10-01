@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 
+#include "Main_export.h"
+
 //#include "..\ui\commandparam.h"
 //#include "..\ui\dbuserinterface.h"
 #include <wtypes.h>
@@ -13,7 +15,7 @@
 namespace NMain
 {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Initialize()
+MAIN_EXPORT bool Initialize()
 {
 	// game timer
 	NSingleton::RegisterSingleton( CreateGameTimer( NGlobal::GetVar( "AI_SEGMENT_DURATION", 50 ) ), IGameTimer::tidTypeID );

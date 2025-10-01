@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Common_RTS_AI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CAIMap;
 class CBasePathUnit;
@@ -71,6 +74,6 @@ interface ICollision : public CAIObjectBase
 	virtual const NCollision::ECollisionName GetName() const = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-ICollisionsCollector *CreateCollisionsCollector();
-ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const NCollision::ECollisionName eName );
+COMMON_RTS_AI_EXPORT ICollisionsCollector *CreateCollisionsCollector();
+COMMON_RTS_AI_EXPORT ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const NCollision::ECollisionName eName );
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

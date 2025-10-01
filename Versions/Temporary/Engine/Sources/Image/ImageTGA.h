@@ -1,10 +1,13 @@
 #pragma once
+
+#include "Image_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NImage
 {
 	bool RecognizeFormatTGA( CDataStream *pStream );
 	bool LoadImageTGA( CArray2D<DWORD> *pRes, CDataStream *pStream );
-	bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<DWORD> &image );
+	IMAGE_EXPORT bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<DWORD> &image );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

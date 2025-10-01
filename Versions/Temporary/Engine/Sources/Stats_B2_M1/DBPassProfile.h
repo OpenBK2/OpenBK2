@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Stats_B2_M1_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -28,7 +31,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SPassProfile
+	struct STATS_B2_M1_EXPORT SPassProfile
 	{
 	private:
 		mutable DWORD __dwCheckSum;

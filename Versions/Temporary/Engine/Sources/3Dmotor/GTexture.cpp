@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "3Dmotor_export.h"
+
 #include "GfxBuffers.h"
 #include "GTexture.h"
 #include "..\System\Commands.h"
@@ -58,7 +61,7 @@ static int GetRealTextureID( const NDb::STexture *pTex )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGScene
 {
-int nTextureUseMip = 0;
+_3DMOTOR_EXPORT int nTextureUseMip = 0;
 bool bLowRAM = false;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 STextureKey GetKey( const NDb::STexture *pTex )

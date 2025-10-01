@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "UISpecificB2.h"
 #include "..\ui\commandparam.h"
 #include "..\ui\dbuserinterface.h"
 #include "..\ui\ui.h"

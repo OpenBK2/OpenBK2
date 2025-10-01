@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGScene
 {
@@ -12,12 +15,12 @@ enum EConfigValue
 	CV_CUSTOM
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void AutoDetectVideoConfig();
+_3DMOTOR_EXPORT void AutoDetectVideoConfig();
 ////
 //EConfigValue GetLightingQualityMode();
 //void SetLightingQualityMode( EConfigValue eMode );
 ////
-EConfigValue GetSpeedMode();
+_3DMOTOR_EXPORT EConfigValue GetSpeedMode();
 void SetSpeedMode( EConfigValue eMode );
 ////
 EConfigValue GetTextureMode();

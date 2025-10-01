@@ -3,16 +3,19 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGlobal
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // global var set value handlers storing variable value to specified in pContext place in bool/int/float format
-void VarBoolHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-void VarIntHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-void VarFloatHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-void VarWStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
-void VarStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarBoolHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarIntHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarFloatHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarWStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pContext );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // helper class for temporary command registration
 class CCmd

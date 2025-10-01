@@ -55,7 +55,7 @@ static vector<CPtr<CObjectBase> > fadeTestObjects;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // share objects
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTextureBasicShare;
-CTextureBasicShare shareTextures(103);
+_3DMOTOR_EXPORT CTextureBasicShare shareTextures(103);
 static CBasicShare<SIntResKey, CParticlesLoader> shareParticles(109);
 
 static CBasicShare<SPartAndSkeletonKey, CGrannyMeshLoader, SPartAndSkeletonKeyHash> shareGrannyMeshes(118);

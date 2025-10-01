@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Net_export.h"
+
 namespace NNet
 {
 typedef unsigned int APPLICATION_ID;
@@ -137,11 +139,11 @@ interface IDriver : public CObjectBase
 	virtual const char* GetAddressByClientID( const int nClientID ) const { return "Unknown"; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );
+NET_EXPORT IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );
 
-ILinksManager* CreateClientLinksManager();
-ILinksManager* CreateServerLinksManager( const int nPort );
+NET_EXPORT ILinksManager* CreateClientLinksManager();
+NET_EXPORT ILinksManager* CreateServerLinksManager( const int nPort );
 
-void GetNOPStream( CMemoryStream *pNOP );
+NET_EXPORT void GetNOPStream( CMemoryStream *pNOP );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

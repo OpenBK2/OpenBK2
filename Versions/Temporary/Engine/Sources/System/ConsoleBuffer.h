@@ -1,4 +1,7 @@
 #pragma once
+
+#include "System_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum
 {
@@ -43,8 +46,8 @@ enum
 	PIPE_CHAT			= 4,					// chat string
 };
 // bPersistentMsg - if pipe dump to console is enabled this parameter will be forwarded to console
-void WriteToPipe( int nPipe, const string &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
-bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor );
-bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor );
-void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const string &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor = 0xffffffff, bool bPersistentMsg = false );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor );
+SYSTEM_EXPORT bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor );
+SYSTEM_EXPORT void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );

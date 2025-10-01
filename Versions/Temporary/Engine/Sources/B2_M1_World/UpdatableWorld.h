@@ -1,5 +1,7 @@
 #pragma once
 
+#include "B2_M1_World_export.h"
+
 #include "MapObj.h"
 #include "Notifications.h"
 
@@ -31,7 +33,7 @@ public:
 	void Update( bool bCombat );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CUpdatableWorld : public virtual CObjectBase, public IUpdatableClient
+class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IUpdatableClient
 {
 	typedef hash_map<int, ObjectFactoryNewFunc> CNewFuncsMap;
 	CNewFuncsMap newFuncs;

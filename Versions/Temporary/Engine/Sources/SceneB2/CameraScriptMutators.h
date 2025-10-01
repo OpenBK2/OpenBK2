@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SceneB2_export.h"
+
 #include "Camera.h"
 #include "../Stats_B2_M1/DBMapInfo.h"
 #include "../System/DG.h"
@@ -201,7 +203,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-class CScriptMoviesMutatorHolder : public CVersioningBase
+class SCENEB2_EXPORT CScriptMoviesMutatorHolder : public CVersioningBase
 {
 	OBJECT_NOCOPY_METHODS( CScriptMoviesMutatorHolder )
 

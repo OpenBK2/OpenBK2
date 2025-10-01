@@ -5,6 +5,8 @@
 #if !defined(AFX_WINDOW_H__54783510_EE35_420B_A2EC_19C1C30EA449__INCLUDED_)
 #define AFX_WINDOW_H__54783510_EE35_420B_A2EC_19C1C30EA449__INCLUDED_
 
+#include "UI_export.h"
+
 #include "WindowMessageHandle.h"
 #include "..\Misc\HashFuncs.h"
 #include "..\Misc\Heap.h"
@@ -33,7 +35,7 @@ enum EMouseStateB2
 	MSTATE_BUTTON2		= 2,
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CUIMORegConttainer : public NInput::CGMORegContainer
+class UI_EXPORT CUIMORegConttainer : public NInput::CGMORegContainer
 {
 public:
 	virtual void AddRawObserver( const string &szMsgName, IGMObserver *pObserver );
@@ -43,7 +45,7 @@ const int WINDOW_TOP_PRIORITY = 0x01000000;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // base class to all UI windows;
 // single background window.
-class CWindow : virtual public IWindow, public CUIMORegConttainer
+class UI_EXPORT CWindow : virtual public IWindow, public CUIMORegConttainer
 {
 	//OBJECT_BASIC_METHODS(CWindow)
 	bool bIsModal;

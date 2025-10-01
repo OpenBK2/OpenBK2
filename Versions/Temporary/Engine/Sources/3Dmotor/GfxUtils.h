@@ -4,6 +4,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "3Dmotor_export.h"
+
 #include "GfxRender.h"
 #include "GfxBuffers.h"
 
@@ -36,7 +38,7 @@ public:
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) = 0;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class C2DQuadsRenderer: INew2DTexAllocCallback
+class _3DMOTOR_EXPORT C2DQuadsRenderer: INew2DTexAllocCallback
 {
 public:
 

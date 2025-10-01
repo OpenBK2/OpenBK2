@@ -4,6 +4,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "3Dmotor_export.h"
+
 #include "aiInterval.h"
 #include "aiVisitor.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +96,7 @@ public:
 void GetGeometry( list<SObjectInfo> *pRes, vector<SMassSphere> *pSpheres, const NDb::SAIGeometry * pAIGeom, bool *pbClosed = 0 );
 void GetSpheres( const NDb::SModel *pModel, vector<SMassSphere> *pRes, CVec3 *pMassCenter );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-IAIMap* CreateAIMap();
+_3DMOTOR_EXPORT IAIMap* CreateAIMap();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, int nFlags );
 } // namespace

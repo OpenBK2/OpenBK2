@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System_export.h"
+
 #define REGISTER_SAVELOAD_CLASS( N, name )  \
 	BASIC_REGISTER_CLASS( name ) \
 	static struct name##Register##N { \
@@ -402,8 +404,8 @@ interface IDebugSaveCheckObj : public CObjectBase
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CFileStream;
-IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext );
-IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &objToCheck );
+SYSTEM_EXPORT IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext );
+SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &objToCheck );
 
 inline IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode )
 {

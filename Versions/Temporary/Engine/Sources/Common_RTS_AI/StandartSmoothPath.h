@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Common_RTS_AI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "Path.h"
 #include "Tools.h"
@@ -23,7 +26,7 @@ public:
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! //! сглаженный путь для разных солдатиков, сглаживание IPath при помощи сплайнов, упрощенные повороты
-class CStandartSmoothPathBasis : public ISmoothPath
+class COMMON_RTS_AI_EXPORT CStandartSmoothPathBasis : public ISmoothPath
 {
 	// владелец пути
 	CBasePathUnit *pUnit;

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "UI_export.h"
+
 #include "background.h"
 #include "..\Misc\2Darray.h"
 #include "..\3DMotor\GFXBuffers.h"
@@ -8,7 +11,7 @@
 // Can be modified during runtime
 // used to display pictures (i.e. screenshots)
 // is NOT initialised by InitByDesc() and SetTexture()
-class CBackgroundMutableTexture : public CBackground
+class UI_EXPORT CBackgroundMutableTexture : public CBackground
 {
 	OBJECT_BASIC_METHODS(CBackgroundMutableTexture);
 	

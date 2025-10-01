@@ -1,4 +1,7 @@
 #pragma once
+
+#include "System_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 interface IRandomSeed : public CObjectBase
 {
@@ -15,11 +18,11 @@ interface IRandomSeed : public CObjectBase
 namespace NRandom
 {
 	// initialize random generator with random seed
-	void SetRandomSeed( IRandomSeed *pSeed );
+	SYSTEM_EXPORT void SetRandomSeed( IRandomSeed *pSeed );
 	// create copy of the current random gen seed and return it
-	IRandomSeed *CreateRandomSeedCopy();
+	SYSTEM_EXPORT IRandomSeed *CreateRandomSeedCopy();
 	// get random value
-	UINT Random();
+	SYSTEM_EXPORT UINT Random();
 	// random w/o checks
 	__forceinline unsigned int Random( const unsigned int uMax ) { return Random() % uMax; }
 	__forceinline int Random( const int nMin, const int nMax ) { return nMin + (int)Random( (unsigned int)(nMax - nMin + 1) ); }

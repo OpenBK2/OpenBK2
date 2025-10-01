@@ -1,4 +1,7 @@
 #pragma once
+
+#include "libdb_export.h"
+
 #include "Db.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
@@ -23,7 +26,7 @@ bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
 //! mark object as changed to save it
 void MarkChanged( const CDBID &dbid );
 //! save all objects, marked as changed
-void SaveChanges();
+LIBDB_EXPORT void SaveChanges();
 //! drop all cached resources
 void DropCachedResources();
 //! check, have we changed DB objects?

@@ -2,7 +2,7 @@
 #include "BinChunkSaver.h"
 #include "Cruncher.h"
 
-int N_SAVELOAD_VERSION = 4;
+SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 
 // remove this for final version
 #define TEST_PACK

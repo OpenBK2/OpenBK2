@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Main_export.h"
+
 #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #define MOD_MODE_GAME "game"
@@ -23,19 +26,19 @@ struct SMOD
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! get list of all available mods
-void GetAllMODs( vector<SMOD> *pMODs );
+MAIN_EXPORT void GetAllMODs( vector<SMOD> *pMODs );
 //! instantly attach mod (in game use it only for start)
-void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode );
+MAIN_EXPORT void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode );
 //! correctly attach mod through game mechanisms
-void AttachMOD( const NFile::CFilePath &path );
+MAIN_EXPORT void AttachMOD( const NFile::CFilePath &path );
 //! detach all mods
-void DetachAllMODs();
+MAIN_EXPORT void DetachAllMODs();
 //! check, does specified mod attached
-bool DoesMODAttached( const NFile::CFilePath &path );
+MAIN_EXPORT bool DoesMODAttached( const NFile::CFilePath &path );
 //! check, does any mod attached
-bool DoesAnyMODAttached();
+MAIN_EXPORT bool DoesAnyMODAttached();
 //! get currently attached MOD descriptor
-bool GetAttachedMOD( SMOD *pMOD );
+MAIN_EXPORT bool GetAttachedMOD( SMOD *pMOD );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EModSetupClassIDs
 {

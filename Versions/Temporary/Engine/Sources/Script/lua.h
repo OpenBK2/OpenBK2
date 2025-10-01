@@ -11,6 +11,8 @@
 #ifndef lua_h
 #define lua_h
 
+#include "Script_export.h"
+
 
 /* definition of `size_t' */
 #include <stddef.h>
@@ -77,13 +79,13 @@ enum EUserTags
 ** state manipulation
 */
 lua_State *lua_open (int stacksize, const char* instanceName = 0);
-void       lua_close (lua_State *L);
+SCRIPT_EXPORT void       lua_close (lua_State *L);
 
 
 /*
 ** basic stack manipulation
 */
-int   lua_gettop (lua_State *L);
+SCRIPT_EXPORT int   lua_gettop (lua_State *L);
 void  lua_settop (lua_State *L, int index);
 void  lua_pushvalue (lua_State *L, int index);
 void  lua_remove (lua_State *L, int index);
@@ -96,17 +98,17 @@ void  lua_insert (lua_State *L, int index);
 
 int            lua_type (lua_State *L, int index);
 const char    *lua_typename (lua_State *L, int t);
-int            lua_isnumber (lua_State *L, int index);
-int            lua_isnumber_only (lua_State *L, int index);
-int            lua_isstring (lua_State *L, int index);
+SCRIPT_EXPORT int            lua_isnumber (lua_State *L, int index);
+SCRIPT_EXPORT int            lua_isnumber_only (lua_State *L, int index);
+SCRIPT_EXPORT int            lua_isstring (lua_State *L, int index);
 int            lua_iscfunction (lua_State *L, int index);
 int            lua_tag (lua_State *L, int index);
 
 int            lua_equal (lua_State *L, int index1, int index2);
 int            lua_lessthan (lua_State *L, int index1, int index2);
 
-double         lua_tonumber (lua_State *L, int index);
-const char    *lua_tostring (lua_State *L, int index);
+SCRIPT_EXPORT double         lua_tonumber (lua_State *L, int index);
+SCRIPT_EXPORT const char    *lua_tostring (lua_State *L, int index);
 size_t         lua_strlen (lua_State *L, int index);
 lua_CFunction  lua_tocfunction (lua_State *L, int index);
 CObjectBase   *lua_touserdata (lua_State *L, int index);
@@ -116,10 +118,10 @@ const void    *lua_topointer (lua_State *L, int index);
 /*
 ** push functions (C -> stack)
 */
-void  lua_pushnil (lua_State *L);
-void  lua_pushnumber (lua_State *L, double n);
+SCRIPT_EXPORT void  lua_pushnil (lua_State *L);
+SCRIPT_EXPORT void  lua_pushnumber (lua_State *L, double n);
 void  lua_pushlstring (lua_State *L, const char *s, size_t len);
-void  lua_pushstring (lua_State *L, const char *s);
+SCRIPT_EXPORT void  lua_pushstring (lua_State *L, const char *s);
 void   lua_pushcclosure (lua_State *L, lua_CFunction fn, int n);
 void  lua_pushusertag (lua_State *L, CObjectBase *u, int tag);
 

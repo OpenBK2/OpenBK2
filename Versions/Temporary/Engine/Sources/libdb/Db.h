@@ -1,5 +1,7 @@
 #pragma once
 
+#include "libdb_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NVFS
 {
@@ -17,17 +19,17 @@ enum EDatabaseMode
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! open database - prepare it for usage
-bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator, EDatabaseMode eMode );
+LIBDB_EXPORT bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator, EDatabaseMode eMode );
 //! close database - no database usage allowed after this call
-void CloseDatabase();
+LIBDB_EXPORT void CloseDatabase();
 //! set new load depth - how many (how deeply) hierarchical objects will be loaded by refs during resource load
-void SetLoadDepth( int nLoadDepth );
+LIBDB_EXPORT void SetLoadDepth( int nLoadDepth );
 //! get object from database
 class CResource *GetObject( const CDBID &dbid );
 //! does object exist?
 bool DoesObjectExist( const CDBID &dbid );
 //! retrieve class type name for requested object
-string GetClassTypeName( const CDBID &dbid );
+LIBDB_EXPORT string GetClassTypeName( const CDBID &dbid );
 //! retrieve all objects by type
 bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +37,7 @@ bool GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID );
 bool IsDBIDValid( const CDBID &dbid );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! special function for object load-time profiling
-void SegmentProfiler();
+LIBDB_EXPORT void SegmentProfiler();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

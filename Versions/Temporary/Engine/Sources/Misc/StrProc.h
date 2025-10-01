@@ -1,5 +1,6 @@
 #ifndef __STRPROC_H__
 #define __STRPROC_H__
+#include "Misc_export.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NStr
 {
@@ -28,11 +29,11 @@ string Join( It first, It last, const string &szSeparator = " " )
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // разделить строку на массив строк по заданному разделителю
-void SplitString( const string &szString, vector<string> *pVector, const char cSeparator );
-void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator );
+MISC_EXPORT void SplitString( const string &szString, vector<string> *pVector, const char cSeparator );
+MISC_EXPORT void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator );
 // разделить строку на массив строк по заданному разделителю с учётом скобок любой вложенности
-void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator );
-void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector, const wchar_t cSeparator );
+MISC_EXPORT void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator );
+MISC_EXPORT void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &szVector, const wchar_t cSeparator );
 // отрезать все символы 'cTrim'
 // отрезать все 'cTrim' слева
 inline void TrimLeft( string &szString, const char cTrim ) { szString.erase( 0, szString.find_first_not_of( cTrim ) ); }
@@ -41,9 +42,9 @@ inline void TrimLeft( string &szString, const char *pszTrim ) { szString.erase( 
 // отрезать все whitespaces слева
 inline void TrimLeft( string &szString ) { TrimLeft(szString, " \t\n\r"); } 
 // отрезать все 'pszTrim' справа
-void TrimRight( string &szString, const char *pszTrim );
+MISC_EXPORT void TrimRight( string &szString, const char *pszTrim );
 // отрезать все 'cTrim' справа
-void TrimRight( string &szString, const char cTrim );   
+MISC_EXPORT void TrimRight( string &szString, const char cTrim );
 // отрезать все whitespaces справа
 inline void TrimRight( string &szString ) { TrimRight(szString, " \t\n\r"); }
 // отрезать все 'pszTrim' с обоих концов
@@ -108,12 +109,12 @@ inline void ToLowerASCII( string *pRes, const string &szString )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // convert 'string', which represents integer value in any radix (oct, dec, hex) to 'int'
-int ToInt( const char *pszString );
+MISC_EXPORT int ToInt( const char *pszString );
 inline int ToInt( const string &szString ) { return ToInt( szString.c_str() ); }
 unsigned long ToULong( const char *pszString );
 inline unsigned long ToULong( const string &szString ) { return ToULong( szString.c_str() ); }
 // convert 'string', which represents FP value to 'float' and 'double'
-float ToFloat( const char *pszString );
+MISC_EXPORT float ToFloat( const char *pszString );
 inline float ToFloat( const string &szString ) { return ToFloat( szString.c_str() ); }
 double ToDouble( const char *pszString );
 inline double ToDouble( const string &szString ) { return ToDouble( szString.c_str() ); }
@@ -124,14 +125,14 @@ inline bool IsOctDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <
 inline bool IsDecDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '9') ); }
 inline bool IsHexDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '9') ) || ( (cChar >= 'a') && (cChar <= 'f') ) || ( (cChar >= 'A') && (cChar <= 'F') ); }
 inline bool IsSign( const char cChar ) { return ( (cChar == '-') || (cChar == '+') ); }
-bool IsDecNumber( const string &szString );
+MISC_EXPORT bool IsDecNumber( const string &szString );
 bool IsOctNumber( const string &szString );
-bool IsHexNumber( const string &szString );
+MISC_EXPORT bool IsHexNumber( const string &szString );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // перевод string => bin и обратно
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
-void* StringToBin( const char *pszData, void *pBuffer, int *pnSize );
-const char* BinToString( const void *pData, int nSize, char *pszBuffer );
+MISC_EXPORT void* StringToBin( const char *pszData, void *pBuffer, int *pnSize );
+MISC_EXPORT const char* BinToString( const void *pData, int nSize, char *pszBuffer );
 __forceinline char HalfByteToHexSymbol( const unsigned char chr ) { return chr >= 10 ? 'a' + ( chr - 10 ) : '0' + chr; }
 __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 {
@@ -144,23 +145,23 @@ __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // перевод UNICODE => UTF-8 и обратно
-void UnicodeToUTF8( string *pRes, const wstring &szString );
-void UTF8ToUnicode( wstring *pRes, const string &szString );
+MISC_EXPORT void UnicodeToUTF8( string *pRes, const wstring &szString );
+MISC_EXPORT void UTF8ToUnicode( wstring *pRes, const string &szString );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // перевод MBCS => Unicode и обратно
-void SetCodePage( const int nCodePage );
-void ToMBCS( string *pRes, const wstring &szSrc );
+MISC_EXPORT void SetCodePage( const int nCodePage );
+MISC_EXPORT void ToMBCS( string *pRes, const wstring &szSrc );
 inline string ToMBCS( const wstring &szSrc ) { string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
-void ToUnicode( wstring *pRes, const string &szSrc );
+MISC_EXPORT void ToUnicode( wstring *pRes, const string &szSrc );
 inline wstring ToUnicode( const string &szSrc ) { wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // перевод MBCS => UTF-8 и обратно
-void UTF8ToMBCS( string *pRes, const string &szSrc );
-void MBCSToUTF8( string *pRes, const string &szSrc );
+MISC_EXPORT void UTF8ToMBCS( string *pRes, const string &szSrc );
+MISC_EXPORT void MBCSToUTF8( string *pRes, const string &szSrc );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GUID => string conversion
-void GUID2String( string *pString, const GUID &guid );
-void String2GUID( const string &szString, GUID *pGuid );
+MISC_EXPORT void GUID2String( string *pString, const GUID &guid );
+MISC_EXPORT void String2GUID( const string &szString, GUID *pGuid );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class TChar>
 void ReplaceAllChars( basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )

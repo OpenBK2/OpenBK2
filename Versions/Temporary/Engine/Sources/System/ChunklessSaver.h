@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System_export.h"
+
 interface IPointerSerialization : virtual public CObjectBase
 {
 	virtual int GetObjectID( CObjectBase *p ) = 0;
@@ -7,4 +9,4 @@ interface IPointerSerialization : virtual public CObjectBase
 };
 
 class CMemoryStream;
-IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pStream, ESaverMode mode );
+SYSTEM_EXPORT IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pStream, ESaverMode mode );

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Parser_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "LangNode.h"
 #include "NodesList.h"
@@ -36,7 +39,7 @@ public:
 	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this );	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CTypeDefNode : public CTypeNode
+class PARSER_EXPORT CTypeDefNode : public CTypeNode
 {
 	OBJECT_NOCOPY_METHODS( CTypeDefNode );
 	
@@ -79,7 +82,7 @@ public:
 	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this );	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CEnumNode : public CTypeNode
+class PARSER_EXPORT CEnumNode : public CTypeNode
 {
 	OBJECT_NOCOPY_METHODS( CEnumNode );
 	
@@ -110,7 +113,7 @@ public:
 	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this );	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CVariable : public CLangNode
+class PARSER_EXPORT CVariable : public CLangNode
 {
 	CPtr<CTypeNode> pType;
 	CPtr< CNodesList<CAttributeNode> > pAttrList;
@@ -212,7 +215,7 @@ public:
 	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this );	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CNamespace : public CLangNode
+class PARSER_EXPORT CNamespace : public CLangNode
 {
 	OBJECT_NOCOPY_METHODS( CNamespace );
 	
@@ -261,7 +264,7 @@ public:
 	virtual void Visit( IVisitor *pVisitor ) { pVisitor->Visit( this );	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CComplexTypeNode : public CTypeNode
+class PARSER_EXPORT CComplexTypeNode : public CTypeNode
 {
 	OBJECT_NOCOPY_METHODS( CComplexTypeNode );
 	

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\System\DG.h"
 namespace NGfx
@@ -82,7 +85,7 @@ struct SMaterialCreateInfo
 		fMetalMirror(0), fDielMirror(0), alphaMode(MF_GENERIC|MF_OPAQUE), bDoesCastShadow(true), nPriority(0),
 		fSpecPower(32), fFloatParam(0), fDetailScale(1), bProjectOnTerrain(false), bSelfIllum(false), b2Sided(false), bApplyFog(true), bAddPlaced(false), bIgnoreZ(false), bBackFaceCastShadow(false), bReceiveShadow(true), eDynamicType(DT_DONT_CARE) {}
 };
-IMaterial* CreateMaterial( const SMaterialCreateInfo &m_ );
+_3DMOTOR_EXPORT IMaterial* CreateMaterial( const SMaterialCreateInfo &m_ );
 // make exact decal from decal material for alpha test geometry
 IMaterial* GetExactDecal( IMaterial *p );
 IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor );

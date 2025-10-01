@@ -3,10 +3,13 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CBasicShareBase
 {
-	friend void RegisterBasicShareBase( class CBasicShareBase *pBase );
+	SYSTEM_EXPORT friend void RegisterBasicShareBase( class CBasicShareBase *pBase );
 	int nID;
 	CBasicShareBase *pNext;
 protected:
@@ -16,7 +19,7 @@ public:
 	CBasicShareBase( int _nID ): nID( _nID ) { RegisterBasicShareBase(this); }
 	virtual int operator&( IBinSaver &f ) = 0;
 	//
-	friend void SerializeShared( IBinSaver *pFile );
+	SYSTEM_EXPORT friend void SerializeShared( IBinSaver *pFile );
 	friend void CreateSharedHolder( class CSharedHolder *pHolder );
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +96,6 @@ public:
 	CSharedHolder() { CreateSharedHolder(this); }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void SerializeShared( IBinSaver *pFile );
+SYSTEM_EXPORT void SerializeShared( IBinSaver *pFile );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif

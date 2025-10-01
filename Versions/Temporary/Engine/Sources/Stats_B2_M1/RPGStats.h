@@ -2,6 +2,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
+#include "Stats_B2_M1_export.h"
+
 #include "../3dmotor/dbscene.h"
 #include "acktypes.h"
 #include "dbpassprofile.h"
@@ -340,7 +342,7 @@ namespace NDb
 		SELECTION_TYPE_CANNOT_SELECT = 4,
 	};
 
-	struct SAttachedLightEffect
+	struct STATS_B2_M1_EXPORT SAttachedLightEffect
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -1973,7 +1975,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SUnitBaseRPGStats : public SHPObjectRPGStats
+	struct STATS_B2_M1_EXPORT SUnitBaseRPGStats : public SHPObjectRPGStats
 	{
 	public:
 	private:
@@ -2982,7 +2984,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SUnitStatsModifier : public CResource
+	struct STATS_B2_M1_EXPORT SUnitStatsModifier : public CResource
 	{
 		OBJECT_BASIC_METHODS( SUnitStatsModifier )
 	public:
@@ -3303,8 +3305,8 @@ struct SKnownEnum<NDb::EMineType>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
-	string EnumToString( NDb::EDBUnitRPGType eValue );
-	EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const string &szValue );
+	STATS_B2_M1_EXPORT string EnumToString( NDb::EDBUnitRPGType eValue );
+	STATS_B2_M1_EXPORT EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const string &szValue );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <>
@@ -3345,8 +3347,8 @@ struct SKnownEnum<NDb::EEncyclopediaFilterUnitType>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
-	string EnumToString( NDb::EDesignUnitType eValue );
-	EDesignUnitType StringToEnum_NDb_EDesignUnitType( const string &szValue );
+	STATS_B2_M1_EXPORT string EnumToString( NDb::EDesignUnitType eValue );
+	STATS_B2_M1_EXPORT EDesignUnitType StringToEnum_NDb_EDesignUnitType( const string &szValue );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <>
@@ -3415,8 +3417,8 @@ struct SKnownEnum<NDb::SSquadRPGStats::SFormation::EFormationMoveType>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
-	string EnumToString( NDb::EReinforcementType eValue );
-	EReinforcementType StringToEnum_NDb_EReinforcementType( const string &szValue );
+	STATS_B2_M1_EXPORT string EnumToString( NDb::EReinforcementType eValue );
+	STATS_B2_M1_EXPORT EReinforcementType StringToEnum_NDb_EReinforcementType( const string &szValue );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <>

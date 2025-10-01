@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Image_export.h"
+
 template<class T> class CArray2D;
 
 namespace NImage
@@ -16,5 +19,5 @@ enum EImageScaleMethod
 	IMAGE_SCALE_METHOD_FORCE_DWORD = 0x7fffffff
 };
 
-void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScaleMethod method );
+IMAGE_EXPORT void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScaleMethod method );
 }

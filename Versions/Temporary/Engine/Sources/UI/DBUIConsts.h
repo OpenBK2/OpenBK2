@@ -1,4 +1,7 @@
 #pragma once
+
+#include "UI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -43,7 +46,7 @@ namespace NDb
 		DWORD CalcCheckSum() const { return 0; }
 	};
 
-	struct SUIGameConsts : public CResource
+	struct UI_EXPORT SUIGameConsts : public CResource
 	{
 	public:
 	private:

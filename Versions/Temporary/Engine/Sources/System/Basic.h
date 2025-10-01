@@ -1,5 +1,6 @@
 #ifndef __BASIC2_H_
 #define __BASIC2_H_
+#include "System_export.h"
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -33,7 +34,7 @@ class CObjectBase;
 	inline void PrintObjectsStatistics() {}
 #endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CObjectBase
+class SYSTEM_EXPORT CObjectBase
 {
 private:
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
@@ -143,8 +144,8 @@ protected:                                                                      
 	virtual void DestroyContents() { classname::~classname(); int nHoldRefs = nRefData, nHoldObjs = nObjData; new(this) classname(); nRefData += nHoldRefs; nObjData += nHoldObjs; }\
 	private:
 #define BASIC_REGISTER_CLASS(classname) \
-template<> CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
-template<> classname* CastToUserObjectImpl<classname >( CObjectBase *p, classname*, void* ) { return dynamic_cast<classname*>( p ); }
+template<> __declspec(dllexport) CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
+template<> __declspec(dllexport) classname* CastToUserObjectImpl<classname >( CObjectBase *p, classname*, void* ) { return dynamic_cast<classname*>( p ); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, void* );
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, CObjectBase* ) { return p; }

@@ -9,6 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "UI_export.h"
+
 #include "Window.h"
 
 interface IML;
@@ -16,7 +18,7 @@ interface IML;
 // plain text window
 // user gives Font, Color, String, Alignment,
 // and Window parameters
-class CWindowTextView : public CWindow, public ITextView
+class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 {
 	OBJECT_BASIC_METHODS(CWindowTextView);
 	

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "DebugTools_export.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDebugInfo
 {
@@ -51,5 +54,5 @@ interface IDebugInfoManager : public CObjectBase
 	virtual void ShowAxes( const bool bShow ) = 0;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IDebugInfoManager *CreateDebugInfoManager();
+DEBUGTOOLS_EXPORT IDebugInfoManager *CreateDebugInfoManager();
 inline IDebugInfoManager *DebugInfoManager() { return Singleton<IDebugInfoManager>(); }

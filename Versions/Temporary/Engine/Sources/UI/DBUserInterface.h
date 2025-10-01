@@ -1,4 +1,7 @@
 #pragma once
+
+#include "UI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -23,7 +26,7 @@ namespace NDb
 		EPA_MARGIN = 3,
 	};
 
-	struct SUIDesc : public CResource
+	struct UI_EXPORT SUIDesc : public CResource
 	{
 	public:
 	private:
@@ -85,7 +88,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SUIStateBaseShared : public CResource
+	struct UI_EXPORT SUIStateBaseShared : public CResource
 	{
 	public:
 	private:
@@ -103,7 +106,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SUIStateBase : public SUIDesc
+	struct UI_EXPORT SUIStateBase : public SUIDesc
 	{
 	public:
 	private:
@@ -250,7 +253,7 @@ namespace NDb
 	};
 	struct STexture;
 
-	struct SBackground : public SUIDesc
+	struct UI_EXPORT SBackground : public SUIDesc
 	{
 	public:
 	private:
@@ -294,7 +297,7 @@ namespace NDb
 	};
 	enum EPositionAllign;
 
-	struct SBackgroundSimpleTexture : public SBackground
+	struct UI_EXPORT SBackgroundSimpleTexture : public SBackground
 	{
 		OBJECT_BASIC_METHODS( SBackgroundSimpleTexture )
 	public:
@@ -387,7 +390,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SWindowBaseDesc : public SUIDesc
+	struct UI_EXPORT SWindowBaseDesc : public SUIDesc
 	{
 	public:
 	private:
@@ -474,7 +477,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SWindowShared : public SWindowBaseShared
+	struct UI_EXPORT SWindowShared : public SWindowBaseShared
 	{
 	public:
 	private:
@@ -500,7 +503,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SWindow : public SWindowBaseDesc
+	struct UI_EXPORT SWindow : public SWindowBaseDesc
 	{
 	public:
 	private:

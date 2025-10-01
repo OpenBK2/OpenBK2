@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 #include "GRenderCore.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,7 +167,7 @@ public:
 	virtual void Precache();
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CAnimWaterMaterial : public IMaterial
+class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CAnimWaterMaterial);
 	ZDATA

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "System_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "../Misc/Pool.h"
 #define HREF_ATTRIBUTE_NAME "href"
@@ -46,7 +49,7 @@ struct SXmlAttribute
 	SXmlValue value;
 };
 
-class CXmlNode
+class SYSTEM_EXPORT CXmlNode
 {
 	vector<const SXmlAttribute*> attributes;
 	vector<const CXmlNode*> nodes;
@@ -87,7 +90,7 @@ struct SPool
 	CPool<SXmlAttribute, 32> attrPool;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CXmlReader : public CObjectBase
+class SYSTEM_EXPORT CXmlReader : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CXmlReader )
 

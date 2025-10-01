@@ -3,8 +3,11 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3DLib_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CMemObject: public CObjectBase
+class _3DLIB_EXPORT CMemObject: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CMemObject);
 	ZDATA

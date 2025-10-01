@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Stats_B2_M1_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -11,7 +14,7 @@ namespace NDb
 	struct SWindowScreen;
 	struct STexture;
 
-	struct SUIScreenEntry
+	struct STATS_B2_M1_EXPORT SUIScreenEntry
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -57,7 +60,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SUITextureEntry
+	struct STATS_B2_M1_EXPORT SUITextureEntry
 	{
 	private:
 		mutable DWORD __dwCheckSum;

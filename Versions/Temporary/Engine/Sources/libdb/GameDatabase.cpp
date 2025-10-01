@@ -1,3 +1,5 @@
+#include <libdb_export.h>
+
 #include "StdAfx.h"
 #include "Database.h"
 #include "Index.h"
@@ -264,7 +266,7 @@ public:
 	}
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SegmentProfiler()
+LIBDB_EXPORT void SegmentProfiler()
 {
 	DWORD dwTime = GetTickCount();
 	if ( dwTime - dwLastProfilerSegment > 1000 )

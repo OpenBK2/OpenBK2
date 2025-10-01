@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGfx
 {
@@ -62,10 +65,10 @@ struct SFrameTransitionInfo
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void StartFrameTransition();
 void StartFrameTransition( const SFrameTransitionInfo &info );
-bool IsFrameTransitionComplete();
-void RenderFrameTransition();
-CRTPtr *GetFrameTransitionCapture2();
-CRTPtr *GetFrameTransitionCapture1( const SFrameTransitionInfo &info ); // need for B2 interfaces using (flip is not placed in Interface::Draw() necessary)
+_3DMOTOR_EXPORT bool IsFrameTransitionComplete();
+_3DMOTOR_EXPORT void RenderFrameTransition();
+_3DMOTOR_EXPORT CRTPtr *GetFrameTransitionCapture2();
+_3DMOTOR_EXPORT CRTPtr *GetFrameTransitionCapture1( const SFrameTransitionInfo &info ); // need for B2 interfaces using (flip is not placed in Interface::Draw() necessary)
 
 NGfx::CTexture *GetTexture( CRTPtr * pTex);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

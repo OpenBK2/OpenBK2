@@ -5,6 +5,8 @@
 #if !defined(AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_)
 #define AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_
 
+#include "UI_export.h"
+
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
@@ -17,9 +19,9 @@ namespace NGScene
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // fFade[0..1]
-DWORD FadeColor( DWORD dwColor, float fFade );
+UI_EXPORT DWORD FadeColor( DWORD dwColor, float fFade );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CBackground : public IWindowPart
+class UI_EXPORT CBackground : public IWindowPart
 {
 	float fFadeValue;
 protected:

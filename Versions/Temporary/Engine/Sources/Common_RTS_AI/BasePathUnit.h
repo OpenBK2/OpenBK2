@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Common_RTS_AI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\Common_RTS_AI\Terrain.h"
 
@@ -46,7 +49,7 @@ struct SIterateUnitsCallback
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! Абстрактный класс, представляющий "перемещаемые" юниты. Все что может двигаться в AI, должно наследоваться от
 //! CBasePathUnit. Также предоставляет необходимую статическую информации о юните для функций поиска пути.
-class CBasePathUnit
+class COMMON_RTS_AI_EXPORT CBasePathUnit
 {
 	CBasePathUnit *pLastPushUnit;
 	CBasePathUnit *pLastPusherUnit;
@@ -360,5 +363,5 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! CBasePathUnit не является потомком CObjectBase, поэтому для его сериализации нельзя использовать operator&, необходимо
 //! пользоваться SerializeBasePathUnit( ... )
-void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit );
+COMMON_RTS_AI_EXPORT void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

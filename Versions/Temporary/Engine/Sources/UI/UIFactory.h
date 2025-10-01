@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UI_export.h"
+
 #include "UI.h"
 #include "../Input/GameMessage.h"
 #include "DBUIConsts.h"
@@ -39,7 +41,7 @@ namespace NUIFactory
 EXTERNVAR CDBPtr<NDb::SUIGameConsts> pConsts;
 }
 //////////////////////////////////////////////////////////////////////
-class CUIFactory : public IUIInitialization
+class UI_EXPORT CUIFactory : public IUIInitialization
 {
 	OBJECT_BASIC_METHODS( CUIFactory )
 	CObj<CVirtualScreenController> pVirtualScreenController;

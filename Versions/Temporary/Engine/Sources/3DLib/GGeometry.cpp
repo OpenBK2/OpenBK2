@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "3DLib_export.h"
+
 #include "GGeometry.h"
 #include "Bound.h"
 //#include "..\Misc\StrProc.h"
@@ -8,7 +11,7 @@
 
 namespace NGfx
 {
-	int nVCacheSize = 10;
+	_3DLIB_EXPORT int nVCacheSize = 10;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGScene

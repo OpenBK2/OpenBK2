@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Stats_B2_M1_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
@@ -66,16 +69,16 @@ enum EUnitRPGType
 	RPG_TYPE_TRAIN_ARMOR				= 0x00400005
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType );
+STATS_B2_M1_EXPORT enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EUnitRPGType GetMainType( EUnitRPGType type );
-bool IsInfantry( EUnitRPGType type );
-bool IsTransport( EUnitRPGType type );
-bool IsArtillery( EUnitRPGType type );
-bool IsSPG( EUnitRPGType type );
-bool IsArmor( EUnitRPGType type );
-bool IsAviation( EUnitRPGType type );
-bool IsTrain( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsInfantry( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsTransport( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsArtillery( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsSPG( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsArmor( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsAviation( EUnitRPGType type );
+STATS_B2_M1_EXPORT bool IsTrain( EUnitRPGType type );
 const EUnitRPGClass GetRPGClass( const EUnitRPGType eType );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

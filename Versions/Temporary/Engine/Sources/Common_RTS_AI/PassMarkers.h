@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common_RTS_AI_export.h"
+
 #include "../DebugTools/DebugInfoManager.h"
 #include "AIClasses.h"
 #include "Terrain.h"
@@ -9,7 +11,7 @@
 #define MARKERS_COLORS_COUNT	3
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CPassMarkersDraw : public CObjectBase
+class COMMON_RTS_AI_EXPORT CPassMarkersDraw : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CPassMarkersDraw )
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common_RTS_AI_export.h"
+
 #include "../Stats_B2_M1/TerraAIObserver.h"
 #include "../B2_M1_Terrain/fmtvso.h"
 #include "../b2_m1_terrain/dbvso.h"
@@ -26,7 +28,7 @@ struct SSingleSide
 //
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CTerraAIObserver :	public ITerraAIObserver
+class COMMON_RTS_AI_EXPORT CTerraAIObserver :	public ITerraAIObserver
 {
 	OBJECT_NOCOPY_METHODS( CTerraAIObserver )
 

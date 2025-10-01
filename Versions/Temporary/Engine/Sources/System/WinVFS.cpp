@@ -3,6 +3,7 @@
 #include "FileTime.h"
 #include "FileUtils.h"
 #include "VFSOperations.h"
+#include "WinVFS.h"
 #include "WinVFS.hpp"
 #include "ZipArchieve.h"
 #include "../Misc/StrProc.h"

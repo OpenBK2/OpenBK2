@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "DG.h"
 namespace NGScene
@@ -124,7 +127,7 @@ public:
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // for use in CResourceOpener
-class CResourceFileOpener
+class SYSTEM_EXPORT CResourceFileOpener
 {
 public:
 	static bool DoesExist( const char *pszResName, const SResKey<int> &key );
@@ -154,7 +157,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // if for some package CFileRequest scheme is used all access to that resource should be
 // through CFileRequest system
-class CFileRequest : public CObjectBase
+class SYSTEM_EXPORT CFileRequest : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CFileRequest);
 	const char *pszResName;
@@ -177,16 +180,16 @@ inline CFileRequest* CreateFileRequiest( const char *pszResName, int nID, bool b
 inline CFileRequest* CreateFileRequiest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayedLoad ); }
 //inline CFileRequest* CreateFileRequiest( const char *pszResName, const SPartKey &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayLoad ); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void AddToPrecachedUpdate( IPrecache *pAdd );
+SYSTEM_EXPORT void AddToPrecachedUpdate( IPrecache *pAdd );
 //void AddResourceDir( const char *pszName );
 //void ClearResourceDirs();
 //void CloseAllResources();
 void __declspec(dllexport) SFLB3_RunResourceLoadingThread();
-void ReleaseFileRequestHolder();
-void AddFileRequest( NGScene::CFileRequest *pReq );
-bool HasFileRequestsInFly();
-int CountFileRequestsInFly();
-void LoadPrecached();
+SYSTEM_EXPORT void ReleaseFileRequestHolder();
+SYSTEM_EXPORT void AddFileRequest( NGScene::CFileRequest *pReq );
+SYSTEM_EXPORT bool HasFileRequestsInFly();
+SYSTEM_EXPORT int CountFileRequestsInFly();
+SYSTEM_EXPORT void LoadPrecached();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef NGScene::SResKey<int> SIntResKey;

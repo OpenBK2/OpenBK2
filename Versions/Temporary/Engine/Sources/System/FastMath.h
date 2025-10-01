@@ -1,13 +1,14 @@
 #ifndef __FAST_MATH_H__
 #define __FAST_MATH_H__
 #pragma once
+#include "System_export.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NMath
 {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // fast trigonometry section
 // sinus & cosinus
-float Sin( float fAlpha );
+SYSTEM_EXPORT float Sin( float fAlpha );
 __forceinline float Cos( const float fAlpha ) { return Sin( fAlpha + FP_PI2 ); }
 
 // result depends on current FPU rounding state, don't use in AI, can lead to async
@@ -15,7 +16,7 @@ float FastSin( float fAlpha );
 __forceinline float FastCos( const float fAlpha ) { return FastSin( fAlpha + FP_PI2 ); }
 
 // arc sinus & arc cosinus
-float ASin( float fSin );
+SYSTEM_EXPORT float ASin( float fSin );
 __forceinline float ACos( const float fCos ) { return FP_PI2 - ASin( fCos ); }
 
 // result depends on current FPU rounding state, don't use in AI, can lead to async
@@ -23,7 +24,7 @@ float FastASin( float fSin );
 __forceinline float FastACos( const float fCos ) { return FP_PI2 - FastASin( fCos ); }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // fast SQRT
-float Sqrt( float fVal );
+SYSTEM_EXPORT float Sqrt( float fVal );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline void NormalizeFast( float *pfX, float *pfY )
 {

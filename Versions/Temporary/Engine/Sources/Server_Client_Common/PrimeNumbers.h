@@ -1,6 +1,9 @@
 #pragma once
+
+#include "Server_Client_Common_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CPrimeNumbers : public CObjectBase
+class SERVER_CLIENT_COMMON_EXPORT CPrimeNumbers : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CPrimeNumbers );
 	vector<int> numbers;

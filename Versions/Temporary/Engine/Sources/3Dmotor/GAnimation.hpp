@@ -1,5 +1,7 @@
 #pragma once
 
+#include "3Dmotor_export.h"
+
 #include "GSkeleton.h"
 #include "GChannelAnimator.h"
 #include "..\System\Time.hpp"
@@ -84,6 +86,6 @@ interface ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public ICha
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex ) = 0;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-ISkeletonAnimator *CreateSkeletonAnimator(
+_3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
 	const SGrannySkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace

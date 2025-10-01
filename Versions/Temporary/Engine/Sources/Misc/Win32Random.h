@@ -3,11 +3,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma ONCE
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "Misc_export.h"
+
 namespace NWin32Random
 {
-	void Seed( const int nSeed );
-	int GetSeed();
-	unsigned int Random();
+	MISC_EXPORT void Seed( const int nSeed );
+	MISC_EXPORT int GetSeed();
+	MISC_EXPORT unsigned int Random();
 	__forceinline unsigned int Random( const unsigned int uMax ) { return NWin32Random::Random() % uMax; }
 	__forceinline int Random( const int nMin, const int nMax ) { return nMin + (int)NWin32Random::Random( (const unsigned int)(nMax - nMin + 1) ); }
 	__forceinline float Random( const float fMin, const float fMax ) { return fMin + float( float(NWin32Random::Random()) / float(RAND_MAX) * (fMax - fMin) ); }

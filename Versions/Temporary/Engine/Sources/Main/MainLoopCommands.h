@@ -1,15 +1,18 @@
 #pragma once
+
+#include "Main_export.h"
+
 #include "MainLoop.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IInterfaceCommand *CreateICExitGame();
+MAIN_EXPORT IInterfaceCommand *CreateICExitGame();
 IInterfaceCommand *CreateICLoad( const string &szName );
-IInterfaceCommand *CreateICSave( const string &szName );
-IInterfaceCommand *CreateICCloseInterface();
+MAIN_EXPORT IInterfaceCommand *CreateICSave( const string &szName );
+MAIN_EXPORT IInterfaceCommand *CreateICCloseInterface();
 
-IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode );
+MAIN_EXPORT IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode );
 IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, vector< CPtr<IDebugSaveCheckObj> > &checkers );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CICLoadBase : public IInterfaceCommand
+class MAIN_EXPORT CICLoadBase : public IInterfaceCommand
 {
 	wstring szTitleName;
 	string szFileName;
@@ -32,7 +35,7 @@ public:
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Wrong call" ); return 0; }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CICSaveBase : public IInterfaceCommand
+class MAIN_EXPORT CICSaveBase : public IInterfaceCommand
 {
 	ZDATA
 	wstring szTitleName;

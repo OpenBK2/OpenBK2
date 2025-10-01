@@ -1,5 +1,7 @@
 #pragma once
 
+#include "3Dmotor_export.h"
+
 #include "..\System\DG.h"
 #include "..\3Dlib\GGeometry.h"
 #include "GRenderModes.h"
@@ -197,10 +199,10 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 IGScene* CreateScene();
 // wrappers to Gfx to exclude interface on Gfx dependency
-bool Is3DActive();
-void SetWireframe( bool bWire );
+_3DMOTOR_EXPORT bool Is3DActive();
+_3DMOTOR_EXPORT void SetWireframe( bool bWire );
 bool GetWireframe();
-void ClearScreen( const CVec3 &vColor );
+_3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
 enum ERegisterCopyMode
 {
 	RCM_COPY,
@@ -208,10 +210,10 @@ enum ERegisterCopyMode
 	RCM_SHOWALPHA
 };
 void CopyRegisterOnScreen( const CTRect<float> &rScreenRect, ERegisterCopyMode mode, int nRegister );
-void GetRenderStats( SRenderStats *pStats );
-float GetFrameTime();
-void Flip();
-int CalcTouchedTextureSize();
+_3DMOTOR_EXPORT void GetRenderStats( SRenderStats *pStats );
+_3DMOTOR_EXPORT float GetFrameTime();
+_3DMOTOR_EXPORT void Flip();
+_3DMOTOR_EXPORT int CalcTouchedTextureSize();
 bool GetGeometryObjectInfo( CObjectBase *p, 
 	CPtrFuncBase<CObjectInfo> **pGeometry, SFBTransform *pPos, SFullGroupInfo *pGroupInfo );
 CFuncBase<vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<vector<SHMatrix> > *pAnim );

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "..\System\DG.h"
 #include "GPixelFormat.h"
@@ -45,12 +48,12 @@ public:
 	virtual void SetWindowSize( const CVec2 &vSize ) = 0;
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-I2DGameView* CreateNew2DView();
+_3DMOTOR_EXPORT I2DGameView* CreateNew2DView();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool Is3DActive();
-void SetWireframe( bool bWire );
+_3DMOTOR_EXPORT bool Is3DActive();
+_3DMOTOR_EXPORT void SetWireframe( bool bWire );
 void SetShowSceneInfo( bool bShow );
-void Flip();
-void ClearScreen( const CVec3 &vColor );
+_3DMOTOR_EXPORT void Flip();
+_3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 }

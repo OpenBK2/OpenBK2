@@ -1,4 +1,7 @@
 #include "StdAfx.h"
+
+#include "../3Dmotor/3Dmotor_export.h"
+
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../input/gamemessage.h"
@@ -21,7 +24,7 @@
 
 namespace NGScene
 {
-EXTERNVAR int nTextureUseMip;
+_3DMOTOR_EXPORT EXTERNVAR int nTextureUseMip;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace

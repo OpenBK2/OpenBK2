@@ -1,4 +1,7 @@
 #pragma once
+
+#include "Common_RTS_AI_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "BasePathUnit.h"
 #include "StandartSmoothPath.h"
@@ -14,7 +17,7 @@ struct SGeometryCellInfo
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //! гладкий путь для группы (формации), позиции не привязаны (!!!) к юнитам, позиции привязаны к некоему приоритету (индексу),
 //! который определяет класс юнита (т.е. офицеры могут стоять на таких-то позяциях, а солдаты на таких)
-class CGroupSmoothPath : public CStandartSmoothPathBasis
+class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 {
 	struct SCellInfo
 	{

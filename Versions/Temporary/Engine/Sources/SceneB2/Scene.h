@@ -1,4 +1,7 @@
 #pragma once
+
+#include "SceneB2_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "../Stats_B2_M1/DBMapInfo.h"
 #include "../3DMotor/GView.h"
@@ -285,7 +288,7 @@ interface IScene : public CObjectBase
 	virtual bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget ) = 0;
 };
 inline IScene* Scene() { return Singleton<IScene>(); }
-IScene* CreateScene();
+SCENEB2_EXPORT IScene* CreateScene();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DEFINE_DG_CONSTANT_NODE( CCSFBTransform, SFBTransform );
 DEFINE_DG_CONSTANT_NODE( CCCVec3, CVec3 );

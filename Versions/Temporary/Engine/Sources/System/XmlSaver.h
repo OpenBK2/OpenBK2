@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System_export.h"
+
 #include "BinSaver.h"
 #include "XmlResource.h"
 
@@ -523,4 +525,4 @@ namespace NXml
 {
 	struct SPool;
 }
-IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode );
+SYSTEM_EXPORT IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode );

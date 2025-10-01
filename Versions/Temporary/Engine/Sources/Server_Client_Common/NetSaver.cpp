@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "../System/System_export.h"
+
 #include "NetPacket.h"
 #include "NetSaver.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,7 @@ REGISTER_SAVELOAD_CLASS( UNKNOWN_PACKET_TYPE_ID, CUnknownPacket );
 //*													NetSaver                                 *
 //*******************************************************************
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EXTERNVAR int N_SAVELOAD_VERSION;
+SYSTEM_EXPORT EXTERNVAR int N_SAVELOAD_VERSION;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // uses the fact that order of chunks during save and during load is the same
 // also requires no countchunks() use

@@ -1,26 +1,29 @@
 #ifndef __TRANSFORM_H__
 #define __TRANSFORM_H__
+
+#include "3DLib_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CTransformStack;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-SFBTransform MakeTransform( const CVec3 &ptPos );
-SFBTransform MakeTransform( const CVec3 &ptPos, int nRotation );
-SFBTransform MakeTransform( const CVec3 &ptPos, const CVec3 &ptScale );
-void MakeMatrix( SHMatrix *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos );
-void MakeMatrix( SHMatrix *pRes, const CVec3 &ptPos, const CVec3 &ptDir );
-void MakeMatrix( SFBTransform *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos );
-void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, float fAngle = 0 );
-void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, const CQuat &rot );
-bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m );
+_3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos );
+_3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos, int nRotation );
+_3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos, const CVec3 &ptScale );
+_3DLIB_EXPORT void MakeMatrix( SHMatrix *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos );
+_3DLIB_EXPORT void MakeMatrix( SHMatrix *pRes, const CVec3 &ptPos, const CVec3 &ptDir );
+_3DLIB_EXPORT void MakeMatrix( SFBTransform *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos );
+_3DLIB_EXPORT void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, float fAngle = 0 );
+_3DLIB_EXPORT void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, const CQuat &rot );
+_3DLIB_EXPORT bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m );
 void TransformYupToZup( SHMatrix *pMatrix );
-void MakeProjectiveRay( CVec3 *pDir, CVec3 *pOrig, const SHMatrix &camera, const CVec2 &screenRect, const CVec2 &cursorPos, float fFovX = 90 );
-void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const CTransformStack &ts, const CVec2 &vScreenRect, const CVec2 &cursorPos );
+_3DLIB_EXPORT void MakeProjectiveRay( CVec3 *pDir, CVec3 *pOrig, const SHMatrix &camera, const CVec2 &screenRect, const CVec2 &cursorPos, float fFovX = 90 );
+_3DLIB_EXPORT void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const CTransformStack &ts, const CVec2 &vScreenRect, const CVec2 &cursorPos );
 bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 &screenRect, float fFovX = 90, CVec2 *pRes = 0 );
 bool TestRayInFrustrum( const CVec3 &ptPos, const CTransformStack &ts, const CVec2 &screenRect, CVec2 *pRes = 0, float *pZ = 0, float *pfMinDistance = 0, float *pfMaxDistance = 0 );
-float CalcRadius2( const SBound &b, const SHMatrix &fwd );
-void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd );
+_3DLIB_EXPORT float CalcRadius2( const SBound &b, const SHMatrix &fwd );
+_3DLIB_EXPORT void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd );
 // original screen is (0,0) - (1,1), (0,0) - upper left corner
-void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &vOrigin, const CVec2 &vSize );
+_3DLIB_EXPORT void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &vOrigin, const CVec2 &vSize );
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template< int nMaxNumMatrices, class TElement>
 class CBaseMatrixStack
@@ -78,7 +81,7 @@ public :
 	void PushScale( float val );
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-class CTransformStack : public CFBMatrixStack<8>
+class _3DLIB_EXPORT CTransformStack : public CFBMatrixStack<8>
 {
 	typedef int TFlags;
 	CVec4 viewFrustrum[32];

@@ -1,6 +1,9 @@
 #ifndef __SYSTEM_HEADER_H__
 #define __SYSTEM_HEADER_H__
 #pragma once
+
+#include "System_export.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <int N> 
 struct SInt2Type { enum { value = N }; };
@@ -30,17 +33,17 @@ typedef CObjectBase* (*ObjectFactoryNewFunc)();
 namespace NObjectFactory
 {
 	// create new object by typeID
-	CObjectBase *MakeObject( int nTypeID );
+	SYSTEM_EXPORT CObjectBase *MakeObject( int nTypeID );
 	// register type for further creation
-	void RegisterType( int nObjectTypeID, ::ObjectFactoryNewFunc pfnNewFunc, const type_info *pTypeInfo );
+	SYSTEM_EXPORT void RegisterType( int nObjectTypeID, ::ObjectFactoryNewFunc pfnNewFunc, const type_info *pTypeInfo );
 	void UnRegisterType( int nObjectTypeID, const type_info *pTypeInfo );
 	// get object's typeID (for save/load system)
-	int GetObjectTypeID( CObjectBase *pObj );
-	int GetObjectTypeID( const type_info &rtti );
+	SYSTEM_EXPORT int GetObjectTypeID( CObjectBase *pObj );
+	SYSTEM_EXPORT int GetObjectTypeID( const type_info &rtti );
 	// check, is type registered
-	bool IsRegistered( int nObjectTypeID );
+	SYSTEM_EXPORT bool IsRegistered( int nObjectTypeID );
 	// start register type
-	void StartRegister();
+	SYSTEM_EXPORT void StartRegister();
 	// 
 	template <class TT>
 		void RegisterTypeName( int nTypeID, ObjectFactoryNewFunc func, TT* ) { NObjectFactory::RegisterType( nTypeID, func, &typeid(TT) ); }
@@ -72,12 +75,12 @@ template <class TYPE>
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NSingleton
 {
-	CObjectBase *Singleton( const int nTypeID );
-	void RegisterSingleton( CObjectBase *pObj, const int nTypeID );
-	void UnRegisterSingleton( const int nTypeID );
-	void DoneSingletons();
-	void Serialize( const char chunkID, IBinSaver &saver );
-	void GetAllSingletonIDs( vector<int> *pRes );
+	SYSTEM_EXPORT CObjectBase *Singleton( const int nTypeID );
+	SYSTEM_EXPORT void RegisterSingleton( CObjectBase *pObj, const int nTypeID );
+	SYSTEM_EXPORT void UnRegisterSingleton( const int nTypeID );
+	SYSTEM_EXPORT void DoneSingletons();
+	SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
+	SYSTEM_EXPORT void GetAllSingletonIDs( vector<int> *pRes );
 };
 // получить singleton по ID из глобального хранилища.
 // singleton должен иметь enum с одним полем 'tidTypeID', которое содержит его константу
@@ -88,7 +91,7 @@ inline TYPE* Singleton() { return checked_cast<TYPE*>( NSingleton::Singleton(TYP
 // serialization
 namespace NSystem
 {
-	void Serialize( const char chunkID, IBinSaver &saver );
+	SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #endif

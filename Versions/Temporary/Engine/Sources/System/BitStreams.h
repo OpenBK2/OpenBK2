@@ -1,5 +1,7 @@
 #pragma once
 
+#include "System_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // класс для последовательной записи/считывания данных, включая возможность записи
 // или считывания побитных данных, может использоваться на произовольных областях
@@ -61,7 +63,7 @@ public:
 // после того, как с CDataStream начинает работать CBitLocker прямые операции с 
 // DataStream приведут к некорректному результату
 class CDataStream;
-class CBitLocker: public CBitStream
+class SYSTEM_EXPORT CBitLocker: public CBitStream
 {
 	CDataStream *pData;
 	unsigned char *pBuffer;

@@ -1,4 +1,7 @@
 #pragma once
+
+#include "B2_M1_Terrain_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
@@ -141,7 +144,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SVSOPoint
+	struct B2_M1_TERRAIN_EXPORT SVSOPoint
 	{
 	private:
 		mutable DWORD __dwCheckSum;

@@ -1,9 +1,12 @@
 #pragma once
+
+#include "System_export.h"
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NFile
 {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CFileIterator
+class SYSTEM_EXPORT CFileIterator
 {
 	HANDLE hFind;													// find file handle of the last search result
 	WIN32_FIND_DATA findinfo;							// last search info
@@ -76,20 +79,19 @@ void EnumerateFiles( const string &szStartDir, const char *pszMask, TEnumFunc ca
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void GetDirectoryDirs( const char *pszDirName, list<string> *pNames, bool bRecursive = true );
-void GetDirectoryFiles( const char *pszDirName, const char *pszMask, list<string> *pNames, bool bRecurse = true );
+SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, list<string> *pNames, bool bRecurse = true );
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive );
-void DeleteDirectory( const string &szDir );
+SYSTEM_EXPORT void DeleteDirectory( const string &szDir );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool DoesFileExist( const string &szFileName );
-bool DoesFolderExist( const string &szFolderName );
-bool IsValidFileName( const string &szFileName );
+SYSTEM_EXPORT bool DoesFileExist( const string &szFileName );
+bool DoesFolderExist( const string &szFolderName );bool IsValidFileName( const string &szFileName );
 // is valid win32 file name
-bool IsValidDirName( const string &szName );
+SYSTEM_EXPORT bool IsValidDirName( const string &szName );
 // copy file. create dst path before copying
 bool CopyFile( const string &szSrcName, const string &szDstName );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-string GetFullName( const string &szPath );
-void GetFullName( string *pResult, const string &szPath );
+SYSTEM_EXPORT string GetFullName( const string &szPath );
+SYSTEM_EXPORT void GetFullName( string *pResult, const string &szPath );
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 string GetTempPath();
 string GetTempFileName();

@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 
+#include "../MemoryLib/MemoryLib_export.h"
+
 #include "../ui/ui.h"
 #include "../misc/strproc.h"
 #include "../stats_b2_m1/rpgstatsautomagic.h"
@@ -105,7 +107,7 @@ static void SetRawWarfog( BYTE value )
 	Scene()->SetWarFog( warFog, 1.0f );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void DumpMemoryStats();
+MEMORYLIB_EXPORT void DumpMemoryStats();
 static void MsgDumpMemoryStats( const SGameMessage &msg )
 {
 	DumpMemoryStats();

@@ -2,6 +2,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // automatically generated file, don't change manually!
 
+#include "Stats_B2_M1_export.h"
+
 #include "../b2_m1_terrain/dbterrain.h"
 #include "dbconstructorprofile.h"
 #include "dbreinforcements.h"
@@ -64,7 +66,7 @@ namespace NDb
 	struct SMissionBonus;
 	struct SDifficultyLevel;
 
-	struct SCameraPlacement
+	struct STATS_B2_M1_EXPORT SCameraPlacement
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -91,7 +93,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SScriptCameraPlacement
+	struct STATS_B2_M1_EXPORT SScriptCameraPlacement
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -200,7 +202,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SScriptMovies
+	struct STATS_B2_M1_EXPORT SScriptMovies
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -286,7 +288,7 @@ namespace NDb
 		DWORD CalcCheckSum() const { return 0; }
 	};
 
-	struct SMapObjectInfo
+	struct STATS_B2_M1_EXPORT SMapObjectInfo
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -365,7 +367,7 @@ namespace NDb
 		EAT_CIRCLE = 1,
 	};
 
-	struct SScriptArea
+	struct STATS_B2_M1_EXPORT SScriptArea
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -391,7 +393,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SAIStartCommand
+	struct STATS_B2_M1_EXPORT SAIStartCommand
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -421,7 +423,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SBattlePosition
+	struct STATS_B2_M1_EXPORT SBattlePosition
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -513,7 +515,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SAIGeneralParcel
+	struct STATS_B2_M1_EXPORT SAIGeneralParcel
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -604,7 +606,7 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 
-	struct SPlayerBonusData
+	struct STATS_B2_M1_EXPORT SPlayerBonusData
 	{
 	private:
 		mutable DWORD __dwCheckSum;
@@ -995,8 +997,8 @@ namespace NDb
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NDb
 {
-	string EnumToString( NDb::EMPGameType eValue );
-	EMPGameType StringToEnum_NDb_EMPGameType( const string &szValue );
+	STATS_B2_M1_EXPORT string EnumToString( NDb::EMPGameType eValue );
+	STATS_B2_M1_EXPORT EMPGameType StringToEnum_NDb_EMPGameType( const string &szValue );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <>

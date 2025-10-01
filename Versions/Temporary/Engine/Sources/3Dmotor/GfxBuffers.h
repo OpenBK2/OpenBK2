@@ -3,6 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+
+#include "3dmotor_export.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "GPixelFormat.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +256,7 @@ struct STexturePlaceInfo
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // could not be copied
-struct INew2DTexAllocCallback
+struct _3DMOTOR_EXPORT INew2DTexAllocCallback
 {
 	INew2DTexAllocCallback();
 	~INew2DTexAllocCallback();
@@ -266,7 +269,7 @@ class CTriList;
 class CTexture;
 class CCubeTexture;
 CTriList* MakeWrapper( CTriList *pSrc, int nTris );
-CTexture* MakeTexture( int nXSize, int nYSize, int nMipLevels, int nPixelID, ETextureUsage eUsage, EWrap bWrap );
+_3DMOTOR_EXPORT CTexture* MakeTexture( int nXSize, int nYSize, int nMipLevels, int nPixelID, ETextureUsage eUsage, EWrap bWrap );
 CCubeTexture* MakeCubeTexture( int nSize, int nMipLevels, int nPixelID, ETextureUsage eUsage );
 CTexture* GetTextureCache();
 CTexture* GetTransparentTextureCache();
@@ -284,7 +287,7 @@ bool IsDynamicGeometryThrashing();
 bool Is2DTextureThrashing();
 bool IsTransparentThrashing();
 bool CanStreamGeometry();
-bool Is16BitTextures();
+_3DMOTOR_EXPORT bool Is16BitTextures();
 void ReplaceTextureSurface( CTexture *pTex, int nLevel, IDirect3DSurface9 *pSurf );
 void FlushQueue();
 ////////////////////////////////////////////////////////////////////////////////////////////////////

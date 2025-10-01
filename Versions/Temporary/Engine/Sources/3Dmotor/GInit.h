@@ -1,10 +1,12 @@
 #pragma once
 
+#include "3Dmotor_export.h"
+
 namespace NGScene
 {
 struct SUserRTInfo;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SetModeFromConfig( bool bReinit, const SUserRTInfo &rtInfo );
+_3DMOTOR_EXPORT bool SetModeFromConfig( bool bReinit, const SUserRTInfo &rtInfo );
 //bool CanRenderShadows();
 //bool CanCacheLighting();
 //bool CanCalcAmbient();
