@@ -38,10 +38,8 @@ namespace NMain
 {
 	MAIN_EXPORT bool Initialize();
 }
-void HookUISpecificB2();
 void ReferenceCheatForReleaseLinkerUISpecificB2()
 {
-	HookUISpecificB2();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace NGameX
