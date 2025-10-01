@@ -244,7 +244,7 @@ const char *ConvertWeightsFromGrannyEx(
 
 	if ( GrannyMeshIsRigid( pMesh ) )
 	{
-		char *pszBoneName = pMesh->BoneBindings[0].BoneName;
+		const char *pszBoneName = pMesh->BoneBindings[0].BoneName;
 		int nBone;
 		if ( GrannyFindBoneByName( pSkeleton, pszBoneName, &nBone ) )
 		{
