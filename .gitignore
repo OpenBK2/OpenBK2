@@ -1,3 +1,14 @@
+*.obj
+*.tlog
+*.pdb
+*.idb
+*.ilk
+*.lib
+*.exp
+*.pch
+*.dll
+*.recipe
+
 # macOS system files
 .DS_Store
 .DS_Store?
@@ -55,3 +66,12 @@ CVS/
 Icon?
 .directory
 .localized
+
+# Visual Studio
+*.vcxproj.user
+.vs
+BetaRelease
+out/build
+
+# CMake
+*_export.h
