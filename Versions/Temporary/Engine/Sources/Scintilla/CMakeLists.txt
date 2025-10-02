@@ -1,0 +1,68 @@
+project(Scintilla)
+set(SOURCES
+    AutoComplete.cxx
+    CallTip.cxx
+    CellBuffer.cxx
+    ContractionState.cxx
+    Document.cxx
+    DocumentAccessor.cxx
+    Editor.cxx
+    ExternalLexer.cxx
+    Indicator.cxx
+    KeyMap.cxx
+    KeyWords.cxx
+    LexAda.cxx
+    LexAsm.cxx
+    LexAVE.cxx
+    LexBaan.cxx
+    LexBullant.cxx
+    LexCLW.cxx
+    LexConf.cxx
+    LexCPP.cxx
+    LexCrontab.cxx
+    LexCSS.cxx
+    LexEiffel.cxx
+    LexErlang.cxx
+    LexEScript.cxx
+    LexForth.cxx
+    LexFortran.cxx
+    LexHTML.cxx
+    LexLisp.cxx
+    LexLout.cxx
+    LexLua.cxx
+    LexMatlab.cxx
+    LexMetapost.cxx
+    LexMMIXAL.cxx
+    LexMPT.cxx
+    LexNsis.cxx
+    LexOthers.cxx
+    LexPascal.cxx
+    LexPB.cxx
+    LexPerl.cxx
+    LexPOV.cxx
+    LexPS.cxx
+    LexPython.cxx
+    LexRuby.cxx
+    LexScriptol.cxx
+    LexSQL.cxx
+    LexTeX.cxx
+    LexVB.cxx
+    LexYAML.cxx
+    LineMarker.cxx
+    PlatWin.cxx
+    PropSet.cxx
+    RESearch.cxx
+    ScintillaBase.cxx
+    ScintillaWin.cxx
+    Style.cxx
+    StyleContext.cxx
+    UniConversion.cxx
+    ViewStyle.cxx
+    WindowAccessor.cxx
+    XPM.cxx
+)
+include(GenerateExportHeader)
+add_library(Scintilla SHARED ${SOURCES})
+generate_export_header(Scintilla EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/Scintilla_export.h)
+target_link_libraries(Scintilla PRIVATE MemoryLib Imm32)
+install(TARGETS Scintilla DESTINATION bin)

@@ -1,0 +1,54 @@
+project(System)
+set(SOURCES
+    Basic.cpp
+    BasicShare.cpp
+    BinaryResources.cpp
+    BinChunkSaver.cpp
+    BitStreams.cpp
+    CheckSumLog.cpp
+    ChunklessSaver.cpp
+    CmdLine.cpp
+    CombinerVFS.cpp
+    Commands.cpp
+    ConsoleBufferInternal.cpp
+    Cruncher.cpp
+    Dg.cpp
+    FastMath.cpp
+    FilePath.cpp
+    FileReaders.cpp
+    FileUtils.cpp
+    Formatting.cpp
+    FreeIDs.cpp
+    GameDB.cpp
+    GlobalVars.cpp
+    GResource.cpp
+    LightXML.cpp
+    LightXMLUtils.cpp
+    Logger.cpp
+    LogStream.cpp
+    ObjectFactory.cpp
+    Profiler.cpp
+    RandomGenInternal.cpp
+    Serialize.cpp
+    Singleton.cpp
+    SplashScreen.cpp
+    StdAfx.cpp
+    Streams.cpp
+    Text.cpp
+    Time.cpp
+    VFS.cpp
+    VFSOperations.cpp
+    WinCursor.cpp
+    WinFrame.cpp
+    WinVFS.cpp
+    XMLChunkSaver.cpp
+    XMLReader.cpp
+    XMLSAXPArser.cpp
+    XmlUtils.cpp
+    ZipArchieve.cpp
+)
+include(GenerateExportHeader)
+add_library(System SHARED ${SOURCES})
+generate_export_header(System EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/System_export.h)
+target_link_libraries(System PRIVATE MemoryLib Misc zlib)
+install(TARGETS System DESTINATION bin)

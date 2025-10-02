@@ -1,0 +1,60 @@
+project(MapEditorLib)
+set(SOURCES
+    BaseTreeControl.cpp
+    BasicDataExtractor.cpp
+    BuildDataBuilder.cpp
+    BuilderBase.cpp
+    BuilderFactory.cpp
+    ChildFrameFactory.cpp
+    CommonEditorMethods.cpp
+    CommonExporterMethods.cpp
+    ConfigFile.cpp
+    ControlAlgorithms.cpp
+    DefaultBuilder.cpp
+    DefaultBuilderBase.cpp
+    DefaultController.cpp
+    DefaultExporter.cpp
+    DefaultInputState.cpp
+    DefaultShortcutBar.cpp
+    DefaultTabWindow.cpp
+    DefaultView.cpp
+    DefaultWindow.cpp
+    EditorBase.cpp
+    EditorFactory.cpp
+    ExporterBase.cpp
+    ExporterFactory.cpp
+    FolderController.cpp
+    InteractiveMaya.cpp
+    InteractiveProcess.cpp
+    Logger.cpp
+    ManipulatorManager.cpp
+    MapEditorModule.cpp
+    MaskManipulator.cpp
+    MultiInputState.cpp
+    MultiManipulator.cpp
+    ObjectBaseController.cpp
+    ObjectController.cpp
+    ObjectFilter.cpp
+    PCIEMnemonics.cpp
+    Progress.cpp
+    ResizeDialog.cpp
+    ScintillaEditor.cpp
+    stdafx.cpp
+    StoreInputState.cpp
+    StringManager.cpp
+    Tools_FreeIDCollector.cpp
+    Tools_Geometry.cpp
+    Tools_Gradient.cpp
+    Tools_Image.cpp
+    Tools_IndexCollector.cpp
+    Tools_MainFolder.cpp
+    Tools_Registry.cpp
+    Tools_Resources.cpp
+    Tools_SysCodes.cpp
+    Tools_UniqueList.cpp
+)
+include(GenerateExportHeader)
+add_library(MapEditorLib SHARED ${SOURCES})
+generate_export_header(MapEditorLib EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/MapEditorLib_export.h)
+target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System)
+install(TARGETS MapEditorLib DESTINATION bin)
