@@ -21,7 +21,7 @@ if(MSVC)
 endif()
 
 set(ZLIB_COMPAT ON)
-add_subdirectory(third_party/zlib-ng)
+include(cmake/zlib-ng.cmake)
 
 set(SDLMIXER_VENDORED OFF)
 add_subdirectory(third_party/SDL)
