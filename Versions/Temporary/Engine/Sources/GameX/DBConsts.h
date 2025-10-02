@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "../sceneb2/dbsceneconsts.h"
+#include "sceneb2/dbsceneconsts.h"
 
 struct IXmlSaver;
 

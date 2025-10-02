@@ -1,7 +1,7 @@
 #pragma once
 #include "MPManager.h"
 #include "DBMPConsts.h"
-#include "../Server_Client_Common/LadderStatistics.h"
+#include "Server_Client_Common/LadderStatistics.h"
 
 class CMPManagerModeNivalNet : public CMPManagerMode
 {

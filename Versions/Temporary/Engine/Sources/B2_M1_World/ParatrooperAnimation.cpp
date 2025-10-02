@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "ParatrooperAnimation.h"
 #include "MOUnitInfantry.h"
-#include "../3Dmotor/GAnimation.hpp"
-#include "../Stats_B2_M1/DBAnimB2.h"
+#include "3Dmotor/GAnimation.hpp"
+#include "Stats_B2_M1/DBAnimB2.h"
 
 bool CParatrooperAnimationProcess::Update( const NTimer::STime &time )
 {

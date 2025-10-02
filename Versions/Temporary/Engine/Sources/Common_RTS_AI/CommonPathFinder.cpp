@@ -4,10 +4,10 @@
 #include "ImportedStruct.h"
 #include "PointChecking.h"
 #include "StaticPathInternal.h"
-#include "../Common_RTS_AI/Terrain.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Misc/Bresenham.h"
-#include "../System/Commands.h"
+#include "Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Misc/Bresenham.h"
+#include "System/Commands.h"
 
 static const int LONG_PATH_LENGTH = 2000;
 static const int STEP_LENGTH_THERE = 30;

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "GMesh.h"
-#include "../3Dlib/Bound.h"
+#include "3Dlib/Bound.h"
 
 
 namespace NGScene

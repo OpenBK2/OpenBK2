@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UpdatableProcess.h"
-#include "../Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 
 class CDeadHouseAnimations : public IClientUpdatableProcess
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Stats_B2_M1/CameraRunTypes.h"
-#include "../SceneB2/CameraInternal.h"
+#include "Stats_B2_M1/CameraRunTypes.h"
+#include "SceneB2/CameraInternal.h"
 
 //
 //

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_Exporter.h"
 
 class CClientGameConstsExporter : public IExporter
 {

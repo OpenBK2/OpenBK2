@@ -1,15 +1,15 @@
 #include "StdAfx.h"
 
-#include "../misc/strproc.h"
-#include "../misc/2darray.h"
-#include "../libdb/ResourceManager.h"
+#include "misc/strproc.h"
+#include "misc/2darray.h"
+#include "libdb/ResourceManager.h"
 #include "BridgeRPGStatsExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
-#include "../System/FilePath.h"
-#include "../System/FileUtils.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
 
 #include <zconf.h>
 

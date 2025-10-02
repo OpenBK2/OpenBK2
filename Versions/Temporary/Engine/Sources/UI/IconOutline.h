@@ -1,6 +1,6 @@
 #pragma once
-#include "../3DMotor/GfxBuffers.h"
-#include "../System/DG.h"
+#include "3DMotor/GfxBuffers.h"
+#include "System/DG.h"
 
 struct IML;
 namespace NGScene

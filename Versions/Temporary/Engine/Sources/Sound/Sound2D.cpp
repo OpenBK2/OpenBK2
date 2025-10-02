@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "./sound2d.h"
 #include "DBSoundDesc.h"
-#include "../System/BasicShare.h"
-#include "../System/Commands.h"
+#include "System/BasicShare.h"
+#include "System/Commands.h"
 
 CBasicShare<CDBID, CSoundSample> shareSoundSample(120, false);
 

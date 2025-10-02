@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
 struct ITransceiver;
 class CCommandsSender : public CObjectBase

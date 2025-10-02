@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "../b2_m1_terrain/dbterrain.h"
+#include "b2_m1_terrain/dbterrain.h"
 #include "terraingfxinfo.h"
 #include "Terrain.h"
-#include "../3Dmotor/GView.h"
-#include "../System/Commands.h"
+#include "3Dmotor/GView.h"
+#include "System/Commands.h"
 
 static bool bDisableRivers = false;
 

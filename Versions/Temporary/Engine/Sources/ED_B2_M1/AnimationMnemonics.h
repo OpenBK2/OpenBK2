@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../MapEditorLib/Tools_MnemonicsCollector.h"
-#include "../Stats_B2_M1/AnimationType.h"
+#include "MapEditorLib/Tools_MnemonicsCollector.h"
+#include "Stats_B2_M1/AnimationType.h"
 
 class CMayaAnimationMnemonics : public CMnemonicsCollector<int>
 {

@@ -2,7 +2,7 @@
 
 #include "BinaryResources.h"
 #include "VFSOperations.h"
-#include "../misc/strproc.h"
+#include "misc/strproc.h"
 
 namespace NBinResources
 {

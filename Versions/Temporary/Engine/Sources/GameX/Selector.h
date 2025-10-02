@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../B2_M1_World/MapObj.h"
+#include "B2_M1_World/MapObj.h"
 #include "Selector.h"
 
 typedef	list< CPtr<CMOSelectable> > CMapObjectsList;

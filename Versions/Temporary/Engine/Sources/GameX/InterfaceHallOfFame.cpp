@@ -3,9 +3,9 @@
 #include "InterfaceStateInternal.h"
 #include "InterfaceHallOfFame.h"
 #include "GameXClassIDs.h"
-#include "../UI/SceneClassIDs.h"
+#include "UI/SceneClassIDs.h"
 #include "DBGameRoot.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 
 // CHallOfFame

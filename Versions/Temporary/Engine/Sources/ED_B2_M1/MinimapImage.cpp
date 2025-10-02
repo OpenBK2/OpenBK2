@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
-#include "../misc/2darray.h"
-#include "../3dmotor/dbscene.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../Misc/GeomMisc.h"
-#include "../Image/Targa.h"
-#include "../Image/ImageTGA.h"
-#include "../Image/ImageEffect.h"
-#include "../MapEditorLib/Interface_UserData.h"
+#include "misc/2darray.h"
+#include "3dmotor/dbscene.h"
+#include "stats_b2_m1/iconsset.h"
+#include "Misc/GeomMisc.h"
+#include "Image/Targa.h"
+#include "Image/ImageTGA.h"
+#include "Image/ImageEffect.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "MinimapImage.h"
 #include "VSOManager.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 #include <zconf.h>
 

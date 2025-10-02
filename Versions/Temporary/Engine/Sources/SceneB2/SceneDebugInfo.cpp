@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-#include "../DebugTools/DebugInfoManagerInternal.h"
-#include "../Misc/HashFuncs.h"
+#include "DebugTools/DebugInfoManagerInternal.h"
+#include "Misc/HashFuncs.h"
 #include "SceneInternal.h"
 #include "DBSceneConsts.h"
 

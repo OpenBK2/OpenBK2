@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "ED_B2_M1Dll.h"
-#include "../MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoViewFilterDlg.h"
 
 //

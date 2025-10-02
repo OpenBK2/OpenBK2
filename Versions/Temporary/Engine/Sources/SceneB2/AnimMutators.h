@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../3DMotor/GAnimation.hpp"
+#include "3DMotor/GAnimation.hpp"
 
 using namespace NAnimation;
 

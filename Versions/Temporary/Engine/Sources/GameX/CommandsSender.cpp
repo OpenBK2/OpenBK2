@@ -2,9 +2,9 @@
 
 #include "CommandsSender.h"
 #include "AILogicCommandInternal.h"
-#include "../AILogic/B2AI.h"
+#include "AILogic/B2AI.h"
 #include "Transceiver.h"
-#include "../Main/MainLoop.h"
+#include "Main/MainLoop.h"
 #include "ScenarioTracker.h"
 
 #ifndef _FINALRELEASE

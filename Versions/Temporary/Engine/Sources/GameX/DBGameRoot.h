@@ -2,11 +2,11 @@
 
 // automatically generated file, don't change manually!
 
-#include "../stats_b2_m1/rpgstats.h"
-#include "../stats_b2_m1/uientries.h"
+#include "stats_b2_m1/rpgstats.h"
+#include "stats_b2_m1/uientries.h"
 #include "dbscenario.h"
-#include "../ui/dbuserinterface.h"
-#include "../system/filepath.h"
+#include "ui/dbuserinterface.h"
+#include "system/filepath.h"
 
 struct IXmlSaver;
 

@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "../3Dmotor/G2DView.h"
-#include "../UI/UIVisitor.h"
-#include "../UI/UIML.h"
-#include "../UI/UI.h"
+#include "3Dmotor/G2DView.h"
+#include "UI/UIVisitor.h"
+#include "UI/UIML.h"
+#include "UI/UI.h"
 
 class CUIVisitor : public IUIVisitor
 {

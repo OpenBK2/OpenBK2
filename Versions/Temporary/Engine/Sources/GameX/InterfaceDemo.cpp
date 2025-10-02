@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "InterfaceDemo.h"
 #include "GameXClassIDs.h"
-#include "../System/VFSOperations.h"
-#include "../System/XmlSaver.h"
-#include "../Image/Targa.h"
-#include "../UI/BackgroundMutableTexture.h"
+#include "System/VFSOperations.h"
+#include "System/XmlSaver.h"
+#include "Image/Targa.h"
+#include "UI/BackgroundMutableTexture.h"
 
 const char* DEMO_START_SEQUENCE_FILE_NAME = "Demo\\start_frames.xml";
 const char* DEMO_FINAL_SEQUENCE_FILE_NAME = "Demo\\final_frames.xml";

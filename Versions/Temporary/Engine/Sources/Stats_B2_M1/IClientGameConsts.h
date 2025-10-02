@@ -1,5 +1,5 @@
 #pragma once
-#include "../Stats_B2_M1/DBClientConsts.h"
+#include "Stats_B2_M1/DBClientConsts.h"
 
 struct IClientGameConsts :  public CObjectBase
 {

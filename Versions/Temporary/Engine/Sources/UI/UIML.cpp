@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "../3dMotor/RectLayout.h"
-#include "../3dMotor/G2DView.h"
-#include "../3dMotor/DBScene.h"
-#include "../3DMotor/Locale.h"
+#include "3dMotor/RectLayout.h"
+#include "3dMotor/G2DView.h"
+#include "3dMotor/DBScene.h"
+#include "3DMotor/Locale.h"
 
 #include "UIML.h"
 #include "UIMLHandlers.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 static const int N_TAB_SIZE = 4;
 static string s_DefaultFontName = "System";

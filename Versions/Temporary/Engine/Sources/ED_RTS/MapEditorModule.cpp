@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/MapEditorModule.h"
+#include "MapEditorLib/MapEditorModule.h"
 
 class CEditorModuleRegistrator : public IEditorModuleRegistrator
 {

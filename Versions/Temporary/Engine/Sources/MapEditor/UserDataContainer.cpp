@@ -2,9 +2,9 @@
 #include "ResourceDefines.h"
 
 #include "UserDataContainer.h"
-#include "../Main/MainLoop.h"
-#include "../System/FilePath.h"
-#include "../Misc/StrProc.h"
+#include "Main/MainLoop.h"
+#include "System/FilePath.h"
+#include "Misc/StrProc.h"
 
 #define START_FOLDER_TOKEN "%START%\\"
 

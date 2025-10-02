@@ -4,7 +4,7 @@
 #include "UnitsIterators2.h"
 #include "AIUnit.h"
 #include "UnitStates.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 
 BASIC_REGISTER_CLASS(CLongObjectCreation);
 

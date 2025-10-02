@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../vendor/Granny/include/granny.h"
-#include "../Misc/2DArray.h"
+#include "vendor/Granny/include/granny.h"
+#include "Misc/2DArray.h"
 
 void GetVertices( granny_mesh *pMesh, vector<CVec3> *pRes, CVec3 *vMin, CVec3 *vMax );
 void GetTriangles( granny_mesh *pMesh, vector<STriangle> *pRes );

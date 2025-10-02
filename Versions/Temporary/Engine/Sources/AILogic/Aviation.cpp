@@ -17,7 +17,7 @@
 #include "AAFeedBacks.h"
 #include "AIGeometry.h"
 #include "UnitsIterators2.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 
 REGISTER_SAVELOAD_CLASS( 0x1108D443, CAviation );

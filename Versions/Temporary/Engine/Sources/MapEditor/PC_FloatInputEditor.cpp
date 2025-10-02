@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
 #include "pc_constants.h"
 
 #include "PC_FloatInputEditor.h"
-#include "../Misc/StrProc.h"
-#include "../MapEditorLib/StringManager.h"
+#include "Misc/StrProc.h"
+#include "MapEditorLib/StringManager.h"
 
 CPCFloatInputEditor::CPCFloatInputEditor() : fDefaultValue( 0.0f ), nPrecision( PCSV_DEFAULT_RECISION ), bCreateControls( true )
 {	

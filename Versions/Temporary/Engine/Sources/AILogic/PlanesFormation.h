@@ -4,7 +4,7 @@
 #include "IPlane.h"
 #include "PlanePreferences.h"
 
-#include "../Common_RTS_AI/BasePathUnit.h"
+#include "Common_RTS_AI/BasePathUnit.h"
 
 class CPlaneManuverHistory
 {

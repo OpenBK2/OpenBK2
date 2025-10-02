@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../ED_Common/RunModeInterfaceBase.h"
+#include "ED_Common/RunModeInterfaceBase.h"
 struct IWindow;
 
 class CUIRunModeInterface : public CRunModeInterfaceBase

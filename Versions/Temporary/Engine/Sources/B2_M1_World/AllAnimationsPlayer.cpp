@@ -2,7 +2,7 @@
 
 #include "AllAnimationsPlayer.h"
 #include "MapObj.h"
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 
 CAllAnimationsPlayer::CAllAnimationsPlayer( const hash_map<int, CObj<CMapObj> > &_objects )
 : objects( _objects ), bSwitchToNextAnimation( true )

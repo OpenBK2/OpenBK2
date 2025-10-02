@@ -3,7 +3,7 @@
 #include "3Dmotor_export.h"
 
 
-#include "../System/DG.h"
+#include "System/DG.h"
 #include "GPixelFormat.h"
 #include "GRenderModes.h"
 

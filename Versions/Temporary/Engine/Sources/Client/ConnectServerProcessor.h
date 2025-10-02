@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/PacketProcessor.h"
+#include "Server_Client_Common/PacketProcessor.h"
 
 class CConnectServerProcessor : public CPacketProcessor
 {

@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 #include "InterfaceMainMenu.h"
 #include "GameXClassIDs.h"
-#include "../Misc/STrProc.h"
-#include "../SceneB2/Cursor.h"
+#include "Misc/STrProc.h"
+#include "SceneB2/Cursor.h"
 #include "InterfaceState.h"
 #include "InterfaceMisc.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Sound/MusicSystem.h"
+#include "Sound/MusicSystem.h"
 #include "SaveLoadHelper.h"
-#include "../Main/Profiles.h"
-#include "../Main/MODs.h"
+#include "Main/Profiles.h"
+#include "Main/MODs.h"
 
 static bool bVisited = false;
 

@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "ObjectRPGStatsBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/BuilderFactory.h"
 
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 REGISTER_BUILDER_IN_DLL( ObjectRPGStats, CObjectRPGStatsBuilder )
 

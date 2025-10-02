@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StaticPath.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 class CAIMap;
 

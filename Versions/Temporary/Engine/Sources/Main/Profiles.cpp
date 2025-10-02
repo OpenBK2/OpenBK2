@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 #include "Profiles.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "MainLoop.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
 #include <objbase.h>
-#include "../Input/Bind.h"
+#include "Input/Bind.h"
 
 namespace NProfile
 {

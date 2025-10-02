@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/IClientGameConsts.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
 
 
 class CClientGameConsts: public IClientGameConsts

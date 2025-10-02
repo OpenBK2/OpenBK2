@@ -11,10 +11,10 @@
 #include "uiinternal.h"
 #include "window.h"
 #include "WindowTooltip.h"
-#include "../Misc/PlaneGeometry.h"
-#include "../System/Commands.h"
-#include "../System/Text.h"
-#include "../3DMotor/DBScene.h"
+#include "Misc/PlaneGeometry.h"
+#include "System/Commands.h"
+#include "System/Text.h"
+#include "3DMotor/DBScene.h"
 
 
 int CHECK_DUPLICATE_CHILDREN;

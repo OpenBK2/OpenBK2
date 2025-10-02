@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../MapEditorLib/EditorBase.h"
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/EditorBase.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/DefaultShortcutBar.h"
 #include "MarkerSet.h"
 #include "SquadState.h"
 

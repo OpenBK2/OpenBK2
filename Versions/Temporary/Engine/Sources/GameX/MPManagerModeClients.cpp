@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
 #include "MPManagerMode.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Client/ServerClientInterface.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Client/ServerClientInterface.h"
 #include "MultiplayerNetPackets.h"
 #include "MPTransceiver.h"
 #include "ScenarioTracker.h"

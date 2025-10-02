@@ -94,14 +94,14 @@
 
 */
 #include "StdAfx.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "AnimationMnemonics.h"
 #include "ExporterMethods.h"
 #include "MechUnitRPGStatsExporter.h"
-#include "../System/FastMath.h"
-#include "../ED_Common/TempAttributesTool.h"
+#include "System/FastMath.h"
+#include "ED_Common/TempAttributesTool.h"
 //DEBUG{
 //DEBUG}
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "AnimMutators.h"
-#include "../Main/GameTimer.h"
-#include "../vendor/Granny/include/granny.h"
+#include "Main/GameTimer.h"
+#include "vendor/Granny/include/granny.h"
 
 using namespace NAnimation;
 

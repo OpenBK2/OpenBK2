@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "Pinger.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Misc/Time64.h"
-#include "../Client/ServerClient.h"
-#include "../Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Misc/Time64.h"
+#include "Client/ServerClient.h"
+#include "Server_Client_Common/LoginPackets.h"
 
 const int MAX_ATTEMPTS = 3;
 

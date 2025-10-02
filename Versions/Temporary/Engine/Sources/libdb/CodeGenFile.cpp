@@ -3,10 +3,10 @@
 #include "CodeGenFile.h"
 #include "CodeGenNamespace.h"
 #include "StrStream.h"
-#include "../System/FilePath.h"
-#include "../Misc/StrProc.h"
-#include "../Parser/FileNode.h"
-#include "../System/XmlSaver.h"
+#include "System/FilePath.h"
+#include "Misc/StrProc.h"
+#include "Parser/FileNode.h"
+#include "System/XmlSaver.h"
 
 namespace NCodeGen
 {

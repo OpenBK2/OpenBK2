@@ -1,7 +1,7 @@
 // automatically generated file, don't change manually!
 
 #include "stdafx.h"
-#include "../libdb/ReportMetaInfo.h"
+#include "libdb/ReportMetaInfo.h"
 #include "testtype.h"
 
 namespace NDb

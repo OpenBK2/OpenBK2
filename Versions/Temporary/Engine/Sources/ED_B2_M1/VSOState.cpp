@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../MapEditorLib/CommonEditorMethods.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../SceneB2/Scene.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "SceneB2/Scene.h"
 #include "ResourceDefines.h"
 
 #include "EditorMethods.h"

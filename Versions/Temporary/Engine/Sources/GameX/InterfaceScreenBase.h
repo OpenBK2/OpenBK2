@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "../input/gamemessage.h"
-#include "../Main/MainLoop.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "input/gamemessage.h"
+#include "Main/MainLoop.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 namespace NGScene
 {

@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "HeightContainer.h"
-#include "../Misc/Bresenham.h"
-#include "../Image/Targa.h"
-#include "../B2_M1_Terrain/DBVSO.h"
+#include "Misc/Bresenham.h"
+#include "Image/Targa.h"
+#include "B2_M1_Terrain/DBVSO.h"
 
 int CHeightContainer::STACK_SIZE = sizeof( DWORD ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;

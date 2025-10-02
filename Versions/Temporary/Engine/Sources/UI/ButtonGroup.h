@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 class CWindowMSButton;
 struct IWindow;

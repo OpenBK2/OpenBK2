@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "MOFence.h"
-#include "../Common_RTS_AI/AIClasses.h"
+#include "Common_RTS_AI/AIClasses.h"
 
 bool CMOFence::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {

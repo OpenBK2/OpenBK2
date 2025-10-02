@@ -2,8 +2,8 @@
 #include "DBMusicSystem.h"
 #include "MusicSystem.hpp"
 #include "Track.h"
-#include "../System/VFSOperations.h"
-#include "../vendor/fmod/api/inc/fmod.h"
+#include "System/VFSOperations.h"
+#include "vendor/fmod/api/inc/fmod.h"
 
 namespace NMusicSystem
 {

@@ -4,7 +4,7 @@
 #include "AIUnit.h"
 #include "GroupLogic.h"
 
-#include "../Misc/Checker.h"
+#include "Misc/Checker.h"
 
 extern CGroupLogic theGroupLogic;
 

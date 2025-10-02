@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../System/Time.h"
-#include "../Misc/2Darray.h"
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "System/Time.h"
+#include "Misc/2Darray.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 
 namespace NGScene
 {

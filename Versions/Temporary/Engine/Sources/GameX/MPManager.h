@@ -1,10 +1,10 @@
 #pragma once
 
 //#include "../Server_Client_Common/PacketProcessor.h"
-#include "../Server_Client_Common/GameInfo.h"
+#include "Server_Client_Common/GameInfo.h"
 #include "MPInterfaceData.h"
-#include "../Net/NetDriver.h"
-#include "../Net/NetAddress.h"
+#include "Net/NetDriver.h"
+#include "Net/NetAddress.h"
 #include "MPManagerMode.h"
 
 

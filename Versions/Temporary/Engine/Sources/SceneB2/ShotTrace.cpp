@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../3dlib/ggeometry.h"
-#include "../System/Commands.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "3dlib/ggeometry.h"
+#include "System/Commands.h"
+#include "Stats_B2_M1/Vis2AI.h"
 #include "ShotTrace.h"
 
 namespace NShotTrace

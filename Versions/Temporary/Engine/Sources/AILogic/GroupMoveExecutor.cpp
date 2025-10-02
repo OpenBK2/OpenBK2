@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 #include "GroupMoveExecutor.h"
 #include "CommonStates.h"
 #include "ExecutorContainer.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Common_RTS_AI/HungarianMethod.h"
-#include "../Common_RTS_AI/CommonPathFinder.h"
-#include "../Common_RTS_AI/StaticPathInternal.h"
-#include "../System/Commands.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/HungarianMethod.h"
+#include "Common_RTS_AI/CommonPathFinder.h"
+#include "Common_RTS_AI/StaticPathInternal.h"
+#include "System/Commands.h"
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
 

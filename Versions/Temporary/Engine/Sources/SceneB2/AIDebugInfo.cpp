@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "../B2_M1_World/CommonB2M1AI.h"
-#include "../3Dlib/GGeometry.h"
-#include "../3Dmotor/DBScene.h"
+#include "B2_M1_World/CommonB2M1AI.h"
+#include "3Dlib/GGeometry.h"
+#include "3Dmotor/DBScene.h"
 #include "AIDebugInfo.h"
 
 const int MAX_TILES_IN_MARKER = 1024;

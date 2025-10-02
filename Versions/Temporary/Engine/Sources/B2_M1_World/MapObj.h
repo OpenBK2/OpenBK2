@@ -3,17 +3,17 @@
 #include "B2_M1_World_export.h"
 
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/actioncommand.h"
-#include "../stats_b2_m1/specialabilities.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/actioncommand.h"
+#include "stats_b2_m1/specialabilities.h"
+#include "stats_b2_m1/iconsset.h"
 #include "B2MapObj.h"
-#include "../Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/DBVisObj.h"
 #include "UpdatableProcess.h"
 
-#include "../SceneB2/Scene.h"
-#include "../Stats_B2_M1/AIUpdates.h"
-#include "../Misc/HashFuncs.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/AIUpdates.h"
+#include "Misc/HashFuncs.h"
 
 #include <zconf.h>
 

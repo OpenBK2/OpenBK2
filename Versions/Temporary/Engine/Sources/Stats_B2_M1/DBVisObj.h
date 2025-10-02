@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "../3dmotor/dbscene.h"
+#include "3dmotor/dbscene.h"
 #include "season.h"
 
 struct IXmlSaver;

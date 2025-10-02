@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "../3Dlib/Bound.h"
+#include "3Dlib/Bound.h"
 #include "aiObject.h"
 //#include "PrecalcSpheres.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/AITypes.h"
+#include "Stats_B2_M1/AITypes.h"
 
 // последняя party обязательно должна быть нейтральна ко всем
 class CDiplomacy

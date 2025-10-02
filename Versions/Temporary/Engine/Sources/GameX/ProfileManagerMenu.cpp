@@ -3,8 +3,8 @@
 #include "InterfaceMisc.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"
-#include "../Main/Profiles.h"
-#include "../Misc/StrProc.h"
+#include "Main/Profiles.h"
+#include "Misc/StrProc.h"
 
 // CInterfaceProfileManager
 

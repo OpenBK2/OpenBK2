@@ -2,7 +2,7 @@
 #include "./fencecreation.h"
 #include "StaticObjects.h"
 #include "Fence.h"
-#include "../Stats_B2_M1/AIUpdates.h"
+#include "Stats_B2_M1/AIUpdates.h"
 #include "UnitCreation.h"
 #include "UnitsIterators2.h"
 #include "AIUnit.h"

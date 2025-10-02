@@ -2,7 +2,7 @@
 
 #include "ErrorsAndMessages.h"
 #include "FileRead.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 void yyerror (char *s, ... );
 void yyerror_no_line( char *s, ... );

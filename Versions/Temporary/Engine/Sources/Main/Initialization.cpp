@@ -8,9 +8,9 @@
 #include <winbase.h>
 
 
-#include "../Main/MainLoop.h"
+#include "Main/MainLoop.h"
 
-#include "../UI/UI.h"
+#include "UI/UI.h"
 
 namespace NMain
 {

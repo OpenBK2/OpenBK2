@@ -3,7 +3,7 @@
 
 #include "DBMusicSystem.h"
 #include "MusicSystem.hpp"
-#include "../Misc/Win32Random.h"
+#include "Misc/Win32Random.h"
 #include "Track.h"
 #include "Pause.h"
 

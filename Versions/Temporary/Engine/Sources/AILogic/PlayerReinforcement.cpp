@@ -6,11 +6,11 @@
 #include "Diplomacy.h"
 #include "GroupLogic.h"
 #include "CommonUnit.h"
-#include "../Stats_B2_M1/ReinfUpdates.h"
-#include "../Common_RTS_AI/AIMap.h"
+#include "Stats_B2_M1/ReinfUpdates.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "DBAIConsts.h"
 #include "AILogicInternal.h"
-#include "../System/RandomGen.h"
+#include "System/RandomGen.h"
 
 extern NTimer::STime curTime;
 extern CEventUpdater updater;

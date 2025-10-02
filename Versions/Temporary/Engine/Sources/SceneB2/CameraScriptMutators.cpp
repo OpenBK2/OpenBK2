@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../3Dmotor/Interpolate.h"
-#include "../SceneB2/Scene.h"
+#include "3Dmotor/Interpolate.h"
+#include "SceneB2/Scene.h"
 #include "CameraScriptMutators.h"
 
 void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll, 

@@ -4,8 +4,8 @@
 
 #include "PlayList.h"
 #include "Track.h"
-#include "../System/Commands.h"
-#include "../System/VFSOperations.h"
+#include "System/Commands.h"
+#include "System/VFSOperations.h"
 
 float s_fMusicVolume;
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../misc/bresenham.h"
-#include "../system/time.h"
+#include "misc/bresenham.h"
+#include "system/time.h"
 #include <float.h>
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "TransportStates.h"
 #include "SoldierStates.h"
 #include "Technics.h"
@@ -23,8 +23,8 @@
 #include "Randomize.h"
 #include "ArtilleryBulletStorage.h"
 #include "PathFinder.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "FeedBackSystem.h"
 #include "UnitsIterators2.h"
 

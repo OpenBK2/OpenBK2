@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 #include "aiMap.h"
-#include "../System/BasicShare.h"
+#include "System/BasicShare.h"
 #include "aiTrace.h"
 #include "aiRender.h"
 #include "ocTree.h"
 #include "aiObjectLoader.h"
 #include "GBind.h"
 #include "dbscene.h"
-#include "../3Dlib/Transform.h"
+#include "3Dlib/Transform.h"
 #include "GMesh.h"
 #include "SuperCollider.h"
-#include "../3Dlib/Bound.h"
+#include "3Dlib/Bound.h"
 #include "RandomGen.h"
-#include "../3dlib/MemObject.h"
+#include "3dlib/MemObject.h"
 
 const int N_MIN_FLOOR = -3;
 

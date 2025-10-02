@@ -2,11 +2,11 @@
 
 #include "WorldClient.h"
 #include "GameXClassIDs.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
 #include "CommandsSender.h"
-#include "../AILogic/B2AI.h"
-#include "../Common_RTS_AI/AIClasses.h"
+#include "AILogic/B2AI.h"
+#include "Common_RTS_AI/AIClasses.h"
 
 // ************************************************************************************************************************ //
 // **

@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../3DMotor/Gfx.h"
-#include "../Image/Targa.h"
-#include "../System/VFSOperations.h"
+#include "3DMotor/Gfx.h"
+#include "Image/Targa.h"
+#include "System/VFSOperations.h"
 #include "WindController.h"
 #include "SceneInternal.h"
 #include "DBSceneConsts.h"

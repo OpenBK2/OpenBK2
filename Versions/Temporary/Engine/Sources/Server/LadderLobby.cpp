@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "LadderLobby.h"
 #include "clients.h"
-#include "../System/RandomGen.h"
-#include "../Misc/Time64.h"
+#include "System/RandomGen.h"
+#include "Misc/Time64.h"
 #include "Statistics.h"
-#include "../Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/GamePackets.h"
 //#define LADDER_TEST
 
 extern int MAX_NUMBER_OF_REINFORCEMENTS;

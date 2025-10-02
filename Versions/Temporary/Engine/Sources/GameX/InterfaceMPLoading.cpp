@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "InterfaceMPLoading.h"
 #include "GameXClassIDs.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "GameRoomData.h"
 #include "ScenarioTracker.h"
 

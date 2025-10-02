@@ -2,7 +2,7 @@
 
 #include "resource.h"
 #include "ImportFromGameDialog.h"
-#include "../MapEditorLib/StringManager.h"
+#include "MapEditorLib/StringManager.h"
 
 const int CImportFromGameDialog::vID[] = 
 {

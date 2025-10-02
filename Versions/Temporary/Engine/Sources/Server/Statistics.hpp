@@ -1,6 +1,6 @@
 #pragma once
 #include "Statistics.h"
-#include "../Misc/Time64.h"
+#include "Misc/Time64.h"
 
 
 class CStatisticsCollector : public IStatisticsCollector

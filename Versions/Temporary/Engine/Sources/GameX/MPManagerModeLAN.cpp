@@ -2,19 +2,19 @@
 
 #include "MPManagerModeLAN.hpp"
 
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "MPTransceiver.h"
-#include "../Server_Client_Common/ChatPackets.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Server_Client_Common/ChatPackets.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
-#include "../System/Text.h"
-#include "../System/Commands.h"
+#include "System/Text.h"
+#include "System/Commands.h"
 
-#include "../Misc/Time64.h"
+#include "Misc/Time64.h"
 #include "MPLANTest.h"
 
 #define SERVER_DEAD_TIMEOUT 5000

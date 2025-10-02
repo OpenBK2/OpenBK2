@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "BuildingRPGStatsBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/BuilderFactory.h"
 //
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 //
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/ObjectController.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/ObjectController.h"
 
 REGISTER_BUILDER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsBuilder )
 

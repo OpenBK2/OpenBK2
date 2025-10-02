@@ -2,7 +2,7 @@
 #include "GInit.h"
 #include "Gfx.h"
 #include "GfxRender.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "GRTShare.h"
 #include "GRTInfo.h"
 #include "GRenderModes.h"

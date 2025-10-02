@@ -1,6 +1,6 @@
 #pragma once
 #include "RectLayout.h"
-#include "../System/Time.hpp"
+#include "System/Time.hpp"
 #include "GSkeleton.h"
 
 namespace NGScene

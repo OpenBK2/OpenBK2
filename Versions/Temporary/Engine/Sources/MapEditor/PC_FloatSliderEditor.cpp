@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "pc_constants.h"
-#include "../Misc/StrProc.h"
-#include "../MapEditorLib/StringManager.h"
+#include "Misc/StrProc.h"
+#include "MapEditorLib/StringManager.h"
 #include "PC_FloatSliderEditor.h"
 
 CPCFloatSliderEditor::CPCFloatSliderEditor() : fStep( 1.0f ), nPrecision( 4 ), nPowerPrecision( 10000 )

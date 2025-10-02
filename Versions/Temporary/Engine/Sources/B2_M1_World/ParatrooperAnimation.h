@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UpdatableProcess.h"
-#include "../Stats_B2_M1/Season.h"
+#include "Stats_B2_M1/Season.h"
 
 class CMapObj;
 class CMOUnitInfantry;

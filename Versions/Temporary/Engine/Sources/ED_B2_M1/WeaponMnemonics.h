@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Tools_MnemonicsCollector.h"
+#include "MapEditorLib/Tools_MnemonicsCollector.h"
 
 class CMayaWeaponMnemonics : public CMnemonicsCollector<int>
 {

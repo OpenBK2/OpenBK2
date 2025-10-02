@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../Stats_B2_M1/Vis2AI.h"
-#include "../Misc/Win32Helper.h"
-#include "../System/Commands.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "Misc/Win32Helper.h"
+#include "System/Commands.h"
 
 #include "TerraAIObserver.h"
 

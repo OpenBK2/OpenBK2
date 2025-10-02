@@ -5,7 +5,7 @@
 #include "SoundCell.h"
 #include "SubstSound.h"
 #include "SoundManager.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "DBSoundDesc.h"
 
 

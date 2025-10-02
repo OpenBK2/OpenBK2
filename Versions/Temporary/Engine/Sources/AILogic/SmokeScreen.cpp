@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../misc/bresenham.h"
+#include "misc/bresenham.h"
 #include "SmokeScreen.h"
 #include "StaticObjectsIters.h"
-#include "../Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "GlobalWarFog.h"
 
 extern NTimer::STime curTime;

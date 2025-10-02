@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "../MapEditorLib/MapEditorModule.h"
+#include "MapEditorLib/MapEditorModule.h"
 
 class CEditorModuleRTS : public IEditorModule
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../3DMotor/GView.h"
-#include "../Stats_B2_M1/IconsSet.h"
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "3DMotor/GView.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 
 struct ICamera;
 class CCSBound;

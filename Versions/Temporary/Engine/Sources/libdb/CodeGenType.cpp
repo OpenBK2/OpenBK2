@@ -7,7 +7,7 @@
 #include "StrStream.h"
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
-#include "../Parser/LangNodesDefinitions.h"
+#include "Parser/LangNodesDefinitions.h"
 
 namespace NCodeGen
 {

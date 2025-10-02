@@ -22,9 +22,9 @@
 #include "Bridge.h"
 #include "General.h"
 #include "Statistics.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../Common_RTS_AI/PathFinder.h"
-#include "../Common_RTS_AI/StandartDirPath.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/StandartDirPath.h"
 #include "FeedBackSystem.h"
 #include "EntrenchmentCreation.h"
 

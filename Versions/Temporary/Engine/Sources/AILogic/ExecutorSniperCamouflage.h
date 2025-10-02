@@ -1,7 +1,7 @@
 #pragma once
 
 #include "executor.h"
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "Stats_B2_M1/AbilityActions.h"
 
 class CSoldier;
 class CAIUnit;

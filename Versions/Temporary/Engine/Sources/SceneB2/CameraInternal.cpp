@@ -2,14 +2,14 @@
 
 #include <float.h>
 #include "CameraInternal.h"
-#include "../Misc/StrProc.h"
-#include "../System/Commands.h"
+#include "Misc/StrProc.h"
+#include "System/Commands.h"
 #include "Cursor.h"
-#include "../3Dmotor/Gfx.h"
+#include "3Dmotor/Gfx.h"
 #include "CameraGameMouseMutator.h"
 #include "CameraMayaMouseMutator.h"
 #include "CameraScriptMutators.h"
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 #include "Scene.h"
 
 BASIC_REGISTER_CLASS( ICamera );

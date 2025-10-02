@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
 #include "LogSaver.h"
 #include "NetLogger.h"
 #include <time.h>

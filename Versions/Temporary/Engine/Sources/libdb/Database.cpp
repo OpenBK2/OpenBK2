@@ -8,9 +8,9 @@
 #include "ReportMetaInfo.h"
 #include "DBObserver.h"
 #include "Index.h"
-#include "../Misc/StrProc.h"
-#include "../System/VFS.h"
-#include "../System/FilePath.h"
+#include "Misc/StrProc.h"
+#include "System/VFS.h"
+#include "System/FilePath.h"
 
 BASIC_REGISTER_CLASS(NDb::IDbObserver);
 

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "../net/netaddress.h"
+#include "net/netaddress.h"
 #include "MultiplayerInternal.h"
 #include "NetMessages.h"
 #include "DBNetConsts.h"
 
-#include "../Net/NetDriver.h"
+#include "Net/NetDriver.h"
 #include "AICmdsAutoMagicInterface.h"
 
 #include <float.h>

@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 #include "MOProjectile.h"
 #include "MOUnitHelicopter.h"
 #include "MOUnitMechanical.h"
 
-#include "../Input/Bind.h"
-#include "../Main/GameTimer.h"
-#include "../Misc/Win32Random.h"
-#include "../SceneB2/AttachedObj.h"
-#include "../Stats_B2_M1/M1UnitSpecific.h"
-#include "../Stats_B2_M1/IClientGameConsts.h"
+#include "Input/Bind.h"
+#include "Main/GameTimer.h"
+#include "Misc/Win32Random.h"
+#include "SceneB2/AttachedObj.h"
+#include "Stats_B2_M1/M1UnitSpecific.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
 typedef hash_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;

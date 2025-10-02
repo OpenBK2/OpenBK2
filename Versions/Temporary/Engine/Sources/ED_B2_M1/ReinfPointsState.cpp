@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
 
 #include "ReinfPointsState.h"

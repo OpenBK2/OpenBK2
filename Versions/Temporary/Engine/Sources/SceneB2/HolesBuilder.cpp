@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-#include "../Misc/Win32Helper.h"
-#include "../System/Commands.h"
+#include "Misc/Win32Helper.h"
+#include "System/Commands.h"
 #include "GenTerrain.h"
 
 bool g_bDontUpdateRoads = false;

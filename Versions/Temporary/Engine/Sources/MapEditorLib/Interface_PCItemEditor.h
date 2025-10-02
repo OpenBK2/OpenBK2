@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 #include "Interface_Controller.h"
 
 // Вставить индекс нового типа в EPCIEType

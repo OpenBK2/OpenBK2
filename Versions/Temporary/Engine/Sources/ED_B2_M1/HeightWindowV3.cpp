@@ -1,19 +1,19 @@
 #include "stdafx.h"
 
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../sceneb2/scene.h"
-#include "../mapeditorlib/multimanipulator.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "sceneb2/scene.h"
+#include "mapeditorlib/multimanipulator.h"
 
 #include "HeightWindowV3.h"
 
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/Tools_HashSet.h"
-#include "../MapEditorLib/EditParameter.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../MapEditorLib/Interface_ObjectCollector.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/EditParameter.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_ObjectCollector.h"
 
 #include <zconf.h>
 

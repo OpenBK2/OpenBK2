@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "Clients.h"
 #include "LadderLobby.h"
-#include "../vendor/MySQL/include/mysql.h"
-#include "../Misc/StrProc.h"
+#include "vendor/MySQL/include/mysql.h"
+#include "Misc/StrProc.h"
 #include "Statistics.h"
 #include "HashMapConvertor.h"
 

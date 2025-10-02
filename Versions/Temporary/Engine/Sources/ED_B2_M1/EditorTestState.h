@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/DefaultInputState.h"
+#include "MapEditorLib/DefaultInputState.h"
 
 class CEditorTestEditor;
 class CEditorTestState : public CDefaultInputState

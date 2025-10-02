@@ -1,6 +1,6 @@
 #pragma once
-#include "../System/DG.h"
-#include "../3dlib/ExpFader.h"
+#include "System/DG.h"
+#include "3dlib/ExpFader.h"
 
 namespace NGfx
 {

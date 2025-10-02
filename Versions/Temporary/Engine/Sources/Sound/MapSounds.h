@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Misc/TypeConvertor.h"
-#include "../System/FreeIDs.h"
-#include "../Misc/2dArray.h"
+#include "Misc/TypeConvertor.h"
+#include "System/FreeIDs.h"
+#include "Misc/2dArray.h"
 #include "IntPair.h"
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 namespace NDb
 {

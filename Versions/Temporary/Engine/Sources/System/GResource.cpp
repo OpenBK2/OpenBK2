@@ -2,7 +2,7 @@
 #include "BinaryResources.h"
 #include "GResource.h"
 #include "VFSOperations.h"
-#include "../Misc/Win32Helper.h"
+#include "Misc/Win32Helper.h"
 
 namespace NGScene
 {

@@ -5,7 +5,7 @@
 #include "CodeGenNamespace.h"
 #include "CodeGenType.h"
 #include "StrStream.h"
-#include "../Parser/LangNodesDefinitions.h"
+#include "Parser/LangNodesDefinitions.h"
 
 namespace NCodeGen
 {

@@ -1,35 +1,35 @@
 #include "StdAfx.h"
 
-#include "../Stats_B2_M1/DBClientConsts.h"
-#include "../b2_m1_world/mapobj.h"
-#include "../misc/strproc.h"
+#include "Stats_B2_M1/DBClientConsts.h"
+#include "b2_m1_world/mapobj.h"
+#include "misc/strproc.h"
 #include "WorldClient.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
-#include "../SceneB2/Cursor.h"
-#include "../Sound/SoundScene.h"
-#include "../Stats_B2_M1/ActionsRemap.h"
-#include "../AILogic/AIDebugInfo.h"
-#include "../AILogic/B2AI.h"
-#include "../Misc/Win32Random.h"
-#include "../SceneB2/TerraGen.h"
-#include "../UISpecificB2/WindowMiniMap.h"
-#include "../B2_M1_World/MOEntrenchment.h"
-#include "../Stats_B2_M1/DBCameraConsts.h"
+#include "SceneB2/Cursor.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/ActionsRemap.h"
+#include "AILogic/AIDebugInfo.h"
+#include "AILogic/B2AI.h"
+#include "Misc/Win32Random.h"
+#include "SceneB2/TerraGen.h"
+#include "UISpecificB2/WindowMiniMap.h"
+#include "B2_M1_World/MOEntrenchment.h"
+#include "Stats_B2_M1/DBCameraConsts.h"
 #include "CommandsSender.h"
 #include "ScenarioTracker.h"
 #include "InterfaceState.h"
-#include "../System/BinaryResources.h"
+#include "System/BinaryResources.h"
 #include "GetConsts.h"
 #include "GameXClassIDs.h"
-#include "../AILogic/FeedbackSystem.h"
-#include "../B2_M1_World/MissionObjectiveStates.h"
-#include "../B2_M1_World/MOBridge.h"
+#include "AILogic/FeedbackSystem.h"
+#include "B2_M1_World/MissionObjectiveStates.h"
+#include "B2_M1_World/MOBridge.h"
 #include "Utils.h"
 
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "SuperWeapon.h"
-#include "../Stats_B2_M1/SuperWeaponUpdates.h"
+#include "Stats_B2_M1/SuperWeaponUpdates.h"
 
 const int CURSOR_FADE_HALF_SIZE_X = 150;
 const int CURSOR_FADE_HALF_SIZE_Y = 150;
@@ -1413,7 +1413,7 @@ CVec3 CWorldClient::ScreenToAI( const CVec2 &vScreen )
 // ************************************************************************************************************************ //
 
 #ifndef _FINALRELEASE
-#include "../B2_M1_World/MOUnit.h"
+#include "B2_M1_World/MOUnit.h"
 #endif
 
 void CWorldClient::DoMouseMove( const CVec2 &vPos )
@@ -2935,12 +2935,12 @@ REGISTER_SAVELOAD_CLASS( 0x10078340, CWorldClient );
 //
 
 
-#include "../DebugTools/DebugInfoManagerInternal.h"
-#include "../misc/strproc.h"
-#include "../Common_RTS_AI/AIClasses.h"
-#include "../Common_RTS_AI/Terrain.h"
-#include "../Common_RTS_AI/TerraAIObserver.h"
-#include "../System/Commands.h"
+#include "DebugTools/DebugInfoManagerInternal.h"
+#include "misc/strproc.h"
+#include "Common_RTS_AI/AIClasses.h"
+#include "Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/TerraAIObserver.h"
+#include "System/Commands.h"
 #ifndef _FINALRELEASE
 
 static void CommandDumpMaxes( const string &szID, const vector<wstring> &paramsSet, void *pContext )

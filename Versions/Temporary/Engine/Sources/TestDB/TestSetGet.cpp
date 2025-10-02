@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "TestType.h"
 #include "MeasureTimer.h"
-#include "../libdb/ObjMan.h"
+#include "libdb/ObjMan.h"
 
 namespace NTest
 {

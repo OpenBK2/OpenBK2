@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/AnimationFromAction.h"
+#include "Stats_B2_M1/AnimationFromAction.h"
 #include "Guns.h"
 #include "GunsInternal.h"
 #include "Shell.h"
@@ -16,13 +16,13 @@
 #include "Diplomacy.h"
 #include "Formation.h"
 #include "TimeCounter.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "AIGeometry.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "UnitCreation.h"
 #include "Building.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "GlobalWarFog.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4B5, CBaseGun );

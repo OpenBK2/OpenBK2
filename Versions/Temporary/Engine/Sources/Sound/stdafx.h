@@ -31,7 +31,7 @@
 #include <memory.h>
 #include <string.h>
 // 
-#include "../Misc/Asserts.h"
+#include "Misc/Asserts.h"
 //
 #pragma warning( disable: 4018 4355 4800 4244 4267 )
 #pragma warning( disable: 4127 4100 4201 4512 4389 )
@@ -39,37 +39,37 @@
 #pragma warning( disable: 4273)
 #endif
 
-#include "../Misc/nlist.h"
+#include "Misc/nlist.h"
 #pragma component( mintypeinfo, off )
-#include "../Misc/nstring.h"
-#include "../Misc/nvector.h"
+#include "Misc/nstring.h"
+#include "Misc/nvector.h"
 #pragma component( mintypeinfo, on )
-#include "../Misc/nhash_map.h"
-#include "../Misc/nhash_set.h"
-#include "../Misc/nset.h"
+#include "Misc/nhash_map.h"
+#include "Misc/nhash_set.h"
+#include "Misc/nset.h"
 #pragma component( mintypeinfo, off )
 //#pragma warning( disable : 4503 4018 4786 4800 4290 4146 4244 4284 4267 )
 
 using namespace nstl;
 
-#include "../Misc/nhelpdebug.h"
+#include "Misc/nhelpdebug.h"
 
 namespace NTimer
 {
 	typedef DWORD STime;
 };
 //
-#include "../System/System.h"
-#include "../Misc/Tools.h"
-#include "../System/Basic.h"
-#include "../Misc/Geom.h"
-#include "../System/Streams.h"
-#include "../System/BinSaver.h"
-#include "../System/GlobalVars.h"
-#include "../System/ConsoleBuffer.h"
-#include "../System/LogStream.h"
-#include "../System/DB.h"
-#include "../System/DG.h"
+#include "System/System.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "Misc/Geom.h"
+#include "System/Streams.h"
+#include "System/BinSaver.h"
+#include "System/GlobalVars.h"
+#include "System/ConsoleBuffer.h"
+#include "System/LogStream.h"
+#include "System/DB.h"
+#include "System/DG.h"
 // in the file 'Specific.h' one can define ow n project-specific includes
 #include "Specific.h"
 

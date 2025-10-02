@@ -6,7 +6,7 @@
 #include "m1actions.h"
 #include "rpgstats.h"
 #include "useractions.h"
-#include "../system/filepath.h"
+#include "system/filepath.h"
 
 struct IXmlSaver;
 

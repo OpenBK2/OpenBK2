@@ -1,5 +1,5 @@
 #pragma once
-#include "../Input/Bind.h"
+#include "Input/Bind.h"
 
 #include <cstdint>
 

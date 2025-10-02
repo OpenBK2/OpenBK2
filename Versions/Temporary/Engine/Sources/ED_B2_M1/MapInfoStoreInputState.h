@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/StoreInputState.h"
+#include "MapEditorLib/StoreInputState.h"
 
 class CMapInfoStoreInputState : public CStoreInputState
 {

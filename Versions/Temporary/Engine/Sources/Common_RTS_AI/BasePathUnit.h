@@ -3,7 +3,7 @@
 #include "Common_RTS_AI_export.h"
 
 
-#include "../Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/Terrain.h"
 
 #include "Path.h"
 #include "StaticPath.h"

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "LinkObject.h"
-#include "../Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 namespace NDb
 {

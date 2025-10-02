@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MOUnit.h"
-#include "../SceneB2/AnimMutators.h"
+#include "SceneB2/AnimMutators.h"
 #include "SmokeTrailEffect.h"
 
 namespace NAnimation

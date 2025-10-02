@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 
 #include "ClientAckManager.h"
-#include "../Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 #include "MOUnit.h"
-#include "../Stats_B2_M1/DBAttachedModelVisObj.h"
-#include "../3Dmotor/GAnimation.hpp"
-#include "../Input/Bind.h"
-#include "../Stats_B2_M1/ActionsRemap.h"
-#include "../Stats_B2_M1/AIAckTypes.h"
-#include "../Main/GameTimer.h"
-#include "../Stats_B2_M1/AbilityActions.h"
-#include "../SceneB2/AttachedObj.h"
+#include "Stats_B2_M1/DBAttachedModelVisObj.h"
+#include "3Dmotor/GAnimation.hpp"
+#include "Input/Bind.h"
+#include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/AIAckTypes.h"
+#include "Main/GameTimer.h"
+#include "Stats_B2_M1/AbilityActions.h"
+#include "SceneB2/AttachedObj.h"
 
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "MOUnitInfantry.h"
 
 static float s_fPointerOffset = 3.0f;

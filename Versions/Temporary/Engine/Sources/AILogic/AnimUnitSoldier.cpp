@@ -3,7 +3,7 @@
 #include "AnimUnitSoldier.h"
 #include "Soldier.h"
 #include "NewUpdater.h"
-#include "../Stats_B2_M1/AnimationType.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "Formation.h"
 #include "UnitStates.h"
 #include <float.h>

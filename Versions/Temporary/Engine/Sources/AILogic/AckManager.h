@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/AIAckTypes.h"
+#include "Stats_B2_M1/AIAckTypes.h"
 
 class CAIUnit;
 namespace NDb

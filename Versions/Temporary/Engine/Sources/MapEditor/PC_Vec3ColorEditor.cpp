@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 
-#include "../Image/ImageColor.h"
+#include "Image/ImageColor.h"
 #include "PC_Vec3ColorEditor.h"
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/ObjectBaseController.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ObjectBaseController.h"
 
 bool CPCVec3ColorEditor::GetColorValue( int *pnColor, IManipulator *pManipulator, const string &rszName )
 {

@@ -2,7 +2,7 @@
 
 #include "BuilderMethods.h"
 
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 bool CheckStringValue( string *pszDescription, const string &szValueName, IManipulator *pBuilderMan )
 {

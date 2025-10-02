@@ -2,8 +2,8 @@
 
 #include "SceneB2_export.h"
 
-#include "../system/time.h"
-#include "../Main/GameTimer.h"
+#include "system/time.h"
+#include "Main/GameTimer.h"
 
 //
 //		Creates waves of wind activity according to wind direction

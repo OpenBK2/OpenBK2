@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "../misc/strproc.h"
+#include "misc/strproc.h"
 #include <float.h>
-#include "../ED_Common/Tools_Granny.h"
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../MapEditorLib/Interface_MOD.h"
-#include "../Stats_B2_M1/Vis2AI.h"
-#include "../System/Randomgen.h"
-#include "../System/BinaryResources.h"
-#include "../3Dmotor/DBScene.h"
+#include "ED_Common/Tools_Granny.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "System/Randomgen.h"
+#include "System/BinaryResources.h"
+#include "3Dmotor/DBScene.h"
 #include "TraceModel.h"
 
 //

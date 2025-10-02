@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Camera.h"
-#include "../Input/GameMessage.h"
+#include "Input/GameMessage.h"
 
 namespace NCamera
 {

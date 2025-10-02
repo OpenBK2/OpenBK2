@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SymAccess.h"
-#include "../Misc/nhash_map.h"
-#include "../Misc/tools.h"
+#include "Misc/nhash_map.h"
+#include "Misc/tools.h"
 
 static bool bInternal = false;
 struct SAlloc

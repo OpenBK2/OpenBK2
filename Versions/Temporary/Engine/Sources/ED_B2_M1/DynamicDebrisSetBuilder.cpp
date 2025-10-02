@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "DynamicDebrisSetBuilder.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 
 //REGISTER_BUILDER_IN_DLL( DynamicDebrisSet, CDynamicDebrisSetBuilder )
 

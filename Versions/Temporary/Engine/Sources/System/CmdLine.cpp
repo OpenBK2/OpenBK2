@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CmdLine.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NCmdLine
 {

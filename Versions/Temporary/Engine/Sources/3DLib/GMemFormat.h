@@ -1,5 +1,5 @@
 #pragma once
-#include "../System/DG.h"
+#include "System/DG.h"
 
 namespace NGScene
 {

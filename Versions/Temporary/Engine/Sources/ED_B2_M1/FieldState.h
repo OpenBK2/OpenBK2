@@ -3,9 +3,9 @@
 #include "PolygonState.h"
 #include "DBField.h"
 #include "HeightPattern.h"
-#include "../MapEditorLib/WV_Types.h"
+#include "MapEditorLib/WV_Types.h"
 #include "MapInfoEditorData.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
 
 //Mapinfo terrain field state edit parameters

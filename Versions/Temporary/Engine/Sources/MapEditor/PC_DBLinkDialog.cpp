@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/resourcedefines.h"
 #include "tree_gdbbrowserbase_constants.h"
 
 #include "PC_DBLinkDialog.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "Tree_GDBLinkBrowser.h"
-#include "../MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/Tools_HashSet.h"
 
 const UINT	CPCDBLinkDialog::PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCDBLinkDialog::PC_DBL_TREE_COLUMN_FORMAT[PC_DBL_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };

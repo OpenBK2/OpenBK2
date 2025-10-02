@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_Common/ChildFrameBase.h"
+#include "ED_Common/ChildFrameBase.h"
 
 class CCFSceneB2 : public CChildFrameBase
 {

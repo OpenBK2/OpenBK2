@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "TypeDef.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 int CRAPTooSmartCompiler_DBTools_TypeDef()
 {

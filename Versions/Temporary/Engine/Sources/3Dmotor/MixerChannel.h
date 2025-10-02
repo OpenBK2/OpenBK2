@@ -1,7 +1,7 @@
 #pragma once
 
 //#include "../System/Time.hpp"
-#include "../System/DG.h"
+#include "System/DG.h"
 
 namespace NAnimation
 {

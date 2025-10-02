@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ManuverStateDesc.h"
-#include "../System/RandomGen.h"
+#include "System/RandomGen.h"
 namespace NDb
 {
 	struct SAIGameConsts;

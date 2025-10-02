@@ -3,8 +3,8 @@
 #include "PolygonState.h"
 #include "MapInfoEditor.h"
 #include "ScriptAreaWindow.h"
-#include "../MapEditorLib/Tools_IndexCollector.h"
-#include "../MapEditorLib/Tools_FreeIDCollector.h"
+#include "MapEditorLib/Tools_IndexCollector.h"
+#include "MapEditorLib/Tools_FreeIDCollector.h"
 
 //
 //

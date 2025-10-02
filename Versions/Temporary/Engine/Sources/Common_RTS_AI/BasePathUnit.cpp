@@ -8,8 +8,8 @@
 #include "StandartSmoothMechPath.h"
 #include "StaticPathInternal.h"
 
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../System/RandomGen.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "System/RandomGen.h"
 #include <float.h>
 
 const WORD TURN_TOLERANCE = 0;

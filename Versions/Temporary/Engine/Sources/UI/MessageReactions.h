@@ -4,7 +4,7 @@
 
 
 #pragma once
-#include "../Script/ScriptWrapper.h"
+#include "Script/ScriptWrapper.h"
 
 struct IMessageReactionB2;
 

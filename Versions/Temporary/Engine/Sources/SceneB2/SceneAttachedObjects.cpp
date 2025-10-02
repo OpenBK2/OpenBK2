@@ -2,7 +2,7 @@
 
 #include "AttachedObj.h"
 #include "SceneInternal.h"
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 
 IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const string &szBoneName )
 {

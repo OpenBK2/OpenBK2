@@ -1,6 +1,6 @@
 #pragma once
 #include "InterfaceMPBase.h"
-#include "../UI/Background.h"
+#include "UI/Background.h"
 
 namespace NMPSetData
 {

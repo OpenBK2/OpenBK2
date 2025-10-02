@@ -3,7 +3,7 @@
 #include "GLocale.h"
 #include "Locale.h"
 #include "GTexture.h"
-#include "../System/BasicShare.h"
+#include "System/BasicShare.h"
 #include "DBScene.h"
 #include "2DScene.h"
 #include "G2DView.h"

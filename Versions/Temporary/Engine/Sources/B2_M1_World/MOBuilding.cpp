@@ -3,14 +3,14 @@
 #include "DeadHouseAnimation.h"
 #include "DeadHouseAnimations.h"
 #include "MOBuilding.h"
-#include "../Stats_B2_M1/IClientGameConsts.h"
-#include "../Input/Bind.h"
-#include "../Misc/Win32Random.h"
-#include "../SceneB2/AttachedObj.h"
-#include "../SceneB2/WindController.h"
-#include "../Sound/SoundScene.h"
-#include "../AILogic/ScenarioTracker.h"
-#include "../System/Text.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
+#include "Input/Bind.h"
+#include "Misc/Win32Random.h"
+#include "SceneB2/AttachedObj.h"
+#include "SceneB2/WindController.h"
+#include "Sound/SoundScene.h"
+#include "AILogic/ScenarioTracker.h"
+#include "System/Text.h"
 
 namespace
 {

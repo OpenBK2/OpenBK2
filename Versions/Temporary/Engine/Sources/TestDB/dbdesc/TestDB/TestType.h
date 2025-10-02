@@ -1,4 +1,4 @@
-#include "../game.h"
+#include "game.h"
 [hExternal] #include "BinaryFlags.h"
 
 //

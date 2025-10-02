@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include <limits>
 #include "GText.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NGScene
 {

@@ -1,7 +1,7 @@
 
 #pragma once
 #include "resource.h"
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "ELK_Types.h"
 
 

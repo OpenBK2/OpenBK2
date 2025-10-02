@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/LadderStatistics.h"
+#include "Server_Client_Common/LadderStatistics.h"
 extern int NUMBER_OF_RACES_IN_LADDER;
 
 struct SLadderDBInfo : public CObjectBase

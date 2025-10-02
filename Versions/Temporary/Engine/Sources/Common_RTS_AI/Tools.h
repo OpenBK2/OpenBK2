@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Common_RTS_AI/AIMap.h"
-#include "../System/FastMath.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "System/FastMath.h"
 
 const int SPLINE_STEP = 6;
 const int SPLINE_N_OF_ITERATONS = 50;

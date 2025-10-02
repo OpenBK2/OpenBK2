@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "VSODataExtractor.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 bool CVSODataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {

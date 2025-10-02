@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../misc/2darray.h"
+#include "misc/2darray.h"
 #include "dbmpconsts.h"
 #include "ScenarioTracker.h"
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 #include <zconf.h>
 

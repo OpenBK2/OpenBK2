@@ -4,7 +4,7 @@
 #include "XMLChunkSaver.h"
 #include "XmlReader.h"
 #include "XmlUtils.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 typedef IXmlSaver::chunk_id chunk_id;
 static const int START_CHUNK_LEVELS = 50;

@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 #include "MechUnitJoggingMutator.h"
-#include "../Main/GameTimer.h"
-#include "../System/Commands.h"
+#include "Main/GameTimer.h"
+#include "System/Commands.h"
 
 static bool s_bJogTweakMode = false;
 static float s_fJogPeriod1 = FP_2PI;

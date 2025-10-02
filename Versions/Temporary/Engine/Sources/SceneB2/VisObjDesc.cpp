@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
-#include "../3dmotor/dbscene.h"
+#include "3dmotor/dbscene.h"
 #include "AttachedObj.h"
 #include "VisObjDesc.h"
-#include "../3DMotor/AIVisitor.h"
-#include "../3DMotor/GScene.h"
-#include "../3DLib/Transform.h"
-#include "../Main/GameTimer.h"
-#include "../System/Commands.h"
+#include "3DMotor/AIVisitor.h"
+#include "3DMotor/GScene.h"
+#include "3DLib/Transform.h"
+#include "Main/GameTimer.h"
+#include "System/Commands.h"
 #include "VisObjIconsManager.h"
 
 static bool s_bGeomAABB = false;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Stats_B2_M1/RPGStats.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "UISpecificB2/UISpecificB2.h"
 #include "UnitFullInfoHelper.h"
 
 struct SObjectStatus;

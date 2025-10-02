@@ -9,9 +9,9 @@
 #include "UI_export.h"
 
 #include "WindowMessageHandle.h"
-#include "../Misc/HashFuncs.h"
-#include "../Misc/Heap.h"
-#include "../ui/uifactory.h"
+#include "Misc/HashFuncs.h"
+#include "Misc/Heap.h"
+#include "ui/uifactory.h"
 
 class CForegroundTextString;
 class CWindow;

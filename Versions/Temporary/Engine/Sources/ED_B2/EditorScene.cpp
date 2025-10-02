@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "EditorScene.h"
-#include "../SceneB2/Scene.h"
+#include "SceneB2/Scene.h"
 
 void CEditorScene::RemoveAllScreens()
 {

@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
-#include "../system/time.h"
+#include "system/time.h"
 #include "TreeWindMutator.h"
 #include "WindController.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 #include "Scene.h"
 
 #define TIME_COEFF 1

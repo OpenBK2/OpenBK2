@@ -1,6 +1,6 @@
 #pragma once
-#include "../vendor/fmod/api/inc/fmod.h"
-#include "../System/GResource.h"
+#include "vendor/fmod/api/inc/fmod.h"
+#include "System/GResource.h"
 
 
 class CSoundSample : public CObjectBase

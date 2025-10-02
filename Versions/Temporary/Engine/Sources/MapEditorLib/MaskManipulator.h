@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 
 
 class CMaskManipulatorIterator;

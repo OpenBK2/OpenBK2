@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"

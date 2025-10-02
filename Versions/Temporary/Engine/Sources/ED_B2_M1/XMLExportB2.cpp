@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "XMLExport.h"
-#include "../libdb/ResourceManager.h"
-#include "../Misc/StrProc.h"
+#include "libdb/ResourceManager.h"
+#include "Misc/StrProc.h"
 
 namespace NXMLExport
 {

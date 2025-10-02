@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../3DMotor/GView.h"
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "3DMotor/GView.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 
 namespace NDb
 {

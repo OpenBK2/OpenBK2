@@ -3,8 +3,8 @@
 #include "UI_export.h"
 
 
-#include "../3dmotor/GPixelFormat.h"
-#include "../3Dmotor/GLocale.h"
+#include "3dmotor/GPixelFormat.h"
+#include "3Dmotor/GLocale.h"
 
 struct IML;
 struct IMLObject;

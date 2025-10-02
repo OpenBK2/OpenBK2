@@ -1,8 +1,8 @@
 #pragma once
 
 #include "GameLobby.h"
-#include "../Server_Client_Common/LobbiesIDs.h"
-#include "../Server_Client_Common/LadderLobbyPackets.h"
+#include "Server_Client_Common/LobbiesIDs.h"
+#include "Server_Client_Common/LadderLobbyPackets.h"
 #include "Statistics.h"
 #include "LadderStats.h"
 

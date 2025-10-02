@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "ClientGameConstsExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
-#include "../System/FileUtils.h"
+#include "System/FileUtils.h"
 
 REGISTER_EXPORTER_IN_DLL( ClientGameConsts, CClientGameConstsExporter )
 

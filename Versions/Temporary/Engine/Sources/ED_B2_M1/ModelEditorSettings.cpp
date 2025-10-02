@@ -2,9 +2,9 @@
 #include "StdAfx.h"
 #include "ModelEditorSettings.h"
 
-#include "../libdb/Manipulator.h"
-#include "../Stats_B2_M1/Vis2AI.h"
-#include "../System/XmlSaver.h"
+#include "libdb/Manipulator.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "System/XmlSaver.h"
 
 const CVec3 CModelEditorSettings::vShift = CVec3( VIS_TILE_SIZE / 8.0f, VIS_TILE_SIZE / 8.0f, VIS_TILE_SIZE / 8.0f );
 const float CModelEditorSettings::fDefaultDiff = VIS_TILE_SIZE / 64;

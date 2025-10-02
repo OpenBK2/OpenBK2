@@ -4,15 +4,15 @@
 #include "ResourceDefines.h"
 
 #include "CommonExporterMethods.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/InteractiveMaya.h"
-#include "../System/FileUtils.h"
-#include "../Misc/HPTimer.h"
-#include "../Misc/StrProc.h"
-#include "../Image/DDS.h"
-#include "../Image/Targa.h"
-#include "../System/VFSOperations.h"
-#include "../System/WinVFS.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/InteractiveMaya.h"
+#include "System/FileUtils.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "Image/DDS.h"
+#include "Image/Targa.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
 string GetGrannyExportSettingsFileName( const string &szTypeName )
 {

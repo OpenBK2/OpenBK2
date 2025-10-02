@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "../misc/2darray.h"
-#include "../System/Commands.h"
-#include "../3dmotor/dbscene.h"
+#include "misc/2darray.h"
+#include "System/Commands.h"
+#include "3dmotor/dbscene.h"
 #include "MOObject.h"
-#include "../SceneB2/AnimMutators.h"
-#include "../SceneB2/WindController.h"
-#include "../Sound/SoundScene.h"
+#include "SceneB2/AnimMutators.h"
+#include "SceneB2/WindController.h"
+#include "Sound/SoundScene.h"
 
 #include <zconf.h>
 

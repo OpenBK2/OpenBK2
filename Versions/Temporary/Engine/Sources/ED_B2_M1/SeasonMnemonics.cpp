@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../Stats_B2_M1/Season.h"
+#include "Stats_B2_M1/Season.h"
 #include "SeasonMnemonics.h"
 
 CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_MNEMONIC )

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 //
 //

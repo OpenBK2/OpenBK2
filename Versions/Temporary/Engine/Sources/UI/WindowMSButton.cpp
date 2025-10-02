@@ -6,7 +6,7 @@
 #include "WindowMSButton.h"
 #include "ButtonGroup.h"
 #include "ForegroundTextString.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075B87,CWindowMSButton)
 

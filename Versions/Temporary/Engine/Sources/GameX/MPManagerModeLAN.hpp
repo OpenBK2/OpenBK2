@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MPManagerMode.h"
-#include "../Client/LANClient.h"
+#include "Client/LANClient.h"
 
 class CMPManagerModeLAN : public CMPManagerMode
 {

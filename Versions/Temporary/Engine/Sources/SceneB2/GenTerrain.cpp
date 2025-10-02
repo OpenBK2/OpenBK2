@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../B2_M1_Terrain/DBPreLight.h"
-#include "../3DMotor/DBScene.h"
-#include "../Stats_B2_M1/TerraAIObserver.h"
+#include "B2_M1_Terrain/DBPreLight.h"
+#include "3DMotor/DBScene.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
 #include "TerraConverters.h"
 #include "GenTerrain.h"
 

@@ -4,7 +4,7 @@
 
 #include "dbterrainspot.h"
 #include "dbvso.h"
-#include "../system/filepath.h"
+#include "system/filepath.h"
 
 #include "B2_M1_Terrain_export.h"
 

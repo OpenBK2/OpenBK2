@@ -1,27 +1,27 @@
 #include "StdAfx.h"
 
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/objectcontroller.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/objectcontroller.h"
 #include "simpleobjectinfodata.h"
-#include "../ui/commandparam.h"
+#include "ui/commandparam.h"
 #include "mapinfoeditor.h"
 
 #include "MapInfoEditor.h"
 #include "MapInfoBuilder.h"
-#include "../MapEditorLib/EditorFactory.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/Tools_HashSet.h"
-#include "../libdb/ResourceManager.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "libdb/ResourceManager.h"
 
 #include "EditorScene.h"
 
-#include "../UISpecificB2/DBUISpecificB2.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 
 #include <afxwin.h>
 
-#include "../MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/DefaultTabWindow.h"
 #include "EditorMethods.h"
 
 // Docking Windows
@@ -46,7 +46,7 @@
 //#include "../GameX/GetConsts.h"
 //#include "../AILogic/CreateAI.h"
 
-#include "../Stats_B2_M1/TerraAIObserver.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
 
 REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 

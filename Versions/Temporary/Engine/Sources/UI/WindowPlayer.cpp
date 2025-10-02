@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "../3dmotor/rectlayout.h"
+#include "3dmotor/rectlayout.h"
 #include "uivisitor.h"
 #include "WindowPlayer.h"
-#include "../System/VFSOperations.h"
-#include "../System/XmlSaver.h"
+#include "System/VFSOperations.h"
+#include "System/XmlSaver.h"
 
 
 REGISTER_SAVELOAD_CLASS(0x170A7B82, CWindowPlayer);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_Logger.h"
 #include "LogWindow.h"
 
 

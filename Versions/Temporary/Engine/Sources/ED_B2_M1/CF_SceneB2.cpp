@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/ChildFrameFactory.h"
+#include "MapEditorLib/ChildFrameFactory.h"
 #include "CF_SceneB2.h"
 #include "CFC_SceneB2.h"
 

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "GenTerrain.h"
-#include "../Stats_B2_M1/TerraAIObserver.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
 
 #define DEF_WATER_TYPE 0xff
 

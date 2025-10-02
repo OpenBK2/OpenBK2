@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 
 #include "WindowSimpleSharedBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../System/FileUtils.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "System/FileUtils.h"
 
 //REGISTER_BUILDER_IN_DLL( WindowSimpleShared, CWindowSimpleSharedBuilder )
 

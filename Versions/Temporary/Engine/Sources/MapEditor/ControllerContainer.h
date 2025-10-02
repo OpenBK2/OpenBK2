@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MDDLDialog.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #define UNDO_BUFFER_SIZE 25
 

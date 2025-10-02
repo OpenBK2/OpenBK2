@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "ManuverInternal.h"
-#include "../Stats_B2_M1/RPGStatsAutomagic.h"
+#include "Stats_B2_M1/RPGStatsAutomagic.h"
 #include "DBAIConsts.h"
 
 namespace NAIConsts

@@ -4,7 +4,7 @@
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
 #include "Variant.h"
-#include "../Parser/Visitor.h"
+#include "Parser/Visitor.h"
 
 namespace NLang
 {

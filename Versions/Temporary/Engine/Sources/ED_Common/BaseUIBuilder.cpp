@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "BaseUIBuilder.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 bool CBaseUIBuilder::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {

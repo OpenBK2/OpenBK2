@@ -19,10 +19,10 @@
 #include "BridgeCreation.h"
 #include "Bridge.h"
 #include "StaticObjectsIters.h"
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "AIGeometry.h"
 #include "FeedBackSystem.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 
 REGISTER_SAVELOAD_CLASS( 0x1108D470, CTransportRepairState );

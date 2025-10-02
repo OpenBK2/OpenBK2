@@ -1,17 +1,17 @@
 #include "StdAfx.h"
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
 #include "SoundEngine.h"
 
-#include "../Misc/Win32Helper.h"
+#include "Misc/Win32Helper.h"
 #include "Sound2D.h"
-#include "../Misc/StrProc.h"
-#include "../UI/ui.h"
-#include "../System/Commands.h"
-#include "../System/BasicShare.h"
-#include "../Sound/DBSoundDesc.h"
-#include "../System/VFSOperations.h"
+#include "Misc/StrProc.h"
+#include "UI/ui.h"
+#include "System/Commands.h"
+#include "System/BasicShare.h"
+#include "Sound/DBSoundDesc.h"
+#include "System/VFSOperations.h"
 
 extern CBasicShare<CDBID, CSoundSample> shareSoundSample;
 

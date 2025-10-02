@@ -2,14 +2,14 @@
 
 #include <time.h>
 
-#include "../../Misc/HPTimer.h"
-#include "../../Misc/StrProc.h"
-#include "../../System/FileUtils.h"
-#include "../../System/FilePath.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
 
-#include "../EditorDb.h"
-#include "../ObjectRecordIDAllocator.h"
-#include "../DBWatcherClient.h"
+#include "EditorDb.h"
+#include "ObjectRecordIDAllocator.h"
+#include "DBWatcherClient.h"
 
 #include "ResourceManagerInternal.h"
 #include "TableManipulator.h"

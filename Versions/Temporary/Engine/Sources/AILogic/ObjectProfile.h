@@ -1,5 +1,5 @@
 #pragma once
-#include "../Stats_B2_M1/DBPassProfile.h"
+#include "Stats_B2_M1/DBPassProfile.h"
 
 
 struct SUnitProfile;

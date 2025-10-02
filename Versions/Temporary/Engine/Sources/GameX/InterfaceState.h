@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../GameX/DBScenario.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "GameX/DBScenario.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 namespace NDb
 {

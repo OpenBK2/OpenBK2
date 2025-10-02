@@ -4,25 +4,25 @@
 #include "EditorScene.h"
 #include "TargetMesh.h"
 
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../MapEditorLib/Interface_Exporter.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
-#include "../libdb/objman.h"
-#include "../libdb/editordb.h"
+#include "libdb/objman.h"
+#include "libdb/editordb.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 
-#include "../3DMotor/GRTShare.h"
-#include "../3DMotor/FrameTransition.h"
-#include "../3DMotor/GfxBuffers.h"
+#include "3DMotor/GRTShare.h"
+#include "3DMotor/FrameTransition.h"
+#include "3DMotor/GfxBuffers.h"
 
-#include "../Image/ImageTGA.h"
+#include "Image/ImageTGA.h"
 
-#include "../stats_b2_m1/RPGStats.h"
-#include "../stats_b2_m1/dbvisobj.h"
+#include "stats_b2_m1/RPGStats.h"
+#include "stats_b2_m1/dbvisobj.h"
 
-#include "../SceneB2/Camera.h"
+#include "SceneB2/Camera.h"
 
 const int N_ICONS_SIZE_X = 42;
 const int N_ICONS_SIZE_Y = 42;

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "Commands.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NGlobal
 {

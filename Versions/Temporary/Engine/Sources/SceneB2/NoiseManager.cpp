@@ -2,8 +2,8 @@
 
 #include "LoadImage.h"
 #include "NoiseManager.h"
-#include "../Misc/StrProc.h"
-#include "../System/VFSOperations.h"
+#include "Misc/StrProc.h"
+#include "System/VFSOperations.h"
 
 struct SLoadNoise
 {

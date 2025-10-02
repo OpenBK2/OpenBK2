@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../System/DB.h"
+#include "System/DB.h"
 #include "CellsConglomerateContainer.h"
 #include "MapSounds.h"
 #include "TerrainSounds.h"

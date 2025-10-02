@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "MultiTester.hpp"
-#include "../Client/ServerClient.h"
-#include "../Server_Client_Common/NetPacket.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/LoginPackets.h"
-#include "../Server_Client_Common/LobbiesIDs.h"
-#include "../Server_Client_Common/LadderLobbyPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Misc/StrProc.h"
-#include "../Misc/Win32Random.h"
+#include "Client/ServerClient.h"
+#include "Server_Client_Common/NetPacket.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/LobbiesIDs.h"
+#include "Server_Client_Common/LadderLobbyPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Random.h"
 
 enum EMultiTesterStage
 {

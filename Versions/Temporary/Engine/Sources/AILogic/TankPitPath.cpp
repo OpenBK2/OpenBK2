@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "TankPitPath.h"
-#include "../Common_RTS_AI/BasePathUnit.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/BasePathUnit.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4C3, CTankPitPath );
 

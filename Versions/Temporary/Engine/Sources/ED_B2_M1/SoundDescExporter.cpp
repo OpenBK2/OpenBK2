@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
-#include "../System/FileUtils.h"
+#include "System/FileUtils.h"
 
 #include "SoundDescExporter.h"
 

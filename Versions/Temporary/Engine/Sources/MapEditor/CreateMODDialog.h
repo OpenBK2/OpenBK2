@@ -2,7 +2,7 @@
 
 #include "ResourceDefines.h"
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 
 
 class CCreateMODDialog : public CResizeDialog

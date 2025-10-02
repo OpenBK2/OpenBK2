@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "ChatControl.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 CChatControlWrapper::CChatControlWrapper( IScrollableContainer *_pList, int _nMaxItems )
 : pList( _pList ), nMaxItems( _nMaxItems ), nItems( 0 )

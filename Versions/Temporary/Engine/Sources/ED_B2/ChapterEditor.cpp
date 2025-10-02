@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "ChapterEditor.h"
-#include "../MapEditorLib/EditorFactory.h"
-#include "../mapeditorlib/interface_commandhandler.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commoneditormethods.h"
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../libdb/ResourceManager.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "mapeditorlib/interface_commandhandler.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commoneditormethods.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "libdb/ResourceManager.h"
 
 REGISTER_EDITOR_IN_DLL( Chapter, CChapterEditor )
 

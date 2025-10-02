@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "RefListDialog.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_UserData.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_UserData.h"
 
 BEGIN_MESSAGE_MAP(CRefListDialog, CResizeDialog)
 	ON_NOTIFY( LVN_ITEMCHANGED, IDC_REF_LIST_OBJECTS, OnItemChanged )

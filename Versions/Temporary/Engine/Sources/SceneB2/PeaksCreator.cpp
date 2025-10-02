@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../3DMotor/DBScene.h"
+#include "3DMotor/DBScene.h"
 #include "GenTerrain.h"
 
 #define DEF_PENDENT_WIDTH ( DEF_TILE_SIZE * 0.1125f )

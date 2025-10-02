@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../SceneB2/Scene.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "SceneB2/Scene.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
 #include "EnterNameDialog.h"
 #include "ScriptAreaState.h"

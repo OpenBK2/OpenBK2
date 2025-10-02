@@ -2,7 +2,7 @@
 #include "Streams.h"
 #include "FileReaders.h"
 #include "VFS.h"
-#include "../System/FilePath.h"
+#include "System/FilePath.h"
 
 // ************************************************************************************************************************ //
 // **

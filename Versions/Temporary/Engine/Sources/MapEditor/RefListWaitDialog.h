@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 #include "ResourceDefines.h"
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 
 struct IResourceManager;
 

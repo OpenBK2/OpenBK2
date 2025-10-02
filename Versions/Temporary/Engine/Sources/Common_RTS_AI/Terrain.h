@@ -4,7 +4,7 @@
 
 
 #include "AIClasses.h"
-#include "../Misc/BitData.h"
+#include "Misc/BitData.h"
 
 enum ELockMode
 {

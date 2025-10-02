@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "MapInfoEditorData_Consts.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 namespace NMapInfoEditor
 {

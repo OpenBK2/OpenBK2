@@ -3,8 +3,8 @@
 #include "Nodes2TypeDefs.h"
 #include "Type.h"
 #include "Variant.h"
-#include "../Misc/StrProc.h"
-#include "../System/XmlSaver.h"
+#include "Misc/StrProc.h"
+#include "System/XmlSaver.h"
 
 //
 // TODO: equivalence function and equality function!

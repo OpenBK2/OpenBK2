@@ -1,7 +1,7 @@
 #pragma once
-#include "../System/DG.h"
+#include "System/DG.h"
 #include "DiscretePos.h"
-#include "../3Dlib/GGeometry.h"
+#include "3Dlib/GGeometry.h"
 namespace NGScene
 {
 class CObjectInfo;

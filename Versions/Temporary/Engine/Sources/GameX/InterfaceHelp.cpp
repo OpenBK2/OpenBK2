@@ -2,8 +2,8 @@
 #include "InterfaceHelp.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"
-#include "../System/Text.h"
-#include "../SceneB2/Cursor.h"
+#include "System/Text.h"
+#include "SceneB2/Cursor.h"
 
 // CInterfaceHelp
 

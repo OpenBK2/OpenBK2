@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 #include "InterfaceScreenBase.h"
-#include "../B2_M1_World/Notifications.h"
-#include "../Stats_B2_M1/UserActions.h"
-#include "../Stats_B2_M1/SpecialAbilities.h"
+#include "B2_M1_World/Notifications.h"
+#include "Stats_B2_M1/UserActions.h"
+#include "Stats_B2_M1/SpecialAbilities.h"
 
 class CWorldClient;
 class CMapObj;

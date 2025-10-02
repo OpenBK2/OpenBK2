@@ -2,7 +2,7 @@
 
 #include "LogSaver.h"
 #include "NetPacket.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 static int N_SAVELOAD_VERSION = 2;
 

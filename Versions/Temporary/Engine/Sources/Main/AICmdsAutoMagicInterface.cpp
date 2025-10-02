@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "AICmdsAutoMagicInterface.h"
-#include "../System/ChunklessSaver.h"
+#include "System/ChunklessSaver.h"
 
 
 IBinSaver *IAICmdsAutoMagic::MakeCommandSerializer( CMemoryStream *pStream, ESaverMode mode )

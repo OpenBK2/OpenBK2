@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "CommandHandlerDefines.h"
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "DrawToolsDC.h"
 
 #include "TimeSliderControl.h"

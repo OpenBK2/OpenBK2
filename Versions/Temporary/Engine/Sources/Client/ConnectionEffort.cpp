@@ -2,7 +2,7 @@
 
 #include "ConnectionEffort.h"
 #include "ConnectionEffortInternal.h"
-#include "../Net/NetDriver.h"
+#include "Net/NetDriver.h"
 
 BASIC_REGISTER_CLASS( CConnectionEffort );
 

@@ -3,34 +3,34 @@
 #include <crtdbg.h>
 #include "resource.h"
 #include "revision.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
 
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
 
-#include "../Input/Input.h"
-#include "../SceneB2/Scene.h"
-#include "../SceneB2/Cursor.h"
-#include "../System/GResource.h"
+#include "Input/Input.h"
+#include "SceneB2/Scene.h"
+#include "SceneB2/Cursor.h"
+#include "System/GResource.h"
 
-#include "../Sound/SFX.h"
-#include "../3Dmotor/Gfx.h"
+#include "Sound/SFX.h"
+#include "3Dmotor/Gfx.h"
 
-#include "../Main/Profiles.h"
+#include "Main/Profiles.h"
 #include "WinFrame2Input.h"
-#include "../Main/MainLoopCommands.h"
-#include "../AILogic/CreateAI.h"
+#include "Main/MainLoopCommands.h"
+#include "AILogic/CreateAI.h"
 #include "VersionInfo.h"
-#include "../libdb/Db.h"
+#include "libdb/Db.h"
 
-#include "../System/FilePath.h"
-#include "../System/Commands.h"
+#include "System/FilePath.h"
+#include "System/Commands.h"
 
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
-#include "../System/SplashScreen.h"
-#include "../Main/MODs.h"
+#include "System/SplashScreen.h"
+#include "Main/MODs.h"
 
 #include <zconf.h>
 

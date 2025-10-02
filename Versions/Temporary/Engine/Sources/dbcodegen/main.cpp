@@ -4,10 +4,10 @@
 #include "config.h"
 #include "Errors.h"
 #include "SolutionAnalyzer.h"
-#include "../System/CmdLine.h"
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
+#include "System/CmdLine.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
 //
 using namespace NDb::NCodeGenTool;
 

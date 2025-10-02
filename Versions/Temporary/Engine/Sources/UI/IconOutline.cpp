@@ -1,14 +1,14 @@
 #include "StdAfx.h"
-#include "../3dmotor/g2dview.h"
+#include "3dmotor/g2dview.h"
 #include "IconOutline.h"
-#include "../3DMotor/2DSceneSW.h"
-#include "../3DMotor/SWTexture.h"
-#include "../3dmotor/DBScene.h"
+#include "3DMotor/2DSceneSW.h"
+#include "3DMotor/SWTexture.h"
+#include "3dmotor/DBScene.h"
 
 #include "UIML.h"
-#include "../3dmotor/GTexture.h"
-#include "../System/BasicShare.h"
-#include "../3DMotor/GRects.h"
+#include "3dmotor/GTexture.h"
+#include "System/BasicShare.h"
+#include "3DMotor/GRects.h"
 
 namespace NGScene
 {

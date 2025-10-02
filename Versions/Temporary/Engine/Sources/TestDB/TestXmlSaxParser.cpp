@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "../System/XMLSAXParser.h"
-#include "../System/VFSOperations.h"
+#include "System/XMLSAXParser.h"
+#include "System/VFSOperations.h"
 
 namespace NTest
 {

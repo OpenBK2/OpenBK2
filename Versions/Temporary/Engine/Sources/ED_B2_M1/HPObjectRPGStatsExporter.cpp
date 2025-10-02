@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 #include "HPObjectRPGStatsExporter.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
 #include "ExporterMethods.h"
 #include "TraceModel.h"
-#include "../System/FileUtils.h"
-#include "../3DMotor/GPixelFormat.h"
+#include "System/FileUtils.h"
+#include "3DMotor/GPixelFormat.h"
 
 static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SModelSurfacePoint> &rPoints )
 {

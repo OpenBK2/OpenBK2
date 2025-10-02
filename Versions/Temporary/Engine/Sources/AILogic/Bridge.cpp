@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "../system/fastmath.h"
-#include "../system/time.h"
-#include "../misc/bresenham.h"
+#include "system/fastmath.h"
+#include "system/time.h"
+#include "misc/bresenham.h"
 #include "Bridge.h"
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"
@@ -13,8 +13,8 @@
 #include "Scripts.h"
 #include "Graveyard.h"
 #include "StaticObjectsIters.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "DebugTools/DebugInfoManager.h"
 
 REGISTER_SAVELOAD_CLASS_NM( 0x1108D4D1, SSpanLock, CFullBridge );
 REGISTER_SAVELOAD_CLASS( 0x1108D4D0, CFullBridge );

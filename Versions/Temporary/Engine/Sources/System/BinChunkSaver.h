@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 // a) chunk structure
 // b) ptr/ref storage

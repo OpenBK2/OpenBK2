@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "LinkObject.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
 SLinkObjData * SLinkObjDataAutoMagic::pLinkObjData = 0;
 SLinkObjDataAutoMagic magic;

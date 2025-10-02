@@ -1,7 +1,7 @@
 #pragma once
 
 #include "InterfaceScreenBase.h"
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 namespace NDb
 {

@@ -1,22 +1,22 @@
 #include "StdAfx.h"
 
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/commoneditormethods.h"
-#include "../sceneb2/scene.h"
-#include "../mapeditorlib/objectcontroller.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/commoneditormethods.h"
+#include "sceneb2/scene.h"
+#include "mapeditorlib/objectcontroller.h"
 #include "simpleobjectinfodata.h"
 
-#include "../MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/DefaultTabWindow.h"
 
 #include "MapInfoInterface.h"
 #include "MapInfoState.h"
 
 #include "EditorScene.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_Progress.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../libdb/editorDB.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_Progress.h"
+#include "MapEditorLib/StringManager.h"
+#include "libdb/editorDB.h"
 
 #include "ScriptAreaState.h"
 #include "CameraPositionState.h"
@@ -33,11 +33,11 @@
 
 #include "VSOMultiState.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 
 //#include "../MapEditorLib/Interface_ProgressHook.h"
-#include "../MapEditor/ProgressHook.h"
-#include "../MapEditor/ProgressDlg.h"
+#include "MapEditor/ProgressHook.h"
+#include "MapEditor/ProgressDlg.h"
 
 const UINT CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 
 {

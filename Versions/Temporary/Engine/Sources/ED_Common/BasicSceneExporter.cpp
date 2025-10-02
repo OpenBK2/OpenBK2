@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "BasicSceneExporter.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_MOD.h"
 
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
-#include "../Misc/StrProc.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
+#include "Misc/StrProc.h"
 //#include "../System/BinaryResources.h"
 
 bool CBasicSceneExporter::Validate( IManipulator *pManipulator )

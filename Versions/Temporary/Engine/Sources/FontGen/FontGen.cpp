@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "revision.h"
 #include "FontFormat.h"
-#include "../Image/Targa.h"
-#include "../Misc/2DArray.h"
-#include "../Misc/StrProc.h"
-#include "../Misc/nalgoritm.h"
-#include "../System/FileUtils.h"
+#include "Image/Targa.h"
+#include "Misc/2DArray.h"
+#include "Misc/StrProc.h"
+#include "Misc/nalgoritm.h"
+#include "System/FileUtils.h"
 
 const int N_LEADING_PIXELS = 2;
 

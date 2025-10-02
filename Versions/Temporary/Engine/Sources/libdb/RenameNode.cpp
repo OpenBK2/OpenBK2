@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
 #include "DBWatcherClient.h"
-#include "../libdb/EditorDb.h"
+#include "libdb/EditorDb.h"
 class CString;	// без такой ботвы #include "../../MapEditorLib/Interface_UserData.h" отказывается компилироваться!
-#include "../MapEditorLib/Interface_UserData.h" 
+#include "MapEditorLib/Interface_UserData.h"
 
-#include "../System/FilePath.h"
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
-#include "../System/VFSOperations.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
+#include "System/VFSOperations.h"
 
 namespace NFolderManipulator
 {

@@ -5,7 +5,7 @@
 //#include "afxdlgs.h"
 
 #include "Tree_GDBLinkBrowser.h"
-#include "../MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Interface_UserData.h"
 
 const char CTreeGDBLinkBrowser::TABGDBB_TREE_HEAD_WIDTH_UPDATE_TYPE[] = "__CTGDBLB__";
 

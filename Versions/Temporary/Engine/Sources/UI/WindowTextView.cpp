@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "WindowTextView.h"
 #include "UIVisitor.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 
 
 #include "UIML.h"

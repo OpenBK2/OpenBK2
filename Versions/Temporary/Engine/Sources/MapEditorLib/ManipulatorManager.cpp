@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "ManipulatorManager.h"
 #include "StringManager.h"
 #include "PCIEMnemonics.h"
-#include "../System/FilePath.h"
-#include "../MapEditorLib/Interface_Controller.h"
-#include "../MapEditorLib/MultiManipulator.h"
+#include "System/FilePath.h"
+#include "MapEditorLib/Interface_Controller.h"
+#include "MapEditorLib/MultiManipulator.h"
 
 IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &rObjectSet )
 {

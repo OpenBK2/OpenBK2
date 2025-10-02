@@ -1,6 +1,6 @@
 
 #pragma once
-#include "../MapEditorLib/BuildDataBuilder.h"
+#include "MapEditorLib/BuildDataBuilder.h"
 
 class CMapInfoBuilder : public CBuildDataBuilder
 {

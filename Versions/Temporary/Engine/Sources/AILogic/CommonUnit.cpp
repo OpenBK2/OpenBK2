@@ -17,11 +17,11 @@
 #include "StaticObjectsIters.h"
 #include "UnitsIterators2.h"
 #include "Commands.h"
-#include "../Common_RTS_AI/CommonPathFinder.h"
-#include "../Common_RTS_AI/PathFinder.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
-#include "../System/Commands.h"
+#include "Common_RTS_AI/CommonPathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "Stats_B2_M1/StatusUpdates.h"
+#include "System/Commands.h"
 
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;

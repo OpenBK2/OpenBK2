@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 #include "ShootAreaMesh.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 
 void AppendToVector( vector<NGScene::SVertex> &dst, const vector<NGScene::SVertex> &src )
 {

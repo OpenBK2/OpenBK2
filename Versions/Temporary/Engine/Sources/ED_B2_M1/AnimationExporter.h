@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_Common/BasicSceneExporter.h"
+#include "ED_Common/BasicSceneExporter.h"
 
 class CAnimationExporter : public CBasicSceneExporter
 {

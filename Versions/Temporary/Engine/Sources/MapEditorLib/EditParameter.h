@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 template <class TList, class TControl>
 void GetComboBoxEditParameters( TList *pList, int *pIndex, const TControl &rControl, const bool bCount, const bool bIndex )

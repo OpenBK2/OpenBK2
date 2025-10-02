@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_View.h"
+#include "MapEditorLib/Interface_View.h"
 
 typedef hash_map<CDBID, CViewSet> CViewSetMap;
 typedef hash_map<string, CViewSetMap> CViewSetMapTypeMap;

@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include <crtdbg.h>
-#include "../libdb/ObjMan.h"
-#include "../libdb/ObjManIterator.h"
-#include "../libdb/TypeDef.h"
+#include "libdb/ObjMan.h"
+#include "libdb/ObjManIterator.h"
+#include "libdb/TypeDef.h"
 #include "MeasureTimer.h"
 
 namespace NTest

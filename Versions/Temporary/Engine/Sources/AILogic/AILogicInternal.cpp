@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
-#include "../system/time.h"
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
+#include "system/time.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
 
 #include "AILogicInternal.h"
 #include "Commands.h"
 #include "UnitsIterators.h"
 #include "NewUpdater.h"
 #include "StaticObjects.h"
-#include "../Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "GroupLogic.h"
 #include "Entrenchment.h"
 #include "HitsStore.h"
@@ -35,21 +35,21 @@
 #include "TempBuffer.h"
 #include "KeyBuildingBonusSystem.h"
 #include "Reinforcement.h"
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../Common_RTS_AI/CommonPathFinder.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/CommonPathFinder.h"
 extern CUnderConstructionObject theUnderConstructionObject;
 #include "ExecutorRestoreTransparencyQueue.h"
 //#include "../Common_RTS_AI/CollisionInternal.h"
-#include "../System/CheckSumLog.h"
+#include "System/CheckSumLog.h"
 
 
 //#include "../SCeneB2/AIDebugInfo.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 #include "ManuverBuilder.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 #include "BalanceTest.h"
 //#include "../System/Commands.h"
@@ -60,9 +60,9 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "FeedbackSystem.h"
 #include "DBAIConsts.h"
 #include "PlayerReinforcement.h"
-#include "../Common_RTS_AI/CheckSums.h"
-#include "../Misc/Win32Helper.h"
-#include "../Input/Bind.h"
+#include "Common_RTS_AI/CheckSums.h"
+#include "Misc/Win32Helper.h"
+#include "Input/Bind.h"
 #include "GlobalWarFog.h"
 
 //#define FPS_TEST

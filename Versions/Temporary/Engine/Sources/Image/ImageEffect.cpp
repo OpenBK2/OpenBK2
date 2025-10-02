@@ -2,8 +2,8 @@
 #include "ImageEffect.h"
 
 #include "Image.h"
-#include "../Misc/Geom.h"
-#include "../Misc/Bresenham.h"
+#include "Misc/Geom.h"
+#include "Misc/Bresenham.h"
 
 namespace NImage
 {

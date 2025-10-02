@@ -1,5 +1,5 @@
 #pragma once
-#include "../Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 namespace NDb
 {

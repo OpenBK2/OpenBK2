@@ -3,8 +3,8 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 //
 //	AI General Points Parcel dialog		

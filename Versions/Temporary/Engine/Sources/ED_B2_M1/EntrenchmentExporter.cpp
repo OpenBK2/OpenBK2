@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ExporterFactory.h"
 #include "EntrenchmentExporter.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "ExporterMethods.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 REGISTER_EXPORTER_IN_DLL( EntrenchmentRPGStats, CEntrenchmentExporter )
 

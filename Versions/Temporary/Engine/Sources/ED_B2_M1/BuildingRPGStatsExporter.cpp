@@ -14,17 +14,17 @@
 */
 
 #include "StdAfx.h"
-#include "../misc/2darray.h"
-#include "../3dmotor/dbscene.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "misc/2darray.h"
+#include "3dmotor/dbscene.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "ExporterMethods.h"
 #include "BuildingRPGStatsExporter.h"
-#include "../ED_Common/TempAttributesTool.h"
-#include "../Misc/StrProc.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "Misc/StrProc.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Interface_MOD.h"
 
 #include <zconf.h>
 

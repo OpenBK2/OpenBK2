@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../misc/bresenham.h"
-#include "../system/time.h"
+#include "misc/bresenham.h"
+#include "system/time.h"
 #include "Graveyard.h"
 #include "NewUpdater.h"
 #include "AIUnit.h"
@@ -9,8 +9,8 @@
 #include "Units.h"
 #include "Diplomacy.h"
 #include "FakeObjects.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Stats_B2_M1/AnimationFromAction.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Stats_B2_M1/AnimationFromAction.h"
 
 CGraveyard theGraveyard;
 

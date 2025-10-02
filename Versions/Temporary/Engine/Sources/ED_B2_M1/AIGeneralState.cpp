@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
-#include "../mapeditorlib/resourcedefines.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 #include "aigeneraltypes.h"
-#include "../sceneb2/scene.h"
+#include "sceneb2/scene.h"
 #include "aigenparceldlg.h"
 #include "aigenmobileiddlg.h"
 #include "AIGeneralState.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 #include <zconf.h>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Common_RTS_AI/AIClasses.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/AIClasses.h"
+#include "DebugTools/DebugInfoManager.h"
 
 class CBasePathUnit;
 class CAIMap;

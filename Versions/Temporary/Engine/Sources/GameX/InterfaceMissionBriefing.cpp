@@ -4,8 +4,8 @@
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
-#include "../System/Text.h"
+#include "Misc/StrProc.h"
+#include "System/Text.h"
 
 const float TEXTURE_POINT_X = 4.0f; 
 const float TEXTURE_POINT_Y = 7.0f;

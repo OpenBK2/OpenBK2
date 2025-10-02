@@ -3,8 +3,8 @@
 #include "MouseTranslator.h"
 #include "Selector.h"
 
-#include "../B2_M1_World/UpdatableWorld.h"
-#include "../Sound/TerrainSounds.h"
+#include "B2_M1_World/UpdatableWorld.h"
+#include "Sound/TerrainSounds.h"
 
 namespace NDb
 {

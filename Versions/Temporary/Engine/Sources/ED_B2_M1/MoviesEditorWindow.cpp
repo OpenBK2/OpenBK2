@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../MapEditorLib/EditParameter.h"
-#include "../SceneB2/CameraScriptMutators.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/EditParameter.h"
+#include "SceneB2/CameraScriptMutators.h"
 #include "CommandHandlerDefines.h"
 #include "MovEditorSettingsWindow.h"
 #include "ED_B2_M1Dll.h"

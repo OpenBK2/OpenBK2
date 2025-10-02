@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/BasicDataExtractor.h"
+#include "MapEditorLib/BasicDataExtractor.h"
 
 class CVSODataExtractor : public CBasicDataExtractor
 {

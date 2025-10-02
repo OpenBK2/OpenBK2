@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_Exporter.h"
-#include "../MapEditorLib/InteractiveMaya.h"
-#include "../MapEditorLib/TextMapSettings.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/InteractiveMaya.h"
+#include "MapEditorLib/TextMapSettings.h"
 
 class CBasicExporter : public IExporter
 {

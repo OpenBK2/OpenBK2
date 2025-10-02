@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/AckTypes.h"
+#include "Stats_B2_M1/AckTypes.h"
 
 struct SAckDebugHelper
 {

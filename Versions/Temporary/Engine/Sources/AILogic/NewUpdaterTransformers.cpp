@@ -7,8 +7,8 @@
 #include "Graveyard.h"
 #include "Soldier.h"
 
-#include "../Stats_B2_M1/StatusUpdates.h"
-#include "../Stats_B2_M1/SuperWeaponUpdates.h"
+#include "Stats_B2_M1/StatusUpdates.h"
+#include "Stats_B2_M1/SuperWeaponUpdates.h"
 
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;

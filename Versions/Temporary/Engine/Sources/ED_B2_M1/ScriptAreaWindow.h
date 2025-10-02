@@ -1,10 +1,10 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../Stats_B2_M1/DBMapinfo.h"
-#include "../libdb/Manipulator.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "Stats_B2_M1/DBMapinfo.h"
+#include "libdb/Manipulator.h"
 
 //
 //

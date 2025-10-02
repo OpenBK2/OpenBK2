@@ -1,7 +1,7 @@
 #pragma once
 #include "Executor.h"
 #include "AIUnit.h"
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "Stats_B2_M1/AbilityActions.h"
 
 // CExecutorExactShot
 //

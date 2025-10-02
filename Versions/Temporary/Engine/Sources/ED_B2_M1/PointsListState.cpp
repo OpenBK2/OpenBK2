@@ -1,15 +1,15 @@
 #include "StdAfx.h"
 
-#include "../misc/2darray.h"
-#include "../misc/planegeometry.h"
-#include "../sceneb2/visobjdesc.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "misc/2darray.h"
+#include "misc/planegeometry.h"
+#include "sceneb2/visobjdesc.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 #include "seasonmnemonics.h"
 #include "pointlistdialog.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../Main/GameTimer.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Main/GameTimer.h"
 
 #include "PointsListState.h"
 

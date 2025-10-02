@@ -2,7 +2,7 @@
 
 #include "Common_RTS_AI_export.h"
 
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "AIClasses.h"
 #include "Terrain.h"
 #include "aiMap.h"

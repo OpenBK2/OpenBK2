@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "WindController.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 
 float CWindController::CoeffFunc( int nParam )
 {

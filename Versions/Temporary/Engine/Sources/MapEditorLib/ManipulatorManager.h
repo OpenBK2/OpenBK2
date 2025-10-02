@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "../System/BinaryResources.h"
-#include "../libdb/Manipulator.h"
+#include "System/BinaryResources.h"
+#include "libdb/Manipulator.h"
 
 //
 #define REFINFO_MAKE_UNIQUE_LIST	0x00000001

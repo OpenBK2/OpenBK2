@@ -7,11 +7,11 @@
 #include "ServerApp.h"
 #include "Server.h"
 
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
-#include "../Scintilla/Platform.h"
-#include "../Scintilla/Scintilla.h"
-#include "../Server_Client_Common/Commands.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
+#include "Scintilla/Platform.h"
+#include "Scintilla/Scintilla.h"
+#include "Server_Client_Common/Commands.h"
 
 CServerApp theApp;
 

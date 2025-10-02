@@ -1,5 +1,5 @@
 #pragma once
-#include "../B2_M1_Terrain/DBVSO.h"
+#include "B2_M1_Terrain/DBVSO.h"
 
 struct SRailRoadSystem
 {

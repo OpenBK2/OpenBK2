@@ -3,8 +3,8 @@
 #include "General.h"
 #include "Commander.h"
 #include "Resistance.h"
-#include "../System/FreeIDs.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "System/FreeIDs.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 
 

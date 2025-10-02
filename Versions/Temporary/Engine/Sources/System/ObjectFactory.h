@@ -1,5 +1,5 @@
 #pragma once
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 
 // factory is using RTTI

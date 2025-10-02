@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../3Dmotor/GPixelFormat.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "3Dmotor/GPixelFormat.h"
 
 class CTextureRoundSegmentVisitor
 {

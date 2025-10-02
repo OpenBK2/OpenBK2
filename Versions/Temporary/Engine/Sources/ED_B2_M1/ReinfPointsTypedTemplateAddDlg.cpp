@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "ReinforcementTypes.h"
 #include "ReinfPointsTypedTemplateAddDlg.h"
 

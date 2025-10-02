@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "Resource.h"
-#include "../MemoryLib/SymAccess.h"
+#include "MemoryLib/SymAccess.h"
 #include "BSUtil.h"
 #include "BSDialogFunctions.h"
 #include <CommCtrl.h>

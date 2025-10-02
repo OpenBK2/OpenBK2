@@ -3,14 +3,14 @@
 #include "UISpecificB2_export.h"
 
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../UI/UI.h"
-#include "../3DMotor/Gfx.h"
-#include "../Stats_B2_M1/DBNotifications.h"
-#include "../Stats_B2_M1/AITypes.h"
-#include "../Stats_B2_M1/DBAnimB2.h"
-#include "../Misc/Progress.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "UI/UI.h"
+#include "3DMotor/Gfx.h"
+#include "Stats_B2_M1/DBNotifications.h"
+#include "Stats_B2_M1/AITypes.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Misc/Progress.h"
 
 UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
 UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample );

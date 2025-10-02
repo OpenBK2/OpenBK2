@@ -2,15 +2,15 @@
 #include "InterfaceStateInternal.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
-#include "../GameX/GameXClassIDs.h"
-#include "../3DMotor/ScreenShot.h"
-#include "../UISpecificB2/DBUISpecificB2.h"
-#include "../UI/UIML.h"
+#include "Misc/StrProc.h"
+#include "GameX/GameXClassIDs.h"
+#include "3DMotor/ScreenShot.h"
+#include "UISpecificB2/DBUISpecificB2.h"
+#include "UI/UIML.h"
 #include "GetConsts.h"
 #include "InterfaceScreenBase.h"
-#include "../System/Text.h"
-#include "../Misc/Win32Random.h"
+#include "System/Text.h"
+#include "Misc/Win32Random.h"
 
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )

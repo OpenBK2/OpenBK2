@@ -3,11 +3,11 @@
 #include "InputViewDialog.h"
 #include "WMDefines.h"
 #include "ELK_Types.h"
-#include "../Misc/2DArray.h"
-#include "../Image/Image.h"
-#include "../Image/ImageDDS.h"
-#include "../MapEditorLib/Tools_Image.h"
-#include "../System/VFSOperations.h"
+#include "Misc/2DArray.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
+#include "MapEditorLib/Tools_Image.h"
+#include "System/VFSOperations.h"
 
 const int CInputViewDialog::vID[] = 
 {

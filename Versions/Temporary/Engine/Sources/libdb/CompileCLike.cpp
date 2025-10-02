@@ -4,7 +4,7 @@
 #include "CompileCLikeVisitor.h"
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
-#include "../Parser/ErrorsAndMessages.h"
+#include "Parser/ErrorsAndMessages.h"
 
 namespace NCompileCLike
 {

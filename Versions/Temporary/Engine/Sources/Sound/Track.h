@@ -1,7 +1,7 @@
 #pragma once
 #include "PlayElement.h"
 
-#include "../vendor/fmod/api/inc/fmod.h"
+#include "vendor/fmod/api/inc/fmod.h"
 #include "PlayTime.h"
 #include "MusicSystem.h"
 

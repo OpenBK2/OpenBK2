@@ -5,7 +5,7 @@
 #include "ComplexObstacleCreation.h"
 #include "StaticObject.h"
 #include "Diplomacy.h"
-#include "../Stats_B2_m1/ActionCommand.h"
+#include "Stats_B2_m1/ActionCommand.h"
 
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
@@ -22,7 +22,7 @@ void CUnderConstructionObject::Clear()
 	//objects.clear();
 }
 #ifndef _FINALRELEASE
-#include "../System/CheckSumLog.h"
+#include "System/CheckSumLog.h"
 
 class CSimpleChecksumLog : public ICheckSumLog
 { 

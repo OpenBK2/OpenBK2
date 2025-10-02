@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "InterfacePlayerStats.h"
 #include "GameXClassIDs.h"
-#include "../Main/Profiles.h"
-#include "../Misc/StrProc.h"
+#include "Main/Profiles.h"
+#include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 #include "InterfaceState.h"
 
 // CInterfacePlayerStats

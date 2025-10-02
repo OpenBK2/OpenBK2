@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "Tools_Resources.h"
-#include "../Misc/StrProc.h"
-#include "../System/VFS.h"
-#include "../System/WinVFS.h"
-#include "../System/VFSOperations.h"
+#include "Misc/StrProc.h"
+#include "System/VFS.h"
+#include "System/WinVFS.h"
+#include "System/VFSOperations.h"
 
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
 {

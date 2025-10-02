@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_Editor.h"
+#include "MapEditorLib/Interface_Editor.h"
 
 class CEditorContainer : public IEditorContainer
 {

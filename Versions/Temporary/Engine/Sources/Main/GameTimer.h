@@ -1,5 +1,5 @@
 #pragma once
-#include "../System/Time.hpp"
+#include "System/Time.hpp"
 template<class T> class CFuncBase;
 
 

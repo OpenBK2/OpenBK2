@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "DefaultUIBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/BuilderFactory.h"
 
 //REGISTER_BUILDER_IN_DLL( WindowScreenShared, CDefaultUIBuilder )
 

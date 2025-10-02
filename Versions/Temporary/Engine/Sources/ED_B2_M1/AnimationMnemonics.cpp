@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "AnimationMnemonics.h"
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 
 const char CMayaAnimationMnemonics::DECIMAL_NUMBERS[] = "0123456789";
 

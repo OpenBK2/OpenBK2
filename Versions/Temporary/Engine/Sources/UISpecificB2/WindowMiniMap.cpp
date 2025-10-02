@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 
 #include "WindowMiniMap.h"
-#include "../3DMotor/RectLayout.h"
-#include "../Misc/Bresenham.h"
-#include "../Misc/GeomMisc.h"
-#include "../System/FastMath.h"
-#include "../UI/UIVisitor.h"
-#include "../Misc/PlaneGeometry.h"
-#include "../Main/GameTimer.h"
-#include "../System/Commands.h"
+#include "3DMotor/RectLayout.h"
+#include "Misc/Bresenham.h"
+#include "Misc/GeomMisc.h"
+#include "System/FastMath.h"
+#include "UI/UIVisitor.h"
+#include "Misc/PlaneGeometry.h"
+#include "Main/GameTimer.h"
+#include "System/Commands.h"
 
 REGISTER_SAVELOAD_CLASS(0x1508EAC0, CWindowMiniMap);
 REGISTER_SAVELOAD_CLASS(0x15099C00, CMiniMapLayer);

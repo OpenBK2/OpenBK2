@@ -2,7 +2,7 @@
 
 #include "StatusUpdates.h"
 
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 REGISTER_SAVELOAD_CLASS( 0x31247300, SUnitStatusUpdate );
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #define DEF_SEL_RAD	0.1f
 

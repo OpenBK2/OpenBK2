@@ -1,26 +1,26 @@
 #include "StdAfx.h"
-#include "../misc/strproc.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../sceneb2/scene.h"
-#include "../libdb/resourcemanager.h"
+#include "misc/strproc.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "sceneb2/scene.h"
+#include "libdb/resourcemanager.h"
 
 #include "MapInfoEditor.h"
 #include "EditorOptions.h"
 #include "EditorMethods.h"
 
 //#include "../Input/Input.h"
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Interface_Exporter.h"
 #include "SeasonMnemonics.h"
 
 
 //#include "MiniMap_Addons.h"
-#include "../B2_M1_Terrain/fmtvso.h"
-#include "../Image/Targa.h"
+#include "B2_M1_Terrain/fmtvso.h"
+#include "Image/Targa.h"
 #include "MinimapImage.h"
 #include "SeasonMnemonics.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 #include <zconf.h>
 

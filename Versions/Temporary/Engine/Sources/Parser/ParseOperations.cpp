@@ -6,9 +6,9 @@
 #include "LangNodesDefinitions.h"
 #include "ParseOperations.h"
 #include "StringNumbers.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
-#include "../Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
+#include "Misc/StrProc.h"
 
 int yyparse( void );
 

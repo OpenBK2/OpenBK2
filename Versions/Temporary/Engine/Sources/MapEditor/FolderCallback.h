@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_FolderCallback.h"
+#include "MapEditorLib/Interface_FolderCallback.h"
 
 
 class CFolderCallback : public IFolderCallback

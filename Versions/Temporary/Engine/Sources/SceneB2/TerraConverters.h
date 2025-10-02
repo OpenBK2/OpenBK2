@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../image/targa.h"
+#include "image/targa.h"
 #include "TerrainInfo.h"
 
 void LegacyLoadTileMap( const string &szMapFilesPath, int nX, int nY, CArray2D<BYTE> *pTileTerraMap )

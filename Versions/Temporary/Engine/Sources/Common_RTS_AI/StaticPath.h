@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 // большой статический потайловый  путь, вдоль которого идут юниты
 struct IStaticPath : public CAIObjectBase

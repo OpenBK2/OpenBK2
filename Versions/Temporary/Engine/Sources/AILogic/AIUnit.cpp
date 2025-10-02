@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/AnimationType.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "AnimUnit.h"
 #include "AIClassesID.h"
 #include "NewUpdater.h"
@@ -46,15 +46,15 @@
 #include "AILogicInternal.h"
 #include "ArtilleryStates.h"
 
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 
 #include "ScenarioTracker.h"
 #include "ExecutorSoldierEntrench.h"
 #include "ExecutorPlaneDropBombs.h"
 
 #include "UnitCreation.h"
-#include "../Stats_B2_M1/ActionsRemap.h"
-#include "../System/Commands.h"
+#include "Stats_B2_M1/ActionsRemap.h"
+#include "System/Commands.h"
 
 #include "BalanceTest.h"
 #include "FeedbackSystem.h"

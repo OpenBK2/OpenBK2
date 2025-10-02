@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "../system/time.h"
+#include "system/time.h"
 #include "./aitimer.h"
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 
 
 IGameTimer * CAITimer::pTimer = 0;

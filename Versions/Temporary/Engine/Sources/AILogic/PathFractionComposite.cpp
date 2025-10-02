@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "./pathfractioncomposite.h"
 #include "IPlane.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 REGISTER_SAVELOAD_CLASS( 0x11097AC0, CPathFractionComposite )
 

@@ -2,7 +2,7 @@
 
 #include "FileRead.h"
 #include "FileNode.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NLang
 {

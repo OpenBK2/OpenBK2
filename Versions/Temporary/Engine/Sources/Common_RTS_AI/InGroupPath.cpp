@@ -3,8 +3,8 @@
 #include "InGroupPath.h"
 #include "StandartPath2.h"
 #include "PathFinder.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../System/RandomGen.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "System/RandomGen.h"
 #include "StaticPathInternal.h"
 
 REGISTER_SAVELOAD_CLASS( 0x310CBCC2, CInGroupPathMemento );

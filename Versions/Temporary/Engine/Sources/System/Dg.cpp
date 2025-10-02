@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "DG.h"
-#include "../Misc/Pool.h"
+#include "Misc/Pool.h"
 
 #ifdef _MAPEDIT 
 	const int N_HOLD_TIME = 16384; // must be power of 2

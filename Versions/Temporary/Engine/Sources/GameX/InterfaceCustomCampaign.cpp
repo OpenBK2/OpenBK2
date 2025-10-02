@@ -4,8 +4,8 @@
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
-#include "../System/Text.h"
+#include "Misc/StrProc.h"
+#include "System/Text.h"
 #include "CustomMissions.h"
 #include "CampaignSelectionMenu.h"
 

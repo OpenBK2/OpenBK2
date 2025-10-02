@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GrannyMemoryMap.hpp"
 
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 
 
 struct SMemoryInfo

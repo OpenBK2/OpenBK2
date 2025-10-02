@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "wmdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/resourcedefines.h"
 #include "pc_dialog.h"
 
 #include "ComboBox_GDBBrowser.h"

@@ -2,8 +2,8 @@
 
 #include "GlobalVars.h"
 #include "FilePath.h"
-#include "../Misc/StrProc.h"
-#include "../Misc/Win32Helper.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Helper.h"
 
 
 // ************************************************************************************************************************ //

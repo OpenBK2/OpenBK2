@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 
 #include "ParticleExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_MOD.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
 
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../System/FilePath.h"
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
 
-#include "../3Dmotor/GParticleFormat.h"
+#include "3Dmotor/GParticleFormat.h"
 
 REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
 //

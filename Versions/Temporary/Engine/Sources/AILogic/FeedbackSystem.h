@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Stats_B2_M1/FeedBackUpdates.h"
-#include "../System/FreeIDs.h"
+#include "Stats_B2_M1/FeedBackUpdates.h"
+#include "System/FreeIDs.h"
 
 namespace NDb
 {

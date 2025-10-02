@@ -8,7 +8,7 @@
 #include "AntiArtilleryManager.h"
 #include "UnitStates.h"
 #include "Guns.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
+#include "Stats_B2_M1/StatusUpdates.h"
 
 extern NTimer::STime curTime;
 extern CEventUpdater updater;

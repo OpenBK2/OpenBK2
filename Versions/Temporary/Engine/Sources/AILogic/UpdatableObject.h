@@ -1,5 +1,5 @@
 #pragma once
-#include "../Stats_B2_M1/ActionNotify.h"
+#include "Stats_B2_M1/ActionNotify.h"
 
 typedef vector<SVector> CTilesSet;
 namespace NDb

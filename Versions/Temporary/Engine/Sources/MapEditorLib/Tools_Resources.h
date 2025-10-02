@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 // Legacy
 template<class TResource>

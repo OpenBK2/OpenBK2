@@ -2,10 +2,10 @@
 
 #include "CommonCommands.h"
 
-#include "../Input/Bind.h"
+#include "Input/Bind.h"
 
-#include "../AILogic/B2AI.h"
-#include "../Misc/2Darray.h"
+#include "AILogic/B2AI.h"
+#include "Misc/2Darray.h"
 
 // ************************************************************************************************************************ //
 // **

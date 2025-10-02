@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Misc/2DArray.h"
-#include "../System/DG.h"
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "Misc/2DArray.h"
+#include "System/DG.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 #include "WaterStuff.h"
-#include "../B2_M1_Terrain/TerrUtils.h"
-#include "../Image/ImageConvertor.h"
+#include "B2_M1_Terrain/TerrUtils.h"
+#include "Image/ImageConvertor.h"
 
 class CCSBound;
 

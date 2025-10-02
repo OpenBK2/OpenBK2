@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "ConnectionInternal.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/Net.h"
-#include "../Server_Client_Common/PacketProcessor.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/Net.h"
+#include "Server_Client_Common/PacketProcessor.h"
 
 //*******************************************************************
 //*                    CFinishConnectionFilter                       *

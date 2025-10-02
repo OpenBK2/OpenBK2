@@ -15,8 +15,8 @@
 #include "UnitsIterators2.h"
 #include "Reinforcement.h"
 
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "FeedbackSystem.h"
 
 extern CFeedBackSystem theFeedBackSystem;

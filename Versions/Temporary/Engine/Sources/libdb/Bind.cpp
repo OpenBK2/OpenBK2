@@ -2,7 +2,7 @@
 
 #include "Bind.h"
 #include "BindArray.h"
-#include "../System/LightXML.h"
+#include "System/LightXML.h"
 #include "Database.h"
 
 namespace NDb

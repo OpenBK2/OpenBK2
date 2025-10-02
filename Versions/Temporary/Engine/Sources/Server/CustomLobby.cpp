@@ -2,9 +2,9 @@
 
 #include "Clients.h"
 #include "CustomLobby.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/CustomLobbyPackets.h"
-#include "../Server_Client_Common/LobbiesIDs.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/CustomLobbyPackets.h"
+#include "Server_Client_Common/LobbiesIDs.h"
 #include "Statistics.h"
 
 CCustomLobby::CCustomLobby( class CClients *pClients, const string &szCfgFile )

@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include "StringManager.h"
-#include "../Misc/StrProc.h"
-#include "../libdb/EditorDb.h"
+#include "Misc/StrProc.h"
+#include "libdb/EditorDb.h"
 #include "Interface_Controller.h"
 #include "Interface_UserData.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "Tools_HashSet.h"
 
 void CStringManager::CreateRecentListName( string *pszName, const SObjectSet &rObjectSet, bool bMainObject )

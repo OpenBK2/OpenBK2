@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Common_RTS_AI/TerraAIObserver.h"
+#include "Common_RTS_AI/TerraAIObserver.h"
 
 typedef list<CVec2> CRiverSounds;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/Interface_Controller.h"
+#include "MapEditorLib/Interface_Controller.h"
 
 class CMDDLDialog : public CDialog
 {

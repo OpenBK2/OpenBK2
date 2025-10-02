@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "../3dmotor/rectlayout.h"
+#include "3dmotor/rectlayout.h"
 #include "BackgroundMutableTexture.h"
 #include "UIVisitor.h"
 

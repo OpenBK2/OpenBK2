@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ScriptWrapperInternal.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 CPtr<NScript::CScriptWrapper> pScript;
 

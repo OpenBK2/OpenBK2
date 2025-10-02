@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../input/gamemessage.h"
+#include "input/gamemessage.h"
 
 class CScene;
 class CMapObj;

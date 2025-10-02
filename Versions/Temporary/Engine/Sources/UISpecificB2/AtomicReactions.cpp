@@ -2,7 +2,7 @@
 
 #include "atomicreactions.h"
 
-#include "../Input/Bind.h"
+#include "Input/Bind.h"
 
 
 

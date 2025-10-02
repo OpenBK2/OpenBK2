@@ -3,7 +3,7 @@
 #include "PresizePath.h"
 #include "TankpitPath.h"
 #include "Technics.h"
-#include "../Common_RTS_AI/StandartSmoothMechPath.h"
+#include "Common_RTS_AI/StandartSmoothMechPath.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4C4, CPresizePath );
 REGISTER_SAVELOAD_CLASS( 0x11123400, CMechUnitRestOnBoardPath);

@@ -1,8 +1,8 @@
 
 #pragma once
-#include "../mapeditorlib/interface_commandhandler.h"
-#include "../Stats_B2_M1/Season.h"
-#include "../MapEditorLib/BuildDataBuilder.h"
+#include "mapeditorlib/interface_commandhandler.h"
+#include "Stats_B2_M1/Season.h"
+#include "MapEditorLib/BuildDataBuilder.h"
 
 
 class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler

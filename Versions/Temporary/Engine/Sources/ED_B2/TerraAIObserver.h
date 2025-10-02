@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../DebugTools/DebugInfoManager.h"
-#include "../Common_RTS_AI/TerraAIObserver.h"
+#include "misc/2darray.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/TerraAIObserver.h"
 
 
 class CAIMap;

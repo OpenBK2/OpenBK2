@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../scintilla/scintilla.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "scintilla/scintilla.h"
 #include "ResourceDefines.h"
 #include "LogWindow.h"
 
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 BEGIN_MESSAGE_MAP(CLogWindow, CScintillaEditorWindow)
 	ON_WM_SETFOCUS()

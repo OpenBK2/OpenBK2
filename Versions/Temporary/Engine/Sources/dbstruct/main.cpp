@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "revision.h"
-#include "../libdb/EditorDb.h"
-#include "../libdb/TypeDef.h"
-#include "../System/VFSOperations.h"
-#include "../System/WinVFS.h"
-#include "../System/FilePath.h"
-#include "../System/FileUtils.h"
-#include "../System/CmdLine.h"
+#include "libdb/EditorDb.h"
+#include "libdb/TypeDef.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/CmdLine.h"
 
 namespace
 {

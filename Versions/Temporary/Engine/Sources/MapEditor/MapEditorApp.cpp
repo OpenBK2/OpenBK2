@@ -1,22 +1,22 @@
 #include "stdafx.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../scintilla/platform.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "scintilla/platform.h"
 
 #include <crtdbg.h>
 #include <Shlwapi.h>
 
-#include "../Scintilla/Scintilla.h"
-#include "../libdb/ResourceManager.h"
-#include "../libdb/Logger.h"
-#include "../Misc/StrProc.h"
-#include "../Misc/HPtimer.h"
-#include "../System/FileUtils.h"
-#include "../Main/MainLoop.h"
-#include "../MapEditorLib/Tools_Registry.h"
-#include "../Main/Mods.h"
+#include "Scintilla/Scintilla.h"
+#include "libdb/ResourceManager.h"
+#include "libdb/Logger.h"
+#include "Misc/StrProc.h"
+#include "Misc/HPtimer.h"
+#include "System/FileUtils.h"
+#include "Main/MainLoop.h"
+#include "MapEditorLib/Tools_Registry.h"
+#include "Main/Mods.h"
 
-#include "../System/SplashScreen.h"
+#include "System/SplashScreen.h"
 
 // Singletons
 #include "UserDataContainer.h"
@@ -33,14 +33,14 @@
 #include "ProgressHook.h"
 #include "MODContainer.h"
 
-#include "../MapeditorLib/MapEditorModule.h"
+#include "MapeditorLib/MapEditorModule.h"
 
 #include "MapEditorApp.h"
-#include "../libdb/EditorDb.h"
-#include "../libdb/DBWatcherClient.h"
+#include "libdb/EditorDb.h"
+#include "libdb/DBWatcherClient.h"
 
-#include "../System/VFSOperations.h"
-#include "../System/WinVFS.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
 bool IsRunningOnLocalDrive();
 

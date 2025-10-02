@@ -6,7 +6,7 @@
 #include "Gfx.h"
 #include "GfxShaders.h"
 #include "GfxShadersDescr.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "GShaderFX.h"
 
 namespace NGfx

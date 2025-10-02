@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "../SceneB2/Camera.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "SceneB2/Camera.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 CVec3 CorrectPosByCameraAndHeight( const CVec3 &vCenter )
 {

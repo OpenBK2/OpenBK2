@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MainLoopCommands.h"
 #include "Profiles.h"
-#include "../System/WinVFS.h"
+#include "System/WinVFS.h"
 
 class CICExitGame : public IInterfaceCommand
 {

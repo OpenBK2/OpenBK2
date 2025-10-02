@@ -1,15 +1,15 @@
 #include "StdAfx.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
 #include "wmdefines.h"
 #include "tree_gdbbrowserbase_constants.h"
 #include "ResourceDefines.h"
 //#include "afxdlgs.h"
 
 #include "Tree_GDBBrowser.h"
-#include "../MapEditorLib/Interface_Editor.h"
-#include "../MapEditorLib/Interface_UserData.h"
-#include "../libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_Editor.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "libdb/ResourceManager.h"
 
 const char CTreeGDBBrowser::TABGDBB_TREE_HEAD_WIDTH_UPDATE_TYPE[] = "__CTGDBB__";
 

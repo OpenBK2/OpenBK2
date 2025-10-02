@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/CommonClientState.h"
+#include "Server_Client_Common/CommonClientState.h"
 #include "ChatPackets.h"
 
 class CNetNewClient : public CNetPacket

@@ -4,7 +4,7 @@
 
 
 #include "ServerClientInterface.h"
-#include "../Net/NetDriver.h"
+#include "Net/NetDriver.h"
 
 namespace NNet
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "GeneralHelper.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "AIUnit.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NTimer::STime curTime;

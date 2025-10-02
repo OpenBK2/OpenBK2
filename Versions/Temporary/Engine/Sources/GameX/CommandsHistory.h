@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Main/CommandsHistory.hpp"
-#include "../System/Commands.h"
+#include "Main/CommandsHistory.hpp"
+#include "System/Commands.h"
 #include "MPInterfaceData.h"
 
 #include <zconf.h>

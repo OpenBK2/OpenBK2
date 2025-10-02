@@ -3,9 +3,9 @@
 
 
 #include "stdafx.h"
-#include "../script/script.h"
+#include "script/script.h"
 #include "MessageReactions.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 //CRAP{ FOR TEST
 #include "MessageReaction.h"

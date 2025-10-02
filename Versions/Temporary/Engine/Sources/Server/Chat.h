@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Server_Client_Common/PacketProcessor.h"
+#include "Server_Client_Common/PacketProcessor.h"
 #include "VersionBaseList.h"
-#include "../Server_Client_Common/ChatPackets.h"
+#include "Server_Client_Common/ChatPackets.h"
 
 class CClients;
 

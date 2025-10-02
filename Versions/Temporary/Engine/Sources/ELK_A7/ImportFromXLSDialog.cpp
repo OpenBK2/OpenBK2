@@ -2,7 +2,7 @@
 
 #include "resource.h"
 #include "ImportFromXLSDialog.h"
-#include "../MapEditorLib/StringManager.h"
+#include "MapEditorLib/StringManager.h"
 
 
 const int CImportFromXLSDialog::vID[] = 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "StringNumbers.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NStr
 {

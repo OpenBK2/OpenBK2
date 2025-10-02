@@ -4,10 +4,10 @@
 #include "InterfaceMPBase.h"
 #include "GameXClassIDs.h"
 #include "MultiplayerCommandManager.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 #include "DBScenario.h"
 
 // CInterfaceMPLadderStatistics

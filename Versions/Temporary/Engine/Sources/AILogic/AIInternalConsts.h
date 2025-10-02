@@ -1,6 +1,6 @@
 #pragma once
 #include "AIConsts.h"
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 
 namespace NDb

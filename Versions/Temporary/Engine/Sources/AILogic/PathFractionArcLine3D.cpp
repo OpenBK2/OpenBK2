@@ -2,7 +2,7 @@
 #include "./pathfractionarcline3d.h"
 #include "PathFractionArc3D.h"
 #include "PathFractionLine.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 REGISTER_SAVELOAD_CLASS(0x11095C41, CPathFractionArcLine3D)
 

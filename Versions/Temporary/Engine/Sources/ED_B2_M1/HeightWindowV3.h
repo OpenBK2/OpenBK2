@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 #include "HeightStateV3.h"
 #include "ED_B2_M1Dll.h"

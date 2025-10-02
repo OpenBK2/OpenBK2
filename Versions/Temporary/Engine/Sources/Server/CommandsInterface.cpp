@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "CommandsInterface.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 const string SCommand::GetStr( const int nIndex ) const
 {

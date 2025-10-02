@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../MapEditorLib/MultiInputState.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/MultiInputState.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 //
 //			

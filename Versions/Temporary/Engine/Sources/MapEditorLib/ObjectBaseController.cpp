@@ -4,10 +4,10 @@
 #include "ObjectBaseController.h"
 #include "MultiManipulator.h"
 
-#include "../libdb/ResourceManager.h"
-#include "../libdb/ObjMan.h"
-#include "../libdb/ObjManIterator.h"
-#include "../Misc/HPTimer.h"
+#include "libdb/ResourceManager.h"
+#include "libdb/ObjMan.h"
+#include "libdb/ObjManIterator.h"
+#include "Misc/HPTimer.h"
 
 void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName, IManipulator *pObjectManipulator )
 {

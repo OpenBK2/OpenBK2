@@ -3,10 +3,10 @@
 #include "ChapterExporter.h"
 
 #include "ExporterMethods.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../System/FileUtils.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "System/FileUtils.h"
+#include "MapEditorLib/Interface_MOD.h"
 
 
 REGISTER_EXPORTER_IN_DLL( Chapter, CChapterExporter )

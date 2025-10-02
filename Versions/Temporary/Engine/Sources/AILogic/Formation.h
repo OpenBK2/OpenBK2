@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CommonUnit.h"
-#include "../Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 class CArtillery;
 class CCommonPathFinder;

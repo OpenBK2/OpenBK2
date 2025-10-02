@@ -2,9 +2,9 @@
 #include "scriptPtr.h"
 #include "scriptCallLUA.h"
 #include "scriptCommon.h"
-#include "../Script/lstate.h"
-#include "../System/RandomGen.h"
-#include "../Misc/StrProc.h"
+#include "Script/lstate.h"
+#include "System/RandomGen.h"
+#include "Misc/StrProc.h"
 //
 namespace NScript
 {

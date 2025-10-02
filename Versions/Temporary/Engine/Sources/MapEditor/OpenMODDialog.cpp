@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "OpenMODDialog.h"
-#include "../MapEditorLib/EditParameter.h"
-#include "../MapEditorLib/Tools_Resources.h"
-#include "../MapEditorLib/StringManager.h"
+#include "MapEditorLib/EditParameter.h"
+#include "MapEditorLib/Tools_Resources.h"
+#include "MapEditorLib/StringManager.h"
 
 COpenMODDialog::COpenMODDialog( CWnd* pParent )
 	: CResizeDialog( COpenMODDialog::IDD, pParent ), bCreateControls( true ), nMODIndex( -1 )

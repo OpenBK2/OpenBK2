@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Misc/2DArray.h"
-#include "../Misc/BitData.h"
-#include "../B2_M1_Terrain/TerrUtils.h"
+#include "Misc/2DArray.h"
+#include "Misc/BitData.h"
+#include "B2_M1_Terrain/TerrUtils.h"
 
 #define DEF_PATCH_SIZE_BITS 4
 #define DEF_PATCH_SIZE ( 1 << DEF_PATCH_SIZE_BITS )

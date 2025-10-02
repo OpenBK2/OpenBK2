@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "StaticMapHeights.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
 void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *pv, float ptCtrls[] ) const
 {

@@ -1,7 +1,7 @@
 #pragma once
 //
 #include "ScriptWrapper.h"
-#include "../Script/Script.h"
+#include "Script/Script.h"
 //
 
 namespace NScript

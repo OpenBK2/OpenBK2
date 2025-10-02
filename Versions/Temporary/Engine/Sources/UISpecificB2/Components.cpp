@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "UISpecificB2.h"
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../ui/ui.h"
-#include "../system/dg.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "ui/ui.h"
+#include "system/dg.h"
 #include "Components.h"
-#include "../UI/UIVisitor.h"
-#include "../3Dmotor/DBScene.h"
+#include "UI/UIVisitor.h"
+#include "3Dmotor/DBScene.h"
 
 IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 {

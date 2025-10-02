@@ -2,7 +2,7 @@
 #include "GLocale.h"
 #include "GFont.h"
 #include "GTexture.h"
-#include "../System/BasicShare.h"
+#include "System/BasicShare.h"
 #include "DBScene.h"
 
 namespace NGScene

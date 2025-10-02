@@ -2,7 +2,7 @@
 
 #include <Limits.h>
 #include "GenTerrain.h"
-#include "../Misc/HPTimer.h"
+#include "Misc/HPTimer.h"
 
 void CTerraGen::GenerateTerrain()
 {

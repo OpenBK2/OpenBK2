@@ -1,15 +1,15 @@
 #include "StdAfx.h"
 
-#include "../Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 #include "MapObj.h"
-#include "../3Dmotor/GAnimation.hpp"
-#include "../Main/GameTimer.h"
-#include "../Misc/Win32Random.h"
-#include "../Sound/SoundScene.h"
-#include "../Stats_B2_M1/IClientGameConsts.h"
-#include "../System/Commands.h"
-#include "../System/Text.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
+#include "3Dmotor/GAnimation.hpp"
+#include "Main/GameTimer.h"
+#include "Misc/Win32Random.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
+#include "System/Commands.h"
+#include "System/Text.h"
+#include "Stats_B2_M1/StatusUpdates.h"
 
 const float SOLID_ICON_ALPHA = 1.0f;
 float FADED_ICON_ALPHA = 0.25f;

@@ -3,7 +3,7 @@
 #include "UI_export.h"
 
 #include "UI.h"
-#include "../Input/GameMessage.h"
+#include "Input/GameMessage.h"
 #include "DBUIConsts.h"
 
 namespace NGScene

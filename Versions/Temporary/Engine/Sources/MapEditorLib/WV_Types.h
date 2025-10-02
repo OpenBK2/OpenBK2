@@ -1,7 +1,7 @@
 
 #pragma once
-#include "../System/RandomGen.h"
-#include "../Misc/Win32Random.h"
+#include "System/RandomGen.h"
+#include "Misc/Win32Random.h"
 
 //Темплейт для создания векторов обьектов с весами,
 //веса могут быть любыми неотрицательными целыми числами

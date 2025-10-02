@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "MDDLDialog.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../libdb/Manipulator.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "libdb/Manipulator.h"
 
 CMDDLDialog::CMDDLDialog() : CDialog( CMDDLDialog::IDD, 0 ), nCommandID( INVALID_NODE_ID ) {}
 

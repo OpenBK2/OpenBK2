@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ListsSet.h"
-#include "../System/FreeIDs.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
-#include "../Common_RTS_AI/AIClasses.h"
+#include "System/FreeIDs.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
+#include "Common_RTS_AI/AIClasses.h"
 
 struct IStaticPathFinder;
 struct IStaticPath;

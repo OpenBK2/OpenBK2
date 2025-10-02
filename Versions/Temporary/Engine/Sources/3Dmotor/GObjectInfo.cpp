@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "../System/BasicShare.h"
+#include "System/BasicShare.h"
 #include "GObjectInfo.h"
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 #include "GSkeleton.h"
-#include "../System/BinaryResources.h"
-#include "../System/GResource.h"
-#include "../System/VFSOperations.h"
+#include "System/BinaryResources.h"
+#include "System/GResource.h"
+#include "System/VFSOperations.h"
 #include "dbscene.h"
 
 

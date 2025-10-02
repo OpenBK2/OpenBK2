@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../libdb/Manipulator.h"
-#include "../SceneB2/TerraTools.h"
-#include "../Stats_B2_M1/DBPassProfile.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "libdb/Manipulator.h"
+#include "SceneB2/TerraTools.h"
+#include "Stats_B2_M1/DBPassProfile.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 //#define _DEBUG_GENERATION
 

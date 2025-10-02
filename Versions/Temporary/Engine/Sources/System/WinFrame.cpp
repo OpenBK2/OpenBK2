@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "WinFrame.h"
-#include "../Misc/Win32Helper.h"
+#include "Misc/Win32Helper.h"
 #include "Commands.h"
 
 using namespace NWinFrame;

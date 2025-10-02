@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/dbmapinfo.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/dbmapinfo.h"
 #include "EntrenchmentMnemonics.h"
 
 #include <zconf.h>

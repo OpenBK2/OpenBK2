@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 #include "TerraTools.h"
 #include "GenTerrain.h"
 

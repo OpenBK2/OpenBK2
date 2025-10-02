@@ -2,7 +2,7 @@
 
 #include "./soundsample.h"
 #include "DBSoundDesc.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 bool CSoundSample::b3DSoundShare = false;
 

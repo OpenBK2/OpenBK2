@@ -6,9 +6,9 @@
 #include "StandartDirPath.h"
 #include "Terrain.h"
 
-#include "../DebugTools/DebugInfoManager.h"
-#include "../Misc/Geom.h"
-#include "../System/RandomGen.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "Misc/Geom.h"
+#include "System/RandomGen.h"
 
 static const float SPEED_TIME = 2;
 static const float MIN_SPEED_LENGTH = 1.5f;

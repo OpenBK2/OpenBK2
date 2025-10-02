@@ -2,8 +2,8 @@
 
 #include "pc_constants.h"
 #include "PC_StringComboRefEditor.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/PCIEMnemonics.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/PCIEMnemonics.h"
 
 // CPCItemEditor
 

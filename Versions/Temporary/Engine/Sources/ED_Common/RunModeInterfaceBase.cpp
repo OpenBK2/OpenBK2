@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "RunModeInterfaceBase.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 
 CRunModeInterfaceBase::CRunModeInterfaceBase( CTimeCounter *_pTimer ) : 
 	dwTime(0), pTimer(_pTimer)

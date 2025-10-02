@@ -2,8 +2,8 @@
 #include "RegisterEditors.h"
 
 #include "UserDataContainer.h"
-#include "../MapEditorLib/EditorFactory.h"
-#include "../ED_Common/WindowSimpleSharedEditor.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "ED_Common/WindowSimpleSharedEditor.h"
 
 CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
 

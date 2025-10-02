@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../misc/2darray.h"
+#include "misc/2darray.h"
 #include "commandhandlerdefines.h"
 #include "seasonmnemonics.h"
 #include "PointListDialog.h"

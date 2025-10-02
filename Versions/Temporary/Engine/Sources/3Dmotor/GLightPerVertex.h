@@ -1,6 +1,6 @@
 #pragma once
 #include "GPixelFormat.h"
-#include "../Misc/2Darray.h"
+#include "Misc/2Darray.h"
 
 namespace NGfx
 {

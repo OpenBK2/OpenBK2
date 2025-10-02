@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/interface_commandhandler.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/interface_commandhandler.h"
 //
 #include "EditorTestInterface.h"
 #include "EditorTestState.h"

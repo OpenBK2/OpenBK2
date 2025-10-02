@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../MapEditorLib/ScintillaEditor.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ScintillaEditor.h"
 
 class CLogWindow : public CScintillaEditorWindow, public ICommandHandler
 {

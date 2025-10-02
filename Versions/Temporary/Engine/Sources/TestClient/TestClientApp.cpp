@@ -5,13 +5,13 @@
 #include "TestClient.h"
 #include "TestClientApp.h"
 
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
 
-#include "../Scintilla/Platform.h"
-#include "../Scintilla/Scintilla.h"
+#include "Scintilla/Platform.h"
+#include "Scintilla/Scintilla.h"
 
-#include "../Server_Client_Common/Commands.h"
+#include "Server_Client_Common/Commands.h"
 
 CTestClientApp theApp;
 

@@ -3,12 +3,12 @@
 #include "InterfaceMisc.h"
 #include "InterfaceState.h"
 #include "GameXClassIDs.h"
-#include "../UI/Window.h"
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
+#include "UI/Window.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
 #include "ScenarioTracker.h"
-#include "../System/Text.h"
-#include "../3DMotor/ScreenShot.h"
+#include "System/Text.h"
+#include "3DMotor/ScreenShot.h"
 
 // CInterfaceSaveLoadMenu::CReactions
 

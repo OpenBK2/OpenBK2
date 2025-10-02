@@ -6,7 +6,7 @@
 #include "FieldState.h"
 #include "MapObjectMultiState.h"
 #include "VSOMultiState.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 
 class CMapInfoEditorSettings

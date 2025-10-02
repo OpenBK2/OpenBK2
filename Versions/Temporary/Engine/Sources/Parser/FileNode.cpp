@@ -5,8 +5,8 @@
 #include "FileRead.h"
 #include "LangNodesDefinitions.h"
 #include "ParseOperations.h"
-#include "../System/FilePath.h"
-#include "../Misc/StrProc.h"
+#include "System/FilePath.h"
+#include "Misc/StrProc.h"
 
 int yyparse( void );
 extern int nyyLineNumber;

@@ -2,7 +2,7 @@
 
 #include "Nodes2TypeDefs.h"
 #include "TypeDef.h"
-#include "../Parser/LangNode.h"
+#include "Parser/LangNode.h"
 
 int SNodesHash::operator()( NLang::CLangNode *pNode ) const
 { 

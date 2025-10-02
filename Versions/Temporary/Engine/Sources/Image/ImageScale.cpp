@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ImageScale.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 
 #define WHITE_PIXEL 255
 #define BLACK_PIXEL 0

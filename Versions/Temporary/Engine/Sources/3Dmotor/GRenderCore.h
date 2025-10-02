@@ -1,11 +1,11 @@
 #pragma once
-#include "../System/DG.h"
-#include "../System/Time.hpp"
-#include "../Misc/Pool.h"
+#include "System/DG.h"
+#include "System/Time.hpp"
+#include "Misc/Pool.h"
 #include "GPixelFormat.h"
 #include "GShadowMap.h"
 #include "GMaterial.hpp"
-#include "../3dlib/Bound.h"
+#include "3dlib/Bound.h"
 
 inline CVec3 MulPerComp4( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x*4, a.y*b.y*4, a.z*b.z*4); }
 inline CVec3 MulPerComp2( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x*2, a.y*b.y*2, a.z*b.z*2); }

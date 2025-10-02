@@ -27,10 +27,10 @@
 #include "TimerChargeExecutor.h"
 #include "Statistics.h"
 #include "UnitsIterators2.h"
-#include "../Common_RTS_AI/PathFinder.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "ExecutorContainer.h"
-#include "../Stats_B2_M1/AnimationFromAction.h"
+#include "Stats_B2_M1/AnimationFromAction.h"
 
 extern CStatistics theStatistics;
 

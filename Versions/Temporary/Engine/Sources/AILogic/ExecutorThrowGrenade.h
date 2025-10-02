@@ -1,6 +1,6 @@
 #pragma once
 #include "Executor.h"
-#include "../Stats_B2_m1/SpecialAbilities.h"
+#include "Stats_B2_m1/SpecialAbilities.h"
 
 class CAIUnit;
 

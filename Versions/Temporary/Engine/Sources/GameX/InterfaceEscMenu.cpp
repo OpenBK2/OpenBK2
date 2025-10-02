@@ -3,7 +3,7 @@
 #include "InterfaceMisc.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"
-#include "../3DMotor/ScreenShot.h"
+#include "3DMotor/ScreenShot.h"
 #include "ScenarioTracker.h"
 #include "MultiplayerCommandManager.h"
 #include "SaveLoadHelper.h"

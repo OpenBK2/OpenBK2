@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../B2_M1_Terrain/DBPreLight.h"
-#include "../Misc/Win32Random.h"
+#include "B2_M1_Terrain/DBPreLight.h"
+#include "Misc/Win32Random.h"
 #include "GenTerrain.h"
 
 #define DEF_TILE_MIN_ALPHA 0

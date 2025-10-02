@@ -1,20 +1,20 @@
 #include "StdAfx.h"
 
-#include "../3Dmotor/3Dmotor_export.h"
+#include "3Dmotor/3Dmotor_export.h"
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../input/gamemessage.h"
-#include "../ui/ui.h"
-#include "../misc/2darray.h"
-#include "../ui/uifactory.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "input/gamemessage.h"
+#include "ui/ui.h"
+#include "misc/2darray.h"
+#include "ui/uifactory.h"
 #include "InterfaceEncyclopedia.h"
 #include "GameXClassIDs.h"
-#include "../B2_M1_World/MapObj.h"
+#include "B2_M1_World/MapObj.h"
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
-#include "../UISpecificB2/EffectorB2Move.h"
-#include "../System/Text.h"
+#include "UISpecificB2/EffectorB2Move.h"
+#include "System/Text.h"
 
 #include <zconf.h>
 

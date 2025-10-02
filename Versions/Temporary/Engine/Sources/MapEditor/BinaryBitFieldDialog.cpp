@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "BinaryBitFieldDialog.h"
 #include "BinaryBitFieldDialog.h"
-#include "../System/VFSOperations.h"
-#include "../System/XmlSaver.h"
+#include "System/VFSOperations.h"
+#include "System/XmlSaver.h"
 
 CBinaryBitFieldDialog::CBinaryBitFieldDialog( const string &_szFileName, const BYTE *_pData, const int _nSize, CWnd *pwndParent )
 	: CResizeDialog( CBinaryBitFieldDialog::IDD, pwndParent ),

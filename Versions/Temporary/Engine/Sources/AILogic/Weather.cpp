@@ -6,8 +6,8 @@
 #include "NewUpdater.h"
 #include "UnitsIterators.h"
 #include "Aviation.h"
-#include "../Stats_B2_M1/AIUpdates.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/AIUpdates.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 extern CEventUpdater updater; 
 CWeather theWeather;

@@ -2,8 +2,8 @@
 
 #include "SceneB2_export.h"
 
-#include "../System/DG.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "System/DG.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 #define DEF_YAW 0.0f
 #define DEF_PITCH 45.0f

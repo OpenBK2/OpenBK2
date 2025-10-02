@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 struct ICamera;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "ScriptCameraMovementTypes.h"
 
 //

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <afxwin.h>
-#include "../B2_M1_Terrain/DBTerrain.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "B2_M1_Terrain/DBTerrain.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 /*
 жестко заданный minimap, в виде ромба. вершины ромба лежат РОВНО на серединах сторон окна прямоугольника, 

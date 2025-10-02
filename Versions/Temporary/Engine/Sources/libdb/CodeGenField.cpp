@@ -4,7 +4,7 @@
 #include "CodeGenMisc.h"
 #include "Hungarian.h"
 #include "StrStream.h"
-#include "../Parser/LangNodesDefinitions.h"
+#include "Parser/LangNodesDefinitions.h"
 
 namespace NCodeGen
 {

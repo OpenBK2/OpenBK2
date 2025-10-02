@@ -5,14 +5,14 @@
 
 #include "MainLoopInternal.h"
 
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
 
-#include "../Input/GameMessage.h"
-#include "../System/BasicShare.h"
+#include "Input/GameMessage.h"
+#include "System/BasicShare.h"
 #include "MainLoopCommands.h"
-#include "../System/GResource.h"
-#include "../libdb/Db.h"
+#include "System/GResource.h"
+#include "libdb/Db.h"
 
 namespace NVFS
 {

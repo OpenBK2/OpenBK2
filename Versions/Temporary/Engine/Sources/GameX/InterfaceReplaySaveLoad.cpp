@@ -4,12 +4,12 @@
 #include "GameXClassIDs.h"
 #include "SaveLoadHelper.h"
 #include "MPInterfaceData.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "Stats_B2_M1/Vis2AI.h"
 #include "GameRoomData.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "InterfaceMisc.h"
 
 // CInterfaceReplaySaveLoad

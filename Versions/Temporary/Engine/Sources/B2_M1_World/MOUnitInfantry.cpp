@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 
 #include "MOUnitInfantry.h"
-#include "../Sound/SoundScene.h"
-#include "../Stats_B2_M1/DBAnimB2.h"
-#include "../3Dmotor/GAnimation.hpp"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "3Dmotor/GAnimation.hpp"
 #include "ParatrooperAnimation.h"
-#include "../Main/GameTimer.h"
-#include "../Misc/Win32Random.h"
+#include "Main/GameTimer.h"
+#include "Misc/Win32Random.h"
 #include "MOProjectile.h"
 
-#include "../System/Commands.h"
-#include "../System/Text.h"
+#include "System/Commands.h"
+#include "System/Text.h"
 
 void CMOUnitInfantry::SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight )
 {

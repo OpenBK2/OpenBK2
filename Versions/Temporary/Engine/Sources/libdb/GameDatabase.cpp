@@ -3,10 +3,10 @@
 #include "StdAfx.h"
 #include "Database.h"
 #include "Index.h"
-#include "../libdb/TypeDef.h"
-#include "../System/VFS.h"
-#include "../System/xmlreader.h"
-#include "../Misc/Win32Helper.h"
+#include "libdb/TypeDef.h"
+#include "System/VFS.h"
+#include "System/xmlreader.h"
+#include "Misc/Win32Helper.h"
 
 //#define _PROFILER
 namespace NTest

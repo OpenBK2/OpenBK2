@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SuperWeapon.h"
-#include "../UI/UI.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "UI/UI.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 namespace NDb
 {

@@ -3,7 +3,7 @@
 
 #include "MusicSystem.hpp"
 #include "DBMusicSystem.h"
-#include "../Misc/Win32Random.h"
+#include "Misc/Win32Random.h"
 
 namespace NMusicSystem
 {

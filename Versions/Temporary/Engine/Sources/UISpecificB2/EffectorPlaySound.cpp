@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "../System/Dg.h"
+#include "System/Dg.h"
 #include "effectorplaysound.h"
-#include "../Sound/SoundScene.h"
+#include "Sound/SoundScene.h"
 #include "DBUISpecificB2.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075C02,CEffectorPlaySound)

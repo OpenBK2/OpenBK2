@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "GShadowMap.h"
-#include "../3Dlib/Transform.h"
+#include "3Dlib/Transform.h"
 #include "4dCalcs.h"
 
 namespace NGeometry

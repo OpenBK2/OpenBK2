@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../3Dmotor/GView.h"
-#include "../3Dmotor/GObjectInfo.h"
+#include "3Dmotor/GView.h"
+#include "3Dmotor/GObjectInfo.h"
 #include "Camera.h"
 
 namespace NDb

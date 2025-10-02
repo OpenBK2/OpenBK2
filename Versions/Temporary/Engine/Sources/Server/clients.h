@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/CommonClientState.h"
+#include "Server_Client_Common/CommonClientState.h"
 
 struct st_mysql;
 typedef st_mysql MYSQL;

@@ -10,10 +10,10 @@
 #include "GeneralConsts.h"
 #include "StaticObjects.h"
 #include "TempBuffer.h"
-#include "../Misc/nalgoritm.h"
+#include "Misc/nalgoritm.h"
 #include "UnitsIterators2.h"
 #include "UnitCreation.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "UnitStates.h"
 #include "B2AI.h"
 

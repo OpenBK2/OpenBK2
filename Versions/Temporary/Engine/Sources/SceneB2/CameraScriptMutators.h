@@ -3,9 +3,9 @@
 #include "SceneB2_export.h"
 
 #include "Camera.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
-#include "../System/DG.h"
-#include "../Main/GameTimer.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/DG.h"
+#include "Main/GameTimer.h"
 
 class CScriptMovieMutator : public NCamera::CCameraPlacement
 {

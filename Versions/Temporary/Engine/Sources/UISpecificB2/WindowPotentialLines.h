@@ -1,18 +1,18 @@
 #pragma once
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../ui/ui.h"
-#include "../input/gamemessage.h"
-#include "../ui/uifactory.h"
-#include "../misc/2darray.h"
-#include "../UI/Window.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "ui/ui.h"
+#include "input/gamemessage.h"
+#include "ui/uifactory.h"
+#include "misc/2darray.h"
+#include "UI/Window.h"
 #include "DBUISpecificB2.h"
-#include "../3DMotor/GfxBuffers.h"
-#include "../System/DG.h"
-#include "../Main/GameTimer.h"
+#include "3DMotor/GfxBuffers.h"
+#include "System/DG.h"
+#include "Main/GameTimer.h"
 #include "UISpecificB2.h"
-#include "../Misc/BitData.h"
+#include "Misc/BitData.h"
 
 #include <zconf.h>
 

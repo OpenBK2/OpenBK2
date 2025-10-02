@@ -1,5 +1,5 @@
 #pragma once
-#include "../System/GResource.h"
+#include "System/GResource.h"
 #include "FontFormat.h"
 
 namespace NGScene

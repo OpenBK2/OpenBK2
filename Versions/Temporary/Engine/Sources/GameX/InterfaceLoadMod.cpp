@@ -4,9 +4,9 @@
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
-#include "../System/Text.h"
-#include "../Main/MODs.h"
+#include "Misc/StrProc.h"
+#include "System/Text.h"
+#include "Main/MODs.h"
 
 const int NO_MOD = -1;
 

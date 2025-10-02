@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 #include "ObjectRecordIDAllocator.h"
-#include "../Misc/HPTimer.h"
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
-#include "../System/Commands.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/Commands.h"
 
 namespace NDb
 {

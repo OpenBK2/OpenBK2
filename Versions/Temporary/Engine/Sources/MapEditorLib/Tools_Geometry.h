@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Misc/PlaneGeometry.h"
+#include "Misc/PlaneGeometry.h"
 
 
 EXTERNVAR const float MINIMAL_POINT_DISTANCE;	//2.0f

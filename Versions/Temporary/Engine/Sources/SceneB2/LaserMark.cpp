@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "LaserMark.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 static float LASER_MARK_HALF_THIKNESS = 0.1f;
 static float LASER_MARK_PULSAR_TIME = 0.2f;

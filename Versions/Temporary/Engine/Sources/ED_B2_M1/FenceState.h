@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../sceneb2/scene.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "sceneb2/scene.h"
 #include "SimpleObjectState.h"
 
 #include <zconf.h>

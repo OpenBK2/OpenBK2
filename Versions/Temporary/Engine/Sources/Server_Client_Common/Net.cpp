@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "../net/netaddress.h"
+#include "net/netaddress.h"
 #include "CommonPackets.h"
 #include "Net.h"
 #include "NetSaver.h"
-#include "../Net/NetDriver.h"
+#include "Net/NetDriver.h"
 
 #include "ZipPacket.h"
 

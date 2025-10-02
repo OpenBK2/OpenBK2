@@ -1,6 +1,6 @@
 #pragma once
 //
-#include "../MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 
 //Main context menu numbers
 #define MCMN_DW_GDB_BROWSER															0

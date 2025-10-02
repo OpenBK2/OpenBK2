@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UI/UI.h"
+#include "UI/UI.h"
 
 // ChatControlWrapper - a wrapper for a ScrollableContainer (of a specific form) that makes it act like a chat
 

@@ -1,6 +1,6 @@
 #define CStructureSaver IBinSaver
 
-#include "../Sound/DBSound.h"
+#include "Sound/DBSound.h"
 
 #ifndef _FINALRELEASE
 #define CONSOLE_BUFFER_LOG(n,s)	Singleton<IConsoleBuffer>()->WriteASCII( n, s )

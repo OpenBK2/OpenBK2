@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../System/DG.h"
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "System/DG.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 #include "WaterStuff.h"
 
 class CCSBound;

@@ -1,6 +1,6 @@
 #pragma once
 #include "GAnimation.hpp"
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 
 namespace NDb
 {

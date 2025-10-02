@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../B2_M1_World/Notifications.h"
-#include "../UISpecificB2/UISpecificB2.h"
-#include "../Misc/HashFuncs.h"
+#include "B2_M1_World/Notifications.h"
+#include "UISpecificB2/UISpecificB2.h"
+#include "Misc/HashFuncs.h"
 
 class CMapObj;
 struct IAILogic;

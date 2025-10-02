@@ -4,7 +4,7 @@
 #include "Interface_Builder.h" //CTableSet;
 #include "Tools_Resources.h"
 #include "ControlSelection.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 struct SUserData
 {

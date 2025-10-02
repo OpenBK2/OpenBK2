@@ -4,11 +4,11 @@
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
 #include "Transceiver.h"
-#include "../AILogic/B2AI.h"
-#include "../Sound/SFX.h"
+#include "AILogic/B2AI.h"
+#include "Sound/SFX.h"
 #include "ScenarioTracker.h"
-#include "../SceneB2/Camera.h"
-#include "../Misc/StrProc.h"
+#include "SceneB2/Camera.h"
+#include "Misc/StrProc.h"
 
 #ifndef _FINALRELEASE
 static int nInterfaceMissionBackgroundCount = 0; // sanity check

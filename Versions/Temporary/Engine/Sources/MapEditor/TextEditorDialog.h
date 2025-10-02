@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "../MapEditorLib/Tools_MnemonicsCollector.h"
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../MapEditorLib/ScintillaEditor.h"
+#include "MapEditorLib/Tools_MnemonicsCollector.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ScintillaEditor.h"
 
 
 #define TE_XML_FILE_NAME_LABEL_PREFIX "CTextEditorDialog"

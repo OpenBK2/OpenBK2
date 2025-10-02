@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Manipulator.h"
-#include "../TypeDef.h"
+#include "Manipulator.h"
+#include "TypeDef.h"
 
 using namespace NDb::NTypeDef;
 

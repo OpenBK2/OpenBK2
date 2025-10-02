@@ -1,6 +1,6 @@
 
 #pragma once
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "TranslateEdit.h"
 
 class CInputViewDialog : public CResizeDialog

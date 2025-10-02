@@ -4,9 +4,9 @@
 #include <winuser.h>
 
 #include "CursorInternal.h"
-#include "../System/VFSOperations.h"
-#include "../System/WinFrame.h"
-#include "../System/WinCursor.h"
+#include "System/VFSOperations.h"
+#include "System/WinFrame.h"
+#include "System/WinCursor.h"
 
 BASIC_REGISTER_CLASS( ICursor );
 

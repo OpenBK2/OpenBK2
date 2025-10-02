@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../B2_M1_Terrain/DBWater.h"
-#include "../B2_M1_Terrain/DBTerrain.h"
+#include "B2_M1_Terrain/DBWater.h"
+#include "B2_M1_Terrain/DBTerrain.h"
 
 namespace NWaterStuff
 {

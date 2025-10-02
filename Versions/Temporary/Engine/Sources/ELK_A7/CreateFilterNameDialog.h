@@ -1,7 +1,7 @@
 
 #pragma once
 #include "Resource.h"
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 
 
 class CCreateFilterNameDialog : public CResizeDialog

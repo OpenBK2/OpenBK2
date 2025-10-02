@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "BasicExporter.h"
-#include "../MapEditorLib/CommonExporterMethods.h"
+#include "MapEditorLib/CommonExporterMethods.h"
 
 void CBasicExporter::Log( ELogOutputType eLogOutputType, const string &szText ) const
 {

@@ -1,9 +1,9 @@
 #pragma once
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../ui/ui.h"
-#include "../misc/2darray.h"
-#include "../UI/Background.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "ui/ui.h"
+#include "misc/2darray.h"
+#include "UI/Background.h"
 #include "DBUISpecificB2.h"
 
 #include <zconf.h>

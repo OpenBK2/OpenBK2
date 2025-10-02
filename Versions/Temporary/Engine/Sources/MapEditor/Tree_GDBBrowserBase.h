@@ -1,12 +1,12 @@
 #pragma once
 
 
-#include "../MapEditorLib/Tools_MnemonicsCollector.h"
+#include "MapEditorLib/Tools_MnemonicsCollector.h"
 
 #include "Tree_GDBBrowser_InputState.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/FolderController.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/FolderController.h"
 #include "SortTreeControl.h"
 
 #define TABGDBB_TREE_COLUMN_COUNT (1)

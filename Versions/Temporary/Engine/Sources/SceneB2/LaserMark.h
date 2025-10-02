@@ -2,8 +2,8 @@
 
 #include "SceneB2_export.h"
 
-#include "../3DLib/GGeometry.h"
-#include "../System/DG.h"
+#include "3DLib/GGeometry.h"
+#include "System/DG.h"
 
 class SCENEB2_EXPORT CLaserMarkTrace :	public CPtrFuncBase<NGScene::CObjectInfo>
 {

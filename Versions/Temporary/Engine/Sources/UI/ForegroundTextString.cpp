@@ -4,7 +4,7 @@
 #include "UIVisitor.h"
 #include "UIML.h"
 #include "Tools.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075B43,CForegroundTextString)
 REGISTER_SAVELOAD_CLASS(0x1715A340,CPlacedText)

@@ -2,8 +2,8 @@
 
 #include "CodeGenFile.h"
 #include "CodeStructure.h"
-#include "../Misc/StrProc.h"
-#include "../Parser/FileNode.h"
+#include "Misc/StrProc.h"
+#include "Parser/FileNode.h"
 
 namespace NCodeGen
 {

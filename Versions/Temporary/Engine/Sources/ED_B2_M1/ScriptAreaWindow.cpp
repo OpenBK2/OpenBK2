@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../misc/2darray.h"
+#include "misc/2darray.h"
 #include "commandhandlerdefines.h"
 #include "StringResources.h"
 #include "ScriptAreaWindow.h"

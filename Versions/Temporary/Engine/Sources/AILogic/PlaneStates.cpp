@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "Stats_B2_M1/AbilityActions.h"
 #include "PlaneStates.h"
 #include "Building.h"
 #include "GroupLogic.h"
@@ -22,13 +22,13 @@
 #include "ManuverInternal.h"
 #include "DBAIConsts.h"
 //CRAP{ FOR TEXT
-#include "../SceneB2/StatSystem.h"
+#include "SceneB2/StatSystem.h"
 //CRAP}
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "Shell.h"
 #include "AILogicInternal.h"
-#include "../DebugTools/DebugInfoManager.h"
-#include "../System/Commands.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "System/Commands.h"
 
 extern CWeather theWeather;
 extern CScripts *pScripts;

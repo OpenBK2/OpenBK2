@@ -2,7 +2,7 @@
 #include "./bridgecreation.h"
 #include "Bridge.h"
 #include "CommonUnit.h"
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1508D49E, CBridgeCreation );
 

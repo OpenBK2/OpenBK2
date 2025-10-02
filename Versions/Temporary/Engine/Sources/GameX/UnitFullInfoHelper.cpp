@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "UnitFullInfoHelper.h"
-#include "../Stats_B2_M1/RPGStats.h"
-#include "../Stats_B2_M1/AnimationType.h"
-#include "../Stats_B2_M1/DBAnimB2.h"
-#include "../Stats_B2_M1/DBVisObj.h"
-#include "../System/Text.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/AnimationType.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBVisObj.h"
+#include "System/Text.h"
 
 namespace NUnitFullInfo
 {

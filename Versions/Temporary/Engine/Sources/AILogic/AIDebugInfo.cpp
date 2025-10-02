@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "AIDebugInfo.h"
-#include "../DebugTools/DebugInfoManager.h"
-#include "../System/FastMath.h"
-#include "../Stats_B2_M1/DBPassProfile.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "System/FastMath.h"
+#include "Stats_B2_M1/DBPassProfile.h"
 
 namespace NAIVisInfo
 {

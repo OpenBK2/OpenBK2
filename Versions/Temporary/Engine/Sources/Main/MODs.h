@@ -2,7 +2,7 @@
 
 #include "Main_export.h"
 
-#include "../System/FilePath.h"
+#include "System/FilePath.h"
 
 #define MOD_MODE_GAME "game"
 #define MOD_MODE_EDITOR "editor"

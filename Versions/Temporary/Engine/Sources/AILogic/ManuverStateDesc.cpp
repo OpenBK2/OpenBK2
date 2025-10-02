@@ -3,7 +3,7 @@
 #include "IPlane.h"
 #include "PlanePreferences.h"
 #include "ManuverInternal.h"
-#include "../Stats_B2_M1/DBPlaneManuvers.h"
+#include "Stats_B2_M1/DBPlaneManuvers.h"
 
 
 //	CManuverStateDesc

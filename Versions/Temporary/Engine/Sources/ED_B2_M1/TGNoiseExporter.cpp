@@ -2,11 +2,11 @@
 
 #include "TGNoiseExporter.h"
 
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_MOD.h"
-#include "../System/FileUtils.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "System/FileUtils.h"
 
 REGISTER_EXPORTER_IN_DLL( TGNoise, CTGNoiseExporter )
 

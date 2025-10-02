@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "ReinfPointsTypedDlg.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "ReinfPointsTypedTemplateAddDlg.h"
 
 //

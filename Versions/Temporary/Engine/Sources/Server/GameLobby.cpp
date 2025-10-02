@@ -3,12 +3,12 @@
 #include "Clients.h"
 #include "GameLobby.h"
 #include "InternalPackets.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/LobbiesIDs.h"
-#include "../Misc/Time64.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/LobbiesIDs.h"
+#include "Misc/Time64.h"
 #include "Statistics.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 CGameLobby::CGameLobby( CClients *_pClients, const string &_szCfgFile )
 : pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )

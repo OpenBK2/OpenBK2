@@ -1,5 +1,5 @@
 #pragma once
-#include "../Main/MainLoop.h"
+#include "Main/MainLoop.h"
 
 
 class CInterfaceCommandDeclare : public IInterfaceCommand

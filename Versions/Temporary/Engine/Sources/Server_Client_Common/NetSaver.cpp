@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../System/System_export.h"
+#include "System/System_export.h"
 
 #include "NetPacket.h"
 #include "NetSaver.h"

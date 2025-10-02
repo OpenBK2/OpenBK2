@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "FontInfo.h"
-#include "../Misc/2DArray.h"
-#include "../Image/ImageConvertor.h"
-#include "../3Dmotor/FontFormat.h"
+#include "Misc/2DArray.h"
+#include "Image/ImageConvertor.h"
+#include "3Dmotor/FontFormat.h"
 
 namespace NFontGen
 {

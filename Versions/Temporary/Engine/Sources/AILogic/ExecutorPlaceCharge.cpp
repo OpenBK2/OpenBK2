@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ExecutorPlaceCharge.h"
 #include "NewUpdater.h"
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "Stats_B2_M1/AbilityActions.h"
 
 extern CEventUpdater updater;
 

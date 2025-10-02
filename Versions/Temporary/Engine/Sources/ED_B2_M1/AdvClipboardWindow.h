@@ -1,7 +1,7 @@
 #pragma once
 /**
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "ResourceDefines.h"
 
 //

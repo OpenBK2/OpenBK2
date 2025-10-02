@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "CreateMODDialog.h"
-#include "../Main/Mods.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/Interface_UserData.h"
+#include "Main/Mods.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Interface_UserData.h"
 
 CCreateMODDialog::CCreateMODDialog( CWnd* pParent )
 	: CResizeDialog( CCreateMODDialog::IDD, pParent )

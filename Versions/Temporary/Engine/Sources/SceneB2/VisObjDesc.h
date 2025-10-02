@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../3DMotor/GAnimation.hpp"
-#include "../Misc/Sync.h"
+#include "3DMotor/GAnimation.hpp"
+#include "Misc/Sync.h"
 #include "Scene.h"
 #include "VisObjSelection.h"
 

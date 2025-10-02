@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "TerrainManager.h"
-#include "../Stats_B2_M1/TerraAIObserver.h"
-#include "../System/BinaryResources.h"
-#include "../System/VFSOperations.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
+#include "System/BinaryResources.h"
+#include "System/VFSOperations.h"
 
 //TODO: divide LOAD and CREATE methods in TerraManager
 

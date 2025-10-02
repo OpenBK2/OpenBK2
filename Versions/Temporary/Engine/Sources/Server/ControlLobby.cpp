@@ -2,12 +2,12 @@
 
 #include "Clients.h"
 #include "ControlLobby.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/LoginPackets.h"
-#include "../Server_Client_Common/Net.h"
-#include "../Server_Client_Common/PrimeNumbers.h"
-#include "../System/XmlSaver.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/Net.h"
+#include "Server_Client_Common/PrimeNumbers.h"
+#include "System/XmlSaver.h"
 
 #include "Statistics.h"
 

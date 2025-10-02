@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/NetPacket.h"
+#include "Server_Client_Common/NetPacket.h"
 
 #include <zlib.h>
 

@@ -5,11 +5,11 @@
 #include <crtdbg.h>
 #include "MainFrm.h"
 #include "AboutDialog.h"
-#include "../System/FileUtils.h"
-#include "../MapEditorLib/Tools_Registry.h"
-#include "../Image/Image.h"
-#include "../Misc/StrProc.h"
-#include "../ED_Common/Initialize.h"
+#include "System/FileUtils.h"
+#include "MapEditorLib/Tools_Registry.h"
+#include "Image/Image.h"
+#include "Misc/StrProc.h"
+#include "ED_Common/Initialize.h"
 
 BEGIN_MESSAGE_MAP(CELKApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)

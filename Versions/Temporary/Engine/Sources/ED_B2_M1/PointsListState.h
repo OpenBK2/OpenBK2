@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../misc/2darray.h"
+#include "misc/2darray.h"
 #include "commandhandlerdefines.h"
-#include "../MapEditorLib/DefaultInputState.h"
-#include "../MapEditorLib/MaskManipulator.h"
+#include "MapEditorLib/DefaultInputState.h"
+#include "MapEditorLib/MaskManipulator.h"
 #include "Tools_SceneDraw.h"
 #include "DialogData.h"
 #include "MarkerSet.h"

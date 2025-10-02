@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../3DMotor/DBScene.h"
+#include "3DMotor/DBScene.h"
 #include "GenTerrain.h"
 
 #define DEF_FOOT_WIDTH_BASE 1.5f

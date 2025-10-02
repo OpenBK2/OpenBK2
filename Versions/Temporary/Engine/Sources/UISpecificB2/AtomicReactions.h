@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UI/IMessageReaction.h"
+#include "UI/IMessageReaction.h"
 #include "DBUISpecificB2.h"
 
 

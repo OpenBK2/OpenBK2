@@ -4,7 +4,7 @@
 #include "DifficultyLevel.h"
 
 #include "ScenarioTracker.h"
-#include "../Misc/2darray.h"
+#include "Misc/2darray.h"
 
 CDiplomacy theDipl;
 

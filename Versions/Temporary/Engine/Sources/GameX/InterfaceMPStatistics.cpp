@@ -2,17 +2,17 @@
 #include "InterfaceMPStatistics.h"
 #include "GameXClassIDs.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "SaveLoadHelper.h"
 #include "InterfaceState.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
 #include "MultiplayerCommandManager.h"
 #include "GameRoomData.h"
-#include "../SceneB2/Scene.h"
-#include "../SceneB2/Camera.h"
-#include "../SceneB2/FullScreenFader.h"
+#include "SceneB2/Scene.h"
+#include "SceneB2/Camera.h"
+#include "SceneB2/FullScreenFader.h"
 
 const float UNFADE_TIME = 1.0f;
 

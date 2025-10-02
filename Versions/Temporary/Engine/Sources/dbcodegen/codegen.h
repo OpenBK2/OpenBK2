@@ -1,6 +1,6 @@
 #pragma once
-#include "../libdb/TypeDef.h"
-#include "../libdb/Nodes2TypeDefs.h"
+#include "libdb/TypeDef.h"
+#include "libdb/Nodes2TypeDefs.h"
 
 namespace NDb
 {

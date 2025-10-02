@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../3DLib/GGeometry.h"
+#include "3DLib/GGeometry.h"
 
 
 #include "3DLib_export.h"

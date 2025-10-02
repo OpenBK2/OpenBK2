@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 
-#include "../misc/strproc.h"
+#include "misc/strproc.h"
 #include "XMLExport.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/PCIEMnemonics.h"
-#include "../System/FilePath.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/PCIEMnemonics.h"
+#include "System/FilePath.h"
 
 #define NUM_SYSTEM_CHUNKS 1
 namespace NXMLExport

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_Common/BasicExporter.h"
+#include "ED_Common/BasicExporter.h"
 
 class CInfantryExporter : public CBasicExporter
 {

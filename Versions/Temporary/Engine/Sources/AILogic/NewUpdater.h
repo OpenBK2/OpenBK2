@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../system/time.h"
+#include "system/time.h"
 #include "UpdatableObject.h"
 
-#include "../Misc/2Darray.h"
-#include "../Stats_B2_M1/FeedBackUpdates.h"
+#include "Misc/2Darray.h"
+#include "Stats_B2_M1/FeedBackUpdates.h"
 
 
 class CEventUpdater

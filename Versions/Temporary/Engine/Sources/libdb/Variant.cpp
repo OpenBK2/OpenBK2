@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
 #include "Variant.h"
-#include "../Misc/StrProc.h"
-#include "../System/XmlSaver.h"
+#include "Misc/StrProc.h"
+#include "System/XmlSaver.h"
 
 #define FLOAT_EPSILON 1e-5
 

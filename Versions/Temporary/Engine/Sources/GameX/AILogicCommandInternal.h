@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../AILogic/AILogicCommand.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "AILogic/AILogicCommand.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
 class CRegisterGroupCommand : public IAILogicCommandB2
 {

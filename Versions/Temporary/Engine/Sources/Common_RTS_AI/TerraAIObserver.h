@@ -2,9 +2,9 @@
 
 #include "Common_RTS_AI_export.h"
 
-#include "../Stats_B2_M1/TerraAIObserver.h"
-#include "../B2_M1_Terrain/fmtvso.h"
-#include "../b2_m1_terrain/dbvso.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
+#include "B2_M1_Terrain/fmtvso.h"
+#include "b2_m1_terrain/dbvso.h"
 #include "StaticMapHeights.h"
 #include "AIMap.h"
 #include "Terrain.h"

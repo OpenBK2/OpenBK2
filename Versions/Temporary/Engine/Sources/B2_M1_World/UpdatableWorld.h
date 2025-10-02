@@ -5,7 +5,7 @@
 #include "MapObj.h"
 #include "Notifications.h"
 
-#include "../SceneB2/CameraInternal.h"
+#include "SceneB2/CameraInternal.h"
 
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;

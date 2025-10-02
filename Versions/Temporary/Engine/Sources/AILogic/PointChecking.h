@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../Common_RTS_AI/PointChecking.h"
+#include "Common_RTS_AI/PointChecking.h"
 
 class CAttackPointChecking : public IPointChecking
 {

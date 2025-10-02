@@ -3,7 +3,7 @@
 #include "BuildDataBuilder.h"
 
 #include "Interface_UserData.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "Tools_HashSet.h"
 
 bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,

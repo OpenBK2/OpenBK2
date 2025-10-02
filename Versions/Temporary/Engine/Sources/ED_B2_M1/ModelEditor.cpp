@@ -1,21 +1,21 @@
 #include "StdAfx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
 #include "CommandHandlerDefines.h"
 
 #include "ED_B2_M1Dll.h"
-#include "../Misc/HPtimer.h"
+#include "Misc/HPtimer.h"
 
-#include "../MapEditorLib/EditorFactory.h"
+#include "MapEditorLib/EditorFactory.h"
 
 #include "ModelEditor.h"
 
 #include "EditorScene.h"
-#include "../SceneB2/Camera.h"
+#include "SceneB2/Camera.h"
 
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 #include <zconf.h>
 

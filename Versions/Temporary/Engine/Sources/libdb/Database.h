@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../System/Db.h"
+#include "System/Db.h"
 #include "DBObserverContainer.h"
 
 #define INDEX_FILE_NAME "index.bin"

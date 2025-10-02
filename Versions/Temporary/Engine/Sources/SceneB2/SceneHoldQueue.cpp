@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../Misc/Pool.h"
+#include "Misc/Pool.h"
 
 const int N_HOLD_TIME = 64; // seconds, must be power of 2
 typedef CPool<CObj<CObjectBase>, 64> CScenePool;

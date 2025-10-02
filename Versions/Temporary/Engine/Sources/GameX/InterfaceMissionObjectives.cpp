@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 #include "InterfaceMissionObjectives.h"
 #include "GameXClassIDs.h"
-#include "../UI/SceneClassIDs.h"
-#include "../SceneB2/Scene.h"
-#include "../Misc/STrProc.h"
+#include "UI/SceneClassIDs.h"
+#include "SceneB2/Scene.h"
+#include "Misc/STrProc.h"
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
-#include "../B2_M1_World/MissionObjectiveStates.h"
-#include "../System/Text.h"
+#include "B2_M1_World/MissionObjectiveStates.h"
+#include "System/Text.h"
 
 const int N_OBJECTIVES_ROW_COUNT = 8;
 const int MISSION_BRIEFING_ID = 1000000;

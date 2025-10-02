@@ -2,11 +2,11 @@
 #include "resource.h"
 #include "ELK_TreeWindow.h"
 #include "SpellChecker.h"
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
 #include "ProgressDialog.h"
 #include "WMDefines.h"
-#include "../System/FilePath.h"
+#include "System/FilePath.h"
 
 CELKTreeWindow::CELKTreeWindow() : pwndFormWindow( 0 ), bCollapseDeselected( true ), bNextFilterChanged( true ), bPreviousFilterChanged( true ), cachedNextItem( 0 ), cachedPreviousItem( 0 ), bCachedNextItemExists( true ), bCachedPreviousItemExists( true )
 {

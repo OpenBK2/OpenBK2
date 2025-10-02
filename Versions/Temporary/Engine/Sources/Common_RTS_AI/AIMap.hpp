@@ -1,7 +1,7 @@
 #pragma once
 
 #include "aiMap.h"
-#include "../Misc/Bresenham.h"
+#include "Misc/Bresenham.h"
 
 inline bool operator < ( const SVector &cell1, const SVector &cell2 );
 

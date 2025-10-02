@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/rpgstats.h"
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../ED_Common/Tools_Granny.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/rpgstats.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "ED_Common/Tools_Granny.h"
 
 #include <zconf.h>
 

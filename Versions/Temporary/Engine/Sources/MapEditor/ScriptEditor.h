@@ -3,7 +3,7 @@
 //#include "SyntaxColorizer.h"
 #include "LuaEditor.h"
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 
 const int WM_ME_TEXTCHANGED = WM_USER + 5;
 

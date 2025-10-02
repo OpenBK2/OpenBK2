@@ -3,7 +3,7 @@
 #include "AIMap.h"
 #include "StaticMapHeights.h"
 #include "Terrain.h"
-#include "../Misc/Bresenham.h"
+#include "Misc/Bresenham.h"
 
 
 const CVec2 CAIMap::GetCenterOfTile( const float x, const float y ) const

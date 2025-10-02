@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "../misc/strproc.h"
+#include "misc/strproc.h"
 #include "MissionUnitFullInfo.h"
 #include "InterfaceMissionInternal.h"
 #include "ScenarioTracker.h"
-#include "../B2_M1_World/MOBuilding.h"
-#include "../B2_M1_World/MOUnitMechanical.h"
-#include "../System/Text.h"
+#include "B2_M1_World/MOBuilding.h"
+#include "B2_M1_World/MOUnitMechanical.h"
+#include "System/Text.h"
 
 const int SUPPLIES_COUNT = 1000; // CRAP - magic number
 const int SUPPLIES_COUNT_INFINITE = 1000000;

@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 
-#include "../misc/strproc.h"
-#include "../misc/2darray.h"
+#include "misc/strproc.h"
+#include "misc/2darray.h"
 #include "MechUnitRPGStatsBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/BuilderFactory.h"
 //
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 //
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/ObjectController.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/ObjectController.h"
 
 #include "ExporterMethods.h"
-#include "../ED_Common/TempAttributesTool.h"
-#include "../MapEditorLib/StringManager.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "MapEditorLib/StringManager.h"
 
 #include <zconf.h>
 

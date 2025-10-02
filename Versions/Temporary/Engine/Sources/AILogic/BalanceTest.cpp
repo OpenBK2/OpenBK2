@@ -5,11 +5,11 @@
 #include "AIUnit.h"
 #include "GroupLogic.h"
 #include "Cheats.h"
-#include "../Main/GameTimer.h"
-#include "../System/Text.h"
-#include "../system/time.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
-#include "../Misc/StrProc.h"
+#include "Main/GameTimer.h"
+#include "System/Text.h"
+#include "system/time.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "Misc/StrProc.h"
 #include "B2AI.h"
 
 extern NTimer::STime curTime;

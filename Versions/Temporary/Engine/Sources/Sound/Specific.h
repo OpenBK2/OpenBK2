@@ -1,2 +1,2 @@
-#include "../Main/GameTimer.h"
-#include "../Misc/nalgoritm.h"
+#include "Main/GameTimer.h"
+#include "Misc/nalgoritm.h"

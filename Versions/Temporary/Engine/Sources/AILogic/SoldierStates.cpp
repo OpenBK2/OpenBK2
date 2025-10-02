@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/AnimationFromAction.h"
+#include "Stats_B2_M1/AnimationFromAction.h"
 #include "SoldierStates.h"
 #include "Commands.h"
 #include "PathFinder.h"
@@ -11,7 +11,7 @@
 #include "InBuildingStates.h"
 #include "GroupLogic.h"
 #include "NewUpdater.h"
-#include "../Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "AntiArtilleryManager.h"
 #include "Diplomacy.h"
 #include "Soldier.h"
@@ -25,15 +25,15 @@
 #include "ArtilleryBulletStorage.h"
 #include "StaticObjectsIters.h"
 #include "ExecutorContainer.h"
-#include "../Common_RTS_AI/PathFinder.h"
-#include "../Stats_B2_M1/DBVisObj.h"
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/AbilityActions.h"
 // for profiling
 #include "TimeCounter.h"
 #include "AAFeedBacks.h"
-#include "../Common_RTS_AI/StandartDirPath.h"
+#include "Common_RTS_AI/StandartDirPath.h"
 #include "Artillery.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "GlobalWarFog.h"
 
 extern CAAFeedBacks theAAFeedBacks;

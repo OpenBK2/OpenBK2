@@ -2,17 +2,17 @@
 
 #include "GetConsts.h"
 #include "DBGameRoot.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
-#include "../Misc/StrProc.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "Misc/StrProc.h"
 #include "MPLANTest.h"
 #include "GameXClassIDs.h"
-#include "../Main/MainLoop.h"
-#include "../Main/MainLoopCommands.h"
+#include "Main/MainLoop.h"
+#include "Main/MainLoopCommands.h"
 #include "MultiplayerCommandManager.h"
 #include "MPManager.h"
-#include "../Misc/Win32Random.h"
+#include "Misc/Win32Random.h"
 #include "DBMPConsts.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 
 
 #ifndef _FINALRELEASE

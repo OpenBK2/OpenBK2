@@ -16,15 +16,15 @@
 #include "Scripts.h"
 #include "AIGeometry.h"
 #include "ObjectProfile.h"
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "KeyBuildingBonusSystem.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "UnitCreation.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "FeedbackSystem.h"
 #include "ScenarioTracker.h"
 #include "GlobalWarFog.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
+#include "Stats_B2_M1/StatusUpdates.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D450, CBuildingSimple );
 

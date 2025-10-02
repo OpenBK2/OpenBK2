@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../UI/UI.h"
+#include "UI/UI.h"
 
 class CListControlSorterMapSize : public IWindowSorter
 {

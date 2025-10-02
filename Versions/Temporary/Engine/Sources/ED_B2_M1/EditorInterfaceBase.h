@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_Common/GameInputInterface.h"
+#include "ED_Common/GameInputInterface.h"
 struct ICamera;
 
 class CEditorInterfaceBase : public CGameInputInterface

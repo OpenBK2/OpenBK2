@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Common_RTS_AI/Collision.h"
+#include "Common_RTS_AI/Collision.h"
 
 //*******************************************************************
 //*											Коллизии для самолётов											*

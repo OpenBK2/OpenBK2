@@ -2,8 +2,8 @@
 #include <D3D9.h>
 #include "GfxBuffers.h"
 #include "Cache.h"
-#include "../System/Commands.h"
-#include "../Misc/2Darray.h"
+#include "System/Commands.h"
+#include "Misc/2Darray.h"
 #include "GfxBuffersInternal.h"
 
 const int N_SYSMEM_TEXTURES = 2;

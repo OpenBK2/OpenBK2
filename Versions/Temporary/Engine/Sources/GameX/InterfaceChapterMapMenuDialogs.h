@@ -2,7 +2,7 @@
 
 #include "InterfaceChapterMapMenu.h"
 #include "UnitFullInfoHelper.h"
-#include "../UISpecificB2/UISpecificB2.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 namespace NDb
 {

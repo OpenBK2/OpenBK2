@@ -1,6 +1,6 @@
 #pragma once
 //
-#include "../MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 
 // Common IDs
 #define IDR_ED_B2_M1_MANIFEST												1

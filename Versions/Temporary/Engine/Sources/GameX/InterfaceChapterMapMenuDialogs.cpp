@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 #include "InterfaceChapterMapMenuDialogs.h"
-#include "../Stats_B2_M1/RPGStats.h"
-#include "../Misc/StrProc.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "InterfaceState.h"
-#include "../System/Text.h"
+#include "System/Text.h"
 
 const int BASE_ID_3D = 30000;
 const int DELTA_ID_3D = 100;

@@ -2,9 +2,9 @@
 
 #include "stdafx.h"
 
-#include "../libdb/ReportMetaInfo.h"
-#include "../libdb/Checksum.h"
-#include "../System/XmlSaver.h"
+#include "libdb/ReportMetaInfo.h"
+#include "libdb/Checksum.h"
+#include "System/XmlSaver.h"
 #include "rpgstats.h"
 #include "AnimationType.h"
 #include "DBAnimB2.h"

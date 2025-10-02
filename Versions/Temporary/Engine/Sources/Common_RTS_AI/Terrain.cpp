@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "../misc/bresenham.h"
+#include "misc/bresenham.h"
 #include "Terrain.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Image/Image.h"
-#include "../Image/ImageTGA.h"
-#include "../Misc/NAlgoritm.h"
-#include "../DebugTools/DebugInfoManager.h"
-#include "../Misc/Bresenham.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Image/Image.h"
+#include "Image/ImageTGA.h"
+#include "Misc/NAlgoritm.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "Misc/Bresenham.h"
 
 //*******************************************************************
 //*												  CTerrain																*

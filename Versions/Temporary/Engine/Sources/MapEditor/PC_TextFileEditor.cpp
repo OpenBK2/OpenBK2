@@ -5,18 +5,18 @@
 #include "pc_dblinkdialog.h"
 
 #include "PC_TextFileEditor.h"
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/Interface_Exporter.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../MapEditorLib/CommonEditorMethods.h"
-#include "../MapEditorLib/PCIEMnemonics.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "MapEditorLib/StringManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/PCIEMnemonics.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "TextEditorDialog.h"
 #include "Scripteditor.h"
-#include "../System/text.h"
+#include "System/text.h"
 
 // CPCItemEditor
 

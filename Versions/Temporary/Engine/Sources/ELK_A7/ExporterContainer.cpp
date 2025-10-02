@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/DefaultExporter.h"
-#include "../MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/DefaultExporter.h"
+#include "MapEditorLib/Interface_Logger.h"
 #include "ExporterContainer.h"
 
 bool CExporterContainer::StartExport( const string &rszExportTypeName,

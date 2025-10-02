@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Misc/2DArray.h"
-#include "../MapEditorLib/ObjectBaseController.h"
-#include "../B2_M1_Terrain/DBVSO.h"
+#include "Misc/2DArray.h"
+#include "MapEditorLib/ObjectBaseController.h"
+#include "B2_M1_Terrain/DBVSO.h"
 
 class CMapInfoController : public CObjectBaseController
 {

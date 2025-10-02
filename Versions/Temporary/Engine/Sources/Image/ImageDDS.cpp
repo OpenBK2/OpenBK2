@@ -7,14 +7,14 @@
 #include "ImageInternal.h"
 #include "ImageConvertor.h"
 #include "DDS.h"
-#include "../System/FilePath.h"
+#include "System/FilePath.h"
 #include "GUnpackDXT.h"
 #include "ImageMip.h"
-#include "../3dMotor/GfxInternal.h" // ePixelFormat->D3DFormat
+#include "3dMotor/GfxInternal.h" // ePixelFormat->D3DFormat
 #include "ImageScale.h"
 
 extern "C" { 
-#include "../vendor/S3TC/s3tc.h"
+#include "vendor/S3TC/s3tc.h"
 }
 
 

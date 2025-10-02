@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../vendor/fmod/api/inc/fmod.h"
+#include "vendor/fmod/api/inc/fmod.h"
 #include "Fade.h"
 
 namespace NDb

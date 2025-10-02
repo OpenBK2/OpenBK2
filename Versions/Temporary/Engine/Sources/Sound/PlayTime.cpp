@@ -2,10 +2,10 @@
 #include "playtime.h"
 
 #include "DBMusicSystem.h"
-#include "../Misc/Win32Random.h"
-#include "../vendor/fmod/api/inc/fmod.h"
+#include "Misc/Win32Random.h"
+#include "vendor/fmod/api/inc/fmod.h"
 #include "MusicSystem.hpp"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 namespace NMusicSystem
 {

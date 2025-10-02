@@ -1,16 +1,16 @@
 #include "StdAfx.h"
-#include "../stats_b2_m1/actioncommand.h"
+#include "stats_b2_m1/actioncommand.h"
 #include "InterfaceArmyScreen.h"
 #include "GameXClassIDs.h"
-#include "../Misc/StrProc.h"
-#include "../UISpecificB2/DBUISpecificB2.h"
+#include "Misc/StrProc.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 #include "InterfaceState.h"
-#include "../Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/ActionsRemap.h"
 #include "InterfaceMisc.h"
-#include "../B2_M1_World/MapObj.h"
+#include "B2_M1_World/MapObj.h"
 #include "DBWrapReinf.h"
-#include "../UISpecificB2/EffectorB2Move.h"
-#include "../System/Text.h"
+#include "UISpecificB2/EffectorB2Move.h"
+#include "System/Text.h"
 
 const int WAIT_TIME = 300; // msec
 const int STEP_WAIT_TIME = 50; // msec

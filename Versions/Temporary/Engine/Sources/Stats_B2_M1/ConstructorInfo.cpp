@@ -2,7 +2,7 @@
 
 #include "DBConstructorProfile.h"
 #include "ConstructorInfo.h"
-#include "../Misc/nalgoritm.h"
+#include "Misc/nalgoritm.h"
 
 bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const vector<SUnitPlatform> **pPlatforms )
 {

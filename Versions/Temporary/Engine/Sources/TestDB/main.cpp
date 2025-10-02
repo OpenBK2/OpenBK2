@@ -3,12 +3,12 @@
 #include <crtdbg.h>
 #include "MeasureTimer.h"
 #include "TestType.h"
-#include "../libdb/EditorDb.h"
-#include "../libdb/ObjMan.h"
-#include "../System/FileUtils.h"
-#include "../System/XMLSAXParser.h"
-#include "../System/WinVFS.h"
-#include "../System/VFSOperations.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ObjMan.h"
+#include "System/FileUtils.h"
+#include "System/XMLSAXParser.h"
+#include "System/WinVFS.h"
+#include "System/VFSOperations.h"
 
 int CRAPTooSmartCompiler_DBTools_TypeDef();
 

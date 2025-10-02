@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../B2_M1_Terrain/PatchHolder.h"
+#include "B2_M1_Terrain/PatchHolder.h"
 
 namespace NDb
 {

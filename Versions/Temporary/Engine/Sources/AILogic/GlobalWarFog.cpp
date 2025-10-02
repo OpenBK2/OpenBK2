@@ -10,14 +10,14 @@
 #include "Tracer.hpp"
 #include "Visibility.hpp"
 
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 //#include "../Image/Image.h"
 //#include "../Image/ImageTGA.h"
-#include "../Main/GameTimer.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
-#include "../Stats_B2_M1/Vis2AI.h"
-#include "../System/Commands.h"
+#include "Main/GameTimer.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "System/Commands.h"
 
 static const int MAX_UPDATE_AT_SEGMENT = 100;
 static const int MAX_AREAS_CALCULATED_AT_SEGMENT = 50;

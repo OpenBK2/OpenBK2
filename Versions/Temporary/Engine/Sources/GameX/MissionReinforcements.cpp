@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 #include "MissionReinforcements.h"
 #include "InterfaceState.h"
-#include "../UISpecificB2/DBUISpecificB2.h"
-#include "../Misc/StrProc.h"
+#include "UISpecificB2/DBUISpecificB2.h"
+#include "Misc/StrProc.h"
 #include "CommandsSender.h"
 #include "ScenarioTracker.h"
 #include "MissionUnitFullInfo.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 #include "DBWrapReinf.h"
 #include "UIElementsHelper.h"
-#include "../System/Commands.h"
-#include "../System/Text.h"
+#include "System/Commands.h"
+#include "System/Text.h"
 
 const char* REINF_STATE_NORMAL = "Normal";
 const char* REINF_STATE_SELECTED = "Selected";

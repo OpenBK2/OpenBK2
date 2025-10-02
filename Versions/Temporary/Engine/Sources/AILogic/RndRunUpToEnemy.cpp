@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "RndRunUpToEnemy.h"
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "Soldier.h"
 #include "Guns.h"
 #include "SerializeOwner.h"

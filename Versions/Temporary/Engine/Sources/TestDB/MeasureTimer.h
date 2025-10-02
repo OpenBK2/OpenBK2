@@ -1,5 +1,5 @@
 #pragma once
-#include "../Misc/HPTimer.h"
+#include "Misc/HPTimer.h"
 
 namespace NTest
 {

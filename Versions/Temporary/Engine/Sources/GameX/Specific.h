@@ -1,4 +1,4 @@
-#include "../Main/GameTimer.h"
+#include "Main/GameTimer.h"
 #define CStructureSaver IBinSaver
 #ifndef _FINALRELEASE
 #define CONSOLE_BUFFER_LOG(n,s)	Singleton<IConsoleBuffer>()->WriteASCII( n, s )

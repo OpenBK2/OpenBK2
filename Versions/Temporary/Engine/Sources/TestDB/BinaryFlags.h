@@ -1,5 +1,5 @@
 #pragma once
-#include "../libdb/Variant.h"
+#include "libdb/Variant.h"
 namespace NDb
 {
 	class CBinaryFlags

@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
 #include "TreeFallingMutator.h"
-#include "../System/FastMath.h"
-#include "../Misc/Win32Random.h"
+#include "System/FastMath.h"
+#include "Misc/Win32Random.h"
 #include "Scene.h"
 
 void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,

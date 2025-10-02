@@ -2,8 +2,8 @@
 
 #include "ExecutorSeaReinf.h"
 #include "GroupLogic.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "UnitStates.h"
 #include "B2AI.h"
 

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CommandHandlerContainer.h"
-#include "../MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/Tools_HashSet.h"
 
 void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID )
 {

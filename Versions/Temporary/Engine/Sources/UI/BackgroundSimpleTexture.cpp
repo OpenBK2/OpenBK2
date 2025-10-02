@@ -2,8 +2,8 @@
 #include "backgroundsimpletexture.h"
 #include "UIVisitor.h"
 #include "Tools.h"
-#include "../3dMotor/DBScene.h"
-#include "../3DMotor/RectLayout.h"
+#include "3dMotor/DBScene.h"
+#include "3DMotor/RectLayout.h"
 #include "UIComponents.h"
 
 REGISTER_SAVELOAD_CLASS( 0x11075B41, CBackgroundSimpleTexture )

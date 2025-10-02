@@ -2,7 +2,7 @@
 
 #include "FileUtils.h"
 #include "FilePath.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 #include <objbase.h>
 #include <stdlib.h>

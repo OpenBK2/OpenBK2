@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Common_RTS_AI/Terrain.h"
-#include "../Misc/AreaMap.h"
+#include "Common_RTS_AI/Terrain.h"
+#include "Misc/AreaMap.h"
 #include <float.h>
 
 class CExistingObject;

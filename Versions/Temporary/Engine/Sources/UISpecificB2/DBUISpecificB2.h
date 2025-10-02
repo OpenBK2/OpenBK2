@@ -2,14 +2,14 @@
 
 // automatically generated file, don't change manually!
 
-#include "../stats_b2_m1/dbmapinfo.h"
-#include "../stats_b2_m1/m1actions.h"
-#include "../stats_b2_m1/rpgstats.h"
-#include "../stats_b2_m1/season.h"
-#include "../stats_b2_m1/useractions.h"
-#include "../ui/dbuiconsts.h"
-#include "../ui/dbuserinterface.h"
-#include "../system/filepath.h"
+#include "stats_b2_m1/dbmapinfo.h"
+#include "stats_b2_m1/m1actions.h"
+#include "stats_b2_m1/rpgstats.h"
+#include "stats_b2_m1/season.h"
+#include "stats_b2_m1/useractions.h"
+#include "ui/dbuiconsts.h"
+#include "ui/dbuserinterface.h"
+#include "system/filepath.h"
 
 struct IXmlSaver;
 

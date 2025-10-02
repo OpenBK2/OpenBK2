@@ -4,17 +4,17 @@
 #include "GroupMover.h"
 #include "CommonUnit.h"
 
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Common_RTS_AI/StaticPath.h"
-#include "../Common_RTS_AI/StaticPathInternal.h"
-#include "../Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/StaticPath.h"
+#include "Common_RTS_AI/StaticPathInternal.h"
+#include "Common_RTS_AI/Terrain.h"
 
-#include "../DebugTools/DebugInfoManager.h"
+#include "DebugTools/DebugInfoManager.h"
 
-#include "../Stats_B2_M1/AIUnitCmd.h"
-#include "../Stats_B2_M1/ActionCommand.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/ActionCommand.h"
 
-#include "../System/RandomGen.h"
+#include "System/RandomGen.h"
 
 extern NTimer::STime curTime;
 

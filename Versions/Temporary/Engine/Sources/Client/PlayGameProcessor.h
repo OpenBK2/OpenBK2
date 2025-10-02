@@ -1,7 +1,7 @@
 #pragma once
 
 #include "LinksManager.h"
-#include "../Server_Client_Common/PacketProcessor.h"
+#include "Server_Client_Common/PacketProcessor.h"
 
 class CNet;
 class CNetPacket;

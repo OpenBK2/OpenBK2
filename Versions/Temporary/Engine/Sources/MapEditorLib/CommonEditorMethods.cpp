@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "CommonEditorMethods.h"
 
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 #include "Interface_CommandHandler.h"
 
 bool SetGetEditParameters( DWORD pEditParameters, UINT nCommandHandlerType, int nCmdID )

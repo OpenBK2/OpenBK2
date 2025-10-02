@@ -4,9 +4,9 @@
 #include "Hungarian.h"
 #include "TypeDefType.h"
 #include "CodeGenMisc.h"
-#include "../Parser/ErrorsAndMessages.h"
-#include "../Parser/LangNodesDefinitions.h"
-#include "../Parser/FileNode.h"
+#include "Parser/ErrorsAndMessages.h"
+#include "Parser/LangNodesDefinitions.h"
+#include "Parser/FileNode.h"
 
 namespace NCompileCLike
 {

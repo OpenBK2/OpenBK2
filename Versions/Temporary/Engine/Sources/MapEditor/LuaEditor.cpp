@@ -2,10 +2,10 @@
 //
 
 #include "stdafx.h"
-#include "../scintilla/platform.h"
+#include "scintilla/platform.h"
 #include "LuaEditor.h"
 
-#include "../Scintilla/SciLexer.h"
+#include "Scintilla/SciLexer.h"
 //#include "MainFrame.h"
 
 // CLuaEditor

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CameraGameMouseMutator.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 #include "Scene.h"
 
 namespace NCamera

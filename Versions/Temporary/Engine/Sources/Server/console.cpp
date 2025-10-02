@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "../scintilla/scintilla.h"
+#include "scintilla/scintilla.h"
 #include "Console.h"
 #include "CommandsInterface.h"
 
-#include "../Scintilla/SciLexer.h"
-#include "../Misc/StrProc.h"
+#include "Scintilla/SciLexer.h"
+#include "Misc/StrProc.h"
 
 const int MAX_CONSOLE_SIZE = 10000;
 

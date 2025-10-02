@@ -1,7 +1,7 @@
 #pragma once
 #include "ExecutorUnitBase.h"
 #include "AIUnit.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
+#include "Stats_B2_M1/StatusUpdates.h"
 
 // CExecutorUnitBonus
 //

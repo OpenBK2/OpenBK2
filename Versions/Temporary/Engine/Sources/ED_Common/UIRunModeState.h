@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/DefaultInputState.h"
+#include "MapEditorLib/DefaultInputState.h"
 
 class CUIRunModeState : public CDefaultInputState
 {

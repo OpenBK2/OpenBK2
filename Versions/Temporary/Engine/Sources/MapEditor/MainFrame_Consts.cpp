@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/resourcedefines.h"
 #include "MainFrame.h"
 
 const int CMainFrame::WM_SECTOOLBARWNDNOTIFY = RegisterWindowMessage( _T( "WM_SECTOOLBARWNDNOTIFY" ) );

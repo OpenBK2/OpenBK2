@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "FolderManipulator.h"
-#include "../ObjMan.h"
-#include "../EditorDb.h"
-#include "../Bind.h"
-#include "../Database.h"
-#include "../../System/FilePath.h"
-#include "../../Misc/HPTimer.h"
+#include "ObjMan.h"
+#include "EditorDb.h"
+#include "Bind.h"
+#include "Database.h"
+#include "System/FilePath.h"
+#include "Misc/HPTimer.h"
 
 //#include <vtuneapi.h>
 //#pragma comment(lib, "vtuneapi.lib")

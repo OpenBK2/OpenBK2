@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "../sceneb2/scene.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../mapeditorlib/resourcedefines.h"
+#include "sceneb2/scene.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
 #include "EditorOptions.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../SceneB2/CameraScriptMutators.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "SceneB2/CameraScriptMutators.h"
 
 #include "DrawToolsDC.h"
 

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "../misc/bresenham.h"
-#include "../system/time.h"
-#include "../Stats_B2_M1/AbilityActions.h"
+#include "misc/bresenham.h"
+#include "system/time.h"
+#include "Stats_B2_M1/AbilityActions.h"
 #include "TechnicsStates.h"
 #include "NewUpdater.h"
 #include "GroupLogic.h"
@@ -16,9 +16,9 @@
 #include "Commands.h"
 #include "Guns.h"
 #include "PresizePath.h"
-#include "../Common_RTS_AI/PathFinder.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "DebugTools/DebugInfoManager.h"
 
 
 extern CDiplomacy theDipl;

@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "ManipulatorManager.h"
 #include "StringManager.h"
 #include "ExporterBase.h"
 #include "PCIEMnemonics.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../MapEditorLib/Interface_Editor.h"
-#include "../System/Commands.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_Editor.h"
+#include "System/Commands.h"
 
 static bool s_bReportSafeRefs = true;
 

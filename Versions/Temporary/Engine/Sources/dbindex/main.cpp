@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 
 #include "revision.h"
-#include "../libdb/Db.h"
-#include "../Misc/HPTimer.h"
-#include "../Misc/StrProc.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
-#include "../System/VFS.h"
-#include "../System/VFSOperations.h"
-#include "../System/WinVFS.h"
+#include "libdb/Db.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
+#include "System/VFS.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
 
 namespace NDb

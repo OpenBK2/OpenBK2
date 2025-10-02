@@ -3,13 +3,13 @@
 #include "AIMap.h"
 #include "GroupMover.h"
 #include "CommonUnit.h"
-#include "../Common_RTS_AI/AIMap.h"
-#include "../Common_RTS_AI/StaticPath.h"
-#include "../Common_RTS_AI/StaticPathInternal.h"
-#include "../Common_RTS_AI/Terrain.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
-#include "../Stats_B2_M1/ActionCommand.h"
-#include "../DebugTools/DebugInfoManager.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/StaticPath.h"
+#include "Common_RTS_AI/StaticPathInternal.h"
+#include "Common_RTS_AI/Terrain.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/ActionCommand.h"
+#include "DebugTools/DebugInfoManager.h"
 
 extern NTimer::STime curTime;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Input/GameMessage.h"
+#include "Input/GameMessage.h"
 #include "InterfaceCommandDeclare.h"
 
 class CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 class CMovEditorKeySettingsDlg : public CResizeDialog
 {

@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "MPManagerModeNivalNet.hpp"
-#include "../Server_Client_Common/ChatPackets.h"
-#include "../Client/ServerClient.h"
-#include "../Misc/StrProc.h"
+#include "Server_Client_Common/ChatPackets.h"
+#include "Client/ServerClient.h"
+#include "Misc/StrProc.h"
 #include "InterfaceState.h"
 
 void CMPManagerModeNivalNet::RequestChatChannels( DWORD dwVersion )

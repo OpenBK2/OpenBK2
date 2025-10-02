@@ -2,17 +2,17 @@
 
 #include "MPManagerMode.h"
 #include "MPTransceiver.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "CommandsHistory.h"
-#include "../Stats_B2_M1/DBMapInfo.h"
-#include "../System/Commands.h"
-#include "../Main/MainLoopCommands.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/Commands.h"
+#include "Main/MainLoopCommands.h"
 #include "MultiplayerTestNet.h"
 #include "GameXClassIDs.h"
 #include "InterfaceMisc.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "../Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/GamePackets.h"
 
 static wstring s_wszMultiplayerName;
 

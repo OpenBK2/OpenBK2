@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/Tools_HashSet.h"
 #include "SelectTablesDialog.h"
 
 CSelectTablesDialog::CSelectTablesDialog( CWnd* pParent )

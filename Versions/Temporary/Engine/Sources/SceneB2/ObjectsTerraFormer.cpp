@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "TerraTools.h"
-#include "../System/FastMath.h"
+#include "System/FastMath.h"
 #include "GenTerrain.h"
 
 #define DEF_EXPAND_TILES_NUM 3

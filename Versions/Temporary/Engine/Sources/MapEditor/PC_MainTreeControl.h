@@ -1,9 +1,9 @@
 #pragma once
 
 #include "PC_ItemEditor.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/ObjectController.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/ObjectController.h"
 #include "SortTreeControl.h"
 
 // Можно вставлять только в диалоги CDialog и в его производные

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "GBinkPlayer.h"
-#include "../System/Basic.h"
+#include "System/Basic.h"
 
 namespace NGScene {
 

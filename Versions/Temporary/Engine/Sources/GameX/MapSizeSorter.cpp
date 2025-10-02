@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "MapSizeSorter.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1927ABC1, CListControlSorterMapSize )
 

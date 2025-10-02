@@ -4,9 +4,9 @@
 #include "ConnectionInternal.h"
 #include "ConnectServerProcessor.h"
 #include "LinksManager.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/Net.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/Net.h"
 
 BASIC_REGISTER_CLASS( CSimpleClientEffort );
 BASIC_REGISTER_CLASS( CSimpleServerEffort );

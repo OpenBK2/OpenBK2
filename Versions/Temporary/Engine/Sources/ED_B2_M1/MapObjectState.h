@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../libdb/manipulator.h"
-#include "../MapEditorLib/MultiInputState.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "libdb/manipulator.h"
+#include "MapEditorLib/MultiInputState.h"
 #include "MapInfoStoreInputState.h"
 #include "Tools_SceneDraw.h"
 #include "EditorScene.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <zconf.h>
 

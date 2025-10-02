@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Errors.h"
 #include "SolutionAnalyzer.h"
-#include "../System/FilePath.h"
-#include "../System/FileUtils.h"
-#include "../Misc/StrProc.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "Misc/StrProc.h"
 
 namespace NSlnAnalyzer
 {

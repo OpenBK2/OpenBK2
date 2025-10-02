@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "MODs.h"
-#include "../Main/MainLoop.h"
-#include "../System/FileUtils.h"
-#include "../System/VFSOperations.h"
-#include "../System/WinVFS.h"
-#include "../System/Text.h"
-#include "../Misc/StrProc.h"
-#include "../libdb/Db.h"
+#include "Main/MainLoop.h"
+#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
+#include "System/Text.h"
+#include "Misc/StrProc.h"
+#include "libdb/Db.h"
 
 #define MOD_ATTACH_COMMAND 0x10268440
 

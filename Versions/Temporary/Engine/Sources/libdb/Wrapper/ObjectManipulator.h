@@ -1,7 +1,7 @@
 #pragma once
-#include "../ObjMan.h"
-#include "../ObjManIterator.h"
-#include "../Manipulator.h"
+#include "ObjMan.h"
+#include "ObjManIterator.h"
+#include "Manipulator.h"
 
 /**
 Класс управляющий полями объекта финального типа

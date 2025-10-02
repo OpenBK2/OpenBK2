@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "WinFrame2Input.h"
-#include "../Input/GameMessage.h"
+#include "Input/GameMessage.h"
 
 
 /**

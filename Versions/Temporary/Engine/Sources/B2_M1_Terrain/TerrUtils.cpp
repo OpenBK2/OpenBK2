@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-#include "../Misc/2DArray.h"
-#include "../System/FastMath.h"
+#include "Misc/2DArray.h"
+#include "System/FastMath.h"
 #include "TerrUtils.h"
 
 CVec3dEx CVec3fEx::GetVec3dEx() const { return CVec3dEx( (double)x, (double)y, (double)z, flag ); }

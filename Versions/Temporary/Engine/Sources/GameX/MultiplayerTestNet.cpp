@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "MultiplayerTestNet.h"
-#include "../Server_Client_Common/LoginPackets.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../System/RandomGen.h"
-#include "../Misc/StrProc.h"
+#include "Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "System/RandomGen.h"
+#include "Misc/StrProc.h"
 #include "MultiplayerNetPackets.h"
 
 // CEmptyServerClient

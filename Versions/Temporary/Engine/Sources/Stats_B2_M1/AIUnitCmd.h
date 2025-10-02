@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ActionCommand.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 namespace NDb
 {

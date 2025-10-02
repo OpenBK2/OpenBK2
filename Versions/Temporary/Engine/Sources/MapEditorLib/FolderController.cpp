@@ -2,8 +2,8 @@
 
 #include "FolderController.h"
 
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 bool CFolderController::UndoWithoutUpdateViews()
 {

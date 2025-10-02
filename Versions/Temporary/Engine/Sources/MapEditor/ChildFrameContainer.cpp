@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/ChildFrameFactory.h"
+#include "MapEditorLib/ChildFrameFactory.h"
 #include "ChildFrameContainer.h"
 
 CChildFrameContainer::~CChildFrameContainer()

@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
 #include "./statssysteminternal.h"
-#include "../UI/UI.h"
-#include "../Misc/StrProc.h"
+#include "UI/UI.h"
+#include "Misc/StrProc.h"
 
 void CStatsSystem::UpdateEntry( const string &szName, const string &szEntry, const DWORD dwColor )
 {

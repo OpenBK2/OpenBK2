@@ -6,8 +6,8 @@
 #include "WinVFS.h"
 #include "WinVFS.hpp"
 #include "ZipArchieve.h"
-#include "../Misc/StrProc.h"
-#include "../Misc/Win32Helper.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Helper.h"
 
 static NWin32Helper::CCriticalSection g_WinVFSCriticalSection;
 namespace NVFS

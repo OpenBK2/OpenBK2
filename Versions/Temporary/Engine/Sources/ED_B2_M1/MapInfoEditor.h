@@ -1,15 +1,15 @@
 #pragma once
 
 #include "MapInfoEditorSettings.h"
-#include "../MapEditorLib/EditorBase.h"
-#include "../MapEditorLib/DefaultView.h"
+#include "MapEditorLib/EditorBase.h"
+#include "MapEditorLib/DefaultView.h"
 
 #include "MapInfoController.h"
 #include "MapInfoState.h"
 #include "HeightContainer.h"
 #include "SpotInfoData.h"
 
-#include "../MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/DefaultShortcutBar.h"
 #include "MiniMapWindow.h"
 #include "MoviesEditorWindow.h"
 

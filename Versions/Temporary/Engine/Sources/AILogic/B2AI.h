@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../B2_M1_World/CommonB2M1AI.h"
+#include "B2_M1_World/CommonB2M1AI.h"
 
 namespace NDb
 {

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
 #include "Tools_SceneGeometry.h"
-#include "../Image/ImageColor.h"
+#include "Image/ImageColor.h"
 #include "EditorScene.h"
-#include "../SceneB2/Terrain.h"
-#include "../stats_b2_m1/Vis2AI.h"
+#include "SceneB2/Terrain.h"
+#include "stats_b2_m1/Vis2AI.h"
 
 #include <zconf.h>
 

@@ -1,17 +1,17 @@
 #include "StdAfx.h"
 
-#include "../B2_M1_Terrain/DBPreLight.h"
-#include "../3DMotor/GMaterial.hpp"
-#include "../3DMotor/GMaterial.h"
-#include "../3DMotor/GfxRender.h"
-#include "../Misc/Win32Random.h"
-#include "../System/FastMath.h"
-#include "../Image/Targa.h"
+#include "B2_M1_Terrain/DBPreLight.h"
+#include "3DMotor/GMaterial.hpp"
+#include "3DMotor/GMaterial.h"
+#include "3DMotor/GfxRender.h"
+#include "Misc/Win32Random.h"
+#include "System/FastMath.h"
+#include "Image/Targa.h"
 #include "GenTerrain.h"
 #include "TerraHeight.h"
 #include "Scene.h"
 #include "WaterController.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 #define DEF_WATER_PATCH_SIZE_X 6
 #define DEF_WATER_PATCH_SIZE_Y 6

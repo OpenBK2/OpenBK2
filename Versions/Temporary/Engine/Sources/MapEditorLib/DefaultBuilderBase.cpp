@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "DefaultBuilderBase.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/StringManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/StringManager.h"
 
 bool CDefaultBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {

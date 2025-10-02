@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Nodes2TypeDefs.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 namespace NDb
 {

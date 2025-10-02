@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_B2_M1/EditorScene.h"
+#include "ED_B2_M1/EditorScene.h"
 
 class CEditorScene : public IEditorScene
 {

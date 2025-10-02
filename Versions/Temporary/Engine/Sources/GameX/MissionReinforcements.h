@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "../misc/2darray.h"
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
+#include "misc/2darray.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
 #include "WorldClient.h"
-#include "../UI/UI.h"
+#include "UI/UI.h"
 
 #include <zconf.h>
 

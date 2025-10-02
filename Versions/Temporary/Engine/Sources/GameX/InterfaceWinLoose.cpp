@@ -3,12 +3,12 @@
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
-#include "../3DMotor/ScreenShot.h"
-#include "../SceneB2/Scene.h"
-#include "../SceneB2/Camera.h"
-#include "../SceneB2/FullScreenFader.h"
-#include "../System/Commands.h"
-#include "../Sound/MusicSystem.h"
+#include "3DMotor/ScreenShot.h"
+#include "SceneB2/Scene.h"
+#include "SceneB2/Camera.h"
+#include "SceneB2/FullScreenFader.h"
+#include "System/Commands.h"
+#include "Sound/MusicSystem.h"
 
 static float END_GAME_FADE_TIME = 2.5f;
 static float END_GAME_ROTATE_TIME = 10.0f;

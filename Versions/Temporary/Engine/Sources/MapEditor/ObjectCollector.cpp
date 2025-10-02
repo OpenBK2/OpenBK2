@@ -2,9 +2,9 @@
 #include "ResourceDefines.h"
 
 #include "ObjectCollector.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../Misc/HPTimer.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "Misc/HPTimer.h"
 
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 {

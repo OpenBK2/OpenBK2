@@ -16,7 +16,7 @@
 #include "ArtilleryBulletStorage.h"
 #include "StaticObjectsIters.h"
 #include "ExecutorContainer.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "TankStates.h"
 #include "FeedBackSystem.h"
 // for profiling

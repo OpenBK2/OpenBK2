@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../System/FreeIDs.h"
+#include "System/FreeIDs.h"
 #include "Commander.h"
 
 namespace NDb

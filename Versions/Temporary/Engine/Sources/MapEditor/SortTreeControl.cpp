@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "SortTreeControl.h"
-#include "../libdb/Manipulator.h"
-#include "../Misc/StrProc.h"
+#include "libdb/Manipulator.h"
+#include "Misc/StrProc.h"
 
 BEGIN_MESSAGE_MAP(CSortTreeControl, SECTreeCtrl)
 END_MESSAGE_MAP()

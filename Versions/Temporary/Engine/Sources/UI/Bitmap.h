@@ -1,8 +1,8 @@
 
 #pragma once
-#include "../3DMotor/GfxBuffers.h"
-#include "../Misc/2Darray.h"
-#include "../System/DG.h"
+#include "3DMotor/GfxBuffers.h"
+#include "Misc/2Darray.h"
+#include "System/DG.h"
 
 
 class CBitmap :  public CPtrFuncBase< NGfx::CTexture >

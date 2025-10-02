@@ -4,7 +4,7 @@
 #include "ParseOperations.h"
 #include "StringNumbers.h"
 #include "ErrorsAndMessages.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 void yyerror_no_line( char *s, ... );
 

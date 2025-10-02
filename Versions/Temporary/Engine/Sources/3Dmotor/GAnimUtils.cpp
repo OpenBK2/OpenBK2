@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 #include "GAnimUtils.h"
 
 namespace NAnimation

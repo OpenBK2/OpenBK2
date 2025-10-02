@@ -545,7 +545,7 @@ char *yytext;
 #include <malloc.h>
 #include "LangToken.h"
 #include "lang.tab.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 int nyyLineNumber = 1;
 

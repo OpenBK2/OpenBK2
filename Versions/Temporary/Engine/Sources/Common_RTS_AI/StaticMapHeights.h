@@ -3,8 +3,8 @@
 #include "Common_RTS_AI_export.h"
 
 
-#include "../Misc/Spline.h"
-#include "../Misc/2DArray.h"
+#include "Misc/Spline.h"
+#include "Misc/2DArray.h"
 
 class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 {

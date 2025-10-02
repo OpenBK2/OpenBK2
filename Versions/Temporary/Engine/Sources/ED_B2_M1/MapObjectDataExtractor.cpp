@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "MapObjectDataExtractor.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../System/Text.h"
-#include "../Misc/StrProc.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "System/Text.h"
+#include "Misc/StrProc.h"
 
 bool CMapObjectDataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {

@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../misc/2darray.h"
-#include "../Stats_B2_M1/DBClientConsts.h"
-#include "../Stats_B2_M1/DBCameraConsts.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "misc/2darray.h"
+#include "Stats_B2_M1/DBClientConsts.h"
+#include "Stats_B2_M1/DBCameraConsts.h"
 #include "InterfaceMissionBase.h"
 #include "WorldClient.h"
 
-#include "../AILogic/B2AI.h"
+#include "AILogic/B2AI.h"
 #include "Transceiver.h"
 
-#include "../Sound/SoundScene.h"
-#include "../Sound/MusicSystem.h"
+#include "Sound/SoundScene.h"
+#include "Sound/MusicSystem.h"
 #include "GetConsts.h"
 #include "ScenarioTracker.h"
 

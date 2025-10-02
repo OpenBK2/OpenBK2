@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "MainFrameContainer.h"
-#include "../MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_Logger.h"
 
 
 

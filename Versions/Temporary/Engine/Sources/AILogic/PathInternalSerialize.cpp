@@ -5,7 +5,7 @@
 #include "PresizePath.h"
 #include "ArtilleryPaths.h"
 #include "SerializeOwner.h"
-#include "../Common_RTS_AI/BasePathUnit.h"
+#include "Common_RTS_AI/BasePathUnit.h"
 
 int CPlaneInFormationSmoothPath::operator&( IBinSaver &saver )
 {

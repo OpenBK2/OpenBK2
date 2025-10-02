@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "../misc/bresenham.h"
+#include "misc/bresenham.h"
 #include "StandartSmoothMechPath.h"
 #include "Terrain.h"
-#include "../System/RandomGen.h"
+#include "System/RandomGen.h"
 #include "BasePathUnit.h"
 
 

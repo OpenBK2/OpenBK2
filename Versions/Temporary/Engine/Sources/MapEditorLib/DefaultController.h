@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Interface_Controller.h"
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 
 
 class CDefaultView;

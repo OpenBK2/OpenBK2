@@ -1,7 +1,7 @@
 
 #pragma once
 #include "MPInterfaceData.h"
-#include "../Server_Client_Common/LadderStatistics.h"
+#include "Server_Client_Common/LadderStatistics.h"
 
 namespace NDb
 {

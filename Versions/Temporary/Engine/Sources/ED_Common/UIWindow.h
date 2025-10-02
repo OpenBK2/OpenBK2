@@ -1,9 +1,9 @@
 #pragma once
 
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../UI/ui.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "UI/ui.h"
 
 class CUIWindow : public IWindow
 {

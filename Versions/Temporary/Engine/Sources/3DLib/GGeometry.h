@@ -1,7 +1,7 @@
 #pragma once
 #include "3DLib_export.h"
 
-#include "../3Dmotor/GPixelFormat.h"
+#include "3Dmotor/GPixelFormat.h"
 
 namespace NGScene
 {

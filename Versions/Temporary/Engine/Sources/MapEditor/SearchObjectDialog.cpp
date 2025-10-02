@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../libdb/Manipulator.h"
+#include "libdb/Manipulator.h"
 #include "SearchObjectDialog.h"
 
 CSearchObjectDialog::CSearchObjectDialog( CWnd* pParent ) : CDialog( CSearchObjectDialog::IDD, pParent )

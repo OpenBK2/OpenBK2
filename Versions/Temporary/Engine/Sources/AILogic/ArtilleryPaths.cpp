@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "ArtilleryPaths.h"
-#include "../Common_RTS_AI/BasePathUnit.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/BasePathUnit.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4BA, CArtilleryCrewPath );
 REGISTER_SAVELOAD_CLASS( 0x1108D4BB, CArtilleryBeingTowedPath );

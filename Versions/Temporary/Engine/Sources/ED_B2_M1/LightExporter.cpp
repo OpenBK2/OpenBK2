@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "LightExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
-#include "../System/FileUtils.h"
-#include "../System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/FilePath.h"
 
 REGISTER_EXPORTER_IN_DLL( AnimLight, CLightExporter )
 

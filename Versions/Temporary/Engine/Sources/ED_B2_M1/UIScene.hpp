@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../ED_Common/UIScene.h"
+#include "ED_Common/UIScene.h"
 
 class CUISceneB2 : public IUIScene
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AILogic/AILogicCommand.h"
+#include "AILogic/AILogicCommand.h"
 
 class CControlSumCheckCommand : public IAILogicCommandB2
 {

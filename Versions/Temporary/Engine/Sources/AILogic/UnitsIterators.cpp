@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "UnitsIterators.h"
-#include "../Misc/Bresenham.h"
+#include "Misc/Bresenham.h"
 
 //*******************************************************************
 //*													CGlobalIter															*

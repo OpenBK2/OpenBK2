@@ -3,10 +3,10 @@
 #include "BindArray.h"
 #include "Bind.h"
 #include "EditorDb.h"
-#include "../System/LightXML.h"
-#include "../System/XmlReader.h"
-#include "../System/XmlUtils.h"
-#include "../System/FilePath.h"
+#include "System/LightXML.h"
+#include "System/XmlReader.h"
+#include "System/XmlUtils.h"
+#include "System/FilePath.h"
 
 namespace NDb
 {

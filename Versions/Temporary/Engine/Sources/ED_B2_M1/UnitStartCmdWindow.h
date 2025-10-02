@@ -2,9 +2,9 @@
 #define __UNIT_START_CMD_WINDOW__
 #pragma once
 
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "StringResources.h"
 
 //

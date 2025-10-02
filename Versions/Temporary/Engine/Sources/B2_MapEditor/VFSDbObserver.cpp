@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include "../libdb/DBObserver.h"
-#include "../System/VFSOperations.h"
+#include "libdb/DBObserver.h"
+#include "System/VFSOperations.h"
 
 namespace NDb
 {

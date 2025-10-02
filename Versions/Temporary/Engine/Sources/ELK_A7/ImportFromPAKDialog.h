@@ -1,6 +1,6 @@
 
 #pragma once
-#include "../MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/ResizeDialog.h"
 
 class CImportFromPAKDialog : public CResizeDialog
 {

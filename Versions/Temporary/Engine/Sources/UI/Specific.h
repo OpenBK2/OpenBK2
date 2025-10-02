@@ -1,14 +1,14 @@
 #pragma once
 #define CStructureSaver IBinSaver
 
-#include "../Main/GameTimer.h"
-#include "../Sound/DBSound.h"
+#include "Main/GameTimer.h"
+#include "Sound/DBSound.h"
 #include "DBUserInterface.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 #include "UIFactory.h"
 #include "SceneClassIDs.h"
-#include "../Misc/nalgoritm.h"
-#include "../Input/GameMessage.h"
+#include "Misc/nalgoritm.h"
+#include "Input/GameMessage.h"
 #ifndef _FINALRELEASE
 #define CONSOLE_BUFFER_LOG(n,s)	WriteToPipe( n, s )
 #define CONSOLE_BUFFER_LOG1(n,s,c)	WriteToPipe( n, s, c )

@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 #include "SuperWeapon.hpp"
-#include "../Stats_B2_M1/UserActions.h"
-#include "../Input/Bind.h"
+#include "Stats_B2_M1/UserActions.h"
+#include "Input/Bind.h"
 #include "MissionUnitFullInfo.h"
 #include "CommandsSender.h"
 #include "WorldClient.h"
-#include "../Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
 
 // CMissionSuperWeapon
 

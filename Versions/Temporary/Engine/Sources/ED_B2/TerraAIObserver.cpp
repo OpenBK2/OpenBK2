@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "Stats_B2_M1/Vis2AI.h"
 #include "TerraAIObserver.h"
 
 CTerraAIObserverInEditor::CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY )

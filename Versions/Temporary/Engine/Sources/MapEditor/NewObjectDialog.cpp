@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "../libdb/Manipulator.h"
-#include "../Misc/StrProc.h"
+#include "libdb/Manipulator.h"
+#include "Misc/StrProc.h"
 #include "NewObjectDialog.h"
-#include "../MapEditorLib/Interface_FolderCallback.h"
-#include "../MapEditorLib/StringManager.h"
+#include "MapEditorLib/Interface_FolderCallback.h"
+#include "MapEditorLib/StringManager.h"
 
 CNewObjectDialog::CNewObjectDialog( CWnd* pParent )
 	: CResizeDialog( CNewObjectDialog::IDD, pParent ),

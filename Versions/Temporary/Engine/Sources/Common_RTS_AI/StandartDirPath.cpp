@@ -2,7 +2,7 @@
 
 #include "StandartDirPath.h"
 
-#include "../Misc/Bresenham.h"
+#include "Misc/Bresenham.h"
 
 REGISTER_SAVELOAD_CLASS( 0x31114C82, CStandartDirPath );
 

@@ -7,7 +7,7 @@
 #include "UnitsIterators2.h"
 #include "AIUnit.h"
 #include "Cheats.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "FeedBackSystem.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4B0, CMineStaticObject );

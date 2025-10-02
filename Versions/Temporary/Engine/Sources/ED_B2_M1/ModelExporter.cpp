@@ -2,13 +2,13 @@
 
 #include "ModelExporter.h"
 #include "ExporterMethods.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../MapEditorLib/Interface_MOD.h"
-#include "../ED_Common/TempAttributesTool.h"
-#include "../libdb/ResourceManager.h"
-#include "../Misc/StrProc.h"
-#include "../System/FilePath.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "libdb/ResourceManager.h"
+#include "Misc/StrProc.h"
+#include "System/FilePath.h"
 
 namespace NModelExporter
 {

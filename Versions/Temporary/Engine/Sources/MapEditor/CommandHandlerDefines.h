@@ -1,5 +1,5 @@
 #pragma once
-#include "../MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 
 
 

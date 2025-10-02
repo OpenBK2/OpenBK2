@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "ProgressThread.h"
-#include "../MapEditorLib/Interface_ProgressHook.h"
-#include "../MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_ProgressHook.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 
 IMPLEMENT_DYNAMIC( CProgressThread, CWinThread )

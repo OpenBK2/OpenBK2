@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../Misc/Win32Random.h"
+#include "Misc/Win32Random.h"
 #include "GenTerrain.h"
 #include "Scene.h"
 #include "TerraHeight.h"

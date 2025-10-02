@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
-#include "../MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 
 #include "WindowSimpleSharedEditor.h"
 #include "UIRunModeState.h"

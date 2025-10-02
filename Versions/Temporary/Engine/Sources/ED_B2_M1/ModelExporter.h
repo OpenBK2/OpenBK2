@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../ED_Common/BasicExporter.h"
-#include "../ED_Common/Tools_Granny.h"
+#include "ED_Common/BasicExporter.h"
+#include "ED_Common/Tools_Granny.h"
 
 namespace NModelExporter
 {

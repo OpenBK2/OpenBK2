@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Terminal.h"
-#include "../Server_Client_Common/Commands.h"
-#include "../misc/win32helper.h"
+#include "Server_Client_Common/Commands.h"
+#include "misc/win32helper.h"
 
 const int INPUT_BUFFER_SIZE = 255;
 

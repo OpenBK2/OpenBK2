@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ObjectFilter.h"
-#include "../Misc/StrProc.h"
-#include "../System/XmlSaver.h"
+#include "Misc/StrProc.h"
+#include "System/XmlSaver.h"
 
 static void NormalizeFileName( string *pFileName )
 {

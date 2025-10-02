@@ -2,7 +2,7 @@
 
 #include "BasePathUnit.h"
 #include "Collision.h"
-#include "../Misc/nqueue.h"
+#include "Misc/nqueue.h"
 
 struct IPath;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_PCItemEditor.h"
+#include "MapEditorLib/Interface_PCItemEditor.h"
 
 
 class CPCItemEditor : public IPCItemEditor

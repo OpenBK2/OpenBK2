@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "../3DLib/GGeometry.h"
+#include "3DLib/GGeometry.h"
 #include "DBScene.h"
 #include "GRenderModes.h"
 #include "HeightFog.h"

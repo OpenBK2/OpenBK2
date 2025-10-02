@@ -2,7 +2,7 @@
 #include "3Dmotor_export.h"
 
 
-#include "../System/Time.hpp"
+#include "System/Time.hpp"
 #include "GParticleFormat.h"
 namespace NDb
 {

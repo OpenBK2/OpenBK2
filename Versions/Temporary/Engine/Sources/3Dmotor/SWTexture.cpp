@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "SWTexture.h"
 #include "DBScene.h"
-#include "../Image/DDS.h"
-#include "../Image/GUnpackDXT.h"
+#include "Image/DDS.h"
+#include "Image/GUnpackDXT.h"
 
 #include <cstdint>
 

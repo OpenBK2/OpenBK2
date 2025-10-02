@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "../3DMotor/Gfx.h"
-#include "../3DMotor/GfxUtils.h"
-#include "../System/dg.h"
+#include "3DMotor/Gfx.h"
+#include "3DMotor/GfxUtils.h"
+#include "System/dg.h"
 
 #include "FullScreenFader.h"
 

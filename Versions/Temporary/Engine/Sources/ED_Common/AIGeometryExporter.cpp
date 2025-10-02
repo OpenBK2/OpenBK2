@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "AIGeometryExporter.h"
-#include "../3Dmotor/aiObject.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../Misc/StrProc.h"
+#include "3Dmotor/aiObject.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/StrProc.h"
 
-#include "../MapEditorLib/CommonExporterMethods.h"
+#include "MapEditorLib/CommonExporterMethods.h"
 #include "Tools_Granny.h"
 
 REGISTER_EXPORTER_IN_DLL( AIGeometry, CAIGeometryExporter )

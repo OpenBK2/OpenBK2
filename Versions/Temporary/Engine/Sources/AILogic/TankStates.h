@@ -3,7 +3,7 @@
 #include "StatesFactory.h"
 #include "UnitStates.h"
 #include "AIUnit.h"
-#include "../Stats_B2_M1/StatusUpdates.h"
+#include "Stats_B2_M1/StatusUpdates.h"
 #include "StatusUpdatesHelper.h"
 
 class CTankStatesFactory : public IStatesFactory

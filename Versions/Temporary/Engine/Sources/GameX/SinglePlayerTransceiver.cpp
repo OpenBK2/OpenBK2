@@ -2,12 +2,12 @@
 
 #include "SinglePlayerTransceiver.h"
 
-#include "../AILogic/AILogicCommand.h"
-#include "../AILogic/B2AI.h"
-#include "../Input/Bind.h"
+#include "AILogic/AILogicCommand.h"
+#include "AILogic/B2AI.h"
+#include "Input/Bind.h"
 #include "ScenarioTracker.h"
 
-#include "../SceneB2/Scene.h"
+#include "SceneB2/Scene.h"
 
 // CSinglePlayerTransceiver
 

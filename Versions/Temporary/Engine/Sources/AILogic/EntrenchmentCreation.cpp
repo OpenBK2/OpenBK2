@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
-#include "../misc/bresenham.h"
+#include "misc/bresenham.h"
 #include "EntrenchmentCreation.h"
 #include "UnitsIterators2.h"
 #include "AIUnit.h"
 #include "UnitStates.h"
 #include "UnitCreation.h"
 #include "StaticObjectsIters.h"
-#include "../Stats_B2_M1/AIUpdates.h"
+#include "Stats_B2_M1/AIUpdates.h"
 #include "Entrenchment.h"
 
 

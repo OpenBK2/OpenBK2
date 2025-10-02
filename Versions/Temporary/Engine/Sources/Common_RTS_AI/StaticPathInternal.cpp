@@ -3,7 +3,7 @@
 #include "StaticPathInternal.h"
 #include "CommonPathFinder.h"
 
-#include "../Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/AIMap.h"
 
 const int DIRECTION_OFFSET = 32;
 

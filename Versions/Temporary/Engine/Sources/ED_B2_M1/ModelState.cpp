@@ -1,26 +1,26 @@
 #include "StdAfx.h"
 
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
 
-#include "../mapeditorlib/commoneditormethods.h"
+#include "mapeditorlib/commoneditormethods.h"
 #include "modelstate.h"
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 
-#include "../3DLib/MemObject.h"
-#include "../3DLib/GMemBuilder.h"
-#include "../3DLib/Transform.h"
+#include "3DLib/MemObject.h"
+#include "3DLib/GMemBuilder.h"
+#include "3DLib/Transform.h"
 #include "EditorScene.h"
-#include "../SceneB2/Camera.h"
-#include "../Main/GameTimer.h"
+#include "SceneB2/Camera.h"
+#include "Main/GameTimer.h"
 
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../libdb/ResourceManager.h"
-#include "../Misc/PlaneGeometry.h"
-#include "../3DMotor/GAnimation.hpp"
+#include "MapEditorLib/Interface_Logger.h"
+#include "libdb/ResourceManager.h"
+#include "Misc/PlaneGeometry.h"
+#include "3DMotor/GAnimation.hpp"
 
 #include "EditorMethods.h"
 
@@ -30,10 +30,10 @@
 
 #include "EditorOptions.h"
 #include "ED_B2_M1Dll.h"
-#include "../Stats_B2_M1/AnimModes.h"
-#include "../Stats_B2_M1/SceneModes.h"
-#include "../Stats_B2_M1/Vis2AI.h"
-#include "../Stats_B2_M1/dbvisobj.h"
+#include "Stats_B2_M1/AnimModes.h"
+#include "Stats_B2_M1/SceneModes.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "Stats_B2_M1/dbvisobj.h"
 
 #include <zconf.h>
 

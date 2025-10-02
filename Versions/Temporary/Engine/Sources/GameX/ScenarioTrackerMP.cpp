@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/dbmapinfo.h"
-#include "../ui/commandparam.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/dbmapinfo.h"
+#include "ui/commandparam.h"
 #include "ScenarioTracker.hpp"
-#include "../B2_M1_World/MissionObjectiveStates.h"
+#include "B2_M1_World/MissionObjectiveStates.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
-#include "../UISpecificB2/DBUISpecificB2.h"
-#include "../AILogic/DBAIConsts.h"
-#include "../Stats_B2_M1/RPGStats.h"
-#include "../AILogic/B2AI.h"
+#include "UISpecificB2/DBUISpecificB2.h"
+#include "AILogic/DBAIConsts.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "AILogic/B2AI.h"
 
 #include <zconf.h>
 

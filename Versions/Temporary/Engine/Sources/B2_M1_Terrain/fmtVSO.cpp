@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
 #include "fmtVSO.h"
-#include "../System/VFSOperations.h"
-#include "../System/XmlSaver.h"
+#include "System/VFSOperations.h"
+#include "System/XmlSaver.h"
 
 int SVectorStripeObjectPoint::operator&( IXmlSaver &saver )
 {

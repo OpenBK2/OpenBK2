@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../SceneB2/WeatherVisual.h"
+#include "SceneB2/WeatherVisual.h"
 
 class CWeather
 {

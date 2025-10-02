@@ -1,10 +1,10 @@
 #pragma once
 #define EDITOR_BUILDING_ID (-4)
 
-#include "../B2_M1_World/MOBuilding.h"
-#include "../MapEditorLib/DefaultShortcutBar.h"
-#include "../MapEditorLib/DefaultView.h"
-#include "../MapEditorLib/EditorBase.h"
+#include "B2_M1_World/MOBuilding.h"
+#include "MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/EditorBase.h"
 
 
 class CBuildingRPGStatsEditorSettings

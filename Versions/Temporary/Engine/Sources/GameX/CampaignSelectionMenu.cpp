@@ -2,15 +2,15 @@
 #include "CampaignSelectionMenu.h"
 #include "DBGameRoot.h"
 #include "GameXClassIDs.h"
-#include "../UI/SceneClassIDs.h"
-#include "../SceneB2/Scene.h"
+#include "UI/SceneClassIDs.h"
+#include "SceneB2/Scene.h"
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
-#include "../System/Commands.h"
-#include "../Misc/StrProc.h"
+#include "System/Commands.h"
+#include "Misc/StrProc.h"
 #include "GetConsts.h"
-#include "../System/Text.h"
-#include "../SceneB2/Cursor.h"
+#include "System/Text.h"
+#include "SceneB2/Cursor.h"
 
 static bool s_bCampaignAutostartMission = false;
 

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "AboutDialog.h"
-#include "../MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Interface_UserData.h"
 
 CAboutDialog::CAboutDialog( CWnd* pParent)
 	: CDialog( CAboutDialog::IDD, pParent ) {}

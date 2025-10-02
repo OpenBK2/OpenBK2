@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../MapEditorLib/ResizeDialog.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResizeDialog.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "ResourceDefines.h"
-#include "../Stats_B2_M1/RPGStats.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 //
 //						REINFPOINTS WINDOW DATA

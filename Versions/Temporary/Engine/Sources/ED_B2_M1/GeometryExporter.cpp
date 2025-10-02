@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
 #include "GeometryExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 #include "ExporterMethods.h"
 

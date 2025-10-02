@@ -2,13 +2,13 @@
 #include "resource.h"
 
 #include "ELK_Types.h"
-#include "../MapEditorLib/Tools_Resources.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../Misc/StrProc.h"
-#include "../System/WinVFS.h"
-#include "../System/VFSOperations.h"
+#include "MapEditorLib/Tools_Resources.h"
+#include "MapEditorLib/StringManager.h"
+#include "Misc/StrProc.h"
+#include "System/WinVFS.h"
+#include "System/VFSOperations.h"
 #include "CreateFilterDialog.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 int SELKTextProperty::operator&( IXmlSaver &xs )
 {

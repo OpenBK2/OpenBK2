@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../Misc/Win32Random.h"
+#include "Misc/Win32Random.h"
 #include "PerlinNoise.h"
 
 #define DEF_NOISE_EPS 0.00001f

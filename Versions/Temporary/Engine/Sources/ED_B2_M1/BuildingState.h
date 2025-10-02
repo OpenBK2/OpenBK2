@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/MultiInputState.h"
+#include "MapEditorLib/MultiInputState.h"
 
 #include "BuildingEditor.h"
 

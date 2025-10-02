@@ -2,7 +2,7 @@
 #include "GScene.h"
 #include "GRenderLight.h"
 
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 static int nDirectionalLightID, nPointLightID;
 namespace NGScene

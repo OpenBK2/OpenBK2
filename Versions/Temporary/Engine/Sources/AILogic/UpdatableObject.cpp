@@ -3,7 +3,7 @@
 #include "UpdatableObject.h"
 #include "Diplomacy.h"
 #include "Cheats.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 
 extern CDiplomacy theDipl;
 extern SCheats theCheats;

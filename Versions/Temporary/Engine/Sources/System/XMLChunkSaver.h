@@ -2,7 +2,7 @@
 
 #include "LightXML.h"
 #include "Db.h"
-#include "../Misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 #include "XmlSaver.h"
 
 namespace NXml

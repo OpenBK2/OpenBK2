@@ -2,11 +2,11 @@
 
 #include "ConnectServerProcessor.h"
 
-#include "../Net/NetDriver.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/LoginPackets.h"
-#include "../Server_Client_Common/Net.h"
-#include "../Server_Client_Common/PrimeNumbers.h"
+#include "Net/NetDriver.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/Net.h"
+#include "Server_Client_Common/PrimeNumbers.h"
 
 CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckConnect )
 {

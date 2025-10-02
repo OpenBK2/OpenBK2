@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Stats_B2_M1/DBMapInfo.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "DBMinimap.h"
-#include "../SceneB2/TerrainInfo.h"
-#include "../Image/ImageScale.h"
+#include "SceneB2/TerrainInfo.h"
+#include "Image/ImageScale.h"
 
 namespace NMinimapImage
 {

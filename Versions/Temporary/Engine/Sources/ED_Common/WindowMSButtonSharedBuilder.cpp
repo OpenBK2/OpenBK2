@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "WindowMSButtonSharedBuilder.h"
-#include "../MapEditorLib/BuilderFactory.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/CommonExporterMethods.h"
-#include "../System/FileUtils.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "System/FileUtils.h"
 
 //REGISTER_BUILDER_IN_DLL( WindowMSButtonShared, CWindowMSButtonSharedBuilder )
 

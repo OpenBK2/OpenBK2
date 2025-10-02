@@ -2,14 +2,14 @@
 
 #include "InternalPackets.h"
 #include "TestClientProcessor.h"
-#include "../Client/ServerClient.h"
-#include "../Misc/StrProc.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/CustomLobbyPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/LadderLobbyPackets.h"
-#include "../Server_Client_Common/LoginPackets.h"
-#include "../Server_Client_Common/ChatPackets.h"
+#include "Client/ServerClient.h"
+#include "Misc/StrProc.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/CustomLobbyPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/LadderLobbyPackets.h"
+#include "Server_Client_Common/LoginPackets.h"
+#include "Server_Client_Common/ChatPackets.h"
 
 CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
 {

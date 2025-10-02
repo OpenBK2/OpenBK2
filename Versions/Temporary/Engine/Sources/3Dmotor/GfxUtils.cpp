@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GfxUtils.h"
 #include "GfxShaders.h"
-#include "../3DLib/Transform.h"
+#include "3DLib/Transform.h"
 namespace NGfx
 {
 

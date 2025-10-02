@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 
-#include "../Stats_B2_M1/DBClientConsts.h"
+#include "Stats_B2_M1/DBClientConsts.h"
 #include "DebugAckHelper.hpp"
 #include "MapObj.h"
 #include "clientackmanagerinternal.h"
 
-#include "../Main/GameTimer.h"
-#include "../Sound/SoundScene.h"
-#include "../Misc/StrProc.h"
-#include "../System/Commands.h"
+#include "Main/GameTimer.h"
+#include "Sound/SoundScene.h"
+#include "Misc/StrProc.h"
+#include "System/Commands.h"
 
 
 REGISTER_SAVELOAD_CLASS( 0x110AE400, CClientAckManager);

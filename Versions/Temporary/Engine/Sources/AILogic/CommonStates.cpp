@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "groupmoveexecutor.h"
-#include "../system/time.h"
+#include "system/time.h"
 #include "CommonStates.h"
 #include "Building.h"
 #include "Entrenchment.h"
@@ -16,13 +16,13 @@
 #include "Formation.h"
 #include "AckManager.h"
 #include "Probability.h"
-#include "../Common_RTS_AI/PathFinder.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "PathFinder.h"
 #include "Technics.h"
 #include <float.h>
 #include "Artillery.h"
 #include "ExecutorContainer.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 
 /*

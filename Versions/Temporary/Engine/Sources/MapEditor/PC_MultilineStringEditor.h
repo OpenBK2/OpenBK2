@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../MapEditorLib/ScintillaEditor.h"
-#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ScintillaEditor.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 
 

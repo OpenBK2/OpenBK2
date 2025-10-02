@@ -1,6 +1,6 @@
 #pragma once
 #include "InterfaceMPBase.h"
-#include "../UI/UIComponents.h"
+#include "UI/UIComponents.h"
 
 enum EMPChatStatus;
 

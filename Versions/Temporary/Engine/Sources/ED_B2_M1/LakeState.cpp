@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
-#include "../sceneb2/scene.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
+#include "sceneb2/scene.h"
 
 #include "MapInfoEditor.h"
 #include "LakeState.h"
 
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 
 #include <zconf.h>
 

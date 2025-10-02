@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Reinforcement.h"
-#include "../Misc/2Darray.h"
+#include "Misc/2Darray.h"
 #include "DBAIConsts.h"
 
 namespace NReinforcement

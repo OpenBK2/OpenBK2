@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../MapEditorLib/Interface_ProgressHook.h"
+#include "MapEditorLib/Interface_ProgressHook.h"
 #include "ProgressThread.h"
 
 

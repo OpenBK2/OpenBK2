@@ -4,8 +4,8 @@
 #include "InterfaceState.h"
 #include "DBGameRoot.h"
 #include "ScenarioTracker.h"
-#include "../Misc/StrProc.h"
-#include "../System/Text.h"
+#include "Misc/StrProc.h"
+#include "System/Text.h"
 #include "CustomMissions.h"
 
 const int CUSTOM_MISSION_DEFAULT_DIFFICULTY = 1;

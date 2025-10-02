@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "XMLSAXParser.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NLXML
 {

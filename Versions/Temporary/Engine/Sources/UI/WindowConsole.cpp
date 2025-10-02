@@ -10,7 +10,7 @@
 
 #include "UIML.h"
 #include "DBUIConsts.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 static int nConsoleSize = 100;
 

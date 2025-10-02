@@ -4,10 +4,10 @@
 #include "ConnectionEffort.h"
 #include "ConnectServerProcessor.h"
 #include "PlayGameProcessor.h"
-#include "../Server_Client_Common/CommonPackets.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../Server_Client_Common/Net.h"
-#include "../Server_Client_Common/NetLogger.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "Server_Client_Common/Net.h"
+#include "Server_Client_Common/NetLogger.h"
 
 static const DWORD dwWaitingPacketTimeout = 300000;
 const int CONNECTION_TIMEOUT = 20;

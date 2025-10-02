@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "RefListWaitDialog.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 
 BEGIN_MESSAGE_MAP(CRefListWaitDialog, CResizeDialog)
 	ON_WM_TIMER()

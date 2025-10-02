@@ -2,7 +2,7 @@
 
 #include "Scripts.h"
 #include "B2AI.h"
-#include "../Common_RTS_AI/Terrain.h"
+#include "Common_RTS_AI/Terrain.h"
 
 namespace NDb
 {

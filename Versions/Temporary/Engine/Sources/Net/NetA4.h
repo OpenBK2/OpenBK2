@@ -5,7 +5,7 @@
 #include "NetLogin.h"
 #include "NetPeer2Peer.h"
 
-#include "../Misc/HPTimer.h"
+#include "Misc/HPTimer.h"
 
 #if !defined(_FINALRELEASE) || defined(_DEVVERSION)
 //#define __TEST_LAGS__

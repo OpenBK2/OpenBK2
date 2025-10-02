@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "../mapeditorlib/resourcedefines.h"
-#include "../mapeditorlib/commandhandlerdefines.h"
+#include "mapeditorlib/resourcedefines.h"
+#include "mapeditorlib/commandhandlerdefines.h"
 
 #include "PC_BinaryBitFieldEditor.h"
 #include "BinaryBitFieldDialog.h"
 
-#include "../MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Interface_UserData.h"
 
 bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {

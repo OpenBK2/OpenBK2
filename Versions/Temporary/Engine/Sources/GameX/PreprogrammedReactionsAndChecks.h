@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../UI/UI.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "UI/UI.h"
 
 
 template <typename TObj>

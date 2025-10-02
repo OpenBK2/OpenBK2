@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../3DMotor/GView.h"
+#include "3DMotor/GView.h"
 
 namespace NDb
 {

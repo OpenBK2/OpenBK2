@@ -9,8 +9,8 @@
 #include "WaterController.h"
 #include "SurfController.h"
 #include "DynamicDebrisManager.h"
-#include "../Misc/HPTimer.h"
-#include "../Stats_B2_M1/Vis2AI.h"
+#include "Misc/HPTimer.h"
+#include "Stats_B2_M1/Vis2AI.h"
 
 
 #define DEF_CRAG_HOLE_WIDTH 0.05f

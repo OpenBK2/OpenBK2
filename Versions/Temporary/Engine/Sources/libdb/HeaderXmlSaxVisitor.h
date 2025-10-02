@@ -1,6 +1,6 @@
 #pragma once
-#include "../System/XMLSAXParser.h"
-#include "../Misc/StrProc.h"
+#include "System/XMLSAXParser.h"
+#include "Misc/StrProc.h"
 #include "ObjectHeader.h"
 
 namespace NDb

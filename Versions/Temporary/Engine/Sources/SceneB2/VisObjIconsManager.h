@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Stats_B2_M1/IconsSet.h"
-#include "../3DMotor/RectLayout.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "3DMotor/RectLayout.h"
 #include "SceneTypes.h"
 
 namespace NGScene

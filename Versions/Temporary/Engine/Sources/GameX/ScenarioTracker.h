@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../GameX/DBScenario.h"
+#include "GameX/DBScenario.h"
 
-#include "../AILogic/ScenarioTracker.h"
+#include "AILogic/ScenarioTracker.h"
 
 
 // BEGIN new scenario tracker

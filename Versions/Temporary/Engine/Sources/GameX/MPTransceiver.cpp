@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 
 #include "MPTransceiver.h"
-#include "../Client/ServerClientInterface.h"
-#include "../Server_Client_Common/GamePackets.h"
-#include "../AILogic/B2AI.h"
-#include "../Main/DBNetConsts.h"
+#include "Client/ServerClientInterface.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "AILogic/B2AI.h"
+#include "Main/DBNetConsts.h"
 #include "CommonCommands.h"
 #include <float.h>
-#include "../Main/AICmdsAutoMagicInterface.h"
-#include "../Main/CommandsHistory.hpp"
+#include "Main/AICmdsAutoMagicInterface.h"
+#include "Main/CommandsHistory.hpp"
 #include "ScenarioTracker.h"
 #include "SaveLoadHelper.h"
 #include "InterfaceMissionInternal.h"
@@ -17,15 +17,15 @@
 #include "InterfaceState.h"
 #include "GameXClassIDs.h"
 #include "MultiplayerCommandManager.h"
-#include "../Misc/StrProc.h"
-#include "../Main/MainLoop.h"
-#include "../Main/MainLoopCommands.h"
-#include "../System/GlobalVars.h"
-#include "../System/Commands.h"
+#include "Misc/StrProc.h"
+#include "Main/MainLoop.h"
+#include "Main/MainLoopCommands.h"
+#include "System/GlobalVars.h"
+#include "System/Commands.h"
 #include "GetConsts.h"
 #include "InterfaceMisc.h"
 
-#include "../SceneB2/Scene.h"
+#include "SceneB2/Scene.h"
 
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
 

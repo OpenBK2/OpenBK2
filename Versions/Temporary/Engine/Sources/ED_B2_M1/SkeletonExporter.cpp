@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 
 #include "SkeletonExporter.h"
-#include "../MapEditorLib/ExporterFactory.h"
-#include "../libdb/ResourceManager.h"
-#include "../MapEditorLib/StringManager.h"
-#include "../MapEditorLib/Tools_HashSet.h"
-#include "../MapEditorLib/ManipulatorManager.h"
-#include "../ED_Common/TempAttributesTool.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "ED_Common/TempAttributesTool.h"
 
 #include "ExporterMethods.h"
 #include "AnimationMnemonics.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 REGISTER_EXPORTER_IN_DLL( Skeleton, CSkeletonExporter )
 

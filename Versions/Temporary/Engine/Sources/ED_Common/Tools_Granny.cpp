@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Tools_Granny.h"
-#include "../MapEditorLib/Tools_Geometry.h"
-#include "../MapEditorLib/Interface_Logger.h"
-#include "../Misc/StrProc.h"
+#include "MapEditorLib/Tools_Geometry.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "Misc/StrProc.h"
 
 int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char *pName )
 {

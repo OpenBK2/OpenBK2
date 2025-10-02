@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "SpellChecker.h"
-#include "../MapEditorLib/Tools_Registry.h"
+#include "MapEditorLib/Tools_Registry.h"
 #include "MLParser.h"
 
 const CSpellEngine::SLidInfo CSpellEngine::LID_NUM[]=

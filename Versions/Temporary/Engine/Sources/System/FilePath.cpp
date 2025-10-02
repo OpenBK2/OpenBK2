@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "FilePath.h"
-#include "../Misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 namespace NFile
 {

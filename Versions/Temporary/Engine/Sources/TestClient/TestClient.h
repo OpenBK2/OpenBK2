@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Server_Client_Common/CommandsInterface.h"
+#include "Server_Client_Common/CommandsInterface.h"
 
 class CCommands;
 struct IMultiTester;

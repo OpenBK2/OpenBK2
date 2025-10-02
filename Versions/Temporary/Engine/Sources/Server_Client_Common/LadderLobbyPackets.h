@@ -2,7 +2,7 @@
 
 #include "NetPacket.h"
 #include "LadderStatistics.h"
-#include "../System/XmlSaver.h"
+#include "System/XmlSaver.h"
 
 class CLadderInfoPacket : public CNetPacket
 {

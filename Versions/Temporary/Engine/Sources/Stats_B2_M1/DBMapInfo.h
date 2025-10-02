@@ -4,13 +4,13 @@
 
 #include "Stats_B2_M1_export.h"
 
-#include "../b2_m1_terrain/dbterrain.h"
+#include "b2_m1_terrain/dbterrain.h"
 #include "dbconstructorprofile.h"
 #include "dbreinforcements.h"
 #include "rpgstats.h"
 #include "season.h"
 #include "prefix_dbmapinfo.h"
-#include "../system/filepath.h"
+#include "system/filepath.h"
 
 struct IXmlSaver;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Net/LinksManager.h"
+#include "Net/LinksManager.h"
 
 namespace NNet
 {

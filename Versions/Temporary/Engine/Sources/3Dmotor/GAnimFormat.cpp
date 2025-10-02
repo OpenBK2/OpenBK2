@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "../vendor/Granny/include/granny.h"
+#include "vendor/Granny/include/granny.h"
 #include "GAnimFormat.h"
-#include "../System/BasicShare.h"
+#include "System/BasicShare.h"
 
 namespace NAnimation
 {

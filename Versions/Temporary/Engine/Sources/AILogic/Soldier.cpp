@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../system/time.h"
-#include "../misc/bresenham.h"
+#include "system/time.h"
+#include "misc/bresenham.h"
 #include "Soldier.h"
 #include "SoldierStates.h"
 #include "InBuildingStates.h"
@@ -28,7 +28,7 @@
 
 #include "GroupLogic.h"
 #include "Statistics.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "Graveyard.h"
 #include "AILogicInternal.h"
 #include "DBAIConsts.h"

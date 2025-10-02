@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "CustomCheck.h"
-#include "../Script/ScriptWrapper.h"
+#include "Script/ScriptWrapper.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075CC4,CCheckRunScript)
 REGISTER_SAVELOAD_CLASS(0x11075CC5, CCheckPreprogrammed)

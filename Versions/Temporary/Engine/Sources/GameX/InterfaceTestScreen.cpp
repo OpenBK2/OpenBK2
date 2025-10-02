@@ -1,14 +1,14 @@
 #include "StdAfx.h"
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../misc/2darray.h"
-#include "../stats_b2_m1/iconsset.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "misc/2darray.h"
+#include "stats_b2_m1/iconsset.h"
 #include "InterfaceTestScreen.h"
 #include "GameXClassIDs.h"
-#include "../SceneB2/Cursor.h"
-#include "../SceneB2/Scene.h"
-#include "../UI/SceneClassIDs.h"
-#include "../Misc/STrProc.h"
+#include "SceneB2/Cursor.h"
+#include "SceneB2/Scene.h"
+#include "UI/SceneClassIDs.h"
+#include "Misc/STrProc.h"
 
 #include <zconf.h>
 

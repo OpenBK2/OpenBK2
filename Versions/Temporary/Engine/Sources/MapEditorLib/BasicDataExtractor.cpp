@@ -1,15 +1,15 @@
 #include "StdAfx.h"
 
 #include "BasicDataExtractor.h"
-#include "../libdb/ResourceManager.h"
+#include "libdb/ResourceManager.h"
 #include "Interface_UserData.h"
 #include "Tools_Image.h"
-#include "../Misc/2DArray.h"
-#include "../Image/Image.h"
-#include "../Image/ImageDDS.h"
-#include "../Image/ImageScale.h"
-#include "../System/FileUtils.h"
-#include "../System/VFSOperations.h"
+#include "Misc/2DArray.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
+#include "Image/ImageScale.h"
+#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
 #include "Tools_Resources.h"
 
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,

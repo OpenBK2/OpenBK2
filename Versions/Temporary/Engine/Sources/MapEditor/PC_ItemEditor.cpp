@@ -3,8 +3,8 @@
 #include "pc_constants.h"
 #include "pc_itemeditor.h"
 #include "PC_ItemEditor.h"
-#include "../Misc/StrProc.h"
-#include "../MapEditorLib/StringManager.h"
+#include "Misc/StrProc.h"
+#include "MapEditorLib/StringManager.h"
 
 //Editors
 #include "PC_IntInputEditor.h"

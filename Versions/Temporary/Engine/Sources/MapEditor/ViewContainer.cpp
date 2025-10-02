@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "../MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/Tools_HashSet.h"
 #include "ViewContainer.h"
 
 void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )

@@ -5,7 +5,7 @@
 #include "MPManagerModeLAN.hpp"
 #include "MPManagerModeNivalNet.hpp"
 #include "GameXClassIDs.h"
-#include "../Main/MainLoop.h"
+#include "Main/MainLoop.h"
 
 // CMPManager - general methods
 

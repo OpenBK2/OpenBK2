@@ -1,6 +1,6 @@
 #pragma once
 #include "GFileSkin.h"
-#include "../System/GResource.h"
+#include "System/GResource.h"
 #include "aiObject.h"
 #include "GSkeleton.h"
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../ui/commandparam.h"
-#include "../ui/dbuserinterface.h"
-#include "../ui/ui.h"
-#include "../UI/BackGroundMutableTexture.h"
+#include "ui/commandparam.h"
+#include "ui/dbuserinterface.h"
+#include "ui/ui.h"
+#include "UI/BackGroundMutableTexture.h"
 #include "CommandsHistory.h"
 
 namespace NDb

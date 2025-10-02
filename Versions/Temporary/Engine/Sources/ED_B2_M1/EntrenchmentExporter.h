@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ED_Common/StoreObjectExporter.h"
+#include "ED_Common/StoreObjectExporter.h"
 
 class CEntrenchmentExporter : public IExporter
 {

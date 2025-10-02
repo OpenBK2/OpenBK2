@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "../MapEditorLib/Interface_MainFrame.h"
-#include "../MapEditorLib/ResourceDefines.h"
-#include "../System/Dg.h"
-#include "../System/GResource.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "System/Dg.h"
+#include "System/GResource.h"
 
 #include "ChildFrameBase.h"
 

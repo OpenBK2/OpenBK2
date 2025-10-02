@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CameraMayaMouseMutator.h"
-#include "../System/Commands.h"
+#include "System/Commands.h"
 
 namespace NCamera
 {

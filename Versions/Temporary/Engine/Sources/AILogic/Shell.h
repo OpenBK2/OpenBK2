@@ -2,9 +2,9 @@
 
 #include <queue>
 #include "LinkObject.h"
-#include "../Misc/nqueue.h"
-#include "../Stats_B2_M1/Actions.h"
-#include "../Stats_B2_M1/RPGStats.h"
+#include "Misc/nqueue.h"
+#include "Stats_B2_M1/Actions.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 class CAIUnit;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../B2_M1_World/UpdatableWorld.h"
+#include "B2_M1_World/UpdatableWorld.h"
 
 class CEditorUpdatableWorld : public CUpdatableWorld
 {

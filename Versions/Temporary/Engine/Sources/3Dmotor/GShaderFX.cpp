@@ -2,7 +2,7 @@
 #include <D3D9.h>
 #include <D3DX9.h>
 #include "GfxInternal.h"
-#include "../System/VFSOperations.h"
+#include "System/VFSOperations.h"
 
 
 #include "GShaderFX.h"

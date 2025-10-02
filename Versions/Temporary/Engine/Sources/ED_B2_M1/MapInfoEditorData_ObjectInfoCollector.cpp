@@ -4,8 +4,8 @@
 
 #include "MapInfoEditorData_ObjectInfoCollector.h"
 #include "MapInfoEditor.h"
-#include "../MapEditorLib/Tools_HashSet.h"
-#include "../MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 
 namespace NMapInfoEditor
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "UnitTorpedo.h"
-#include "../Common_RTS_AI/StaticMapHeights.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "Shell.h"
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"

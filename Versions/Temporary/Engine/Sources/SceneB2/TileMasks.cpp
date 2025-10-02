@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "../3DMotor/DBScene.h"
+#include "3DMotor/DBScene.h"
 #include "GenTerrain.h"
 
-#include "../System/Commands.h"
-#include "../System/VFSOperations.h"
+#include "System/Commands.h"
+#include "System/VFSOperations.h"
 
 
 //#include <VTuneAPI.h>

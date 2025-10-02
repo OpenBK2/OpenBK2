@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 
 #include "ScenarioTracker.hpp"
-#include "../B2_M1_World/MissionObjectiveStates.h"
-#include "../AILogic/DBAIConsts.h"
+#include "B2_M1_World/MissionObjectiveStates.h"
+#include "AILogic/DBAIConsts.h"
 #include "GetConsts.h"
-#include "../Misc/Win32Random.h"
-#include "../Misc/StrProc.h"
+#include "Misc/Win32Random.h"
+#include "Misc/StrProc.h"
 #include "InterfaceState.h"
-#include "../UISpecificB2/DBUISpecificB2.h"
-#include "../Stats_B2_M1/RPGStats.h"
-#include "../B2_M1_World/MapObj.h"
-#include "../AILogic/B2AI.h"
-#include "../System/Commands.h"
-#include "../System/Text.h"
+#include "UISpecificB2/DBUISpecificB2.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "B2_M1_World/MapObj.h"
+#include "AILogic/B2AI.h"
+#include "System/Commands.h"
+#include "System/Text.h"
 
 BASIC_REGISTER_CLASS(IAIScenarioTracker)
 
