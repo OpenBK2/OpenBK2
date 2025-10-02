@@ -10,13 +10,6 @@
 #include "CreateFilterDialog.h"
 #include "../System/XmlSaver.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 int SELKTextProperty::operator&( IXmlSaver &xs )
 {
 	xs.Add( "State", &nState );

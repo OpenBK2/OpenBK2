@@ -1,12 +1,5 @@
 #include "StdAfx.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool IsRunningOnLocalDrive()
 {
 #if defined(_DO_ASSERT_SLOW) && !defined(_FINALRELEASE)

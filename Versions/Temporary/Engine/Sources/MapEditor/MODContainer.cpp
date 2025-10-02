@@ -9,13 +9,6 @@
 #include "../MapEditorLib/Interface_MainFrame.h"
 #include "../MapEditorLib/Interface_Progress.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CMODContainer::CanNewMOD()
 {
 	return true;

@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "Tools_FreeIDCollector.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #include "../libdb/Manipulator.h"
 
 bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const UINT nID )

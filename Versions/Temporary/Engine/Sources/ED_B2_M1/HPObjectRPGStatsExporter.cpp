@@ -8,13 +8,6 @@
 #include "../System/FileUtils.h"
 #include "../3DMotor/GPixelFormat.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SModelSurfacePoint> &rPoints )
 {
 	if ( !pManipulator )

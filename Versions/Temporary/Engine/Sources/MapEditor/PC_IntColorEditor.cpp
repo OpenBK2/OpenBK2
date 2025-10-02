@@ -6,12 +6,6 @@
 #include "PC_IntColorEditor.h"
 #include "../MapEditorLib/Interface_UserData.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // CPCItemEditor
 
 void CPCIntColorEditor::SetValue( const CVariant &rValue )

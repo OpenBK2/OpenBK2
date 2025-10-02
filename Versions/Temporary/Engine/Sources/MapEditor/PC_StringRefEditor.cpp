@@ -10,13 +10,6 @@
 #include "../MapEditorLib/PCIEMnemonics.h"
 #include "../MapEditorLib/CommonEditorMethods.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CPCItemEditor
 
 void CPCStringRefEditor::SetValue( const CVariant &rValue )

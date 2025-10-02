@@ -5,13 +5,6 @@
 #include "../MapEditorLib/StringManager.h"
 #include "../MapEditorLib/Interface_UserData.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CCreateMODDialog::CCreateMODDialog( CWnd* pParent )
 	: CResizeDialog( CCreateMODDialog::IDD, pParent )
 {

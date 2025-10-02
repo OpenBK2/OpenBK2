@@ -3,13 +3,6 @@
 #include "../mapeditorlib/resourcedefines.h"
 #include "MainFrame.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CMainFrame::WM_SECTOOLBARWNDNOTIFY = RegisterWindowMessage( _T( "WM_SECTOOLBARWNDNOTIFY" ) );
 
 

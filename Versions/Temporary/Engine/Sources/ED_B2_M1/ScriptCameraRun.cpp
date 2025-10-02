@@ -3,13 +3,6 @@
 #include "ScriptCameraRun.h"
 #include "./scriptcamerarun.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 //
 //
 //		RUN ScriptMovie dialog

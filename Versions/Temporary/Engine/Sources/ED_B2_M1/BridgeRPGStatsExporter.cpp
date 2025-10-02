@@ -13,12 +13,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 static const char *AI_GEOMETRY_PREFIX[] = { "mAI", "center", "border" };
 //static const char GEOMETRY_FOLDER[] = "bin\\Geometries\\";
 static const char BRIDGE_FOLDER[] = "bin\\Bridges\\";

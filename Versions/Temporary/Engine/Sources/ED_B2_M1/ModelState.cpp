@@ -37,13 +37,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CModelState::CModelState( CModelEditor *_pModelEditor ) : nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_STATE, this );

@@ -6,13 +6,6 @@
 #include "../MapEditorLib/Interface_Logger.h"
 #include "../Misc/HPTimer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Operation", &szOperation );

@@ -14,12 +14,6 @@
 #include "CameraPositionState.h"
 #include "CameraPositionWindow.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMapInfoMan, int nPlayerIndex )
 {
 	if ( !pResult || !pMapInfoMan )

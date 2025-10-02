@@ -14,13 +14,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CVSOWindow::FILTER_TYPE[] = "VSO";
 const char CVSOWindow::EXTRACTOR_TYPE[] = "VSO";
 

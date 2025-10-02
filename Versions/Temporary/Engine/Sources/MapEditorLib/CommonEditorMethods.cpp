@@ -4,13 +4,6 @@
 #include "../libdb/Manipulator.h"
 #include "Interface_CommandHandler.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool SetGetEditParameters( DWORD pEditParameters, UINT nCommandHandlerType, int nCmdID )
 {
 	NI_ASSERT( pEditParameters != 0, "CObjectState::GetEditParameters(): pEditParameters == 0" );

@@ -3,13 +3,6 @@
 #include "../Stats_B2_M1/Vis2AI.h"
 #include "TerraAIObserver.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CTerraAIObserverInEditor::CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY )
 {
 	CTerraAIObserver::CTerraAIObserver();

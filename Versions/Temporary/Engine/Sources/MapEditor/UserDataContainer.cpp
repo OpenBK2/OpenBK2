@@ -6,13 +6,6 @@
 #include "../System/FilePath.h"
 #include "../Misc/StrProc.h"
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #define START_FOLDER_TOKEN "%START%\\"
 
 typedef hash_map<string, string> CTokensMap;

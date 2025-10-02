@@ -9,13 +9,6 @@
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor, const string &rszTypeName, const CDBID &rDBID ) 
 	: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )
 {

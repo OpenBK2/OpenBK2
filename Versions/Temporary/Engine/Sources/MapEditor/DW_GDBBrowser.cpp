@@ -17,13 +17,6 @@
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID ) : bCreateControls( true ), nGDBBrowserID( _nGDBBrowserID ), wndContents( nGDBBrowserID )
 {
 }

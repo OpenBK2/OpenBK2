@@ -6,13 +6,6 @@
 
 #include "PC_String3ButtonEditor.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void CPCString3ButtonEditor::GetButtonTitle( CString *pstrTitle, int nButtonIndex )
 {
 	if ( nButtonIndex == 0 )

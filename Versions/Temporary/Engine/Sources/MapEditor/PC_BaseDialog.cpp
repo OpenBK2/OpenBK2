@@ -3,13 +3,6 @@
 
 #include "PC_BaseDialog.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CPCBaseDialog::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )

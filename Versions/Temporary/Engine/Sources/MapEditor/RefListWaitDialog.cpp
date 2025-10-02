@@ -3,13 +3,6 @@
 #include "RefListWaitDialog.h"
 #include "../libdb/ResourceManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP(CRefListWaitDialog, CResizeDialog)
 	ON_WM_TIMER()
 	ON_WM_DESTROY()

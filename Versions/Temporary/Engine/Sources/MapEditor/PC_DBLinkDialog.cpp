@@ -10,13 +10,6 @@
 #include "Tree_GDBLinkBrowser.h"
 #include "../MapEditorLib/Tools_HashSet.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const UINT	CPCDBLinkDialog::PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCDBLinkDialog::PC_DBL_TREE_COLUMN_FORMAT[PC_DBL_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };
 const int		CPCDBLinkDialog::PC_DBL_TREE_COLUMN_WIDTH [PC_DBL_TREE_COLUMN_COUNT] = { 100, 50, 100 };

@@ -6,13 +6,6 @@
 #include "../System/WinVFS.h"
 #include "../System/VFSOperations.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
 {
 	if ( pStreamHolder )

@@ -12,13 +12,6 @@
 #include "../UI/UI.h"
 #include "ChildFrameWndBase.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
 

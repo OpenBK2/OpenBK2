@@ -13,13 +13,6 @@
 #include "../MapEditorLib/CommonEditorMethods.h"
 #include "../3Dmotor/DBScene.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CTextureState::CTextureState( CTextureEditor *_pEditor ) 
 : pEditor( _pEditor )
 {

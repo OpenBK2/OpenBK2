@@ -19,12 +19,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const CVec3 &rvPos, 
 														  NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {

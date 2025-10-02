@@ -7,13 +7,6 @@
 
 #include "../MapEditorLib/Interface_MainFrame.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP(CLogWindow, CScintillaEditorWindow)
 	ON_WM_SETFOCUS()
 	ON_WM_CONTEXTMENU()

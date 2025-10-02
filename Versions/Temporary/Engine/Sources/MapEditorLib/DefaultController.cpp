@@ -3,13 +3,6 @@
 #include "Interface_View.h"
 #include "DefaultController.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {
 	// самостоятельно выполнить команду

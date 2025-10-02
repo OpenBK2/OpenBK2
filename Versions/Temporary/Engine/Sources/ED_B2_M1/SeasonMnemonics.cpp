@@ -2,12 +2,6 @@
 #include "../Stats_B2_M1/Season.h"
 #include "SeasonMnemonics.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER, "SEASON_WINTER" );

@@ -4,13 +4,6 @@
 #include "ImportFromGameDialog.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CImportFromGameDialog::vID[] = 
 {
 	IDC_IFG_FOLDER_BROWSE_LABEL,	//0

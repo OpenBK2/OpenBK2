@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "ScriptCameraMovementTypes.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CScriptCameraRunTypeMnemonics::CScriptCameraRunTypeMnemonics() : 
 CMnemonicsCollector<int>( NDb::SCRT_DIRECT_MOVE, "SCRT_DIRECT_MOVE" )
 {

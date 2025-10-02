@@ -10,13 +10,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 float GetDistanceTo3DLine( const CVec3 &rvPoint, CVec2 &rvScreenPos )
 {
 	CVec3 vOrigin = VNULL3;

@@ -13,13 +13,6 @@
 #include "VSOState.h"
 #include "ED_B2_M1Dll.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-
 namespace NExtraDraw
 {
 	void DrawVector( CSceneDrawTool *pSceneDrawTool, UINT uColor, const vector<CVec3> &vPoints )

@@ -2,14 +2,6 @@
 #include "../scintilla/scintilla.h"
 #include "ScintillaEditor.h"
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CScintillaEditorWindow::CScintillaEditorWindow()
 	: pwndStatusStringWindow( 0 ) //, pwndTargetWindow( 0 )
 {

@@ -5,13 +5,6 @@
 #include "../MapEditorLib/Tools_Resources.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 COpenMODDialog::COpenMODDialog( CWnd* pParent )
 	: CResizeDialog( COpenMODDialog::IDD, pParent ), bCreateControls( true ), nMODIndex( -1 )
 {

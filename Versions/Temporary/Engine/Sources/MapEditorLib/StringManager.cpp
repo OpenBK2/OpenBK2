@@ -8,13 +8,6 @@
 #include "../libdb/ResourceManager.h"
 #include "Tools_HashSet.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void CStringManager::CreateRecentListName( string *pszName, const SObjectSet &rObjectSet, bool bMainObject )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();

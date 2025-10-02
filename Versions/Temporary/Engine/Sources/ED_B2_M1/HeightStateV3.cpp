@@ -19,13 +19,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 #define HEIGHT_MARK ( 1.0f )
 
 const int CHeightStateV3::BRUSH_MIN_SIZE	= 3;

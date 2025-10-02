@@ -3,13 +3,6 @@
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP( CDefaultShortcutBar, SECShortcutBar )
 	ON_MESSAGE( TCM_TABSEL, OnNotifyChangeTab )	
 END_MESSAGE_MAP()

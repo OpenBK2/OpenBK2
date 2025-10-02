@@ -8,14 +8,6 @@
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CUIRunModeInterface::CUIRunModeInterface( const string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
 {
 	LoadWindow( rszTypeName, rDBID, rTemplateWindowDBID, rTemplateScreenDBID );

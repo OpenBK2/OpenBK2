@@ -5,13 +5,6 @@
 #include "../MapEditorLib/StringManager.h"
 #include "../MapEditorLib/ManipulatorManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CBaseUIBuilder::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	// call default implementation of copying (copy object itself)

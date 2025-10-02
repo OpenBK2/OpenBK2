@@ -2,13 +2,6 @@
 
 #include "CreateFilterNameDialog.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CCreateFilterNameDialog::vID[] = 
 {
 	IDC_CF_FILTER_NAME_LABEL,	//0

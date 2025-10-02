@@ -3,13 +3,6 @@
 #include "AnimationMnemonics.h"
 #include "../libdb/Manipulator.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CMayaAnimationMnemonics::DECIMAL_NUMBERS[] = "0123456789";
 
 

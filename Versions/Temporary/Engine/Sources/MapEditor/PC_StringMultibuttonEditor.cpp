@@ -6,12 +6,6 @@
 
 #include "PC_StringMultibuttonEditor.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CPCStringMultibuttonEditor::CPCStringMultibuttonEditor( int _nButtonCount )
 	: bIgnoreFocusChange( false ),
 		bMultiLine( false ),

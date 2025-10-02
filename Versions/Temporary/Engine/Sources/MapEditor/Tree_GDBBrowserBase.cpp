@@ -23,13 +23,6 @@
 #include "../System/FilePath.h"
 #include "../LibDB/DB.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 /**
 const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT };

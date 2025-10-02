@@ -5,12 +5,6 @@
 #include "UnitStartCmdState.h"
 #include "../MapEditorLib/Interface_MainFrame.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //
 //
 //	UNIT START COMMANDS LIST

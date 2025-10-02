@@ -3,13 +3,6 @@
 #include "MultiManipulator.h"
 #include "PCIEMnemonics.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CMultiManipulator::DescExists( const string &rszName ) const
 {
 	if ( manipulatorMap.empty() )

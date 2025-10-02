@@ -6,13 +6,6 @@
 #include "../libdb/ResourceManager.h"
 #include "Tools_HashSet.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CBuildDataBuilder::InsertObject( string *pszObjectTypeName,
 																			string *pszUniqueObjectName,
 																			bool bFromMainMenu,

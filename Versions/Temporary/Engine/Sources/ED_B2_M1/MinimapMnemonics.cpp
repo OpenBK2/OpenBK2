@@ -2,12 +2,6 @@
 #include "dbminimap.h"
 #include "MinimapMnemonics.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CMinimapLayerMnemonics::CMinimapLayerMnemonics() : 
 CMnemonicsCollector<int>( NDb::LAYER_UNKNOWN, "LAYER_UNKNOWN" )
 {

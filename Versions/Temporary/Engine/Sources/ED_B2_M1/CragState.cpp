@@ -11,13 +11,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-
 const string CCragState::VSO_NAME = "Crags";
 const string CCragState::VSO_TYPE_NAME = "CragDesc";
 

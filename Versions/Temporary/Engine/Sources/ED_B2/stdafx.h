@@ -17,7 +17,6 @@
 #else
 //#define _STLP_USE_MFC 1
 
-#include <afx.h>                                            // DEBUG_NEW
 #include <afxwin.h>											// MFC core and standard components
 #include <afxext.h>											// MFC extensions
 #include <afxdtctl.h>										// MFC support for Internet Explorer 4 Common Controls

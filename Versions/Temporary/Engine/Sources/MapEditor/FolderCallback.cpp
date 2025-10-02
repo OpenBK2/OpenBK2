@@ -7,13 +7,6 @@
 #include "../MapEditorLib/Interface_Logger.h"
 #include "FolderCallback.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void CFolderCallback::UndoChanges()
 {
 	for ( CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )

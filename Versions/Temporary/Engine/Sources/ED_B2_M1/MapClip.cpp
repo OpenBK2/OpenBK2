@@ -11,13 +11,6 @@
 #include "EntrenchmentMnemonics.h"
 #include "MapClip.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CMapClip::SaveMapClipToDB(  CObjectBaseController *pObjectController ) const
 {
 	if ( !pObjectController )

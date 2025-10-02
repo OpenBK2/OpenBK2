@@ -2,13 +2,6 @@
 
 #include "MaskManipulator.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CMaskManipulator::CMaskManipulator( const string& rszMask,  IManipulator* _pTargetManipulator, EMaskMode _maskMode )
 	: szMask( rszMask ), pTargetManipulator( _pTargetManipulator ), maskMode( _maskMode )
 {

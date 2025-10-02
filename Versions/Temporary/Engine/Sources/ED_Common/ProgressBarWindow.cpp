@@ -2,13 +2,6 @@
 #include "resource.h"
 #include "ProgressBarWindow.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CProgressBarWindow::CProgressBarWindow()
 	: CDialog( IDD_PROGRESS_BAR, 0 )
 {

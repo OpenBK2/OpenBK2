@@ -1,13 +1,6 @@
 #include "stdafx.h"
 #include "StoreInputState.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-
 void CStoreInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;

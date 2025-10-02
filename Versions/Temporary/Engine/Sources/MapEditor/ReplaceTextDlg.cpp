@@ -4,13 +4,6 @@
 #include "stdafx.h"
 #include "ReplaceTextDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 // CReplaceTextDlg dialog
 
 IMPLEMENT_DYNAMIC(CReplaceTextDlg, CDialog)

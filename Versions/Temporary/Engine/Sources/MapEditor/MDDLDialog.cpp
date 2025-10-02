@@ -4,13 +4,6 @@
 #include "../MapEditorLib/Interface_CommandHandler.h"
 #include "../libdb/Manipulator.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CMDDLDialog::CMDDLDialog() : CDialog( CMDDLDialog::IDD, 0 ), nCommandID( INVALID_NODE_ID ) {}
 
 

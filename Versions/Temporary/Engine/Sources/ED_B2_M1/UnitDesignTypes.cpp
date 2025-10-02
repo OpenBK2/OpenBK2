@@ -5,12 +5,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #define MNEMO( e ) Insert( NDb::DB_RPG_TYPE_##e, #e );
 
 CUnitDesignTypeMnemonics::CUnitDesignTypeMnemonics() : 

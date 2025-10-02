@@ -5,15 +5,6 @@
 #include "../MapEditorLib/Interface_Logger.h"
 #include "../Misc/StrProc.h"
 
-
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char *pName )
 {
 	int nOffset = 0;

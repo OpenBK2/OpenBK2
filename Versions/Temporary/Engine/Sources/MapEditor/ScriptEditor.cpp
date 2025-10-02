@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 
-
 //#include "MapEdit.h"
 #include "ScriptEditor.h"
 #include "ScriptDictionary.hpp"
@@ -16,12 +15,6 @@
 //#pragma comment(linker, "/include:_ForceLuaLexer")
 
 #include "../MapEditorLib/Interface_UserData.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 
 static string szErr;

@@ -5,13 +5,6 @@
 #include "../MapEditorLib/Interface_UserData.h"
 #include "../libdb/ResourceManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();

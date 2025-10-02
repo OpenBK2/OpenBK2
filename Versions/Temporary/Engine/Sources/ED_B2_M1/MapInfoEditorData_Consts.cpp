@@ -3,13 +3,6 @@
 #include "MapInfoEditorData_Consts.h"
 #include "../Stats_B2_M1/Vis2AI.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 namespace NMapInfoEditor
 {
 	const DWORD BRUSH_COLOR											= 0xFF00FF00;

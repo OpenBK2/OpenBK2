@@ -5,12 +5,6 @@
 #include "pc_constants.h"
 #include "PC_EditorButton.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CPCEditorButton::CPCEditorButton() : pwndTargetWindow( 0 ), pwndNextWindow( 0 ), pwndPreviousWindow( 0 )
 {	
 }

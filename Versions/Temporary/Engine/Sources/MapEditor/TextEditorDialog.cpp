@@ -3,13 +3,6 @@
 #include "../scintilla/scintilla.h"
 #include "TextEditorDialog.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CTEMnemonics::CTEMnemonics() : CMnemonicsCollector<int>( TE_UNKNOWN, "" )
 {
 	Insert( TE_LUA, "lua" );

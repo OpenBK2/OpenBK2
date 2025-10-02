@@ -9,13 +9,6 @@
 #include "../libdb/ObjManIterator.h"
 #include "../Misc/HPTimer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );

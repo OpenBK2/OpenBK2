@@ -2,13 +2,6 @@
 
 #include "Tools_SysCodes.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<UINT>( 0, "" )
 {
 	Insert( WM_NULL, "WM_NULL" );

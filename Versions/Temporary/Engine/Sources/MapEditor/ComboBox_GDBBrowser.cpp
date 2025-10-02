@@ -5,13 +5,6 @@
 
 #include "ComboBox_GDBBrowser.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CComboBoxGDBBrowser::CComboBoxGDBBrowser( int _nGDBBrowserID ) : pwndParent( 0 ), nControlID( 0 ), bEnableEdit( true ), nGDBBrowserID( _nGDBBrowserID )
 {
 	ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();

@@ -4,13 +4,6 @@
 #include "ImportFromPAKDialog.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CImportFromPAKDialog::vID[] = 
 {
 	IDC_IFP_PAK_BROWSE_LABEL,		//0

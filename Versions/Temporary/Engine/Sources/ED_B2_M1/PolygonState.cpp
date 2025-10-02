@@ -11,13 +11,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const float	CPolygonState::CONTROL_POINT_RADIUS	= AI_TILE_SIZE / 1.0f;
 const int		CPolygonState::CONTROL_POINT_PARTS	= 8;
 const float	CPolygonState::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;

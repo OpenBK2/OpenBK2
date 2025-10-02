@@ -6,14 +6,6 @@
 #include "../MapEditorLib/ManipulatorManager.h"
 #include "../MapEditorLib/Interface_Logger.h"
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 REGISTER_EXPORTER_IN_DLL( SquadRPGStats, CSquadExporter )
 
 EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,

@@ -12,13 +12,6 @@
 #include "../MapEditorLib/EditorFactory.h"
 #include "EditorContainer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 string CEditorContainer::GetBaseObjectType( const string &rszExtendObjectTypeName )
 {
 	CExtendTypeMap::iterator posExtendType = extendTypeMap.find( rszExtendObjectTypeName );

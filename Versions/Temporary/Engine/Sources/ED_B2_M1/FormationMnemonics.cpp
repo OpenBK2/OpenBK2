@@ -5,12 +5,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CFormationMnemonics::CFormationMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
 {
 	Insert( NDb::SSquadRPGStats::SFormation::DEFAULT, "DEFAULT" );

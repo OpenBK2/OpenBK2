@@ -15,13 +15,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CMapObjectWindow::FILTER_TYPE[] = "MAPOBJECT";
 const char CMapObjectWindow::MAPOBJECT_EXTRACTOR_TYPE[] = "MAPOBJECT";
 const char CMapObjectWindow::SPOT_EXTRACTOR_TYPE[] = "SPOT";

@@ -5,13 +5,6 @@
 #include "../libdb/ResourceManager.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CDefaultBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {
 	if ( ( pszObjectTypeName != 0 ) && ( pszUniqueObjectName != 0 ) && ( pbNeedExport != 0 ) && ( pbNeedEdit != 0 ) )

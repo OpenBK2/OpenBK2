@@ -11,13 +11,6 @@
 #include "../Misc/StrProc.h"
 #include "../ED_Common/Initialize.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP(CELKApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	ON_COMMAND(ID_HELP_CONTENTS, OnHelpContents)

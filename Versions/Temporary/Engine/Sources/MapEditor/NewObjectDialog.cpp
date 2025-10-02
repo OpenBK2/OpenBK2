@@ -6,13 +6,6 @@
 #include "../MapEditorLib/Interface_FolderCallback.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CNewObjectDialog::CNewObjectDialog( CWnd* pParent )
 	: CResizeDialog( CNewObjectDialog::IDD, pParent ),
 		bCreateControls( false ),

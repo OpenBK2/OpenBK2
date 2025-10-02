@@ -2,13 +2,6 @@
 #include "ED_B2_M1Dll.h"
 #include "MapInfoAIMarkersSelectDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 //
 //
 //	CMapInfoAIMarkersSelectDlg

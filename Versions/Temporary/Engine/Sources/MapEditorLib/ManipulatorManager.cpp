@@ -8,14 +8,6 @@
 #include "../MapEditorLib/Interface_Controller.h"
 #include "../MapEditorLib/MultiManipulator.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
-
 IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.objectNameSet.empty() )

@@ -7,13 +7,6 @@
 
 #include "ChildFrameBase.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CChildFrameBase::CChildFrameBase() : pwndChildFrame( 0 ), pChildWnd( 0 )
 {
 }

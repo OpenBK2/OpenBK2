@@ -11,13 +11,6 @@
 #include "../MapEditorLib/Interface_UserData.h"
 #include "../libdb/ResourceManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CTreeGDBBrowser::TABGDBB_TREE_HEAD_WIDTH_UPDATE_TYPE[] = "__CTGDBB__";
 
 

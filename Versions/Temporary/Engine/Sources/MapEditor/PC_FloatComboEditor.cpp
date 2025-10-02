@@ -5,13 +5,6 @@
 #include "PC_FloatComboEditor.h"
 #include "../MapEditorLib/StringManager.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPCFloatComboEditor::CPCFloatComboEditor() : nPrecision( PCSV_DEFAULT_RECISION )
 {
 }

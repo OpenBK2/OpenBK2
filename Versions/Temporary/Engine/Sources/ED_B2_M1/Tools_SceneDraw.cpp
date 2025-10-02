@@ -7,12 +7,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 const float CSceneDrawTool::SCENE_Z_SHIFT = AI_TILE_SIZE / 16.0f;
 
 CSceneDrawTool::CSceneDrawTool()

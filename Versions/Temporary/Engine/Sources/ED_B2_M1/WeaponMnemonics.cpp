@@ -6,13 +6,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CMayaWeaponMnemonics::CMayaWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" )
 {
 	Insert( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" );

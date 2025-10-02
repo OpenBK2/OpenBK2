@@ -4,12 +4,6 @@
 #include "Tree_GDBBrowserBase.h"
 #include "Tree_GDBBrowser_InputState.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #define RELAX_RADIUS_2 16
 
 

@@ -17,13 +17,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CHeightWindowV3::FILTER_TYPE[] = "TILE";
 const char CHeightWindowV3::EXTRACTOR_TYPE[] = "TILE";
 const char CHeightWindowV3::TILE_TYPE_NAME[] = "TGTerraType";

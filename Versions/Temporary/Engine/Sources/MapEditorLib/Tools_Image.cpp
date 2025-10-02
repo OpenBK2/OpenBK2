@@ -3,13 +3,6 @@
 #include "../Misc/2DArray.h"
 #include "Tools_Image.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void NImage::Copy( CArray2D<DWORD> *pDestination, const CArray2D<DWORD> &rSource, const CTPoint<int> &rStartPoint )
 {
 	for ( int nXIndex = 0; ( nXIndex < pDestination->GetSizeX() ) && ( nXIndex < ( rSource.GetSizeX() - rStartPoint.x ) ); ++nXIndex )

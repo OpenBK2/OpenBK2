@@ -5,13 +5,6 @@
 #include "../MapEditorLib/StringManager.h"
 #include "PC_FloatSliderEditor.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPCFloatSliderEditor::CPCFloatSliderEditor() : fStep( 1.0f ), nPrecision( 4 ), nPowerPrecision( 10000 )
 {
 }

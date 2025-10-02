@@ -12,13 +12,6 @@
 #include "../System/VFSOperations.h"
 #include "Tools_Resources.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,
 																							  CArray2D<DWORD> *pNormalImage, 
 																								const string &szFileName,

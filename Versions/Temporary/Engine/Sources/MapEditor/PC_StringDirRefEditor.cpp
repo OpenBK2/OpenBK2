@@ -7,13 +7,6 @@
 #include "../MapEditorLib/Interface_MainFrame.h"
 #include "../MapEditorLib/Interface_MOD.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const char CPCStringDirRefEditor::FOLDER_PATH_LABEL[] = "_FOLDER_";
 
 

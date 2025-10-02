@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorSingleton.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 string CMapEditorSingletonBase::MAP_FILE_NAME = "CMapEditorSingletonBase_B2MapEditor_1.0";
 const DWORD CMapEditorSingletonBase::MAP_FILE_MAX_SIZE = 0xFFF;
 

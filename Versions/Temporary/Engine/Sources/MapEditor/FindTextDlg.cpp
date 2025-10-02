@@ -4,12 +4,6 @@
 #include "stdafx.h"
 #include "FindTextDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // CFindTextDlg dialog
 
 IMPLEMENT_DYNAMIC(CFindTextDlg, CDialog)

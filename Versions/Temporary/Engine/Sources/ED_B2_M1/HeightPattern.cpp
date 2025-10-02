@@ -2,13 +2,6 @@
 
 #include "HeightPattern.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGradient &rGradient )
 {
 	NI_ASSERT( nGridLines > 0, StrFmt( "Invalid GridLines Number: %d\n", nGridLines ) );

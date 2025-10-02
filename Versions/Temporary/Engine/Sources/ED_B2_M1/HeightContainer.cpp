@@ -4,13 +4,6 @@
 #include "../Image/Targa.h"
 #include "../B2_M1_Terrain/DBVSO.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 int CHeightContainer::STACK_SIZE = sizeof( DWORD ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;
 

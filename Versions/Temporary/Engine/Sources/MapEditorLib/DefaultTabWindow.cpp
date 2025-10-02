@@ -2,12 +2,6 @@
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 BEGIN_MESSAGE_MAP( CDefault3DTabWindow, SEC3DTabWnd )
 END_MESSAGE_MAP()
 

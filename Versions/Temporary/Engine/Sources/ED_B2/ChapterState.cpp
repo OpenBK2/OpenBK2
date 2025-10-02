@@ -17,12 +17,6 @@
 #include "../LibDB/ObjMan.h"
 #include "../mapeditorlib/MaskManipulator.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // CChapterState
 
 CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :

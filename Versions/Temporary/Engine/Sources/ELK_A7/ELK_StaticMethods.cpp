@@ -29,13 +29,6 @@
 #include "../MapEditorLib/Interface_Logger.h"
 #include "../System/FilePath.h"
 
-#ifdef _DEBUG
-
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //REGISTER_EXPORTER_IN_EXE( Font, CFontExporter )
 //REGISTER_EXPORTER_IN_EXE( Texture, CTextureExporter )
 

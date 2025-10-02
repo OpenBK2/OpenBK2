@@ -4,13 +4,6 @@
 #include "pc_constants.h"
 #include "PC_BoolCheckBoxEditor.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CPCBoolCheckBoxEditor::CPCBoolCheckBoxEditor() : bDefaultValue( false )
 {	
 }

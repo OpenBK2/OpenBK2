@@ -1,13 +1,6 @@
 #include "stdafx.h"
 #include "DefaultWindow.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP(CDefaultWindow, CWnd)
 	ON_WM_PAINT()
 END_MESSAGE_MAP()

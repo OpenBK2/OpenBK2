@@ -3,13 +3,6 @@
 #include "../MapEditorLib/Tools_HashSet.h"
 #include "ViewContainer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Add, pView == 0" );

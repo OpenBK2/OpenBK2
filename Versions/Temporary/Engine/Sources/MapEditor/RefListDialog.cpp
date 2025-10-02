@@ -6,13 +6,6 @@
 #include "../MapEditorLib/ManipulatorManager.h"
 #include "../MapEditorLib/Interface_UserData.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 BEGIN_MESSAGE_MAP(CRefListDialog, CResizeDialog)
 	ON_NOTIFY( LVN_ITEMCHANGED, IDC_REF_LIST_OBJECTS, OnItemChanged )
 	ON_BN_CLICKED( IDC_REF_LIST_EMPTY_CURRENT, OnSetEmptyCurrent )

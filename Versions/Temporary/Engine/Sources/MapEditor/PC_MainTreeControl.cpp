@@ -40,13 +40,6 @@
 #include "PC_GUIDEditor.h"
 #include "PC_Vec3ColorEditor.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort )
 {
 	HTREEITEM hItem0 = reinterpret_cast<HTREEITEM>( lParam0 );

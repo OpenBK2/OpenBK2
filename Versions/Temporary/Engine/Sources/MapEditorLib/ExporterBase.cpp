@@ -9,13 +9,6 @@
 #include "../MapEditorLib/Interface_Editor.h"
 #include "../System/Commands.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 static bool s_bReportSafeRefs = true;
 
 EXPORT_RESULT CExporterBase::GetStartExportResult( const string &rszObjectTypeName )

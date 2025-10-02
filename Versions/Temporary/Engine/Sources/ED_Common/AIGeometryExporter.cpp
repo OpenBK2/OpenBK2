@@ -9,13 +9,6 @@
 #include "../MapEditorLib/CommonExporterMethods.h"
 #include "Tools_Granny.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 REGISTER_EXPORTER_IN_DLL( AIGeometry, CAIGeometryExporter )
 
 

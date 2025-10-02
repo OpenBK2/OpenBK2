@@ -2,13 +2,6 @@
 
 #include "MapEditorModule.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 class CEditorModuleRegistrator : public IEditorModuleRegistrator
 {
 	friend void RegisterMapEditorTypeDelayed( const string &szType, const string &szName, ObjectFactoryNewFunc pfnNewFunc );

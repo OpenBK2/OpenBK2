@@ -20,13 +20,6 @@
 //#include "../Stats_B2_M1/TerraAIObserver.h"
 //#include "../SceneB2/TerraGen.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 namespace NEditor
 {
 	const string SZ_TERRA_BIN_FILE_NAME = "map.b2m";

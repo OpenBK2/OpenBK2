@@ -8,13 +8,6 @@
 #include "../MapEditorLib/ManipulatorManager.h"
 #include "../MapEditorLib/ObjectBaseController.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 bool CPCVec3ColorEditor::GetColorValue( int *pnColor, IManipulator *pManipulator, const string &rszName )
 {
 	if ( pnColor && pManipulator )

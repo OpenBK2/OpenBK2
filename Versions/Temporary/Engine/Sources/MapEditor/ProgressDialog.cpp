@@ -2,13 +2,6 @@
 
 #include "ProgressDialog.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const DWORD CProgressDialog::START_TIMER_ID = 10;
 const DWORD CProgressDialog::START_TIMER_INTERVAL = 500;
 

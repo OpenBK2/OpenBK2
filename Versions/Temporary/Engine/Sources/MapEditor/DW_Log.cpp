@@ -6,13 +6,6 @@
 
 #include "DW_Log.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CDWLog::CDWLog()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_LOG, this );

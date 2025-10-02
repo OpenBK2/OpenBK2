@@ -4,12 +4,6 @@
 #include "../System/VFSOperations.h"
 #include "../System/XmlSaver.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 CBinaryBitFieldDialog::CBinaryBitFieldDialog( const string &_szFileName, const BYTE *_pData, const int _nSize, CWnd *pwndParent )
 	: CResizeDialog( CBinaryBitFieldDialog::IDD, pwndParent ),
 		bCreateControls( true ),

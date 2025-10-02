@@ -15,12 +15,6 @@
 #include "ScriptCameraRun.h"
 #include "KeySettingsDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #define MOV_ED_DEF_LEN (60.0f) // default movie length (sec)
 
 //

@@ -6,13 +6,6 @@
 #include "../MapEditorLib/Interface_Progress.h"
 #include "ControllerContainer.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CControllerContainer::CControllerContainer()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CONTROLLER_CONTAINER, this );

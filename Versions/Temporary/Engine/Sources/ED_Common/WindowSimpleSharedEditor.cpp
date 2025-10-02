@@ -10,13 +10,6 @@
 #include "UIRunModeState.h"
 //#include "UIScene.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 REGISTER_EDITOR_IN_DLL( WindowSimpleShared, CWindowSimpleSharedEditor )
 
 #define REGISTER_EDITOR_LOCAL( name ) \

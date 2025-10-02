@@ -7,12 +7,6 @@
 #include "../Scintilla/SciLexer.h"
 #include "../Misc/StrProc.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 const int MAX_CONSOLE_SIZE = 10000;
 
 enum EStyles

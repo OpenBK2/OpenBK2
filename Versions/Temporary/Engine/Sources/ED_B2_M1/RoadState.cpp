@@ -17,13 +17,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
-
 const string CRoadState::VSO_NAME = "Roads";
 const string CRoadState::VSO_TYPE_NAME = "RoadDesc";
 

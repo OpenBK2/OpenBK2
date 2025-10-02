@@ -7,12 +7,6 @@
 
 #include "TimeSliderControl.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 #define TSL_BG_COLOR				RGB( 0xBB, 0xBB, 0xBB )
 #define TSL_BG_E_COLOR			RGB( 0x33, 0x33, 0x33 )
 #define TSL_KEY_COLOR				RGB( 0xBB, 0x00, 0x00 )

@@ -2,13 +2,6 @@
 
 #include "ScriptCameraAddDlg.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 CScriptCameraAddDlg::CScriptCameraAddDlg( CWnd *pParentWindow, string *_pszNewCameraName, const vector<NCamera::CCameraPlacement> &rvExistingCameras )
 	: CResizeDialog( CScriptCameraAddDlg::IDD, pParentWindow ),
 	pszNewCameraName( _pszNewCameraName ),

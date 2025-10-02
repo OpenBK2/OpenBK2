@@ -18,13 +18,6 @@
 
 #include <zconf.h>
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
-
 const int CBridgeState::START_TERMINATOR_INDEX = 0;
 const int CBridgeState::FINISH_TERMINATOR_INDEX = 1;
 const int CBridgeState::TERMINATOR_COUNT = 2;
