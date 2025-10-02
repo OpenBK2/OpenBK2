@@ -460,36 +460,6 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
   return true;
 }
 
-const DWORD CPUID_MMX_FEATURE_PRESENT = 0x00800000;
-const DWORD CPUID_SSE_FEATURE_PRESENT = 0x02000000;
-#define GET_CPUID __asm _emit 0x0f __asm _emit 0xa2
-inline DWORD GetCPUID()
-{
-	DWORD dwRes;
-	_asm
-	{
-		pusha                               // keep compiler happy
-		pushfd 															// get extended flags
-		pop eax 														// store extended flags in eax
-		mov ebx, eax 												// save current flags
-		xor eax, 200000h 										// toggle bit 21
-		push eax 														// put new flags on stack
-		popfd 															// flags updated now in flags
-		pushfd 															// get extended flags
-		pop eax 														// store extended flags in eax
-		xor eax, ebx 												// if bit 21 r/w then eax <> 0
-		je q  															// can't toggle id bit (21) no cpuid here
-
-		mov	eax, 1                          // configure eax to retrieve CPUID
-		GET_CPUID                           // perform CPUID command
-		mov dwRes, edx                      // store CPUID in dwRes1
-	q:
-		popa
-	}
-	return dwRes;
-}
-#undef GET_CPUID
-
 MISC_EXPORT void __stdcall DbgTrc( const char *pszFormat, ... );
 MISC_EXPORT const char * __stdcall StrFmt( const char *pszFormat, ... );
 

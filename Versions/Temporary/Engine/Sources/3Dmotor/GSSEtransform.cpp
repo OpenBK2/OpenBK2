@@ -1,6 +1,20 @@
 #include "StdAfx.h"
 #include "GPixelFormat.h"
-bool bIsSSEPresent = ( GetCPUID() & CPUID_SSE_FEATURE_PRESENT ) != 0;
+
+#include <intrin.h>
+
+namespace {
+	bool IsSSEPresent() {
+
+		enum { CPUID_SSE_FEATURE_PRESENT = 1 << 25 };
+
+		int cpuinfo[4];
+		__cpuid(cpuinfo, 1);
+		return 0 != (cpuinfo[3] & CPUID_SSE_FEATURE_PRESENT);
+	}
+}
+
+bool bIsSSEPresent = IsSSEPresent();
 
 short nNormalizeTable[16384];
 NGfx::SMMXWord mmxWeights[512];
