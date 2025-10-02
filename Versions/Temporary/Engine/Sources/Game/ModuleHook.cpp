@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#pragma comment( lib, "N:\\Dev\\Soft\\Utils\\ModuleHook.lib" )
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

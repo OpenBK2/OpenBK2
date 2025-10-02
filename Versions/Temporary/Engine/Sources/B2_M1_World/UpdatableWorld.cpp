@@ -43,7 +43,7 @@
 //CRAP{ for profiling
 #ifdef _PROFILER
 #include <VTuneAPI.h>
-#pragma comment( lib, "vtuneapi.lib" )
+
 #endif // _PROFILER
 //CRAP}
 

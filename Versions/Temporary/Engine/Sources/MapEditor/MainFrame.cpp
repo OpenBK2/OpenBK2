@@ -927,7 +927,7 @@ void CMainFrame::OnToolsCustomize()
 }
 
 
-#pragma comment( lib, "htmlhelp.lib" )
+
 void CMainFrame::OnHelpContents() 
 {
 	if ( NFile::DoesFileExist( (const char*)strHelpFilePath ) )

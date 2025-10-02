@@ -8,8 +8,8 @@
 #include "GShaderFX.h"
 #include "GShaderFX.hpp"
 
-#pragma comment(lib, "d3dx9.lib")
-#pragma comment(lib, "dxguid.lib")
+
+
 
 namespace NGfx
 {

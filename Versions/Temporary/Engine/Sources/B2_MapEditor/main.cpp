@@ -16,7 +16,7 @@
 #include "VFSDbObserver.h"
 #include "../libdb/EditorDb.h"
 
-#pragma comment(lib, "granny2.lib")
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

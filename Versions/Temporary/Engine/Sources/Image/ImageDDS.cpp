@@ -17,9 +17,9 @@ extern "C" {
 #include "../vendor/S3TC/s3tc.h"
 }
 
-#pragma comment( lib, "s3tc.lib" )
-#pragma comment( lib, "d3d9.lib" )
-#pragma comment( lib, "d3dx9.lib" )
+
+
+
 #pragma comment( linker, "/NODEFAULTLIB:libc.lib" )
 
 

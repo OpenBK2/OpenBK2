@@ -6,7 +6,7 @@
 #include "output.h"
 #include "hlsl.h"
 #include <d3dx9.h>
-#pragma comment( lib, "d3dx9.lib" )
+
 
 struct SCommand
 {

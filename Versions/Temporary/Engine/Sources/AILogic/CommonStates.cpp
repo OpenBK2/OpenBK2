@@ -27,7 +27,7 @@
 
 /*
 #include <VTuneApi.h>
-#pragma comment(lib, "vtuneapi.lib")
+
 class CVTuneResumer
 {
 public:

@@ -5,7 +5,7 @@
 #include "../MapEditorLib/Interface_Logger.h"
 #include "../Misc/StrProc.h"
 
-#pragma comment(lib, "granny2.lib")
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

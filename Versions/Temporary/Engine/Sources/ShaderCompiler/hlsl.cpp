@@ -3,7 +3,7 @@
 #include "parser.h"
 #include "Data.h"
 #include <d3dx9.h>
-#pragma comment( lib, "d3dx9.lib" )
+
 
 void Parse( SHLSLSrcInfo *pRes, const char *psz )
 {

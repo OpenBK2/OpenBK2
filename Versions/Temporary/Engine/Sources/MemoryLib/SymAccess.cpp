@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "SymAccess.h"
 #include <DbgHelp.h>
-#pragma comment( lib, "DbgHelp.lib" )
+
 
 #ifndef ARRAY_SIZE
 #define ARRAY_SIZE( a ) ( sizeof( a ) / sizeof( (a)[0] ) )

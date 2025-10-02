@@ -470,7 +470,7 @@ inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fCo
 
 #ifdef MEASURE_BREAKS
 #include <vtuneapi.h>
-#pragma comment( lib, "vtuneapi.lib" )
+
 #endif
 
 

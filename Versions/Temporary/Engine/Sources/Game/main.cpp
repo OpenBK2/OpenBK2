@@ -60,7 +60,7 @@ extern "C"
 	void __declspec(dllimport) __cdecl VTPause(void);
 	void __declspec(dllimport) __cdecl VTResume(void);
 }
-#pragma comment(lib, "vtuneapi.lib")
+
 
 namespace NGfx
 {

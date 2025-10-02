@@ -2,7 +2,7 @@
 
 #include "TerraTools.h"
 
-#pragma comment(lib, "granny2.lib")
+
 
 static int GetGrannyTypedefOffset( granny_data_type_definition *pType, const char *name )
 {

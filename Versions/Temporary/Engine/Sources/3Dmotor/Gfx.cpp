@@ -13,8 +13,8 @@
 #include "GfxBuffers.h"
 #include "GfxCatchGPF.h"
 
-#pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "dxerr.lib")
+
+
 namespace NGfx
 {
 

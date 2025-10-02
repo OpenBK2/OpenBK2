@@ -2,7 +2,7 @@
 #include "GrannyMemoryMap.hpp"
 
 #include "../vendor/Granny/include/granny.h"
-#pragma comment(lib, "granny2.lib")
+
 
 struct SMemoryInfo
 {

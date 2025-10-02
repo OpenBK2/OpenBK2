@@ -11,7 +11,7 @@
 
 //#include "../Misc/HPTimer.h" // test for perfomance
 
-#pragma comment(lib, "granny2.lib")
+
 inline bool operator==( const SPlane &a, const SPlane &b ) { return a.n == b.n && a.d == b.d; }
 
 namespace NGScene

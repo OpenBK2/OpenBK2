@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 //#include "CallStack.h"
 #include <commctrl.h>
-#pragma comment( lib, "comctl32.lib" )
+
 
 
 static HINSTANCE g_hInst = NULL ;

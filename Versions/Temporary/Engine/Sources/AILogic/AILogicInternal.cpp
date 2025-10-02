@@ -109,7 +109,7 @@ static DWORD dwTickStartTickCount = 0;
 static int nTickStartFrame = 0;
 
 #include <VTuneAPI.h>
-#pragma comment( lib, "vtuneapi.lib" )
+
 #endif
 
 CBalanceTest theBalanceTest;

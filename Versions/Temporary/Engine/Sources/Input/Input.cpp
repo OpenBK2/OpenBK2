@@ -6,8 +6,8 @@
 #include "../Misc/Win32Helper.h"
 #include "../Misc/StrProc.h"
 
-#pragma comment(lib, "dinput8.lib")
-#pragma comment(lib, "dxguid.lib")
+
+
 extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
 
 bool bMouseDisabledDebug = false;

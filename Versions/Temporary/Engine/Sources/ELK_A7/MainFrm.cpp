@@ -2019,7 +2019,7 @@ void CMainFrame::OnToolsSpelling()
 	}
 }
 
-#pragma comment( lib, "htmlhelp.lib" )
+
 
 void CMainFrame::RunExternalHelpFile( const string &rszHelpFilePath )
 {

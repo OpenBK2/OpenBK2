@@ -282,7 +282,7 @@ LIBDB_EXPORT void SegmentProfiler()
 
 #ifdef _PROFILER
 #include <vtuneapi.h>
-#pragma comment( lib, "vtuneapi.lib" )
+
 #endif
 
 struct SVTuneProfiler

@@ -20,7 +20,7 @@
 
 #include <typeinfo.h>
 #include "../vendor/MySQL/include/mysql.h"
-#pragma comment(lib, "libmysql.lib")
+
 
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
 processCmdsFuncs[cmd] = &CGameServer::##FuncName;

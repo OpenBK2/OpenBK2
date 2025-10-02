@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "NetLowest.h"
 
-#pragma comment(lib, "wsock32.lib")
+
 namespace NNet
 {
 

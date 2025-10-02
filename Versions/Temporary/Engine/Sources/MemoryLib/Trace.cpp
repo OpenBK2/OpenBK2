@@ -71,7 +71,7 @@ static bool AddressFits( DWORD dwAddress )
 
 /*
 #include <vtuneapi.h>
-#pragma comment( lib, "vtuneapi.lib" )
+
 
 struct SVTuneProfiler
 {

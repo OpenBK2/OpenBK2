@@ -78,7 +78,7 @@
 
 #define SC_WIN_IDLE 5001
 
-#pragma comment(lib, "Imm32.lib")
+
 
 // Functions imported from PlatWin
 extern bool IsNT();

@@ -29,7 +29,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#pragma comment(lib, "granny2.lib")
+
 
 
 IManipulator* CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipulator, string *pModelName )

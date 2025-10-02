@@ -8,7 +8,7 @@
 #include "../System/Commands.h"
 #include "DBSoundDesc.h"
 
-#pragma comment(lib, "fmodvc.lib")
+
 //#pragma comment(lib, "dsound.lib")
 
 class CAckTuning 
