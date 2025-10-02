@@ -1,5 +1,3 @@
-#if !defined(__USER_DATA__CONTAINER__)
-#define __USER_DATA__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_UserData.h"
@@ -16,6 +14,5 @@ public:
 	void Save() {}
 };
 
-#endif // !defined(__USER_DATA__CONTAINER__)
 
 

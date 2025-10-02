@@ -1,5 +1,3 @@
-#if !defined( __ED_UNIT_START_CMD__ )
-#define __ED_UNIT_START_CMD__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -90,5 +88,4 @@ public:
 	afx_msg void OnCbnSelchangeComboCmdType();
 };
 
-#endif // #if !defined( __ED_UNIT_START_CMD__ )
 

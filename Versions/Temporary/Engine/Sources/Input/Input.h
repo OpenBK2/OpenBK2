@@ -1,5 +1,4 @@
-#ifndef __INPUT_H__
-#define __INPUT_H__
+#pragma once
 
 #include "Input_export.h"
 
@@ -64,5 +63,4 @@ INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, stri
 
 };
 
-#endif
 

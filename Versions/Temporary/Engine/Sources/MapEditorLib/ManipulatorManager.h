@@ -1,7 +1,5 @@
-#if !defined(__MANIPULATOR_MANAGER__)
-#define __MANIPULATOR_MANAGER__
 
-#pragma ONCE
+#pragma once
 
 #include "../System/BinaryResources.h"
 #include "../libdb/Manipulator.h"
@@ -618,5 +616,4 @@ public:
 	static bool Remove2DArray( interface IManipulator *pManipulator, const string &rszName );
 };
 
-#endif // !defined(__MANIPULATOR_MANAGER__)
 

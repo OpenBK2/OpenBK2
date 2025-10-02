@@ -1,9 +1,4 @@
-#ifndef __OBJECTINFO_H_
-#define __OBJECTINFO_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 
@@ -188,5 +183,4 @@ _3DMOTOR_EXPORT void SetLoadMode( ELoadMode eMode );
 
 }	// namespace NGScene
 
-#endif // __OBJECTINFO_H_
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__CONTROL_ALGORITHMS__)
-#define __COMMON_CONTROLS__CONTROL_ALGORITHMS__
 #pragma once
 
 
@@ -32,5 +30,4 @@ namespace NCA
 	bool TranslateAccelerators( bool bModal, UINT nMessage, WPARAM wParam, LPARAM lParam );
 };
 
-#endif // !defined(__COMMON_CONTROLS__CONTROL_ALGORITHMS__)
 

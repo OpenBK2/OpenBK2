@@ -1,5 +1,4 @@
-#if !defined(__TREE__GDB_BROWSER_BASE__)
-#define __TREE__GDB_BROWSER_BASE__
+#pragma once
 
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -233,5 +232,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__TREE__GDB_BROWSER_BASE__)
 

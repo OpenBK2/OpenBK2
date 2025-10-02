@@ -1,9 +1,4 @@
-#ifndef __aiTrace_H_
-#define __aiTrace_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "aiObject.h"
 #include "aiInterval.h"
 namespace NAI
@@ -37,5 +32,4 @@ public:
 };
 
 }
-#endif
 

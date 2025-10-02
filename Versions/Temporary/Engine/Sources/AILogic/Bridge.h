@@ -1,7 +1,5 @@
-#ifndef __BRIDGE_H__
-#define __BRIDGE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StaticObject.h"
 
@@ -160,5 +158,4 @@ public:
 	friend class CBridgeCreation;
 };
 
-#endif // __BRIDGE_H__
 

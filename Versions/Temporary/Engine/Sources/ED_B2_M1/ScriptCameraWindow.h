@@ -1,5 +1,3 @@
-#if !defined( __SCAM_WINDOW__ )
-#define __SCAM_WINDOW__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -86,5 +84,4 @@ public:
 	afx_msg void OnTimer( UINT nIDEvent );
 };
 
-#endif // #if !defined( __SCAM_WINDOW__ )
 

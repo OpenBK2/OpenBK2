@@ -1,7 +1,5 @@
-#ifndef __GUNS_INTERNAL_H__
-#define __GUNS_INTERNAL_H__
 
-#pragma ONCE
+#pragma once
 
 #include "Guns.h"
 
@@ -129,5 +127,4 @@ public:
 	}
 };
 
-#endif // __GUNS_INTERNAL_H__
 

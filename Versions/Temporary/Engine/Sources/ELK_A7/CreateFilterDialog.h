@@ -1,10 +1,5 @@
-#if !defined(__CREATE_FILTER_DIALOG__)
-#define __CREATE_FILTER_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "ELK_Types.h"
 #include "../MapEditorLib/ResizeDialog.h"
 #include "../MapEditorLib/Tools_Resources.h"
@@ -81,5 +76,4 @@ public:
 	string szCurrentFilter;
 };
 
-#endif // !defined(__CREATE_FILTER_DIALOG__)
 

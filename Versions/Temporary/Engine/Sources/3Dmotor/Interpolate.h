@@ -1,9 +1,4 @@
-#ifndef __Interpolate_H_
-#define __Interpolate_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 // universal bilinear interpolation
 
 template<class T, class TInterp> 
@@ -38,5 +33,4 @@ struct THermitInterpolate
 		}
 };
 
-#endif
 

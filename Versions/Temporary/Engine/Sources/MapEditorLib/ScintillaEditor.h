@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__SCINTILLA_EDITOR_WINDOW__)
-#define __COMMON_CONTROLS__SCINTILLA_EDITOR_WINDOW__
 #pragma once
 
 
@@ -36,5 +34,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__SCINTILLA_EDITOR_WINDOW__)
 

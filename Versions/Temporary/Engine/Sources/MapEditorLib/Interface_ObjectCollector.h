@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__OBJECT_COLLECTOR__)
-#define __INTERFACE__OBJECT_COLLECTOR__
 #pragma once
 
 #include "Interface_Controller.h"
@@ -108,6 +106,5 @@ interface IObjectCollector : public CObjectBase
 	virtual void ClearCollection() = 0;
 };
 
-#endif // !defined(__INTERFACE__OBJECT_COLLECTOR__)
 
 

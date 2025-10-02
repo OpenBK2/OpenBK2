@@ -1,5 +1,3 @@
-#ifndef __VIS2AI_H__
-#define __VIS2AI_H__
 #pragma once
 
 #define VIS_TILE_SIZE 2.75f
@@ -86,5 +84,4 @@ inline const SVector GetAIMapTile( const float x, const float y, const int nTile
 	return SVector( x < 0.0f ? 0.0f : x / nTileSize, y < 0.0f ? 0.0f : y / nTileSize );
 }
 
-#endif // __VIS2AI_H__
 

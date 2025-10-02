@@ -1,5 +1,3 @@
-#if !defined(__FENCE_STATE__)
-#define __FENCE_STATE__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -110,5 +108,4 @@ public:
 	//
 };
 
-#endif // #if !defined(__FENCE_STATE__)
 

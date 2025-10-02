@@ -1,5 +1,3 @@
-#if !defined(__BUILDING_STATE__)
-#define __BUILDING_STATE__
 #pragma once
 
 #include "../MapEditorLib/MultiInputState.h"
@@ -65,5 +63,4 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // __BUILDING_STATE__
 

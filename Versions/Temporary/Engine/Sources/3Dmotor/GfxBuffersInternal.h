@@ -1,9 +1,4 @@
-#ifndef __GFXBUFFERSINTERNAL_H_
-#define __GFXBUFFERSINTERNAL_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GfxInternal.h"
 #include "Gfx.h"
 #include "GfxCatchGPF.h"
@@ -183,5 +178,4 @@ typedef CIBFast<D3DFMT_INDEX16> CIB16Fast;
 //class CIB16: public CRBase<IDirect3DIndexBuffer8>
 
 }
-#endif
 

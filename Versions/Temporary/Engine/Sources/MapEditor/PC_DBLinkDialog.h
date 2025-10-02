@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_DB_LINK_DIALOG__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_DB_LINK_DIALOG__
 #pragma once
 
 #include "pc_dialog.h"
@@ -95,5 +93,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_DB_LINK_DIALOG__)
 

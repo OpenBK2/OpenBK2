@@ -1,7 +1,5 @@
-#ifndef __WIN32RANDOM_H__
-#define __WIN32RANDOM_H__
 
-#pragma ONCE
+#pragma once
 
 
 #include "Misc_export.h"
@@ -26,5 +24,4 @@ namespace NWin32Random
 	const SRandomFunc& RndFunc();
 };
 
-#endif // __WIN32RANDOM_H__
 

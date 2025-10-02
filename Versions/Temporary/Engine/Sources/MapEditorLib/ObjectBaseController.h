@@ -1,5 +1,3 @@
-#if !defined(__OBJECT_BASE_CONTROLLER__)
-#define __OBJECT_BASE_CONTROLLER__
 #pragma once
 
 #include "DefaultController.h"
@@ -386,6 +384,5 @@ public:
 	}
 };
 
-#endif // !defined(__OBJECT_BASE_CONTROLLER__)
 
 

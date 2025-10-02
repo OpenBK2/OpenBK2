@@ -1,5 +1,3 @@
-#ifndef __PLAYER_BONUSES_H__
-#define __PLAYER_BONUSES_H__
 
 #pragma once
 
@@ -9,6 +7,5 @@ namespace NDb
 	struct SReinforcement;
 }
 
-#endif // __PLAYER_BONUSES_H__
 
 

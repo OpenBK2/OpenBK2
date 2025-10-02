@@ -1,5 +1,4 @@
-#if !defined(__ELK_TREE_WINDOW__)
-#define __ELK_TREE_WINDOW__
+#pragma once
 
 #include "resource.h"
 #include "TreeDockWindow.h"
@@ -112,5 +111,4 @@ public:
 	void UpdateSelectedFolder( CELK *pELK, int nState );
 };
 
-#endif // !defined(__ELK_TREE_WINDOW__)
 

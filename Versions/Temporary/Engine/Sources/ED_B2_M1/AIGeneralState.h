@@ -1,5 +1,3 @@
-#if !defined( __AIGENERAL_STATE__ )
-#define __AIGENERAL_STATE__
 #pragma once
 
 #include "AIGeneralWindow.h"
@@ -59,5 +57,4 @@ public:
 	void RefreshWindowData();
 };
 
-#endif // #if !defined( __AIGENERAL_STATE__ )
 

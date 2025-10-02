@@ -1,7 +1,5 @@
-#ifndef __MULTIPLAYER_TEST_NET_H__
-#define __MULTIPLAYER_TEST_NET_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../Client/ServerClientInterface.h"
 #include "../Server_Client_Common/PacketProcessor.h"
@@ -107,5 +105,4 @@ public:
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "do not serialize" ); return 0; }
 };*/
 
-#endif //__MULTIPLAYER_TEST_NET_H__
 

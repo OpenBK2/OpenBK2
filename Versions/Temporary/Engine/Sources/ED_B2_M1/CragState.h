@@ -1,5 +1,3 @@
-#if !defined(__CRAG_STATE__)
-#define __CRAG_STATE__
 #pragma once
 
 #include "VSOStateEx.h"
@@ -66,7 +64,6 @@ protected:
 	void UpdateVSOInTerrain( int nVSOID );
 };
 
-#endif // !defined(__CRAG_STATE__)
 /**
 class CCragState : public CVSOState
 {

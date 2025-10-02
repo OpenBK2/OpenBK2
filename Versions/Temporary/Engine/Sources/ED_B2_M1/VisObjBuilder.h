@@ -1,5 +1,3 @@
-#if !defined(__VISOBJ_BUILDER__)
-#define __VISOBJ_BUILDER__
 
 #pragma once
 #include "../mapeditorlib/interface_commandhandler.h"
@@ -77,5 +75,4 @@ protected:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__VISOBJ_BUILDER__)
 

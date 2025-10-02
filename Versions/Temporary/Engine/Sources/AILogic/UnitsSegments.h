@@ -1,7 +1,5 @@
-#ifndef __UNITS_SEGMENTS_H__
-#define __UNITS_SEGMENTS_H__
 
-#pragma ONCE
+#pragma once
 
 class CCommonUnit;
 class CAIUnit;
@@ -82,5 +80,4 @@ public:
 	void ProcessSegment();
 };
 
-#endif // __UNITS_SEGMENTS_H__
 

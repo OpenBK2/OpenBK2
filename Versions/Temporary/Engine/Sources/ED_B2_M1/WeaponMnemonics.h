@@ -1,5 +1,3 @@
-#if !defined(__WEAPON_MNEMONICS__)
-#define __WEAPON_MNEMONICS__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -19,5 +17,4 @@ public:
 extern CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 extern CWeaponMnemonics typeWeaponMnemonics;
 
-#endif // !defined(__WEAPON_MNEMONICS__)
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BUILD_DATA_DIALOG__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_BUILD_DATA_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -68,5 +66,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BUILD_DATA_DIALOG__)
 

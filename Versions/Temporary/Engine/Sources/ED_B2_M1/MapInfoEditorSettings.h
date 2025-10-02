@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_SETTINGS__)
-#define __MAPINFO_EDITOR_SETTINGS__
 #pragma once
 
 #include "StringResources.h"
@@ -49,5 +47,4 @@ public:
 	int operator&( IXmlSaver &xs );
 };
 
-#endif // !defined(__MAPINFO_EDITOR_SETTINGS__)
 

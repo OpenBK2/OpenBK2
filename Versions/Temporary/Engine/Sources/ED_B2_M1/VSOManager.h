@@ -1,5 +1,3 @@
-#if !defined(__VSO_MANAGER__)
-#define __VSO_MANAGER__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -301,5 +299,4 @@ public:
 	//
 };
 
-#endif // #if !defined(__VSO_MANAGER__)
 

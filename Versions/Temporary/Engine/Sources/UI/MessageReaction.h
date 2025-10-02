@@ -1,9 +1,8 @@
+#pragma once
 // Reaction.h: interface for the CReaction class.
 //
 
 
-#if !defined(AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_)
-#define AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_
 
 #include "IMessageReaction.h"
 
@@ -89,5 +88,4 @@ public:
 
 
 
-#endif // !defined(AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_)
 

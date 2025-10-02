@@ -1,9 +1,4 @@
-#ifndef __GDXEFFECTS_H_
-#define __GDXEFFECTS_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 namespace NGfx
 {
 class CGeometry;
@@ -64,5 +59,4 @@ struct SEffTransparentParticles : public SEffect
 
 } // namespace
 
-#endif
 

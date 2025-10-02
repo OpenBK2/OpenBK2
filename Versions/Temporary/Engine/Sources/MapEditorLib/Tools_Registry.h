@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__REGISTRY__)
-#define __COMMON_TOOLS__REGISTRY__
 #pragma once
 
 
@@ -101,7 +99,6 @@ class CRegistrySection
 	}
 };
 
-#endif //#if !defined(__COMMON_TOOLS__REGISTRY__)
 
 
 

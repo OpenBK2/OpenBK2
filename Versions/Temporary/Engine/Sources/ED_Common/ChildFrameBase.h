@@ -1,5 +1,3 @@
-#if !defined(__CHILD_FRAME_BASE__)
-#define __CHILD_FRAME_BASE__
 #pragma once
 
 #include "../MapEditorLib/Interface_ChildFrame.h"
@@ -21,5 +19,4 @@ public:
 	virtual void Leave();
 };
 
-#endif // !defined(__CHILD_FRAME_BASE__)
 

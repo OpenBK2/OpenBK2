@@ -1,5 +1,3 @@
-#if !defined( __SCRIPT_AREA_WINDOW__ )
-#define __SCRIPT_AREA_WINDOW__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -103,5 +101,4 @@ public:
 	afx_msg void OnButtonSelect();
 };
 
-#endif // #if !defined( __SCRIPT_AREA_WINDOW__ )
 

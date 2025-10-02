@@ -1,11 +1,7 @@
-#if !defined(__ELK_PROGRESS_DIALOG__)
-#define __ELK_PROGRESS_DIALOG__
+#pragma once
 
 #include "Resource.h"
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
 
 
 class CProgressDialog : public CDialog
@@ -38,6 +34,5 @@ public:
 	void IterateProgressPosition();
 };
 
-#endif // !defined(__ELK_PROGRESS_DIALOG__)
 
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_BROWSE__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_BROWSE__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -25,5 +23,4 @@ public:
 	virtual void OnBrowse() = 0;
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_BROWSE__)
 

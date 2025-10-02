@@ -1,7 +1,5 @@
-#ifndef __SHOOT_ESTIMATOR_INTERNAL_H__
-#define __SHOOT_ESTIMATOR_INTERNAL_H__
 
-#pragma ONCE
+#pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "ShootEstimator.h"
 #include "Obstacle.h"
@@ -229,5 +227,4 @@ public:
 	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;} 
 };
 
-#endif __SHOOT_ESTIMATOR_INTERNAL_H__
 

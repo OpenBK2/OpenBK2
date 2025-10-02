@@ -1,7 +1,5 @@
-#ifndef __DIFFICULTY_LEVEL_H__
-#define __DIFFICULTY_LEVEL_H__
 
-#pragma ONCE
+#pragma once
 
 class CDifficultyLevel
 {
@@ -48,5 +46,4 @@ public:
 	*/
 };
 
-#endif // __DIFFICULTY_LEVEL_H__
 

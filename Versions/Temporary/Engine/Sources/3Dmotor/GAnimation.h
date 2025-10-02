@@ -1,9 +1,4 @@
-#ifndef __GANIMATION_H_
-#define __GANIMATION_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GAnimation.hpp"
 #include "../vendor/Granny/include/granny.h"
 
@@ -201,5 +196,4 @@ public:
 
 } // namespace
 
-#endif
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__CONTROL_CONFIG__)
-#define __COMMON_CONTROLS__CONTROL_CONFIG__
 #pragma once
 
 
@@ -21,5 +19,4 @@ interface IControlConfig
 	virtual int GetWidth( int nColumnIndex ) = 0;
 };
 
-#endif // !defined(__COMMON_CONTROLS__CONTROL_CONFIG__)
 

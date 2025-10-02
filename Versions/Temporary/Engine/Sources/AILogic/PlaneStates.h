@@ -1,7 +1,5 @@
-#ifndef __PLANE_STATES_H__
-#define __PLANE_STATES_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StatesFactory.h"
 #include "UnitStates.h"
@@ -541,5 +539,4 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_PLANE_SUICIDE; }
 };
 
-#endif // __PLANE_STATES_H__
 

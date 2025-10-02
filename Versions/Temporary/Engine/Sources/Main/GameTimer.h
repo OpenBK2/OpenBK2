@@ -1,5 +1,3 @@
-#ifndef __GAMETIMER_H__
-#define __GAMETIMER_H__
 #pragma once
 #include "../System/Time.hpp"
 template<class T> class CFuncBase;
@@ -112,5 +110,4 @@ enum EPauseType
 	PAUSE_TYPE_MP_NO_SEGMENT_DATA = 100,	// no segment data in multiplayer mode
 };
 
-#endif // __GAMETIMER_H__
 

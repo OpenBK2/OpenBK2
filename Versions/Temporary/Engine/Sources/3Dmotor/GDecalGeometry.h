@@ -1,9 +1,4 @@
-#ifndef __GDECALGEOMETRY_H_
-#define __GDECALGEOMETRY_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/DG.h"
 #include "DiscretePos.h"
 #include "../3Dlib/GGeometry.h"
@@ -90,5 +85,4 @@ public:
 };
 
 }
-#endif
 

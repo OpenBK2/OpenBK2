@@ -1,5 +1,3 @@
-#ifndef __INTERFACE_MP_LADDER_STATISTICS_H__
-#define __INTERFACE_MP_LADDER_STATISTICS_H__
 #pragma once
 #include "InterfaceScreenBase.h"
 #include "InterfaceMPBase.h"
@@ -66,5 +64,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_MP_LADDER_STATISTICS_H__
 

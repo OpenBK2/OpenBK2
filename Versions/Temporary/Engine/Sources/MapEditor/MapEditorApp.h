@@ -1,5 +1,3 @@
-#if !defined(__MAP_EDITOR_APP__)
-#define __MAP_EDITOR_APP__
 #pragma once
 
 #ifndef __AFXWIN_H__
@@ -76,5 +74,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MAP_EDITOR_APP__)
 

@@ -1,7 +1,5 @@
-#ifndef __MP_LOG_H__
-#define __MP_LOG_H__
 
-#pragma ONCE
+#pragma once
 
 extern NTimer::STime timeToLogStart;
 extern NTimer::STime timeToLogFinish;
@@ -25,5 +23,4 @@ inline void MPLog( const char *pszInfo, ... )
 	}
 }
 
-#endif // __MP_LOG_H__
 

@@ -1,10 +1,5 @@
-#ifndef __BASIC2_H_
-#define __BASIC2_H_
 #include "System_export.h"
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 // single thread version
 // базовые классы для системы подсчета ссылок на объекты с целью упрощения memory management
 //
@@ -281,4 +276,3 @@ public:
 template <class T>
 inline bool IsValid( const CDynamicCast<T> &p ) { return IsValid( p.GetPtr() ); }
 
-#endif

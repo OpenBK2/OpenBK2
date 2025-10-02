@@ -1,10 +1,5 @@
-#if !defined(__ELK_TYPES__)
-#define __ELK_TYPES__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../MapEditorLib/Tools_Resources.h"
 #include "../MapEditorLib/Tools_Registry.h"
 #include "../3dMotor/DBscene.h"
@@ -431,5 +426,4 @@ struct SMainFrameParams
 	const SSimpleFilter* GetCurrentFilter() const;
 };
 
-#endif // !defined(__ELK_TYPES__)
 

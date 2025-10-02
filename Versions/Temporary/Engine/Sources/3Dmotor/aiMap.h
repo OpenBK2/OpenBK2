@@ -1,9 +1,4 @@
-#ifndef __AIMAP_H_
-#define __AIMAP_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 #include "aiInterval.h"
@@ -101,5 +96,4 @@ _3DMOTOR_EXPORT IAIMap* CreateAIMap();
 void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, int nFlags );
 } // namespace
 
-#endif
 

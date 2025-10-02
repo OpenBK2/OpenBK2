@@ -1,9 +1,4 @@
-#ifndef __MEMOBJECT_H_
-#define __MEMOBJECT_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3DLib_export.h"
 
 
@@ -35,5 +30,4 @@ public:
 	friend class CMemObjectBuilder;
 };
 
-#endif // __MEMOBJECT_H_
 

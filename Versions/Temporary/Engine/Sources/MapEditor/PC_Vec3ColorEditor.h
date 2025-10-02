@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_VEC3_COLOR__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_VEC3_COLOR__
 #pragma once
 
 #include "PC_StringBrowseEditor.h"
@@ -26,5 +24,4 @@ private:
 	void OnBrowse();
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_VEC3_COLOR__)
 

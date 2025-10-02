@@ -1,7 +1,5 @@
-#ifndef __SERIALIZE_OWNER_H__
-#define __SERIALIZE_OWNER_H__
 
-#pragma ONCE
+#pragma once
 
 template <class T>
 void SerializeOwner( const int nChunk, T **pOwner, IBinSaver* pSaver )
@@ -19,5 +17,4 @@ void SerializeOwner( const int nChunk, T **pOwner, IBinSaver* pSaver )
 	}
 }
 
-#endif // __SERIALIZE_OWNER_H__
 

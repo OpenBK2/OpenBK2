@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MP_WAIT_PLAYERS_H__
-#define __INTERFACE_MP_WAIT_PLAYERS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceMPBase.h"
 
@@ -44,5 +42,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_MP_WAIT_PLAYERS_H__
 

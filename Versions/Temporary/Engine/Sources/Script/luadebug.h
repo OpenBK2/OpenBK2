@@ -1,3 +1,4 @@
+#pragma once
 /*
 ** $Id: luadebug.h,v 1.17 2000/10/30 12:38:50 roberto Exp $
 ** Debugging API
@@ -5,8 +6,6 @@
 */
 
 
-#ifndef luadebug_h
-#define luadebug_h
 
 
 #include "lua.h"
@@ -43,5 +42,4 @@ struct lua_Debug {
 };
 
 
-#endif
 

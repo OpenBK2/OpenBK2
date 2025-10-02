@@ -1,5 +1,3 @@
-#if !defined(__STORE_INPUT_STATE_TEMPLATE__)
-#define __STORE_INPUT_STATE_TEMPLATE__
 #pragma once
 
 #include "../MapEditorLib/StoreInputState.h"
@@ -49,5 +47,4 @@ public:
 	inline void SetSizes( const CTPoint<int> &rVisSize, bool _bFixInvalidPos ) { visSize = rVisSize; bFixInvalidPos = _bFixInvalidPos; }
 };
 
-#endif // !defined(__STORE_INPUT_STATE_TEMPLATE__)
 

@@ -1,5 +1,3 @@
-#if !defined(__BRIDGE_STATE__)
-#define __BRIDGE_STATE__
 
 #pragma once
 #include "../misc/2darray.h"
@@ -57,6 +55,5 @@ protected:
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 };
 
-#endif // !defined(__BRIDGE_STATE__)
 
 

@@ -1,5 +1,4 @@
-#ifndef __TEXTURE_RUN_MODE_INTERFACE__
-#define __TEXTURE_RUN_MODE_INTERFACE__
+#pragma once
 
 #include "RunModeInterfaceBase.h"
 
@@ -14,5 +13,4 @@ public:
 
 INTERFACE_COMMAND_DECLARE( CTexturelIC, CTextureInterface )
 
-#endif // __TEXTURE_RUN_MODE_INTERFACE__
 

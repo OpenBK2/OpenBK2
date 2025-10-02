@@ -1,5 +1,3 @@
-#if !defined(__FOLDER_CONTROLLER__)
-#define __FOLDER_CONTROLLER__
 #pragma once
 
 #include "DefaultController.h"
@@ -82,6 +80,5 @@ public:
 };
 
 
-#endif // !defined(__FOLDER_CONTROLLER__)
 
 

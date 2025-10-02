@@ -1,5 +1,3 @@
-#if !defined(__MAIN_FRAME__)
-#define __MAIN_FRAME__
 #pragma once
 
 #include "MapEditorSingleton.h"
@@ -172,5 +170,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MAIN_FRAME__)
 

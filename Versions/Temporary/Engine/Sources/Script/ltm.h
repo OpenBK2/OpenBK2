@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: ltm.h,v 1.18 2000/10/05 13:00:17 roberto Exp $
 ** Tag methods
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ltm_h
-#define ltm_h
 
 
 
@@ -72,5 +71,4 @@ void luaT_realtag (lua_State *L, int tag);
 int luaT_validevent (int t, int e);  /* used by compatibility module */
 
 
-#endif
 

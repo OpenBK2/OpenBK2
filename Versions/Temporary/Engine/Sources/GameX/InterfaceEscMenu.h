@@ -1,10 +1,5 @@
-#ifndef __INTERFACE_ESC_MENU_H__
-#define __INTERFACE_ESC_MENU_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 
 class CInterfaceEscMenu : public CInterfaceScreenBase
@@ -105,5 +100,4 @@ public:
 //INTERFACE_COMMAND_DECLARE( CICEscMenu, CInterfaceEscMenu );
 
 
-#endif //__INTERFACE_ESC_MENU_H__
 

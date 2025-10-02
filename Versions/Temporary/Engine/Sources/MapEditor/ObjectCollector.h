@@ -1,5 +1,3 @@
-#if !defined(__OBJECT_COLLECTOR__)
-#define __OBJECT_COLLECTOR__
 #pragma once
 
 #include "../misc/HashFuncs.h"
@@ -154,6 +152,5 @@ public:
 	}
 };
 
-#endif // !defined(__OBJECT_COLLECTOR__)
 
 

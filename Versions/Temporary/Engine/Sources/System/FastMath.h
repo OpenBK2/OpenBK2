@@ -1,5 +1,3 @@
-#ifndef __FAST_MATH_H__
-#define __FAST_MATH_H__
 #pragma once
 #include "System_export.h"
 
@@ -96,5 +94,4 @@ inline float GetAngle( const CVec2 &v1, const CVec2 &v2 )
 
 }
 
-#endif // __FAST_MATH_H__
 

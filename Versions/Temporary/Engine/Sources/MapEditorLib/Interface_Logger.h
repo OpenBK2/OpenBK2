@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE_LOGGER__)
-#define __INTERFACE_LOGGER__
 #pragma once
 
 #include "Interface_MainFrame.h"
@@ -26,5 +24,4 @@ namespace NLog
 	void ClearLog();
 }
 
-#endif //#define __INTERFACE_LOGGER__
 

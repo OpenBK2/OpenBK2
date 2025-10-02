@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: llimits.h,v 1.19 2000/10/26 12:47:05 roberto Exp $
 ** Limits, basic types, and some other "installation-dependent" definitions
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llimits_h
-#define llimits_h
 
 
 #include <limits.h>
@@ -201,5 +200,4 @@ typedef unsigned long Instruction;
 #endif
 
 
-#endif
 

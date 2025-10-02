@@ -1,5 +1,3 @@
-#if !defined(__ENTRENCHMENT_EXPORTER__)
-#define __ENTRENCHMENT_EXPORTER__
 #pragma once
 
 #include "../ED_Common/StoreObjectExporter.h"
@@ -29,5 +27,4 @@ public:
 														 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };
 
-#endif // !defined(__ENTRENCHMENT_EXPORTER__)
 

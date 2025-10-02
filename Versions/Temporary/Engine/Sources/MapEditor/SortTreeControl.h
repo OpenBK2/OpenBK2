@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__SORT_TREE_CONTROL__)
-#define __COMMON_CONTROLS__SORT_TREE_CONTROL__
 #pragma once
 
 #include "../misc/HashFuncs.h"
@@ -76,5 +74,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__SORT_TREE_CONTROL__)
 

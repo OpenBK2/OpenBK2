@@ -1,5 +1,3 @@
-#if !defined(__MECHUNITRPGSTATS_EXPORTER__)
-#define __MECHUNITRPGSTATS_EXPORTER__
 #pragma once
 
 #include "HPObjectRPGStatsExporter.h"
@@ -31,6 +29,5 @@ public:
 															EXPORT_TYPE exportType );
 };
 
-#endif// __MECHUNITRPGSTATS_EXPORTER__
 
 

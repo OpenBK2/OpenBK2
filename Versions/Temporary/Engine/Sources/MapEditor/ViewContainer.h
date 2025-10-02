@@ -1,5 +1,3 @@
-#if !defined(__VIEW__CONTAINER__)
-#define __VIEW__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_View.h"
@@ -24,6 +22,5 @@ public:
 	bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const;
 };
 
-#endif // !defined(__VIEW__CONTAINER__)
 
 

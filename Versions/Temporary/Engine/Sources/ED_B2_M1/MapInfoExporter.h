@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EXPORTER__)
-#define __MAPINFO_EXPORTER__
 
 #pragma once
 #include "../mapeditorlib/interface_commandhandler.h"
@@ -45,5 +43,4 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__MAPINFO_EXPORTER__)
 

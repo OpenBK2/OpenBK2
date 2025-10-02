@@ -1,5 +1,3 @@
-#if !defined( __ENTER_NAME_DIALOG__ )
-#define __ENTER_NAME_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -39,5 +37,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // #if !defined( __ENTER_NAME_DIALOG__ )
 

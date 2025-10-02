@@ -1,7 +1,5 @@
-#ifndef __PLAYMOVIEINTERFACE_H__
-#define __PLAYMOVIEINTERFACE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 //#include "..\Scene\Scene.h"
@@ -53,5 +51,4 @@ public:
 	virtual int operator&( IBinSaver &saver );
 };
 
-#endif // __PLAYMOVIEINTERFACE_H__
 

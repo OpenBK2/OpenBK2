@@ -1,5 +1,3 @@
-#if !defined( __SCAM_ADD_DLG__ )
-#define __SCAM_ADD_DLG__
 #pragma once
 
 #include "ScriptCameraWindow.h"
@@ -25,5 +23,4 @@ public:
 	afx_msg void OnEnChangeScriptCameraNameEdit();
 };
 
-#endif // if !defined( __SCAM_ADD_DLG__ )
 

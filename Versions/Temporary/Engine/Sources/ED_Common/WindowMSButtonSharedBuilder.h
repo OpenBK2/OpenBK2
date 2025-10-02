@@ -1,5 +1,3 @@
-#if !defined(__WINDOW_MSBUTTON_SHARED_BUILDER__)
-#define __WINDOW_MSBUTTON_SHARED_BUILDER__
 
 #pragma once
 #include "../MapEditorLib/BuildDataBuilder.h"
@@ -36,5 +34,4 @@ private:
 	bool CreateButtonState( const string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index, const char * szSuffixName, bool bNormalState );
 };
 
-#endif // !defined(__WINDOW_MSBUTTON_SHARED_BUILDER__)
 

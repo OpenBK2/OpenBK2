@@ -1,5 +1,4 @@
-#ifndef _EffectorRunReaction_h_Included_
-#define _EffectorRunReaction_h_Included_
+#pragma once
 
 
 // run message reaction
@@ -22,5 +21,4 @@ public:
 	virtual int operator&( IBinSaver &saver );
 };
 
-#endif //_EffectorRunReaction_h_Included_
 

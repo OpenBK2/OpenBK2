@@ -1,7 +1,5 @@
-#ifndef __STATES_FACTORY_H__
-#define __STATES_FACTORY_H__
 
-#pragma ONCE
+#pragma once
 
 interface IStatesFactory : public CAIObjectBase
 {
@@ -13,5 +11,4 @@ public:
 	virtual interface IUnitState* ProduceRestState( class CQueueUnit *pUnit ) = 0;
 };
 
-#endif // __STATES_FACTORY_H__
 

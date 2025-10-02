@@ -1,5 +1,4 @@
-#if !defined(__DOCKING_WINDOW__LAYER_BROWSER__)
-#define __DOCKING_WINDOW__LAYER_BROWSER__
+#pragma once
 
 
 class CDWLayerBrowser : public SECControlBar
@@ -17,5 +16,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DOCKING_WINDOW__LAYER_BROWSER__)
 

@@ -1,6 +1,3 @@
-#if !defined(__BUILDINGRPGSTATS_EXPORTER__)
-#define __BUILDINGRPGSTATS_EXPORTER__
-#pragma once
 #pragma once
 
 #include "ObjectBaseRPGStatsExporter.h"
@@ -44,6 +41,5 @@ public:
 															EXPORT_TYPE exportType );
 };
 
-#endif//__BUILDINGRPGSTATS_EXPORTER__
 
 

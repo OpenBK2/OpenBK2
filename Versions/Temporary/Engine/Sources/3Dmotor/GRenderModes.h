@@ -1,9 +1,4 @@
-#ifndef __GRenderModes_H_
-#define __GRenderModes_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 namespace NGfx
 {
 	class CTexture;
@@ -106,5 +101,4 @@ struct SRTClearParams
 
 inline SBound MakeLargeHintBound() { SBound b; b.SphereInit( CVec3(0,0,0), 1e6 ); return b; }
 }
-#endif
 

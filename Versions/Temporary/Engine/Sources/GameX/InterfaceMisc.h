@@ -1,10 +1,5 @@
-#ifndef __INTERFACE_MISC_H__
-#define __INTERFACE_MISC_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 
 class CInterfaceMessageBox : public CInterfaceScreenBase
@@ -128,5 +123,4 @@ public:
 	void Exec();
 };
 
-#endif //__INTERFACE_MISC_H__
 

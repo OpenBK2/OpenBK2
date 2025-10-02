@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_REF__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_REF__
 #pragma once
 
 #include "PC_StringNewBrowseEditor.h"
@@ -23,5 +21,4 @@ private:
 	//void GetUniqueName( const string &szObjectTypeName, string *pszObjectName );
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_REF__)
 

@@ -1,5 +1,3 @@
-#if !defined( __TRACE_MODEL__ )
-#define __TRACE_MODEL__
 #pragma once
 
 struct STriangleForTrace
@@ -32,6 +30,5 @@ struct granny_file_info;
 int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile );
 bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGeometryResourceName );
 //////////////////////////////////////////////////////////////////////////////////////`////////////////////////////////////////
-#endif // #if !defined( __TRACE_MODEL__ )
 
 

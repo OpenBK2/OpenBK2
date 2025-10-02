@@ -1,5 +1,4 @@
-#ifndef __FMT_TARGA_H__
-#define __FMT_TARGA_H__
+#pragma once
 
 enum ETGAImageType
 {
@@ -57,4 +56,3 @@ struct STGAFileFooter
 };
 #pragma pack()
 
-#endif // __FMT_TARGA_H__

@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MP_GAME_ROOM_H__
-#define __INTERFACE_MP_GAME_ROOM_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceMPBase.h"
 #include "GameRoomData.h"
@@ -149,5 +147,4 @@ public:
 };
 #endif // _SINGLE_DEMO
 
-#endif //__INTERFACE_MP_GAME_ROOM_H__
 

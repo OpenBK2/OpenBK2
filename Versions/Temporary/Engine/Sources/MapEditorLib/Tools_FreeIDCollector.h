@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__FREE_ID_COLLECTOR__)
-#define __COMMON_TOOLS__FREE_ID_COLLECTOR__
 #pragma once
 
 /**
@@ -60,5 +58,4 @@ public:
 	}
 };
 
-#endif // #if !defined(__COMMON_TOOLS__FREE_ID_COLLECTOR__)
 

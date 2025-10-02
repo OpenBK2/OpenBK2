@@ -1,5 +1,3 @@
-#if !defined(__UI_VISITOR_IMPLEMENTATION__)
-#define __UI_VISITOR_IMPLEMENTATION__
 #pragma once
 
 
@@ -83,6 +81,5 @@ public:
 	}
 };
 
-#endif // !defined(__UI_VISITOR_IMPLEMENTATION__)
 
 

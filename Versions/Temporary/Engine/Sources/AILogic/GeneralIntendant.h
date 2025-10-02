@@ -1,7 +1,5 @@
-#ifndef __GENERALINTENDANT_H__
-#define __GENERALINTENDANT_H__
 
-#pragma ONCE
+#pragma once
 #include "Commander.h"
 #include "General.h"
 #include "EnemyRememberer.h"
@@ -303,5 +301,4 @@ public:
 	void MarkCellsDangerous( const SVector &vCell );		
 };
 
-#endif // __GENERALINTENDANT_H__
 

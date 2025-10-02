@@ -1,9 +1,4 @@
-#ifndef __GGeometry_H_
-#define __GGeometry_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3DLib_export.h"
 
 #include "../3Dmotor/GPixelFormat.h"
@@ -176,5 +171,4 @@ _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 
 }
-#endif
 

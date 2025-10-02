@@ -1,5 +1,3 @@
-#if !defined(__GDB__SELECT_TABLES_DIALOG__)
-#define __GDB__SELECT_TABLES_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -36,5 +34,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__GDB__SELECT_TABLES_DIALOG__)
 

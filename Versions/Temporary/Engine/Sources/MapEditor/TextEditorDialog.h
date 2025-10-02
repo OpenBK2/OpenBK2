@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__TEXT_EDITOR_DIALOG__)
-#define __COMMON_CONTROLS__TEXT_EDITOR_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -76,5 +74,4 @@ public:
 };
 
 //{{AFX_INSERT_LOCATION}}
-#endif // !defined(__COMMON_CONTROLS__TEXT_EDITOR_DIALOG__)
 

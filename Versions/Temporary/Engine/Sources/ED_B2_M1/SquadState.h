@@ -1,5 +1,3 @@
-#if !defined(__SQUAD_STATE__)
-#define __SQUAD_STATE__
 #pragma once
 
 #include "../MapEditorLib/MultiInputState.h"
@@ -55,5 +53,4 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__SQUAD_STATE__)
 

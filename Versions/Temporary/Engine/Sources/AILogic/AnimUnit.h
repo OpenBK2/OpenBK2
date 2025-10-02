@@ -1,7 +1,4 @@
-#ifndef __ANIM_UNIT_H__
-#define __ANIM_UNIT_H__
-
-#pragma ONCE
+#pragma once
 
 interface IAnimUnit : public CAIObjectBase
 {
@@ -14,6 +11,3 @@ interface IAnimUnit : public CAIObjectBase
 
 	virtual void Init( class CAIUnit *pOwner ) = 0;
 };
-
-#endif // __ANIM_UNIT_H__
-

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__COLORS__)
-#define __COMMON_TOOLS__COLORS__
 #pragma once
 
 
@@ -180,5 +178,4 @@ TColor GetARGBColorGradient( TColor zeroColor, TColor fullColor, float fGradient
 												(TColor)(int)( nZeroBlue + ( nFullBlue - nZeroBlue ) * fGradient ) );
 }
 
-#endif // #if !defined(__COMMON_TOOLS__COLORS__)
 

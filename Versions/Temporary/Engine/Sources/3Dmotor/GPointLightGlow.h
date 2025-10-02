@@ -1,9 +1,4 @@
-#ifndef __POINTLIGHTGLOW_H_
-#define __POINTLIGHTGLOW_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/DG.h"
 #include "../3dlib/ExpFader.h"
 
@@ -45,5 +40,4 @@ public:
 };
 }
 
-#endif
 

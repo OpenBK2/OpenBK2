@@ -1,5 +1,3 @@
-#if !defined(__HEIGHT_STATE_V3__)
-#define __HEIGHT_STATE_V3__
 #pragma once
 
 #include "CommandHandlerDefines.h"
@@ -297,7 +295,6 @@ public:
 	}
 };
 
-#endif // !defined(__HEIGHT_STATE_V3__)
 
 
 

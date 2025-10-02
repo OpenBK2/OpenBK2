@@ -1,9 +1,4 @@
-#ifndef __GFXBUFFERS_H_
-#define __GFXBUFFERS_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3dmotor_export.h"
 
 
@@ -293,5 +288,4 @@ void FlushQueue();
 
 }
 
-#endif
 

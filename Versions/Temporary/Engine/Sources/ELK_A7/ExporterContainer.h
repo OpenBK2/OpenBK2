@@ -1,5 +1,3 @@
-#if !defined(__EXPORTER__CONTAINER__)
-#define __EXPORTER__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Exporter.h"
@@ -64,6 +62,5 @@ public:
 	EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName );
 };
 
-#endif // !defined(__EXPORTER__CONTAINER__)
 
 

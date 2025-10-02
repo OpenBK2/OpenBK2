@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__CHILD_FRAME__)
-#define __INTERFACE__CHILD_FRAME__
 #pragma once
 
 
@@ -35,6 +33,5 @@ interface IChildFrameContainer : public CObjectBase
 	virtual void Leave() = 0;
 };
 
-#endif // !defined(__INTERFACE__CHILD_FRAME__)
 
 

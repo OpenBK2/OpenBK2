@@ -1,5 +1,4 @@
-#ifndef __IMAGE_BMP_H__
-#define __IMAGE_BMP_H__
+#pragma once
 
 namespace NImage
 {
@@ -7,5 +6,4 @@ namespace NImage
 	bool LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream );
 };
 
-#endif // __IMAGE_BMP_H__
 

@@ -1,9 +1,4 @@
-#ifndef __GTEXT_H__
-#define __GTEXT_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "RectLayout.h"
 #include "GLocale.h"
 
@@ -47,5 +42,4 @@ CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *
 
 }; // namespace 
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "Executor.h"
 #include "AIUnit.h"
 

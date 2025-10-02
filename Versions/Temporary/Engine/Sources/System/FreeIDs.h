@@ -1,7 +1,5 @@
-#ifndef __FREEIDS_H__
-#define __FREEIDS_H__
 
-#pragma ONCE
+#pragma once
 
 
 #include "System_export.h"
@@ -38,5 +36,4 @@ public:
 	
 };
 
-#endif // __FREEIDS_H__
 

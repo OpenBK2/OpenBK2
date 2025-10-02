@@ -1,5 +1,3 @@
-#if !defined(__COMMON_DATA_ID__)
-#define __COMMON_DATA_ID__
 #pragma once
 
 
@@ -118,5 +116,4 @@ template <> void Invalidate( int *pID ) { if ( pID != 0 ) { ( *pID ) = ( -1 ); }
 template <> void Invalidate( string *pID ) { if ( pID != 0 ) { pID->clear(); } }
 /**/
 
-#endif // !defined(__COMMON_DATA_ID__)
 

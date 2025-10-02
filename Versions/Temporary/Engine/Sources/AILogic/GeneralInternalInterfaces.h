@@ -1,5 +1,4 @@
-#ifndef __GENERAL_INTERNAL_INTERFACES__
-#define __GENERAL_INTERNAL_INTERFACES__
+#pragma once
 
 class CFormation;
 class CAIUnit;
@@ -127,5 +126,4 @@ interface IGeneralDelayedTask : public CAIObjectBase
 	virtual void Run() = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#endif // __GENERAL_INTERNAL_INTERFACES__
 

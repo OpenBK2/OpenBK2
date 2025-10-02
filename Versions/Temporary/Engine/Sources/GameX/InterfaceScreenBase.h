@@ -1,7 +1,5 @@
-#ifndef __INTERFACESCREENBASE_H__
-#define __INTERFACESCREENBASE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../input/gamemessage.h"
 #include "../Main/MainLoop.h"
@@ -139,5 +137,4 @@ class CommandName : public CInterfaceCommandBase< InterfaceName >	\
 	OBJECT_NOCOPY_METHODS( CommandName );														\
 };
 
-#endif // __INTERFACESCREENBASE_H__
 

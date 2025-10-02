@@ -1,5 +1,3 @@
-#ifndef __GAME_MESSAGE_H__
-#define __GAME_MESSAGE_H__
 #pragma once
 
 #include "Bind.h"
@@ -354,5 +352,4 @@ inline CVec2 UnPackCoords( int _nPacked )
 	return CVec2( dwPacked & 0x7FFF, (dwPacked >> 15) & 0x7FFF );
 }
 
-#endif // __GAME_MESSAGE_H__
 

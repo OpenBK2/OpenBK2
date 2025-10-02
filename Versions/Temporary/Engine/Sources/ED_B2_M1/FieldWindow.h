@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_DW_FIELD_WINDOW__)
-#define __MAPINFO_DW_FIELD_WINDOW__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -42,5 +40,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MAPINFO_DW_FIELD_WINDOW__)
 

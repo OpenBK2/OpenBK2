@@ -1,9 +1,4 @@
-#ifndef __GLOCALE_H__
-#define __GLOCALE_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 
@@ -81,5 +76,4 @@ public:
 
 }; // namespace 
 
-#endif
 

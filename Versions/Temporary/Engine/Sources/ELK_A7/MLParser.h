@@ -1,9 +1,4 @@
-#if !defined(__ELK_MLPARSER__)
-#define __ELK_MLPARSER__
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 namespace NML
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,5 +23,4 @@ namespace NML
 	int Parse( CMLUnicodeText *pMLUnicodeText, const wstring &rwszText, bool bJoinTags );
 	int Parse( CMLMBCSText *pMLMBCSText, const CString &rstrText, bool bJoinTags, int nCodePage );
 };
-#endif // !defined(__ELK_MLPARSER__)
 

@@ -1,5 +1,3 @@
-#ifndef _Plane_Path_Math_
-#define _Plane_Path_Math_
 
 #pragma once
 #include "../Misc/Spline.h"
@@ -126,5 +124,4 @@ public:
 };
 
 
-#endif //_Plane_Path_Math_
 

@@ -1,5 +1,3 @@
-#ifndef __SEGMENTED_OBJECTS_H__
-#define __SEGMENTED_OBJECTS_H__
 
 #pragma once
 #include "ListsSet.h"
@@ -134,5 +132,4 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime, const NTimer::STime
 
 };
 
-#endif // __SEGMENTED_OBJECTS_H__
 

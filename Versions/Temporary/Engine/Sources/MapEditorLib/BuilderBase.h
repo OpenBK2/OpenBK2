@@ -1,5 +1,3 @@
-#if !defined(__BUILDER_BASE__)
-#define __BUILDER_BASE__
 #pragma once
 
 #include "Interface_Builder.h"
@@ -16,6 +14,5 @@ public:
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) { if ( pszDefaultFolder ) { pszDefaultFolder->clear(); } }
 };
 
-#endif // !defined(__BUILDER_BASE__)
 
 

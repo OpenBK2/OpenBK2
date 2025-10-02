@@ -1,5 +1,4 @@
-#ifndef __GfxShaders_H__
-#define __GfxShaders_H__
+#pragma once
 struct SVShader;
 struct SPShader;
 struct SHLSLShader;
@@ -132,5 +131,4 @@ namespace NShader
   const int EPRST = 1;
 }
 
-#endif
 

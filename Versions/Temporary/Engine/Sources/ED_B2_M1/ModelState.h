@@ -1,5 +1,3 @@
-#if !defined(__MODEL_STATE__)
-#define __MODEL_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -134,6 +132,5 @@ public:
 };
 
 
-#endif // !defined(__MODEL_STATE__)
 
 

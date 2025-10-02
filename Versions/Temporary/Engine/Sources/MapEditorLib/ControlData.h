@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__CONTROL_DATA__)
-#define __COMMON_CONTROLS__CONTROL_DATA__
 #pragma once
 
 
@@ -107,5 +105,4 @@ public:
 };
 //
 
-#endif // !defined(__COMMON_CONTROLS__CONTROL_DATA__)
 

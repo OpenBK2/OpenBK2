@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__PROGRESS__)
-#define __INTERFACE__PROGRESS__
 #pragma once
 
 
@@ -15,6 +13,5 @@ namespace NProgress
 	void IteratePosition();
 };
 
-#endif // !defined(__INTERFACE__PROGRESS__)
 
 

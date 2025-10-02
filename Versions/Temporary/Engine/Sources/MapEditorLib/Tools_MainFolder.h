@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__MAIN_FOLDER__)
-#define __COMMON_TOOLS__MAIN_FOLDER__
 #pragma once
 
 
@@ -10,5 +8,4 @@ struct SMainFolder
 	static bool SetMainFolder();
 };
 
-#endif // !defined(__COMMON_TOOLS__MAIN_FOLDER__)
 

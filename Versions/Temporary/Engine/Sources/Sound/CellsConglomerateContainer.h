@@ -1,7 +1,5 @@
-#ifndef __CELLSCONGLOMERATECONTAINER_H__
-#define __CELLSCONGLOMERATECONTAINER_H__
 
-#pragma ONCE
+#pragma once
 #include "../Misc/2dArray.h"
 #include "IntPair.h"
 
@@ -79,5 +77,4 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-#endif // __CELLSCONGLOMERATECONTAINER_H__
 

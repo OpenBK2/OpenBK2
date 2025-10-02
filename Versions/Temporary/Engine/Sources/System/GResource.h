@@ -1,9 +1,4 @@
-#ifndef __GRESOURCE_H_
-#define __GRESOURCE_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "System_export.h"
 
 
@@ -204,5 +199,4 @@ namespace nstl
 template<class T>
 SIntResKey GetIntResKey( T *pResource ) { return SIntResKey( pResource->uid, pResource->GetRecordID() ); }
 
-#endif
 

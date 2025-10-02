@@ -1,5 +1,3 @@
-#if !defined(__SPECIFIC__)
-#define __SPECIFIC__
 #pragma once
 //
 #include "../misc/nalgoritm.h"
@@ -12,5 +10,4 @@
 #include "../vendor/Stingray/Include/Toolkit/ot_tabwnd.h"
 #include "../vendor/Stingray/Include/Toolkit/olbar.h"
 
-#endif // !defined(__SPECIFIC__)
 

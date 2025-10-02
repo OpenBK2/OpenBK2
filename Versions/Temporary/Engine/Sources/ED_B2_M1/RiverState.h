@@ -1,5 +1,3 @@
-#if !defined(__RIVER_STATE__)
-#define __RIVER_STATE__
 #pragma once
 
 #include "VSOStateEx.h"
@@ -65,7 +63,6 @@ protected:
 	void UpdateVSOInTerrain( int nVSOID );
 };
 
-#endif // !defined(__RIVER_STATE__)
 /**
 class CRiverState : public CVSOState
 {

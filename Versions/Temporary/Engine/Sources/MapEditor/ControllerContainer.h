@@ -1,5 +1,3 @@
-#if !defined(__CONTROLLER__CONTAINER__)
-#define __CONTROLLER__CONTAINER__
 #pragma once
 
 #include "MDDLDialog.h"
@@ -36,6 +34,5 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__CONTROLLER__CONTAINER__)
 
 

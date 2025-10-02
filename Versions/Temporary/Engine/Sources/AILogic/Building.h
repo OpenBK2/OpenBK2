@@ -1,7 +1,5 @@
-#ifndef __BUILDING_H__
-#define __BUILDING_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StaticObject.h"
 #include "../Misc/Heap.h"
@@ -280,5 +278,4 @@ public:
 	void CheckHitPoints();
 };
 
-#endif // __BUILDING_H__
 

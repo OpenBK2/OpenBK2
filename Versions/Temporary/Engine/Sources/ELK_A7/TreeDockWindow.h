@@ -1,5 +1,4 @@
-#if !defined(__ELK_TREE_DOCK_WINDOW__)
-#define __ELK_TREE_DOCK_WINDOW__
+#pragma once
 
 #define IDC_EMBEDDED_CONTROL 200
 
@@ -21,5 +20,4 @@ public:
 	void SetMainFrameWindow( CWnd *_pwndMainFrame );
 };
 
-#endif // !defined(__ELK_TREE_DOCK_WINDOW__)
 

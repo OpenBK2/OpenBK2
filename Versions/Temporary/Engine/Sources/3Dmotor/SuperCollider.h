@@ -1,8 +1,4 @@
-#ifndef __SuperCollider_H_
-#define __SuperCollider_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 #include "VolumeContainer.h"
 namespace NCollider
 {
@@ -136,5 +132,4 @@ public:
 	}
 };
 }
-#endif
 

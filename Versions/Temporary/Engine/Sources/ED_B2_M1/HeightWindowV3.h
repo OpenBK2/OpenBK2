@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_DW_HEIGHT_WINDOW_V3__)
-#define __MAPINFO_DW_HEIGHT_WINDOW_V3__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -86,5 +84,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MAPINFO_DW_HEIGHT_WINDOW_V3__)
 

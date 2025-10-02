@@ -1,7 +1,5 @@
-#ifndef __WINDOW_COMBO_BOX_H__
-#define __WINDOW_COMBO_BOX_H__
 
-#pragma ONCE
+#pragma once
 
 #include "Window.h"
 #include "UIComponents.h"
@@ -95,5 +93,4 @@ public:
 	//}
 };
 
-#endif //__WINDOW_COMBO_BOX_H__
 

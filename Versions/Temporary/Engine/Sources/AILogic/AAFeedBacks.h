@@ -1,7 +1,4 @@
-#ifndef __AAFEEDBACKS_H__
-#define __AAFEEDBACKS_H__
-
-#pragma ONCE
+#pragma once
 
 class CAAFeedBacks
 {
@@ -23,6 +20,3 @@ public:
 	void Fired( class CAIUnit *pAA, class CAIUnit *pTarget );
 	void PlaneDeleted( class CAIUnit *pTarget );
 };
-
-#endif // __AAFEEDBACKS_H__
-

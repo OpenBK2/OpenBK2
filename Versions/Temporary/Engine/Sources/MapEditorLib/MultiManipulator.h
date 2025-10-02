@@ -1,7 +1,5 @@
-#if !defined(__MULTI_MANIPULATOR__)
-#define __MULTI_MANIPULATOR__
 
-#pragma ONCE
+#pragma once
 
 #include "../libdb/Manipulator.h"
 #include "Tools_UniqueList.h"
@@ -100,5 +98,4 @@ public:
 	bool IsFolder() const { return false; }
 };
 
-#endif // !defined(__MULTI_MANIPULATOR__)
 

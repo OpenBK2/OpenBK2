@@ -1,5 +1,3 @@
-#ifndef __MAP_CLIP__
-#define __MAP_CLIP__
 #pragma once
 /**
 #include "MapInfoEditorData.h"
@@ -290,5 +288,4 @@ public:
 };
 
 /**/
-#endif //#ifndef __MAP_CLIP__
 

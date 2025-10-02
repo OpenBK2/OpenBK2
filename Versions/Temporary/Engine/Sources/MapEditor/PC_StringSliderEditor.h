@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_SLIDER__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_SLIDER__
 #pragma once
 
 #include "../MapEditorLib/Interface_CommandHandler.h"
@@ -54,5 +52,4 @@ private:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_SLIDER__)
 

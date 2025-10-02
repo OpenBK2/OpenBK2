@@ -2,13 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_)
-#define AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Window.h"
 
 
@@ -73,5 +68,4 @@ public:
 	void SetSpecialPosition( int nPosition );
 };
 
-#endif // !defined(AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_)
 

@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MISC_H__
-#define __INTERFACE_MISC_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 
@@ -47,5 +45,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_MISC_H__
 

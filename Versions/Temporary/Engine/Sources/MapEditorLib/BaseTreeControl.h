@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__BASE_TREE_CONTROL__)
-#define __COMMON_CONTROLS__BASE_TREE_CONTROL__
 #pragma once
 
 #include "ControlConfig.h"
@@ -52,5 +50,4 @@ class CBaseTreeControl
 	CControlConfig controlConfig;
 };
 
-#endif // !defined(__COMMON_CONTROLS__BASE_TREE_CONTROL__)
 

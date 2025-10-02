@@ -1,5 +1,4 @@
-#if !defined( __ENTRENCHMENT_INFO_DATA__ )
-#define __ENTRENCHMENT_INFO_DATA__
+#pragma once
 
 #include "MapInfoEditorData.h"
 
@@ -73,5 +72,4 @@ namespace NMapInfoEditor
 
 }//namespace
 
-#endif // __ENTRENCHMENT_INFO_DATA__
 

@@ -2,13 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWMESSAGEHANDLE_H__733B319B_FB3A_4022_B18F_2E2596A5F251__INCLUDED_)
-#define AFX_WINDOWMESSAGEHANDLE_H__733B319B_FB3A_4022_B18F_2E2596A5F251__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 
 typedef bool (*MESSAGE_HANDLER)( const struct SBUIMessage &msg, void *pObj );
 
@@ -53,5 +48,4 @@ public:
 	//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );	
 
 
-#endif // !defined(AFX_WINDOWMESSAGEHANDLE_H__733B319B_FB3A_4022_B18F_2E2596A5F251__INCLUDED_)
 

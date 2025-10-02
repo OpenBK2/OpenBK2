@@ -1,5 +1,3 @@
-#if !defined(__DIALOG_DATA__)
-#define __DIALOG_DATA__
 #pragma once
 
 #include "../Stats_B2_M1/RPGStats.h"
@@ -48,5 +46,4 @@ struct SFormationWindowDialogData
 	}
 };
 
-#endif//#if !defined(__DIALOG_DATA__)
 

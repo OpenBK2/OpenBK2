@@ -1,5 +1,3 @@
-#if !defined(__INFANTRYRPGSTATS_BUILDER__)
-#define __INFANTRYRPGSTATS_BUILDER__
 
 #pragma once
 #include "../MapEditorLib/BuildDataBuilder.h"
@@ -28,5 +26,4 @@ protected:
 														 IManipulator *pBuildDataManipulator );
 };
 
-#endif // !defined(__INFANTRYRPGSTATS_BUILDER__)
 

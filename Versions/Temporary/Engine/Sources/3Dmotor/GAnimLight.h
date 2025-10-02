@@ -1,9 +1,4 @@
-#ifndef __GAnimLight_H_
-#define __GAnimLight_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 
@@ -103,5 +98,4 @@ public:
 
 }
 
-#endif
 

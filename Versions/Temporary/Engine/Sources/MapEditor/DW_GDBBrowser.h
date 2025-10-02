@@ -1,5 +1,4 @@
-#if !defined(__DOCKING_WINDOW__GDB_BROWSER__)
-#define __DOCKING_WINDOW__GDB_BROWSER__
+#pragma once
 
 
 //#include "3DTab_GDBBrowser.h"
@@ -68,5 +67,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DOCKING_WINDOW__GDB_BROWSER__)
 

@@ -1,5 +1,4 @@
-#ifndef __TRANSFORM_H__
-#define __TRANSFORM_H__
+#pragma once
 
 #include "3DLib_export.h"
 
@@ -452,5 +451,4 @@ inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float val )
 	PushScale( val, val, val ); 
 }
 
-#endif
 

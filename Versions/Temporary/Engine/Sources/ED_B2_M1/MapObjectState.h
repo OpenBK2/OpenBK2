@@ -1,5 +1,3 @@
-#if !defined(__MAPOBJECT_STATE__)
-#define __MAPOBJECT_STATE__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -307,6 +305,5 @@ public:
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__MAPOBJECT_STATE__)
 
 

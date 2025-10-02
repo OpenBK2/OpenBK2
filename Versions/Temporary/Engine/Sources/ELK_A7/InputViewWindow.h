@@ -1,10 +1,5 @@
-#if !defined(__ELK_INPUT_VIEW_WINDOW__)
-#define __ELK_INPUT_VIEW_WINDOW__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "ELK_Types.h"
 #include "InputViewDialog.h"
 
@@ -50,5 +45,4 @@ protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 };
 
-#endif // !defined(__ELK_INPUT_VIEW_WINDOW__)
 

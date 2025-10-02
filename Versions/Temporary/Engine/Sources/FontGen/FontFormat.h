@@ -1,9 +1,4 @@
-#ifndef __FONTFORMAT_H__
-#define __FONTFORMAT_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #pragma pack( 4 )
 // complete necessary one letter description
 struct STFCharacter
@@ -63,5 +58,4 @@ public:
 	friend class CFontGen;
 };
 
-#endif // __FONTFORMAT_H__
 

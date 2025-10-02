@@ -1,5 +1,3 @@
-#if !defined(__TREE__GDB_BROWSER__INPUT_STATE__)
-#define __TREE__GDB_BROWSER__INPUT_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -50,5 +48,4 @@ public:
 	void OnContextMenu		( const CTPoint<int> &rMousePoint );
 };
 
-#endif // !defined(__TREE__GDB_BROWSER__INPUT_STATE__)
 

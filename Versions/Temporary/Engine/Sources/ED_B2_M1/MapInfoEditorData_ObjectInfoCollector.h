@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_DATA__OBJECT_INFO_COLLECTOR__)
-#define __MAPINFO_EDITOR_DATA__OBJECT_INFO_COLLECTOR__
 #pragma once
 
 #include "MapInfoEditorData_Consts.h"
@@ -458,5 +456,4 @@ namespace NMapInfoEditor
 	};
 };
 
-#endif // !defined(__MAPINFO_EDITOR_DATA__OBJECT_INFO_COLLECTOR__)
 

@@ -1,7 +1,5 @@
-#if !defined(__MASK_MANIPULATOR__)
-#define __MASK_MANIPULATOR__
 
-#pragma ONCE
+#pragma once
 
 #include "../libdb/Manipulator.h"
 
@@ -122,5 +120,4 @@ public:
 	bool IsFolder() const { return false; }
 };
 
-#endif // !defined(__MASK_MANIPULATOR__)
 

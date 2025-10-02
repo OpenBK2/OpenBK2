@@ -1,7 +1,5 @@
-#ifndef __SAVE_DBID_H__
-#define __SAVE_DBID_H__
 
-#pragma ONCE
+#pragma once
 
 /*
 inline void SaveDBID( IBinSaver *pSaver, const int nChunk )
@@ -24,5 +22,4 @@ inline void LoadDBID( IBinSaver *pSaver, const int nChunk, int *pDBID )
 }
 */
 
-#endif // __SAVE_DBID_H__
 

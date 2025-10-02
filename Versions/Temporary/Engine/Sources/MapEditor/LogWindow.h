@@ -1,5 +1,3 @@
-#if !defined(__LOG_WINDOW__)
-#define __LOG_WINDOW__
 #pragma once
 
 #include "../MapEditorLib/Interface_CommandHandler.h"
@@ -19,5 +17,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__LOG_WINDOW__)
 

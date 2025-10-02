@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_SWITCHER__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_SWITCHER__
 #pragma once
 
 #include "PC_ItemEditor.h"
@@ -25,5 +23,4 @@ public:
 	void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) {}
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_SWITCHER__)
 

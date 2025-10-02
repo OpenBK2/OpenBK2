@@ -1,5 +1,3 @@
-#ifndef __UI_RUN_MODE_INTERFACE__
-#define __UI_RUN_MODE_INTERFACE__
 
 #pragma once
 
@@ -31,5 +29,4 @@ protected:
 
 INTERFACE_COMMAND_DECLARE( CUIRunModeIC, CUIRunModeInterface )
 
-#endif // __UI_RUN_MODE_INTERFACE__
 

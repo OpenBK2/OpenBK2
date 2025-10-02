@@ -2,10 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_)
-#define AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_
 
-#pragma ONCE
+#pragma once
 
 #include "Window.h"
 #include "UIComponents.h"
@@ -128,5 +126,4 @@ public:
 };
 
 
-#endif // !defined(AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_)
 

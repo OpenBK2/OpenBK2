@@ -1,5 +1,3 @@
-#if !defined(__UI_RUN_MODE_STATE_STATE__)
-#define __UI_RUN_MODE_STATE_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -23,6 +21,5 @@ protected:
 	string szTypeName;
 };
 
-#endif // !defined(__UI_RUN_MODE_STATE_STATE__)
 
 

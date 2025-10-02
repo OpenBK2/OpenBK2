@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__MOD__)
-#define __INTERFACE__MOD__
 #pragma once
 
 #include "Interface_UserData.h"
@@ -23,6 +21,5 @@ interface IMODContainer : public CObjectBase
 	virtual string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType ) = 0;
 };
 
-#endif // !defined(__INTERFACE__MOD__)
 
 

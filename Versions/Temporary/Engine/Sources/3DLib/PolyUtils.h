@@ -1,9 +1,4 @@
-#ifndef __GTERRAINUTILS_H_
-#define __GTERRAINUTILS_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 enum ELineDispos
 {
 	SAME,
@@ -19,5 +14,4 @@ ELineDispos IntersectLines( const CVec2 &vLine1Beg, const CVec2 &vLine1End, cons
 void ClipPolygon(	const TPolygonsList &vPolygon, const TPolygonsList &vClipPolygon, TPolygonsList *pvIntList, TPolygonsList *pvSubList );
 void DumpPolyList( const TPolygonsList &polygonsList );
 
-#endif
 

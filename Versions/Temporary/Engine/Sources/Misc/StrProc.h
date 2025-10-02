@@ -1,5 +1,4 @@
-#ifndef __STRPROC_H__
-#define __STRPROC_H__
+#pragma once
 #include "Misc_export.h"
 
 namespace NStr
@@ -468,5 +467,4 @@ struct SASCIICharsComparer
 
 }; // end of namespace NStr
 
-#endif // __STRPROC_H__
 

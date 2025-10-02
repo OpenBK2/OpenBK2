@@ -1,10 +1,5 @@
-#if !defined(__ELK_IMPORT_FROM_PAK_DIALOG__)
-#define __ELK_IMPORT_FROM_PAK_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../MapEditorLib/ResizeDialog.h"
 
 class CImportFromPAKDialog : public CResizeDialog
@@ -42,5 +37,4 @@ public:
 	void GetFilePath( string *pszFilePath );
 };
 
-#endif // !defined(__ELK_IMPORT_FROM_PAK_DIALOG__)
 

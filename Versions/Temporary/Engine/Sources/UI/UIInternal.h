@@ -1,5 +1,4 @@
-#ifndef _IBackground_h_Included_
-#define _IBackground_h_Included_
+#pragma once
 
 ////#include "UIMain.h"
 
@@ -27,5 +26,4 @@ struct SBUIMessage
 };
 
 
-#endif //_IBackground_h_Included_
 

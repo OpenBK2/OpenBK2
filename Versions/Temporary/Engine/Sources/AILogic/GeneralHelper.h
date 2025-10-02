@@ -1,5 +1,4 @@
-#ifndef __GENERAL_HELPER__
-#define __GENERAL_HELPER__
+#pragma once
 
 #include "GeneralInternalInterfaces.h"
 #include "../System/RandomGen.h"
@@ -73,5 +72,4 @@ struct SGeneralHelper
 	};
 };
 
-#endif // __GENERAL_HELPER__
 

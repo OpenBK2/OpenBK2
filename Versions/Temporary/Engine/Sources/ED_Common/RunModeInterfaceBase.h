@@ -1,5 +1,3 @@
-#ifndef __RUN_MODE_INTERFACE_BASE__
-#define __RUN_MODE_INTERFACE_BASE__
 
 #pragma once
 
@@ -28,5 +26,4 @@ protected:
 	DWORD dwTime;
 };
 
-#endif // __RUN_MODE_INTERFACE_BASE__
 

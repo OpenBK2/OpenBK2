@@ -1,7 +1,5 @@
-#ifndef __UI_COMPONENTS_H__
-#define __UI_COMPONENTS_H__
 
-#pragma ONCE
+#pragma once
 
 
 #include "UI_export.h"
@@ -24,5 +22,4 @@ interface IFocusNotify : public virtual CObjectBase
 	virtual void OnFocus( const bool bFocus ) = 0;
 };
 
-#endif //__UI_COMPONENTS_H__
 

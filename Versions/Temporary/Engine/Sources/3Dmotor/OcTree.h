@@ -1,9 +1,4 @@
-#ifndef __OcTree_H_
-#define __OcTree_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 template <class TFinal, int N_MIN_NODE>
 class COcTreeNode: public CObjectBase
 {
@@ -95,5 +90,4 @@ public:
 	}
 };
 
-#endif
 

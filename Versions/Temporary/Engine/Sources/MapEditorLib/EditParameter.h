@@ -1,5 +1,3 @@
-#if !defined(__EDIT_PARAMETER_TEMPLATES__)
-#define __EDIT_PARAMETER_TEMPLATES__
 #pragma once
 
 #include "../Misc/StrProc.h"
@@ -227,5 +225,4 @@ int GetSelectedListIndex( const TControl &rControl )
 }
 
 
-#endif // !defined(__EDIT_PARAMETER_TEMPLATES__)
 

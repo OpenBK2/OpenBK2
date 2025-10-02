@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__MENU_DROP_DOWN_LIST_DIALOG__)
-#define __COMMON_CONTROLS__MENU_DROP_DOWN_LIST_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -31,5 +29,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__MENU_DROP_DOWN_LIST_DIALOG__)
 

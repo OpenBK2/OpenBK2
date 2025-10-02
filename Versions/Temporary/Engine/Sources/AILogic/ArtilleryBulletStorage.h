@@ -1,7 +1,7 @@
 #ifndef __BULLETSTORAGE_H__
 #define __BULLETSTORAGE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StaticObject.h"
 

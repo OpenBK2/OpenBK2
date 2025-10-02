@@ -1,10 +1,5 @@
-#ifndef __PROFILE_MANAGER_MENU_H__
-#define __PROFILE_MANAGER_MENU_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 
 class CInterfaceProfileManager : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -86,5 +81,4 @@ public:
 };
 
 
-#endif //__PROFILE_MANAGER_MENU_H__
 

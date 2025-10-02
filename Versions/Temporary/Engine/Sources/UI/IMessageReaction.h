@@ -1,5 +1,4 @@
-#ifndef _IReaction_h_included_
-#define _IReaction_h_included_
+#pragma once
 
 namespace NDb
 {
@@ -22,5 +21,4 @@ interface IMessageCheck : public CObjectBase
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
 
-#endif //_IReaction_h_included_
 

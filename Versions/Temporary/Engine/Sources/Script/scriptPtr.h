@@ -1,5 +1,4 @@
-#ifndef __SCRIPTPTR_H_
-#define __SCRIPTPTR_H_
+#pragma once
 
 #include "script.h"
 //
@@ -63,5 +62,4 @@ template < class T > bool luaIsDBPtr( const Script::Object &o )
 
 }
 //
-#endif __SCRIPTPTR_H_
 

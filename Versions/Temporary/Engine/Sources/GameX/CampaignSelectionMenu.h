@@ -1,10 +1,5 @@
-#ifndef __INTERFACE_CAMPAIGN_SELECTION_MENU_H__
-#define __INTERFACE_CAMPAIGN_SELECTION_MENU_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 
 namespace NDb
@@ -92,5 +87,4 @@ public:
 };
 #endif // _MP_DEMO
 
-#endif //__INTERFACE_CAMPAIGN_SELECTION_MENU_H__
 

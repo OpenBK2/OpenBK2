@@ -1,7 +1,5 @@
-#ifndef __CHEATS_H__
-#define __CHEATS_H__
 
-#pragma ONCE
+#pragma once
 
 struct SCheats
 {
@@ -57,5 +55,4 @@ public:
 	bool IsPasswordOk() const { return bPasswordOK; }
 };
 
-#endif // __CHEATS_H__
 

@@ -1,5 +1,3 @@
-#if !defined(__AIGEOMETRY_EXPORTER__)
-#define __AIGEOMETRY_EXPORTER__
 #pragma once
 
 #include "BasicSceneExporter.h"
@@ -29,5 +27,4 @@ class CAIGeometryExporter : public CBasicSceneExporter
 	CAIGeometryExporter() {  }
 };
 
-#endif // !defined(__AIGEOMETRY_EXPORTER__)
 

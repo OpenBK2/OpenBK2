@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_SAVE_LOAD_MENU_H__
-#define __INTERFACE_SAVE_LOAD_MENU_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 #include "SaveLoadHelper.h"
@@ -173,5 +171,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_SAVE_LOAD_MENU_H__
 

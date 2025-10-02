@@ -1,8 +1,4 @@
-#ifndef __aiInterval_H_
-#define __aiInterval_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 namespace NDb
 {
 	//struct SRPGArmor;
@@ -64,5 +60,4 @@ void FillIntersectionResults( vector<SSimpleInterval> *pRes,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain );
 
 }
-#endif
 

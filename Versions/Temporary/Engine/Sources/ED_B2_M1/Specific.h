@@ -1,5 +1,3 @@
-#if !defined(__SPECIFIC__)
-#define __SPECIFIC__
 #pragma once
 //
 
@@ -15,6 +13,5 @@
 
 #define CStructureSaver IBinSaver
 
-#endif // !defined(__SPECIFIC__)
 
 

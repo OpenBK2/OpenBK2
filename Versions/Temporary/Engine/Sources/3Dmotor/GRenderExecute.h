@@ -1,10 +1,5 @@
-#ifndef __GRenderExecute_H_
-#define __GRenderExecute_H_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GRenderCore.h"
 
 class CTransformStack;
@@ -33,5 +28,4 @@ void StartRenderExecute( NGfx::CRenderContext *pRC, const SLightInfo &light );
 void SetupNLShadowsProjection( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &depthInfo );
 
 }
-#endif
 

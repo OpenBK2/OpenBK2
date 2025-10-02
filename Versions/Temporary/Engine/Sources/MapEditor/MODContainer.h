@@ -1,5 +1,3 @@
-#if !defined(__MOD__CONTAINER__)
-#define __MOD__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_MOD.h"
@@ -28,6 +26,5 @@ public:
 	string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType );
 };
 
-#endif // !defined(__MOD__CONTAINER__)
 
 

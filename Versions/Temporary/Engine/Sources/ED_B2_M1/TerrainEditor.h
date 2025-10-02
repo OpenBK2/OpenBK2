@@ -1,5 +1,3 @@
-#if !defined(__TERRAIN_EDITOR__)
-#define __TERRAIN_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -40,5 +38,4 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 };
 
-#endif // !defined(__TERRAIN_EDITOR__)
 

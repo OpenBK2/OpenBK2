@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__REFLIST_DIALOG__)
-#define __COMMON_CONTROLS__REFLIST_DIALOG__
 #pragma once
 
 #include "../libdb/Manipulator.h"
@@ -55,5 +53,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__REFLIST_DIALOG__)
 

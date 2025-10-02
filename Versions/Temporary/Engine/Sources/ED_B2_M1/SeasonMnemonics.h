@@ -1,5 +1,3 @@
-#if !defined(__SEASON_MNEMONICS__)
-#define __SEASON_MNEMONICS__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -35,6 +33,5 @@ extern CSeasonMnemonics typeSeasonMnemonics;
 extern CSeasonFilePostfixMnemonics typeSeasonFilePostfixMnemonics;
 extern CSeasonFolderPostfixMnemonics typeSeasonFolderPostfixMnemonics;
 
-#endif // !defined(__SEASON_MNEMONICS__)
 
 

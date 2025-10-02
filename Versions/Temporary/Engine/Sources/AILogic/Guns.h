@@ -1,7 +1,5 @@
-#ifndef __GUNS_H__
-#define __GUNS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "LinkObject.h"
 #include "../Stats_B2_M1/RPGStats.h"
@@ -305,5 +303,4 @@ float GetDispByRadius( const float fDispRadius, const float fRangeMax, const flo
 
 const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner );
 
-#endif // __GUNS_H__
 

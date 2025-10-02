@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__ABOUT_DIALOG__)
-#define __COMMON_CONTROLS__ABOUT_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -18,6 +16,5 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__ABOUT_DIALOG__)
 
 

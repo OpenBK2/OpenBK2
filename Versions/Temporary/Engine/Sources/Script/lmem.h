@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lmem.h,v 1.16 2000/10/30 16:29:59 roberto Exp $
 ** Interface to Memory Manager
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lmem_h
-#define lmem_h
 
 
 #include <stddef.h>
@@ -37,6 +36,5 @@ extern unsigned long memdebug_memlimit;
 #endif
 
 
-#endif
 
 

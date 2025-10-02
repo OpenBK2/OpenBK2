@@ -1,9 +1,4 @@
-#ifndef __GRECTS_H__
-#define __GRECTS_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3dmotor_export.h"
 
 
@@ -30,5 +25,4 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
 
 }
 
-#endif
 

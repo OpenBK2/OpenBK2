@@ -1,3 +1,4 @@
+#pragma once
 /*
 ** $Id: lua.h,v 1.79 2000/10/31 12:44:07 roberto Exp $
 ** Lua - An Extensible Extension Language
@@ -8,8 +9,6 @@
 */
 
 
-#ifndef lua_h
-#define lua_h
 
 #include "Script_export.h"
 
@@ -233,7 +232,6 @@ namespace NScript
 	extern SLUAError luaLastError;
 }
 
-#endif
 /******************************************************************************
 * Copyright (C) 1994-2000 TeCGraf, PUC-Rio.  All rights reserved.
 * 

@@ -1,5 +1,3 @@
-#if !defined(__SPECIFIC__)
-#define __SPECIFIC__
 #pragma once
 
 #include "../misc/nalgoritm.h"
@@ -15,5 +13,4 @@
 #include <toolkit/ot_tabwnd.h>						// Objective Toolkit Tab controls
 #include <toolkit/olbar.h>								// Objective Toolkit Shortcut bar
 
-#endif // !defined(__SPECIFIC__)
 

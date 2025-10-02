@@ -1,5 +1,3 @@
-#ifndef __NSTL_HEAP_H__
-#define __NSTL_HEAP_H__
 
 #pragma once
 
@@ -289,4 +287,3 @@ make_heap(_RandomAccessIterator __first,
 
 }
 
-#endif // __NSTL_HEAP_H__

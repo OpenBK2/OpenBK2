@@ -1,5 +1,3 @@
-#if !defined( __ADV_CLIPBOARD_STATE__ )
-#define __ADV_CLIPBOARD_STATE__
 #pragma once
 /**
 
@@ -304,5 +302,4 @@ public:
 };
 
 /**/
-#endif // #if !defined( __ADV_CLIPBOARD_STATE__ )
 

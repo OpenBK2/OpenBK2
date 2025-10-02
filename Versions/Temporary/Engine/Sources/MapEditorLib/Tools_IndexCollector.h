@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__INDEX_COLLECTOR__)
-#define __COMMON_TOOLS__INDEX_COLLECTOR__
 #pragma once
 
 template<class TID>
@@ -195,5 +193,4 @@ public:
 	}
 };
 
-#endif // #if !defined(__COMMON_TOOLS__INDEX_COLLECTOR__)
 

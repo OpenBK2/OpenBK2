@@ -1,5 +1,3 @@
-#if !defined(__MULTI_INPUT_STATE__)
-#define __MULTI_INPUT_STATE__
 #pragma once
 
 #include "Interface_InputState.h"
@@ -144,5 +142,4 @@ public:
 	}
 };
 
-#endif // !defined(__MULTI_INPUT_STATE__)
 

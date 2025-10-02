@@ -27,8 +27,6 @@
  *   You should not attempt to use it directly.
  */
 
-#ifndef __NSTL_QUEUE_H__
-#define __NSTL_QUEUE_H__
 
 #pragma once
 #pragma warning ( disable : 4180 )
@@ -103,4 +101,3 @@ public:
 
 } // end of namespace nstl
 
-#endif // __NSTL_QUEUE_H__

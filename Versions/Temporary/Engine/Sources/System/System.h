@@ -1,5 +1,3 @@
-#ifndef __SYSTEM_HEADER_H__
-#define __SYSTEM_HEADER_H__
 #pragma once
 
 #include "System_export.h"
@@ -94,5 +92,4 @@ namespace NSystem
 	SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
 };
 
-#endif
 

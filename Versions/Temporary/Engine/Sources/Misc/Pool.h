@@ -1,9 +1,4 @@
-#ifndef __POOL_H_
-#define __POOL_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 template<class T, int N_BLOCK_SIZE = 4096>
 class CPool
 {
@@ -75,5 +70,4 @@ public:
 	void Clear() { data.clear(); pCurrent = pLast = 0; }
 };
 
-#endif
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_REF__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_REF__
 #pragma once
 
 #include "PC_StringBrowseEditor.h"
@@ -21,5 +19,4 @@ private:
 	void SetWindowTextByTypeAndName( const string &szObjectTypeName, const string &szObjectName );
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_REF__)
 

@@ -1,5 +1,3 @@
-#if !defined(__CONTROLLER__MANIPULATOR__)
-#define __CONTROLLER__MANIPULATOR__
 #pragma once
 
 #include "../Misc/2DArray.h"
@@ -114,6 +112,5 @@ public:
 	}
 };
 
-#endif // !defined(__CONTROLLER__MANIPULATOR__)
 
 

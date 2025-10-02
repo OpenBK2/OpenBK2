@@ -1,5 +1,3 @@
-#if !defined(__EMPTY__GDB_BROWSER__)
-#define __EMPTY__GDB_BROWSER__
 #pragma once
 
 
@@ -17,5 +15,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__EMPTY__GDB_BROWSER__)
 

@@ -1,5 +1,3 @@
-#if !defined(__BUILDING_EDITOR__)
-#define __BUILDING_EDITOR__
 #pragma once
 #define EDITOR_BUILDING_ID (-4)
 
@@ -94,5 +92,4 @@ public:
 	void ChangeSeason( const NDb::ESeason eSeason );
 };
 
-#endif // __BUILDING_EDITOR__
 

@@ -1,7 +1,4 @@
-#ifndef __ANIM_UNIT_SOLDIER_H__
-#define __ANIM_UNIT_SOLDIER_H__
-
-#pragma ONCE
+#pragma once
 
 #include "AnimUnit.h"
 
@@ -53,6 +50,3 @@ public:
 
 	virtual void StopCurAnimation();
 };
-
-#endif // __ANIM_UNIT_INTERNAL_H__
-

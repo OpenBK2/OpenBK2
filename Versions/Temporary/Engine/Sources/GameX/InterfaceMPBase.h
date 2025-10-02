@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MP_BASE_H__
-#define __INTERFACE_MP_BASE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 #include "MultiplayerCommandProcessor.h"
@@ -17,5 +15,4 @@ protected:
 public:
 };
 
-#endif //__INTERFACE_MP_BASE_H__
 

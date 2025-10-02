@@ -1,5 +1,4 @@
-#ifndef __BIND_H__
-#define __BIND_H__
+#pragma once
 
 #include "Input.h"
 
@@ -86,5 +85,4 @@ INPUT_EXPORT void PurgeUIEvents();
 
 };
 
-#endif
 

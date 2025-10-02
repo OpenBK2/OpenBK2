@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__SCENE_DRAW__)
-#define __COMMON_TOOLS__SCENE_DRAW__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -310,5 +308,4 @@ public:
 	}
 };
 
-#endif // !defined(__COMMON_TOOLS__SCENE_DRAW__)
 

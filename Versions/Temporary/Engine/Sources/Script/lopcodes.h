@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lopcodes.h,v 1.68 2000/10/24 16:05:59 roberto Exp $
 ** Opcodes for Lua virtual machine
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lopcodes_h
-#define lopcodes_h
 
 #include "llimits.h"
 
@@ -164,5 +163,4 @@ OP_CLOSURE/*	A B	v_b-v_1		closure(KPROTO[a], v_1-v_b)	*/
 //#endif
 
 
-#endif
 

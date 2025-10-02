@@ -1,9 +1,4 @@
-#ifndef __GDXUTILS_H_
-#define __GDXUTILS_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 #include "GfxRender.h"
@@ -125,5 +120,4 @@ void MakeQuadTriList( int nRects, STriangleList *pRes );
 //void CopyRegister( int nDst, int nSrc );
 }
 
-#endif
 

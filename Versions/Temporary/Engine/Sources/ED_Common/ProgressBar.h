@@ -1,5 +1,3 @@
-#if !defined(__PROGRESS_BAR_INTERFACE__)
-#define __PROGRESS_BAR_INTERFACE__
 #pragma once
 
 namespace NProgressBar
@@ -15,5 +13,4 @@ namespace NProgressBar
 };
 
 
-#endif // !defined(__PROGRESS_BAR_INTERFACE__)
 

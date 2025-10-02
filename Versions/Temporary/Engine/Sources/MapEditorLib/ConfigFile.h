@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__CONFIG_FILE__)
-#define __COMMON_TOOLS__CONFIG_FILE__
 #pragma once
 
 
@@ -51,5 +49,4 @@ struct SConfigFile
 	int RemoveKeyword( const string &rszKeyword, bool bIgnoreCase );
 };
 
-#endif // !defined(__COMMON_TOOLS__CONFIG_FILE__)
 

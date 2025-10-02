@@ -1,5 +1,3 @@
-#if !defined(__WINDOW_SIMPLE_SHARED_STATE__)
-#define __WINDOW_SIMPLE_SHARED_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -78,6 +76,5 @@ protected:
 	bool bDragging;
 };
 
-#endif // !defined(__WINDOW_SIMPLE_SHARED_STATE__)
 
 

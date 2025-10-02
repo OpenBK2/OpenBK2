@@ -1,10 +1,5 @@
-#ifndef __TOOLS_H__
-#define __TOOLS_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Misc_export.h"
 
 
@@ -509,5 +504,4 @@ inline void __stdcall DebugTrace( const char *pszFormat, ... ) {  }
 #else
 #define EXTERNVAR extern
 #endif
-#endif // __TOOLS_H__
 

@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lobject.h,v 1.82 2000/10/30 17:49:19 roberto Exp $
 ** Type definitions for Lua objects
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lobject_h
-#define lobject_h
 
 
 #include "llimits.h"
@@ -376,5 +375,4 @@ void __cdecl luaO_verror (lua_State *L, const char *fmt, ...);
 void __cdecl luaO_chunkid (char *out, const char *source, int len);
 
 
-#endif
 

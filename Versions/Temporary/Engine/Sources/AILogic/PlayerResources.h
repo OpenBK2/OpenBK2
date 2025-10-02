@@ -1,5 +1,3 @@
-#ifndef __PLAYER_RESOURCES_H__
-#define __PLAYER_RESOURCES_H__
 
 #pragma once
 /*
@@ -114,5 +112,4 @@ public:
 	CPlayerResourcesTracker* operator[]( const int &nIndex );
 };*/
 
-#endif // __PLAYER_RESOURCES_H__
 

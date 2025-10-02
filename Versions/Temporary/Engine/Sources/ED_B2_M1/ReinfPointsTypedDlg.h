@@ -1,5 +1,3 @@
-#if !defined( __REINF_POINTS_TYPED_DLG__ )
-#define __REINF_POINTS_TYPED_DLG__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -50,5 +48,4 @@ public:
 	afx_msg void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-#endif // #if !defined( __REINF_POINTS_TYPED_DLG__ )
 

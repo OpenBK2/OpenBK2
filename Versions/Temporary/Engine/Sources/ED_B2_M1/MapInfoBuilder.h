@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_BUILDER__)
-#define __MAPINFO_BUILDER__
 
 #pragma once
 #include "../MapEditorLib/BuildDataBuilder.h"
@@ -58,5 +56,4 @@ public:
 	static bool MakeMinimapMaterialAndTexture( string *pszObjectName, const string &szFolder );
 };
 
-#endif // !defined(__MAPINFO_BUILDER__)
 

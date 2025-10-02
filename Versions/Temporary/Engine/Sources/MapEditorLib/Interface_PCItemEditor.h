@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__PROPERTY_CONTROL_ITEM_EDITOR__)
-#define __INTERFACE__PROPERTY_CONTROL_ITEM_EDITOR__
 #pragma once
 
 #include "../libdb/Manipulator.h"
@@ -87,5 +85,4 @@ interface  IPCItemEditor : public CObjectBase
 	virtual void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) = 0;
 };
 
-#endif // !defined(__INTERFACE__PROPERTY_CONTROL_ITEM_EDITOR__)
 

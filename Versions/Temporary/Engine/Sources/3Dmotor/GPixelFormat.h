@@ -1,9 +1,4 @@
-#ifndef __GPIXELFORMAT_H__
-#define __GPIXELFORMAT_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 namespace NGfx
 {
 
@@ -239,5 +234,4 @@ struct SCompactTransformer
 
 }; // namespace NGfx
 
-#endif // __GPIXELFORMAT_H__
 

@@ -1,9 +1,4 @@
-#ifndef __WINFRAME_H__
-#define __WINFRAME_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "System_export.h"
 
 
@@ -52,5 +47,4 @@ namespace NWinFrame
 	void EnableCursorManagement( bool bEnable );
 };
 
-#endif
 

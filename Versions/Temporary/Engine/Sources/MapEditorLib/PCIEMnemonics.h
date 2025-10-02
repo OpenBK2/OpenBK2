@@ -1,5 +1,3 @@
-#if !defined(__PROPERTY_CONTROL_ITEM_EDITOR_TYPE_MNEMONICS__)
-#define __PROPERTY_CONTROL_ITEM_EDITOR_TYPE_MNEMONICS__
 #pragma once
 
 #include "Interface_PCItemEditor.h"
@@ -22,5 +20,4 @@ class CPCIEMnemonics : public CMnemonicsCollector<int>
 
 EXTERNVAR CPCIEMnemonics typePCIEMnemonics;
 
-#endif // !defined(__PROPERTY_CONTROL_ITEM_EDITOR_TYPE_MNEMONICS__)
 

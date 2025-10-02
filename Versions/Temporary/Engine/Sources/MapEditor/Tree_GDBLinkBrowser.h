@@ -1,5 +1,4 @@
-#if !defined(__TREE__GDB_LINK_BROWSER__)
-#define __TREE__GDB_LINK_BROWSER__
+#pragma once
 
 #include "Tree_GDBBrowserBase.h"
 
@@ -17,6 +16,3 @@ public:
 	void LoadHeaderWidth();
 	void SaveHeaderWidth();
 };
-
-#endif // !defined(__TREE__GDB_BROWSER__)
-

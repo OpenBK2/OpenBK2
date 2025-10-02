@@ -1,5 +1,3 @@
-#if !defined(__DESIGN_TYPES__)
-#define __DESIGN_TYPES__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -12,6 +10,5 @@ public:
 
 extern CUnitDesignTypeMnemonics typeUnitDesignTypeMnemonics;
 
-#endif //#if !defined(__DESIGN_TYPES__)
 
 

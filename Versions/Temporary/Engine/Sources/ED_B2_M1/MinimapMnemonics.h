@@ -1,5 +1,3 @@
-#if !defined(__MINIMAP_MNEMONICS__)
-#define __MINIMAP_MNEMONICS__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -19,5 +17,4 @@ public:
 extern CMinimapLayerMnemonics typeMinimapLayer;
 extern CImageScaleMethod typeImageScaleMethod;
 
-#endif //#if !defined(__MINIMAP_MNEMONICS__)
 

@@ -1,10 +1,5 @@
-#if !defined(__ELK_STATISTIC_DIALOG__)
-#define __ELK_STATISTIC_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "resource.h"
 #include "../MapEditorLib/ResizeDialog.h"
 #include "ELK_Types.h"
@@ -73,6 +68,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__ELK_STATISTIC_DIALOG__)
 
 

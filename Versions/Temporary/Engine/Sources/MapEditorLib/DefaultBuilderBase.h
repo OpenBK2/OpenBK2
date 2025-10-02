@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_BUILDER_BASE__)
-#define __DEFAULT_BUILDER_BASE__
 #pragma once
 
 #include "BuilderBase.h"
@@ -12,6 +10,5 @@ public:
 	virtual bool InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit );
 };
 
-#endif // !defined(__DEFAULT_BUILDER_BASE__)
 
 

@@ -1,9 +1,4 @@
-#ifndef __GSCENEPARTICLES_H__
-#define __GSCENEPARTICLES_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
 #include "GfxBuffers.h"
@@ -286,5 +281,4 @@ public:
 #pragma warning( default : 4799 )
 
 }
-#endif
 

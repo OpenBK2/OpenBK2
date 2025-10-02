@@ -1,11 +1,7 @@
-#if !defined(__PROGRESS_DIALOG__)
-#define __PROGRESS_DIALOG__
+#pragma once
 
 #include "ResourceDefines.h"
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
 
 
 class CProgressDialog : public CDialog
@@ -41,6 +37,5 @@ public:
 	void IterateProgressPosition();
 };
 
-#endif // !defined(__PROGRESS_DIALOG__)
 
 

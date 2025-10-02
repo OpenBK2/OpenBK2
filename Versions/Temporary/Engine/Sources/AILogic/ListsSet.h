@@ -1,7 +1,5 @@
-#ifndef __LISTS_SET_H__
-#define __LISTS_SET_H__
 
-#pragma ONCE
+#pragma once
 
 //*******************************************************************
 //*								  Set of lists, stored in arrays									*
@@ -554,5 +552,4 @@ int CDecksSet<T>::operator&( IBinSaver &saver )
 	return 0;
 }
 
-#endif // __LISTS_SET_H__
 

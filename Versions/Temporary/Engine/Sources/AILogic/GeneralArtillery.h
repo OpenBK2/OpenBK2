@@ -1,7 +1,5 @@
-#ifndef __GENERAL_ARTILLERY_H__
-#define __GENERAL_ARTILLERY_H__
 
-#pragma ONCE
+#pragma once
 
 #include "GeneralInternalInterfaces.h"
 
@@ -149,5 +147,4 @@ public:
 	void SetCellInUse( const int nResistanceCell, bool bInUse );
 };
 
-#endif // __GENERAL_ARTILLERY_H__
 

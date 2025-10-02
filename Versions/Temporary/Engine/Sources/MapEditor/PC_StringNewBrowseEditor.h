@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_BROWSE__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_BROWSE__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -27,5 +25,4 @@ public:
 	virtual void OnNew() = 0;
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_BROWSE__)
 

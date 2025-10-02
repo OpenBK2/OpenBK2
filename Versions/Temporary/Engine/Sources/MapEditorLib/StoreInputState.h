@@ -1,5 +1,3 @@
-#if !defined(__STORE_INPUT_STATE__)
-#define __STORE_INPUT_STATE__
 #pragma once
 
 #include "DefaultInputState.h"
@@ -123,5 +121,4 @@ protected:
 	virtual void OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo ) = 0;
 };
 
-#endif // !defined(__STORE_INPUT_STATE__)
 

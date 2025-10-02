@@ -1,5 +1,3 @@
-#if !defined(__MODEL_EDITOR__)
-#define __MODEL_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -59,5 +57,4 @@ public:
 	void DeleteTarget();
 };
 
-#endif // !defined(__MODEL_EDITOR__)
 

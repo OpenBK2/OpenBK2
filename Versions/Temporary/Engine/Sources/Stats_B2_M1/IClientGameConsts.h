@@ -1,4 +1,4 @@
-#pragma	 once
+#pragma once
 #include "../Stats_B2_M1/DBClientConsts.h"
 
 interface IClientGameConsts :  public CObjectBase

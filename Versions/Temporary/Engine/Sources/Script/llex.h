@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: llex.h,v 1.31 2000/09/27 17:41:58 roberto Exp $
 ** Lexical Analyzer
 ** See Copyright Notice in lua.h
 */
 
-#ifndef llex_h
-#define llex_h
 
 #include "lobject.h"
 #include "lzio.h"
@@ -69,5 +68,4 @@ void luaX_error (LexState *ls, const char *s, int token);
 void luaX_token2str (int token, char *s);
 
 
-#endif
 

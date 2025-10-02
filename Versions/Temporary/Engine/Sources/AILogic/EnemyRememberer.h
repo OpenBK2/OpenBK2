@@ -1,6 +1,4 @@
-#ifndef __ENEMY_REMEMBERER__
-#define __ENEMY_REMEMBERER__
-
+#pragma once
 
 class CCommonUnit;
 
@@ -22,6 +20,5 @@ public:
 	const bool IsTimeToForget() const;
 };
 
-#endif // #define __ENEMY_REMEMBERER__
 
 

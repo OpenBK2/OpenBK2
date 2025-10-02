@@ -1,5 +1,3 @@
-#if !defined(__GAME_INPUT_INTERFACE__)
-#define __GAME_INPUT_INTERFACE__
 #pragma once
 
 #include "../Input/GameMessage.h"
@@ -16,5 +14,4 @@ public:
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 };
 
-#endif // !defined(__GAME_INPUT_INTERFACE__)
 

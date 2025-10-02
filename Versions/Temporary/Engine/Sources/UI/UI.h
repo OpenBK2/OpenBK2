@@ -1,5 +1,3 @@
-#ifndef _interfaceBase_h_included_
-#define _interfaceBase_h_included_
 
 #pragma once
 
@@ -615,5 +613,4 @@ inline TCheck* GetChildChecked( IWindow *pParent, const string &szName, const bo
 	return pCheck;
 }
 
-#endif //_interfaceBase_h_included_
 

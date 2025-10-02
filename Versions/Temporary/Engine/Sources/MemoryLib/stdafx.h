@@ -3,13 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__99C19B29_7D10_46A8_9B06_01AEC226210E__INCLUDED_)
-#define AFX_STDAFX_H__99C19B29_7D10_46A8_9B06_01AEC226210E__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define _STLP_NO_THREADS
 
@@ -39,5 +34,4 @@
 
 void __cdecl DebugTraceMMgr( const char *pszFormat, ... );
 
-#endif // !defined(AFX_STDAFX_H__99C19B29_7D10_46A8_9B06_01AEC226210E__INCLUDED_)
 

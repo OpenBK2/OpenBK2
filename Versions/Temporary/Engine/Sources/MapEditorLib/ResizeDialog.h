@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__RESIZE_DIALOG__)
-#define __COMMON_CONTROLS__RESIZE_DIALOG__
 #pragma once
 
 
@@ -109,5 +107,4 @@ protected:
 };
 #define RESIZE_DIALOG_OPTIONS_FILE_NAME "Editor\\ResizeDialogStyles\\"
 
-#endif // !defined(__COMMON_CONTROLS__RESIZE_DIALOG__)
 

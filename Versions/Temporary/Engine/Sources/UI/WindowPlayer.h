@@ -1,10 +1,5 @@
-#ifndef __WINDOW_PLAYER_H__
-#define __WINDOW_PLAYER_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "window.h"
 #include "GBinkPlayer.h"
 #include "../System/DG.h"
@@ -66,5 +61,4 @@ public:
 };
 
 
-#endif //__WINDOW_PLAYER_H__
 

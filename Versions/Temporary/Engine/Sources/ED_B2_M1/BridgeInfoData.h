@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_DATA__BRIDGE_INFO__)
-#define __MAPINFO_EDITOR_DATA__BRIDGE_INFO__
 #pragma once
 
 #include "MapInfoEditorData.h"
@@ -67,5 +65,4 @@ namespace NMapInfoEditor
 	};
 };
 
-#endif // !defined(__MAPINFO_EDITOR_DATA__BRIDGE_INFO__)
 

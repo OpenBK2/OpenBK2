@@ -1,5 +1,3 @@
-#ifndef __AIGENERAL_WINDOW__
-#define __AIGENERAL_WINDOW__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -137,5 +135,4 @@ public:
 	//
 };
 
-#endif // #ifndef __AIGENERAL_WINDOW__
 

@@ -1,5 +1,3 @@
-#if !defined(__SPECIFIC__)
-#define __SPECIFIC__
 #pragma once
 
 
@@ -12,6 +10,5 @@
 EXTERNVAR HINSTANCE theEDCommonInstance;
 
 
-#endif // !defined(__SPECIFIC__)
 
 

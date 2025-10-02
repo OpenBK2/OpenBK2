@@ -1,5 +1,3 @@
-#if !defined(__BUILD_DATA_BUILDER__)
-#define __BUILD_DATA_BUILDER__
 
 #pragma once
 #include "DefaultBuilder.h"
@@ -28,5 +26,4 @@ public:
 	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
 };
 
-#endif // !defined(__BUILD_DATA_BUILDER__)
 

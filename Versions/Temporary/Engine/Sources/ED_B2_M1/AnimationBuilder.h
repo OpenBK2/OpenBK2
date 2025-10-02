@@ -1,5 +1,3 @@
-#if !defined(__ANIMATION_BUILDER__)
-#define __ANIMATION_BUILDER__
 #pragma once
 
 #include "../mapeditorlib/interface_commandhandler.h"
@@ -26,5 +24,4 @@ protected:
 	DWORD GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
 };
 
-#endif // !defined(__ANIMATION_BUILDER__)
 

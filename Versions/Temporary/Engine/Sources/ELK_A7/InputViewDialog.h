@@ -1,10 +1,5 @@
-#if !defined(__ELK_INPUT_VIEW_DIALOG__)
-#define __ELK_INPUT_VIEW_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../MapEditorLib/ResizeDialog.h"
 #include "TranslateEdit.h"
 
@@ -57,5 +52,4 @@ protected:
 	void LoadGameImage( const string &rszGameImagePath );
 };
 
-#endif // !defined(__ELK_INPUT_VIEW_DIALOG__)
 

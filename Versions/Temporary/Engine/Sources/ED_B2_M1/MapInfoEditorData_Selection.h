@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_DATA__SELECTION__)
-#define __MAPINFO_EDITOR_DATA__SELECTION__
 #pragma once
 
 
@@ -120,5 +118,4 @@ namespace NMapInfoEditor
 	};
 };
 
-#endif // !defined(__MAPINFO_EDITOR_DATA__SELECTION__)
 

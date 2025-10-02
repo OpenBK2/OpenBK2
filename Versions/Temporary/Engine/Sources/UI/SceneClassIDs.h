@@ -1,7 +1,5 @@
-#ifndef __SCENECLASSIDS_H__
-#define __SCENECLASSIDS_H__
 
-#pragma ONCE
+#pragma once
 
 enum
 {
@@ -9,5 +7,4 @@ enum
 	UI_SCREEN																				= 0x11075B80,
 };
 
-#endif // __SCENECLASSIDS_H__
 

@@ -1,5 +1,3 @@
-#ifndef __STORMABLE_OBJECT_H__
-#define __STORMABLE_OBJECT_H__
 
 #pragma once
 #include "ListsSet.h"
@@ -64,5 +62,4 @@ public:
 	const bool IsAnyInsiderVisible() const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#endif // __STORMABLE_OBJECT_H__
 

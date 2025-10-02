@@ -1,9 +1,4 @@
-#ifndef __GFONT_H__
-#define __GFONT_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/GResource.h"
 #include "FontFormat.h"
 
@@ -19,5 +14,4 @@ protected:
 
 }; // namespace 
 
-#endif // __GFONT_H__
 

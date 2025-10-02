@@ -1,5 +1,4 @@
-#if !defined(__AIMARKERSETTINGS__)
-#define __AIMARKERSETTINGS__
+#pragma once
 
 // настройки маркеров дальности видимости и дальности стрельбы
 struct SAIMarkerSettings
@@ -100,5 +99,4 @@ struct SAIMarkerSettings
 	}
 };
 
-#endif // #if !defined(__AIMARKERSETTINGS__)
 

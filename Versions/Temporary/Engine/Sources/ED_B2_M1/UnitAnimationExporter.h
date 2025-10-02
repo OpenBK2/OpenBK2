@@ -1,5 +1,3 @@
-#if !defined(__UNIT_ANIMATION_EXPORTER__)
-#define __UNIT_ANIMATION_EXPORTER__
 #pragma once
 
 #include "../ED_Common/BasicExporter.h"
@@ -33,5 +31,4 @@ public:
 														 EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__UNIT_ANIMATION_EXPORTER__)
 

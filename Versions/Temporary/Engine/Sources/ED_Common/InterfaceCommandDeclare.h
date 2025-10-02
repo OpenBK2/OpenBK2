@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE_COMMAND_DECLARE__)
-#define __INTERFACE_COMMAND_DECLARE__
 #pragma once
 #include "../Main/MainLoop.h"
 
@@ -27,5 +25,4 @@ public:																																		\
 	CommandClass( InterfaceClass * pI ) : CInterfaceCommandDeclare( pI ) {}	\
 };
 
-#endif // !defined(__INTERFACE_COMMAND_DECLARE__)
 

@@ -1,5 +1,4 @@
-#ifndef __SCRIPTCOMMON_H_
-#define __SCRIPTCOMMON_H_
+#pragma once
 
 #include "Script.h"
 //
@@ -38,5 +37,4 @@ void ScriptWarning( const string &message );
 void ScriptError( const string &message );
 }
 //
-#endif __SCRIPTCOMMON_H_
 

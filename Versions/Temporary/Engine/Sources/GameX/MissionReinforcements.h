@@ -1,7 +1,5 @@
-#ifndef __MISSION_REINFORCEMENTS_H__
-#define __MISSION_REINFORCEMENTS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../misc/2darray.h"
 #include "../zlib/zconf.h"
@@ -182,5 +180,4 @@ public:
 	void AfterLoad();
 };
 
-#endif //__MISSION_REINFORCEMENTS_H__
 

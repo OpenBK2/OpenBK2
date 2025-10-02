@@ -1,7 +1,4 @@
-#ifndef __ANIM_UNIT_MECH_H__
-#define __ANIM_UNIT_MECH_H__
-
-#pragma ONCE
+#pragma once
 
 #include "AnimUnit.h"
 
@@ -41,6 +38,3 @@ public:
 	
 	virtual void StopCurAnimation() { }
 };
-
-#endif // __ANIM_UNIT_MECH_H__
-

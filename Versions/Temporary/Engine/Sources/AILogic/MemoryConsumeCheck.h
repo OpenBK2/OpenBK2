@@ -1,7 +1,5 @@
-#ifndef __MEMORYCONSUMECHECK_H__
-#define __MEMORYCONSUMECHECK_H__
 
-#pragma ONCE
+#pragma once
 
 class CMemoryConsumeCheck
 {
@@ -70,5 +68,4 @@ public:
 	}
 };
 
-#endif // __MEMORYCONSUMECHECK_H__
 

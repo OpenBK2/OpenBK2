@@ -1,5 +1,3 @@
-#if !defined(__HASH_SET_INSERT_FUNCTION__)
-#define __HASH_SET_INSERT_FUNCTION__
 #pragma once
 
 
@@ -105,5 +103,4 @@ bool IsElementExistsInList( const TContainer &rList, const TElement &rElement )
 }
 
 /**/
-#endif // !defined(__HASH_SET_INSERT_FUNCTION__)
 

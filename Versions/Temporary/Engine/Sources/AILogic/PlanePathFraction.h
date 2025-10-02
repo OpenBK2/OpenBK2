@@ -1,10 +1,5 @@
-#if !defined(_IPathFraction_included_)
-#define _IPathFraction_included_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 
 
 //	SPrevPathParams
@@ -63,5 +58,4 @@ interface IPathFraction : public CAIObjectBase
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wrong call" ); }
 	//virtual void GetPrevPoints( CVec3 *p0, CVec3 *p1, CVec3 *p2, CVec3 *pCur, float *pfSplineProgress  ) const { NI_ASSERT( false, "wrong call" ); }
 };
-#endif //_IPathFraction_included_
 

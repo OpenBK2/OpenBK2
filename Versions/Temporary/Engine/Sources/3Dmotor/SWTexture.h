@@ -1,9 +1,4 @@
-#ifndef __GSWTEXTURE_H__
-#define __GSWTEXTURE_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/GResource.h"
 #include "GPixelFormat.h"
 #include "../Misc/2DArray.h"
@@ -67,6 +62,3 @@ public:
 };
 
 } // namespace
-
-#endif // __GTEXTURE_H__
-

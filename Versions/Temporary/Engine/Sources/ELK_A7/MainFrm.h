@@ -1,10 +1,5 @@
-#if !defined(__ELK_MAIN_FRAME__)
-#define __ELK_MAIN_FRAME__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "ELK_TreeWindow.h"
 #include "InputViewWindow.h"
 #include "ELK_Types.h"
@@ -140,5 +135,4 @@ public:
 	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam );
 };
 
-#endif // !defined(__ELK_MAIN_FRAME__)
 

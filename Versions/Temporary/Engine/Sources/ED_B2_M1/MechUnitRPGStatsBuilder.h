@@ -1,5 +1,3 @@
-#if !defined(__MECHUNITRPGSTATS_BUILDER__)
-#define __MECHUNITRPGSTATS_BUILDER__
 
 #pragma once
 #include "../MapEditorLib/BuildDataBuilder.h"
@@ -28,5 +26,4 @@ protected:
 														 IManipulator *pBuildDataManipulator );
 };
 
-#endif // !defined(__MECHUNITRPGSTATS_BUILDER__)
 

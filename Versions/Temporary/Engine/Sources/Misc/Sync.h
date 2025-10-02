@@ -1,9 +1,4 @@
-#ifndef __Sync_H_
-#define __Sync_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 template<class T> class CSyncSrc;
 template<class T> class CSyncDst;
 template<class T>
@@ -362,5 +357,4 @@ public:
 	static bool GetResult( int nMask ) { return nMask == 1; }
 };
 
-#endif
 

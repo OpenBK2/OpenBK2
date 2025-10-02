@@ -2,10 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWCONSOLE_H__3222DEC4_B4EB_4831_9CE4_417F561454C6__INCLUDED_)
-#define AFX_WINDOWCONSOLE_H__3222DEC4_B4EB_4831_9CE4_417F561454C6__INCLUDED_
 
-#pragma ONCE
+#pragma once
 
 #include "Window.h"
 
@@ -117,5 +115,4 @@ public:
 	interface IStatsSystemWindow * GetStatsWindow();
 };
 
-#endif // !defined(AFX_WINDOWCONSOLE_H__3222DEC4_B4EB_4831_9CE4_417F561454C6__INCLUDED_)
 

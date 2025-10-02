@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__VIEW__)
-#define __INTERFACE__VIEW__
 #pragma once
 
 #include "Interface_Controller.h"
@@ -59,6 +57,5 @@ interface IViewContainer : public CObjectBase
 	virtual bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const = 0;
 };
 
-#endif // !defined(__INTERFACE__VIEW__)
 
 

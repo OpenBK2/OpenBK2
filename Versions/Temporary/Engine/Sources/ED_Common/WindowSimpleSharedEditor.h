@@ -1,5 +1,3 @@
-#if !defined(__WINDOW_SIMPLE_SHARED_EDITOR__)
-#define __WINDOW_SIMPLE_SHARED_EDITOR__
 #pragma once
 
 #include "../ui/commandparam.h"
@@ -123,5 +121,4 @@ public:
 	void PopRunModeState();
 };
 
-#endif // !defined(__WINDOW_SIMPLE_SHARED_EDITOR__)
 

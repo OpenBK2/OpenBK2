@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_TAB_VSO__)
-#define __MAPINFO_TAB_VSO__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -73,5 +71,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MAPINFO_TAB_VSO__)
 

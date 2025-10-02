@@ -1,5 +1,3 @@
-#if !defined(__VSO_STATE_EX__)
-#define __VSO_STATE_EX__
 #pragma once
 
 #include "VSOState.h"
@@ -63,5 +61,4 @@ public:
 	virtual void UpdateVSOInTerrain( int nVSOID ) = 0;
 };
 
-#endif // !defined(__VSO_STATE_EX__)
 

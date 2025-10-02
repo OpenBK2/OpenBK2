@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: ldo.h,v 1.28 2000/10/06 12:45:25 roberto Exp $
 ** Stack and Call structure of Lua
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ldo_h
-#define ldo_h
 
 
 #include "lstate.h"
@@ -31,5 +30,4 @@ void luaD_breakrun (lua_State *L, int errcode);
 bool luaD_startCall (lua_State *L, StkId func, int nResults); 
 void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstresult );
 
-#endif
 

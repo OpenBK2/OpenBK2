@@ -1,5 +1,3 @@
-#if !defined(__VSO_STATE__)
-#define __VSO_STATE__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -313,5 +311,4 @@ public:
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__VSO_STATE__)
 

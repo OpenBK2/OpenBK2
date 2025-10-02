@@ -1,5 +1,3 @@
-#if !defined(__TEXTMAP_SETTINGS__)
-#define __TEXTMAP_SETTINGS__
 #pragma once
 
 
@@ -35,5 +33,4 @@ public:
 };
 
 
-#endif //#define __TEXTMAP_SETTINGS__
 

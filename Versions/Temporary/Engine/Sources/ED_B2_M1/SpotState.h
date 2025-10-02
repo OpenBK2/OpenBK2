@@ -1,5 +1,3 @@
-#if !defined(__SPOT_STATE__)
-#define __SPOT_STATE__
 #pragma once
 
 #include "MapObjectState.h"
@@ -44,6 +42,5 @@ protected:
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 };
 
-#endif // !defined(__SPOT_STATE__)
 
 

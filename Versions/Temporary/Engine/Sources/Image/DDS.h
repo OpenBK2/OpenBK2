@@ -1,5 +1,3 @@
-#ifndef __FMTTEXTURE_H__
-#define __FMTTEXTURE_H__
 
 #pragma once
 
@@ -129,5 +127,4 @@ struct SDDSFileHeader
 	SDDSFileHeader() { dwSignature = SDDSFileHeader::SIGNATURE; }
 };
 
-#endif // __FMTTEXTURE_H__
 

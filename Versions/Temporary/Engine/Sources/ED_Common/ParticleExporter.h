@@ -1,5 +1,3 @@
-#if !defined(__PARTICLE_EXPORTER__)
-#define __PARTICLE_EXPORTER__
 #pragma once
 
 #include "StoreObjectExporter.h"
@@ -38,6 +36,5 @@ public:
 														 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };
 
-#endif // !defined(__PARTICLE_EXPORTER__)
 
 

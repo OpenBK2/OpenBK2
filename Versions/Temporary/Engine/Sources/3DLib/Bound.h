@@ -1,9 +1,4 @@
-#ifndef __Bound_H_
-#define __Bound_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 template<class T>
 struct SGetSelf
 {
@@ -155,5 +150,4 @@ inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 		fabs(v.z) - s.fRadius < bv.ptHalfBox.z;
 }
 
-#endif
 

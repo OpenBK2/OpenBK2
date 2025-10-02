@@ -1,5 +1,3 @@
-#if !defined(__SQUAD_EDITOR__)
-#define __SQUAD_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -135,5 +133,4 @@ public:
 	//
 };
 
-#endif // !defined(__SQUAD_EDITOR__)
 

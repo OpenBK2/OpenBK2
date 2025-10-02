@@ -1,5 +1,3 @@
-#ifndef __INTERFACE_REPLAY_SAVE_LOAD_H__
-#define __INTERFACE_REPLAY_SAVE_LOAD_H__
 
 #pragma once
 
@@ -93,5 +91,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_REPLAY_SAVE_LOAD_H__
 

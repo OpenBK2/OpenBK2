@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_TEXT_FILE__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_TEXT_FILE__
 #pragma once
 
 #include "PC_StringNewBrowseEditor.h"
@@ -41,5 +39,4 @@ public:
 	static bool GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc );
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_TEXT_FILE__)
 

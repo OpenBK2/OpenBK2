@@ -1,5 +1,3 @@
-#if !defined(__OBJECTBASERPGSTATS_EXPORTER__)
-#define __OBJECTBASERPGSTATS_EXPORTER__
 #pragma once
 
 #include "StaticObjectRPGStatsExporter.h"
@@ -18,6 +16,5 @@ public:
 															EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__OBJECTBASERPGSTATS_EXPORTER__)
 
 

@@ -1,5 +1,3 @@
-#if !defined(__CAMERA_MOVEMENT_INTERFACE__)
-#define __CAMERA_MOVEMENT_INTERFACE__
 #pragma once
 
 #include "../ED_Common/GameInputInterface.h"
@@ -16,5 +14,4 @@ public:
 	virtual void Step( bool bAppActive );
 };
 
-#endif // !defined(__CAMERA_MOVEMENT_INTERFACE__)
 

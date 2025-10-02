@@ -1,5 +1,3 @@
-#if !defined(__WINDOW_SIMPLE_SHARED_BUILDER__)
-#define __WINDOW_SIMPLE_SHARED_BUILDER__
 
 #pragma once
 #include "BaseUIBuilder.h"
@@ -29,5 +27,4 @@ protected:
 														 IManipulator *pBuildDataManipulator );
 };
 
-#endif // !defined(__WINDOW_SIMPLE_SHARED_BUILDER__)
 

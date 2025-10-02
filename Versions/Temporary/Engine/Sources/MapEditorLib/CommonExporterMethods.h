@@ -1,5 +1,3 @@
-#if !defined(__COMMON_EXPORTER_METHODS__)
-#define __COMMON_EXPORTER_METHODS__
 #pragma once
 
 #include "Interface_UserData.h"
@@ -149,6 +147,5 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 //! move temp file, made during export, to real destination and register it in RCS
 void MoveTempFileToDestination( const string &szTempFileFullName, const string &szDstFileFullName );
 
-#endif // !defined(__COMMON_EXPORTER_METHODS__)
  
 

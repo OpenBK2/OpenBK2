@@ -1,7 +1,5 @@
-#ifndef __AVIATION_H__
-#define __AVIATION_H__
 
-#pragma ONCE
+#pragma once
 
 #include "Technics.h"
 #include "IPlane.h"
@@ -133,5 +131,4 @@ public:
 	virtual const float GetVisZ() const { return GetCenter().z; }
 };
 
-#endif // __AVIATION_H__
 

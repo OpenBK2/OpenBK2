@@ -1,5 +1,3 @@
-#if !defined(__SIMPLE_OBJECT_STATE__)
-#define __SIMPLE_OBJECT_STATE__
 #pragma once
 
 #include "MapObjectState.h"
@@ -46,6 +44,5 @@ protected:
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 };
 
-#endif // !defined(__SIMPLE_OBJECT_STATE__)
 
 

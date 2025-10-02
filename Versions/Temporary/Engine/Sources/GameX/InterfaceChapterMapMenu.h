@@ -1,10 +1,5 @@
-#ifndef __INTERFACE_CHAPTER_MAP_MENU_H__
-#define __INTERFACE_CHAPTER_MAP_MENU_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 #include "InterfaceChapterMapMenuHelper.h"
 
@@ -370,5 +365,4 @@ public:
 };
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
 
-#endif //__INTERFACE_CHAPTER_MAP_MENU_H__
 

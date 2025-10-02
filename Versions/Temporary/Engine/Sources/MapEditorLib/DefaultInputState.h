@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_INPUT_STATE__)
-#define __DEFAULT_INPUT_STATE__
 #pragma once
 
 #include "Interface_InputState.h"
@@ -42,5 +40,4 @@ public:
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint ) {}
 };
 
-#endif // !defined(__DEFAULT_INPUT_STATE__)
 

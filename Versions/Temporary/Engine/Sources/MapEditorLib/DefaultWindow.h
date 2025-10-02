@@ -1,11 +1,5 @@
-#if !defined(__DEFAULT_WINDOW__)
-#define __DEFAULT_WINDOW__
-#pragma once
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 
 class CDefaultWindow : public CWnd
 {
@@ -21,5 +15,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DEFAULT_WINDOW__)
 

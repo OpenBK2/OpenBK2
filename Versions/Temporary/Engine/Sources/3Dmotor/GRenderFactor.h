@@ -1,9 +1,4 @@
-#ifndef __GRenderFactor_H_
-#define __GRenderFactor_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GRenderCore.h"
 namespace NGfx
 {
@@ -23,5 +18,4 @@ NGfx::CTexture* GetCheckerTexture();
 NGfx::CTexture* Get16bitDepthLookup();
 
 }
-#endif
 

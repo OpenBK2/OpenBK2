@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__CONTROLLER__)
-#define __INTERFACE__CONTROLLER__
 #pragma once
 
 
@@ -77,6 +75,5 @@ interface IControllerContainer : public CObjectBase
 	virtual int RemoveTemporaryControllers( const string &rszTemporaryLabel ) = 0;
 };
 
-#endif // !defined(__INTERFACE__CONTROLLER__)
 
 

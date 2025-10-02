@@ -1,5 +1,3 @@
-#if !defined(__MINIMAP_IMAGE__)
-#define __MINIMAP_IMAGE__
 #pragma once
 
 #include "../Stats_B2_M1/DBMapInfo.h"
@@ -253,5 +251,4 @@ void Create( const NDb::SMapInfo *pMapInfo,
 
 }
 
-#endif // !defined(__MINIMAP_IMAGE__)
 

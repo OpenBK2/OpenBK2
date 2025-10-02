@@ -1,5 +1,3 @@
-#if !defined(__FORMATIONS_STATE__)
-#define __FORMATIONS_STATE__
 #pragma once
 
 #include "../MapEditorLib/Interface_CommandHandler.h"
@@ -54,6 +52,5 @@ public:
 	void RefreshState( bool bForce );
 };
 
-#endif//#if !defined(__FORMATIONS_STATE__)
 
 

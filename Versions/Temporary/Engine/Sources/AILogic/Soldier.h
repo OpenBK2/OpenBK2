@@ -1,7 +1,5 @@
-#ifndef __SOLDIER_H__
-#define __SOLDIER_H__
 
-#pragma ONCE
+#pragma once
 
 #include "AIUnit.h"
 #include "StaticObjectSlotInfo.h"
@@ -363,5 +361,4 @@ struct SSniperTrace
 };
 */
 
-#endif // __SOLDIER_H__
 

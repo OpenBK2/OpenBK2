@@ -1,7 +1,5 @@
-#ifndef __GRID_CREATION_H__
-#define __GRID_CREATION_H__
 
-#pragma ONCE
+#pragma once
 
 class CSortedGridUnits
 {
@@ -83,5 +81,4 @@ public:
 	friend struct SColumnCompare;
 };
 
-#endif // __GRID_CREATION_H__
 

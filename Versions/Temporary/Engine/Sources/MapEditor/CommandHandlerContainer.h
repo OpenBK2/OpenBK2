@@ -1,5 +1,3 @@
-#if !defined(__COMMAND_HANDLER__CONTINER__)
-#define __COMMAND_HANDLER__CONTINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_CommandHandler.h"
@@ -49,6 +47,5 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__COMMAND_HANDLER__CONTINER__)
 
 

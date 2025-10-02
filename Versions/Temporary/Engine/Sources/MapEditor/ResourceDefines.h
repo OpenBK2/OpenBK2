@@ -1,5 +1,4 @@
-#if !defined(__ME__RESOURCE_DEFINES__)
-#define __ME__RESOURCE_DEFINES__
+#pragma once
 //
 #include "../MapEditorLib/ResourceDefines.h"
 
@@ -264,5 +263,4 @@
 #define IDC_CM_DESC_LABEL																22175
 #define IDC_CM_DESC_EDIT																22176
 
-#endif // !defined(__ME__RESOURCE_DEFINES__)
 

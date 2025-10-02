@@ -1,11 +1,5 @@
-#if !defined(__DEFAULT_SHORTCUT_BAR__)
-#define __DEFAULT_SHORTCUT_BAR__
-#pragma once
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Interface_CommandHandler.h"
 
 #define INVALID_SHORTCUT_INDEX (0xFFFF)
@@ -46,5 +40,4 @@ public:
 	UINT GetCommand() { return nCommandID; }
 };
 
-#endif // !defined(__DEFAULT_SHORTCUT_BAR__)
 

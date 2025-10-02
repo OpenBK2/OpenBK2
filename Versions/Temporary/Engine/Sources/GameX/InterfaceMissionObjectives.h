@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MISSION_OBJECTIVES_H__
-#define __INTERFACE_MISSION_OBJECTIVES_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 
@@ -118,5 +116,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_MISSION_OBJECTIVES_H__
 

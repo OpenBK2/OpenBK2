@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lstring.h,v 1.24 2000/10/30 17:49:19 roberto Exp $
 ** String table (keep all strings handled by Lua)
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lstring_h
-#define lstring_h
 
 
 #include "lstate.h"
@@ -29,5 +28,4 @@ TString *luaS_new (lua_State *L, const char *str);
 TString *luaS_newfixed (lua_State *L, const char *str);
 
 
-#endif
 

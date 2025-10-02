@@ -1,5 +1,3 @@
-#if !defined(__UI_SCENE_B2__)
-#define __UI_SCENE_B2__
 #pragma once
 
 
@@ -22,6 +20,5 @@ public:
 	NGScene::I2DGameView *GetG2DView();
 };
 
-#endif // !defined(__UI_SCENE_B2__)
 
 

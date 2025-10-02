@@ -1,5 +1,3 @@
-#if !defined(__MAIN_FRAME__PARAMS__)
-#define __MAIN_FRAME__PARAMS__
 #pragma once
 
 
@@ -23,5 +21,4 @@ struct SMainFrameParams
 	void Save( bool bToRegistry );
 };
 
-#endif // !defined(__MAIN_FRAME__PARAMS__)
 

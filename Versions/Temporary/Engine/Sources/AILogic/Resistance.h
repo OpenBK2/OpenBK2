@@ -1,7 +1,5 @@
-#ifndef __RESISTANCE_H__
-#define __RESISTANCE_H__
 
-#pragma ONCE
+#pragma once
 
 //
 // очаги сопротивления
@@ -119,5 +117,4 @@ public:
 	iterator begin() { return CIter( this ); }
 };
 
-#endif // __RESISTANCE_H__
 

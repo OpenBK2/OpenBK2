@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS_SCENE__GEOMETRY__)
-#define __COMMON_TOOLS_SCENE__GEOMETRY__
 #pragma once
 
 
@@ -13,6 +11,5 @@ void UpdateTerrainHeight( CVec3 *pvPos );
 void GetCameraPosition( CVec3 *pvCamAnchor );
 void SetCameraPosition( const CVec3 &rvCamAnchor );
 
-#endif // !defined(__COMMON_TOOLS_SCENE__GEOMETRY__)
 
 

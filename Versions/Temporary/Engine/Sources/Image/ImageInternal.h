@@ -1,5 +1,3 @@
-#ifndef __IMAGEINTERNAL_H__
-#define __IMAGEINTERNAL_H__
 #pragma once
 
 // ************************************************************************************************************************ //
@@ -41,5 +39,4 @@ public:
 	DWORD DecompColor( DWORD dwColor ) const;
 };
 
-#endif // __IMAGEINTERNAL_H__
 

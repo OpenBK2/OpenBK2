@@ -1,5 +1,3 @@
-#if !defined( __REINF_POINTS_WINDOW__ )
-#define __REINF_POINTS_WINDOW__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -141,5 +139,4 @@ public:
 	afx_msg void OnLvnDblclkListReinfPoints(NMHDR *pNMHDR, LRESULT *pResult);
 };
 
-#endif // #if !defined( __REINF_POINTS_WINDOW__ )
 

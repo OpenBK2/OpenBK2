@@ -1,5 +1,3 @@
-#if !defined(__SPOT_INFO_DATA__)
-#define __SPOT_INFO_DATA__
 #pragma once
 
 #include "MapInfoEditorData.h"
@@ -154,5 +152,4 @@ namespace NMapInfoEditor
 	};
 };
 
-#endif // !defined(__SPOT_INFO_DATA__)
 

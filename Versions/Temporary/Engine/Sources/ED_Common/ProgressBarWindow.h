@@ -1,5 +1,3 @@
-#if !defined(__PROGRESS_BAR_WINDOW__)
-#define __PROGRESS_BAR_WINDOW__
 #pragma once
 
 
@@ -26,5 +24,4 @@ private:
 	CStatic wndCaption;
 };
 
-#endif // !defined(__PROGRESS_BAR_WINDOW__)
 

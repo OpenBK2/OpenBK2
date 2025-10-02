@@ -1,5 +1,3 @@
-#if !defined(__UNIT_START_CMD_STATE__)
-#define __UNIT_START_CMD_STATE__
 #pragma once
 
 #include "MapInfoEditor.h"
@@ -146,5 +144,4 @@ public:
 	void EdCmdTypeChange() {}
 };
 
-#endif // !defined(__UNIT_START_CMD_STATE__)
 

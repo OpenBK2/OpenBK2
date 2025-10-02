@@ -1,9 +1,4 @@
-#ifndef __GTEXTURE_H__
-#define __GTEXTURE_H__
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/GResource.h"
 #include "dbscene.h"
 
@@ -82,5 +77,4 @@ public:
 
 } // namespace
 
-#endif // __GTEXTURE_H__
 

@@ -1,7 +1,5 @@
-#ifndef __POINT_CHECKING_H__
-#define __POINT_CHECKING_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../Common_RTS_AI/PointChecking.h"
 
@@ -73,5 +71,4 @@ public:
 	virtual bool IsGoodTile( const SVector &curTile ) const;
 };
 
-#endif // __POINT_CHECKING_H__
 

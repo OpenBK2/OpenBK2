@@ -1,5 +1,3 @@
-#if !defined(__GEOMETRY_EXPORTER__)
-#define __GEOMETRY_EXPORTER__
 #pragma once
 
 #include "../ED_Common/BasicSceneExporter.h"
@@ -29,6 +27,5 @@ class CGeometryExporter : public CBasicSceneExporter
 	CGeometryExporter() {}
 };
 
-#endif // !defined(__GEOMETRY_EXPORTER__)
 
 

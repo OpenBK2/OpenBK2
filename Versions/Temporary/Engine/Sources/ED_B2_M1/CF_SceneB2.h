@@ -1,5 +1,3 @@
-#if !defined(__CHILD_FRAME__SCENE_B2__)
-#define __CHILD_FRAME__SCENE_B2__
 #pragma once
 
 #include "../ED_Common/ChildFrameBase.h"
@@ -13,5 +11,4 @@ public:
 	virtual ~CCFSceneB2();
 };
 
-#endif // !defined(__CHILD_FRAME__SCENE_B2__)
 

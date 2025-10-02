@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__EDITOR__)
-#define __INTERFACE__EDITOR__
 #pragma once
 
 #include "Interface_View.h"
@@ -85,6 +83,5 @@ interface IEditorContainer : public CObjectBase
 	virtual bool IsModified() = 0;
 };
 
-#endif // !defined(__INTERFACE__EDITOR__)
 
 

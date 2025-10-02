@@ -1,10 +1,5 @@
-#if !defined(AFX_UISCREEN_H__B9599715_34A7_477E_9D09_8DE9B2953C08__INCLUDED_)
-#define AFX_UISCREEN_H__B9599715_34A7_477E_9D09_8DE9B2953C08__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Window.h"
 #include "MessageReactions.h"
 #include "UIStates.h"
@@ -184,5 +179,4 @@ public:
 	void RegisterTabOrder( IWindow * pWindow, int nTabOrder );
 };
 
-#endif // !defined(AFX_UISCREEN_H__B9599715_34A7_477E_9D09_8DE9B2953C08__INCLUDED_)
 

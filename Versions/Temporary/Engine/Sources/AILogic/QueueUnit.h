@@ -1,5 +1,3 @@
-#ifndef __QUEUE_UNIT__
-#define __QUEUE_UNIT__
 
 #pragma once
 
@@ -104,5 +102,4 @@ public:
 	friend class CStaticMembers;
 };
 
-#endif // __QUEUE_UNIT__
 

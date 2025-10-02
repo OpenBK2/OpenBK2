@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_INTERFACE__)
-#define __MAPINFO_INTERFACE__
 #pragma once
 
 #include "EditorInterfaceBase.h"
@@ -16,5 +14,4 @@ public:
 
 INTERFACE_COMMAND_DECLARE( CMapInfoInterfaceCommand, CMapInfoInterface )
 
-#endif // !defined(__MAPINFO_INTERFACE__)
 

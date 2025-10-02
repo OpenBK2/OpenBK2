@@ -1,10 +1,5 @@
-#if !defined(__ELK_ABOUT_DIALOG__)
-#define __ELK_ABOUT_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "resource.h"
 
 class CAboutDialog : public CDialog
@@ -19,6 +14,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__ELK_ABOUT_DIALOG__)
 
 

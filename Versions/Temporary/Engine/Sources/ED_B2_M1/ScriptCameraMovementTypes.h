@@ -1,5 +1,3 @@
-#ifndef __SCRIPT_CAMERA_RUN_TYPES_H__
-#define __SCRIPT_CAMERA_RUN_TYPES_H__
 #pragma once
 
 #include "ScriptCameraState.h"
@@ -12,5 +10,4 @@ public:
 
 extern CScriptCameraRunTypeMnemonics typeScriptCameraRunTypeMnemonics;
 
-#endif // __SCRIPT_CAMERA_RUN_TYPES_H__
 

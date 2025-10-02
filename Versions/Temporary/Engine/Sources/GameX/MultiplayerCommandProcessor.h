@@ -1,7 +1,5 @@
-#ifndef __MULTIPLAYER_COMMAND_PROCESSOR_H__
-#define __MULTIPLAYER_COMMAND_PROCESSOR_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../Misc/HashFuncs.h"
 
@@ -76,5 +74,4 @@ public:
 	SMPUIMessage* PeekMessage();
 };
 
-#endif //__MULTIPLAYER_COMMAND_PROCESSOR_H__
 

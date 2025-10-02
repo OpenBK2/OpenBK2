@@ -1,7 +1,5 @@
-#ifndef __MULTIPLAYER_COMMAND_MANAGER_H__
-#define __MULTIPLAYER_COMMAND_MANAGER_H__
 
-#pragma ONCE
+#pragma once
 #include "MPInterfaceData.h"
 #include "../Server_Client_Common/LadderStatistics.h"
 
@@ -506,5 +504,4 @@ public:
 		SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ), wszText(_wszText), bTeamOnly( _bTeamOnly ) {}
 };
 
-#endif //__MULTIPLAYER_COMMAND_MANAGER_H__
 

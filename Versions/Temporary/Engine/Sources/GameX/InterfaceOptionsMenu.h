@@ -1,10 +1,5 @@
-#ifndef __INTERFACE_OPTIONS_MENU_H__
-#define __INTERFACE_OPTIONS_MENU_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif
-
 #include "InterfaceScreenBase.h"
 #include "DBGameOptions.h"
 
@@ -131,6 +126,5 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_OPTIONS_MENU_H__
 
 

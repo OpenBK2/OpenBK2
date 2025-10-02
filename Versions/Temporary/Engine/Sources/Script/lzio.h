@@ -1,3 +1,4 @@
+#pragma once
 /*
 ** $Id: lzio.h,v 1.7 2000/10/20 16:36:32 roberto Exp $
 ** Buffered streams
@@ -5,8 +6,6 @@
 */
 
 
-#ifndef lzio_h
-#define lzio_h
 
 #include <stdio.h>
 
@@ -50,5 +49,4 @@ struct zio {
 };
 
 
-#endif
 

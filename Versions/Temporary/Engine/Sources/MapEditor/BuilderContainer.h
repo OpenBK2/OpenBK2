@@ -1,5 +1,3 @@
-#if !defined(__BUILDER__CONTAINER__)
-#define __BUILDER__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Builder.h"
@@ -46,6 +44,5 @@ public:
 	bool FillNewObjectName( SBuildDataParams *pBuildDataParams );
 };
 
-#endif // !defined(__BUILDER__CONTAINER__)
 
 

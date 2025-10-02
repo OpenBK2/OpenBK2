@@ -1,5 +1,3 @@
-#if !defined(__DYNAMICDEBRISSET_BUILDER__)
-#define __DYNAMICDEBRISSET_BUILDER__
 
 #pragma once
 
@@ -27,5 +25,4 @@ protected:
 														 IManipulator *pBuildDataManipulator );
 };
 
-#endif // !defined(__DYNAMICDEBRISSET_BUILDER__)
 

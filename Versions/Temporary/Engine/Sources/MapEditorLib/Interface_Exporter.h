@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__EXPORTER__)
-#define __INTERFACE__EXPORTER__
 #pragma once
 
 #include "Interface_Builder.h"
@@ -173,6 +171,5 @@ interface IExporterContainer : public CObjectBase
 	virtual EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName ) = 0;
 };
 
-#endif // !defined(__INTERFACE__EXPORTER__)
 
 

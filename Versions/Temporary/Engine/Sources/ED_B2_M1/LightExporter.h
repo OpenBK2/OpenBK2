@@ -1,5 +1,3 @@
-#if !defined(__LIGHT_EXPORTER__)
-#define __LIGHT_EXPORTER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Exporter.h"
@@ -31,6 +29,5 @@ public:
 														 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };
 
-#endif // !defined(__LIGHT_EXPORTER__)
 
 

@@ -1,5 +1,3 @@
-#if !defined( __SCRIPT_AREA_STATE__ )
-#define __SCRIPT_AREA_STATE__
 #pragma once
 
 #include "PolygonState.h"
@@ -91,5 +89,4 @@ public:
 	void PostDraw( CPaintDC *pPaintDC );
 };
 
-#endif // #if !defined( __SCRIPT_AREA_STATE__ )
 

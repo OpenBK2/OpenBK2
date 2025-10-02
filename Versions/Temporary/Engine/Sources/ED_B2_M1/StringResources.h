@@ -1,5 +1,3 @@
-#if !defined(__STRING_RESOURCES__)
-#define __STRING_RESOURCES__
 #pragma once
 
 #define RCSTR(s)	(s)
@@ -20,6 +18,5 @@ inline CString RCStr( const UINT nStringID )
 	return s;
 }
 
-#endif // #if !defined(__STRING_RESOURCES__)
 
 

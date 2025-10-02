@@ -1,5 +1,3 @@
-#if !defined(__CONTROLLER__FOLDER_CALLBACK__)
-#define __CONTROLLER__FOLDER_CALLBACK__
 #pragma once
 
 #include "../MapEditorLib/Interface_FolderCallback.h"
@@ -36,6 +34,5 @@ protected:
 	bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor );
 };
 
-#endif // !defined(__CONTROLLER__FOLDER_CALLBACK__)
 
 

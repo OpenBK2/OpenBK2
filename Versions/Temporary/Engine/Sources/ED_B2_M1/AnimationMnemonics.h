@@ -1,5 +1,3 @@
-#if !defined(__ANIMATION_MNEMONICS__)
-#define __ANIMATION_MNEMONICS__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -24,5 +22,4 @@ class CAnimationMnemonics : public CMnemonicsCollector<int>
 extern CMayaAnimationMnemonics typeMayaAnimationMnemonics;
 extern CAnimationMnemonics typeAnimationMnemonics;
 
-#endif // !defined(__ANIMATION_MNEMONICS__)
 

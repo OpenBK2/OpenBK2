@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lcode.h,v 1.16 2000/08/09 14:49:13 roberto Exp $
 ** Code generator for Lua
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lcode_h
-#define lcode_h
 
 #include "lopcodes.h"
 #include "lparser.h"
@@ -65,5 +64,4 @@ void luaK_infix (LexState *ls, BinOpr op, expdesc *v);
 void luaK_posfix (LexState *ls, BinOpr op, expdesc *v1, expdesc *v2);
 
 
-#endif
 

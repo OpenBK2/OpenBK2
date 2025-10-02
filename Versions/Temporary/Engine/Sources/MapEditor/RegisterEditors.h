@@ -1,5 +1,3 @@
-#ifndef __REGISTER_EDITORS_H__
-#define __REGISTER_EDITORS_H__
 
 #pragma once
 
@@ -35,5 +33,4 @@ public:
 
 extern CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
 
-#endif //__REGISTER_EDITORS_H__
 

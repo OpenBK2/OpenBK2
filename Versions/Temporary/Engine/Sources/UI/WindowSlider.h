@@ -2,13 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWSLIDER_H__FF45A97C_D276_4BE2_BF2C_061AFFE51E2F__INCLUDED_)
-#define AFX_WINDOWSLIDER_H__FF45A97C_D276_4BE2_BF2C_061AFFE51E2F__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Window.h"
 
 
@@ -111,5 +106,4 @@ public:
 	int GetCurrentSpecialPosition() const;
 };
 
-#endif // !defined(AFX_WINDOWSLIDER_H__FF45A97C_D276_4BE2_BF2C_061AFFE51E2F__INCLUDED_)
 

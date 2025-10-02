@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_DATA__CONSTS__)
-#define __MAPINFO_EDITOR_DATA__CONSTS__
 #pragma once
 
 #include "../libdb/Manipulator.h"
@@ -300,5 +298,4 @@ namespace NMapInfoEditor
 														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, UINT nLinkToFrameIndex );
 };
 
-#endif // !defined(__MAPINFO_EDITOR_DATA__CONSTS__)
 

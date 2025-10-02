@@ -1,5 +1,3 @@
-#if !defined(__TEXTURE_EDITOR__)
-#define __TEXTURE_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -37,5 +35,4 @@ protected:
 	CTextureState * pState;
 };
 
-#endif // !defined(__TEXTURE_EDITOR__)
 

@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__MAIN_FRAME__)
-#define __INTERFACE__MAIN_FRAME__
 #pragma once
 
 #include "Interface_UserData.h"
@@ -121,6 +119,5 @@ interface IMainFrameContainer : public CObjectBase
 	virtual void DestoryMenu() = 0;
 /**/
 
-#endif // !defined(__INTERFACE__MAIN_FRAME__)
 
 

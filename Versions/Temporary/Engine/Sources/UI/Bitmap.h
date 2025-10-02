@@ -1,10 +1,5 @@
-#ifndef __BITMAP_H__
-#define __BITMAP_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../3DMotor/GfxBuffers.h"
 #include "../Misc/2Darray.h"
 #include "../System/DG.h"
@@ -55,5 +50,4 @@ public:
 };
 
 
-#endif //__BITMAP_H__
 

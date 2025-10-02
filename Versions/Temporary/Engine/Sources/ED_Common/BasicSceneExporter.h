@@ -1,5 +1,3 @@
-#ifndef __BASICSCENESXPORTER_H__
-#define __BASICSCENESXPORTER_H__
 #pragma once
 
 #include "BasicExporter.h"
@@ -52,5 +50,4 @@ public:
 															EXPORT_TYPE exportType );
 };
 
-#endif
 

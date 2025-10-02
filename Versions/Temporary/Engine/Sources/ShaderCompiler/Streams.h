@@ -1,5 +1,3 @@
-#ifndef __STREAMS_H_
-#define __STREAMS_H_
 #pragma once
 
 // this classes use big endian numbers format
@@ -461,5 +459,4 @@ public:
 };
 inline CTextStream& endl( CTextStream& sStream ) { sStream << "\n"; return sStream; }
 
-#endif
 

@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BASE_DIALOG__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_BASE_DIALOG__
 #pragma once
 
 interface IView;
@@ -22,5 +20,4 @@ class CPCBaseDialog : public ICommandHandler
 	virtual void UpdateValues() = 0;
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BASE_DIALOG__)
 

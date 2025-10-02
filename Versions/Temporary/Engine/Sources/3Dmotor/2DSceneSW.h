@@ -1,9 +1,4 @@
-#ifndef __G2DSCENESOFTWARE_H_
-#define __G2DSCENESOFTWARE_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3dmotor_export.h"
 
 
@@ -44,5 +39,4 @@ _3DMOTOR_EXPORT ISW2DScene* Make2DSWScene();
 
 } // NAMESPACE
 
-#endif
 

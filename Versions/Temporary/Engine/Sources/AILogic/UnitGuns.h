@@ -1,7 +1,5 @@
-#ifndef __UNIT_GUNS_H__
-#define __UNIT_GUNS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "Guns.h"
 
@@ -106,5 +104,4 @@ public:
 	virtual const int GetActiveShellType() const { return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH; }
 };
 
-#endif // __UNIT_GUNS_H__
 

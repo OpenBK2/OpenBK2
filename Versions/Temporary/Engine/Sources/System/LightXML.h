@@ -1,7 +1,5 @@
-#ifndef __LIGHTXML_H__
-#define __LIGHTXML_H__
 
-#pragma ONCE
+#pragma once
 
 #include "System_export.h"
 
@@ -319,5 +317,4 @@ public:
 
 }; // end of namespace NLXML
 
-#endif // __LIGHTXML_H__
 

@@ -1,5 +1,3 @@
-#if !defined(__MARKER_SET__)
-#define __MARKER_SET__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -67,5 +65,4 @@ inline IEditorScene* GetEditorScene()
 	return pScene;
 }
 
-#endif // #if !defined(__MARKER_SET__)
 

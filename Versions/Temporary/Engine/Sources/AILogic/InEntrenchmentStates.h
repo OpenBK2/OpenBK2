@@ -1,7 +1,5 @@
-#ifndef __IN_ENTRENCHMENT_STATES_H__
-#define __IN_ENTRENCHMENT_STATES_H__
 
-#pragma ONCE
+#pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "StatesFactory.h"
 #include "CommonStates.h"
@@ -91,5 +89,4 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_IN_ENTRENCH; }
 };
 
-#endif // __IN_ENTRENCHMENT_STATES_H__
 

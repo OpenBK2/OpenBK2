@@ -1,7 +1,5 @@
-#ifndef __SMOKE_SCREEN_H__
-#define __SMOKE_SCREEN_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StaticObject.h"
 
@@ -66,5 +64,4 @@ public:
 	virtual CObjectProfile* GetPassProfile() const { return 0; }
 };
 
-#endif // __SMOKE_SCREEN_H__
 

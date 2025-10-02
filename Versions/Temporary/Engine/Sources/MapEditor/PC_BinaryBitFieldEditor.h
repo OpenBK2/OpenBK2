@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BINARY_BIT_FIELD__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_BINARY_BIT_FIELD__
 #pragma once
 
 #include "PC_StringBrowseEditor.h"
@@ -21,5 +19,4 @@ public:
 	static bool GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc );
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BINARY_BIT_FIELD__)
 

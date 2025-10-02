@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__USER_DATA__)
-#define __INTERFACE__USER_DATA__
 #pragma once
 
 #include "interface_view.h"
@@ -384,6 +382,5 @@ interface IUserDataContainer : public CObjectBase
 	virtual void Save() = 0;
 };
 
-#endif // !defined(__INTERFACE__USER_DATA__)
 
 

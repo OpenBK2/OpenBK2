@@ -1,9 +1,4 @@
-#ifndef __GFILESKIN_H_
-#define __GFILESKIN_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../3Dlib/GGeometry.h"
 
 namespace NGScene
@@ -44,5 +39,4 @@ inline void ConvertWeights( vector<SVertexWeight> *pRes, const vector<SLoadVerte
 
 } // namespace
 
-#endif
 

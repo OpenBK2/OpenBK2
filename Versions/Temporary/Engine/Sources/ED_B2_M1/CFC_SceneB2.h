@@ -1,5 +1,3 @@
-#if !defined(__CHILD_WINDOW__INPUT__)
-#define __CHILD_WINDOW__INPUT__
 #pragma once
 
 #include "../ED_Common/ChildFrameWndBase.h"
@@ -33,5 +31,4 @@ public:
 	void DrawFrameBorders( CPaintDC *pDC );
 };
 
-#endif // !defined(__CHILD_WINDOW__INPUT__)
 

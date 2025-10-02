@@ -1,5 +1,3 @@
-#if !defined(__HEIGHT_PATTERN__)
-#define __HEIGHT_PATTERN__
 #pragma once
 
 #include "../misc/2DArray.h"
@@ -397,5 +395,4 @@ static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 }
 
 
-#endif //#if !defined(__HEIGHT_PATTERN__)
 

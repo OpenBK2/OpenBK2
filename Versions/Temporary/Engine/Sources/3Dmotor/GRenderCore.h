@@ -1,9 +1,4 @@
-#ifndef __GRenderCore_H_
-#define __GRenderCore_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/DG.h"
 #include "../System/Time.hpp"
 #include "../Misc/Pool.h"
@@ -640,5 +635,4 @@ struct SParticleLMRenderTargetInfo
 };
 
 }
-#endif
 

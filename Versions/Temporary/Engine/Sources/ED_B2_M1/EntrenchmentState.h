@@ -1,5 +1,3 @@
-#if !defined(__ENTRENCHMENT_STATE__)
-#define __ENTRENCHMENT_STATE__
 #pragma once
 
 #include "SimpleObjectState.h"
@@ -125,5 +123,4 @@ protected:
 	///
 };
 
-#endif // #if !defined(__ENTRENCHMENT_STATE__)
 

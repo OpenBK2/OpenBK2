@@ -1,5 +1,3 @@
-#ifndef __ADV_CLIPBOARD_WINDOW__
-#define __ADV_CLIPBOARD_WINDOW__
 #pragma once
 /**
 #include "../MapEditorLib/ResizeDialog.h"
@@ -110,5 +108,4 @@ public:
 };
 
 /**/
-#endif // #ifndef __ADV_CLIPBOARD_WINDOW__
 

@@ -1,7 +1,5 @@
-#ifndef __MULTIPLAYER_NET_PACKETS_H__
-#define __MULTIPLAYER_NET_PACKETS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../Server_Client_Common/NetPacket.h"
 #include "MPInterfaceData.h"
@@ -76,5 +74,4 @@ public:
 	CB2LagTimeUpdatePacket( int nClientID, int _nPlayer, int _nTimeLeft ) : CNetPacket( nClientID ), nPlayer( _nPlayer ), nTimeLeft( _nTimeLeft ) {}
 };
 
-#endif //__MULTIPLAYER_NET_PACKETS_H__
 

@@ -1,9 +1,4 @@
-#ifndef __RECTLAYOUT_H_
-#define __RECTLAYOUT_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GPixelFormat.h"
 
 
@@ -71,5 +66,4 @@ inline CRectLayout MakeLayout( float fScrX, float fScrY, float fScrW, float fScr
 	return CRectLayout( fScrX, fScrY, fScrW, fScrH, fTxtX, fTxtY, fTxtW, fTxtH, dwColor );
 }
 
-#endif
 

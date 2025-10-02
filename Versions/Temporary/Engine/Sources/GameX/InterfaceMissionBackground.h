@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MISSION_BACKGROUND_H__
-#define __INTERFACE_MISSION_BACKGROUND_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceMissionBase.h"
 
@@ -47,5 +45,4 @@ public:
 	}
 };
 
-#endif //__INTERFACE_MISSION_BACKGROUND_H__
 

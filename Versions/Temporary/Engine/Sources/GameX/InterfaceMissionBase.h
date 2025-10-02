@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_MISSION_BASE_H__
-#define __INTERFACE_MISSION_BASE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 
@@ -39,5 +37,4 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-#endif //__INTERFACE_MISSION_BASE_H__
 

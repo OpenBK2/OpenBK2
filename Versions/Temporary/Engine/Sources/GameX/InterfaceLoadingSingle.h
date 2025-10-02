@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_LOADING_SINGLE_H__
-#define __INTERFACE_LOADING_SINGLE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 
@@ -164,5 +162,4 @@ public:
 	void Configure( const char *pszConfig );
 };
 
-#endif //__INTERFACE_LOADING_SINGLE_H__
 

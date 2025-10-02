@@ -1,3 +1,4 @@
+#pragma once
 #define CStructureSaver IBinSaver
 
 #include "../Main/GameTimer.h"

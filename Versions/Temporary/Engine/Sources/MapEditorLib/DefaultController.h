@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_CONTROLLER__)
-#define __DEFAULT_CONTROLLER__
 #pragma once
 
 #include "Interface_Controller.h"
@@ -44,6 +42,5 @@ public:
 	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const string &rszName ) const;
 };
 
-#endif // !defined(__DEFAULT_CONTROLLER__)
 
 

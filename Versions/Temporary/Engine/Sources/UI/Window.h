@@ -1,3 +1,4 @@
+#pragma once
 // Window.h: interface for the CWindow class.
 //
 

@@ -1,5 +1,3 @@
-#if !defined(__OBJECTRPGSTATS_EXPORTER__)
-#define __OBJECTRPGSTATS_EXPORTER__
 
 #pragma once
 
@@ -20,5 +18,4 @@ public:
 														 EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__OBJECTRPGSTATS_EXPORTER__)
 

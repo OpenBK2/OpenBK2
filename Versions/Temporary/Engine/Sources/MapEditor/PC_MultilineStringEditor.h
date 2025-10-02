@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MULTILUNE_STRING_EDITOR__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_MULTILUNE_STRING_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/ScintillaEditor.h"
@@ -43,5 +41,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MULTILUNE_STRING_EDITOR__)
 

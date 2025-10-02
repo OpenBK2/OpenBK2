@@ -1,5 +1,4 @@
-#if !defined(__DOCKING_WINDOW__PROPERTY_BROWSER__)
-#define __DOCKING_WINDOW__PROPERTY_BROWSER__
+#pragma once
 
 #include "PC_Dialog.h"
 
@@ -21,5 +20,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DOCKING_WINDOW__PROPERTY_BROWSER__)
 

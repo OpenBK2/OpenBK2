@@ -1,5 +1,3 @@
-#if !defined( __SOUND_DESC_EXPORTER__ )
-#define __SOUND_DESC_EXPORTER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Exporter.h"
@@ -28,5 +26,4 @@ public:
 																			EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };
 
-#endif // #if !defined( __SOUND_DESC_EXPORTER__ )
 

@@ -1,5 +1,3 @@
-#if !defined( __SCAM_RUN__ )
-#define __SCAM_RUN__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -50,5 +48,4 @@ public:
 	afx_msg void OnEnUpdateScrunEditTime();
 };
 
-#endif // if !defined( __SCAM_RUN__ )
 

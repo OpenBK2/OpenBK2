@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__INPUT_STATE__)
-#define __INTERFACE__INPUT_STATE__
 #pragma once
 
 
@@ -43,5 +41,4 @@ interface IInputState
 	virtual ~IInputState() {}
 };
 
-#endif // !defined(__INTERFACE__INPUT_STATE__)
 

@@ -1,5 +1,4 @@
-#if !defined(__DEFAULT_DOCKING_WINDOW__)
-#define __DEFAULT_DOCKING_WINDOW__
+#pragma once
 
 class CDefaultDockingWindow : public SECControlBar
 {
@@ -16,5 +15,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DEFAULT_DOCKING_WINDOW__)
 

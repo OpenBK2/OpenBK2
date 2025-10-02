@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_AI_MARKERS_DLG__)
-#define __MAPINFO_AI_MARKERS_DLG__
 #pragma once
 #include "ResourceDefines.h"
 #include "MapInfoEditorSettings.h"
@@ -44,5 +42,4 @@ public:
 	afx_msg void OnBnClickedButtonDefault();
 };
 
-#endif // #if !defined(__MAPINFO_AI_MARKERS_DLG__)
 

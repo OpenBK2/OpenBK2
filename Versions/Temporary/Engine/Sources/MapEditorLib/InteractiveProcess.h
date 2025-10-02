@@ -1,5 +1,3 @@
-#if !defined(__INTERACTIVE_PROCESS__)
-#define __INTERACTIVE_PROCESS__
 #pragma once
 
 
@@ -36,5 +34,4 @@ public:
 	bool Stop( const string &szQuitScript );
 };
 
-#endif //#define __INTERACTIVE_PROCESS__
 

@@ -1,5 +1,4 @@
-#ifndef __HPTIMER_H_
-#define __HPTIMER_H_
+#pragma once
 #include "Misc_export.h"
 
 namespace NHPTimer
@@ -16,5 +15,4 @@ namespace NHPTimer
 	void UpdateHPTimerFrequency();
 };
 
-#endif
 

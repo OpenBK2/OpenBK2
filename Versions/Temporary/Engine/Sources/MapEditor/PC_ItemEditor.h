@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_ITEM_EDITOR__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_ITEM_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/Interface_PCItemEditor.h"
@@ -53,5 +51,4 @@ bool GetPCItemValue( CVariant *pValue,
 
 //bool CheckPCValue( IManipulator *pManipulator, const string &rszName, const CVariant &rValue );
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_ITEM_EDITOR__)
 

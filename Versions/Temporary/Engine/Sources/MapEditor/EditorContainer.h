@@ -1,5 +1,3 @@
-#if !defined(__EDITOR__CONTAINER__)
-#define __EDITOR__CONTAINER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Editor.h"
@@ -45,6 +43,5 @@ public:
 	bool IsModified();
 };
 
-#endif // !defined(__EDITOR__CONTAINER__)
 
 

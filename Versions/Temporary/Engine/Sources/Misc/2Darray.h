@@ -1,9 +1,4 @@
-#ifndef __2DARRAY_H_
-#define __2DARRAY_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 template < class T > 
 struct CBoundCheck
 {
@@ -184,5 +179,4 @@ public:
 #endif
 };
 
-#endif
 

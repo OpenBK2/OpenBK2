@@ -1,7 +1,5 @@
-#ifndef __SCRIPT_FUNCTIONS_H__
-#define __SCRIPT_FUNCTIONS_H__
 
-#pragma ONCE
+#pragma once
 
 #include "../Stats_B2_M1/DBMapInfo.h"
 
@@ -499,5 +497,4 @@ public:
 	static SRegFunction pRegList[];
 };
 
-#endif // __SCRIPT_FUNCTIONS_H__
 

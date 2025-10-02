@@ -1,10 +1,5 @@
-#if !defined(__WV_Types__) 
-#define __WV_Types__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/RandomGen.h"
 #include "../Misc/Win32Random.h"
 
@@ -181,5 +176,4 @@ namespace NWV
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 
-#endif // !defined(__WV_Types__)
 

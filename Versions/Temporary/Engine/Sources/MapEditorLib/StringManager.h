@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__STRING_MANAGER__)
-#define __COMMON_TOOLS__STRING_MANAGER__
 #pragma once
 
 
@@ -29,5 +27,4 @@ public:
 	static int Compare( const string &rszLeft, const string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString );
 };
 
-#endif // #if !defined(__COMMON_TOOLS__STRING_MANAGER__)
 

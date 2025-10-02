@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_EDITOR_BUTTON__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_EDITOR_BUTTON__
 #pragma once
 
 
@@ -30,5 +28,4 @@ public:
 };
 typedef vector<CPCEditorButton*> CPCEditorButtonList;
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_EDITOR_BUTTON__)
 

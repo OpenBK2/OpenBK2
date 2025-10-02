@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lstate.h,v 1.41 2000/10/05 13:00:17 roberto Exp $
 ** Global State
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lstate_h
-#define lstate_h
 
 #include "lobject.h"
 #include "luadebug.h"
@@ -245,6 +244,5 @@ void lua_setThread( lua_State *L, CLuaThread *pThread );
 
 const string MakeUniqueName( lua_State *L, const char *name );
 
-#endif
 
 

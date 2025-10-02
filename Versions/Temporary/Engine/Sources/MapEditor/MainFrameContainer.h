@@ -1,5 +1,3 @@
-#if !defined(__MAIN_FRAME__CONTAINER__)
-#define __MAIN_FRAME__CONTAINER__
 #pragma once
 
 #include "MainFrame.h"
@@ -23,6 +21,5 @@ public:
 	SECWorkbook* GetSECWorkbook() { return checked_cast<SECWorkbook*>( pMainFrame ); }
 };
 
-#endif // !defined(__MAIN_FRAME__CONTAINER__)
 
 

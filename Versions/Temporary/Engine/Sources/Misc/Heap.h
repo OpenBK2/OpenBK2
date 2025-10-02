@@ -1,7 +1,5 @@
-#ifndef __HEAP_H__
-#define __HEAP_H__
 
-#pragma ONCE
+#pragma once
 template <class T, class TCmp>
 class CSortedVector
 {
@@ -184,5 +182,4 @@ int CHeap<T, TCmp, TWillSwap>::operator&( IBinSaver &ss )
 	return 0;
 }
 
-#endif // __HEAP_H__
 

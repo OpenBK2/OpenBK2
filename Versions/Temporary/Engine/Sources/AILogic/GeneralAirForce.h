@@ -1,5 +1,4 @@
-#ifndef __GENERAL_AIR_FORCE__
-#define __GENERAL_AIR_FORCE__
+#pragma once
 
 #include "../System/FreeIDs.h"
 #include "Commander.h"
@@ -91,5 +90,4 @@ public:
 	bool TurnReturned() const;
 };
 
-#endif // __GENERAL_AIR_FORCE__
 

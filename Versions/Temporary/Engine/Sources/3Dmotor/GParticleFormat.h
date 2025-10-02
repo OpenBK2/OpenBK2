@@ -1,9 +1,4 @@
-#ifndef __GPARTICLEFORMAT_H_
-#define __GPARTICLEFORMAT_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/GResource.h"
 
 namespace NGScene
@@ -121,5 +116,4 @@ class CParticlesLoader: public CLazyResourceLoader<int, CParticlesInfo>
 
 }
 
-#endif
 

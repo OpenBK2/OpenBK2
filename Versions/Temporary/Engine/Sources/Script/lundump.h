@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lundump.h,v 1.21 2000/10/31 16:57:23 lhf Exp $
 ** load pre-compiled Lua chunks
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lundump_h
-#define lundump_h
 
 #include "lobject.h"
 #include "lzio.h"
@@ -34,5 +33,4 @@ int luaU_endianess (void);
 // multiplying by 1E8 gives non-trivial integer values
 #define	TEST_NUMBER	3.14159265358979323846E8
 */
-#endif
 

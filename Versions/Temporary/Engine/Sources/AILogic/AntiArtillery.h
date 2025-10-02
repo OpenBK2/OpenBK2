@@ -1,7 +1,5 @@
-#ifndef __ANTI_ARTILLERY_H__
-#define __ANTI_ARTILLERY_H__
 
-#pragma ONCE
+#pragma once
 
 #include "LinkObject.h"
 
@@ -81,5 +79,4 @@ public:
 	friend class CAntiArtilleryManager;
 };
 
-#endif // __ANTI_ARTILLERY_H__
 

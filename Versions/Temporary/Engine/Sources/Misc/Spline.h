@@ -1,5 +1,3 @@
-#ifndef __SPLINE_H__
-#define __SPLINE_H__
 #pragma once
 
 #include "Misc_export.h"
@@ -214,5 +212,4 @@ public:
 void SampleNURBSCurve( vector<CVec3> *pRes, const float fSampleStep, const vector<CVec3> &ctrlPoints,
   const float fWeight1 = 1.0f, const float fWeight2 = 1.0f, const float fWeight3 = 1.0f, const float fWeight4 = 1.0f );
 
-#endif // __SPLINE_H__
 

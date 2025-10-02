@@ -1,5 +1,3 @@
-#if !defined(__EDITOR_TEST_STATE__)
-#define __EDITOR_TEST_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -16,6 +14,5 @@ public:
 	void Leave();
 };
 
-#endif // !defined(__EDITOR_TEST_STATE__)
 
 

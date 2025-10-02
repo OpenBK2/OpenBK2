@@ -1,9 +1,4 @@
-#ifndef __GSCENEVOLUME_H_
-#define __GSCENEVOLUME_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GRenderCore.h"
 namespace NDb
 {
@@ -38,6 +33,5 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 
 } // namespace
 
-#endif
 
 

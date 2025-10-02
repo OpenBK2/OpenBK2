@@ -1,5 +1,3 @@
-#if !defined(__EFFECT_EDITOR__)
-#define __EFFECT_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -38,5 +36,4 @@ public:
 	void Redo( IController* pController ) {}
 };
 
-#endif // !defined(__EFFECT_EDITOR__)
 

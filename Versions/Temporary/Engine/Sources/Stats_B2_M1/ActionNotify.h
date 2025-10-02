@@ -1,5 +1,3 @@
-#ifndef __ACTION_NOTIFY__
-#define __ACTION_NOTIFY__
 
 #pragma once
 
@@ -250,5 +248,4 @@ inline bool DoWeNeedAction( const int nAction )
 	return false;
 }
 
-#endif
 

@@ -1,9 +1,5 @@
-#if !defined(__ELK__WM_DEFINES__)
-#define __ELK__WM_DEFINES__
 //
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 //
 #define WM_INPUT_FORM_NOTIFY ( WM_USER + 0 )
 #define IFN_STATE_CHANGED ( 0 )
@@ -20,5 +16,4 @@
 #define WM_ELK_TRANSLATE_EDIT_NOTIFY ( WM_USER + 2 )
 #define TEN_NKEYDOWN ( 0 )
 //
-#endif // !defined(__ELK__WM_DEFINES__)
 

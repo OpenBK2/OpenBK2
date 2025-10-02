@@ -1,9 +1,4 @@
-#ifndef __GGeometryUtil_H_
-#define __GGeometryUtil_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 
 namespace NGScene
 {
@@ -202,5 +197,4 @@ struct SEdgeInfoHash
 };
 
 }
-#endif
 

@@ -1,5 +1,3 @@
-#if !defined(__VSO_MULTI_STATE__)
-#define __VSO_MULTI_STATE__
 #pragma once
 
 #include "CommandHandlerDefines.h"
@@ -145,6 +143,5 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__VSO_MULTI_STATE__)
 
 

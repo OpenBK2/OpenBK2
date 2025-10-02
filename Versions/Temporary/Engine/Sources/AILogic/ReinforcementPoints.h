@@ -1,5 +1,3 @@
-#ifndef __REINFORCEMENT_POINTS_H__
-#define __REINFORCEMENT_POINTS_H__
 
 /*
 #pragma once
@@ -60,5 +58,4 @@ public:
 	CPlayerPointsTracker* operator[]( const int &nIndex );
 };*/
 
-#endif // __REINFORCEMENT_POINTS_H__
 

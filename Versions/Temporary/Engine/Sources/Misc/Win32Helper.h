@@ -1,10 +1,5 @@
-#ifndef __WIN32HELPER_H__
-#define __WIN32HELPER_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include <float.h>
 
 namespace NWin32Helper
@@ -131,5 +126,4 @@ typedef CTLock<CSimpleCriticalSection> CSimpleCriticalSectionLock;
 
 }
 
-#endif
 

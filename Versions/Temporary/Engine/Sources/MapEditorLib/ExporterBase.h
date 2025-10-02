@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_EXPORTER__)
-#define __DEFAULT_EXPORTER__
 #pragma once
 
 #include "Interface_Exporter.h"
@@ -75,6 +73,5 @@ public:
 														 EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__DEFAULT_EXPORTER__)
 
 

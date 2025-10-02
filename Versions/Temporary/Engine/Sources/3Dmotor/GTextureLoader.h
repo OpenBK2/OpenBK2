@@ -1,9 +1,4 @@
-#ifndef __GTextureLoader_H_
-#define __GTextureLoader_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 namespace NGfx
 {
 	class CTexture;
@@ -18,5 +13,4 @@ public:
 };*/
 
 }
-#endif
 

@@ -1,5 +1,3 @@
-#if !defined(__BRIDGERPGSTATS_EXPORTER__)
-#define __BRIDGERPGSTATS_EXPORTER__
 
 #pragma once
 
@@ -55,5 +53,4 @@ public:
 															EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__BRIDGERPGSTATS_EXPORTER__)
 

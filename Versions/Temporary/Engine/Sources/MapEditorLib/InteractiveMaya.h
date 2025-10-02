@@ -1,5 +1,3 @@
-#if !defined(__INTERACTIVE_MAYA__)
-#define __INTERACTIVE_MAYA__
 #pragma once
 
 #include "InteractiveProcess.h"
@@ -40,5 +38,4 @@ public:
 	bool TransactQuery( const string &szScript, string *pszResult );
 };
 
-#endif //#define __INTERACTIVE_MAYA__
 

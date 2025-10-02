@@ -1,5 +1,3 @@
-#if !defined(__SPECIFIC__)
-#define __SPECIFIC__
 #pragma once
 
 #include "../misc/nalgoritm.h"
@@ -17,5 +15,4 @@
 #include <toolkit/browedit.h>
 
 
-#endif // !defined(__SPECIFIC__)
 

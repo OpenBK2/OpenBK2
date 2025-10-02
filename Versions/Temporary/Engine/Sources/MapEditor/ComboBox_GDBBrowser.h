@@ -1,5 +1,3 @@
-#if !defined(__COMBOBOX__GDB_BROWSER__)
-#define __COMBOBOX__GDB_BROWSER__
 #pragma once
 
 #include "Tree_GDBBrowserBase.h"
@@ -116,5 +114,4 @@ public:
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__COMBOBOX__GDB_BROWSER__)
 

@@ -1,5 +1,3 @@
-#if !defined(__TEXTURE_STATE__)
-#define __TEXTURE_STATE__
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
@@ -26,6 +24,5 @@ protected:
 };
 
 
-#endif // !defined(__TEXTURE_STATE__)
 
 

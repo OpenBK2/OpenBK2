@@ -2,15 +2,10 @@
 //
 
 
-#if !defined(AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_)
-#define AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_
 
 #include "UI_export.h"
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "UI.h"
 
 namespace NGScene
@@ -42,5 +37,4 @@ public:
 	void SetFadeValue( float fValue ) { fFadeValue = fValue; }
 };
 
-#endif // !defined(AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_)
 

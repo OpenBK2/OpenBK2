@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__CC_FOLDER_CALLBACK__)
-#define __INTERFACE__CC_FOLDER_CALLBACK__
 #pragma once
 
 #include "Interface_Controller.h"
@@ -35,6 +33,5 @@ interface IFolderCallback : public CObjectBase
 	virtual bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor ) = 0;
 };
 
-#endif // !defined(__INTERFACE__CC_FOLDER_CALLBACK__)
 
 

@@ -1,5 +1,4 @@
-#ifndef __RINGLIST_H__
-#define __RINGLIST_H__
+#pragma once
 
 template <class Type>
 struct SRingNode
@@ -137,5 +136,4 @@ public:
 	const_iterator begin() const { return const_iterator( pList ); }
 };
 
-#endif
 

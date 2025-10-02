@@ -1,5 +1,3 @@
-#ifndef __MOBRIDGE_H__
-#define __MOBRIDGE_H__
 #pragma once
 
 #include "MapObj.h"
@@ -35,5 +33,4 @@ public:
 	int operator&( IBinSaver &saver );
 };
 
-#endif // __MOBRIDGE_H__
 

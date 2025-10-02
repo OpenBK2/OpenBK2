@@ -1,5 +1,4 @@
-#ifndef __GENERAL_INTERNAL__
-#define __GENERAL_INTERNAL__
+#pragma once
 
 #include "General.h"
 #include "Commander.h"
@@ -7,7 +6,7 @@
 #include "../System/FreeIDs.h"
 #include "../Stats_B2_M1/DBMapInfo.h"
 
-#pragma ONCE
+
 
 class CArtillery;
 class CAIUnit;
@@ -156,5 +155,4 @@ public:
 	int GetParty() const { return nParty; }
 };
 
-#endif // __GENERAL_INTERNAL__
 

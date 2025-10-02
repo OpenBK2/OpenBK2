@@ -1,3 +1,4 @@
+#pragma once
 /*----------------------------------------------------------------------
 "Debugging Applications" (Microsoft Press)
 Copyright (c) 1997-2000 John Robbins -- All rights reserved.
@@ -8,8 +9,6 @@ DISCUSSION  :
 turned off, must be turned back in in WarningsOn.h
 ----------------------------------------------------------------------*/
 
-#ifndef _WARNINGSOFF_H
-#define _WARNINGSOFF_H
 
 /* Unreferenced in inline function removed */
 #pragma warning ( disable : 4514 )
@@ -28,7 +27,6 @@ turned off, must be turned back in in WarningsOn.h
 /* Force everything to warning level 3. */
 #pragma warning ( push , 3 )
 
-#endif  /* _WARNINGSOFF_H */
 
 
 

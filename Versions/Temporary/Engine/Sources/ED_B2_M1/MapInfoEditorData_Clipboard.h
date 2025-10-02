@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_EDITOR_DATA__CLIPBOARD__)
-#define __MAPINFO_EDITOR_DATA__CLIPBOARD__
 #pragma once
 
 #include "MapInfoEditorData_Consts.h"
@@ -60,5 +58,4 @@ namespace NMapInfoEditor
 	};
 };
 
-#endif // !defined(__MAPINFO_EDITOR_DATA__CLIPBOARD__)
 

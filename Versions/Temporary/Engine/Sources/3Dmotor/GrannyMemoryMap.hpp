@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _GRANNY_MEMORY_MAP_
 #define _GRANNY_MEMORY_MAP_
 

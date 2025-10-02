@@ -1,5 +1,3 @@
-#if !defined(__TEXTURE_EXPORTER__)
-#define __TEXTURE_EXPORTER__
 #pragma once
 
 #include "../MapEditorLib/Interface_Exporter.h"
@@ -32,6 +30,5 @@ public:
 														 EXPORT_TYPE exportType );
 };
 
-#endif // !defined(__TEXTURE_EXPORTER__)
 
 

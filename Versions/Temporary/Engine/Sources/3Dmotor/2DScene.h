@@ -1,9 +1,4 @@
-#ifndef __GS2DCENE_H_
-#define __GS2DCENE_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../System/DG.h"
 #include "RectLayout.h"
 namespace NGfx
@@ -30,5 +25,4 @@ I2DScene* Make2DScene();
 
 }
 
-#endif
 

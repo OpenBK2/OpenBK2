@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_3_BUTTON__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_3_BUTTON__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -29,5 +27,4 @@ public:
 	virtual void OnEdit() = 0;
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_3_BUTTON__)
 

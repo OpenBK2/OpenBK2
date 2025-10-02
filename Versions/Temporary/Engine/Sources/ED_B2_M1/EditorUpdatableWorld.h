@@ -1,5 +1,3 @@
-#if !defined(__EDITOR_UPDATATABLE_WORLD__)
-#define __EDITOR_UPDATATABLE_WORLD__
 #pragma once
 
 #include "../B2_M1_World/UpdatableWorld.h"
@@ -35,5 +33,4 @@ namespace NCreateUpdate
 	CObjectBase* MoveObject( int nObjectID, const CVec3 &rvPlacement, const CQuat &rRotation );
 };
 
-#endif // !defined(__EDITOR_UPDATATABLE_WORLD__)
 

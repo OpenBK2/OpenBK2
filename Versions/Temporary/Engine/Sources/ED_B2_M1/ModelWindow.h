@@ -1,5 +1,3 @@
-#if !defined(__MODEL_DW_WINDOW__)
-#define __MODEL_DW_WINDOW__
 #pragma once
 
 #include "../MapEditorLib/ResizeDialog.h"
@@ -93,5 +91,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__MODEL_DW_WINDOW__)
 

@@ -1,5 +1,3 @@
-#if !defined(__UI_SCENE__)
-#define __UI_SCENE__
 #pragma once
 
 
@@ -23,6 +21,5 @@ interface IUIScene : public CObjectBase
 
 IUIScene *CreateUIScene();
 
-#endif // !defined(__UI_SCENE__)
 
 

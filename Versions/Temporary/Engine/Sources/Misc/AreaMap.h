@@ -1,10 +1,8 @@
-#ifndef __AREA_MAP_H__
-#define __AREA_MAP_H__
 
 #include <float.h>
 #include "Win32Helper.h"
 
-#pragma ONCE
+#pragma once
 
 template <class TYPE, class TStorageType = CPtr<TYPE>, class TPosition = CVec3, class TCoeffType = float>
 class CAreaMap : public CArray2D< list<TStorageType> >
@@ -213,5 +211,4 @@ public:
 	}
 };
 
-#endif // __AREA_MAP_H__
 

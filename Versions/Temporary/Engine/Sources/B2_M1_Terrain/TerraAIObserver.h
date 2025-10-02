@@ -1,3 +1,4 @@
+#pragma once
 //#pragma once
 //
 //#include "../B2_M1_World/TerraAIObserver.h"

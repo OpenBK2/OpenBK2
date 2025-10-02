@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_INPUT__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_INPUT__
 #pragma once
 
 #include "../MapEditorLib/Interface_CommandHandler.h"
@@ -44,5 +42,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_INPUT__)
 

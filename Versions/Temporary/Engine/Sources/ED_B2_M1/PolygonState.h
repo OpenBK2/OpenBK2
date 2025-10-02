@@ -1,5 +1,3 @@
-#if !defined(__POLYGON_STATE__)
-#define __POLYGON_STATE__
 #pragma once
 
 #include "Tools_SceneDraw.h"
@@ -237,6 +235,5 @@ public:
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
 
-#endif // !defined(__POLYGON_STATE__)
 
 

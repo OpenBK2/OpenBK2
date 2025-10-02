@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__BUILDER__)
-#define __INTERFACE__BUILDER__
 #pragma once
 
 #include "Interface_FolderCallback.h"
@@ -136,6 +134,5 @@ interface IBuilderContainer : public CObjectBase
 	virtual bool FillNewObjectName( SBuildDataParams *pBuildDataParams ) = 0;
 };
 
-#endif // !defined(__INTERFACE__BUILDER__)
 
 

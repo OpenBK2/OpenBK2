@@ -1,5 +1,3 @@
-#if !defined(__FORMATION_WINDOW__)
-#define __FORMATION_WINDOW__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -49,5 +47,4 @@ public:
 	afx_msg void OnBnClickedCheckPropmask();
 };
 
-#endif//#if !defined(__FORMATION_WINDOW__)
 

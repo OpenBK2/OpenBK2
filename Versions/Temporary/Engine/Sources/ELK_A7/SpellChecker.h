@@ -1,7 +1,5 @@
-#ifndef __SPELLCHECKER_H__
-#define __SPELLCHECKER_H__
 
-#pragma ONCE
+#pragma once
 
 
 #include"csapi.h"
@@ -165,5 +163,4 @@ public:
 	int GetVariants( const CString &rstrText, vector<CString> *pWords );
 };
 
-#endif // __SPELLCHECKER_H__
 

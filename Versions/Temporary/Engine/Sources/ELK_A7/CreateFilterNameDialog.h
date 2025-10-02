@@ -1,10 +1,5 @@
-#if !defined(__CREATE_FILTER_NAME_DIALOG__)
-#define __CREATE_FILTER_NAME_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Resource.h"
 #include "../MapEditorLib/ResizeDialog.h"
 
@@ -35,5 +30,4 @@ protected:
 public:
 };
 
-#endif // !defined(__CREATE_FILTER_NAME_DIALOG__)
 

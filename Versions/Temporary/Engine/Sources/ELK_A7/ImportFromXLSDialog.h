@@ -1,10 +1,5 @@
-#if !defined(__ELK_IMPORT_FROM_XLS_DIALOG__)
-#define __ELK_IMPORT_FROM_XLS_DIALOG__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "../MapEditorLib/ResizeDialog.h"
 
 class CImportFromXLSDialog : public CResizeDialog
@@ -41,5 +36,4 @@ public:
 	void GetFilePath( string *pszFilePath );
 };
 
-#endif // !defined(__ELK_IMPORT_FROM_XLS_DIALOG__)
 

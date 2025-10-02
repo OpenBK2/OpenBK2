@@ -1,5 +1,3 @@
-#if !defined(__CREATE_MOD_DIALOG__)
-#define __CREATE_MOD_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -39,5 +37,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__CREATE_MOD_DIALOG__)
 

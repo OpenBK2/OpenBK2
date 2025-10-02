@@ -1,5 +1,3 @@
-#if !defined(__PLANE_GEOMETRY_H__)
-#define __PLANE_GEOMETRY_H__
 #pragma once
 
 #include "Misc_export.h"
@@ -2005,5 +2003,4 @@ inline bool ApplyTilesInCircle( const CTRect<int> &rRect,
 	return ApplyTilesInCircle( rRect, rCenter.x, rCenter.y, nRadius, rApplyFunctional );
 }
 
-#endif // #if !defined(__PLANE_GEOMETRY_H__)
 

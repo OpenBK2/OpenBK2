@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: ldebug.h,v 1.7 2000/10/05 12:14:08 roberto Exp $
 ** Auxiliary functions from Debug Interface module
 ** See Copyright Notice in lua.h
 */
 
-#ifndef ldebug_h
-#define ldebug_h
 
 
 #include "luadebug.h"
@@ -17,5 +16,4 @@ void luaG_binerror (lua_State *L, TObject *p1, int t, const char *op);
 void luaG_ordererror (lua_State *L, TObject *top);
 
 
-#endif
 

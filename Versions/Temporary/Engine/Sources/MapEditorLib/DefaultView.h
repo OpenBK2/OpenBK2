@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_VIEW__)
-#define __DEFAULT_VIEW__
 #pragma once
 
 #include "Interface_View.h"
@@ -55,6 +53,5 @@ public:
 	virtual void Leave();
 };
 
-#endif // !defined(__DEFAULT_VIEW__)
 
 

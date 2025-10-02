@@ -1,10 +1,5 @@
-#if !defined(__ELK_TRANSLATE_EDIT__)
-#define __ELK_TRANSLATE_EDIT__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 class CTranslateEdit : public CEdit
 {
 public:
@@ -40,5 +35,4 @@ protected:
 	bool bIgnoreSymbol;
 };
 
-#endif // !defined(__ELK_TRANSLATE_EDIT__)
 

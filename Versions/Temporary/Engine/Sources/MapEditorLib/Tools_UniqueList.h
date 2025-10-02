@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__UNIQUE_LIST__)
-#define __COMMON_TOOLS__UNIQUE_LIST__
 #pragma once
 
 #define UNIQUE_LIST_INSERT_FRONT true
@@ -65,5 +63,4 @@ public:
 	const TList& GetList() const { return elementList; }
 };
 
-#endif // #if !defined(__COMMON_TOOLS__UNIQUE_LIST__)
 

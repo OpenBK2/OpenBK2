@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lvm.h,v 1.27 2000/10/05 12:14:08 roberto Exp $
 ** Lua virtual machine
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lvm_h
-#define lvm_h
 
 
 #include "ltm.h"
@@ -31,5 +30,4 @@ void luaV_strconc (lua_State *L, int total, StkId top);
 void luaV_beginExecute(lua_State *L, int nClosure, StkId base, int nResults );
 void luaV_stepExecute( lua_State *L );
 
-#endif
 

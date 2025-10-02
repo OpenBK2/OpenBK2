@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_UI_BUILDER__)
-#define __DEFAULT_UI_BUILDER__
 
 #pragma once
 #include "BaseUIBuilder.h"
@@ -32,5 +30,4 @@ protected:
 	bool NeedBuildDataDialog() const { return false; }
 };
 
-#endif // !defined(__DEFAULT_UI_BUILDER__)
 

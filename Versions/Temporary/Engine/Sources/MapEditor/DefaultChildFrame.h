@@ -1,5 +1,3 @@
-#if !defined(__DEFAULT_CHILD_FRAME__)
-#define __DEFAULT_CHILD_FRAME__
 #pragma once
 
 
@@ -20,5 +18,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__DEFAULT_CHILD_FRAME__)
 

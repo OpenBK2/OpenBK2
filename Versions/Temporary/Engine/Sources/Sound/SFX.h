@@ -1,7 +1,5 @@
-#ifndef __SFX_H__
-#define __SFX_H__
 
-#pragma ONCE
+#pragma once
 
 
 #include "Sound_export.h"
@@ -91,5 +89,4 @@ interface ISFX : public CObjectBase
 
 SOUND_EXPORT ISFX *CreateSoundEngine();
 
-#endif // __SFX_H__
 

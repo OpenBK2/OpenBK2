@@ -1,10 +1,5 @@
-#ifndef __EFFECTOR_BUTTON_STATE_H__
-#define __EFFECTOR_BUTTON_STATE_H__
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 
 // change visual button state
 class CEffectorButtonState : public IUIEffector
@@ -28,5 +23,4 @@ public:
 	virtual int operator&( IBinSaver &saver );
 };
 
-#endif //__EFFECTOR_BUTTON_STATE_H__
 

@@ -1,9 +1,4 @@
-#ifndef __GANIMFORMAT_H_
-#define __GANIMFORMAT_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GObjectInfo.h"
 
 struct granny_file;
@@ -83,5 +78,4 @@ public:
 
 } // namespace NAnimation
 
-#endif
 

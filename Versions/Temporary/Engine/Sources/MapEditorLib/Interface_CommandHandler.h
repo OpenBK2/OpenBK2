@@ -1,5 +1,3 @@
-#if !defined(__INTERFACE__COMMAND_HANDLER__)
-#define __INTERFACE__COMMAND_HANDLER__
 #pragma once
 
 #define INVALID_COMMAND_ID (0xFFffFFff)
@@ -45,6 +43,5 @@ interface ICommandHandlerContainer : public CObjectBase
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
 
-#endif // !defined(__INTERFACE__COMMAND_HANDLER__)
 
 

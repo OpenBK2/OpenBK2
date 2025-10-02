@@ -1,7 +1,5 @@
-#ifndef __INTERFACE_NIVAL_NET_H__
-#define __INTERFACE_NIVAL_NET_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceMPBase.h"
 
@@ -108,5 +106,4 @@ public:
 };
 #endif // _SINGLE_DEMO
 
-#endif //__INTERFACE_NIVAL_NET_H__
 

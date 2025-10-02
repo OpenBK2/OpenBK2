@@ -1,9 +1,4 @@
-#ifndef __GTransparent_H_
-#define __GTransparent_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "Cache.h"
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
@@ -160,5 +155,4 @@ public:
 };
 
 }
-#endif
 

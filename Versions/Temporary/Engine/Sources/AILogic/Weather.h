@@ -1,6 +1,4 @@
-#ifndef __WEATHER_H__
-#define __WEATHER_H__
-#pragma ONCE
+#pragma once
 
 #include "../SceneB2/WeatherVisual.h"
 
@@ -35,5 +33,4 @@ public:
 	void SwitchAutomatic( const bool bSwitchAutomatic );
 };
 
-#endif // __WEATHER_H__
 

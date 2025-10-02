@@ -1,5 +1,3 @@
-#if !defined(__POINTS_LIST_STATE__)
-#define __POINTS_LIST_STATE__
 #pragma once
 
 #include "../misc/2darray.h"
@@ -156,5 +154,4 @@ public:
 	void Leave();
 };
 
-#endif//#if !defined(__POINTS_LIST_STATE__)
 

@@ -1,5 +1,3 @@
-#if !defined(__MAP_EDITOR__WINDOW_SINGLETON__)
-#define __MAP_EDITOR__WINDOW_SINGLETON__
 #pragma once
 
 
@@ -43,5 +41,4 @@ public:
   bool BringAppOnTop() const;
 	bool OpenFileOnApp( const string &rszFilePath ) const;
 };
-#endif // !defined(__MAP_EDITOR__WINDOW_SINGLETON__)
 

@@ -1,7 +1,5 @@
-#ifndef __TYPECONVERTOR_H__
-#define __TYPECONVERTOR_H__
 
-#pragma ONCE
+#pragma once
 
 // for adding to type converter enums in way STRING_ENUM_ADDER( converter, ENUM )
 #define STRING_ENUM_ADD_PTR(TypeConverter,eEnum) (*TypeConverter)[#eEnum] = eEnum;
@@ -48,5 +46,4 @@ public:
 	}
 };
 
-#endif // __TYPECONVERTOR_H__
 

@@ -3,13 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_)
-#define AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #ifndef __AFX__
 #define WIN32_LEAN_AND_MEAN							// Exclude rarely-used stuff from Windows headers
 
@@ -68,12 +63,6 @@ typedef unsigned __int64 QWORD;					// quadra word
 #ifndef interface
 #define interface struct
 #endif // interface
-// define pragma once
-#if _MSC_VER > 1000
-#define ONCE once
-#else
-#define ONCE message ""
-#endif // _MSC_VER > 1000
 //
 namespace NTimer
 {
@@ -100,5 +89,4 @@ namespace NTimer
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_)
 

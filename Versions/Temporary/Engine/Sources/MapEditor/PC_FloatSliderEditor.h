@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_FLOAT_SLIDER__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_FLOAT_SLIDER__
 #pragma once
 
 #include "PC_StringSliderEditor.h"
@@ -29,5 +27,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_FLOAT_SLIDER__)
 

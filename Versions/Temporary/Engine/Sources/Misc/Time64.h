@@ -1,5 +1,3 @@
-#ifndef __TIME64_H__
-#define __TIME64_H__
 
 #pragma once
 
@@ -10,4 +8,3 @@ inline UINT64 GetLongTickCount()
 	return ( ( UINT64( sysTime.dwHighDateTime ) << 32 ) | sysTime.dwLowDateTime ) / 10000;
 }
 
-#endif // __TIME64_H__

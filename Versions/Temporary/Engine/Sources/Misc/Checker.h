@@ -1,5 +1,4 @@
-#ifndef __CHECKER_H__
-#define __CHECKER_H__
+#pragma once
 
 #if defined(_DO_ASSERT_SLOW)
 
@@ -23,5 +22,4 @@ inline bool CheckRange( const TContainer &container, const int nIndex )
 
 #endif // use ctrl + }
 
-#endif // __CHECKER_H__
 

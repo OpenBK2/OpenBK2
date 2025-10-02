@@ -1,5 +1,3 @@
-#if !defined(__FORMATION_MNEMONICS__)
-#define __FORMATION_MNEMONICS__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -12,6 +10,5 @@ public:
 
 extern CFormationMnemonics typeFormationMnemonics;
 
-#endif // #if !defined(__FORMATION_MNEMONICS__)
 
 

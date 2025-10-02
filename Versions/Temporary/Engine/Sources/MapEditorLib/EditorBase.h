@@ -1,5 +1,3 @@
-#if !defined(__EDITOR_BASE__)
-#define __EDITOR_BASE__
 #pragma once
 
 #include "Interface_Editor.h"
@@ -17,6 +15,5 @@ public:
 	virtual bool ShowProgress() { return true; }
 };
 
-#endif // !defined(__EDITOR_BASE__)
 
 

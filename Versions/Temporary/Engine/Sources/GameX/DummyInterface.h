@@ -1,7 +1,5 @@
-#ifndef __DUMMY_INTERFACE_H__
-#define __DUMMY_INTERFACE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "InterfaceScreenBase.h"
 
@@ -16,5 +14,4 @@ public:
 
 INTERFACE_COMMAND_DECLARE( CICDummy, CDummyInterface );
 
-#endif // __DUMMY_INTERFACE_H__
 

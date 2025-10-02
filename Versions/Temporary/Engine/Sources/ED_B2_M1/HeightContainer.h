@@ -1,5 +1,3 @@
-#if !defined(__MAPINFO_HEIGHT_CONTAINER__)
-#define __MAPINFO_HEIGHT_CONTAINER__
 #pragma once
 
 #include "../MapeditorLib/Tools_FreeIDCollector.h"
@@ -60,5 +58,4 @@ public:
 	void Trace();
 };
 
-#endif // !defined(__MAPINFO_HEIGHT_CONTAINER__)
 

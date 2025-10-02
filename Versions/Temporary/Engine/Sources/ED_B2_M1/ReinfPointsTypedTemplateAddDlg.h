@@ -1,5 +1,3 @@
-#if !defined( __REINF_POINTS_TYPED_TEMPLATE_TYPED_DLG__ )
-#define __REINF_POINTS_TYPED_TEMPLATE_TYPED_DLG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -38,5 +36,4 @@ public:
 	afx_msg void OnBnClickedTemplate();
 };
 
-#endif // #if !defined( __REINF_POINTS_TYPED_TEMPLATE_TYPED_DLG__ )
 

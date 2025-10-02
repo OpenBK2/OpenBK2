@@ -1,9 +1,7 @@
-#if !defined(__TREE__GDB_BROWSER_BASE_CONSTANTS__)
-#define __TREE__GDB_BROWSER_BASE_CONSTANTS__
+#pragma once
 
 
 #define TREE_GDB_BROWSER_CHANGE_SELECTION		0
 #define TREE_GDB_BROWSER_LOAD								1
 
-#endif // !defined(__TREE__GDB_BROWSER_BASE_CONSTANTS__)
 

@@ -1,6 +1,4 @@
-#ifndef __GENERAL__
-#define __GENERAL__
-
+#pragma once
 class CGeneral;
 interface IGeneralDelayedTask;
 namespace NDb
@@ -70,5 +68,4 @@ public:
 	bool IsInResistanceCircle( const CVec2 &vPoint, const int nGeneralParty );
 };
 
-#endif // __GENERAL__
 

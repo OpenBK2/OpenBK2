@@ -1,5 +1,3 @@
-#if !defined(__LAKE_STATE__)
-#define __LAKE_STATE__
 #pragma once
 
 #include "VSOStateEx.h"
@@ -66,6 +64,5 @@ protected:
 	void UpdateVSOInTerrain( int nVSOID );
 };
 
-#endif // !defined(__LAKE_STATE__)
 
 

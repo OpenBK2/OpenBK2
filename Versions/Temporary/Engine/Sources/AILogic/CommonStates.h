@@ -1,7 +1,5 @@
-#ifndef __COMMON_STATES_H__
-#define __COMMON_STATES_H__
 
-#pragma ONCE
+#pragma once
 
 #include "UnitStates.h"
 #include "Behaviour.h"
@@ -443,5 +441,4 @@ public:
 	int operator&( IBinSaver &saver ) { return 0; }
 };
 
-#endif __COMMON_STATES_H__
 

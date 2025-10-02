@@ -1,5 +1,3 @@
-#if !defined(__COMMON_TOOLS__GRANNY__)
-#define __COMMON_TOOLS__GRANNY__
 #pragma once
 
 #include "../vendor/Granny/include/granny.h"
@@ -51,5 +49,4 @@ public:
 	operator granny_file_info *() const { return pInfo; }
 };
 
-#endif // !defined(__COMMON_TOOLS__GRANNY__)
 

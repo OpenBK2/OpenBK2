@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MAIN_TREE_CONTROL__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_MAIN_TREE_CONTROL__
 #pragma once
 
 #include "PC_ItemEditor.h"
@@ -165,5 +163,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MAIN_TREE_CONTROL__)
 

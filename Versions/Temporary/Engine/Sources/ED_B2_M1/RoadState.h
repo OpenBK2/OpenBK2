@@ -1,5 +1,3 @@
-#if !defined(__ROAD_STATE__)
-#define __ROAD_STATE__
 #pragma once
 
 #include "VSOStateEx.h"
@@ -65,5 +63,4 @@ protected:
 	void UpdateVSOInTerrain( int nVSOID );
 };
 
-#endif // !defined(__ROAD_STATE__)
 

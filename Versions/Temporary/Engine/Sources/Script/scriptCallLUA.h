@@ -1,5 +1,4 @@
-#ifndef __SCRIPTCALLLUA_H_
-#define __SCRIPTCALLLUA_H_
+#pragma once
 //
 namespace NScript
 {
@@ -33,5 +32,4 @@ void luaCreateCPtrVar( const string &szVarName, CObjectBase *pObj );
 
 }
 //
-#endif __SCRIPTCALLLUA_H_
 

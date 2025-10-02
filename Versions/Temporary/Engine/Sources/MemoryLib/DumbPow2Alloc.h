@@ -1,5 +1,4 @@
-#ifndef _NEW_
-#define _NEW_
+#pragma once
 #define _INC_NEW
 #include <malloc.h>
 
@@ -27,4 +26,3 @@ inline void *__cdecl operator new(size_t, void *_P)
 inline void __cdecl operator delete(void *, void *)
 {return; }
 
-#endif

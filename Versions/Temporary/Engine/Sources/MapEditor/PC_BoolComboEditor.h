@@ -1,5 +1,3 @@
-#if !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_COMBO__)
-#define __COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_COMBO__
 #pragma once
 
 #include "PC_StringComboEditor.h"
@@ -16,5 +14,4 @@ public:
 	void GetValue( CVariant *pValue );
 };
 
-#endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BOOL_COMBO__)
 

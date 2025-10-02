@@ -1,5 +1,3 @@
-#if !defined(__STATICDEBRISSET_BUILDER__)
-#define __STATICDEBRISSET_BUILDER__
 
 #pragma once
 
@@ -27,5 +25,4 @@ protected:
 														 IManipulator *pBuildDataManipulator );
 };
 
-#endif // !defined(__STATICDEBRISSET_BUILDER__)
 

@@ -1,5 +1,3 @@
-#if !defined(__SKELETON_EXPORTER__)
-#define __SKELETON_EXPORTER__
 #pragma once
 
 #include "../ED_Common/BasicSceneExporter.h"
@@ -31,6 +29,5 @@ class CSkeletonExporter : public CBasicSceneExporter
 	CSkeletonExporter() {}
 };
 
-#endif // !defined(__SKELETON_EXPORTER__)
 
 

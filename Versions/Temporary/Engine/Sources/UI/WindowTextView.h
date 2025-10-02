@@ -2,13 +2,8 @@
 //
 
 
-#if !defined(AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_)
-#define AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "UI_export.h"
 
 #include "Window.h"
@@ -67,5 +62,4 @@ public:
 	int GetIDForMLHandler() const { return nIDForMLHandler; }
 };
 
-#endif // !defined(AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_)
 

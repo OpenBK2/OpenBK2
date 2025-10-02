@@ -1,9 +1,4 @@
-#ifndef __aiObjectLoader_H_
-#define __aiObjectLoader_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "GFileSkin.h"
 #include "../System/GResource.h"
 #include "aiObject.h"
@@ -122,5 +117,4 @@ public:
 // create cube hull
 //void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size );
 }
-#endif
 

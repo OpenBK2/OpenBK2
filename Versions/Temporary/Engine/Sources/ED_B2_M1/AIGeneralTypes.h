@@ -1,5 +1,3 @@
-#if !defined(__AI_GENERAL_TYPES__)
-#define __AI_GENERAL_TYPES__
 #pragma once
 
 #include "../MapEditorLib/Tools_MnemonicsCollector.h"
@@ -12,7 +10,6 @@ public:
 
 extern CAIGeneralParcelTypeMnemonics typeAIGeneralParcel;
 
-#endif //#if !defined(__AI_GENERAL_TYPES__)
 
 
 

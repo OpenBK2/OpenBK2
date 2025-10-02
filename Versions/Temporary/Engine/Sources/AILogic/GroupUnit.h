@@ -1,7 +1,5 @@
-#ifndef __GROUP_UNIT_H__
-#define __GROUP_UNIT_H__
 
-#pragma ONCE
+#pragma once
 
 class CGroupUnit
 {
@@ -35,5 +33,4 @@ public:
 	friend class CGroupLogic;
 };
 
-#endif // __GROUP_UNIT_H__
 

@@ -1,5 +1,3 @@
-#if !defined(__POINTS_LIST_DIALOG__)
-#define __POINTS_LIST_DIALOG__
 #pragma once
 
 #include "DialogData.h"
@@ -65,5 +63,4 @@ public:
 	afx_msg void OnBnClickedButtonResetState();
 };
 
-#endif // #if !defined(__POINTS_LIST_DIALOG__)
 

@@ -1,7 +1,5 @@
-#ifndef __GENERAL_TASKS__
-#define __GENERAL_TASKS__
 
-#pragma ONCE
+#pragma once
 
 #include "GeneralInternalInterfaces.h"
 #include "../Stats_B2_M1/DBMapInfo.h"
@@ -214,5 +212,4 @@ public:
 };
 
 
-#endif // __GENERAL_TASKS__
 

@@ -1,7 +1,5 @@
-#ifndef __STATISTICS_H__
-#define __STATISTICS_H__
 
-#pragma ONCE
+#pragma once
 namespace NDb
 {
 	enum EReinforcementType;
@@ -45,5 +43,4 @@ public:
 
 };
 
-#endif // __STATISTICS_H__
 

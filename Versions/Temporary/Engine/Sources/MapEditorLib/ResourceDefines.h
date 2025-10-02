@@ -1,5 +1,4 @@
-#if !defined(__ME_LIB__RESOURCE_DEFINES__)
-#define __ME_LIB__RESOURCE_DEFINES__
+#pragma once
 
 
 //00001...00135 служебные ID
@@ -215,5 +214,4 @@
 #define ID_LOG_CLEAR_ALL														1193
 #define ID_LOG_LAST_COMMAND_ID											1193
 
-#endif // !defined(__ME_LIB__RESOURCE_DEFINES__)
 

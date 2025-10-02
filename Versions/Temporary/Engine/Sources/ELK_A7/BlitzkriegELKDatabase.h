@@ -1,10 +1,5 @@
-#if !defined(AFX_BLITZKRIEGELKDATABASE_H__CE89F423_7A2A_4413_9CBF_EBA307365C54__INCLUDED_)
-#define AFX_BLITZKRIEGELKDATABASE_H__CE89F423_7A2A_4413_9CBF_EBA307365C54__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 class CBlitzkriegELKRecordset : public CRecordset
 {
 public:
@@ -29,5 +24,4 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 };
-#endif // !defined(AFX_BLITZKRIEGELKDATABASE_H__CE89F423_7A2A_4413_9CBF_EBA307365C54__INCLUDED_)
 

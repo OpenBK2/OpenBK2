@@ -1,9 +1,4 @@
-#ifndef __GfxRender_H_
-#define __GfxRender_H_
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
 #include "3Dmotor_export.h"
 
 //
@@ -291,5 +286,4 @@ void SetDithering( EDithering a );
 
 }
 
-#endif
 

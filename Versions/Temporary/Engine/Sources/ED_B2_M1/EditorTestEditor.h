@@ -1,5 +1,3 @@
-#if !defined(__EDITOR_TEST_EDITOR__)
-#define __EDITOR_TEST_EDITOR__
 #pragma once
 
 #include "../MapEditorLib/EditorBase.h"
@@ -37,5 +35,4 @@ public:
 	void Redo( IController* pController ) {}
 };
 
-#endif // !defined(__EDITOR_TEST_EDITOR__)
 

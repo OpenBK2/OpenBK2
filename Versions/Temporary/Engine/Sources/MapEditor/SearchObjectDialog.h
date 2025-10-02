@@ -1,5 +1,3 @@
-#if !defined(__TREE__GDB_BROWSER__SEARCH_OBJECT_DIALOG__)
-#define __TREE__GDB_BROWSER__SEARCH_OBJECT_DIALOG__
 #pragma once
 
 #include "ResourceDefines.h"
@@ -25,5 +23,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-#endif // !defined(__TREE__GDB_BROWSER__SEARCH_OBJECT_DIALOG__)
 

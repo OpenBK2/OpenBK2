@@ -1,5 +1,3 @@
-#if !defined(__FENCE_RPG_STATS_EXPORTER__)
-#define __FENCE_RPG_STATS_EXPORTER__
 
 #pragma once
 
@@ -29,5 +27,4 @@ public:
 	//
 };
 
-#endif // !defined(__FENCE_RPG_STATS_EXPORTER__)
 

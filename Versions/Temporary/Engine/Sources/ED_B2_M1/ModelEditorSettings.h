@@ -1,5 +1,3 @@
-#if !defined(__MODEL_EDITOR_SETTINGS__)
-#define __MODEL_EDITOR_SETTINGS__
 #pragma once
 
 
@@ -58,5 +56,4 @@ public:
 	int operator&( IXmlSaver &xs );
 };
 
-#endif // !defined(__MODEL_EDITOR_SETTINGS__)
 

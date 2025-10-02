@@ -1,5 +1,3 @@
-#if !defined(__UI_WINDOW__)
-#define __UI_WINDOW__
 #pragma once
 
 
@@ -85,6 +83,5 @@ protected:
 
 CUIWindow *CreateUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::STexture *_pTexture );
 
-#endif // !defined(__UI_WINDOW__)
 
 

@@ -1,7 +1,5 @@
-#ifndef __MINE_H__
-#define __MINE_H__
 
-#pragma ONCE
+#pragma once
 
 #include "StaticObject.h"
 
@@ -77,5 +75,4 @@ public:
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 };
 
-#endif // __MINE_H__
 

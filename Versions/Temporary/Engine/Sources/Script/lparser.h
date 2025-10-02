@@ -1,11 +1,10 @@
+#pragma once
 /*
 ** $Id: lparser.h,v 1.26 2000/10/09 13:47:46 roberto Exp $
 ** LL(1) Parser and code generator for Lua
 ** See Copyright Notice in lua.h
 */
 
-#ifndef lparser_h
-#define lparser_h
 
 #include "lobject.h"
 #include "lzio.h"
@@ -58,5 +57,4 @@ typedef struct FuncState {
 int luaY_parser (lua_State *L, ZIO *z); // returns index of generated proto
 
 
-#endif
 

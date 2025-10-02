@@ -1,5 +1,3 @@
-#if !defined( __FIELD_STATE__ )
-#define __FIELD_STATE__
 #pragma once
 
 #include "PolygonState.h"
@@ -185,5 +183,4 @@ public:
 	}
 };
 
-#endif // #if !defined( __FIELD_STATE__ )
 

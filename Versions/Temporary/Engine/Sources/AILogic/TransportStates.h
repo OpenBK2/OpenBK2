@@ -1,7 +1,5 @@
-#ifndef __TRANSPORT_STATES__
-#define __TRANSPORT_STATES__
 
-#pragma ONCE
+#pragma once
 
 #include "UnitStates.h"
 #include "StatusUpdatesHelper.h"
@@ -684,5 +682,4 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_LAND; }
 };
 
-#endif // __TRANSPORT_STATES__
 

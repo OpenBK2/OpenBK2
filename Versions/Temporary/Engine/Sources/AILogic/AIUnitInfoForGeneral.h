@@ -1,7 +1,4 @@
-#ifndef __AI_UNIT_INFO_FOR_GENERAL_H__
-#define __AI_UNIT_INFO_FOR_GENERAL_H__
-
-#pragma ONCE
+#pragma once
 class CAIUnit;
 
 class CAIUnitInfoForGeneral : public CAIObjectBase
@@ -48,6 +45,3 @@ public:
 	
 	bool IsLastVisibleAntiArt() const { return lastVisibleAntiArtTime > lastVisibleTime; }
 };
-
-#endif // __AI_UNIT_INFO_FOR_GENERAL_H__
-
