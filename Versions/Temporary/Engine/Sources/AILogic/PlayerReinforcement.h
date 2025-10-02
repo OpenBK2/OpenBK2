@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Stats_b2_m1\DBMapInfo.h"
+#include "../Stats_b2_m1/DBMapInfo.h"
 
 class CCommonUnit;
 

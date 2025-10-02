@@ -5,7 +5,7 @@
 #include "Commander.h"
 #include "General.h"
 #include "EnemyRememberer.h"
-#include "..\Stats_B2_M1\DBMapInfo.h"
+#include "../Stats_B2_M1/DBMapInfo.h"
 
 class CResupplyCellInfo : public CAIObjectBase
 {

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "MOEntrenchment.h"
-#include "..\SceneB2\TerraGen.h"
+#include "../SceneB2/TerraGen.h"
 #include "../DebugTools/DebugInfoManager.h"
 
 bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )

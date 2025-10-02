@@ -8,14 +8,14 @@
 #include "ScriptEditor.h"
 #include "ScriptDictionary.hpp"
 //#include "Export.h"
-#include "..\Script\Script.h"
+#include "../Script/Script.h"
 #include <fstream>
 //#include "MEParams.h"
 //#include "MEUserSettings.h"
 
 //#pragma comment(linker, "/include:_ForceLuaLexer")
 
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/Interface_UserData.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

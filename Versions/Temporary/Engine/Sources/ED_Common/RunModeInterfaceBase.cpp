@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "RunModeInterfaceBase.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
-#include "..\MapEditorLib\ResourceDefines.h"
-#include "..\MapEditorLib\CommandHandlerDefines.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "../MapEditorLib/ResourceDefines.h"
+#include "../MapEditorLib/CommandHandlerDefines.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

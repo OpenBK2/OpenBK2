@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\pause.h"
+#include "./pause.h"
 
 #include "MusicSystem.hpp"
 #include "DBMusicSystem.h"

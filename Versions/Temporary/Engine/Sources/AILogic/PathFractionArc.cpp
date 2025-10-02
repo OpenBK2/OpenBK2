@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\pathfractionarc.h"
+#include "./pathfractionarc.h"
 
 
 REGISTER_SAVELOAD_CLASS(0x11095C40, CPathFractionArc)

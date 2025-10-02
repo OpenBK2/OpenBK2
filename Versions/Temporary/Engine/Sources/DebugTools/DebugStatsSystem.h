@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
 
 namespace NDebugInfo
 {

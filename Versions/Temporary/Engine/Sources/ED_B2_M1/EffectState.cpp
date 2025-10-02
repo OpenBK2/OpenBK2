@@ -1,15 +1,15 @@
 #include "StdAfx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
-#include "..\mapeditorlib\interface_commandhandler.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
+#include "../mapeditorlib/interface_commandhandler.h"
 
 #include "EditorScene.h"
-#include "..\SceneB2\Camera.h"
-#include "..\3DMotor\DBScene.h"
-#include "..\Main\GameTimer.h"
+#include "../SceneB2/Camera.h"
+#include "../3DMotor/DBScene.h"
+#include "../Main/GameTimer.h"
 
 
 #include "EffectInterface.h"
@@ -19,7 +19,7 @@
 #include "Tools_SceneGeometry.h"
 #include "../Stats_B2_M1/Vis2AI.h"
 
-#include "..\System\GResource.h"
+#include "../System/GResource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

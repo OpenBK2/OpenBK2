@@ -1,5 +1,5 @@
 #pragma once
-#include "..\3Dlib\GGeometry.h"
+#include "../3Dlib/GGeometry.h"
 
 namespace NMeshData
 {

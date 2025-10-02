@@ -3,8 +3,8 @@
 #include "3Dmotor_export.h"
 
 
-#include "..\System\DG.h"
-#include "..\System\Time.hpp"
+#include "../System/DG.h"
+#include "../System/Time.hpp"
 
 namespace NGScene
 {

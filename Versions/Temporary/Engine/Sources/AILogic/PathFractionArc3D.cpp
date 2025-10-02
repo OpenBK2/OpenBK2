@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\pathfractionarc3d.h"
+#include "./pathfractionarc3d.h"
 #include "../DebugTools/DebugInfoManager.h"
 
 REGISTER_SAVELOAD_CLASS( 0x11095C02, CPathFractionArc3D )

@@ -1,15 +1,15 @@
 #include "StdAfx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 
 #include "../System/Dg.h"
-#include "..\System\GResource.h"
-#include "..\MapeditorLib\Interface_ChildFrame.h"
-#include "..\MapeditorLib\Interface_MainFrame.h"
-#include "..\MapeditorLib\Interface_Progress.h"
+#include "../System/GResource.h"
+#include "../MapeditorLib/Interface_ChildFrame.h"
+#include "../MapeditorLib/Interface_MainFrame.h"
+#include "../MapeditorLib/Interface_Progress.h"
 #include "ControllerContainer.h"
 
-#include "..\MapEditorLib\EditorFactory.h"
+#include "../MapEditorLib/EditorFactory.h"
 #include "EditorContainer.h"
 
 #ifdef _DEBUG

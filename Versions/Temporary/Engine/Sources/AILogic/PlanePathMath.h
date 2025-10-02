@@ -2,7 +2,7 @@
 #define _Plane_Path_Math_
 
 #pragma once
-#include "..\Misc\Spline.h"
+#include "../Misc/Spline.h"
 
 
 inline CVec3 ToVec3( const CVec2 &v ) { return CVec3(v,0); }

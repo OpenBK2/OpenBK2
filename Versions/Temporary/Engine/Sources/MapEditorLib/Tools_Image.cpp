@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "..\Misc\2DArray.h"
+#include "../Misc/2DArray.h"
 #include "Tools_Image.h"
 
 #ifdef _DEBUG

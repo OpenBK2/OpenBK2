@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "DiscretePos.h"
-#include "..\3DLib\Transform.h"
+#include "../3DLib/Transform.h"
 
 static CObj<CFBTransform> pIdentity;
 static struct SInitDiscretePos

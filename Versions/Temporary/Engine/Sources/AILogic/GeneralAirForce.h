@@ -1,7 +1,7 @@
 #ifndef __GENERAL_AIR_FORCE__
 #define __GENERAL_AIR_FORCE__
 
-#include "..\System\FreeIDs.h"
+#include "../System/FreeIDs.h"
 #include "Commander.h"
 
 namespace NDb

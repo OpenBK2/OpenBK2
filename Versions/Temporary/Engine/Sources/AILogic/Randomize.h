@@ -2,7 +2,7 @@
 #define __RANDOMIZE_H__
 
 #pragma ONCE
-#include "..\System\RandomGen.h"
+#include "../System/RandomGen.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // равномерно в круге с центром в 0 и радиусом fR
 inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )

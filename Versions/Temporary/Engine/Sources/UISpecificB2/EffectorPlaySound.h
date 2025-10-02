@@ -1,6 +1,6 @@
 #pragma once
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
 #include "../UI/UI.h"
 
 

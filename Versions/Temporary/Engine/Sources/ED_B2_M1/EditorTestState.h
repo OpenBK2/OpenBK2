@@ -2,7 +2,7 @@
 #define __EDITOR_TEST_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
+#include "../MapEditorLib/DefaultInputState.h"
 
 class CEditorTestEditor;
 class CEditorTestState : public CDefaultInputState

@@ -6,7 +6,7 @@
 #include "../Misc/StrProc.h"
 #include "ProgressDialog.h"
 #include "WMDefines.h"
-#include "..\System\FilePath.h"
+#include "../System/FilePath.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

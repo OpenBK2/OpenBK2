@@ -6,7 +6,7 @@
 #include "GSceneInternal.h"
 #include "GMaterial.hpp"
 #include "GRenderLight.h"
-#include "..\Misc\HPTimer.h"
+#include "../Misc/HPTimer.h"
 #include "SuperCollider.h" // for TraceStatic(...)
 #include "GDecalGeometry.h"
 #include "GShadowVolume.h"
@@ -21,7 +21,7 @@
 #include "GPartParticles.h"
 #include "GPostProcessors.h"
 #include "GRenderPathPolycount.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 #include <D3D9.h>
 #include <D3DX9.h>
 

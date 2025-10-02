@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
-#include "..\ui\ui.h"
-#include "..\input\gamemessage.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\system\dg.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
+#include "../ui/ui.h"
+#include "../input/gamemessage.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../system/dg.h"
 #include "WindowRoundProgressBar.h"
 
 // CWindowRoundProgressBar

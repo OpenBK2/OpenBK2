@@ -2,7 +2,7 @@
 
 #include "Diplomacy.h"
 #include "Units.h"
-#include "..\Common_RTS_AI\AIMap.h"
+#include "../Common_RTS_AI/AIMap.h"
 
 extern CUnits units;
 

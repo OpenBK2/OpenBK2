@@ -2,7 +2,7 @@
 #define __CAMERA_MOVEMENT_INTERFACE__
 #pragma once
 
-#include "..\ED_Common\GameInputInterface.h"
+#include "../ED_Common/GameInputInterface.h"
 interface ICamera;
 
 class CEditorInterfaceBase : public CGameInputInterface

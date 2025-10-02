@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
-#include "..\mapeditorlib\interface_commandhandler.h"
-#include "..\mapeditorlib\commoneditormethods.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
+#include "../mapeditorlib/interface_commandhandler.h"
+#include "../mapeditorlib/commoneditormethods.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 
 #include "../MapEditorLib/EditorFactory.h"
 #include "../MapEditorLib/Interface_UserData.h"
@@ -18,7 +18,7 @@
 #include "../SceneB2/Camera.h"
 
 #include "EditorOptions.h"
-#include "..\Stats_B2_M1\DBMapInfo.h"
+#include "../Stats_B2_M1/DBMapInfo.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

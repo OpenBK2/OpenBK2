@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "..\misc\nheap.h"
-#include "..\system\time.h"
+#include "../misc/nheap.h"
+#include "../system/time.h"
 #include "Shell.h"
 #include "AIUnit.h"
 #include "Randomize.h"
@@ -20,7 +20,7 @@
 //#include "..\Scene\Scene.h"
 
 #include "../Common_RTS_AI/CheckSums.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 #include "../DebugTools/DebugInfoManager.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4E3, CHitInfo );

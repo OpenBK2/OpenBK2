@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\planesformation.h"
+#include "./planesformation.h"
 #include "ManuverBuilder.h"
 
 #include "NewUpdater.h"

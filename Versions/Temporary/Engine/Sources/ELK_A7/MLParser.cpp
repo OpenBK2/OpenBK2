@@ -3,7 +3,7 @@
 #include "WMDefines.h"
 
 #include "MLParser.h"
-#include "..\MapEditorLib\Tools_Resources.h"
+#include "../MapEditorLib/Tools_Resources.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

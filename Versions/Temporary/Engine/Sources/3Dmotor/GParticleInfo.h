@@ -4,7 +4,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\System\DG.h"
+#include "../System/DG.h"
 #include "GPixelFormat.h"
 
 namespace NGfx

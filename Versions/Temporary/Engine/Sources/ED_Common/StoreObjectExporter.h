@@ -2,8 +2,8 @@
 #define __STORE_OBJECT_EXPORTER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_Exporter.h"
-#include "..\MapEditorLib\Tools_HashSet.h"
+#include "../MapEditorLib/Interface_Exporter.h"
+#include "../MapEditorLib/Tools_HashSet.h"
 
 
 class CStoreObjectExporter : public IExporter

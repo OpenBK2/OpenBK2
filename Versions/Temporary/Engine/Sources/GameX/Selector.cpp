@@ -3,18 +3,18 @@
 #include "selector.h"
 #include "GameXClassIDs.h"
 
-#include "..\B2_M1_World\ClientAckManager.h"
+#include "../B2_M1_World/ClientAckManager.h"
 #include "CommandsSender.h"
-#include "..\AILogic\B2AI.h"
-#include "..\Input\Bind.h"
-#include "..\Stats_B2_M1\ActionsRemap.h"
+#include "../AILogic/B2AI.h"
+#include "../Input/Bind.h"
+#include "../Stats_B2_M1/ActionsRemap.h"
 #include "../Stats_B2_M1/AIUnitCmd.h"
 #include "../Stats_B2_M1/AbilityActions.h"
 #include "../B2_M1_World/MOBuilding.h"
 #include "../B2_M1_World/MOUnitInfantry.h"
 #include "../SceneB2/StatSystem.h"
 //#include "..\System\GlobalVars.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 static bool s_bShowAllObjectsInfo = false;
 static bool s_bShowBuildingsInfo = false;

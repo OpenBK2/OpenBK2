@@ -2,7 +2,7 @@
 #include "GRenderFactor.h"
 #include "GfxBuffers.h"
 #include "GfxEffects.h"
-#include "..\Misc\2DArray.h"
+#include "../Misc/2DArray.h"
 namespace NGScene
 {
 

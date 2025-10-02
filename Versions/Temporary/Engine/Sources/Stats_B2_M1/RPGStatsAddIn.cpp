@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
 #include "actioncommand.h"
 #include "ActionsRemap.h"
 

@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
 #include "pc_constants.h"
-#include "..\mapeditorlib\resourcedefines.h"
+#include "../mapeditorlib/resourcedefines.h"
 #include "pc_maintreecontrol.h"
 #include "pc_dblinkdialog.h"
 
 #include "PC_MainTreeControl.h"
 
-#include "..\MapEditorLib\Tools_HashSet.h"
-#include "..\MapEditorLib\PCIEMnemonics.h"
+#include "../MapEditorLib/Tools_HashSet.h"
+#include "../MapEditorLib/PCIEMnemonics.h"
 //#include "..\MapEditorLib\Tools_SysCodes.h"
-#include "..\Image\ImageColor.h"
-#include "..\Misc\StrProc.h"
-#include "..\MapEditorLib\Interface_MainFrame.h"
-#include "..\MapEditorLib\ControlAlgorithms.h"
+#include "../Image/ImageColor.h"
+#include "../Misc/StrProc.h"
+#include "../MapEditorLib/Interface_MainFrame.h"
+#include "../MapEditorLib/ControlAlgorithms.h"
 
 // Controls
 #include "PC_IntInputEditor.h"

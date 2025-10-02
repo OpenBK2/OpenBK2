@@ -2,7 +2,7 @@
 #include "GRenderFactor.h"
 #include "GRenderExecute.h"
 #include "GfxRender.h"
-#include "..\3Dlib\Transform.h"
+#include "../3Dlib/Transform.h"
 #include "GfxShaders.h"
 
 namespace NGScene

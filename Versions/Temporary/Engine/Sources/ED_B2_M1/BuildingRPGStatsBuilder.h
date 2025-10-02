@@ -1,7 +1,7 @@
 #if !defined(__BUILDINGRPGSTATS_BUILDER__)
 #define __BUILDINGRPGSTATS_BUILDER__
 
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CBuildingRPGStatsBuilder : public CBuildDataBuilder
 {

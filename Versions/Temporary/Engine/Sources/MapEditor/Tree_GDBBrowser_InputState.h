@@ -2,7 +2,7 @@
 #define __TREE__GDB_BROWSER__INPUT_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
+#include "../MapEditorLib/DefaultInputState.h"
 
 class CTreeGDBBrowserBase;
 class CTreeGDBBrowserInputState : public CDefaultInputState

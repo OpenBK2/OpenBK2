@@ -2,7 +2,7 @@
 #define __VISOBJ_BUILDER__
 
 #pragma once
-#include "..\mapeditorlib\interface_commandhandler.h"
+#include "../mapeditorlib/interface_commandhandler.h"
 #include "../Stats_B2_M1/Season.h"
 #include "../MapEditorLib/BuildDataBuilder.h"
 

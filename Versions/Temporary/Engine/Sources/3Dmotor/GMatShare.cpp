@@ -2,7 +2,7 @@
 #include "GMatShare.h"
 #include "GMaterial.hpp"
 #include "DBScene.h"
-#include "..\System\BasicShare.h"
+#include "../System/BasicShare.h"
 #include "GTexture.h"
 #include "GSceneUtils.h"
 

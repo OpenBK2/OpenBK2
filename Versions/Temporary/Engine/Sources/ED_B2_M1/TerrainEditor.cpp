@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "..\MapEditorLib\EditorFactory.h"
+#include "../MapEditorLib/EditorFactory.h"
 #include "TerrainEditor.h"
 
 #ifdef _DEBUG

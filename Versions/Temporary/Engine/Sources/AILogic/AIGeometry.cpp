@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\System\FastMath.h"
+#include "../System/FastMath.h"
 #include "AIGeometry.h"
 
 const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegmentEnd, const CVec2 &vPoint )

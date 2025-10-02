@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "..\MapEditorLib\EditorFactory.h"
+#include "../MapEditorLib/EditorFactory.h"
 #include "WindowSimpleSharedEditor.h"
 
 #ifdef _DEBUG

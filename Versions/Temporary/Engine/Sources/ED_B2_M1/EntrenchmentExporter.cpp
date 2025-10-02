@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include "..\MapEditorLib\ExporterFactory.h"
+#include "../MapEditorLib/ExporterFactory.h"
 #include "EntrenchmentExporter.h"
 #include "../libdb/ResourceManager.h"
 #include "ExporterMethods.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

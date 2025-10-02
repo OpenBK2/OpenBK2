@@ -5,7 +5,7 @@
 #endif // _MSC_VER > 1000
 //
 #include "ScriptWrapper.h"
-#include "..\Script\Script.h"
+#include "../Script/Script.h"
 //
 
 namespace NScript

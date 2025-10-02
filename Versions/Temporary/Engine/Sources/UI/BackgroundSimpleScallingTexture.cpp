@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include "..\3dmotor\rectlayout.h"
+#include "../3dmotor/rectlayout.h"
 #include "backgroundsimplescallingtexture.h"
 #include "UIVisitor.h"
-#include "..\3dMotor\DBScene.h"
+#include "../3dMotor/DBScene.h"
 #include "UIComponents.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075B40,CBackgroundSimpleScallingTexture)

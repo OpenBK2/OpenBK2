@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\windowselection.h"
+#include "./windowselection.h"
 
 REGISTER_SAVELOAD_CLASS(0x110BD481, CWindowSelection);
 

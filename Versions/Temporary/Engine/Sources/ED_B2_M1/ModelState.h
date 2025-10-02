@@ -2,9 +2,9 @@
 #define __MODEL_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
-#include "..\3DMotor\DBScene.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/DefaultInputState.h"
+#include "../3DMotor/DBScene.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 
 //Mapinfo height state edit parameters
 #define MODEL_EP_LIGHT_COUNT						0x00000001

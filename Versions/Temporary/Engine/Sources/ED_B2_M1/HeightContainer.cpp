@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "HeightContainer.h"
-#include "..\Misc\Bresenham.h"
-#include "..\Image\Targa.h"
-#include "..\B2_M1_Terrain\DBVSO.h"
+#include "../Misc/Bresenham.h"
+#include "../Image/Targa.h"
+#include "../B2_M1_Terrain/DBVSO.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "GameTimerInternal.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 
 namespace NGameTimer
 {

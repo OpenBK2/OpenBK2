@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Misc\Bresenham.h"
+#include "../Misc/Bresenham.h"
 
 //#define HEIGHT_MULTIPLYER 100
 

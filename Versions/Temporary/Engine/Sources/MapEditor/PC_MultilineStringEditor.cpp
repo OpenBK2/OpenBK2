@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "..\scintilla\scintilla.h"
+#include "../scintilla/scintilla.h"
 #include "wmdefines.h"
 #include "pc_constants.h"
-#include "..\MapEditorLib\PCIEMnemonics.h"
+#include "../MapEditorLib/PCIEMnemonics.h"
 #include "PC_MultilineStringEditor.h"
 
 #ifdef _DEBUG

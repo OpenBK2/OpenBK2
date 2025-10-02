@@ -5,7 +5,7 @@
 #include "../libdb/Manipulator.h"
 #include "ResourceDefines.h"
 
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/ResizeDialog.h"
 
 
 class CRefListDialog : public CResizeDialog

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MDDLDialog.h"
-#include "..\MapEditorLib\CommandHandlerDefines.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/CommandHandlerDefines.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 #include "../libdb/Manipulator.h"
 
 #ifdef _DEBUG

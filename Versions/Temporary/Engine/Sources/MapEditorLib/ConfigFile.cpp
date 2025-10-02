@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 #include "ConfigFile.h"
 
 #ifdef _DEBUG

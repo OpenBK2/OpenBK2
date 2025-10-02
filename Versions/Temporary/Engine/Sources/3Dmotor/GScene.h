@@ -2,10 +2,10 @@
 
 #include "3Dmotor_export.h"
 
-#include "..\System\DG.h"
-#include "..\3Dlib\GGeometry.h"
+#include "../System/DG.h"
+#include "../3Dlib/GGeometry.h"
 #include "GRenderModes.h"
-#include "..\System\Time.hpp"
+#include "../System/Time.hpp"
 
 class CTransformStack;
 class CRectLayout;

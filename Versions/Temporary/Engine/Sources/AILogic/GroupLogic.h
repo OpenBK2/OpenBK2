@@ -3,7 +3,7 @@
 #include "../Stats_B2_M1/AIUnitCmd.h"
 #include "SegmentedObjects.h"
 
-#include "..\System\FreeIDs.h"
+#include "../System/FreeIDs.h"
 
 class CCommonUnit;
 class CAIUnit;

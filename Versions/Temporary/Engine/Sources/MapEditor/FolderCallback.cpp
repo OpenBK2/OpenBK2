@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "../libdb/ResourceManager.h"
-#include "..\libdb\DB.h"
-#include "..\MapEditorLib\Tools_HashSet.h"
-#include "..\MapEditorLib\FolderController.h"
-#include "..\MapEditorLib\Interface_Logger.h"
+#include "../libdb/DB.h"
+#include "../MapEditorLib/Tools_HashSet.h"
+#include "../MapEditorLib/FolderController.h"
+#include "../MapEditorLib/Interface_Logger.h"
 #include "FolderCallback.h"
 
 #ifdef _DEBUG

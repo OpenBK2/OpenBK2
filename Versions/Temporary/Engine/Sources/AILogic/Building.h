@@ -4,7 +4,7 @@
 #pragma ONCE
 
 #include "StaticObject.h"
-#include "..\Misc\Heap.h"
+#include "../Misc/Heap.h"
 #include "StormableObject.h"
 
 class CSoldier;

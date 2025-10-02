@@ -2,10 +2,10 @@
 #define __OBJECT_COLLECTOR__
 #pragma once
 
-#include "..\misc\HashFuncs.h"
-#include "..\misc\StrProc.h"
+#include "../misc/HashFuncs.h"
+#include "../misc/StrProc.h"
 #include "../libdb/Manipulator.h"
-#include "..\MapEditorLib\Interface_ObjectCollector.h"
+#include "../MapEditorLib/Interface_ObjectCollector.h"
 
 
 class CObjectFilterCollector : public IObjectFilterCollector

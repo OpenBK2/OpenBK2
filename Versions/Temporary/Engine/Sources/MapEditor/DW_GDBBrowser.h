@@ -6,7 +6,7 @@
 #include "ComboBox_GDBBrowser.h"
 #include "Empty_GDBBrowser.h"
 
-#include "..\MapEditorLib\Interface_UserData.h" //CTableSet
+#include "../MapEditorLib/Interface_UserData.h" //CTableSet
 
 
 class CDWGDBBrowser : public SECControlBar, public ICommandHandler

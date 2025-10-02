@@ -2,7 +2,7 @@
 
 #include "SortTreeControl.h"
 #include "../libdb/Manipulator.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

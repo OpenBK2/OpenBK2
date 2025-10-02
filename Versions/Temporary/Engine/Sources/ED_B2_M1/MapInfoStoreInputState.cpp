@@ -2,8 +2,8 @@
 
 #include "Tools_SceneGeometry.h"
 #include "MapInfoStoreInputState.h"
-#include "..\Stats_B2_M1\Vis2AI.h"
-#include "..\MapEditorLib\Interface_Mainframe.h"
+#include "../Stats_B2_M1/Vis2AI.h"
+#include "../MapEditorLib/Interface_Mainframe.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

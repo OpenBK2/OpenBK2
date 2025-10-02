@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\ED_B2_M1\EditorInterfaceBase.h"
+#include "../ED_B2_M1/EditorInterfaceBase.h"
 
 class CChapterInterface : public CEditorInterfaceBase
 {

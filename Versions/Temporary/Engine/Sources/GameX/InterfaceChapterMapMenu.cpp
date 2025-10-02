@@ -19,7 +19,7 @@
 #include "InterfaceChapterMapMenuDialogs.h"
 #include "../System/Text.h"
 #include "../UI/SceneClassIDs.h"
-#include "..\3DMotor\ScreenShot.h"
+#include "../3DMotor/ScreenShot.h"
 
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;

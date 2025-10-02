@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 
-#include "..\MapEditorLib\EditorFactory.h"
-#include "..\MapEditorLib\Tools_HashSet.h"
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/EditorFactory.h"
+#include "../MapEditorLib/Tools_HashSet.h"
+#include "../MapEditorLib/Interface_UserData.h"
 #include "../libdb/ResourceManager.h"
 //#include "EditorMethods.h"
 #include "WindowSimpleSharedEditor.h"

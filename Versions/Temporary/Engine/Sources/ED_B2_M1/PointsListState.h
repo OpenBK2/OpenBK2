@@ -2,8 +2,8 @@
 #define __POINTS_LIST_STATE__
 #pragma once
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
 #include "commandhandlerdefines.h"
 #include "../MapEditorLib/DefaultInputState.h"
 #include "../MapEditorLib/MaskManipulator.h"

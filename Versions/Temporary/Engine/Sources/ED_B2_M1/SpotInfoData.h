@@ -3,7 +3,7 @@
 #pragma once
 
 #include "MapInfoEditorData.h"
-#include "..\Misc\Planegeometry.h"
+#include "../Misc/Planegeometry.h"
 
 
 namespace NMapInfoEditor

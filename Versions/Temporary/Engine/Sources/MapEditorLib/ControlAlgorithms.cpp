@@ -2,7 +2,7 @@
 #include "ResourceDefines.h"
 
 #include "ControlAlgorithms.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

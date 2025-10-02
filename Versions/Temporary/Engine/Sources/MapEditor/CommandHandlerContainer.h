@@ -2,7 +2,7 @@
 #define __COMMAND_HANDLER__CONTINER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 
 class  CCommandHandlerContainer : public ICommandHandlerContainer
 {

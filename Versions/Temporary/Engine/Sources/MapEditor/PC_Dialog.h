@@ -5,7 +5,7 @@
 #include "ResourceDefines.h"
 
 #include "PC_BaseDialog.h"
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/ResizeDialog.h"
 #include "PC_MainTreeControl.h"
 
 #define PC_TREE_COLUMN_COUNT (3)

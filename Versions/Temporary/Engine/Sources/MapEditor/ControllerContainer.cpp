@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 
-#include "..\MapEditorLib\Interface_MainFrame.h"
-#include "..\MapEditorLib\Interface_Progress.h"
+#include "../MapEditorLib/Interface_MainFrame.h"
+#include "../MapEditorLib/Interface_Progress.h"
 #include "ControllerContainer.h"
 
 #ifdef _DEBUG

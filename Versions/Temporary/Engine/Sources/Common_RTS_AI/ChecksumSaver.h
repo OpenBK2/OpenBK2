@@ -1,5 +1,5 @@
 #pragma once
-#include "..\zlib\zconf.h"
+#include "../zlib/zconf.h"
 
 
 interface ICheckSumLog;

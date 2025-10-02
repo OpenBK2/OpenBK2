@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\windowstatssystem.h"
+#include "./windowstatssystem.h"
 #include "UIVisitor.h"
 
 #include "UIML.h"

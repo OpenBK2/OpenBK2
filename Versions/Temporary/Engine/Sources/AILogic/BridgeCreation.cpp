@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\bridgecreation.h"
+#include "./bridgecreation.h"
 #include "Bridge.h"
 #include "CommonUnit.h"
 #include "../Common_RTS_AI/PathFinder.h"

@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "..\misc\win32random.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../misc/win32random.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "VSOManager.h"
 #include "../Misc/Spline.h"
-#include "..\B2_M1_Terrain\DBVSO.h"
+#include "../B2_M1_Terrain/DBVSO.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

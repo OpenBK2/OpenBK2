@@ -2,7 +2,7 @@
 #define __STORE_INPUT_STATE_TEMPLATE__
 #pragma once
 
-#include "..\MapEditorLib\StoreInputState.h"
+#include "../MapEditorLib/StoreInputState.h"
 
 class CMapInfoStoreInputState : public CStoreInputState
 {

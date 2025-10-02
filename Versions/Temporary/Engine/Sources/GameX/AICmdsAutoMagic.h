@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Main\AICmdsAutoMagicInterface.h"
+#include "../Main/AICmdsAutoMagicInterface.h"
 
 class CAICmdsAutomagic : public IAICmdsAutoMagic
 {

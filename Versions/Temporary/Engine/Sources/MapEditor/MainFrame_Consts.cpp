@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "..\mapeditorlib\resourcedefines.h"
+#include "../mapeditorlib/resourcedefines.h"
 #include "MainFrame.h"
 
 #ifdef _DEBUG

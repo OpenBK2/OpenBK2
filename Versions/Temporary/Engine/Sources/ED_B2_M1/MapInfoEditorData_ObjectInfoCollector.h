@@ -6,8 +6,8 @@
 #include "MapInfoEditorData_Clipboard.h"
 #include "MapInfoEditorData_Selection.h"
 #include "MapInfoEditorData_ObjectInfo.h"
-#include "..\MapEditorLib\Tools_IndexCollector.h"
-#include "..\MapEditorLib\Tools_FreeIDCollector.h"
+#include "../MapEditorLib/Tools_IndexCollector.h"
+#include "../MapEditorLib/Tools_FreeIDCollector.h"
 #include "EditorUpdatableWorld.h"
 
 class CMapInfoEditor;

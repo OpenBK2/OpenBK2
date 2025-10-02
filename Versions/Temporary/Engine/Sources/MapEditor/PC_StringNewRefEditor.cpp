@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 #include "pc_constants.h"
 #include "pc_dblinkdialog.h"
 
 #include "PC_StringNewRefEditor.h"
-#include "..\Misc\StrProc.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../Misc/StrProc.h"
+#include "../MapEditorLib/StringManager.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\Interface_Exporter.h"
-#include "..\MapEditorLib\CommonEditorMethods.h"
-#include "..\MapEditorLib\PCIEMnemonics.h"
+#include "../MapEditorLib/Interface_Exporter.h"
+#include "../MapEditorLib/CommonEditorMethods.h"
+#include "../MapEditorLib/PCIEMnemonics.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

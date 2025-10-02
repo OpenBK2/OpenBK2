@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "groupmoveexecutor.h"
-#include "..\system\time.h"
+#include "../system/time.h"
 #include "CommonStates.h"
 #include "Building.h"
 #include "Entrenchment.h"
@@ -22,7 +22,7 @@
 #include <float.h>
 #include "Artillery.h"
 #include "ExecutorContainer.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 
 /*

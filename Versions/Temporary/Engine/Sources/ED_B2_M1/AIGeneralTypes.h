@@ -2,7 +2,7 @@
 #define __AI_GENERAL_TYPES__
 #pragma once
 
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
 
 class CAIGeneralParcelTypeMnemonics : public CMnemonicsCollector<int>
 {

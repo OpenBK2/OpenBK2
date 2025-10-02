@@ -5,9 +5,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\MapEditorLib\Tools_Resources.h"
-#include "..\MapEditorLib\Tools_Registry.h"
-#include "..\3dMotor\DBscene.h"
+#include "../MapEditorLib/Tools_Resources.h"
+#include "../MapEditorLib/Tools_Registry.h"
+#include "../3dMotor/DBscene.h"
 //#include "..\Formats\fmtFont.h"
 
 typedef hash_map<WORD, DWORD> CSymbolSet;

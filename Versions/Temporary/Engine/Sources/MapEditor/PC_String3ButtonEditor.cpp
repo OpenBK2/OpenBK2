@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
 #include "pc_constants.h"
 

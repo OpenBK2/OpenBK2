@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 
 #include <dinput.h>
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 //#include "..\System\Streams.h"
 //#include "..\System\BasicChunk.h"
-#include "..\Input\Bind.h"
-#include "..\Input\BindInternal.h"
+#include "../Input/Bind.h"
+#include "../Input/BindInternal.h"
 using namespace NStr;
 
 namespace NInput

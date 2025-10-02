@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "..\scintilla\scintilla.h"
+#include "../scintilla/scintilla.h"
 #include "Console.h"
 #include "CommandsInterface.h"
 
-#include "..\Scintilla\SciLexer.h"
-#include "..\Misc\StrProc.h"
+#include "../Scintilla/SciLexer.h"
+#include "../Misc/StrProc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

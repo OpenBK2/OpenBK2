@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 
-#include "..\Image\ImageColor.h"
+#include "../Image/ImageColor.h"
 #include "PC_IntColorEditor.h"
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/Interface_UserData.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

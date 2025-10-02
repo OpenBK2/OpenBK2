@@ -2,7 +2,7 @@
 #define __CHILD_FRAME__CONTAINER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_ChildFrame.h"
+#include "../MapEditorLib/Interface_ChildFrame.h"
 
 class CChildFrameContainer : public IChildFrameContainer
 {

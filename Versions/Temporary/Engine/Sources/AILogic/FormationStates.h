@@ -4,7 +4,7 @@
 #include "CommonStates.h"
 #include "StaticObjects.h"
 #include "StatusUpdatesHelper.h"
-#include "..\Stats_B2_M1\ActionNotify.h"
+#include "../Stats_B2_M1/ActionNotify.h"
 
 class CBuilding;
 class CEntrenchment;

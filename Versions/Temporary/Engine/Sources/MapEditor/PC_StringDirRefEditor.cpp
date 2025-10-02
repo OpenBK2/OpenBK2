@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\resourcedefines.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/resourcedefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 #include "ResourceDefines.h"
 
 #include "PC_StringDirRefEditor.h"
-#include "..\MapEditorLib\Interface_MainFrame.h"
-#include "..\MapEditorLib\Interface_MOD.h"
+#include "../MapEditorLib/Interface_MainFrame.h"
+#include "../MapEditorLib/Interface_MOD.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

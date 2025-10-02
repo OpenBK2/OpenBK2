@@ -2,8 +2,8 @@
 #define __EDITOR_TEST_EDITOR__
 #pragma once
 
-#include "..\MapEditorLib\EditorBase.h"
-#include "..\MapEditorLib\DefaultView.h"
+#include "../MapEditorLib/EditorBase.h"
+#include "../MapEditorLib/DefaultView.h"
 #include "EditorTestState.h"
 
 

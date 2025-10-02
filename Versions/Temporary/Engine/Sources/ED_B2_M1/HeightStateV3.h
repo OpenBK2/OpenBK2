@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CommandHandlerDefines.h"
-#include "..\MapEditorLib\MultiInputState.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/MultiInputState.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 #include "MapInfoStoreInputState.h"
 #include "HeightPattern.h"
 #include "Tools_SceneDraw.h"

@@ -2,7 +2,7 @@
 
 #include "StatesFactory.h"
 #include "CommonStates.h"
-#include "..\Stats_B2_M1\ActionNotify.h"
+#include "../Stats_B2_M1/ActionNotify.h"
 #include "StatusUpdatesHelper.h"
 
 class CBuilding;

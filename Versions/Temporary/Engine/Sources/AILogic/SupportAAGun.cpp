@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\supportaagun.h"
+#include "./supportaagun.h"
 #include "UnitsIterators.h"
 #include "Aviation.h"
 #include "ShootEstimatorInternal.h"

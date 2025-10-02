@@ -6,7 +6,7 @@
 #endif // _MSC_VER > 1000
 
 #include "resource.h"
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/ResizeDialog.h"
 #include "ELK_Types.h"
 
 

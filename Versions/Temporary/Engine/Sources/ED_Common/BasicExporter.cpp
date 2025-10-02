@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "BasicExporter.h"
-#include "..\MapEditorLib\CommonExporterMethods.h"
+#include "../MapEditorLib/CommonExporterMethods.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

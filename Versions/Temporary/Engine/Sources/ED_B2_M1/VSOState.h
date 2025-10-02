@@ -2,15 +2,15 @@
 #define __VSO_STATE__
 #pragma once
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "../libdb/manipulator.h"
 #include "VSOManager.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
-#include "..\MapEditorLib\MultiInputState.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "../MapEditorLib/MultiInputState.h"
 #include "MapInfoStoreInputState.h"
-#include "..\B2_M1_Terrain\DBVSO.h"
+#include "../B2_M1_Terrain/DBVSO.h"
 
 namespace NExtraDraw
 {

@@ -14,12 +14,12 @@
 */
 
 #include "StdAfx.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\3dmotor\dbscene.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../3dmotor/dbscene.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\ExporterFactory.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ExporterFactory.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 #include "ExporterMethods.h"
 #include "BuildingRPGStatsExporter.h"
 #include "../ED_Common/TempAttributesTool.h"

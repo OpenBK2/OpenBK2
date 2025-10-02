@@ -2,9 +2,9 @@
 
 #include "SquadExporter.h"
 
-#include "..\MapEditorLib\ExporterFactory.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
-#include "..\MapEditorLib\Interface_Logger.h"
+#include "../MapEditorLib/ExporterFactory.h"
+#include "../MapEditorLib/ManipulatorManager.h"
+#include "../MapEditorLib/Interface_Logger.h"
 
 
 #ifdef _DEBUG

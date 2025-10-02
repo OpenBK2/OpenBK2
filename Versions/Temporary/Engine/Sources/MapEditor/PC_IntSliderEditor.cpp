@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "pc_constants.h"
-#include "..\Misc\StrProc.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../Misc/StrProc.h"
+#include "../MapEditorLib/StringManager.h"
 #include "PC_IntSliderEditor.h"
 
 #ifdef _DEBUG

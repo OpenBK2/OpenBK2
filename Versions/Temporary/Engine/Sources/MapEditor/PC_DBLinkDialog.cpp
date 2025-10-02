@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\commandhandlerdefines.h"
+#include "../mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
-#include "..\mapeditorlib\resourcedefines.h"
+#include "../mapeditorlib/resourcedefines.h"
 #include "tree_gdbbrowserbase_constants.h"
 
 #include "PC_DBLinkDialog.h"
 
 #include "../libdb/ResourceManager.h"
 #include "Tree_GDBLinkBrowser.h"
-#include "..\MapEditorLib\Tools_HashSet.h"
+#include "../MapEditorLib/Tools_HashSet.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

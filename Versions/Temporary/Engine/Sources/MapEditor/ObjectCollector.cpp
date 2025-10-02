@@ -3,8 +3,8 @@
 
 #include "ObjectCollector.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\Interface_Logger.h"
-#include "..\Misc\HPTimer.h"
+#include "../MapEditorLib/Interface_Logger.h"
+#include "../Misc/HPTimer.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "DefaultBuilder.h"
-#include "..\MapEditorLib\BuilderFactory.h"
+#include "../MapEditorLib/BuilderFactory.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

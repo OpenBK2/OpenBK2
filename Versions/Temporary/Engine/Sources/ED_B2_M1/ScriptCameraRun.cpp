@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "ScriptCameraRun.h"
-#include ".\scriptcamerarun.h"
+#include "./scriptcamerarun.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

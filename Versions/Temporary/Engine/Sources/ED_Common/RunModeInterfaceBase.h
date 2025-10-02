@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "..\Input\GameMessage.h"
-#include "..\System\Time.h"
+#include "../Input/GameMessage.h"
+#include "../System/Time.h"
 #include "InterfaceCommandDeclare.h"
 
 class CRunModeInterfaceBase : public IInterfaceBase, protected NInput::CGMORegContainer

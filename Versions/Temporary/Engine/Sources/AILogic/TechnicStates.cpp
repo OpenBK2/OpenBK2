@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "..\misc\bresenham.h"
-#include "..\system\time.h"
+#include "../misc/bresenham.h"
+#include "../system/time.h"
 #include "../Stats_B2_M1/AbilityActions.h"
 #include "TechnicsStates.h"
 #include "NewUpdater.h"

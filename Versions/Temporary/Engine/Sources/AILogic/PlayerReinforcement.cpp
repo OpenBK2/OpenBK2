@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\playerreinforcement.h"
+#include "./playerreinforcement.h"
 #include "SingleReinforcement.h"
 #include "NewUpdater.h"
 #include "ScenarioTracker.h"

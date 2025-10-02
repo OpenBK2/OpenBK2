@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "StringManager.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 #include "../libdb/EditorDb.h"
 #include "Interface_Controller.h"
 #include "Interface_UserData.h"

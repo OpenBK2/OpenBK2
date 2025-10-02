@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "SpotDataExtractor.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 
 bool CSpotDataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {

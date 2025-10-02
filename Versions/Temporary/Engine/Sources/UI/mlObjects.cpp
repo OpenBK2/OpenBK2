@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include "..\3dMotor\RectLayout.h"
-#include "..\3dMotor\G2DView.h"
-#include "..\3DMotor\Locale.h"
-#include "..\3Dmotor\GLocale.h"
+#include "../3dMotor/RectLayout.h"
+#include "../3dMotor/G2DView.h"
+#include "../3DMotor/Locale.h"
+#include "../3Dmotor/GLocale.h"
 //
 #include "mlMain.h"
 #include "mlReflow.h"

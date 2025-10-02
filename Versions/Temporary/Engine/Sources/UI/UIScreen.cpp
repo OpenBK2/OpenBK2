@@ -7,7 +7,7 @@
 
 //#include "Cursor.h"
 #include "ButtonGroup.h"
-#include "..\3Dmotor\G2DView.h"
+#include "../3Dmotor/G2DView.h"
 #include "../System/Text.h"
 
 

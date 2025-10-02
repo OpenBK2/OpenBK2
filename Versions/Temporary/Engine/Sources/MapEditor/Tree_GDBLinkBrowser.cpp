@@ -5,7 +5,7 @@
 //#include "afxdlgs.h"
 
 #include "Tree_GDBLinkBrowser.h"
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/Interface_UserData.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

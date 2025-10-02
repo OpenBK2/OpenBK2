@@ -3,10 +3,10 @@
 #include "Stats_B2_M1_export.h"
 
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
 #include "Vis2AI.h"
-#include "..\System\RandomGen.h"
+#include "../System/RandomGen.h"
 
 namespace NDb
 {

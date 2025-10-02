@@ -12,7 +12,7 @@
 #include "GlobalWarFog.h"
 #include "GeneralConsts.h"
 #include "B2AI.h"
-#include "..\Misc\nalgoritm.h"
+#include "../Misc/nalgoritm.h"
 #include "PlayerREinforcement.h"
 #include "../Stats_B2_M1/AIUnitCmd.h"
 

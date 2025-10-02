@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
 #include "commandhandlerdefines.h"
 #include "seasonmnemonics.h"
 #include "PointListDialog.h"

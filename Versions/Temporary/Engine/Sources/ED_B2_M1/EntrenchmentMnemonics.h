@@ -2,7 +2,7 @@
 #define __TRENCH_MNEMONICS__
 #pragma once
 
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
 
 class CEntrenchmentSegmentTypeMnemonics : public CMnemonicsCollector<int>
 {

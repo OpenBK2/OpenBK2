@@ -2,7 +2,7 @@
 #define __GAME_INPUT_INTERFACE__
 #pragma once
 
-#include "..\Input\GameMessage.h"
+#include "../Input/GameMessage.h"
 #include "InterfaceCommandDeclare.h"
 
 class CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer

@@ -50,8 +50,8 @@
 #include "SuperWeapon.hpp"
 #include "GetConsts.h"
 #include "DBGameRoot.h"
-#include "..\Misc\Win32Random.h"
-#include "..\System\Text.h"
+#include "../Misc/Win32Random.h"
+#include "../System/Text.h"
 
 #include "../B2_M1_World/ClientAckManager.h"
 
@@ -4147,9 +4147,9 @@ void ReplayHistory( const string &szID, const vector<wstring> &paramsSet, void *
 	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "replay;%s;%s", szVal.c_str(), szPlayerForWarFog .c_str() ) );
 }
 #ifndef _FINALRELEASE
-#include "..\System\CheckSumLog.h"
-#include "..\GameX\SaveLoadHelper.h"
-#include "..\zlib\zlib.h"
+#include "../System/CheckSumLog.h"
+#include "../GameX/SaveLoadHelper.h"
+#include "../zlib/zlib.h"
 #include "../Common_RTS_AI/Checksums.h"
 #include "../Main/Profiles.h"
 class CSimpleChecksumLog : public ICheckSumLog

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CommandHandlerContainer.h"
-#include "..\MapEditorLib\Tools_HashSet.h"
+#include "../MapEditorLib/Tools_HashSet.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

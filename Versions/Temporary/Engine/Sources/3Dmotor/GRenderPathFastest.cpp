@@ -6,7 +6,7 @@
 #include "GScene.h"
 #include "GRTShare.h"
 #include "GRenderUtils.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 #include "GTransparent.h"
 #include "GRenderClouds.h"
 #include "GInit.h"

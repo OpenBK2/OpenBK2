@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\predictedantiaviationfire.h"
+#include "./predictedantiaviationfire.h"
 #include "SerializeOwner.h"
 
 #include "Aviation.h"

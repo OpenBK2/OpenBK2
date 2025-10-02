@@ -2,7 +2,7 @@
 #define __CHILD_FRAME__SCENE_B2__
 #pragma once
 
-#include "..\ED_Common\ChildFrameBase.h"
+#include "../ED_Common/ChildFrameBase.h"
 
 class CCFSceneB2 : public CChildFrameBase
 {

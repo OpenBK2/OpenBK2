@@ -2,7 +2,7 @@
 #define __BASE_UI_BUILDER__
 
 #pragma once
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 
 class CBaseUIBuilder : public CBuildDataBuilder

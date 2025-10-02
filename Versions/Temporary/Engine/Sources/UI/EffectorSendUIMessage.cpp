@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "uiinternal.h"
-#include ".\effectorsenduimessage.h"
+#include "./effectorsenduimessage.h"
 
 
 //CEffectorSendUIMessage

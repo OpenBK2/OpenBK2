@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 #include "grendermodes.h"
 #include "GTransparent.h"
-#include "..\3Dlib\Transform.h"
+#include "../3Dlib/Transform.h"
 #include "GfxUtils.h"
 #include "GSceneParticles.h"
 #include "GfxEffects.h"
 #include "RadixSort.h"
 #include "GCombiner.h"
-#include "..\3DLib\GGeometry.h"
+#include "../3DLib/GGeometry.h"
 #include "GRenderExecute.h"
 
 namespace NGScene

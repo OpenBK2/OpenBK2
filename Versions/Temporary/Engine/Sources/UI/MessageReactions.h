@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\Script\ScriptWrapper.h"
+#include "../Script/ScriptWrapper.h"
 
 interface IMessageReactionB2;
 

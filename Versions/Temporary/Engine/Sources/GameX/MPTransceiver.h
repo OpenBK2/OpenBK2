@@ -2,8 +2,8 @@
 
 
 #include "Transceiver.h"
-#include "..\Misc\2DArray.h"
-#include "..\Server_Client_Common\PacketProcessor.h"
+#include "../Misc/2DArray.h"
+#include "../Server_Client_Common/PacketProcessor.h"
 #include "MultiplayerNetPackets.h"
 
 interface ICommandsHistory;

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include ".\cameramovement.h"
-#include "..\SceneB2\Camera.h"
+#include "./cameramovement.h"
+#include "../SceneB2/Camera.h"
 
 
 int CCameraMovement::operator&( IBinSaver &saver )

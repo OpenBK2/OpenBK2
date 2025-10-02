@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "BSDialogFunctions.h"
-#include "..\MemoryLib\SymAccess.h"
+#include "../MemoryLib/SymAccess.h"
 #include <CommCtrl.h>
 
 namespace NBSU

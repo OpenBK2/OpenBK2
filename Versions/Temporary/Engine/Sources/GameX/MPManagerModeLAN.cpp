@@ -12,7 +12,7 @@
 #include "GetConsts.h"
 #include "InterfaceState.h"
 #include "../System/Text.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 #include "../Misc/Time64.h"
 #include "MPLANTest.h"

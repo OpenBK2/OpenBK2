@@ -13,7 +13,7 @@
 
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../MapEditorLib/StringManager.h"
 
 #include <HtmlHelp.h>
 

@@ -2,8 +2,8 @@
 #define __MODEL_EDITOR__
 #pragma once
 
-#include "..\MapEditorLib\EditorBase.h"
-#include "..\MapEditorLib\DefaultView.h"
+#include "../MapEditorLib/EditorBase.h"
+#include "../MapEditorLib/DefaultView.h"
 #include "ModelWindow.h"
 #include "ModelEditorSettings.h"
 

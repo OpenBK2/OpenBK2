@@ -2,7 +2,7 @@
 #define __MOD__CONTAINER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_MOD.h"
+#include "../MapEditorLib/Interface_MOD.h"
 
 class CMODContainer : public IMODContainer
 {

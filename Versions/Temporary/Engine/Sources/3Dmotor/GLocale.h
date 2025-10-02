@@ -8,7 +8,7 @@
 
 
 #include "FontFormat.h"
-#include "..\System\DG.h"
+#include "../System/DG.h"
 
 namespace NDb
 {

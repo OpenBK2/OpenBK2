@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\executorstaticobjectsegment.h"
+#include "./executorstaticobjectsegment.h"
 #include "StaticObject.h"
 
 extern NTimer::STime curTime;

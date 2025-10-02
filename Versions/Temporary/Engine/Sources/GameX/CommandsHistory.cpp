@@ -10,7 +10,7 @@
 #include "../GameX/InterfaceState.h"
 #include "../System/GlobalVars.h"
 #include "MultiplayerCommandManager.h"
-#include "..\Input\Bind.h"
+#include "../Input/Bind.h"
 #include "SaveLoadHelper.h"
 #include "GameXClassIDs.h"
 #include "InterfaceMisc.h"

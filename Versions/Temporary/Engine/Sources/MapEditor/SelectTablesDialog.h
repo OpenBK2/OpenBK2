@@ -4,9 +4,9 @@
 
 #include "ResourceDefines.h"
 
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/ResizeDialog.h"
 #include <afxwin.h> //CCheckListBox
-#include "..\MapEditorLib\Interface_UserData.h" //CTableSet
+#include "../MapEditorLib/Interface_UserData.h" //CTableSet
 
 
 class CSelectTablesDialog : public CResizeDialog

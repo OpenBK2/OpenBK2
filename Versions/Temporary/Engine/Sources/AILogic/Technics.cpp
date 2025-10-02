@@ -20,11 +20,11 @@
 #include "GroupLogic.h"
 #include "DifficultyLevel.h"
 #include "PresizePath.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 
-#include "..\Stats_B2_M1\AdditionalActions.h"
-#include "..\Stats_B2_M1\StatusUpdates.h"
-#include "..\Misc\Checker.h"
+#include "../Stats_B2_M1/AdditionalActions.h"
+#include "../Stats_B2_M1/StatusUpdates.h"
+#include "../Misc/Checker.h"
 #include "ExecutorTransportHealInfantry.h"
 #include "SupportAAGun.h"
 #include "ExecutorContainer.h"
@@ -32,7 +32,7 @@
 
 // for profiling
 #include "TimeCounter.h"
-#include "..\Misc\nalgoritm.h"
+#include "../Misc/nalgoritm.h"
 #include "FeedBackSystem.h"
 
 

@@ -2,13 +2,13 @@
 #define __WINDOW_SIMPLE_SHARED_EDITOR__
 #pragma once
 
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
-#include "..\MapEditorLib\EditorBase.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
-#include "..\MapEditorLib\DefaultView.h"
-#include "..\MapEditorLib\DefaultInputState.h"
-#include "..\MapEditorLib\ObjectController.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
+#include "../MapEditorLib/EditorBase.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "../MapEditorLib/DefaultView.h"
+#include "../MapEditorLib/DefaultInputState.h"
+#include "../MapEditorLib/ObjectController.h"
 
 
 struct SEditorState

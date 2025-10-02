@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "IdleMechProcess.h"
-#include "..\SceneB2\Scene.h"
-#include "..\Misc\Win32Random.h"
+#include "../SceneB2/Scene.h"
+#include "../Misc/Win32Random.h"
 
 REGISTER_SAVELOAD_CLASS( 0x12118C80, CIdleMechProcess );
 

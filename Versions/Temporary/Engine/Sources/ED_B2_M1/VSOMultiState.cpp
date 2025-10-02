@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
-#include "..\mapeditorlib\commoneditormethods.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../mapeditorlib/commoneditormethods.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "ResourceDefines.h"
 #include "EditorMethods.h"
 #include "MapInfoEditor.h"

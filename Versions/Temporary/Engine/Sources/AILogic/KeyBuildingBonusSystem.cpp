@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\keybuildingbonussystem.h"
+#include "./keybuildingbonussystem.h"
 #include "Diplomacy.h"
 #include "PlayerReinforcement.h"
 #include "NewUpdater.h"

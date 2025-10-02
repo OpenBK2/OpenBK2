@@ -2,9 +2,9 @@
 
 #include "MapInfoEditorData_ObjectInfo.h"
 #include "MapInfoEditorData_ObjectInfoCollector.h"
-#include "..\MapEditorLib\Interface_Logger.h"
-#include "..\Misc\PlaneGeometry.h"
-#include "..\Stats_B2_M1\AnimationType.h"
+#include "../MapEditorLib/Interface_Logger.h"
+#include "../Misc/PlaneGeometry.h"
+#include "../Stats_B2_M1/AnimationType.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "BSExceptionDialog.h"
-#include "..\MemoryLib\SymAccess.h"
+#include "../MemoryLib/SymAccess.h"
 #include "BSDialogFunctions.h"
 #include "Resource.h"
 

@@ -4,7 +4,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\System\GResource.h"
+#include "../System/GResource.h"
 #include "FontFormat.h"
 
 namespace NGScene

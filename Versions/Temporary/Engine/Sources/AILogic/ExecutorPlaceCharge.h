@@ -1,7 +1,7 @@
 #pragma once
 #include "Executor.h"
 #include "Soldier.h"
-#include "..\Stats_B2_M1\SpecialAbilities.h"
+#include "../Stats_B2_M1/SpecialAbilities.h"
 
 class CExecutorPlaceCharge : public CExecutor
 {

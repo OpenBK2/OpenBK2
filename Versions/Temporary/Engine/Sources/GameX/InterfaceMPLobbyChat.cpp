@@ -4,7 +4,7 @@
 #include "MPLobbyData.h"
 #include "MultiplayerCommandManager.h"
 #include "ChatControl.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 #include "GameRoomData.h"
 #include "InterfaceState.h"
 

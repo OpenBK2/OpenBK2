@@ -2,7 +2,7 @@
 #define __TERRAIN_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
+#include "../MapEditorLib/DefaultInputState.h"
 
 class CTerrainEditor;
 class CTerrainState : public CDefaultInputState

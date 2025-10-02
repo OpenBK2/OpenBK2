@@ -4,7 +4,7 @@
 #include "StaticMembers.h"
 #include "AILogicInternal.h"
 #include "Reinforcement.h"
-#include "..\Misc\Progress.h"
+#include "../Misc/Progress.h"
 #include "ScenarioTracker.h"
 
 extern NTimer::STime curTime;

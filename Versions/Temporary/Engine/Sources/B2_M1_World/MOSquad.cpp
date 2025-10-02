@@ -3,9 +3,9 @@
 #include "MOSquad.h"
 #include "MOUnitInfantry.h"
 #include "MOUnitMechanical.h"
-#include "..\Input\Bind.h"
-#include "..\Stats_B2_M1\IClientGameConsts.h"
-#include "..\Stats_B2_M1\ActionsRemap.h"
+#include "../Input/Bind.h"
+#include "../Stats_B2_M1/IClientGameConsts.h"
+#include "../Stats_B2_M1/ActionsRemap.h"
 
 namespace
 {

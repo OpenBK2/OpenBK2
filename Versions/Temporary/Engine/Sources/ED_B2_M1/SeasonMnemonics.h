@@ -2,7 +2,7 @@
 #define __SEASON_MNEMONICS__
 #pragma once
 
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
 
 #define NDB_DEFAULT_SEASON NDb::SEASON_SUMMER
 #define NDB_DEFAULT_SEASON_MNEMONIC "SEASON_SUMMER"

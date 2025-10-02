@@ -3,7 +3,7 @@
 #pragma once
 
 interface IView;
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 
 class CPCBaseDialog : public ICommandHandler
 {

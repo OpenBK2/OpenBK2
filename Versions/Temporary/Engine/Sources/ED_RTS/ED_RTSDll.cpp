@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "..\MapEditorLib\MapEditorModule.h"
+#include "../MapEditorLib/MapEditorModule.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

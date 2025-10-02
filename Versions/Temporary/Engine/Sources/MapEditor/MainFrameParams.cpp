@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "ResourceDefines.h"
 
-#include "..\MapEditorLib\Tools_Registry.h"
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/Tools_Registry.h"
+#include "../MapEditorLib/Interface_UserData.h"
 
 #include "MainFrameParams.h"
 

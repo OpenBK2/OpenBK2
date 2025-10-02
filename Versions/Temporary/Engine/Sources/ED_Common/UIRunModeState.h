@@ -2,7 +2,7 @@
 #define __UI_RUN_MODE_STATE_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
+#include "../MapEditorLib/DefaultInputState.h"
 
 class CUIRunModeState : public CDefaultInputState
 {

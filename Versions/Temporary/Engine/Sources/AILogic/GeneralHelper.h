@@ -2,7 +2,7 @@
 #define __GENERAL_HELPER__
 
 #include "GeneralInternalInterfaces.h"
-#include "..\System\RandomGen.h"
+#include "../System/RandomGen.h"
 
 namespace NDb
 {

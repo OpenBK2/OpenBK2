@@ -5,7 +5,7 @@
 #include "GCombiner.h"
 #include "RadixSort.h"
 #include "GSSETransform.h"
-#include "..\Misc\HashFuncs.h"
+#include "../Misc/HashFuncs.h"
 
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;

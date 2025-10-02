@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "..\misc\2darray.h"
+#include "../misc/2darray.h"
 #include "Tools_Gradient.h"
-#include "..\Image\ImageColor.h"
+#include "../Image/ImageColor.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

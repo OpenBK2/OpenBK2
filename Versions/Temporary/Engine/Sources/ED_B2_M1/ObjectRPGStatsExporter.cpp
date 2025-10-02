@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
-#include "..\misc\strproc.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\3dmotor\dbscene.h"
+#include "../misc/strproc.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../3dmotor/dbscene.h"
 #include "ObjectRPGStatsExporter.h"
-#include "..\MapEditorLib\ExporterFactory.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ExporterFactory.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 #include "../MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
 

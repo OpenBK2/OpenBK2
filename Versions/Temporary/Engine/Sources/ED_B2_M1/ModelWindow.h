@@ -2,7 +2,7 @@
 #define __MODEL_DW_WINDOW__
 #pragma once
 
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/ResizeDialog.h"
 #include "ModelState.h"
 #include "ResourceDefines.h"
 

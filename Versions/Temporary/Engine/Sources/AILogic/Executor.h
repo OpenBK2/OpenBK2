@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Stats_b2_m1\RpgStats.h"
+#include "../Stats_b2_m1/RpgStats.h"
 
 class CExecutor;
 

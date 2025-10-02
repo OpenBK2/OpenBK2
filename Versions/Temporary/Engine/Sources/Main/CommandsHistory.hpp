@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\System\CheckSumLog.h"
+#include "../System/CheckSumLog.h"
 namespace NDb
 {
 	struct SMapInfo;

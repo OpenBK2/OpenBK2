@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "FileReaders.h"
-#include "..\Misc\Win32Helper.h"
+#include "../Misc/Win32Helper.h"
 
 
 int CMMFile::GetFileSize()

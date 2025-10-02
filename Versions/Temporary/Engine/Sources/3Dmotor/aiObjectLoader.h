@@ -5,7 +5,7 @@
 #endif // _MSC_VER > 1000
 
 #include "GFileSkin.h"
-#include "..\System\GResource.h"
+#include "../System/GResource.h"
 #include "aiObject.h"
 #include "GSkeleton.h"
 

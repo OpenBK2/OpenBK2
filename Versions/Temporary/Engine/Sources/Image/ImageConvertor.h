@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Misc\2DArray.h"
+#include "../Misc/2DArray.h"
 
 #pragma pack ( 1 )
 struct SColor24 

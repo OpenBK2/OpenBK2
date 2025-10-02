@@ -2,7 +2,7 @@
 #define __SOUND_DESC_EXPORTER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_Exporter.h"
+#include "../MapEditorLib/Interface_Exporter.h"
 
 class CSoundDescExporter : public IExporter
 {

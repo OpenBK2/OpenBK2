@@ -3,7 +3,7 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 #include "PC_EditorButton.h"
 

@@ -45,7 +45,7 @@ IEditorModule* GetEditorModule4();
 
 
 BEGIN_BUTTON_MAP(COMMON_BUTTON_MAP)
-#include "..\MapEditor\ToolBarButtonsMap.h"
+#include "../MapEditor/ToolBarButtonsMap.h"
 #include "ToolBarButtonsMapSpecific.h"
 END_BUTTON_MAP()
 

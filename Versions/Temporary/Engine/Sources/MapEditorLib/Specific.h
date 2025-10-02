@@ -2,7 +2,7 @@
 #define __SPECIFIC__
 #pragma once
 //
-#include "..\misc\nalgoritm.h"
+#include "../misc/nalgoritm.h"
 
 //#define _SECDLL
 #include "../vendor/Stingray/Include/Toolkit/ot_dockingwindows.h"

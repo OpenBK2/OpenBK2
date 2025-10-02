@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\buttongroup.h"
+#include "./buttongroup.h"
 #include "WindowMSButton.h"
 
 REGISTER_SAVELOAD_CLASS( 0x11075AC0, CButtonGroup )

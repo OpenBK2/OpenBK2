@@ -3,8 +3,8 @@
 
 #pragma ONCE
 
-#include "..\Client\ServerClientInterface.h"
-#include "..\Server_Client_Common\PacketProcessor.h"
+#include "../Client/ServerClientInterface.h"
+#include "../Server_Client_Common/PacketProcessor.h"
 
 class CNetPacket;
 

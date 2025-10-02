@@ -2,7 +2,7 @@
 #define __INFANTRYRPGSTATS_BUILDER__
 
 #pragma once
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CInfantryRPGStatsBuilder : public CBuildDataBuilder
 {

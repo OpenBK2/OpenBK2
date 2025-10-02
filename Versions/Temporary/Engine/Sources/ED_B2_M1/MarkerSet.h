@@ -2,9 +2,9 @@
 #define __MARKER_SET__
 #pragma once
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "EditorScene.h"
 
 enum EDirMeasure

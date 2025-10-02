@@ -4,7 +4,7 @@
 #include "ManipulatorManager.h"
 #include "StringManager.h"
 #include "PCIEMnemonics.h"
-#include "..\System\FilePath.h"
+#include "../System/FilePath.h"
 #include "../MapEditorLib/Interface_Controller.h"
 #include "../MapEditorLib/MultiManipulator.h"
 

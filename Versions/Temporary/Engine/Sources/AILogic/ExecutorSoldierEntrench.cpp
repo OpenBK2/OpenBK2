@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\executorsoldierentrench.h"
+#include "./executorsoldierentrench.h"
 #include "GroupLogic.h"
 #include "Soldier.h"
 

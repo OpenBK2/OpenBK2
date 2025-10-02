@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "BSAssertDialog.h"
 #include "BSExceptionDialog.h"
-#include "..\MemoryLib\SymAccess.h"
+#include "../MemoryLib/SymAccess.h"
 #include "BSUtil.h"
 #include "BSUInit.h"
 

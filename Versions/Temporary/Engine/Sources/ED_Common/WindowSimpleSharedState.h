@@ -2,7 +2,7 @@
 #define __WINDOW_SIMPLE_SHARED_STATE__
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
+#include "../MapEditorLib/DefaultInputState.h"
 interface IWindow;
 namespace NDb
 {

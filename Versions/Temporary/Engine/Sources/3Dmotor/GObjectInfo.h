@@ -7,8 +7,8 @@
 #include "3Dmotor_export.h"
 
 
-#include "..\System\GResource.h"
-#include "..\3DLib\GGeometry.h"
+#include "../System/GResource.h"
+#include "../3DLib/GGeometry.h"
 
 struct granny_mesh;
 struct granny_model;

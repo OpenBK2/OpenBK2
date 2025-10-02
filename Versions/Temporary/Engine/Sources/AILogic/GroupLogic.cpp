@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "unitssegments.h"
-#include "..\system\time.h"
+#include "../system/time.h"
 #include "GroupLogic.h"
 #include "Commands.h"
 #include "Soldier.h"
@@ -15,7 +15,7 @@
 #include "Building.h"
 #include "GridCreation.h"
 #include "B2AI.h"
-#include "..\System\FastMath.h"
+#include "../System/FastMath.h"
 #include "Artillery.h"
 
 //#include "..\Common_RTS_AI\CollisionInternal.h"

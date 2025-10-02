@@ -2,8 +2,8 @@
 #define __HEIGHT_PATTERN__
 #pragma once
 
-#include "..\misc\2DArray.h"
-#include "..\MapEditorLib\Tools_Gradient.h"
+#include "../misc/2DArray.h"
+#include "../MapEditorLib/Tools_Gradient.h"
 
 
 struct SHeightPattern

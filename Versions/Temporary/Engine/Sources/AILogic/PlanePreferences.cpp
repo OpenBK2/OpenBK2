@@ -2,7 +2,7 @@
 
 #include "ManuverInternal.h"
 #include "PlanePreferences.h"
-#include "..\Stats_B2_M1\RPGStats.h"
+#include "../Stats_B2_M1/RPGStats.h"
 
 
 void CPlanePreferences::Init( const SMechUnitRPGStats* _pStats, bool _bCanViolateHeghtLimits )

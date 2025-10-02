@@ -21,14 +21,14 @@
 #include "AILogicInternal.h"
 #include "TimeCounter.h"
 
-#include "..\Common_RTS_AI\CommonPathFinder.h"
-#include "..\Common_RTS_AI\InFormationPath.h"
-#include "..\Common_RTS_AI\StandartPath2.h"
-#include "..\Common_RTS_AI\StaticPathInternal.h"
-#include "..\Common_RTS_AI\PathFinder.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/CommonPathFinder.h"
+#include "../Common_RTS_AI/InFormationPath.h"
+#include "../Common_RTS_AI/StandartPath2.h"
+#include "../Common_RTS_AI/StaticPathInternal.h"
+#include "../Common_RTS_AI/PathFinder.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D498, CFormation );
 

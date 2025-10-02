@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include "..\mapeditorlib\interface_commandhandler.h"
-#include "..\ui\commandparam.h"
-#include "..\MapEditorLib\ResourceDefines.h"
-#include "..\MapEditorLib\CommandHandlerDefines.h"
+#include "../mapeditorlib/interface_commandhandler.h"
+#include "../ui/commandparam.h"
+#include "../MapEditorLib/ResourceDefines.h"
+#include "../MapEditorLib/CommandHandlerDefines.h"
 
 //#include "EditorMethods.h"
 #include "TextureEditor.h"
@@ -10,8 +10,8 @@
 #include "UIScene.h"
 #include "UIWindow.h"
 
-#include "..\MapEditorLib\CommonEditorMethods.h"
-#include "..\3Dmotor\DBScene.h"
+#include "../MapEditorLib/CommonEditorMethods.h"
+#include "../3Dmotor/DBScene.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

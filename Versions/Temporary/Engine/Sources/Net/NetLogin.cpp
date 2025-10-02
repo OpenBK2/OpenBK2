@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "NetLogin.h"
-#include "..\Misc\HPTimer.h"
+#include "../Misc/HPTimer.h"
 
 const float F_KEEP_ACCEPTED_TIME = 2000;
 const int N_MAX_ACCEPTED_LIST_SIZE = 30;

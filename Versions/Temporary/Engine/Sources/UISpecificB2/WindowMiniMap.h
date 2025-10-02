@@ -1,9 +1,9 @@
 #pragma once
-#include "..\UI\window.h"
-#include "..\UISpecificB2\DBUISpecificB2.h"
-#include "..\3DMotor\GfxBuffers.h"
-#include "..\System\DG.h"
-#include "..\Misc\BitData.h"
+#include "../UI/window.h"
+#include "../UISpecificB2/DBUISpecificB2.h"
+#include "../3DMotor/GfxBuffers.h"
+#include "../System/DG.h"
+#include "../Misc/BitData.h"
 #include "UISpecificB2.h"
 
 class CMiniMapLayer :  public CPtrFuncBase< NGfx::CTexture >

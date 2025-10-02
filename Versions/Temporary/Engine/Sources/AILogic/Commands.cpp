@@ -2,7 +2,7 @@
 
 #include "Commands.h"
 #include "CommonUnit.h"
-#include "..\Common_RTS_AI\PathFinder.h"
+#include "../Common_RTS_AI/PathFinder.h"
 #include "GroupMover.h"
 REGISTER_SAVELOAD_CLASS( 0x1108D44D, CAICommand );
 

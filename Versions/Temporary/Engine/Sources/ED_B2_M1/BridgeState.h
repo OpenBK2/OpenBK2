@@ -2,10 +2,10 @@
 #define __BRIDGE_STATE__
 
 #pragma once
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
-#include "..\sceneb2\scene.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
+#include "../sceneb2/scene.h"
 #include "BridgeInfoData.h"
 #include "MapObjectState.h"
 

@@ -11,14 +11,14 @@
 #include "Diplomacy.h"
 #include "AIUnit.h"
 #include "Fence.h"
-#include "..\Common_RTS_AI\AIMap.h"
+#include "../Common_RTS_AI/AIMap.h"
 #include "../Common_RTS_AI/PathFinder.h"
 #include "SmokeScreen.h"
 #include "ObstacleINternal.h"
 #include "Graveyard.h"
 #include "Cheats.h"
 
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 #include "ExecutorStaticObjectSegment.h"
 #include "KeyBuildingBonusSystem.h"
 

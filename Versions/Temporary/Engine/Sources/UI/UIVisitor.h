@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\3DMotor\GfxBuffers.h"
+#include "../3DMotor/GfxBuffers.h"
 
 template<class T> class CPtrFuncBase;
 namespace NGfx

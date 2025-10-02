@@ -6,7 +6,7 @@
 
 typedef DWORD STime;
 
-#include "..\System\WinFrame.h"
+#include "../System/WinFrame.h"
 namespace NInput
 {
 

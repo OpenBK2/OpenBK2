@@ -2,7 +2,7 @@
 
 #include "BuilderMethods.h"
 
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

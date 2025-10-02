@@ -6,7 +6,7 @@
 #include "GParts.h"
 #include "GRenderExecute.h"
 #include "GLMLightState.h"
-#include "..\3dlib\GLMGeometry.h"
+#include "../3dlib/GLMGeometry.h"
 #include "GInit.h"
 #include "GfxUtils.h"
 #include "GRects.h"

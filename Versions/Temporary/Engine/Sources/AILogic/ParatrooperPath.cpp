@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "ParatrooperPath.h"
-#include "..\Common_RTS_AI\AIMap.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/AIMap.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 #include "AIUnit.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4B9, CParatrooperPath );

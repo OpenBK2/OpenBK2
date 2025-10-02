@@ -8,7 +8,7 @@
 #include "GRenderExecute.h"
 #include "GRenderModes.h"
 #include "GInit.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 
 

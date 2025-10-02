@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "..\ED_Common\RunModeInterfaceBase.h"
+#include "../ED_Common/RunModeInterfaceBase.h"
 interface IWindow;
 
 class CUIRunModeInterface : public CRunModeInterfaceBase

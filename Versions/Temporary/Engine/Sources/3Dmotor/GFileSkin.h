@@ -4,7 +4,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\3Dlib\GGeometry.h"
+#include "../3Dlib/GGeometry.h"
 
 namespace NGScene
 {

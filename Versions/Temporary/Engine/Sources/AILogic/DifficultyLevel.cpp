@@ -2,7 +2,7 @@
 
 #include "DifficultyLevel.h"
 #include "Diplomacy.h"
-#include "..\Misc\2Darray.h"
+#include "../Misc/2Darray.h"
 
 CDifficultyLevel theDifficultyLevel;
 extern CDiplomacy theDipl;

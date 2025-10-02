@@ -3,7 +3,7 @@
 #include "pc_constants.h"
 #include "PC_StringComboRefEditor.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\PCIEMnemonics.h"
+#include "../MapEditorLib/PCIEMnemonics.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

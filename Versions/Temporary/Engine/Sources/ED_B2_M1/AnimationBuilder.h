@@ -2,8 +2,8 @@
 #define __ANIMATION_BUILDER__
 #pragma once
 
-#include "..\mapeditorlib\interface_commandhandler.h"
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../mapeditorlib/interface_commandhandler.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 struct SGrannyBoneAttributes; 
 class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback, public ICommandHandler

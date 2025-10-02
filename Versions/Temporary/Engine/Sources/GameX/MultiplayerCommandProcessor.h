@@ -3,7 +3,7 @@
 
 #pragma ONCE
 
-#include "..\Misc\HashFuncs.h"
+#include "../Misc/HashFuncs.h"
 
 enum EMPUIMessageType;
 struct SMPUIMessage;

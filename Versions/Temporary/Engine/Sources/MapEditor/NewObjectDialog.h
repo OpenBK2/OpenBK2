@@ -3,8 +3,8 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "..\MapEditorLib\Interface_Builder.h"
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/Interface_Builder.h"
+#include "../MapEditorLib/ResizeDialog.h"
 
 
 class CNewObjectDialog : public CResizeDialog

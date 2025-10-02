@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "..\MapEditorLib\Tools_HashSet.h"
+#include "../MapEditorLib/Tools_HashSet.h"
 #include "ViewContainer.h"
 
 #ifdef _DEBUG

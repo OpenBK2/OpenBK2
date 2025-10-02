@@ -7,7 +7,7 @@
 
 #include "window.h"
 #include "GBinkPlayer.h"
-#include "..\System\DG.h"
+#include "../System/DG.h"
 
 
 class CWindowPlayer : public CWindow, public IPlayer

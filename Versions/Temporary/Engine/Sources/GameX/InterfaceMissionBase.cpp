@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
 #include "../Stats_B2_M1/DBClientConsts.h"
 #include "../Stats_B2_M1/DBCameraConsts.h"
 #include "InterfaceMissionBase.h"

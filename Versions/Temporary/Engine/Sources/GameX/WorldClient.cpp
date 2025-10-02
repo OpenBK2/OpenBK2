@@ -1413,7 +1413,7 @@ CVec3 CWorldClient::ScreenToAI( const CVec2 &vScreen )
 // ************************************************************************************************************************ //
 
 #ifndef _FINALRELEASE
-#include "..\B2_M1_World\MOUnit.h"
+#include "../B2_M1_World/MOUnit.h"
 #endif
 
 void CWorldClient::DoMouseMove( const CVec2 &vPos )

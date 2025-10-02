@@ -2,9 +2,9 @@
 #define __TERRAIN_EDITOR__
 #pragma once
 
-#include "..\MapEditorLib\EditorBase.h"
-#include "..\MapEditorLib\Interface_CommandHandler.h"
-#include "..\MapEditorLib\DefaultView.h"
+#include "../MapEditorLib/EditorBase.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
+#include "../MapEditorLib/DefaultView.h"
 #include "TerrainState.h"
 
 

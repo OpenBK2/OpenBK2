@@ -3,7 +3,7 @@
 #include "2DSceneSW.h"
 #include "SWTexture.h"
 #include "Render.h"
-#include "..\System\BasicShare.h"
+#include "../System/BasicShare.h"
 #include "DBScene.h"
 #include "RectLayout.h"
 #include "GTexture.h"

@@ -2,8 +2,8 @@
 #include "RegisterEditors.h"
 
 #include "UserDataContainer.h"
-#include "..\MapEditorLib\EditorFactory.h"
-#include "..\ED_Common\WindowSimpleSharedEditor.h"
+#include "../MapEditorLib/EditorFactory.h"
+#include "../ED_Common/WindowSimpleSharedEditor.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

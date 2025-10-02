@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ListsSet.h"
-#include "..\System\FreeIDs.h"
-#include "..\Misc\2DArray.h"
+#include "../System/FreeIDs.h"
+#include "../Misc/2DArray.h"
 
 class CAIUnit;
 class CAviation;

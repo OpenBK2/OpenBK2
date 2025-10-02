@@ -1,6 +1,6 @@
 #pragma once
 #include "GSkeleton.h"
-#include "..\Misc\Sync.h"
+#include "../Misc/Sync.h"
 
 namespace NDb
 {

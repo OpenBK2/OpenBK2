@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "InterfaceChapterMapMenuHelper.h"
-#include "..\UI\UI.h"
-#include "..\Stats_B2_M1\DBMapInfo.h"
+#include "../UI/UI.h"
+#include "../Stats_B2_M1/DBMapInfo.h"
 #include "DBScenario.h"
 
 // SChapterMapMenuHelper::SArrow

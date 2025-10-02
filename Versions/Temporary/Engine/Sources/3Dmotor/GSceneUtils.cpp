@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "GSceneUtils.h"
-#include "..\3Dlib\Transform.h"
+#include "../3Dlib/Transform.h"
 
 namespace NGScene
 {

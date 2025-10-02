@@ -4,8 +4,8 @@
 #include "../Common_RTS_AI/AIMap.h"
 #include "../Misc/Bresenham.h"
 #include "../System/FastMath.h"
-#include "..\System\Commands.h"
-#include "..\Misc\2Darray.h"
+#include "../System/Commands.h"
+#include "../Misc/2Darray.h"
 
 bool g_bThickLock;
 START_REGISTER(ObjectProfile)

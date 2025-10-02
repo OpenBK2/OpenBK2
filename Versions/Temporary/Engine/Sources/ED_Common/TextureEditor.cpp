@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "TextureEditor.h"
 
-#include "..\MapEditorLib\EditorFactory.h"
+#include "../MapEditorLib/EditorFactory.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

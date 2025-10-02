@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "..\MapEditorLib\EditParameter.h"
+#include "../MapEditorLib/EditParameter.h"
 #include "FieldWindow.h"
 
 #ifdef _DEBUG

@@ -2,7 +2,7 @@
 #define __COMMON_CONTROLS__PROPERTY_CONTROL_STRING_SLIDER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_CommandHandler.h"
+#include "../MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 #include "PC_EditorSlider.h"
 

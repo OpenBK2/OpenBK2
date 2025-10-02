@@ -1,7 +1,7 @@
 #if !defined(__DOCKING_WINDOW__LOG__)
 #define __DOCKING_WINDOW__LOG__
 
-#include "..\MapEditorLib\Interface_Logger.h"
+#include "../MapEditorLib/Interface_Logger.h"
 #include "LogWindow.h"
 
 

@@ -6,11 +6,11 @@
 #include "PathFractionArcLineArc.h"
 #include "PathFractionArcLineArc3D.h"
 #include "PlanesFormation.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 #include "../System/FastMath.h"
-#include "..\System\RandomGen.h"
-#include "..\Stats_b2_m1\DBPlaneManuvers.h"
-#include "..\System\Commands.h"
+#include "../System/RandomGen.h"
+#include "../Stats_b2_m1/DBPlaneManuvers.h"
+#include "../System/Commands.h"
 
 extern float g = 0.0000983f;
 extern NTimer::STime curTime;

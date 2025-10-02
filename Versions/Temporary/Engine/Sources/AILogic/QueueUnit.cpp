@@ -6,7 +6,7 @@
 #include "Commands.h"
 
 #include "Artillery.h"
-#include "..\Stats_B2_M1\ActionsRemap.h"
+#include "../Stats_B2_M1/ActionsRemap.h"
 
 
 extern NTimer::STime curTime;

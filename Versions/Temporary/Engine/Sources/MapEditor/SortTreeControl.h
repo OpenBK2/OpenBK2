@@ -2,7 +2,7 @@
 #define __COMMON_CONTROLS__SORT_TREE_CONTROL__
 #pragma once
 
-#include "..\misc\HashFuncs.h"
+#include "../misc/HashFuncs.h"
 
 
 // Нельзя использовать GetItemData() и SetItemData() !

@@ -6,7 +6,7 @@
 #endif // _MSC_VER > 1000
 // LuaEditor.h : header file
 //
-#include "..\Scintilla\scintilla.h"
+#include "../Scintilla/scintilla.h"
 #include "ReplaceTextDlg.h"
 
 

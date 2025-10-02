@@ -2,7 +2,7 @@
 #define __FORMATION_MNEMONICS__
 #pragma once
 
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
 
 class CFormationMnemonics : public CMnemonicsCollector<int>
 {

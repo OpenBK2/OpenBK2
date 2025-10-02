@@ -3,7 +3,7 @@
 #include "3Dmotor_export.h"
 
 #include "GSkeleton.h"
-#include "..\System\Time.hpp"
+#include "../System/Time.hpp"
 #include "GRenderModes.h"
 
 struct SRandomSeed;

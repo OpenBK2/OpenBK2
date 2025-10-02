@@ -5,9 +5,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\3DMotor\GfxBuffers.h"
-#include "..\Misc\2Darray.h"
-#include "..\System\DG.h"
+#include "../3DMotor/GfxBuffers.h"
+#include "../Misc/2Darray.h"
+#include "../System/DG.h"
 
 
 class CBitmap :  public CPtrFuncBase< NGfx::CTexture >

@@ -9,7 +9,7 @@
 #include "MessageReactions.h"
 #include "UIStates.h"
 #include "Tooltips.h"
-#include "..\System\FreeIDs.h"
+#include "../System/FreeIDs.h"
 
 class CButtonGroup;
 

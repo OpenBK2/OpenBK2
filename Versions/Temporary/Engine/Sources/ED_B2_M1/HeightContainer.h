@@ -2,7 +2,7 @@
 #define __MAPINFO_HEIGHT_CONTAINER__
 #pragma once
 
-#include "..\MapeditorLib\Tools_FreeIDCollector.h"
+#include "../MapeditorLib/Tools_FreeIDCollector.h"
 #include "VSOManager.h"
 
 

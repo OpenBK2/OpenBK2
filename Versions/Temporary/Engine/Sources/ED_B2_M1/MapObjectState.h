@@ -2,9 +2,9 @@
 #define __MAPOBJECT_STATE__
 #pragma once
 
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\stats_b2_m1\iconsset.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../stats_b2_m1/iconsset.h"
 #include "../libdb/manipulator.h"
 #include "../MapEditorLib/MultiInputState.h"
 #include "MapInfoStoreInputState.h"

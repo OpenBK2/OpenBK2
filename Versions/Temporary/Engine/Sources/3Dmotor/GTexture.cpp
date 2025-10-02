@@ -4,9 +4,9 @@
 
 #include "GfxBuffers.h"
 #include "GTexture.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 #include "DBScene.h"
-#include "..\Image\DDS.h"
+#include "../Image/DDS.h"
 
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 {

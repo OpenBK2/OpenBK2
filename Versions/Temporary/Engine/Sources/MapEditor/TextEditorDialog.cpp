@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "..\scintilla\scintilla.h"
+#include "../scintilla/scintilla.h"
 #include "TextEditorDialog.h"
 
 #ifdef _DEBUG

@@ -5,7 +5,7 @@
 #include "pc_dialog.h"
 #include "PC_MultilineStringEditor.h"
 #include "ComboBox_GDBBrowser.h"
-#include "..\MapEditorLib\Interface_UserData.h" //CTableSet
+#include "../MapEditorLib/Interface_UserData.h" //CTableSet
 
 #define  PC_DBL_TREE_COLUMN_COUNT (3)
 

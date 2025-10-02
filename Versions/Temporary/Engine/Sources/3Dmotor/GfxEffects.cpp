@@ -4,7 +4,7 @@
 #include "GfxRender.h"
 #include "GfxShaders.h"
 #include "GfxBuffers.h"
-#include "..\System\Commands.h"
+#include "../System/Commands.h"
 
 namespace NGfx
 {

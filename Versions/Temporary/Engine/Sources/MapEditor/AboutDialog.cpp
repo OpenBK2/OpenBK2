@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "AboutDialog.h"
-#include "..\MapEditorLib\Interface_UserData.h"
+#include "../MapEditorLib/Interface_UserData.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

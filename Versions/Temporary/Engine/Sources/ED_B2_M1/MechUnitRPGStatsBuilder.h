@@ -2,7 +2,7 @@
 #define __MECHUNITRPGSTATS_BUILDER__
 
 #pragma once
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CMechUnitRPGStatsBuilder : public CBuildDataBuilder
 {

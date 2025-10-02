@@ -1,6 +1,6 @@
 #pragma once
-#include "..\mapeditorlib\interface_commandhandler.h"
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../mapeditorlib/interface_commandhandler.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CAcksBuilder : public CDefaultBuilderBase, public IBuildDataCallback, public ICommandHandler
 {

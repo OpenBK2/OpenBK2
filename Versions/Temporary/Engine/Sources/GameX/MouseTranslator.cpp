@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "..\misc\2darray.h"
-#include "..\zlib\zconf.h"
-#include "..\ui\commandparam.h"
-#include "..\ui\dbuserinterface.h"
+#include "../misc/2darray.h"
+#include "../zlib/zconf.h"
+#include "../ui/commandparam.h"
+#include "../ui/dbuserinterface.h"
 #include "MouseTranslator.h"
 #include "Selector.h"
-#include "..\SceneB2\Camera.h"
-#include "..\UI\UI.h"
+#include "../SceneB2/Camera.h"
+#include "../UI/UI.h"
 
 // ************************************************************************************************************************ //
 // **

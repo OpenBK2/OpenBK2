@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 
 #include "DefaultBuilderBase.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../MapEditorLib/StringManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

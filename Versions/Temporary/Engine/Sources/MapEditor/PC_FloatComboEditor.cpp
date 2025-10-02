@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "pc_constants.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 #include "PC_FloatComboEditor.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../MapEditorLib/StringManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

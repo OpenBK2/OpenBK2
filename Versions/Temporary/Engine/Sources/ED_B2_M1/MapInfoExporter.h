@@ -2,8 +2,8 @@
 #define __MAPINFO_EXPORTER__
 
 #pragma once
-#include "..\mapeditorlib\interface_commandhandler.h"
-#include "..\MapEditorLib\Interface_Exporter.h"
+#include "../mapeditorlib/interface_commandhandler.h"
+#include "../MapEditorLib/Interface_Exporter.h"
 
 class CMapInfoExporter : public IExporter, public ICommandHandler
 {

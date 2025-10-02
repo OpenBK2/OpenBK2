@@ -2,7 +2,7 @@
 #define __GEOMETRY_EXPORTER__
 #pragma once
 
-#include "..\ED_Common\BasicSceneExporter.h"
+#include "../ED_Common/BasicSceneExporter.h"
 
 class CGeometryExporter : public CBasicSceneExporter
 {

@@ -2,7 +2,7 @@
 #define __MINIMAP_MNEMONICS__
 #pragma once
 
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
 
 class CMinimapLayerMnemonics : public CMnemonicsCollector<int>
 {

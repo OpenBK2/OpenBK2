@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CDynamicDebrisSetBuilder : public CBuildDataBuilder
 {

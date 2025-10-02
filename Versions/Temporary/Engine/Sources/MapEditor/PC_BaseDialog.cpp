@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "..\mapeditorlib\resourcedefines.h"
+#include "../mapeditorlib/resourcedefines.h"
 
 #include "PC_BaseDialog.h"
 

@@ -2,8 +2,8 @@
 
 #include "BaseUIBuilder.h"
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\StringManager.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/StringManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

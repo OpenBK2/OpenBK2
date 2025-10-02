@@ -6,8 +6,8 @@
 #endif // _MSC_VER > 1000
 
 #include "ELK_Types.h"
-#include "..\MapEditorLib\ResizeDialog.h"
-#include "..\MapEditorLib\Tools_Resources.h"
+#include "../MapEditorLib/ResizeDialog.h"
+#include "../MapEditorLib/Tools_Resources.h"
 
 int CALLBACK FiltersCompareFunc( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort );
 

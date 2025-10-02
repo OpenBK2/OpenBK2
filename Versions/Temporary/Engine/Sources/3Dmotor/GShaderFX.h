@@ -1,6 +1,6 @@
 #pragma once
 #include <D3DX9.h>
-#include "..\Misc\Win32Helper.h"
+#include "../Misc/Win32Helper.h"
 
 typedef LPCSTR D3DXHANDLE;
 struct IDirect3DVertexShader9;

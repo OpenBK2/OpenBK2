@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\MapEditorLib\DefaultInputState.h"
-#include "..\GameX\InterfaceChapterMapMenuHelper.h"
+#include "../MapEditorLib/DefaultInputState.h"
+#include "../GameX/InterfaceChapterMapMenuHelper.h"
 
 class CChapterEditor;
 interface IScreen;

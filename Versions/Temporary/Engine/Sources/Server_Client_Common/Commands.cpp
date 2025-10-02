@@ -3,7 +3,7 @@
 #include "Commands.h"
 #include "CommonClientState.h"
 #include "LobbiesIDs.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 
 struct SStringToCommand
 {

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "..\MapEditorLib\Tools_MnemonicsCollector.h"
-#include "..\MapEditorLib\ResizeDialog.h"
+#include "../MapEditorLib/Tools_MnemonicsCollector.h"
+#include "../MapEditorLib/ResizeDialog.h"
 #include "../MapEditorLib/ScintillaEditor.h"
 
 

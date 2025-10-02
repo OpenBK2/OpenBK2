@@ -2,7 +2,7 @@
 #define __COMMON_CONTROLS__PROPERTY_CONTROL_ITEM_EDITOR__
 #pragma once
 
-#include "..\MapEditorLib\Interface_PCItemEditor.h"
+#include "../MapEditorLib/Interface_PCItemEditor.h"
 
 
 class CPCItemEditor : public IPCItemEditor

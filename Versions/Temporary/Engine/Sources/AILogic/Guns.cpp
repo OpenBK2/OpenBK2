@@ -16,7 +16,7 @@
 #include "Diplomacy.h"
 #include "Formation.h"
 #include "TimeCounter.h"
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 #include "../Common_RTS_AI/AIMap.h"
 #include "AIGeometry.h"
 #include "../DebugTools/DebugInfoManager.h"

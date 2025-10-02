@@ -2,7 +2,7 @@
 #define __TEXTURE_EXPORTER__
 #pragma once
 
-#include "..\MapEditorLib\Interface_Exporter.h"
+#include "../MapEditorLib/Interface_Exporter.h"
 
 class CTextureExporter : public IExporter
 {

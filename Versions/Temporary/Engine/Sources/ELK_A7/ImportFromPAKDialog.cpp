@@ -2,7 +2,7 @@
 
 #include "resource.h"
 #include "ImportFromPAKDialog.h"
-#include "..\MapEditorLib\StringManager.h"
+#include "../MapEditorLib/StringManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

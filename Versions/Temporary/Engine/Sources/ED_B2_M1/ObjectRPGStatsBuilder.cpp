@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "ObjectRPGStatsBuilder.h"
-#include "..\MapEditorLib\BuilderFactory.h"
+#include "../MapEditorLib/BuilderFactory.h"
 
 #include "../libdb/ResourceManager.h"
-#include "..\MapEditorLib\ManipulatorManager.h"
+#include "../MapEditorLib/ManipulatorManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

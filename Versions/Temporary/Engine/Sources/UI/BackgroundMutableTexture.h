@@ -3,9 +3,9 @@
 #include "UI_export.h"
 
 #include "background.h"
-#include "..\Misc\2Darray.h"
-#include "..\3DMotor\GFXBuffers.h"
-#include "..\System\DG.h"
+#include "../Misc/2Darray.h"
+#include "../3DMotor/GFXBuffers.h"
+#include "../System/DG.h"
 
 
 // Can be modified during runtime

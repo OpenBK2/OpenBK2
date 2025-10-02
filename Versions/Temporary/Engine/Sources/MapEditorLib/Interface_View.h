@@ -4,7 +4,7 @@
 
 #include "Interface_Controller.h"
 #include "../libdb/Manipulator.h"
-#include "..\Misc\HashFuncs.h"
+#include "../Misc/HashFuncs.h"
 
 #define VIEW_COLLECTION_ID ("_VIEW_COLLECTION_ID_")
 

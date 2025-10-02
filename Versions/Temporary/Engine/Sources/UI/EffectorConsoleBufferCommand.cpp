@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include ".\effectorconsolebuffercommand.h"
+#include "./effectorconsolebuffercommand.h"
 
 
 REGISTER_SAVELOAD_CLASS( 0x110953C0, CEffectorConsoleBufferCommand )

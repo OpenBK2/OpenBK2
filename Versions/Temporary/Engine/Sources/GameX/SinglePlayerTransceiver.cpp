@@ -4,7 +4,7 @@
 
 #include "../AILogic/AILogicCommand.h"
 #include "../AILogic/B2AI.h"
-#include "..\Input\Bind.h"
+#include "../Input/Bind.h"
 #include "ScenarioTracker.h"
 
 #include "../SceneB2/Scene.h"

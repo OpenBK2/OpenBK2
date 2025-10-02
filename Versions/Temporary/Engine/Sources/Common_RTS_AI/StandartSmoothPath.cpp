@@ -3,7 +3,7 @@
 #include "StandartSmoothPath.h"
 #include "BasePathUnit.h"
 
-#include "..\Common_RTS_AI\StaticMapHeights.h"
+#include "../Common_RTS_AI/StaticMapHeights.h"
 
 
 REGISTER_SAVELOAD_CLASS( STANDART_SMOOTH_SOLDIER_PATH, CStandartSmoothPath );

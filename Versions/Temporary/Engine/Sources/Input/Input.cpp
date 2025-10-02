@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include <dinput.h>
-#include "..\Input\Input.h"
-#include "..\Input\GameMessage.h"
-#include "..\Misc\Win32Helper.h"
-#include "..\Misc\StrProc.h"
+#include "../Input/Input.h"
+#include "../Input/GameMessage.h"
+#include "../Misc/Win32Helper.h"
+#include "../Misc/StrProc.h"
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")

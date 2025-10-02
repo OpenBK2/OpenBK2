@@ -3,7 +3,7 @@
 #pragma once
 
 #include "MapObjectState.h"
-#include "..\B2_M1_Terrain\DBTerrainSpot.h"
+#include "../B2_M1_Terrain/DBTerrainSpot.h"
 
 
 class CSpotState : public CMapObjectState

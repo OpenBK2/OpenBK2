@@ -4,8 +4,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "..\System\DG.h"
-#include "..\3dlib\ExpFader.h"
+#include "../System/DG.h"
+#include "../3dlib/ExpFader.h"
 
 namespace NGfx
 {

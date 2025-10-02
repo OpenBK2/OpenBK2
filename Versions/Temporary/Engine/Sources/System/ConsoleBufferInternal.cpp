@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "Commands.h"
 #include "ConsoleBufferInternal.h"
-#include "..\Misc\StrProc.h"
+#include "../Misc/StrProc.h"
 
 #pragma warning( disable : 4530 )
 #include <fstream>

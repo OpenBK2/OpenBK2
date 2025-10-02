@@ -2,7 +2,7 @@
 #define __WINDOW_MSBUTTON_SHARED_BUILDER__
 
 #pragma once
-#include "..\MapEditorLib\BuildDataBuilder.h"
+#include "../MapEditorLib/BuildDataBuilder.h"
 
 class CWindowMSButtonSharedBuilder : public CBuildDataBuilder
 {

@@ -3,8 +3,8 @@
 #include "GfxRender.h"
 #include "GfxBuffers.h"
 #include "GAutoDetect.h"
-#include "..\Misc\HPTimer.h"
-#include "..\3Dmotor\GfxBenchmark.h"
+#include "../Misc/HPTimer.h"
+#include "../3Dmotor/GfxBenchmark.h"
 
 namespace NGScene
 {

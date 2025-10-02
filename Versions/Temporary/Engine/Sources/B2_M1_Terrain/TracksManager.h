@@ -3,7 +3,7 @@
 #include "B2_M1_Terrain_export.h"
 
 
-#include "..\3DMotor\GView.h"
+#include "../3DMotor/GView.h"
 #include "PatchHolder.h"
 
 class CTracksManager;

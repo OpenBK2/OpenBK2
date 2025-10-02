@@ -7,11 +7,11 @@
 #include "3Dmotor_export.h"
 
 
-#include "..\Misc\2DArray.h"
+#include "../Misc/2DArray.h"
 #include "aiInterval.h"
-#include "..\3dLib\Transform.h"
+#include "../3dLib/Transform.h"
 #include "Render.h"
-#include "..\Misc\Pool.h"
+#include "../Misc/Pool.h"
 
 namespace NAI
 {

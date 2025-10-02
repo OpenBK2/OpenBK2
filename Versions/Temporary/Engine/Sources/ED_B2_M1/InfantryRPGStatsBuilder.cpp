@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "InfantryRPGStatsBuilder.h"
-#include "..\MapEditorLib\BuilderFactory.h"
+#include "../MapEditorLib/BuilderFactory.h"
 //
 #include "../libdb/ResourceManager.h"
 //
-#include "..\MapEditorLib\Interface_UserData.h"
-#include "..\MapEditorLib\DefaultView.h"
-#include "..\MapEditorLib\ObjectController.h"
+#include "../MapEditorLib/Interface_UserData.h"
+#include "../MapEditorLib/DefaultView.h"
+#include "../MapEditorLib/ObjectController.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
