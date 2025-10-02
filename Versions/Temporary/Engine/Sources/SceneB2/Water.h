@@ -76,6 +76,7 @@ class CWaterPatch : public CVersioningBase
 				DWORD color;
 			};
 		};
+		SGridType() {}
 	};
 	//
 	struct SWaveType
