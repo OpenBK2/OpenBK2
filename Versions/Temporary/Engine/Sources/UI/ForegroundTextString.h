@@ -1,7 +1,6 @@
 #pragma once
 
-
-interface IML;
+struct IML;
 
 // window may have string of text
 class CForegroundTextString : public IWindowPart
@@ -28,7 +27,7 @@ public:
 	const NDb::SWindowPlacement* GetPlacement() const;
 
 	//IWindowPart{
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	void SetFadeValue( float fValue );
@@ -56,7 +55,7 @@ public:
 	
 	void Init();
 
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 	
 	const wstring& GetText() const { return wszText; }
 	void SetText( const wstring &wszText );

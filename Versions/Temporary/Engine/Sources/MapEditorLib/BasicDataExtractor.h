@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Interface_ObjectCollector.h"
-interface IManipulator;
+struct IManipulator;
 
 class CBasicDataExtractor : public IObjectDataExtractor
 {

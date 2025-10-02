@@ -1,6 +1,6 @@
 #pragma once
 
-interface IScriptDictionary : public CObjectBase
+struct IScriptDictionary : public CObjectBase
 {
 	enum { tidTypeID = 0x1C191C80 };
 

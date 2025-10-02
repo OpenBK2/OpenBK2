@@ -56,7 +56,7 @@ void CWindowPlayer::Reposition( const CTRect<float> &parentRect )
 	CWindow::Reposition( parentRect );
 }
 
-void CWindowPlayer::Visit( interface IUIVisitor *pVisitor )
+void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
 		return;

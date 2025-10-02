@@ -1,6 +1,6 @@
 #pragma once
 class CGeneral;
-interface IGeneralDelayedTask;
+struct IGeneralDelayedTask;
 namespace NDb
 {
 	struct SMapInfo; 
@@ -45,10 +45,10 @@ public:
 
 	bool IsMobileReinforcement( int nParty, int nGroup ) const;
 	void AddReinforcement( class CAIUnit *pUnit );
-	interface IEnemyContainer* GetEnemyConatiner( int nParty );
+	struct IEnemyContainer* GetEnemyConatiner( int nParty );
 	
 	bool MustShootToObstacles( const int nPlayer );
-	void RegisterDelayedTask( interface IGeneralDelayedTask *pTask );
+	void RegisterDelayedTask( struct IGeneralDelayedTask *pTask );
 	
 	// для очагов сопротивления
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,

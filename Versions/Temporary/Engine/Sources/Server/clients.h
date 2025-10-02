@@ -5,7 +5,7 @@
 struct st_mysql;
 typedef st_mysql MYSQL;
 struct SLadderStatistics;
-interface IStatisticsCollector;
+struct IStatisticsCollector;
 struct SLadderDBInfo;
 struct SLadderGameInfo;
 

@@ -11,11 +11,11 @@ namespace NDb
 	struct SMapInfo;
 };
 
-interface ITransceiver;
-interface IVisualNotifications;
-interface IAILogic;
-interface IScenarioTracker;
-interface IMissionSuperWeapon;
+struct ITransceiver;
+struct IVisualNotifications;
+struct IAILogic;
+struct IScenarioTracker;
+struct IMissionSuperWeapon;
 
 typedef	hash_map< NDb::EUserAction, string, SEnumHash > CEventsMap;
 

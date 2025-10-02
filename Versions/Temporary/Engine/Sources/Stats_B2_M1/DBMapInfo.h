@@ -12,7 +12,7 @@
 #include "prefix_dbmapinfo.h"
 #include "../system/filepath.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

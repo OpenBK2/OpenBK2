@@ -74,7 +74,7 @@ void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTim
 }
 
 
-void CTerrainManager::SetAIObserver( interface ITerraAIObserver *pObserver )
+void CTerrainManager::SetAIObserver( struct ITerraAIObserver *pObserver )
 {
 	if ( pTerraGen == 0 )
 		InitTerragen();

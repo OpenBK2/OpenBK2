@@ -9,7 +9,7 @@ namespace NGfx
 namespace NGScene
 {
 
-interface IGScene;
+struct IGScene;
 class CParticleEffect;
 
 class CSpriteAnimator: public CPtrFuncBase<CParticleEffect>

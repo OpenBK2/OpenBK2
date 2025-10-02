@@ -56,7 +56,7 @@ void CTextureRoundSegmentVisitor::SetAngles( float _fStartAngle, float _fFinishA
 	fFinishAngle = NormalizeAngleInRadian( _fFinishAngle + FP_PI4 ) - FP_PI4;
 }
 
-void CTextureRoundSegmentVisitor::Visit( interface IUIVisitor *pVisitor )
+void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 {
 	CTRect<float> rectScreen;
 	VirtualToScreen( rect, &rectScreen );
@@ -161,7 +161,7 @@ void CTextureRoundSegmentVisitor::Visit( interface IUIVisitor *pVisitor )
 	}
 }
 
-void CTextureRoundSegmentVisitor::DrawTriangle( interface IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,	
+void CTextureRoundSegmentVisitor::DrawTriangle( struct IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,
 	const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 )
 {
 	// CRAP - выводится просто цвет без текстуры, сделать вывод с текстурой нетривиально,

@@ -13,7 +13,7 @@ REGISTER_SAVELOAD_CLASS( 0x110793C1, CSound );
 
 CSound::CSound(	int wID, 
 							 const NDb::SSoundDesc *_pDesc,
-														interface ISound *pSound, 
+														struct ISound *pSound,
 														const enum ESoundMixType eMixType,
 														const CVec3 &vPos,
 														const bool bLooped,

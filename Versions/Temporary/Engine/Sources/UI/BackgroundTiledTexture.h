@@ -35,7 +35,7 @@ class CBackgroundTiledTexture : public CBackground
 
 public:
 	CBackgroundTiledTexture();
-	virtual void Visit( interface IUIVisitor * pVisitor );
+	virtual void Visit( struct IUIVisitor * pVisitor );
 	virtual int operator&( IBinSaver &ss );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 

@@ -136,7 +136,7 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 	}
 }
 
-IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	const bool bAlive = fNewHP > 0;

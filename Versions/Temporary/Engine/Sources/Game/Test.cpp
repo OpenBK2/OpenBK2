@@ -17,7 +17,7 @@
 namespace NGlobal
 {
 
-interface IConsoleFunc : public CObjectBase
+struct IConsoleFunc : public CObjectBase
 {
 	virtual bool Execute( const string &szID, const vector<wstring> &paramsSet ) = 0;
 };

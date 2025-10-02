@@ -9,7 +9,7 @@ namespace NCmdLine
 class CCmdLine
 {
 public:
-	interface IObserver;
+	struct IObserver;
 	enum EProcessResult
 	{
 		PROC_RESULT_OK,										// command line processed successfully

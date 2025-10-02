@@ -8,7 +8,7 @@
 
 #include "Window.h"
 
-interface IML;
+struct ISound;
 
 // plain text window
 // user gives Font, Color, String, Alignment,
@@ -36,8 +36,8 @@ protected:
 public:
 	CWindowTextView() : vScreenRect( VNULL2  ), nIDForMLHandler( -1 ) {}
 
-	virtual void Visit( interface IUIVisitor *pVisitor );
-	virtual int operator&( interface IBinSaver &saver );
+	virtual void Visit( struct IUIVisitor *pVisitor );
+	virtual int operator&( struct IBinSaver &saver );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	virtual wstring GetDBText() const;

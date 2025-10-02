@@ -6,8 +6,8 @@
 
 namespace NDb
 {
-interface IObjMan;
-interface IDbObserver;
+struct IObjMan;
+struct IDbObserver;
 namespace NTypeDef
 {
 	struct STypeClass;

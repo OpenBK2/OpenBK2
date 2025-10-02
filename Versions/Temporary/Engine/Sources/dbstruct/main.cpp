@@ -55,7 +55,7 @@ enum EDBStructMode
 	MODE_SHOW_VERSION,
 };
 
-interface ILoadObjectCallback
+struct ILoadObjectCallback
 {
 	virtual void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) = 0;
 };

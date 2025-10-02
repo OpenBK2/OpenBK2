@@ -11,7 +11,7 @@ namespace NDb
 	struct SVSOInstance;
 }
 
-interface ITerraAIObserver : public CObjectBase
+struct ITerraAIObserver : public CObjectBase
 {
 	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights ) = 0;
 	//

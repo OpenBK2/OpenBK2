@@ -3,7 +3,7 @@
 #include "SceneB2_export.h"
 
 
-interface IStatSystem : public CObjectBase
+struct IStatSystem : public CObjectBase
 {
 	enum { tidTypeID = 0x110AA3C0 };
 

@@ -3,7 +3,7 @@
 #include "Interface_Controller.h"
 
 class CProgressDlg;
-interface IProgressHook : public CObjectBase
+struct IProgressHook : public CObjectBase
 {
 	enum { tidTypeID = 0x1B24AB80 };
 

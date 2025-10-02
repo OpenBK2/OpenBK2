@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../MapEditorLib/DefaultInputState.h"
-interface IWindow;
+struct IWindow;
 namespace NDb
 {
 	struct SUIDesc;

@@ -85,7 +85,7 @@ void CClientAckManager::CBoredUnitsContainer::Copy( const CClientAckManager::CBo
 	timeLastBored = cp.timeLastBored;
 }
 
-void CClientAckManager::CBoredUnitsContainer::AddUnit( interface IMOUnit *pUnit )
+void CClientAckManager::CBoredUnitsContainer::AddUnit( struct IMOUnit *pUnit )
 {
 	CBoredUnits::iterator it = boredUnits.find( pUnit );
 	if ( it == boredUnits.end() )
@@ -95,7 +95,7 @@ void CClientAckManager::CBoredUnitsContainer::AddUnit( interface IMOUnit *pUnit 
 	}
 }
 
-void CClientAckManager::CBoredUnitsContainer::DelUnit( interface IMOUnit *pUnit )
+void CClientAckManager::CBoredUnitsContainer::DelUnit( struct IMOUnit *pUnit )
 {
 	CBoredUnits::iterator it = boredUnits.find( pUnit );
 	if ( it != boredUnits.end() )
@@ -259,7 +259,7 @@ void CClientAckManager::AddDeathAcknowledgement( const CVec3 &vPos, const NDb::S
 	}
 }
 
-void CClientAckManager::AddAcknowledgement( interface IMOUnit *pUnit, const NDb::EUnitAckType eAck, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSinceStart )
+void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EUnitAckType eAck, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSinceStart )
 {
 	if ( GetParam( eAck ) == 0 )
 		return;
@@ -371,7 +371,7 @@ void CClientAckManager::UnregisterAck( SUnitAck *ack )
 	ack->eCurrentAck = -1;
 }
 
-void CClientAckManager::Update( interface ISoundScene *pSoundScene )
+void CClientAckManager::Update( struct ISoundScene *pSoundScene )
 {
 	NTimer::STime curTime = pGameTimer->GetAbsTime();
 
@@ -451,7 +451,7 @@ void CClientAckManager::Update( interface ISoundScene *pSoundScene )
 	}
 }
 
-void CClientAckManager::UnitDead( struct IMOUnit *pUnit, interface ISoundScene *pSoundScene )
+void CClientAckManager::UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSoundScene )
 {
 	IMOUnit * pTipaUnit = pUnit;
 	CUnitsAcks::iterator it = unitAcks.find( pTipaUnit ) ;
@@ -473,7 +473,7 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, interface ISoundScene *
 
 }
 
-void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject )
+void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject )
 {
 	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
 	NI_ASSERT( !pObject->IsRefInvalid(), "added ack from invalid unit" );
@@ -481,7 +481,7 @@ void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, interfa
 	boredUnits[eBored].AddUnit( pObject );
 }
 
-void CClientAckManager::UnRegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject )
+void CClientAckManager::UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject )
 {
 	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
 	boredUnits[eBored].DelUnit( pObject );

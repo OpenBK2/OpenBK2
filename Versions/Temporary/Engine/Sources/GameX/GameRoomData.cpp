@@ -30,7 +30,7 @@ static DWORD ConvertColor( const CVec3 &vColor )
 	return 0xFF000000 + (( r & 0xFF ) << 16) + (( g & 0xFF ) << 8) + ( b & 0xFF );
 }
 
-void CColorBackground::Visit( interface IUIVisitor * pVisitor )
+void CColorBackground::Visit( struct IUIVisitor * pVisitor )
 {
 	if ( pos.IsEmpty() ) 
 		return;

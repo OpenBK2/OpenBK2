@@ -4,7 +4,7 @@
 
 namespace NDb
 {
-	interface IObjMan;
+	struct IObjMan;
 }
 
 #define REF_TYPE_UNKNOWN (-1)                   //subject to remove
@@ -132,7 +132,7 @@ struct SPropertyDesc : public SIteratorDesc
 
 
 // manipulator property iterator
-interface IManipulatorIterator : public CObjectBase
+struct IManipulatorIterator : public CObjectBase
 {
 	// go to the next property/item
 	virtual bool Next() = 0;
@@ -159,7 +159,7 @@ enum ECacheType
 	ECT_CACHE_GLOBAL,
 };
 
-interface IManipulator : public CObjectBase
+struct IManipulator : public CObjectBase
 {
 	typedef hash_map<string, UINT> CNameMap;
 	//
@@ -200,7 +200,7 @@ interface IManipulator : public CObjectBase
 
 
 // multimanipulator
-interface IMultiManipulator : public IManipulator
+struct IMultiManipulator : public IManipulator
 {
 	// remove all manipulators
 	virtual void Clear() = 0;

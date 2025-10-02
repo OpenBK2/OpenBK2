@@ -5,7 +5,7 @@
 struct SWindowEditLine;
 class CWindowEditLine;
 
-interface IML;
+struct ISound;
 
 class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 {
@@ -38,7 +38,7 @@ public:
 
 	int operator&( IBinSaver &saver );
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 
 	void AddString( const wstring &szString, const DWORD color  );
 	void Scroll( const int bUp );

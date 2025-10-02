@@ -21,7 +21,7 @@ bool CEffectorButtonState::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) 
+void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
 { 
 	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate*>( _pCmd ) );
 	eSubstate = pCmd->eSubstate;
@@ -45,7 +45,7 @@ void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, interface 
 	bForward = true;
 }
 
-const int CEffectorButtonState::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
+const int CEffectorButtonState::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	if ( !bStarted )
 	{

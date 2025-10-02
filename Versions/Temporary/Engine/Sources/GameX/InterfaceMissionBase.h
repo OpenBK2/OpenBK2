@@ -4,8 +4,8 @@
 #include "InterfaceScreenBase.h"
 
 class CWorldClient;
-interface ITransceiver;
-interface IScenarioTracker;
+struct ITransceiver;
+struct IScenarioTracker;
 namespace NDb
 {
 	struct SMapInfo;

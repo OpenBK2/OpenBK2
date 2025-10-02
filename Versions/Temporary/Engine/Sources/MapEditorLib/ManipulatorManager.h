@@ -53,18 +53,18 @@ public:
 	typedef list<SReferenceInfo> CReferenceInfoList;
 
 	// Скопировать значения из одного манипулятора в другой
-	static bool CloneDBManipulator( interface IManipulator *pDestinationManipulator,
-																	interface IManipulator *pSourceManipulator,
+	static bool CloneDBManipulator( struct IManipulator *pDestinationManipulator,
+																	struct IManipulator *pSourceManipulator,
 																	bool bEqual );
 	// Проверить ссылку на то, что это ссылка, на заполненность, и получить данные о ней
 	static bool GetParamsFromReference( const string &rszRefValueName,
-																			const interface IManipulator *pSourceManipulator,
+																			const struct IManipulator *pSourceManipulator,
 																			string *pszRefObjectTypeName,
 																			string *pszRefObjectName,
 																			const SPropertyDesc **ppRefDesc );
 	// Получить манипулятор по ссылке ( если это ссылка )
-	static interface IManipulator* CreateManipulatorFromReference( const string &rszRefValueName,
-																																 const interface IManipulator *pSourceManipulator,
+	static struct IManipulator* CreateManipulatorFromReference( const string &rszRefValueName,
+																																 const struct IManipulator *pSourceManipulator,
 																																 string *pszRefObjectTypeName,
 																																 string *pszRefObjectName,
 																																 const SPropertyDesc **ppRefDesc );
@@ -93,36 +93,36 @@ public:
 
 	// получить список ссылок из манипулятора
 	static bool EnumReferences( CReferenceInfoList *pReferenceInfoList,
-															const interface IManipulator* pSourceManipulator,
+															const struct IManipulator* pSourceManipulator,
 															const UINT nFlags,
 															const bool bEnumHidden,
 															const ECacheType eCacheType );
 	//
 	// Привести размер массива к указанному ( добавить необходимое или удалить лишнее )
 	static bool EnsureArraySize( const int nSize,
-															 interface IManipulator *pManipulator,
+															 struct IManipulator *pManipulator,
 															 const string &rszArrayName );
 	// получить список ссылок из манипулятора
-	static void Trace( const string &rszPrefix, interface IManipulator* pManipulator );
+	static void Trace( const string &rszPrefix, struct IManipulator* pManipulator );
 	//
 	// создать манипулятор по ObjectSet 
 	static IManipulator *CreateObectSetManipulator( const struct SObjectSet &rObjectSet );
 
 	template<class TValue> 
-	static bool SetValue( const TValue &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, CVariant( rData ) );
 	}
 	//
 	template<> 
-	static bool SetValue( const CVariant &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVariant &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, rData );
 	}
 	//
-	static bool SetValue( const string &rszData, interface IManipulator *pManipulator, const string &rszName, bool bReference )
+	static bool SetValue( const string &rszData, struct IManipulator *pManipulator, const string &rszName, bool bReference )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		if ( rszData.empty() && bReference )
@@ -136,7 +136,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec2( const TValue &rvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetVec2( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec2(): pManipulator == 0" );
 		bool bResult = true;
@@ -146,7 +146,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec3( const TValue &rvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetVec3( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec3(): pManipulator == 0" );
 		bool bResult = true;
@@ -157,7 +157,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec4( const TValue &rvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetVec4( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec4(): pManipulator == 0" );
 		bool bResult = true;
@@ -169,23 +169,23 @@ public:
 	}
 	//
 	template<> 
-	static bool SetValue( const CVec2 &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec2 &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return SetVec2<CVec2>( rData, pManipulator, rszName );
 	}
 	template<> 
-	static bool SetValue( const CVec3 &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec3 &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return SetVec3<CVec3>( rData, pManipulator, rszName );
 	}
 	template<> 
-	static bool SetValue( const CVec4 &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec4 &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return SetVec4<CVec4>( rData, pManipulator, rszName );
 	}
 	//
 	template<class TValue> 
-	static bool SetArray( const TValue &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool SetArray( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetArray(): pManipulator == 0" );
 		int nExistingElementCount = 0;
@@ -222,7 +222,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool Set2DArray( const TValue &rData, interface IManipulator *pManipulator, const string &rszName )
+	static bool Set2DArray( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Set2DArray(): pManipulator == 0" );
 		const string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
@@ -287,7 +287,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool GetValue( TValue *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( TValue *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -302,7 +302,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( CVariant *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVariant *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -310,7 +310,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( string *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( string *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -331,7 +331,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( UINT *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( UINT *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -346,7 +346,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( WORD *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( WORD *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -361,7 +361,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec2( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetVec2( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec2(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec2(): pManipulator == 0" );
@@ -381,7 +381,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec3( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetVec3( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec3(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec3(): pManipulator == 0" );
@@ -405,7 +405,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec4( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetVec4( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec4(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec4(): pManipulator == 0" );
@@ -433,23 +433,23 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( CVec2 *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec2 *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return GetVec2<CVec2, float>( pData, pManipulator, rszName );
 	}
 	template<> 
-	static bool GetValue( CVec3 *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec3 *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return GetVec3<CVec3, float>( pData, pManipulator, rszName );
 	}
 	template<> 
-	static bool GetValue( CVec4 *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec4 *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		return GetVec4<CVec4, float>( pData, pManipulator, rszName );
 	}
 	//
 	template<>
-	static bool GetValue( GUID *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( GUID *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -468,7 +468,7 @@ public:
 		}
 		return bResult;
 	}
-	static bool GetGUIDAsString( string *pData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetGUIDAsString( string *pData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -482,7 +482,7 @@ public:
 	}
 	//
 	template<class TValue, class TElementType> 
-	static bool GetArray( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetArray( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -505,7 +505,7 @@ public:
 		return bResult;
 	}
 	template<class TValue, class TElementType> 
-	static bool GetVec2Array( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetVec2Array( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -528,7 +528,7 @@ public:
 		return bResult;
 	}
 	template<class TValue, class TElementType> 
-	static bool GetVec3Array( TValue *pvData, interface IManipulator *pManipulator, const string &rszName )
+	static bool GetVec3Array( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -552,7 +552,7 @@ public:
 	}
 	//
 	template<class TValue, class TElementType> 
-	static bool Get2DArray( TValue *pvData, interface IManipulator *pManipulator, const string &rszName, const TElementType &rDefaultValue )
+	static bool Get2DArray( TValue *pvData, struct IManipulator *pManipulator, const string &rszName, const TElementType &rDefaultValue )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::Get2DArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Get2DArray(): pManipulator == 0" );
@@ -613,7 +613,7 @@ public:
 		return bResult;
 	}
 	//
-	static bool Remove2DArray( interface IManipulator *pManipulator, const string &rszName );
+	static bool Remove2DArray( struct IManipulator *pManipulator, const string &rszName );
 };
 
 

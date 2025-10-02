@@ -19,7 +19,7 @@ class CPCBuildDataDialog : public CResizeDialog, public CPCBaseDialog
 	ICommandHandler *pPreviousCommandHandler;
 	//
 	SBuildDataParams *pBuildDataParams;
-	interface IBuildDataCallback *pBuildDataCallback;
+	struct IBuildDataCallback *pBuildDataCallback;
 	//
 	CImageList typesImageList;
 	CImageList headerImageList;
@@ -54,7 +54,7 @@ public:
 	//	
 	void SetBuildDataParams( SBuildDataParams *_pBuildDataParams ) { pBuildDataParams = _pBuildDataParams; }
 	void SetTemporaryLabel( const string &rszTemporaryLabel ) { tree.SetTemporaryLabel( rszTemporaryLabel ); }
-	void SetBuildDataCallback( interface IBuildDataCallback *_pBuildDataCallback ) { pBuildDataCallback = _pBuildDataCallback; }
+	void SetBuildDataCallback( struct IBuildDataCallback *_pBuildDataCallback ) { pBuildDataCallback = _pBuildDataCallback; }
 	//
 	//CPCBaseDialog
 	IView* GetView();

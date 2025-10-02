@@ -70,12 +70,12 @@ CUIFactory::CUIFactory()
 //	MessageReactionsRegisterScriptFunctions();
 }
 
-void CUIFactory::SetMLHandler( const wstring &wsTAG, interface IMLHandler *pHandler )
+void CUIFactory::SetMLHandler( const wstring &wsTAG, struct IMLHandler *pHandler )
 {
 	customMLHandlers[wsTAG] = pHandler;
 }
 
-void CUIFactory::RegisterMLHandlersInternal( interface IML *pML )
+void CUIFactory::RegisterMLHandlersInternal( struct IML *pML )
 {
 	for ( CCustomMLHandlersMap::iterator it = customMLHandlers.begin(); it != customMLHandlers.end(); ++it )
 	{
@@ -83,7 +83,7 @@ void CUIFactory::RegisterMLHandlersInternal( interface IML *pML )
 	}
 }
 
-void CUIFactory::RegisterMLHandlers( interface IML *pML )
+void CUIFactory::RegisterMLHandlers( struct IML *pML )
 {
 	Singleton<CUIFactory>()->RegisterMLHandlersInternal( pML );
 }
@@ -165,7 +165,7 @@ IMessageCheck * CUIFactory::MakeCheck( const struct NDb::SUIDesc *pDesc )
 	return p;
 }
 
-IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimateWindow )
+IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimateWindow )
 {
 	if ( !pCmd ) return 0;
 	IUIEffector *p = MakeObject<IUIEffector>( pCmd->nClassTypeID );

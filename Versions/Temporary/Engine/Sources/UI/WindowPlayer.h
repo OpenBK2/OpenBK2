@@ -40,7 +40,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	virtual void Reposition( const CTRect<float> &parentRect );
 
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 
 	//IPlayer{
 	virtual void SetSequence( const string &szFileName );

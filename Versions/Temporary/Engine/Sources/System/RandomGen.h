@@ -3,7 +3,7 @@
 #include "System_export.h"
 
 
-interface IRandomSeed : public CObjectBase
+struct IRandomSeed : public CObjectBase
 {
 	// re-initialize random seed
 	virtual void Init() = 0;
@@ -12,7 +12,7 @@ interface IRandomSeed : public CObjectBase
 	virtual void Store( CDataStream *pStream ) = 0;
 	virtual void Restore( CDataStream *pStream ) = 0;
 	// serialize to XML
-	virtual int operator&( interface IXmlSaver &saver ) = 0;
+	virtual int operator&( struct IXmlSaver &saver ) = 0;
 };
 
 namespace NRandom

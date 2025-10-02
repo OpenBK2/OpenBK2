@@ -16,7 +16,7 @@
 // GetView->RemoveViewManipulator();
 // Destroy()
 // Destructor()
-interface IEditor : public CObjectBase
+struct IEditor : public CObjectBase
 {
 	// передается в View
 	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) = 0;
@@ -49,7 +49,7 @@ interface IEditor : public CObjectBase
 };
 
 
-interface IEditorContainer : public CObjectBase
+struct IEditorContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C0 };
 	//

@@ -8,7 +8,7 @@
 #include "MPManagerMode.h"
 
 
-interface IServerClient;
+struct IServerClient;
 namespace NDb
 {
 	struct SMultiplayerMap;

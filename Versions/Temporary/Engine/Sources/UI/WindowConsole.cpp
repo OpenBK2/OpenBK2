@@ -166,7 +166,7 @@ void CWindowConsole::Segment( const int timeDiff )
 	}
 }
 
-void CWindowConsole::Visit( interface IUIVisitor *pVisitor )
+void CWindowConsole::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	
@@ -554,7 +554,7 @@ void CDebugSingleton::ShowStatsWindow( const bool bShow )
 		pStatsWindow->ShowWindow( bShow );
 }
 
-interface IStatsSystemWindow * CDebugSingleton::GetStatsWindow()
+struct IStatsSystemWindow * CDebugSingleton::GetStatsWindow()
 {
 	if ( !pStatsWindow )
 		CreateStatsWindow();

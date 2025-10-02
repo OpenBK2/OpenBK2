@@ -13,7 +13,7 @@ class CAttributeDefNode;
 class CNamespace;
 class CEnumEntryNode;
 
-interface IVisitor : public CObjectBase
+struct IVisitor : public CObjectBase
 {
 	virtual void Visit( CBaseTypeNode *pBaseTypeNode ) = 0;
 	virtual void Visit( CComplexTypeNode *pComplexTypeNode ) = 0;

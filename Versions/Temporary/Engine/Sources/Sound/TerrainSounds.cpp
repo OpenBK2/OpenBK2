@@ -128,7 +128,7 @@ void CTerrainSounds::CTerrainSound::StopSounds( ISFX * pSFX, bool bOnlyPeaceful 
 //*															CTerrainSounds*
 //*******************************************************************
 
-void CTerrainSounds::Init( interface ITerrainSounds *_pTerrain )
+void CTerrainSounds::Init( struct ITerrainSounds *_pTerrain )
 {
 	Clear();
 	pTerrain = _pTerrain;
@@ -159,7 +159,7 @@ void CTerrainSounds::Mute( const bool bMute )
 	}
 }
 
-void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, interface ISoundScene *pScene )
+void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, struct ISoundScene *pScene )
 {
 	if ( !pTerrain || bMuteAll ) return ;
 

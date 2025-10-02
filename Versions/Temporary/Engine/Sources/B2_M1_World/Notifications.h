@@ -48,7 +48,7 @@ enum EVisualNotification
 	EVNT_UNITS_GIVEN,
 };
 
-interface IVisualNotifications : public CObjectBase
+struct IVisualNotifications : public CObjectBase
 {
 	struct SObjective
 	{

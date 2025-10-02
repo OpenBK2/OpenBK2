@@ -27,7 +27,7 @@ public:
 	bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) { return false; }
 	IWindow* Pick( const CVec2 &vPos, const bool bRecursive ) { return 0; }
 	bool IsPointInsideOfChildren( const CVec2 &vPoint ) { return false; }
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 	//void Segment( const int timeDiff ) { }
 	bool IsInside( const CVec2 &vPos ) const { return true; }
 	void Enable( const bool bEnable ) {}
@@ -57,7 +57,7 @@ public:
 	void FillWindowRect( CTRect<float> *pRect ) const {}
 	CTRect<float> GetWindowRect() const { return CTRect<float>(0,0,0,0); }
 	IWindow* GetParentWindow() const { return 0; }
-	interface IScreen* GetScreen() { return 0; }
+	struct IScreen* GetScreen() { return 0; }
 	const struct NDb::SWindowShared * GetSharedDesc() const { return 0; }
 	void RemoveChild( IWindow *_pChild ) {}
 	IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) { return 0; }

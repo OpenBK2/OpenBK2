@@ -3,7 +3,7 @@
 
 namespace NNet
 {
-	interface IDriver;
+	struct IDriver;
 }
 class CMultiplayerCommand;
 
@@ -12,7 +12,7 @@ namespace NDb
 	struct SNetGameConsts;
 };
 
-interface IAICmdsAutoMagic;
+struct IAICmdsAutoMagic;
 class CMultiplayerInternal : public IMultiplayer
 {
 	OBJECT_BASIC_METHODS( CMultiplayerInternal );
@@ -44,7 +44,7 @@ public:
 	virtual void SendRecv();
 
 	// CRAP{ only for alpha
-	interface NNet::IDriver* GetNetDriver() const { return pNetDriver; }
+	struct NNet::IDriver* GetNetDriver() const { return pNetDriver; }
 	// CRAP}
 };
 

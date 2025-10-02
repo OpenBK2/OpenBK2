@@ -13,7 +13,7 @@ class CAIMap;
 class CStaticMapHeights;
 class CCollisionsCollector;
 class CCommonPathFinder;
-interface IPointChecking;
+struct IPointChecking;
 
 //! параметры для выравнивания скорости
 enum EAdjustSpeedParam

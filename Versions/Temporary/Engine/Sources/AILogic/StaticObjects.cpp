@@ -147,7 +147,7 @@ void CStaticObjects::Init( const int nMapTileSizeX, const int nMapTileSizeY )
 
 void CStaticObjects::EnumObstaclesInRange(  const CVec2 &vCenter,
 																						const float fR,
-																						interface IObstacleEnumerator *f )
+																						struct IObstacleEnumerator *f )
 {
 	const int nMinX = Max( 0, int( ( vCenter.x - fR ) / ( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
 	const int nMaxX = Min( obstacles.GetSizeX() - 1, int( ( vCenter.x + fR ) / float( SConsts::TILE_SIZE * SConsts::STATIC_OBJ_CELL ) ) );
@@ -359,13 +359,13 @@ void CStaticObjects::PostAllObjectsInit()
 	// iterate 1 more time, look
 }
 
-void CStaticObjects::RemoveObstacle( interface IObstacle *pObstacle )
+void CStaticObjects::RemoveObstacle( struct IObstacle *pObstacle )
 {
 	obstacleObjects.erase( pObstacle->GetObject()->GetUniqueId() );
 	obstacles.RemoveFromPosition( pObstacle, AICellsTiles::GetTile( CVec2(pObstacle->GetCenter().x,pObstacle->GetCenter().y) ) );
 }
 
-void CStaticObjects::AddObstacle( interface IObstacle *pObstacle )
+void CStaticObjects::AddObstacle( struct IObstacle *pObstacle )
 {
 	obstacleObjects.insert( pair< int, CPtr<IObstacle> >(pObstacle->GetObject()->GetUniqueId(), pObstacle ) );
 	obstacles.AddToPosition( pObstacle, AICellsTiles::GetTile( CVec2(pObstacle->GetCenter().x,pObstacle->GetCenter().y) ) );

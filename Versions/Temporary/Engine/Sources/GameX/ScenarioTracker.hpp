@@ -6,7 +6,7 @@
 #include "ScenarioTracker.h"
 #include "../Misc/HashFuncs.h"
 
-interface IScriptWrapper;
+struct IScriptWrapper;
 
 namespace NScenarioTracker
 {

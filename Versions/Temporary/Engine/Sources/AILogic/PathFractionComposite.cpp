@@ -34,7 +34,7 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 	pParams->vSpeed = vSpeed;
 }
 
-CPathFractionComposite::CPathFractionComposite( interface IPlane *pPlane, interface IPathFraction *pPath )
+CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath )
 : vSpeed ( pPlane->GetSpeedB2() ),
 	vNormale( pPlane->GetNormalB2() ),
 	pInitialPath( pPath ),

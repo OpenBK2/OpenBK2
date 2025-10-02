@@ -35,8 +35,8 @@ class CClientAckManager : public IClientAckManager
 
 		int GetCount() const { return nCounter; }
 
-		void AddUnit( interface IMOUnit *pUnit );
-		void DelUnit( interface IMOUnit *pUnit );
+		void AddUnit( struct IMOUnit *pUnit );
+		void DelUnit( struct IMOUnit *pUnit );
 		// если время подошло, то заставляет рандомного юнита послать Ack. 
 		//Если ack послали, то true;
 		bool SendAck( const NTimer::STime curTime, 
@@ -97,7 +97,7 @@ class CClientAckManager : public IClientAckManager
 	};
 
 	IConsoleBuffer *pConsoleBuffer;
-	interface IGameTimer *pGameTimer;
+	struct IGameTimer *pGameTimer;
 	static CDBPtr<NDb::SClientGameConsts> pConsts;
 
 	CPtr<IMOUnit> pLastSelected;
@@ -136,11 +136,11 @@ public:
 
 	void SetClientConsts( const NDb::SClientGameConsts *pConsts );
 	void AddDeathAcknowledgement( const CVec3 &vPos, const NDb::SComplexSoundDesc *pSound, const unsigned int nTimeSinceStart );
-	void AddAcknowledgement( interface IMOUnit *pUnit, const NDb::EUnitAckType eAck, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSinceStart );
-	void UnitDead( struct IMOUnit *pUnit, interface ISoundScene *pSoundScene );
-	void Update( interface ISoundScene *pSoundScene );
-	void RegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject );
-	void UnRegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject );
+	void AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EUnitAckType eAck, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSinceStart );
+	void UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSoundScene );
+	void Update( struct ISoundScene *pSoundScene );
+	void RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
+	void UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
 };
 
 

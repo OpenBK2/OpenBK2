@@ -20,7 +20,7 @@
 #define OCDE_ALL						0xFFFFFFFF
 
 
-interface IObjectCollectorCallback
+struct IObjectCollectorCallback
 {
 	virtual void OnInsertObject( const string &szObjectTypeName, const string &szObjectName ) = 0;
 	virtual void OnRemoveObject( const string &szObjectTypeName, const string &szObjectName ) = 0;
@@ -29,7 +29,7 @@ interface IObjectCollectorCallback
 };
 
 
-interface IObjectDataExtractor : public CObjectBase
+struct IObjectDataExtractor : public CObjectBase
 {
 	// возвращает данные объекта, в качестве возвращаемого значение - битовая маска, что заполнено
 	virtual UINT GetObjectData( class CBitmap *pNormalBitmap,
@@ -41,7 +41,7 @@ interface IObjectDataExtractor : public CObjectBase
 };
 
 
-interface IObjectFilter
+struct IObjectFilter
 {
 	typedef hash_map<NFile::CFilePath, int> CObjectNameCollection;
 	typedef hash_map<NFile::CFilePath, CObjectNameCollection> CObjectCollection;
@@ -51,7 +51,7 @@ interface IObjectFilter
 };
 
 
-interface IObjectFilterCollector : public CObjectBase
+struct IObjectFilterCollector : public CObjectBase
 {
 	enum { tidTypeID = 0x14216B00 };
 	//
@@ -74,7 +74,7 @@ interface IObjectFilterCollector : public CObjectBase
 // Коллекционирование объектов по меткам
 // Создание ImageList на коллекцию
 // Применение фильтров
-interface IObjectCollector : public CObjectBase
+struct IObjectCollector : public CObjectBase
 {
 	enum { tidTypeID = 0x14126380 };
 	//

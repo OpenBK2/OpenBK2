@@ -95,7 +95,7 @@ public:
 		return vNormal; 
 	}
 
-	virtual const interface IManuver * GetManuver() const 
+	virtual const struct IManuver * GetManuver() const
 	{ 
 		return pathHistory.GetCurManuver(); 
 	}
@@ -139,14 +139,14 @@ public:
 	virtual void UpdateDirection( const CVec2 &newDir ) { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void UpdateDirection( const WORD newDir ) { NI_ASSERT( false, "WRONG CALL"); }
 
-	virtual const bool SendAlongPath( interface IPath *pPath ) { NI_ASSERT( false, "WRONG CALL"); return false; }
+	virtual const bool SendAlongPath( struct IPath *pPath ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual const WORD GetDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetDirVector() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
 	virtual const WORD GetFrontDir() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetCenter() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
 	virtual const float GetZ() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual const CVec2& GetSpeed() const { NI_ASSERT( false, "WRONG CALL"); return VNULL2; }
-	virtual interface ISmoothPath* GetCurPath() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
+	virtual struct ISmoothPath* GetCurPath() const { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
 	virtual void UpdateTile()	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdateTile" ); }
 
@@ -171,7 +171,7 @@ public:
 	virtual void Stop() { }
 	virtual void StopTurning() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void ForceGoByRightDir() { NI_ASSERT( false, "WRONG CALL"); }
-	virtual const bool SendAlongPath( interface IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) { NI_ASSERT( false, "WRONG CALL"); return false; }
+	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual bool CheckToTurn( const WORD wNewDir ) { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual void LockTiles() { NI_ASSERT( false, "WRONG CALL"); }
 	virtual void UnlockTiles() { NI_ASSERT( false, "WRONG CALL"); }
@@ -193,7 +193,7 @@ public:
 	virtual bool IsLockingTiles() const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual bool HasSuspendedPoint() const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual bool CanRotateTo( SRect smallRect, const CVec2 &vNewDir, bool bWithUnits, bool bCanGoBackward = true ) const { NI_ASSERT( false, "WRONG CALL"); return true; }
-	virtual IStaticPath* CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, interface IPointChecking *pPointChecking ) { NI_ASSERT( false, "WRONG CALL"); return 0; }
+	virtual IStaticPath* CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking ) { NI_ASSERT( false, "WRONG CALL"); return 0; }
 	virtual bool IsInOneTrain( CBasePathUnit *pUnit ) const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual bool IsTrain() const { NI_ASSERT( false, "WRONG CALL"); return false; }
 	virtual const SVector GetLastKnownGoodTile() const { NI_ASSERT( false, "WRONG CALL"); return SVector(0,0); }

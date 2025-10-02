@@ -1,7 +1,7 @@
 #pragma once
 
 #define DECLARE_FACTORY( TYPE )																													\
-interface I##TYPE;																																			\
+struct I##TYPE;																																			\
 namespace N##TYPE##Factory																															\
 {																																												\
 	void Register##TYPE##Type( const string &szName, ObjectFactoryNewFunc pfnNewFunc );		\

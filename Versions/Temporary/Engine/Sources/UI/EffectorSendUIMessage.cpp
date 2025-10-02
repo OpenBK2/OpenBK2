@@ -20,7 +20,7 @@ int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
+void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
 {
 	const NDb::SUISSendUIMessage *pCmd( checked_cast<const NDb::SUISSendUIMessage*>( _pCmd ) );
 	CParam<string> messageID( pCmd->szMessageID );
@@ -51,7 +51,7 @@ void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, interfac
 	bFinished = false;
 }
 
-const int CEffectorSendUIMessage::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
+const int CEffectorSendUIMessage::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	bool bResult = false;
 	if ( !szAnimatedWindow.empty() )

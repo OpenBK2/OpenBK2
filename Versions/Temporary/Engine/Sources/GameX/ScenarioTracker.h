@@ -14,7 +14,7 @@ namespace NDb
 class CMapObj;
 
 typedef vector<CDBPtr<NDb::SMapInfo> > CMissions;
-interface IScenarioTracker : public IAIScenarioTracker
+struct IScenarioTracker : public IAIScenarioTracker
 {
 	enum { tidTypeID = 0x11165340 };
 

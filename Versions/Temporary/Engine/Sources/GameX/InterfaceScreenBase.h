@@ -68,7 +68,7 @@ protected:
 	const string& GetBindSection() const { return szBindSection; }
 	virtual void RestoreBindSection();
 	
-	void AddScreen( interface IProgrammedReactionsAndChecks *pReactions );
+	void AddScreen( struct IProgrammedReactionsAndChecks *pReactions );
 	IScreen* GetScreen() { return pScreen; }
 	
 	template <typename TObj, typename TMsg>
@@ -88,7 +88,7 @@ public:
 	CInterfaceScreenBase( const string &_szInterfaceType, const string &_szBindSection );
 	//
 	virtual bool Init();
-	virtual bool Init( interface ITransceiver *pTransceiver ) { return CInterfaceScreenBase::Init(); }
+	virtual bool Init( struct ITransceiver *pTransceiver ) { return CInterfaceScreenBase::Init(); }
 
 	void Step( bool bAppActive );
 	virtual void OnGetFocus( bool bFocus );

@@ -709,7 +709,7 @@ int CWindowEditLine::GetTextWidth( const int nFirstChars )
 		return it->x1;
 }
 
-void CWindowEditLine::Visit( interface IUIVisitor *pVisitor )
+void CWindowEditLine::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 

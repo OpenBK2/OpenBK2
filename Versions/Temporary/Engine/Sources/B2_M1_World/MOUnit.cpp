@@ -162,7 +162,7 @@ void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions 
 {
 }
 
-IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	// Ammo
 	nSupply = stats.nSupply;
@@ -327,13 +327,13 @@ bool CMOUnit::NeedShowInterrior() const
 	return false;
 }
 
-void CMOUnit::AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, interface IClientAckManager *pAckManager, const int nSet )
+void CMOUnit::AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet )
 {
 	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, nSet ), nSet, 0 );
 }
 
-void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, interface IClientAckManager *pAckManager )
+void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager )
 {
 	if ( ack.bPresent )
 		pAckManager->RegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
@@ -341,7 +341,7 @@ void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement
 		pAckManager->UnRegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
 }
 
-void CMOUnit::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
+void CMOUnit::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, 0 ), 0, 0 );
@@ -360,7 +360,7 @@ void CMOUnit::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESe
 	SetDeathState();
 }
 
-void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
 		pAckManager->UnitDead( this, pSoundScene );

@@ -10,7 +10,7 @@ namespace NGfx
 namespace NGScene
 {
 class CParticleEffect;
-interface IGScene;
+struct IGScene;
 
 class CPointGlowAnimator : public CPtrFuncBase<CParticleEffect>
 {

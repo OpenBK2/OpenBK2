@@ -29,7 +29,7 @@ void DrawWhiteCross( const CVec3 &vPoint );
 #endif 
 //DEBUG}
 
-interface IAIScenarioTracker *GetScenarioTracker();
+struct IAIScenarioTracker *GetScenarioTracker();
 
 
 

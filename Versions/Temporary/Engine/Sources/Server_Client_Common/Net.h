@@ -7,8 +7,8 @@ class CNetPacket;
 
 namespace NNet
 {
-	interface ILinksManager;
-	interface IDriver;
+	struct ILinksManager;
+	struct IDriver;
 	class CNodeAddress;
 	struct SNetDriverConsts;
 }

@@ -30,7 +30,7 @@ class CManuverBuilder
 		{
 			return wStartAngle + 65535 / nMaxAttakers * nAttacker;
 		}
-		interface IManuver* CreateManuver( class CPlanesFormation * pPos, const CVec3 &vPos, int nAttacker );
+		struct IManuver* CreateManuver( class CPlanesFormation * pPos, const CVec3 &vPos, int nAttacker );
 		void IncreaseMaxAttackers()
 		{
 			nMaxAttakers += 2;
@@ -55,7 +55,7 @@ public:
 	const SManuverDescriptor * Choose( const CManuverStateDesc &current, const class CPlanePreferences &pref ) const;
 
 	// default plane's behaviour. _must_ always return non null IManuver
-	interface IManuver * CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
+	struct IManuver * CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 	
 	enum EPlanesAttitude GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const;
 
@@ -71,14 +71,14 @@ public:
 	}
 
 	// manuvers for air fight.
-	interface IManuver* CreateManuver( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
+	struct IManuver* CreateManuver( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 
 	// manuvers for ground attack
-	interface IManuver* CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID );
+	struct IManuver* CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID );
 
 	// for travel to point. suitable for fighter patrol, bombers, etc.
 	// if bToHorisontal == true then plane will first start horizonal move, then point move
-	interface IManuver* CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
+	struct IManuver* CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
 };
 
 

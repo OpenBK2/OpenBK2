@@ -3,7 +3,7 @@
 namespace NDBWatcherClient
 {
 
-interface IDBWatcherClient : public CObjectBase
+struct IDBWatcherClient : public CObjectBase
 {
 	enum { tidTypeID = 0x30228BC0 };
 	enum EResult

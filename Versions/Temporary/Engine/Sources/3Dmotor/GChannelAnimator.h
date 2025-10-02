@@ -7,7 +7,7 @@ namespace NAnimation
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// arbitrary scalar channel animation support
-	interface IChannelAnimator
+	struct IChannelAnimator
 	{
 		virtual int GetChannelCount() = 0;
 		virtual int GetChannelIndex( const string &szName ) = 0;

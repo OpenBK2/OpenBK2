@@ -4,7 +4,7 @@
 
 
 //interface for manipulating db data and related services
-interface IResourceManager : CObjectBase
+struct IResourceManager : CObjectBase
 {
 	enum { tidTypeID = 0x10074AC0 };
 	//

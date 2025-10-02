@@ -29,8 +29,8 @@ public:
 	}
 
 	static IStatesFactory* Instance();
-	virtual interface IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual interface IUnitState* ProduceRestState( class CQueueUnit *pUnit );
+	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
+	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 	// for Saving/Loading of static members
@@ -103,7 +103,7 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pUnit); f.Add(3,&state); f.Add(4,&nextShootCheck); f.Add(5,&lastEnemyTile); f.Add(6,&wLastEnemyDir); f.Add(7,&lastEnemyCenter); f.Add(8,&pEnemy); f.Add(9,&pGun); f.Add(10,&bAim); f.Add(11,&bFinish); f.Add(12,&bSwarmAttack); f.Add(13,&bPreferGrenade); f.Add(14,&nEnemyParty); f.Add(15,&damageToEnemyUpdater); f.Add(16,&runUpToEnemy); return 0; }
 	//
 	bool IsBruteMoving();
-	interface IStaticPath* BestSidePath();
+	struct IStaticPath* BestSidePath();
 
 	// атака в лоб - ехать на юнит и, когда можно стрелять, стрелять
 	void AnalyzeBruteMovingPosition();

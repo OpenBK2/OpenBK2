@@ -15,12 +15,12 @@ void CEditorScene::RemoveAllScreens()
 	Scene()->RemoveAllScreens();
 }
 
-void CEditorScene::AddScreen( interface IWindow *pScreen )
+void CEditorScene::AddScreen( struct IWindow *pScreen )
 {
 	Scene()->AddScreen( pScreen );
 }
 
-void CEditorScene::RemoveScreen( interface IWindow *pScreen )
+void CEditorScene::RemoveScreen( struct IWindow *pScreen )
 {
 	Scene()->RemoveScreen( pScreen );
 }

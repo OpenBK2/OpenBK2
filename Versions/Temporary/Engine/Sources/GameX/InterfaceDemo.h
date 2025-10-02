@@ -2,7 +2,7 @@
 
 #include "InterfaceScreenBase.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 class CBackgroundMutableTexture;
 
 class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks

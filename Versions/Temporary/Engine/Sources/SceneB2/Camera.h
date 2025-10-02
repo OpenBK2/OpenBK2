@@ -114,7 +114,7 @@ namespace NCamera
 	};
 };
 
-interface ICamera : public CObjectBase
+struct ICamera : public CObjectBase
 {
 	enum { tidTypeID = 0x3014EC01 };
 	

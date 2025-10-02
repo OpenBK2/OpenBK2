@@ -24,7 +24,7 @@ class CGeneralAirForce : public CCommander
 
 	typedef hash_map< int, CPtr<CEnemyRememberer> > AntiAviation;
 
-	interface IEnemyContainer *pEnemyContainer;
+	struct IEnemyContainer *pEnemyContainer;
 
 	struct SSupportInfo
 	{

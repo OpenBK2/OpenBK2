@@ -27,7 +27,7 @@ public:
 	CBackground();
 
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
-	virtual int operator&( interface IBinSaver &ss );
+	virtual int operator&( struct IBinSaver &ss );
 	virtual void Init() {  }
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 

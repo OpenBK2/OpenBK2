@@ -1013,7 +1013,7 @@ void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimat
 //*											 CShootEstimatorForObstacles*
 //*******************************************************************
 
-bool CShootEstimatorForObstacles::AddObstacle( interface IObstacle *pObstacle )
+bool CShootEstimatorForObstacles::AddObstacle( struct IObstacle *pObstacle )
 {
 	// уничтожать только вражеские препятствия
 	if ( theDipl.GetDiplStatus( pObstacle->GetPlayer(), pOwner->GetPlayer() ) != EDI_ENEMY )
@@ -1045,7 +1045,7 @@ bool CShootEstimatorForObstacles::AddObstacle( interface IObstacle *pObstacle )
 	return false;
 }
 
-interface IObstacle * CShootEstimatorForObstacles::GetBest() const
+struct IObstacle * CShootEstimatorForObstacles::GetBest() const
 {
 	return pBest;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "window.h"
 
-interface IML;
+struct ISound;
 
 class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 {
@@ -30,7 +30,7 @@ public:
 
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	void UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor );
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 
 	int operator&( IBinSaver &saver )
 	{

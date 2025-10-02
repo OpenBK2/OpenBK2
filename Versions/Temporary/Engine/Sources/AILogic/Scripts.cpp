@@ -1148,7 +1148,7 @@ void CScripts::DelInvalidUnits( const int scriptId )
 	}
 }
 
-int CScripts::GetCheckObjectsInScriptArea( const SScriptArea &area, const interface ICheckObjects &check )
+int CScripts::GetCheckObjectsInScriptArea( const SScriptArea &area, const struct ICheckObjects &check )
 {
 	float fR = area.eType == EAT_CIRCLE ? area.fR : Max( fabs(area.vAABBHalfSize.x), fabs(area.vAABBHalfSize.y) );	
 	int nResult = 0;

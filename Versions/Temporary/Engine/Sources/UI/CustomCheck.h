@@ -13,7 +13,7 @@ class CCheckRunScript : public IMessageCheck
 public:
 	CCheckRunScript() {  }
 	int operator&( IBinSaver &ss );
-	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
 
@@ -23,7 +23,7 @@ class CCheckPreprogrammed : public IMessageCheck
 		CDBPtr<NDb::SCheckPreprogrammed> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
@@ -34,7 +34,7 @@ class CCheckIsWindowEnabled : public IMessageCheck
 		CDBPtr<NDb::SCheckIsWindowEnabled> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
@@ -45,7 +45,7 @@ class CCheckIsWindowVisible : public IMessageCheck
 	CDBPtr<NDb::SCheckIsWindowVisible> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
@@ -56,7 +56,7 @@ class CCheckIsTabActive : public IMessageCheck
 	CDBPtr<NDb::SCheckIsTabActive> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };

@@ -7,7 +7,7 @@ struct SWindowScrollBar;
 class CWindowScrollBar;
 class CWindowSimple;
 
-interface IScrollableContrainerSorter
+struct IScrollableContrainerSorter
 {
 
 };
@@ -103,11 +103,11 @@ public:
 
 	
 	virtual int operator&( IBinSaver &saver );
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	
-	virtual void Clicked( interface IWindow *pWho, int nButton );
-	void DoubleClicked( interface IWindow *pWho, int nButton );
+	virtual void Clicked( struct IWindow *pWho, int nButton );
+	void DoubleClicked( struct IWindow *pWho, int nButton );
 	virtual IWindow *GetSelectedItem() const { return pSelected; }
 	virtual IWindow *GetItem( const string &szName );
 	virtual IWindow *GetItem( const int nItem );

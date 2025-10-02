@@ -18,7 +18,7 @@ public:
 
 ////Update transformers
 	public:
-		interface IUpdateTransformer : public CObjectBase
+		struct IUpdateTransformer : public CObjectBase
 		{
 			virtual SAIBasicUpdate* Transform( CUpdateData *pUpdate, int nReturnTime ) = 0;
 		};

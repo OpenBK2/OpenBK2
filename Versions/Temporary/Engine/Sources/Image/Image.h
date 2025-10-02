@@ -2,7 +2,7 @@
 
 template<class T> class CArray2D;
 
-interface IDirect3DDevice9;
+struct IDirect3DDevice9;
 namespace NGfx
 {
 enum EPixelFormat;

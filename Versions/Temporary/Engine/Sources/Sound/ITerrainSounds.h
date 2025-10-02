@@ -7,7 +7,7 @@ namespace NDb
 	struct SComplexSoundDesc;
 }
 
-interface ITerrainSounds : public virtual CObjectBase
+struct ITerrainSounds : public virtual CObjectBase
 {
 	// for sound
 	//returns random sound for this terrain or 0

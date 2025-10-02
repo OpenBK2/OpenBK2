@@ -2,7 +2,7 @@
 
 #include "GameLobby.h"
 
-interface IStatisticsCollector;
+struct IStatisticsCollector;
 
 class CCustomLobby : public CGameLobby
 {

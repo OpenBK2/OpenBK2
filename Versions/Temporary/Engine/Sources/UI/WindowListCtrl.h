@@ -8,7 +8,7 @@ class CWindowSimple;
 
 // CWindowListHeader
 
-interface IHeaderNotify : public virtual CObjectBase
+struct IHeaderNotify : public virtual CObjectBase
 {
 	virtual void ColumnsResized( const vector<int> &sizes ) = 0;
 	virtual void ColumnResort( IWindowSorter *pSorter ) = 0;
@@ -95,7 +95,7 @@ public:
 	void SetColumnSizes( const vector<int> &sizes );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
-	//{ interface IListControlItem
+	//{ struct IListControlItem
 	IWindow * GetSubItem( const int nSubItem );
 	
 	CObjectBase* GetUserData() const { return pUserData; }

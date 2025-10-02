@@ -623,7 +623,7 @@ void CWindowMSButton::Reposition( const CTRect<float> &parentRect )
 	CWindow::Reposition( parentRect );
 }
 
-void CWindowMSButton::Visit( interface IUIVisitor *pVisitor )
+void CWindowMSButton::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 }

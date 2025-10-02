@@ -9,7 +9,7 @@ struct SMPUIMessage;
 #define REGISTER_MPUI_MESSAGE_HANDLER( msgType, msgClass, proc ) \
 	RegisterMessageHandler( msgType, MakeMPUIMessageHandler< msgClass >( this, (proc) ) );
 
-interface IMPUIMessageHandler : public CObjectBase
+struct IMPUIMessageHandler : public CObjectBase
 {
 	virtual bool HandleMessage( SMPUIMessage *pMsg ) = 0;
 };

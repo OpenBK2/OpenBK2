@@ -13,8 +13,8 @@ class CBackgroundSimpleTexture :	public CBackground
 	CObj<CIconOutliner> pIcon;
 
 public:
-	virtual void Visit( interface IUIVisitor * pVisitor );
-	virtual int operator&( interface IBinSaver &ss );
+	virtual void Visit( struct IUIVisitor * pVisitor );
+	virtual int operator&( struct IBinSaver &ss );
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	virtual void SetTexture( const struct NDb::STexture *_pDesc );

@@ -31,11 +31,11 @@ typedef vector<SCursomToolBarInfo> CCursomToolBarInfoList;
 
 namespace NVFS
 {
-	interface IVFS;
-	interface IFileCreator;
+	struct IVFS;
+	struct IFileCreator;
 }
 
-interface IEditorModule;
+struct IEditorModule;
 
 class CEditorApp : public CWinApp
 {
@@ -69,7 +69,7 @@ public:
 	virtual void GameXPostStorageInitialize() = 0;
 	virtual const struct SECBtnMapEntry* GetToolbarButtonsMap() const = 0;
 	virtual void GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomToolBarInfoList ) const = 0;
-	virtual void CreateMenus( interface IMainFrame *pMainFrame ) const = 0;
+	virtual void CreateMenus( struct IMainFrame *pMainFrame ) const = 0;
 	//
 	DECLARE_MESSAGE_MAP()
 };

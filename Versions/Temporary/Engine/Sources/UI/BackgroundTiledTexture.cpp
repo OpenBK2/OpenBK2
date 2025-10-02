@@ -127,7 +127,7 @@ void CBackgroundTiledTexture::SetPos( const CVec2 &vPos, const CVec2 &ptSize )
 	DivideSubrects( pDesc->rRB, &layout );
 }
 
-void CBackgroundTiledTexture::Visit( interface IUIVisitor * pVisitor )
+void CBackgroundTiledTexture::Visit( struct IUIVisitor * pVisitor )
 {
 	if ( !layout.rects.empty() )
 	{

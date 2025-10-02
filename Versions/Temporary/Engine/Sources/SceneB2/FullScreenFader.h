@@ -5,7 +5,7 @@
 #define SCREEN_FADER_BLACK 0.0f
 #define SCREEN_FADER_CLEAR 1.0f
 
-interface IFullScreenFader : public CObjectBase
+struct IFullScreenFader : public CObjectBase
 {
 	virtual void Start( float _fDuration, float _fStartValue, float _fEndValue, bool bFadeInterfaces = true ) = 0;
 	virtual bool IsInProgress() = 0;

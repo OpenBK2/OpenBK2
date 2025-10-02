@@ -2,8 +2,8 @@
 
 struct granny_file_info;
 struct granny_bone;
-interface IManipulator;
-interface IExportTool;
+struct IManipulator;
+struct IExportTool;
 
 namespace NMEGeomAttribs
 {

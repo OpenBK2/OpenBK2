@@ -58,7 +58,7 @@ CMOSquad::~CMOSquad(void)
 	}
 }
 
-void CMOSquad::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
+void CMOSquad::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( !units.empty() )
 		(*units.begin())->SendAcknowledgement( pAckManager, eAck );
@@ -137,7 +137,7 @@ void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 	--nLevel;
 }
 
-bool CMOSquad::IsInSquad( interface IMOUnit *pUnit )
+bool CMOSquad::IsInSquad( struct IMOUnit *pUnit )
 {
 	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 	{
@@ -276,7 +276,7 @@ void CMOSquad::SetSelectionGroup( int nSelectionGroup )
   }
 }
 
-void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, 
+void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene,
 	IClientAckManager *pAckManager )
 {
 	CPtr<IMOContainer> pTransport = units.empty() ? 0 : checked_cast_ptr<CMOUnitInfantry*>( units.front() )->GetTransport();
@@ -348,7 +348,7 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 	return -1;
 }
 
-bool CMOSquad::Load( interface IMOUnit *pUnit, const bool bEnter )
+bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 {
 	if ( bEnter )
 	{

@@ -372,7 +372,7 @@ struct SUserData
 };
 
 
-interface IUserDataContainer : public CObjectBase
+struct IUserDataContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408AB40 };
 	// Получить User Data

@@ -83,13 +83,13 @@ public:
 	void GetRange( float *pMax, float *pMin ) const;
 	void SetPos( const float _nCur );
 	float GetPos() const;
-	void SetNotifySink( interface ISliderNotify *_pNotifySink ) { pNotifySink = _pNotifySink; }
+	void SetNotifySink( struct ISliderNotify *_pNotifySink ) { pNotifySink = _pNotifySink; }
 	bool IsLeverVisible() const;
 	void AllowMouseScrolling( const bool _bAllow );
 	//ISlider}
 
 	// IWindow & CWindow
-	int operator&( interface IBinSaver &saver );
+	int operator&( struct IBinSaver &saver );
 	void Reposition( const CTRect<float> &parentRect );
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 

@@ -23,7 +23,7 @@ namespace NDb
 	struct STerrain;
 };
 
-interface ITerraManager;
+struct ITerraManager;
 namespace NEditor
 {
 	extern const string SZ_TERRA_BIN_FILE_NAME;

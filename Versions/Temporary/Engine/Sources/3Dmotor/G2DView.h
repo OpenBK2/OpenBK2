@@ -23,7 +23,7 @@ namespace NGScene
 class CTextLocaleInfo;
 struct STextureKey;
 
-interface ILayoutFakeView
+struct ILayoutFakeView
 {
 public:
 	virtual void CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;

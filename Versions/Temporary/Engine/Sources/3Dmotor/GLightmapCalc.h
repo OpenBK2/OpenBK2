@@ -6,7 +6,7 @@
 namespace NGScene
 {
 class IRender;
-interface IGScene;
+struct IGScene;
 class CLightmapsHolder;
 class CLightmapsLoader;
 class CLightmapsTempHolder;

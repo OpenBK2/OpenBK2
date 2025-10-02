@@ -177,7 +177,7 @@ private:
 
 	void Recalculate();
 	const float GetValue( int nX, int nY ) const;
-	void DrawArrows( interface IUIVisitor *pVisitor );
+	void DrawArrows( struct IUIVisitor *pVisitor );
 	void DrawNoise( const CVec2 &vMainStrike );
 	void SetupNoise();
 	float GetSquaredDistanceToSegment( const SNodeDesc &node, int nX, int nY ) const;
@@ -187,7 +187,7 @@ public:
 	CWindowPotentialLines();
 
 	//{ CWindow
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc ); 
 	//}
 

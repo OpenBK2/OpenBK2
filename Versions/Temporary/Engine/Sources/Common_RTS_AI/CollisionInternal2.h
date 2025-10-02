@@ -4,7 +4,7 @@
 #include "Collision.h"
 #include "../Misc/nqueue.h"
 
-interface IPath;
+struct IPath;
 
 class CBasePathUnitHolder : public CAIObjectBase
 {

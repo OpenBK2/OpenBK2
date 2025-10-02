@@ -135,7 +135,7 @@ CSoundScene2D::~CSoundScene2D()
 //	Clear();
 }
 
-void CSoundScene2D::SetTerrain( interface ITerrainSounds * pTerrain ) 
+void CSoundScene2D::SetTerrain( struct ITerrainSounds * pTerrain )
 { 
 	terrainSounds.Init( pTerrain ); 
 }

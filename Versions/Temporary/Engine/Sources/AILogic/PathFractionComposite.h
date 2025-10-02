@@ -32,7 +32,7 @@ ZDATA_(CPathFractionComplexBase)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPathFractionComplexBase*)this); f.Add(2,&points); f.Add(3,&normales); f.Add(4,&nIndex); f.Add(5,&fSplineProgress); f.Add(6,&p0); f.Add(7,&p1); f.Add(8,&p2); f.Add(9,&p3); f.Add(11,&spline); f.Add(12,&vPos); f.Add(13,&vSpeed); f.Add(14,&vNormale); f.Add(15,&fPathLenght); f.Add(16,&pInitialPath); f.Add(17,&bFinished); f.Add(18,&vPosLastPoint); f.Add(19,&vSpeedLastPoint); f.Add(20,&vNormaleLastPoint); return 0; }
 public:
 	CPathFractionComposite() : fSplineProgress( 0 )  {  }
-	CPathFractionComposite( interface IPlane *pPlane, interface IPathFraction *pPath );
+	CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath );
 
 	virtual CVec3 GetPoint() const 
 	{ 

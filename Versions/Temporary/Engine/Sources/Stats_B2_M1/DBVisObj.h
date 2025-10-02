@@ -5,7 +5,7 @@
 #include "../3dmotor/dbscene.h"
 #include "season.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

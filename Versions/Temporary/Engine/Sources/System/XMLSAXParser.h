@@ -6,7 +6,7 @@
 namespace NLXML
 {
 
-interface IXmlSaxVisitor : public CObjectBase
+struct IXmlSaxVisitor : public CObjectBase
 {
 	virtual bool VisitHeader( const string &szVersion, const string &szEncoding, const string &szStandalone ) = 0;
 	virtual bool VisitComment( const string &szText ) = 0;

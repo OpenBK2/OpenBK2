@@ -32,8 +32,8 @@ struct SSelectionSet
 
 // Операция Undo сама знает что надо отменить
 // Должна уметь выполнять обратную операцию
-interface IView;
-interface IController : public CObjectBase
+struct IView;
+struct IController : public CObjectBase
 {
 	// Выполнить Undo ( кроме указанного View )
 	virtual bool Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude ) = 0;
@@ -53,7 +53,7 @@ interface IController : public CObjectBase
 // Управляющий операциями Undo
 // Складывает из в буфера и умеет из перекладывать
 typedef list<CString> CDescriptionList;
-interface IControllerContainer : public CObjectBase
+struct IControllerContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C2 };
 	//

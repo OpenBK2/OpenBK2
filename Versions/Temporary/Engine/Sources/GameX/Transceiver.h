@@ -7,20 +7,20 @@ namespace NDb
 };
 namespace NNet
 {
-	interface IDriver;
+	struct IDriver;
 }
 
-interface IAILogic;
-interface ICheckSumLog;
-interface IAICmdsAutoMagic;
-interface ITransceiver : public CObjectBase
+struct IAILogic;
+struct ICheckSumLog;
+struct IAICmdsAutoMagic;
+struct ITransceiver : public CObjectBase
 {
 	virtual void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) = 0;
 	// perform segments for AI
 	virtual void DoSegments() = 0;
 
 	// обработать pCommand, пришедшую на текущем сегменте
-	virtual void SendCommand( interface IAILogicCommandB2 *pCommand ) = 0;
+	virtual void SendCommand( struct IAILogicCommandB2 *pCommand ) = 0;
 
 	// client commands
 	virtual void CommandClientTogglePause() = 0;

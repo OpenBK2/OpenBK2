@@ -3,7 +3,7 @@
 
 #include "Guns.h"
 
-interface IStaticPath;
+struct IStaticPath;
 
 //*******************************************************************
 //*								  Все оружия юнита																*
@@ -38,7 +38,7 @@ public:
 	CUnitGuns() : fMaxFireRange( -1 ), bCanShootToPlanes( false ), nCommonGuns( 0 ), nMainGun( 0 ) { }
 	virtual void Init( class CCommonUnit *pCommonUnit ) = 0;
 
-	bool AddGun( const interface IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo );
+	bool AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo );
 	void SetOwner( class CAIUnit *pUnit );
 	
 	const BYTE GetNTotalGuns() const { return guns.size(); }

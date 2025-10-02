@@ -1,6 +1,6 @@
 #pragma once
 
-interface IView;
+struct IView;
 #include "../MapEditorLib/Interface_CommandHandler.h"
 
 class CPCBaseDialog : public ICommandHandler

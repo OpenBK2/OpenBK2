@@ -7,7 +7,7 @@
 
 #include "rpgstats.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

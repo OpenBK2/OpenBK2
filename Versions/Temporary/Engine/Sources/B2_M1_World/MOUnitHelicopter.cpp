@@ -232,7 +232,7 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateMovement( const NTimer::STim
 	return CMOUnit::AIUpdateMovement( time, _bMove, pScene, pSoundScene );
 }
 
-void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
 	SetPropellersSpeed( placement.fSpeed, eSeason );
@@ -248,7 +248,7 @@ void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	}
 }
 
-IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStatsLocal()->fMaxHP;
 	if ( fNewHP > 0.0f )
@@ -344,7 +344,7 @@ void CMOUnitHelicopter::Select( bool bSelect )
 	UpdateIcons();
 }
 
-bool CMOUnitHelicopter::Load( interface IMOUnit *pMO, bool bEnter )
+bool CMOUnitHelicopter::Load( struct IMOUnit *pMO, bool bEnter )
 {
 	const int nID = pMO->GetID();
 	if ( bEnter )
@@ -374,7 +374,7 @@ bool CMOUnitHelicopter::Load( interface IMOUnit *pMO, bool bEnter )
 	return true;
 }
 
-bool CMOUnitHelicopter::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
+bool CMOUnitHelicopter::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
 		return true;
@@ -579,7 +579,7 @@ CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate
 		return 0;
 }
 
-void CMOUnitHelicopter::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnitHelicopter::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	DetachSound( EAST_MOVEMENT );
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );

@@ -16,7 +16,7 @@ namespace NCodeGen
 {
 
 class CStrStream;
-interface ICode : public CXmlResource
+struct ICode : public CXmlResource
 {
 	struct SCodeStreams
 	{

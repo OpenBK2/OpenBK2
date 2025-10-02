@@ -5,14 +5,14 @@
 
 namespace NDb
 {
-interface IObjManIterator;
+struct IObjManIterator;
 struct SObjectHeader;
 
 #define MAN_REMOVE_LAST -1, 1
 #define MAN_REMOVE_ALL 0, -1
 #define MAN_APPEND -1, 1, true
 
-interface IObjMan : public CObjectBase
+struct IObjMan : public CObjectBase
 {
 	//
 	virtual void SetChanged() = 0;
@@ -234,7 +234,7 @@ interface IObjMan : public CObjectBase
 	}
 };
 
-interface IArrayObjMan : public IObjMan
+struct IArrayObjMan : public IObjMan
 {
 	virtual void SetIndex( const int nIndex ) = 0;
 	virtual int GetIndex() const = 0;

@@ -10,7 +10,7 @@ class CWorldClient;
 class CMapObj;
 struct SObjectStatus;
 class CMissionReinf;
-interface IScenarioTracker;
+struct IScenarioTracker;
 class CMissionSuperWeapon;
 enum EActionMode;
 
@@ -452,7 +452,7 @@ public:
 	// переход к этому интерфейсу из другого полноэкранного
 	void StartInterface();
 	//
-	void NewMission( const NDb::SMapInfo *_pMap, interface ITransceiver *pTransceiver, IScenarioTracker *pScenarioTracker, int nPlayer );
+	void NewMission( const NDb::SMapInfo *_pMap, struct ITransceiver *pTransceiver, IScenarioTracker *pScenarioTracker, int nPlayer );
 	//
 	void SetWarForVisibility( const bool bShowWarFog );
 	//

@@ -29,7 +29,7 @@ class CBitArray2DRLEWrapper
 public:
 	CBitArray2DRLEWrapper( T &_a, const BYTE _packingData ) : a( _a ), packingData( _packingData ) { }
 
-	int operator&( interface IBinSaver &saver )
+	int operator&( struct IBinSaver &saver )
 	{
 		
 		saver.Add( 1, &a.xSize );

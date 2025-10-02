@@ -11,7 +11,7 @@ namespace NLog
 	};
 	typedef list<SLogBuffer> CLogBufferList;
 	//
-	interface ILoggerSink : public CObjectBase
+	struct ILoggerSink : public CObjectBase
 	{
 		virtual ILogger * GetLogger() = 0;
 	};

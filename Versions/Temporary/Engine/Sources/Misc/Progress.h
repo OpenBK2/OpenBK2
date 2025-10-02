@@ -1,6 +1,6 @@
 #pragma once
 
-interface IProgressHook : public CObjectBase
+struct IProgressHook : public CObjectBase
 {
 	// set number of steps in current subrange
 	virtual void SetNumSteps( const int nNumSteps ) = 0;

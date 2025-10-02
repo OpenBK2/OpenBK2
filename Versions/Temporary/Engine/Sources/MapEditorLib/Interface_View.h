@@ -9,7 +9,7 @@
 // Те, кто создает Undo Operation могут самостоятельно выполнить их снова
 // Если такой цели нет, то команда должна сама о себе позаботится
 // Controller, View
-interface IView
+struct IView
 {
 	virtual ~IView() {}
 	//
@@ -43,7 +43,7 @@ typedef hash_map<IView*, DWORD, SDefaultPtrHash> CViewSet;
 // rszObjectTypeName - тип View
 // nOnbjectID - номер редактируемого объекта
 
-interface IViewContainer : public CObjectBase
+struct IViewContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A380 };
 	// Добавить target

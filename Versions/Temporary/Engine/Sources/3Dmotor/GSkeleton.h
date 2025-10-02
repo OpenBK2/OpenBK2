@@ -43,7 +43,7 @@ granny_skeleton *GetSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile
 char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile );
 CPtrFuncBase<CGrannyFileInfo> *GetSkeletonFileInfo( const NDb::SSkeleton *pSkeleton );
 
-interface IGetBone
+struct IGetBone
 {
 	virtual int GetBoneIndex( const char *pszName ) = 0;
 	virtual void GetBoneNames( vector<string> *pBoneNames ) = 0;

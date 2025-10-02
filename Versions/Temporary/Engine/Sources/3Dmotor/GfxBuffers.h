@@ -4,7 +4,7 @@
 
 #include "GPixelFormat.h"
 
-interface IDirect3DSurface9;
+struct IDirect3DSurface9;
 
 namespace NGfx
 {

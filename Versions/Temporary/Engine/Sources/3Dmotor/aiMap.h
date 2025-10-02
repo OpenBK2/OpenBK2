@@ -44,14 +44,14 @@ struct SObjectInfo
 	int nTSFlags;
 };
 
-interface IAIMapTracker: public CObjectBase
+struct IAIMapTracker: public CObjectBase
 {
 public:
 	virtual void OnChange() = 0;
 };
 
 class CBSPTree;
-interface IAIMap: public CObjectBase, public IAIVisitor
+struct IAIMap: public CObjectBase, public IAIVisitor
 {
 public:
 	enum ESplitTerrainHGroups

@@ -7,7 +7,7 @@
 #include "../stats_b2_m1/dbmapinfo.h"
 #include "../stats_b2_m1/rpgstats.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

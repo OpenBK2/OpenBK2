@@ -1,6 +1,6 @@
 #pragma once
 
-interface IAILogicCommandB2 : public CObjectBase
+struct IAILogicCommandB2 : public CObjectBase
 {
 	virtual void Execute() = 0;
 	// нужно ли сохранять в истории команд

@@ -10,7 +10,7 @@ namespace NDb
 
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 
 class CAttachedObject : public IAttachedObject

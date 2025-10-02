@@ -33,7 +33,7 @@ class CColorBackground: public CBackground
 	OBJECT_BASIC_METHODS(CColorBackground);		
 public:
 	int nColor;
-	virtual void Visit( interface IUIVisitor * pVisitor );
+	virtual void Visit( struct IUIVisitor * pVisitor );
 };
 
 class CTextData : public CObjectBase

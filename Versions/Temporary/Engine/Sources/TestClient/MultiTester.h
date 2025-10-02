@@ -1,6 +1,6 @@
 #pragma once
 
-interface IMultiTester : virtual public CObjectBase
+struct IMultiTester : virtual public CObjectBase
 {
 	virtual void Init( const string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
 		const string &_szName, const string &_szPassword, const string &_szCDKey, const int _nTestMode ) = 0;

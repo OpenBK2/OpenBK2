@@ -37,7 +37,7 @@ void CWindowProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	bShowFirstElement = false;
 }
 
-void CWindowProgressBar::Visit( interface IUIVisitor *pVisitor )
+void CWindowProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	if ( pForward )
@@ -130,7 +130,7 @@ void CWindowMultiTextureProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDe
 	}
 }
 
-void CWindowMultiTextureProgressBar::Visit( interface IUIVisitor *pVisitor )
+void CWindowMultiTextureProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	

@@ -25,7 +25,7 @@ int CEffectorMoveTo::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) 
+void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
 { 
 	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo*>( _pCmd ) );
 	CParam<CVec2> vOffset( pCmd->vOffset );
@@ -109,7 +109,7 @@ const pair<CVec2,int> CEffectorMoveTo::GetCur() const
 	return res;
 }
 
-const int CEffectorMoveTo::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
+const int CEffectorMoveTo::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	const float fFormerElapsedTime = fElapsedTime;
 	fElapsedTime += timeDiff;

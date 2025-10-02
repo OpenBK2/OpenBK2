@@ -5,7 +5,7 @@
 class CScene;
 class CMapObj;
 class CSelector;
-interface IGameEvent;
+struct IGameEvent;
 
 enum EButtonState
 {

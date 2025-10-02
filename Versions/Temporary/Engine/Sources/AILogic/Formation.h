@@ -11,7 +11,7 @@ class CSoldier;
 class CMineStaticObject;
 class CAITransportUnit;
 enum EActionCommand;
-interface ICollisionsCollector;
+struct ICollisionsCollector;
 namespace NDb
 {
 	struct SUnitBaseRPGStats;
@@ -153,7 +153,7 @@ public:
 	virtual void StopTurning();
 	virtual void ForceGoByRightDir() {}
 
-	virtual interface IStatesFactory* GetStatesFactory() const;
+	virtual struct IStatesFactory* GetStatesFactory() const;
 
 	const int Size() const { return soldiers.size(); }
 	class CSoldier* operator[]( const int n ) const { NI_ASSERT( ( n >= 0 && n < Size() ), "Wrong unit number" ); return soldiers[n]; }
@@ -333,7 +333,7 @@ public:
 	virtual const int GetBoundTileRadius() const { return nBoundTileRadius; }
 
 	// возвращает - поехал или нет
-	virtual const bool SendAlongPath( interface IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
+	virtual const bool SendAlongPath( struct IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
 	virtual const bool SendAlongPath( IPath *pPath );
 
 	// from previous B2 CFormation and CFormationCenter

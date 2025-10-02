@@ -3,7 +3,7 @@
 #include "ExecutorSimpleEvent.h"
 
 CExecutorContainer theExecutorContainer;
-interface IExecutorContainer * pTheExecutorsContainer = 0;
+struct IExecutorContainer * pTheExecutorsContainer = 0;
 
 
 REGISTER_SAVELOAD_CLASS( 0x1105F483, CExecutorContainer )

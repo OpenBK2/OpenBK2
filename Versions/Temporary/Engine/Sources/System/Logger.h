@@ -3,7 +3,7 @@
 namespace NLog
 {
 
-interface ILogDumper : public CObjectBase
+struct ILogDumper : public CObjectBase
 {
 	virtual void Dump( const wstring &wszString ) = 0;
 };

@@ -5,8 +5,8 @@
 
 namespace NVFS
 {
-	interface IVFS;
-	interface IFileCreator;
+	struct IVFS;
+	struct IFileCreator;
 }
 
 namespace NDb

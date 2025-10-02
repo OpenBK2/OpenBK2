@@ -6,9 +6,9 @@
 #include "../3dmotor/GPixelFormat.h"
 #include "../3Dmotor/GLocale.h"
 
-interface IML;
-interface IMLObject;
-interface IMLLayout;
+struct IML;
+struct IMLObject;
+struct IMLLayout;
 
 enum ECommand
 {
@@ -20,7 +20,7 @@ enum ECommand
 
 namespace NGScene
 {
-	interface ILayoutFakeView;
+	struct ILayoutFakeView;
 }
 
 const int
@@ -149,7 +149,7 @@ public:
 
 // IMLObject
 
-interface IMLObject: public CObjectBase
+struct IMLObject: public CObjectBase
 {
 	virtual void Generate(  ) = 0;
 	virtual void DynamicGenerate(  const SReflowInfo &sInfo ) = 0;
@@ -172,7 +172,7 @@ IMLObject* CreateIMLTabObject();
 
 // IMLLayout
 
-interface IMLLayout: public CObjectBase
+struct IMLLayout: public CObjectBase
 {
 	virtual void AddObject( IMLObject *pObject ) = 0;
 	virtual void AddCommand( ECommand eCommand, IMLObject *pObject = 0 ) = 0;
@@ -192,14 +192,14 @@ interface IMLLayout: public CObjectBase
 
 // IMLHandler
 
-interface UI_EXPORT IMLHandler: public CObjectBase
+struct UI_EXPORT IMLHandler: public CObjectBase
 {
 	virtual void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet ) = 0;
 };
 
 // IML
 
-interface IML: public CObjectBase
+struct IML: public CObjectBase
 {
 	virtual void SetText( const wstring &wsText, int nFlags ) = 0;
 	virtual void SetFade( float fFade ) = 0;

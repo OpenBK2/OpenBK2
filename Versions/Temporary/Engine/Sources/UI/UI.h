@@ -49,7 +49,7 @@ enum EWindowPlacementFlags
 	EWPF_ALL						= 0xffff,
 };
 
-interface IVirtualScreenController : public CObjectBase
+struct IVirtualScreenController : public CObjectBase
 {
 	virtual void SetResolution( int nSizeX, int nSizeY ) = 0;
 	virtual void GetResolution( int *nSizeX, int *nSizeY ) = 0;
@@ -60,17 +60,17 @@ interface IVirtualScreenController : public CObjectBase
 	virtual void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos ) = 0;
 };
 
-interface IUIInitialization : public CObjectBase
+struct IUIInitialization : public CObjectBase
 {
 	enum { tidTypeID = 0x1109BC00 };
 
 	virtual void SetUIConsts( const struct NDb::SUIGameConsts *pConsts ) = 0;
 	// default handlers for custom ML tags
-	virtual void SetMLHandler( const wstring &wsTAG, interface IMLHandler *pHandler ) = 0;
-	virtual interface IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc ) = 0;
-	virtual interface IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc, 
+	virtual void SetMLHandler( const wstring &wsTAG, struct IMLHandler *pHandler ) = 0;
+	virtual struct IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc ) = 0;
+	virtual struct IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
 																										const NDb::SUIGameConsts *pConsts, 
-																										interface IProgrammedReactionsAndChecks *pReactionsAndChecks,
+																										struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
 																										NGScene::I2DGameView * p2DView, 
 																										NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView ) = 0;
 	virtual IVirtualScreenController * GetVirtualScreenController() = 0;
@@ -97,10 +97,10 @@ UI_EXPORT void ScreenToVirtual( const CTPoint<int> &vPos, CTPoint<int> *pScreenP
 UI_EXPORT CVec2 ScreenToVirtual( const CVec2 &vPos );
 
 // window notify about being clicked
-interface IClickNotify : virtual public CObjectBase
+struct IClickNotify : virtual public CObjectBase
 {
-	virtual void Clicked( interface IWindow *pWho, int nButton ) {};
-	virtual void DoubleClicked( interface IWindow *pWho, int nButton ) {};
+	virtual void Clicked( struct IWindow *pWho, int nButton ) {};
+	virtual void DoubleClicked( struct IWindow *pWho, int nButton ) {};
 };
 
 struct SWindowAnimationContext : public CObjectBase
@@ -167,7 +167,7 @@ public:
 };
 
 // generic window functionality
-interface IWindow : virtual public CObjectBase
+struct IWindow : virtual public CObjectBase
 {
 	virtual bool ProcessEvent( const struct SGameMessage &msg ) = 0;
 	virtual bool ProcessMessage( const struct SBUIMessage &msg ) = 0;
@@ -187,7 +187,7 @@ interface IWindow : virtual public CObjectBase
 	//
 	virtual bool IsPointInsideOfChildren( const CVec2 &vPoint ) = 0;
 	// DRAWING
-	virtual void Visit( interface IUIVisitor *pVisitor ) = 0;
+	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
 	// dynamic behaviour
 	virtual void Segment( const int timeDiff ) {  }
 	//enabled / disabled
@@ -235,7 +235,7 @@ interface IWindow : virtual public CObjectBase
 	virtual void FillWindowRect( CTRect<float> *pRect ) const = 0;
 	virtual CTRect<float> GetWindowRect() const = 0;
 	virtual IWindow* GetParentWindow() const = 0;
-	virtual interface IScreen* GetScreen() = 0;
+	virtual struct IScreen* GetScreen() = 0;
 	virtual const struct NDb::SWindowShared * GetSharedDesc() const = 0;
 	virtual void RemoveChild( IWindow *_pChild ) = 0;
 	virtual IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) = 0;
@@ -249,15 +249,15 @@ interface IWindow : virtual public CObjectBase
 
 	// fade entire control, fValue[0..1]
 	virtual void SetFadeValue( float fValue ) = 0;
-	virtual void SetBackground( interface IWindowPart *_pBackground ) {}
+	virtual void SetBackground( struct IWindowPart *_pBackground ) {}
 };
 
 // console
-interface IConsole : virtual public IWindow
+struct IConsole : virtual public IWindow
 {
 };
 // console strings (add to bottom, scroll automatically to the top)
-interface IConsoleOutput : virtual public IWindow
+struct IConsoleOutput : virtual public IWindow
 {
 	virtual void AddString( const wstring &szString, const DWORD color  ) = 0;
 	virtual void Scroll( const int bUp ) = 0;
@@ -266,12 +266,12 @@ interface IConsoleOutput : virtual public IWindow
 	virtual void ClearContent() = 0;
 };
 
-interface IStatsSystemWindow : virtual public IWindow
+struct IStatsSystemWindow : virtual public IWindow
 {
 	virtual void UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor ) = 0;
 };
 
-interface IButtonNotify : virtual public CObjectBase
+struct IButtonNotify : virtual public CObjectBase
 {
 	virtual void Released( class CWindow *pWho ) = 0;
 	virtual void Pushed( class CWindow *pWho  ) = 0;
@@ -280,7 +280,7 @@ interface IButtonNotify : virtual public CObjectBase
 	virtual void StateChanged( class CWindow *pWho ) = 0;
 };
 
-interface IDataViewer : virtual public CObjectBase
+struct IDataViewer : virtual public CObjectBase
 {
 	// Creates an interior for the "window" by the user data
 	// Pass pData == 0 for make interior for empty context
@@ -288,9 +288,9 @@ interface IDataViewer : virtual public CObjectBase
 };
 
 // specific to button functionality
-interface IButton : virtual public IWindow
+struct IButton : virtual public IWindow
 {
-	virtual void SetNotifySink( interface IButtonNotify *pNotify ) = 0;
+	virtual void SetNotifySink( struct IButtonNotify *pNotify ) = 0;
 	virtual bool IsPushed() const = 0;
 	virtual void Enable( const bool bEnable ) = 0;
 	virtual void SetNextState() = 0;
@@ -305,7 +305,7 @@ interface IButton : virtual public IWindow
 	virtual int GetState( const string &szName ) = 0;
 };
 // edit line
-interface IEditLine : virtual public IWindow
+struct IEditLine : virtual public IWindow
 {
 	virtual void SetText( const wchar_t *pszText ) = 0;
 	virtual void SetCursor( const int nPos ) = 0;
@@ -313,7 +313,7 @@ interface IEditLine : virtual public IWindow
 	virtual const wchar_t * GetText() const = 0;
 };
 // window that has text must support this
-interface ITextView : virtual public IWindow
+struct ITextView : virtual public IWindow
 {
 	// we can retrieve pure formatting info etc.
 	virtual const wstring& GetText() const = 0;
@@ -326,13 +326,13 @@ interface ITextView : virtual public IWindow
 };
 
 // ISlider's owner extend this interface to be notified about slider events
-interface ISliderNotify : virtual public CObjectBase
+struct ISliderNotify : virtual public CObjectBase
 {
 	// fPosition 0..1
 	virtual void SliderPosition( const float fPosition, class CWindow *pWho ) = 0;
 };
 
-interface ISlider : virtual public IWindow
+struct ISlider : virtual public IWindow
 {
 	//return true if lever is visible
 	virtual bool IsLeverVisible() const = 0;
@@ -340,7 +340,7 @@ interface ISlider : virtual public IWindow
 	virtual void GetRange( float *pMax, float *pMin ) const = 0;
 	virtual void SetPos( const float fCur ) = 0;
 	virtual float GetPos() const = 0;
-	virtual void SetNotifySink( interface ISliderNotify *pNotify ) = 0;
+	virtual void SetNotifySink( struct ISliderNotify *pNotify ) = 0;
 	virtual bool IsHorisontal() const = 0;
 	// mouse-wheel scrolling can be allowed or disallowed
 	virtual void AllowMouseScrolling( const bool bAllow ) = 0;
@@ -352,7 +352,7 @@ interface ISlider : virtual public IWindow
 };
 
 // screen may implement reactions and checks to enable it's functionality
-interface IProgrammedReactionsAndChecks : virtual public CObjectBase
+struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 {
 	//{ for compatibility with old sources
 	virtual bool NeedFlags() const { return false; }
@@ -366,7 +366,7 @@ interface IProgrammedReactionsAndChecks : virtual public CObjectBase
 };
 
 // specific screen funcitonality
-interface IScreen : virtual public IWindow
+struct IScreen : virtual public IWindow
 {
 	virtual void OnGetFocus( const bool bFocus ) = 0;
 	virtual void SetGView( NGScene::I2DGameView *_p2DGameView ) = 0;
@@ -387,17 +387,17 @@ interface IScreen : virtual public IWindow
 	virtual void RunAnimationSequienceBack( const int nAnimationID ) = 0;
 
 	// run szCmdSeq effect. if ID provided, then wait untill effect with this ID is finished, then run szCmdSeq.
-	virtual void RunStateCommandSequience( const string &szCmdSeq, interface IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 ) = 0;
+	virtual void RunStateCommandSequience( const string &szCmdSeq, struct IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 ) = 0;
 	// instantly undo command sequence (run in backward direction)
 	virtual void UndoStateCommandSequence( const string &szCmdSeq ) = 0;
 
 	// 
 	virtual void RegisterEffect( const string &szEffect, const struct NDb::SUIStateSequence &cmds ) = 0;
 	virtual void RegisterEffect( const string &szEffect, const vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable ) = 0;
-	virtual void RegisterReaction( const string &szReactionKey, interface IMessageReactionB2 *pReaction ) = 0;
+	virtual void RegisterReaction( const string &szReactionKey, struct IMessageReactionB2 *pReaction ) = 0;
 
-	virtual void RegisterToSegment( interface IWindow *pWnd, const bool bRegister ) = 0;
-	virtual bool IsRegisteredToSegment( interface IWindow *pWnd ) const = 0;
+	virtual void RegisterToSegment( struct IWindow *pWnd, const bool bRegister ) = 0;
+	virtual bool IsRegisteredToSegment( struct IWindow *pWnd ) const = 0;
 
 	virtual void SetScreenSize( const CTRect<float> &rcScreen ) = 0;
 
@@ -416,7 +416,7 @@ interface IScreen : virtual public IWindow
 };
 
 // may contain any number of windows. scrolls them if needed
-interface IScrollableContainer : virtual public IWindow
+struct IScrollableContainer : virtual public IWindow
 {
 	virtual void InsertAfter( IWindow *pElement, IWindow *pInsert, const bool bSelectable ) = 0;
 	virtual void Remove( IWindow *pRemove ) = 0;
@@ -434,7 +434,7 @@ interface IScrollableContainer : virtual public IWindow
 	virtual void SetDiscreteScroll( int nVisibleSlots ) = 0;
 };
 
-interface I1LvlTreeControl : virtual public IWindow
+struct I1LvlTreeControl : virtual public IWindow
 {
 	virtual IWindow* AddItem() = 0;
 	virtual IWindow* AddSubItem( IWindow *pItem ) = 0;
@@ -442,7 +442,7 @@ interface I1LvlTreeControl : virtual public IWindow
 
 // displays position.
 // position range is [0.0f ... 1.0f]
-interface IProgressBar : virtual public IWindow
+struct IProgressBar : virtual public IWindow
 {
 	virtual void SetPosition( const float fPos ) = 0;
 	virtual float GetPosition() const = 0;
@@ -453,14 +453,14 @@ interface IProgressBar : virtual public IWindow
 // displays positions for some units.
 // position range is [0.0f ... 1.0f]
 // can display solid bar or dotted bar
-interface IMultiTextureProgressBar : virtual public IWindow
+struct IMultiTextureProgressBar : virtual public IWindow
 {
 	virtual bool IsSolid() const = 0;
 	virtual void GetPositions( vector<float> *pPositions ) const = 0;
 	virtual void SetPositions( const vector<float> &positions, bool bSolid ) = 0;
 };
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-interface ITooltip : virtual public IWindow
+struct ITooltip : virtual public IWindow
 {
 	// return position on screen
 	// set GlobalVar( "TOOLTIP_X" & "TOOLTIP_Y" )
@@ -468,7 +468,7 @@ interface ITooltip : virtual public IWindow
 		IScreen *pScreen, const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler ) = 0;
 };
 
-interface ITabControl : virtual public IWindow
+struct ITabControl : virtual public IWindow
 {
 	virtual int GetNTabs() const = 0;
 	virtual void SetActive( const int nTab ) = 0;
@@ -479,26 +479,26 @@ interface ITabControl : virtual public IWindow
 };
 
 // effect on interface
-interface IUIEffector : public CObjectBase
+struct IUIEffector : public CObjectBase
 {
 	// effect may want to calculate something 
 	// return consumed time. if time is completely consumed, return timeDiff
 	// this needed for effect fast forward
-	virtual const int Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) = 0;
+	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward ) = 0;
 	// effect may want to draw somwthing
-	virtual void Visit( interface IUIVisitor *pVisitor ) = 0;
+	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
 	// effect is finished
 	virtual bool IsFinished() const = 0;
 	// configure effect with commad
-	virtual void Configure( const NDb::SUIStateBase *pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) = 0;
+	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) = 0;
 	// reversed effect ( that effect + effect->Reverse() = NULL );
 	virtual void Reverse() = 0;
 };
 
 // window part, such as background, foreground.
-interface IWindowPart : public CObjectBase
+struct IWindowPart : public CObjectBase
 {
-	virtual void Visit( interface IUIVisitor *pVisitor ) = 0;
+	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
 
 	// notify background about window position and size change
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize ) = 0;
@@ -510,7 +510,7 @@ interface IWindowPart : public CObjectBase
 	virtual void SetFadeValue( float fValue ) = 0;
 };
 
-interface IListControlItem : virtual public IWindow
+struct IListControlItem : virtual public IWindow
 {
 	virtual IWindow * GetSubItem( const int nSubItem ) = 0;
 	
@@ -519,7 +519,7 @@ interface IListControlItem : virtual public IWindow
 };
 
 // sorter for list control. user may define own one
-interface IWindowSorter : public CObjectBase
+struct IWindowSorter : public CObjectBase
 {
 	virtual bool Compare( IWindow *pSubItem1, IWindow *pSubItem2 ) = 0;
 	virtual void SetDirection( const bool bAscending ) = 0;
@@ -528,7 +528,7 @@ interface IWindowSorter : public CObjectBase
 	virtual bool IsAscending() const = 0;
 };
 
-interface IListControl : virtual public IWindow
+struct IListControl : virtual public IWindow
 {
 	virtual IListControlItem* AddItem() = 0; // CRAP - obsolete
 	virtual IListControlItem* AddItem( CObjectBase *pData ) = 0;
@@ -548,22 +548,22 @@ interface IListControl : virtual public IWindow
 	virtual void Update() = 0;
 };
 
-interface IDebugSingleton : public CObjectBase
+struct IDebugSingleton : public CObjectBase
 {
 	enum { tidTypeID = 0x11095440 };
 
-	virtual interface IWindow * GetConsole() = 0;
-	virtual interface IWindow * GetDebug() = 0;
+	virtual struct IWindow * GetConsole() = 0;
+	virtual struct IWindow * GetDebug() = 0;
 	
 	virtual void ShowDebugInfo( const bool bShow ) = 0;
 	virtual void ShowStatsWindow( const bool bShow ) = 0;
-	virtual interface IWindow * GetDebugInfoWindow( const int nWindow ) = 0;
-	virtual interface IStatsSystemWindow * GetStatsWindow() = 0;
+	virtual struct IWindow * GetDebugInfoWindow( const int nWindow ) = 0;
+	virtual struct IStatsSystemWindow * GetStatsWindow() = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
 UI_EXPORT IDebugSingleton *CreateDebugSingleton();
 
-interface IPlayer : virtual public IWindow
+struct IPlayer : virtual public IWindow
 {
 	virtual void SetSequence( const string &szFileName ) = 0;
 	virtual void Play() = 0;
@@ -581,7 +581,7 @@ interface IPlayer : virtual public IWindow
 	virtual void PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip = 0 ) = 0;
 };
 
-interface IComboBox : virtual public IWindow
+struct IComboBox : virtual public IWindow
 {
 	// Creates item by user data
 	virtual void AddItem( CObjectBase *pData ) = 0;

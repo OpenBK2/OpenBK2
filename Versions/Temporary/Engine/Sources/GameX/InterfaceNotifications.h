@@ -5,7 +5,7 @@
 #include "../Misc/HashFuncs.h"
 
 class CMapObj;
-interface IAILogic;
+struct IAILogic;
 namespace NDb
 {
 	struct SMissionObjective;

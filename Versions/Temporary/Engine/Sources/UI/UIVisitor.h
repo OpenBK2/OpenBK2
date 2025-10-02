@@ -16,7 +16,7 @@ namespace NDb
 	struct STexture;
 }
 
-interface IUIVisitor
+struct IUIVisitor
 {
 	virtual void ClipSet( const CTRect<float> &rClip ) = 0;
 	virtual void ClipRestore() = 0;
@@ -29,8 +29,8 @@ interface IUIVisitor
   virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, 
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
 	virtual void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects ) = 0;
-	virtual void VisitUIText( interface IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
-	//virtual void VisitUIText( interface IGFXText *pText, const CTRect<float> &rcRect, const int nY, const DWORD dwColor, const DWORD dwFlags ) = 0;
+	virtual void VisitUIText( struct IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	//virtual void VisitUIText( struct IGFXText *pText, const CTRect<float> &rcRect, const int nY, const DWORD dwColor, const DWORD dwFlags ) = 0;
 	//virtual void VisitStringW( const wstring &szString, const int nFont, const int nX, const int nY, const DWORD dwColor = 0xFFFFFFFF ) = 0;
 	friend class CClipStore;
 };

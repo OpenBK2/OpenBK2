@@ -5,7 +5,7 @@
 
 class CNet;
 class CNetPacket;
-interface IConnection;
+struct IConnection;
 class CConnectionEffort;
 class CConnectServerProcessor;
 

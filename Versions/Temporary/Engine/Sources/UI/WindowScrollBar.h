@@ -35,7 +35,7 @@ protected:
 
 public:
 
-	int operator&( interface IBinSaver &saver );
+	int operator&( struct IBinSaver &saver );
 	void Reposition( const CTRect<float> &parentRect );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
@@ -58,7 +58,7 @@ public:
 	void GetRange( float *pMax, float *pMin ) const;
 	void SetPos( const float fCur );
 	float GetPos() const;
-	void SetNotifySink( interface ISliderNotify *pNotify );
+	void SetNotifySink( struct ISliderNotify *pNotify );
 	bool IsHorisontal() const;
 	void SliderPosition( const float fPosition, class CWindow *pWho );
 

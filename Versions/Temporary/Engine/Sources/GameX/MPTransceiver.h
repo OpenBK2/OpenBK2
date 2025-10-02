@@ -6,9 +6,9 @@
 #include "../Server_Client_Common/PacketProcessor.h"
 #include "MultiplayerNetPackets.h"
 
-interface ICommandsHistory;
-interface IServerClient;
-interface IMPAICommandPacker;
+struct ICommandsHistory;
+struct IServerClient;
+struct IMPAICommandPacker;
 class CNetPacket;
 namespace NDb
 {
@@ -116,7 +116,7 @@ public:
 	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) {}
 	void StartMission();
 	void DoSegments();
-	void SendCommand( interface IAILogicCommandB2 *pCommand );
+	void SendCommand( struct IAILogicCommandB2 *pCommand );
 	ICheckSumLog *GetCheckSumLogger();
 	const NDb::SMapInfo *GetMap() const;
 	void EndGame();

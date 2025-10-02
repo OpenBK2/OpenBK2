@@ -18,7 +18,7 @@ namespace NDb
 namespace NBind
 {
 
-interface ILoadableObjMan
+struct ILoadableObjMan
 {
 	virtual bool LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) = 0;
 	virtual bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) = 0;

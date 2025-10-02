@@ -113,7 +113,7 @@ int CMessageReactions::operator&( IBinSaver &saver )
 	return 0;
 }
 
-bool CMessageReactions::Execute( const string &szSender, const string &szReactionKey, interface IScreen *pScreen, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const string &szSender, const string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
 {
 	if ( pProg && 
 		(pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags ) : pProg->Execute( szSender, szReactionKey )  ) ) return true;
@@ -125,7 +125,7 @@ bool CMessageReactions::Execute( const string &szSender, const string &szReactio
 	return false;
 }
 
-bool CMessageReactions::Execute( const string &szSender, const NDb::SUIDesc *pReaction, interface IScreen *pScreen, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
+bool CMessageReactions::Execute( const string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags )
 {
 	CObj<IMessageReactionB2> pReactionB2 = CUIFactory::MakeReaction( pReaction );
 	return pReactionB2->Execute( pScreen, pScript, pProg, wKeyboardFlags );

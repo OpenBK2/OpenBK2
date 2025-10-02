@@ -13,7 +13,7 @@ vector<int> CManuverBuilder::suitableIndeces;
 CManuverStateDesc CManuverBuilder::state;
 
 
-interface IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation * pPos, const CVec3 &vEnemy, int nAttacker )
+struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation * pPos, const CVec3 &vEnemy, int nAttacker )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
 	const CVec3 vPos( pPos->GetPosB2() );
@@ -85,7 +85,7 @@ const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &curr
 	return 0;
 }
 
-interface IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
+struct IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	if ( EPA_RETREAT == att )
 	{
@@ -151,7 +151,7 @@ int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, clas
 	return nIndex;
 }
 
-interface IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal )
+struct IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal )
 {
 	const float fDist = fabs( pPos->GetPosB2() - vPoint );
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -178,7 +178,7 @@ EPlanesAttitude CManuverBuilder::GetAttitude( class CPlanesFormation *pPlane, cl
 	return EPA_ATTACK;
 }
 
-interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID )
+struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID )
 {
 	//return CreateDefaultManuver( att, pPos, pEnemy );
 	// create maneuver to attack ground unit
@@ -206,7 +206,7 @@ interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPo
 	return 0;
 }
 
-interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
+struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	EPlanesAttitude att = GetAttitude( pPos, pEnemy );
 	state.Init( att, pPos, pEnemy );

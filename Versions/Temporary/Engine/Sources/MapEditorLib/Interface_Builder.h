@@ -3,8 +3,8 @@
 #include "Interface_FolderCallback.h"
 #include "StringManager.h"
 //
-interface IManipulator;
-interface IView;
+struct IManipulator;
+struct IView;
 
 #define DEFAULT_BUILDER_LABEL __DEFAULT__BUILDER__
 #define DEFAULT_BUILDER_LABEL_TXT "__DEFAULT__BUILDER__"
@@ -53,7 +53,7 @@ typedef hash_map<int, CTableSet> CTableSetMap;
 // CRAP} HASH_SET
 
 
-interface IBuildDataCallback
+struct IBuildDataCallback
 {
 	// проверить данные на правильность заполнения, если данные не верны вернуть краткое описание ошибки
 	// pszDescription - может быть нулевой
@@ -74,7 +74,7 @@ interface IBuildDataCallback
 
 // При переключении компоновщиков ( не удаляется и не создается )
 // Build();
-interface IBuilder : public CObjectBase
+struct IBuilder : public CObjectBase
 {
 	// Создать и скомпоновать объекты ( может быть добавлено сразу много объектов )
 	// true - создали какие либо объекты ( необходимо обработать ситуацию дальше )
@@ -100,7 +100,7 @@ interface IBuilder : public CObjectBase
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) = 0;
 };
 
-interface IBuilderContainer : public CObjectBase
+struct IBuilderContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C3 };
 	//

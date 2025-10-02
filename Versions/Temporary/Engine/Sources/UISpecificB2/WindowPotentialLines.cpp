@@ -466,7 +466,7 @@ void CWindowPotentialLines::AddArrow( const vector<CVec2> &arrowTraj, float fArr
 	arrows.push_back( newDesc );
 }
 
-void CWindowPotentialLines::DrawArrows( interface IUIVisitor *pVisitor )
+void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 {
 	CVec2 sPos[4];
 	CVec2 sScreenPos[4];

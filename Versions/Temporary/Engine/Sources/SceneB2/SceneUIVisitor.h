@@ -5,7 +5,7 @@
 #include "../UI/UIVisitor.h"
 #include "../UI/UIML.h"
 
-interface IUIVisitorCmd : public CObjectBase
+struct IUIVisitorCmd : public CObjectBase
 {
 	virtual void Visit( IUIVisitor *pVisitor ) = 0;
 };

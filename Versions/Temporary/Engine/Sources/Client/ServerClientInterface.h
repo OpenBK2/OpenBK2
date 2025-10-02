@@ -5,7 +5,7 @@ namespace NNet
 	struct SNetDriverConsts;
 }
 
-interface IServerClient : public CObjectBase
+struct IServerClient : public CObjectBase
 {
 	virtual class CNetPacket* GetPacket() = 0;
 	virtual void SendPacket( class CNetPacket *pPacket ) = 0;

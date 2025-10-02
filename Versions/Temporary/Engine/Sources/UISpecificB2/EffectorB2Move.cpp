@@ -9,7 +9,7 @@
 #include "EffectorB2Move.h"
 #include "DBUISpecificB2.h"
 
-void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *_pContext, const string &szAnimatedWindow ) 
+void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const string &szAnimatedWindow )
 { 
 	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move*>( _pCmd ) );
 	NI_VERIFY( pCmd, "no command", return );
@@ -115,7 +115,7 @@ CVec2 CEffectorB2Move::GetDelta( const CVec2 &vSpeed, const CVec2 &vAccel, float
 	return vSpeed * fTime + vAccel * (fTime * fTime * 0.5f);
 }
 
-const int CEffectorB2Move::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
+const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	if ( bFinished )
 		return 0;

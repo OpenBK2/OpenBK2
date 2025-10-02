@@ -6,7 +6,7 @@
 
 class CUnitGuns;
 class CTurret;
-interface IManuver;
+struct IManuver;
 class CPlanesFormation;
 
 class CAviation : public CMilitaryCar, public IPlane
@@ -102,7 +102,7 @@ public:
 	virtual CVec3 GetSpeedB2() const;
 	virtual CVec3 GetPosB2() const;
 	virtual CVec3 GetNormalB2() const;
-	virtual const interface IManuver * GetManuver() const;
+	virtual const struct IManuver * GetManuver() const;
 
 	// next calculated position
 	virtual CVec3 GetPosNext() const;

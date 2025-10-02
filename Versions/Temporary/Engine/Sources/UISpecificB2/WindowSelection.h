@@ -32,7 +32,7 @@ public:
 	bool MsgCancelSelection( const SGameMessage &msg );
 
 	virtual int operator&( IBinSaver &saver );
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
 

@@ -18,7 +18,7 @@ bool CEffectorRunReaction::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow ) 
+void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
 { 
 	szAnimatedWindow = _szAnimatedWindow;
 	const NDb::SUISRunReaction *pCmd( checked_cast<const NDb::SUISRunReaction*>( _pCmd ) );
@@ -39,7 +39,7 @@ void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, interface 
 	bForward = true;
 }
 
-const int CEffectorRunReaction::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
+const int CEffectorRunReaction::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 { 
 	// to do RUN COMMAND cmd.szParam
 	// in messageReaction

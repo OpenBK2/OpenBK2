@@ -46,7 +46,7 @@ enum ESaverMode
 // **
 // ************************************************************************************************************************ //
 
-interface IBinSaver : public CObjectBase
+struct IBinSaver : public CObjectBase
 {
 public:
 	typedef unsigned char chunk_id;
@@ -398,7 +398,7 @@ struct SBinSaverExternalObject
 };
 
 // objects checker in debug mode
-interface IDebugSaveCheckObj : public CObjectBase
+struct IDebugSaveCheckObj : public CObjectBase
 {
 	virtual bool CheckObj( CObjectBase *pObj ) = 0;
 };

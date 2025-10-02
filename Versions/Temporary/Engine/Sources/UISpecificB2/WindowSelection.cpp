@@ -3,7 +3,7 @@
 
 REGISTER_SAVELOAD_CLASS(0x110BD481, CWindowSelection);
 
-void CWindowSelection::Visit( interface IUIVisitor *pVisitor )
+void CWindowSelection::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	if ( pSelectorRect != 0 && bSelectorVisible )

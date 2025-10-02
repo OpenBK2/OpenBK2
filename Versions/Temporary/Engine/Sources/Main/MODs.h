@@ -7,7 +7,7 @@
 #define MOD_MODE_GAME "game"
 #define MOD_MODE_EDITOR "editor"
 
-interface IXmlSaver;
+struct IXmlSaver;
 namespace NDb
 {
 	enum EDatabaseMode;

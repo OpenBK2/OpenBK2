@@ -54,7 +54,7 @@ void CWindowStatsSystem::UpdateEntry( const wstring &szEntry, const wstring &szV
 		entryPos->second.SetText( szTmp.c_str(), dwColor, wndRect.Width() );
 }
 
-void CWindowStatsSystem::Visit( interface IUIVisitor *pVisitor )
+void CWindowStatsSystem::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 

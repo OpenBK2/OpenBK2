@@ -200,7 +200,7 @@ public:
 	CShootEstimatorForObstacles( class CCommonUnit *pOwner ) : pOwner( pOwner ), fCurRating( 0 ) {  }
 
 	virtual bool AddObstacle( IObstacle *pObstacle );
-	virtual interface IObstacle * GetBest() const;
+	virtual struct IObstacle * GetBest() const;
 };
 
 class CShootEstimatorSupportAAGun : public IShootEstimator

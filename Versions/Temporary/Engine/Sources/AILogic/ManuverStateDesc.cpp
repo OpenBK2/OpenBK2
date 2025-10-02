@@ -9,7 +9,7 @@
 //	CManuverStateDesc
 
 
-void CManuverStateDesc::Init( const enum EPlanesAttitude _att, interface IPlane *pPos, interface IPlane *pEnemy )
+void CManuverStateDesc::Init( const enum EPlanesAttitude _att, struct IPlane *pPos, struct IPlane *pEnemy )
 {
 	att = _att;
 

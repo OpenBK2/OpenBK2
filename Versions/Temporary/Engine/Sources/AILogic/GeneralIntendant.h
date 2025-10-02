@@ -178,7 +178,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTask); f.Add(3,&pCell); f.Add(4,&pCommander); f.Add(5,&eResupplyType); return 0; }
 public:
 	CGeneralTaskCheckCellDanger() {  }
-	CGeneralTaskCheckCellDanger( interface IGeneralTask *_pTask, class CResupplyCellInfo *_pCell, enum EResupplyType _eResupplyType, interface ICommander *_pCommander )
+	CGeneralTaskCheckCellDanger( struct IGeneralTask *_pTask, class CResupplyCellInfo *_pCell, enum EResupplyType _eResupplyType, struct ICommander *_pCommander )
 		: pTask( _pTask ), pCell( _pCell ), eResupplyType( _eResupplyType ), pCommander( _pCommander )
 	{
 	}

@@ -438,7 +438,7 @@ void CInterfaceScreenBase::PauseIntermission( bool bPause )
 	NInput::PostEvent( "show_game_paused", 0, 0 );
 }
 
-void CInterfaceScreenBase::AddScreen( interface IProgrammedReactionsAndChecks *pReactions )
+void CInterfaceScreenBase::AddScreen( struct IProgrammedReactionsAndChecks *pReactions )
 {
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, szInterfaceType, pReactions ) == false )

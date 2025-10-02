@@ -28,7 +28,7 @@ struct SMiniMapUnitInfo
 		: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius ) { }
 };
 
-interface IMiniMap : virtual public IWindow
+struct IMiniMap : virtual public IWindow
 {
 	struct SMarker
 	{
@@ -69,7 +69,7 @@ interface IMiniMap : virtual public IWindow
 	virtual void SetNortDirectionTexture( const NDb::STexture *pTexture ) = 0;
 };
 
-interface IPotentialLines : virtual public IWindow
+struct IPotentialLines : virtual public IWindow
 {
 	virtual void SetParams( const string &szMask, const string &szDiffColourMap, const CVec2 &vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 ) = 0;
 
@@ -80,18 +80,18 @@ interface IPotentialLines : virtual public IWindow
 	virtual void AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour ) = 0;
 };
 
-interface ISelection : virtual public IWindow
+struct ISelection : virtual public IWindow
 {
 };
 
 // Note: no real texture, use color with alpha only
-interface IWindowRoundProgressBar : virtual public IProgressBar
+struct IWindowRoundProgressBar : virtual public IProgressBar
 {
 	// draw only: fStartAngle <= fFinishAngle
 	virtual void SetAngles( float fStartAngle, float fFinishAngle ) = 0;
 };
 
-interface IWindow3DControl : virtual public IWindow
+struct IWindow3DControl : virtual public IWindow
 {
 	struct SParam
 	{
@@ -123,13 +123,13 @@ interface IWindow3DControl : virtual public IWindow
 	virtual void SetBaseID3D( int nID ) = 0;
 };
 
-interface IWindowFrameSequence : virtual public IWindow
+struct IWindowFrameSequence : virtual public IWindow
 {
 	virtual void Run( bool bRun ) = 0;
 	virtual void Reset() = 0;
 };
 
-interface IProgressHookB2 : public IProgressHook
+struct IProgressHookB2 : public IProgressHook
 {
 	virtual void RunFinishScreen() = 0;
 };

@@ -194,7 +194,7 @@ public:
 
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );

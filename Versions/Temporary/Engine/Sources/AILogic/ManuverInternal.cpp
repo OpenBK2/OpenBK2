@@ -84,14 +84,14 @@ CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 		return pPath->GetPoint( fProgress + fAdd );
 }
 
-void CManuver::InitCommon( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal )
+void CManuver::InitCommon( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal )
 {
 	InitInternal( _pPath, _pPlane, fabs( _pPlane->GetSpeedB2() ), _pPlane->GetNormalB2(), _bToHorisontal );
 	CheckToHorisontal();
 	fProgress = 0;
 }
 
-void CManuver::InitInternal( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const float _fSpeed, const CVec3 &_vNormale, const bool _bToHorisontal )
+void CManuver::InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const float _fSpeed, const CVec3 &_vNormale, const bool _bToHorisontal )
 {
 	bToHorisontal = _bToHorisontal;
 	CPtr<IPathFraction> pTmp = _pPath; // to ensure deletion

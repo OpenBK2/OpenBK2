@@ -2,7 +2,7 @@
 
 // internal header for ITransciever realisation
 
-interface IAICmdsAutoMagic;
+struct IAICmdsAutoMagic;
 
 namespace NDb
 {
@@ -10,7 +10,7 @@ namespace NDb
 };
 namespace NNet
 {
-	interface IDriver;
+	struct IDriver;
 }
 
 class CMultiplayerCommand : public CObjectBase
@@ -43,7 +43,7 @@ public:
 			nPlayer( _nPlayer ), nParam( _nParam ) { }
 };
 
-interface IMultiplayer : public CObjectBase
+struct IMultiplayer : public CObjectBase
 {
 	enum EConnectionState
 	{

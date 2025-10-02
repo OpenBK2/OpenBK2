@@ -2,7 +2,7 @@
 
 #include "Interface_UserData.h"
 
-interface IMODContainer : public CObjectBase
+struct IMODContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1424DC42 };
 

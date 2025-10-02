@@ -8,7 +8,7 @@
 #include "Window.h"
 #include "UIComponents.h"
 
-interface IML;
+struct ISound;
 
 // for edit text. keep focus if being clicked upon
 class CWindowEditLine : public CWindow, public IEditLine
@@ -83,7 +83,7 @@ public:
 	void AfterLoad();
 
 	// IWindow
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 	void Segment( const int timeDiff );
 
 	bool OnMouseMove( const CVec2 &_vPos, const int nButton );

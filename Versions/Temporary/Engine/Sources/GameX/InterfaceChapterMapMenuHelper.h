@@ -1,6 +1,6 @@
 #pragma once
 
-interface IWindow;
+struct IWindow;
 namespace NDb
 {
 	struct SChapter;

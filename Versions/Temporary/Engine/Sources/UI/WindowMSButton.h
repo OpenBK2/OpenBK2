@@ -170,7 +170,7 @@ protected:
 public:
 	void SetTextString( const wstring &wszText );
 	void SetOutline( const CDBID &outlineType );
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 
 	void OnActivatePushedState( const SGameMessage &msg );
 
@@ -181,9 +181,9 @@ public:
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 
-	void SetNotifySink( interface IButtonNotify *pNotify ) { pButtonNotify = pNotify; }
+	void SetNotifySink( struct IButtonNotify *pNotify ) { pButtonNotify = pNotify; }
 
-	int operator&( interface IBinSaver &saver );
+	int operator&( struct IBinSaver &saver );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	void NotifyStateSequenceFinished();

@@ -8,7 +8,7 @@ class  CEditorAI : public IEditorAI
 	//
 public:
 	// IEditorAI
-	interface ITerraAIObserver* CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
+	struct ITerraAIObserver* CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
 };
 
 

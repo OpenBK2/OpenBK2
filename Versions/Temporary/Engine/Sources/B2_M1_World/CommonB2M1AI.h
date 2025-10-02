@@ -1,6 +1,6 @@
 #pragma once
 
-interface ICommonB2M1AI : public CObjectBase
+struct ICommonB2M1AI : public CObjectBase
 {
 	enum { tidTypeID = 0x3015CB00 };
 	

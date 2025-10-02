@@ -140,7 +140,7 @@ public:
 // hintBV specifies area where object will be moving, if area is not limited just specify very large BV
 struct SDecalMappingInfo;
 class CDecalTarget;
-interface IGScene : virtual public CObjectBase
+struct IGScene : virtual public CObjectBase
 {
 public:
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 

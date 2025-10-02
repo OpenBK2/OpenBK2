@@ -21,7 +21,7 @@ public:
 	virtual const EState GetState() const = 0;
 	virtual const int GetClientServerID() const = 0;
 
-	virtual interface IConnection* CreateConnection() const = 0;
+	virtual struct IConnection* CreateConnection() const = 0;
 	virtual CConnectionEffort* CreateNextEffort( const int nOurGameID ) = 0;
 };
 

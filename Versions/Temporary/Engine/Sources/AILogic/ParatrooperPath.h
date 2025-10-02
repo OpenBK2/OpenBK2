@@ -34,7 +34,7 @@ public:
 //ненужные функции
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { CPtr<IPath> p = pPath; return true; }
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return true; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { CPtr<IMemento> p = pMemento; return true; }
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { CPtr<IMemento> p = pMemento; return true; }
 
 	virtual void Stop() {}
 	virtual float& GetSpeedLen() { return fSpeedLen; }

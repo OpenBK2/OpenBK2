@@ -80,7 +80,7 @@ struct SMPUIMessage : public CObjectBase
 
 // Interface with UI
 
-interface IMPToUIManager : public CObjectBase
+struct IMPToUIManager : public CObjectBase
 {
 	enum { tidTypeID = 0x1911A400 };
 

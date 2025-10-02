@@ -21,7 +21,7 @@ void CMapSounds::CMapSoundCell::AddSound( const WORD wSoundID, const CVec3 &vPos
 	}
 }
 
-void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, interface ISoundScene * pScene )
+void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, struct ISoundScene * pScene )
 {
 	// if removed sound is playing - remove it from sound scene
 	if ( wInstanceID == playingLoopedSound.wInstanceID && 0 != playingLoopedSound.wSceneID)
@@ -63,7 +63,7 @@ void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSoun
 	}
 }
 
-void CMapSounds::CMapSoundCell::Update( interface ISoundScene * pScene, const CMapSounds::RegisteredSounds &registeredSounds )
+void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapSounds::RegisteredSounds &registeredSounds )
 {
 	if ( timeNextRun < CSoundScene2D::GetCurTime() )
 	{

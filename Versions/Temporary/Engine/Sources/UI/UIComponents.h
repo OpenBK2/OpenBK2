@@ -12,12 +12,12 @@ UI_EXPORT void CheckInstantLoadTexture( const NDb::STexture *pTexture );
 
 // Declares components used rare or mostly internally by UI
 
-interface ISelectNotify : public virtual CObjectBase
+struct ISelectNotify : public virtual CObjectBase
 {
 	virtual void OnSelectData( CObjectBase *pData ) = 0;
 };
 
-interface IFocusNotify : public virtual CObjectBase
+struct IFocusNotify : public virtual CObjectBase
 {
 	virtual void OnFocus( const bool bFocus ) = 0;
 };

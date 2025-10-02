@@ -149,7 +149,7 @@ void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 	}
 }
 
-void CMOUnitInfantry::SetSquad( interface IMOSquad *_pSquad )
+void CMOUnitInfantry::SetSquad( struct IMOSquad *_pSquad )
 {
 	if ( pSquad )
 		pSquad->Load( this, false );
@@ -310,7 +310,7 @@ void CMOUnitInfantry::GetPossibleActions( CUserActions *pActions ) const
 	GetActionsBy( pActions );
 }
 
-void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
 	if ( HasMoveAnimation() )
@@ -328,7 +328,7 @@ void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placem
 	}
 }
 
-void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager  )
+void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager  )
 {
 	const bool bIsM1 = NGlobal::GetVar( "m1", 0 ) != 0;
 	if ( !IsVisible() && !bIsM1 )
@@ -373,7 +373,7 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 	}
 }
 
-void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 

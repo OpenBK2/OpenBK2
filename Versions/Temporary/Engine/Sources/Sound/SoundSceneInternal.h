@@ -112,7 +112,7 @@ private:
 		const int nMixMinimum,
 		bool bDelete = true );
 
-	void PlaySubstSound( interface ISound *pSubstSound, unsigned int nStartSample, unsigned int nSoundLenght, bool bLooped );
+	void PlaySubstSound( struct ISound *pSubstSound, unsigned int nStartSample, unsigned int nSoundLenght, bool bLooped );
 
 	void InitConsts();
 	~CSoundScene2D();
@@ -126,7 +126,7 @@ public:
 
 	// must be called when new terrain was loaded
 	void Init( const int _nMaxX, const int _nMaxY, const int _nMinZ, const int _nMaxZ, const int _VIS_TILE_SIZE );
-	void SetTerrain( interface ITerrainSounds * pTerrain );
+	void SetTerrain( struct ITerrainSounds * pTerrain );
 
 	// если начался или идет бой - то вызывать эу функцию
 	void MuteTerrain( const bool bMute );

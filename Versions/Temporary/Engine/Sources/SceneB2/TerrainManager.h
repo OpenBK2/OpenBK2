@@ -29,8 +29,8 @@ public:
 	void Setup( NGScene::IGameView *pGView, CFuncBase<STime> *pTimer );
 	void Load( const NDb::STerrain *pDesc, CDataStream *pStream );
 	const NDb::STerrain *GetDesc() const { return pDesc; }
-	void SetAIObserver( interface ITerraAIObserver *pObserver );
-	virtual interface ITerraAIObserver* GetAIObserver();
+	void SetAIObserver( struct ITerraAIObserver *pObserver );
+	virtual struct ITerraAIObserver* GetAIObserver();
 	void UpdateAIInfo() { pTerraGen->UpdateAIInfo(); }
 
 	//

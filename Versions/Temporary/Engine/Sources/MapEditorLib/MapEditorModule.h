@@ -3,13 +3,13 @@
 typedef void (*RegisterEditorType)( const string &szName, ObjectFactoryNewFunc pfnNewFunc );
 typedef void (*UnRegisterEditorType)( const string &szName );
 
-interface IEditorModuleRegistrator
+struct IEditorModuleRegistrator
 {
 	virtual void RegisterTypes( const string &szType, RegisterEditorType pfnRegistrator ) const = 0;
 	virtual void UnRegisterTypes( const string &szType, UnRegisterEditorType pfnUnRegistrator ) const = 0;
 };
 
-interface IEditorModule
+struct IEditorModule
 {
 	virtual void ModuleStartup() = 0;
 	virtual void ModuleShutdown() = 0;

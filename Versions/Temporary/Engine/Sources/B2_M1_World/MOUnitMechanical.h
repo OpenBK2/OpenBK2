@@ -6,7 +6,7 @@
 
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 namespace NDb
 {
@@ -60,8 +60,8 @@ public:
 
 	void GetStatus( SObjectStatus *pStatus ) const;
 	//
-	bool Load( interface IMOUnit *pMO, bool bEnter );
-	bool LoadSquad( interface IMOSquad *pSquad, bool bEnter );
+	bool Load( struct IMOUnit *pMO, bool bEnter );
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() { }
 	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
 	int GetPassangersCount() const { return vPassangers.size(); }
@@ -74,14 +74,14 @@ public:
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason );
 	IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene  );
 	void AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn, const NTimer::STime &currTime, IScene *pScene, const bool bHorTurn );
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
 
 	//
-	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
+	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
-	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, interface ISoundScene *pSoundScene, interface IClientAckManager *pAckManager );
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason );
 	virtual class CMOProjectile* LaunchProjectile( const SAINewProjectileUpdate *pUpdate );
 	void SetTransport( IMOContainer *_pTransport );

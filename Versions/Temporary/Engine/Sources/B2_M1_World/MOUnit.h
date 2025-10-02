@@ -52,7 +52,7 @@ private:
 	bool AreasChanged( const vector<SShootAreas> &newAreas ) const;
 
 public:
-	interface IChooseAttached : public CObjectBase
+	struct IChooseAttached : public CObjectBase
 	{
 		virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) = 0;
 	};
@@ -86,20 +86,20 @@ public:
 
 	void GetStatus( SObjectStatus *pStatus ) const;
 
-	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
-	void SetSquad( interface IMOSquad *_pSquad ) { }
-	virtual interface IMOSquad* GetSquad() const {	return 0; }
+	void SetSquad( struct IMOSquad *_pSquad ) { }
+	virtual struct IMOSquad* GetSquad() const {	return 0; }
 	//
 	virtual bool NeedShowInterrior() const;
 	
-	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
-	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, interface IClientAckManager *pAckManager, const int nSet );
-	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, interface IClientAckManager *pAckManager );
+	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
+	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet );
+	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager );
 	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, ISoundScene *pSoundScene, IClientAckManager *pAckManager );
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	void AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate );
 
 	bool IsSelected() const

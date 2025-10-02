@@ -15,11 +15,11 @@ struct SAIBasicUpdate;
 struct SAIUnitCmd;
 struct SShootAreas;
 
-interface ICheckSumLog;
-interface IProgressHook;
+struct ICheckSumLog;
+struct IProgressHook;
 enum EActionCommand;
 
-interface IAILogic : public ICommonB2M1AI
+struct IAILogic : public ICommonB2M1AI
 {
 	enum { tidTypeID = 0x3015CB01 };
 	
@@ -29,7 +29,7 @@ interface IAILogic : public ICommonB2M1AI
 	virtual bool IsMissionLoaded() const = 0;
 
 	virtual void SetProgressHook( IProgressHook *pProgress ) = 0;
-	virtual void Init( ICheckSumLog *pCheckSumLog, const struct NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts, interface IAIScenarioTracker *_pScenarioTracker ) = 0;
+	virtual void Init( ICheckSumLog *pCheckSumLog, const struct NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts, struct IAIScenarioTracker *_pScenarioTracker ) = 0;
 	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog ) { }
 	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo ) = 0;
 	virtual void PostMapLoad() {}
@@ -51,7 +51,7 @@ interface IAILogic : public ICommonB2M1AI
 	virtual float GetZ( const CVec2 &vPoint ) const = 0;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
 	virtual const DWORD GetNormal( const CVec2 &vPoint ) const  = 0;
-	virtual interface ITerraAIObserver* CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
+	virtual struct ITerraAIObserver* CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
 	virtual void RegisterGroup( const vector<int> &vIDs, const int nGroup ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
@@ -70,7 +70,7 @@ interface IAILogic : public ICommonB2M1AI
 	virtual void PickedObj( const int nObjID ) = 0;
 	virtual void PickEmpty() = 0;
 
-	virtual void SetGlobeScriptHandler( interface IGlobeScriptHandler *pHandler ) = 0;
+	virtual void SetGlobeScriptHandler( struct IGlobeScriptHandler *pHandler ) = 0;
 
 	virtual class CStaticMapHeights* GetHeights() const = 0;
 

@@ -838,7 +838,7 @@ void CScene::ResetTimer( const NTimer::STime &time )
 	Singleton<IMusicSystem>()->OnResetTimer();
 }
 
-void CScene::AddScreen( interface IWindow *_pScreen )
+void CScene::AddScreen( struct IWindow *_pScreen )
 {
 	CObj<IWindow> pScreen( _pScreen );
 	RemoveScreen( pScreen );
@@ -847,7 +847,7 @@ void CScene::AddScreen( interface IWindow *_pScreen )
 	screenData.SetSceneConsts( data[eScene]->pSceneConsts );
 }
 
-void CScene::RemoveScreen( interface IWindow *pScreen )
+void CScene::RemoveScreen( struct IWindow *pScreen )
 {
 	data[eScene]->screensData.remove( SSceneData::SScreenData( pScreen ) );
 }

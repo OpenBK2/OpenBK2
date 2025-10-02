@@ -7,7 +7,7 @@
 #include "../misc/geom.h"
 #include "../system/filepath.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

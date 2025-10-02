@@ -4,7 +4,7 @@
 
 namespace NAnimation
 {
-	interface ISkeletonAnimatior;
+	struct ISkeletonAnimatior;
 }
 namespace NDb
 {
@@ -12,8 +12,8 @@ namespace NDb
 	struct SMechUnitRPGStats;
 	struct SM1UnitHelicopter;
 }
-interface IMechUnitJoggingMutator;
-interface IWingScaleMutator;
+struct IMechUnitJoggingMutator;
+struct IWingScaleMutator;
 class CSmokeTrailEffect;
 
 class CMOUnitHelicopter :public CMOUnit
@@ -57,8 +57,8 @@ public:
 	bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 
 //passangers functions
-	bool Load( interface IMOUnit *pMO, bool bEnter );
-	bool LoadSquad( interface IMOSquad *pSquad, bool bEnter );
+	bool Load( struct IMOUnit *pMO, bool bEnter );
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() {}
 	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
 	int GetPassangersCount() const { return vPassangers.size(); }
@@ -67,11 +67,11 @@ public:
 
 //AI updates
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason );
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason );
 	void AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::ESeason eSeason );
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene  );
-	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 
 	virtual void Select( bool bSelect );
 	bool IsMechUnit() const { return true; }

@@ -27,7 +27,7 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	CTempNamesMap tempNamesMap;
 
 	void GetTempAIGeometryName( string *pszAIGeometryPrefix, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry );
-	void GetVisObjectNameList( list<string> *pVisOblectNameList, interface IManipulator *pManipulator );
+	void GetVisObjectNameList( list<string> *pVisOblectNameList, struct IManipulator *pManipulator );
 	//
 	void EnlargeArray( CArray2D<BYTE> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource );
 	void EnlargeArray( CArray2D<BYTE> *pDestination, const CTPoint<int>  &rSourceSize );

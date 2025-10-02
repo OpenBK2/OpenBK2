@@ -3,7 +3,7 @@
 #include "Stats_B2_M1_export.h"
 
 
-interface IRPGStatsAutomagic : public CObjectBase
+struct IRPGStatsAutomagic : public CObjectBase
 {
 	enum { tidTypeID = 0x11078380 };
 public:

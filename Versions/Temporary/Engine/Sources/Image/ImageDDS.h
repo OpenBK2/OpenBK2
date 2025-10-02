@@ -1,6 +1,6 @@
 #pragma once
 
-interface IDirect3DDevice9;
+struct IDirect3DDevice9;
 namespace NGfx
 {
 	enum EPixelFormat;

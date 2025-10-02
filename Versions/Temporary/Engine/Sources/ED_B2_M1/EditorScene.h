@@ -16,7 +16,7 @@ namespace NGScene
 
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 
 enum EScene;
@@ -24,15 +24,15 @@ enum ESceneMarkerType;
 enum ESceneMode;
 enum ESceneObjAnimMode;
 enum ESceneShow;
-interface ITerraManager;
+struct ITerraManager;
 
-interface IEditorScene : public CObjectBase
+struct IEditorScene : public CObjectBase
 {
 	enum { tidTypeID = 0x301CBB41 };
 
 	virtual void RemoveAllScreens() = 0;
-	virtual void AddScreen( interface IWindow *pScreen ) = 0;
-	virtual void RemoveScreen( interface IWindow *pScreen ) = 0;
+	virtual void AddScreen( struct IWindow *pScreen ) = 0;
+	virtual void RemoveScreen( struct IWindow *pScreen ) = 0;
 
 	virtual NGScene::I2DGameView *GetG2DView() = 0;
 	virtual NGScene::IGameView *GetGView() = 0;

@@ -3,7 +3,7 @@
 #include "Main_export.h"
 
 
-interface IAICmdsAutoMagic : public CObjectBase
+struct IAICmdsAutoMagic : public CObjectBase
 {
 	MAIN_EXPORT virtual IBinSaver *MakeCommandSerializer( CMemoryStream *pStream, ESaverMode mode );
 	virtual int GetCommandID( CObjectBase *p ) = 0;

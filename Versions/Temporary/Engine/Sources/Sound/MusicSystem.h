@@ -31,7 +31,7 @@ enum EStreamType
 // "VOICE STREAM" is generally voice over and some short streaming sounds.
 // MUSIC STREAM is running always with settings, set in MapMusic structure. It has pauses and fade in/fade out.
 // VOICE STREAM is running periodically, it is launched through specific functions.
-interface IMusicSystem : public CObjectBase
+struct IMusicSystem : public CObjectBase
 {
 	enum { tidTypeID = 0x11181340 };
 

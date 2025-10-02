@@ -17,7 +17,7 @@ int CEffectorConsoleBufferCommand::operator&( IBinSaver &saver )
 }
 
 void CEffectorConsoleBufferCommand::Configure( const NDb::SUIStateBase *_pCmd,
-																							interface IScreen *pScreen,
+																							struct IScreen *pScreen,
 																							SWindowContext *pContext,
 																							const string &szAnimatedWindow )
 {
@@ -30,7 +30,7 @@ void CEffectorConsoleBufferCommand::Configure( const NDb::SUIStateBase *_pCmd,
 	bFinished = false;
 }
 
-const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
+const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 {
 	// check IWindow that is passed as a param for string.
 	// then pass this string to console buffer

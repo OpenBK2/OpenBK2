@@ -134,7 +134,7 @@ namespace NDb
 	// database functions
 	//
 	//game database iterator
-	interface IDBIterator : public CObjectBase
+	struct IDBIterator : public CObjectBase
 	{
 		virtual bool MoveNext() = 0;
 		virtual bool IsEnd() const = 0;

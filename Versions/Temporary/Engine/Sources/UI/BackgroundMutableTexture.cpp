@@ -13,7 +13,7 @@ void CBackgroundMutableTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CBackground::InitByDesc( _pDesc );
 }
 
-void CBackgroundMutableTexture::Visit( interface IUIVisitor* pVisitor )
+void CBackgroundMutableTexture::Visit( struct IUIVisitor* pVisitor )
 {
 	if ( !pData ) 
 		return;
@@ -38,7 +38,7 @@ void CBackgroundMutableTexture::Set( const CArray2D<NGfx::SPixel8888> &src )
 	pData->Set( src );
 }
 
-int CBackgroundMutableTexture::operator&( interface IBinSaver &saver )
+int CBackgroundMutableTexture::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CBackground*>( this ) );
 	saver.Add( 2, &pData );

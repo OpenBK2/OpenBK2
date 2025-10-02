@@ -2,7 +2,7 @@
 
 class CNetPacket;
 
-interface IConnection : public CObjectBase
+struct IConnection : public CObjectBase
 {
 public:
 	virtual class CNet* GetNet() = 0;

@@ -26,7 +26,7 @@ typedef list< CPtr<CBuilding> > CStoragesList;
 //*												  CStaticObjects													*
 //*******************************************************************
 
-interface IObstacle;
+struct IObstacle;
 class CUpdatableObj;
 class CBridgeSpan;
 class CStaticObjects : public CAIObjectBase
@@ -42,7 +42,7 @@ class CStaticObjects : public CAIObjectBase
 	};
 public:
 	// для перебора всех хранилищь
-	interface IEnumStoragesPredicate
+	struct IEnumStoragesPredicate
 	{
 		// перебирать только подсоединенные хранилища
 		virtual bool OnlyConnected() const = 0;
@@ -123,8 +123,8 @@ public:
 	
 	void PostAllObjectsInit();
 
-	void AddObstacle( interface IObstacle *pObstacle );
-	void RemoveObstacle( interface IObstacle *pObstacle );
+	void AddObstacle( struct IObstacle *pObstacle );
+	void RemoveObstacle( struct IObstacle *pObstacle );
 	
 	class CStaticObject* AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const WORD wDir, const int nDiplomacy, const int nFrameIndex );
 	void AddStaticObject( class CExistingObject* pObj, bool bAlreadyLocked );
@@ -160,10 +160,10 @@ public:
 	
 	void UpdateAllObjectsPos();
 
-	void EnumObstaclesInRange( const CVec2 &vCenter, const float fRadius, interface IObstacleEnumerator *f );
-	void EnumStoragesForParty( const int nParty, interface IEnumStoragesPredicate *pPred );
+	void EnumObstaclesInRange( const CVec2 &vCenter, const float fRadius, struct IObstacleEnumerator *f );
+	void EnumStoragesForParty( const int nParty, struct IEnumStoragesPredicate *pPred );
 	void EnumStoragesInRange( const CVec2 &vCenter, const int nParty, const float fMaxPathLength, const float fMaxOffset,
-														class CCommonUnit *pUnitToFindPath, interface IEnumStoragesPredicate *pPred );
+														class CCommonUnit *pUnitToFindPath, struct IEnumStoragesPredicate *pPred );
 
 	void DeleteObjWOUpdates( class CExistingObject *pObj );
 

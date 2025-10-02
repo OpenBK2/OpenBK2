@@ -6,13 +6,13 @@ namespace NDb
 	struct SMapInfo;
 }
 
-interface ICommandsHistory : public ICheckSumLog
+struct ICommandsHistory : public ICheckSumLog
 {
 	virtual void StartNewGame( const NDb::SMapInfo *pMap ) = 0;
 	virtual const NDb::SMapInfo *GetMap() const = 0;
 	
-	virtual void AddCommand( const int nSegment, interface IAILogicCommandB2 *pCmd ) = 0;
-	virtual void ExecuteSegmentCommands( const int nSegment, interface ITransceiver *pTranceiver ) = 0;
+	virtual void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd ) = 0;
+	virtual void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver ) = 0;
 
 	//virtual bool SaveReplay( const string &szFileName );
 

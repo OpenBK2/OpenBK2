@@ -21,12 +21,12 @@ class CMessageReactionB2 : public IMessageReactionB2
 	CMessageSequence commonBefore;					// always run and before any branch
 	CMessageSequence commonAfter;						// always run and after any branch
 
-	bool Execute( const CMessageSequence *pToExecute, interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
+	bool Execute( const CMessageSequence *pToExecute, struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	void InitSequienceByDesc( CMessageSequence *pCreate, const CMessageSequienceDesc &src );
 
 public:
 	CMessageReactionB2() {  }
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	int operator&( IBinSaver &ss );
 	void AddCommonBefore( IMessageReactionB2 *pReaction ) { commonBefore.push_back( pReaction ); }
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
@@ -40,7 +40,7 @@ class CARSetGlobalVar : public IMessageReactionB2
 	CDBPtr<NDb::SARSetGlobalVar> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -52,7 +52,7 @@ class CARRemoveGlobalVar : public IMessageReactionB2
 	CDBPtr<NDb::SARRemoveGlobalVar> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -62,7 +62,7 @@ class CARSendUIMessage : public IMessageReactionB2
 	CDBPtr<NDb::SARSendUIMessage> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -72,7 +72,7 @@ class CARSendGameMessage : public IMessageReactionB2
 	CDBPtr<NDb::SARSendGameMessage> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -82,7 +82,7 @@ class CARSiwtchTab : public IMessageReactionB2
 	CDBPtr<NDb::SARSwitchTab> pDesc;
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
+	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 

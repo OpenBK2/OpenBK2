@@ -32,7 +32,7 @@ public:
 	SCommonGunInfo( bool _bFiring, const int _nAmmo, const int _nPlatform, const int _nGun ) : bFiring( _bFiring ), nAmmo( _nAmmo ), nPlatform( _nPlatform ), lastShoot( 0 ), nGun( _nGun ) { }
 };
 
-interface IGunsFactory
+struct IGunsFactory
 {
 	enum EGunTypes { MOMENT_CML_GUN, MOMENT_BURST_GUN, VIS_CML_BALLIST_GUN, VIS_BURST_BALLIST_GUN, PLANE_GUN, MORALE_GUN, TORPEDO_GUN, ROCKET_GUN, FLAME_GUN };
 
@@ -240,7 +240,7 @@ public:
 	int GetNAmmo() const { return pCommonGunInfo->nAmmo; }
 	void SetNAmmo( int nAmmo ) { pCommonGunInfo->nAmmo = nAmmo; }
 
-	virtual interface IBallisticTraj* CreateTraj( const CVec3 &vTarget ) const;
+	virtual struct IBallisticTraj* CreateTraj( const CVec3 &vTarget ) const;
 	virtual void Fire( const CVec2 &target, const float z, const bool bShowBombEffect );
 	virtual WORD GetTrajectoryZAngle( const CVec3 &vToAim ) const;
 

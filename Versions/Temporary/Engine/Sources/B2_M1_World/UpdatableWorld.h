@@ -9,7 +9,7 @@
 
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;
-interface ICommonB2M1AI;
+struct ICommonB2M1AI;
 typedef hash_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
 typedef list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
 typedef hash_map<int, CPtr<CMapObj> > CKeyBuildings;

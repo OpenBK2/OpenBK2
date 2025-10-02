@@ -28,7 +28,7 @@ namespace NGScene
 };
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 };
 class CWindController;
 
@@ -41,12 +41,12 @@ namespace NAIVisInfo
 	enum EColor;
 };
 
-interface IVisObj;
+struct IVisObj;
 template<class T> class CSyncSrc;
 
 namespace NAI
 {
-	interface IAIMap;
+	struct IAIMap;
 }
 
 enum ESceneSubObjType
@@ -75,14 +75,14 @@ enum ESceneAttachMode
 };
 
 class CCSTime;
-interface IFullScreenFader;
+struct IFullScreenFader;
 
 struct SObjectFilter
 {
 	virtual bool operator() ( int ) const { return false; };
 };
 
-interface IScene : public CObjectBase
+struct IScene : public CObjectBase
 {
 	enum { tidTypeID = 0x10073C40 };
 	//
@@ -121,7 +121,7 @@ interface IScene : public CObjectBase
 	// set scene light (re-light all scene)
 	virtual void SetLight( const NDb::SAmbientLight *pLight ) = 0;
 	// 
-	virtual interface ITerraManager *GetTerraManager() = 0;
+	virtual struct ITerraManager *GetTerraManager() = 0;
 	virtual bool DoesTerraManagerExist() const = 0;
 	// add object to scene. returns new ID
 	virtual int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, 
@@ -131,8 +131,8 @@ interface IScene : public CObjectBase
 												 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bNeedReflection = false ) = 0;
 
 	// CRAP - ugly, should to pass a special object to screen
-	virtual void AddInterfaceObject( interface IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize ) = 0;
-	virtual void RemoveInterfaceObject( interface IWindow *pScreen, const int nID ) = 0;
+	virtual void AddInterfaceObject( struct IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize ) = 0;
+	virtual void RemoveInterfaceObject( struct IWindow *pScreen, const int nID ) = 0;
 	//
 	virtual bool ChangeModel( const int nObjectID, const NDb::SModel *pModel ) = 0;
 	virtual NAnimation::ISkeletonAnimator *GetAnimator( const int nID, bool bRefreshAnimator = true ) = 0;
@@ -143,7 +143,7 @@ interface IScene : public CObjectBase
 
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset ) = 0;
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const CVec3 &vOffset ) = 0;
-	virtual interface IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) = 0;
+	virtual struct IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) = 0;
 	virtual void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType ) = 0;
 	virtual void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber ) = 0;
 
@@ -213,8 +213,8 @@ interface IScene : public CObjectBase
 	// virtual void SetSoundSceneMode( const enum ESoundSceneMode eMode ) = 0;
 
 	// UI screen manipulation
-	virtual void AddScreen( interface IWindow *pScreen ) = 0;
-	virtual void RemoveScreen( interface IWindow *pScreen ) = 0;
+	virtual void AddScreen( struct IWindow *pScreen ) = 0;
+	virtual void RemoveScreen( struct IWindow *pScreen ) = 0;
 	virtual void RemoveAllScreens() = 0;
 	virtual NGScene::I2DGameView *GetG2DView() = 0;
 	virtual NGScene::IGameView *GetGView() = 0;

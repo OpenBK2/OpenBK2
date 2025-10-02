@@ -17,7 +17,7 @@ public:
 		saver.Add( 2, &pInstance );
 		return 0;
 	}
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc )
 	{
 		pInstance = checked_cast<const NDb::SWindowSimple*>( pDesc )->Duplicate();

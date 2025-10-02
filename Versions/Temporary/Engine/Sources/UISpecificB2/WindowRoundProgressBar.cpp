@@ -14,7 +14,7 @@ CWindowRoundProgressBar::CWindowRoundProgressBar() : fPosition (0), fStartAngle(
 {
 }
 
-void CWindowRoundProgressBar::Visit( interface IUIVisitor *pVisitor )
+void CWindowRoundProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
 /*	CTRect<float> rc;
 	FillWindowRect( &rc );

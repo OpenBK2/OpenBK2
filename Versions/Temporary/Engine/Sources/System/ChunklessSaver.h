@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-interface IPointerSerialization : virtual public CObjectBase
+struct IPointerSerialization : virtual public CObjectBase
 {
 	virtual int GetObjectID( CObjectBase *p ) = 0;
 	virtual CObjectBase *GetObject( int nID ) = 0;

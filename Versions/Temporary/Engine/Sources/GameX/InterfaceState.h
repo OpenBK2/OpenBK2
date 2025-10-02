@@ -14,7 +14,7 @@ namespace NGScene
 	class CScreenshotTexture;
 };
 
-interface ICampaignState : public CObjectBase
+struct ICampaignState : public CObjectBase
 {
 	virtual const CDBID &GetDBID() const = 0;
 	
@@ -25,7 +25,7 @@ interface ICampaignState : public CObjectBase
 	virtual void SetStarted( const bool bValue ) = 0;
 };
 
-interface IInterfaceState : public CObjectBase
+struct IInterfaceState : public CObjectBase
 {
 	enum { tidTypeID = 0x170C1B40 };
 	
@@ -68,7 +68,7 @@ interface IInterfaceState : public CObjectBase
 	virtual void SetSuppressEnableFocus( bool bSuppress ) = 0;
 
 	// closing interfaces in a bunch
-	virtual void SendCommandsToCloseAllIncluding( interface IInterfaceBase * pLastInterfaceToClose ) = 0;
+	virtual void SendCommandsToCloseAllIncluding( struct IInterfaceBase * pLastInterfaceToClose ) = 0;
 	virtual void SendCommandsToCloseAllIncluding( const string &szInterfaceID ) = 0;
 	
 	virtual void MakeScenarioTracker( EScenarioTrackerType eType ) = 0;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../ED_Common/GameInputInterface.h"
-interface ICamera;
+struct ICamera;
 
 class CEditorInterfaceBase : public CGameInputInterface
 {

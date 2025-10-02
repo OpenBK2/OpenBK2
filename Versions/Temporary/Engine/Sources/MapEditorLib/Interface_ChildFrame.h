@@ -2,7 +2,7 @@
 
 
 // в cpp файле написать макрос: REGISTER_CHILD_FRAME_IN_...( typeName, className )
-interface IChildFrame : public CObjectBase
+struct IChildFrame : public CObjectBase
 {
 	//
 	virtual bool Create() = 0;
@@ -15,7 +15,7 @@ interface IChildFrame : public CObjectBase
 };
 
 
-interface IChildFrameContainer : public CObjectBase
+struct IChildFrameContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408B400 };
 	//

@@ -11,8 +11,8 @@ class CArray1Bit
 
 	const BYTE GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
 public:
-	int operator&( interface IBinSaver &saver ) { saver.Add( 1, &array ); saver.Add( 2, &xSize ); return 0; }
-	int operator&( interface IXmlSaver &saver ) { saver.Add( "Size", &xSize ); saver.Add( "BitArray", &array ); return 0; }
+	int operator&( struct IBinSaver &saver ) { saver.Add( 1, &array ); saver.Add( 2, &xSize ); return 0; }
+	int operator&( struct IXmlSaver &saver ) { saver.Add( "Size", &xSize ); saver.Add( "BitArray", &array ); return 0; }
 
 	CArray1Bit() {}
 	CArray1Bit( const int size ) { SetSize( size ); }
@@ -180,8 +180,8 @@ class CArray4Bit
 	int nSize;
 	vector<BYTE> array;
 public:
-	int operator&( interface IBinSaver &saver ) {  saver.Add( 1, &array ); saver.Add( 2, &nSize ); return 0; }
-	int operator&( interface IXmlSaver &saver ) {  saver.Add( "Size", &nSize ); saver.Add( "BitArray", &array ); return 0; }
+	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &array ); saver.Add( 2, &nSize ); return 0; }
+	int operator&( struct IXmlSaver &saver ) {  saver.Add( "Size", &nSize ); saver.Add( "BitArray", &array ); return 0; }
 
 	CArray4Bit() { }
 	CArray4Bit( const int size ) { SetSize( size ); }
@@ -226,7 +226,7 @@ class CArray2D4Bit
 	int xSize;
 	CArray2D<BYTE> array;
 public:
-	int operator&( interface IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
+	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
 
 	CArray2D4Bit() : xSize( 0 ) {}
 	CArray2D4Bit( const int xsize, const int ysize ) { SetSizes( xsize, ysize ); }
@@ -270,7 +270,7 @@ class CArray2D1Bit
 	int xSize;
 	CArray2D<BYTE> array;
 public:
-	int operator&( interface IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
+	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
 
 	CArray2D1Bit() : xSize( 0 ) {  }
 	CArray2D1Bit( const int xsize, const int ysize )  { SetSizes( xsize, ysize ); }

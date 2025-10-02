@@ -4,7 +4,7 @@
 
 using namespace NAnimation;
 
-interface ITreeFallingMutator : public IAnimMutator
+struct ITreeFallingMutator : public IAnimMutator
 {
 	enum { typeID = 0x12094B80 };
 	virtual void Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,
@@ -12,13 +12,13 @@ interface ITreeFallingMutator : public IAnimMutator
 											float fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart ) = 0;
 };
 
-interface ITreeWindMutator : public IAnimMutator
+struct ITreeWindMutator : public IAnimMutator
 {
 	enum { typeID = 0x19132B40 };
 	virtual void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const vector<string> &leafNames ) = 0;
 };
 
-interface IMechUnitJoggingMutator : public IAnimMutator
+struct IMechUnitJoggingMutator : public IAnimMutator
 {
 	enum { typeID = 0x15095B00 };
 	//
@@ -34,7 +34,7 @@ interface IMechUnitJoggingMutator : public IAnimMutator
 	virtual void Stop() = 0;
 };
 
-interface IWingScaleMutator : public IAnimMutator
+struct IWingScaleMutator : public IAnimMutator
 {
 	enum { typeID = 0x3119AB00 };
 	virtual bool Setup( ISkeletonAnimator *pAnimator, const string &szScaledWingPrefix, const string &szStaticWingName ) = 0;

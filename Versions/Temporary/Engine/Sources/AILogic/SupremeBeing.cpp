@@ -16,7 +16,7 @@ extern CScripts *pScripts;
 //*											CSupremeBeing																*
 //*******************************************************************
 
-interface IEnemyContainer * CSupremeBeing::GetEnemyConatiner( int nParty )
+struct IEnemyContainer * CSupremeBeing::GetEnemyConatiner( int nParty )
 {
 	return generals[nParty];
 }

@@ -14,12 +14,12 @@ namespace NDb
 }
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 class CCSTime;
 class CCCVec3;
 
-interface IAttachedObject : virtual public CObjectBase, virtual public IVisObj
+struct IAttachedObject : virtual public CObjectBase, virtual public IVisObj
 {
 	virtual void Destroy( const NTimer::STime time ) = 0;
 	virtual void Clear( const NTimer::STime time ) = 0;

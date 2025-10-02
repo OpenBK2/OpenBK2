@@ -17,15 +17,15 @@ struct SPrevPathParams
 	
 	float fDistToGo;	// distance that have to be gone on new path
 	float fCurTiltSpeed;
-	SPrevPathParams( interface IPlane *pPlane );
+	SPrevPathParams( struct IPlane *pPlane );
 };
 
-interface IPathFraction;
+struct IPathFraction;
 typedef list<CPtr<IPathFraction> > CPathList;
 
 //	IPathFraction 
 
-interface IPathFraction : public CAIObjectBase
+struct IPathFraction : public CAIObjectBase
 {
 	virtual float GetLength() const = 0;
 	

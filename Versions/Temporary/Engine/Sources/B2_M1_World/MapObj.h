@@ -27,8 +27,8 @@ const int ARMOR_COUNT				= 6;
 extern const float SOLID_ICON_ALPHA;
 extern float FADED_ICON_ALPHA;
 
-interface IMOUnit;
-interface IMOContainer;
+struct IMOUnit;
+struct IMOContainer;
 
 typedef list< CPtr<IMOUnit> >CUnitsList;
 
@@ -41,7 +41,7 @@ namespace NDb
 }
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 
 enum EObjectStatusArmor
@@ -223,7 +223,7 @@ protected:
 	float GetAnimSpeed() const { return fAnimationSpeed; }
 	void SetAnimSpeed( float _fAnimationSpeed ) { fAnimationSpeed = _fAnimationSpeed; }
 
-	int CommonUpdateHP( const float fNewHP, const struct SAINotifyRPGStats &stats, interface IScene * pScene, NDb::ESeason eSeason );
+	int CommonUpdateHP( const float fNewHP, const struct SAINotifyRPGStats &stats, struct IScene * pScene, NDb::ESeason eSeason );
 	const NDb::SVisObj* ChooseVisObjForHP( float fHP );
 	void SetStats( const NDb::SHPObjectRPGStats *_pStats ) { pStats = _pStats; }
 	void SetID( int _nID ) { nID = _nID; }
@@ -289,12 +289,12 @@ public:
 	const NDb::STexture *GetIcon() { return GetStats()->pIconTexture;	}
 
 	virtual void AIUpdateState( const int nParam ) {};
-	virtual void AINewUnitInfo( const struct SNewUnitInfo &info, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
-	virtual IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, interface ISoundScene *pSoundScene  ) { return 0; }
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) = 0;
+	virtual void AINewUnitInfo( const struct SNewUnitInfo &info, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, struct ISoundScene *pSoundScene  ) { return 0; }
+	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) = 0;
 
-	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, interface IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate ) { return 0; }
+	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate ) { return 0; }
 	virtual void AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn, const NTimer::STime &currTime, IScene *pScene, const bool bHorTurn ) {}
 	virtual bool AIUpdateDiplomacy( const struct SAINotifyDiplomacy &diplomacy );
 	virtual bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update ) { return false; }
@@ -345,7 +345,7 @@ public:
 	//
 	virtual void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update );
 	virtual void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex ) {}
-	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, interface IClientAckManager *pAckManager );
+	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager );
 
 	void SetParentID( int _nParentID ) { nParentID = _nParentID; }
 	int GetParentID() const { return nParentID; }
@@ -410,7 +410,7 @@ public:
 	int GetSelectionGroup() const { return nSelectionGroup; }
 	virtual void SetSelectionGroup( int nSelectionGroup );
 	//sends selection acknowlegdement
-	//virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const EUnitAckType eAckType, const int nSet ) {  }
+	//virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const EUnitAckType eAckType, const int nSet ) {  }
 	const SIconsSetInfo& GetIconsSetInfo() const { return iconsSetInfo; }
 	float GetIconsRaising() const { return iconsSetInfo.fRaising; }
 	float GetIconsHPBarLen() const { return iconsSetInfo.fHPBarLen; }
@@ -436,7 +436,7 @@ public:
 	}
 };
 
-interface IMOContainer : public CMOSelectable
+struct IMOContainer : public CMOSelectable
 {
 protected:
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
@@ -444,8 +444,8 @@ public:
 	ZDATA_(CMOSelectable)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMOSelectable*)this); return 0; }
 	// load unit onboard or unload it
-	virtual bool Load( interface IMOUnit *pMO, bool bEnter ) = 0;
-	virtual bool LoadSquad( interface IMOSquad *pSquad, bool bEnter ) = 0;
+	virtual bool Load( struct IMOUnit *pMO, bool bEnter ) = 0;
+	virtual bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) = 0;
 
 	// show icons of the passangers
 	virtual void UpdatePassangers() = 0;
@@ -464,10 +464,10 @@ public:
 	virtual bool NeedShowInterrior() const = 0;
 	virtual void AIUpdateModifyEntranceState( bool bOpen ) = 0;
 	virtual bool IsOpen() const = 0;
-	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) { NI_ASSERT( false, "wrong call" ); }
+	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) { NI_ASSERT( false, "wrong call" ); }
 };
 
-interface IMOSquad : public IMOContainer
+struct IMOSquad : public IMOContainer
 {
 	ZDATA_(IMOContainer)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IMOContainer*)this); return 0; }
@@ -481,7 +481,7 @@ interface IMOSquad : public IMOContainer
 	virtual IMOContainer* GetContainer() const = 0;
 };
 
-interface IMOUnit : public IMOContainer
+struct IMOUnit : public IMOContainer
 {
 	ZDATA_(IMOContainer)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IMOContainer*)this); return 0; }
@@ -491,27 +491,27 @@ interface IMOUnit : public IMOContainer
 	//
 	//	virtual void SetContainer( IMOContainer *pContainer ) = 0;
 	//	virtual IMOContainer* GetContainer() const = 0;
-	virtual void SetSquad( interface IMOSquad *_pSquad ) = 0;
-	virtual interface IMOSquad* GetSquad() const = 0;
+	virtual void SetSquad( struct IMOSquad *_pSquad ) = 0;
+	virtual struct IMOSquad* GetSquad() const = 0;
 	// general update. called if this unit in the 'update' list. return true to remove unit from update list
 	// general update. called if this unit in the 'update' list. return true to remove unit from update list
 	//	virtual bool Update( const NTimer::STime &currTime ) = 0;
 	// unit's updates
 	//	virtual void AIUpdateAiming( const struct AIUpdateAiming &aiming ) = 0;
 	//
-	//	virtual IMapObj* AIUpdateFireWithProjectile( const struct SAINotifyNewProjectile &projectile, const NTimer::STime &currTime, interface IVisObjBuilder *pVOB ) = 0;
+	//	virtual IMapObj* AIUpdateFireWithProjectile( const struct SAINotifyNewProjectile &projectile, const NTimer::STime &currTime, struct IVisObjBuilder *pVOB ) = 0;
 	// CRAP{ for animations testing
 	//	virtual void AddAnimation( const SUnitBaseRPGStats::SAnimDesc *pDesc ) = 0;
 	// CRAP}
 	// for acks
-	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) = 0;
-	virtual void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, interface IClientAckManager *pAckManager, const int nSet ) = 0;
-	virtual void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, interface IClientAckManager *pAckManager ) = 0;
+	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) = 0;
+	virtual void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet ) = 0;
+	virtual void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager ) = 0;
 	// remove all sounds that attached to this unit
-	//	virtual void RemoveSounds(interface IScene * pScene ) = 0;
+	//	virtual void RemoveSounds(struct IScene * pScene ) = 0;
 	//
-	virtual void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, interface ISoundScene *pSoundScene, interface IClientAckManager *pAckManager  ) = 0;
-	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager ) = 0;
+	virtual void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager  ) = 0;
+	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager ) = 0;
 	virtual class CMOProjectile* LaunchProjectile( const SAINewProjectileUpdate *pUpdate ) = 0;
 	
 	virtual void SetUnitLevel( int nLevel, bool bShowUnitRank ) = 0;

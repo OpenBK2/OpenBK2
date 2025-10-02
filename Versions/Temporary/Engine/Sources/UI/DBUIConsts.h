@@ -7,7 +7,7 @@
 
 #include "dbuserinterface.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

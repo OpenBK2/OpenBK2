@@ -90,7 +90,7 @@ CMapObj::~CMapObj()
 	Scene()->RemoveAllAttached( GetID(), ESSOT_LIGHT );
 }
 
-void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
 	{
@@ -362,7 +362,7 @@ void CMapObj::AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update )
 	UpdateIcons();
 }
 
-void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	nPlayer = info.nPlayer;
 
@@ -372,7 +372,7 @@ void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info, interface IScene *
 		fHP = 0.0f;
 }
 
-void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( placement.bNewFormat )
 	{

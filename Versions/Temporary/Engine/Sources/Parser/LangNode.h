@@ -2,7 +2,7 @@
 
 namespace NLang
 {
-	interface IVisitor;
+	struct IVisitor;
 
 	class CLangNode : public CObjectBase
 	{

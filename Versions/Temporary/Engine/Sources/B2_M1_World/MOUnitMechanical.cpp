@@ -487,7 +487,7 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 	}
 }
 
-void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
 		return;
@@ -746,7 +746,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 	return pIdleProcess;
 }
 
-bool CMOUnitMechanical::Load( interface IMOUnit *pMO, bool bEnter )
+bool CMOUnitMechanical::Load( struct IMOUnit *pMO, bool bEnter )
 {
 	const int nID = pMO->GetID();
 	if ( bEnter )
@@ -777,7 +777,7 @@ bool CMOUnitMechanical::Load( interface IMOUnit *pMO, bool bEnter )
 	return true;
 }
 
-bool CMOUnitMechanical::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
+bool CMOUnitMechanical::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
 		return true;
@@ -955,7 +955,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 }
 
 void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, 
-																				 ISoundScene *pSoundScene, interface IClientAckManager *pAckManager )
+																				 ISoundScene *pSoundScene, struct IClientAckManager *pAckManager )
 {
 	if ( pJoggingMutator )
 		pJoggingMutator->Stop();
@@ -1083,7 +1083,7 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 	}
 }
 
-void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 	
@@ -1279,7 +1279,7 @@ void CMOUnitMechanical::OnSerialize( IBinSaver &saver )
 {
 }
 
-void CMOUnitMechanical::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
+void CMOUnitMechanical::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( IsValid( pOneFromCrew ) )
 		return pOneFromCrew->SendAcknowledgement( pAckManager, eAck );

@@ -24,7 +24,7 @@ CWindowFrameSequence::~CWindowFrameSequence()
 {
 }
 
-void CWindowFrameSequence::Visit( interface IUIVisitor *pVisitor )
+void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 {
 	CTRect<float> rc;
 	FillWindowRect( &rc );

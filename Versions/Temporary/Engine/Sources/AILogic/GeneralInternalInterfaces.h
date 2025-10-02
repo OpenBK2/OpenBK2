@@ -41,7 +41,7 @@ enum EForceType
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // через этот интерфейс получают врагов
-interface IEnemyEnumerator
+struct IEnemyEnumerator
 {
 	// возращает, нужно ли ещё предлагать врагов
 	virtual bool EnumEnemy( class CAIUnit *pEnemy ) = 0;
@@ -49,7 +49,7 @@ interface IEnemyEnumerator
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // через этот - выдают
-interface IEnemyContainer
+struct IEnemyContainer
 {
 	virtual void GiveEnemies( IEnemyEnumerator *pEnumerator ) = 0;
 	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator ) { }
@@ -60,7 +60,7 @@ interface IEnemyContainer
 // ****
 // common interface for validating and sorting workers
 // ****
-interface IWorkerEnumerator
+struct IWorkerEnumerator
 {
 	// return FALSE if enumerator already has enough workers
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) = 0;
@@ -78,7 +78,7 @@ interface IWorkerEnumerator
 // ****
 // common interface for workers container
 // ****
-interface ICommander : public CAIObjectBase
+struct ICommander : public CAIObjectBase
 {
 	// средняя сложность тасков, которые выполняет данный менджер
 	virtual float GetMeanSeverity() const = 0;
@@ -96,7 +96,7 @@ interface ICommander : public CAIObjectBase
 // ****
 // common interface for task
 // ****
-interface IGeneralTask : public CAIObjectBase
+struct IGeneralTask : public CAIObjectBase
 {
 	// для определения имени таска
 	virtual ETaskName GetName() const = 0;
@@ -120,7 +120,7 @@ interface IGeneralTask : public CAIObjectBase
 	virtual int GetWorkerCount() { return 0; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-interface IGeneralDelayedTask : public CAIObjectBase
+struct IGeneralDelayedTask : public CAIObjectBase
 {
 	virtual bool IsTimeToRun() const = 0;
 	virtual void Run() = 0;

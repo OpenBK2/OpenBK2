@@ -3,7 +3,7 @@
 #include "../Misc/HashFuncs.h"
 
 class CWindowMSButton;
-interface IWindow;
+struct IWindow;
 
 class CButtonGroup : public CObjectBase
 {

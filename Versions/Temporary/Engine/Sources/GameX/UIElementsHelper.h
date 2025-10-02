@@ -1,6 +1,6 @@
 #pragma once
 
-interface IPlayer;
+struct IPlayer;
 
 namespace NUIElementsHelper
 {

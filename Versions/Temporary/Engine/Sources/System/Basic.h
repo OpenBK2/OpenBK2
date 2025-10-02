@@ -85,7 +85,7 @@ public:
 	// reset data in class to default values, saves RefCount from destruction
 	void Clear() { AddRef(); DestroyContents(); DecRef(); }
 	//
-	virtual int operator&( interface IBinSaver &f ) { return 0; }
+	virtual int operator&( struct IBinSaver &f ) { return 0; }
 	virtual DWORD CalcCheckSum() const { return 0; }
 	const char* GetTypeName() const;
 	const char* GetFullTypeName() const;

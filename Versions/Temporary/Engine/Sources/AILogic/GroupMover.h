@@ -3,7 +3,7 @@
 #include "../Stats_B2_M1/AIUnitCmd.h"
 #include "../Common_RTS_AI/AIClasses.h"
 
-interface IStaticPath;
+struct IStaticPath;
 class CCommonUnit;
 
 class CGroupMover : public CAIObjectBase

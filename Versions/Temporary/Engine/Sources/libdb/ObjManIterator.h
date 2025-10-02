@@ -5,7 +5,7 @@
 namespace NDb
 {
 
-interface IObjManIterator : public CObjectBase
+struct IObjManIterator : public CObjectBase
 {
 	// get base name (full field name = BaseName + '.' + GetName())
 	virtual string GetBaseName() const = 0;

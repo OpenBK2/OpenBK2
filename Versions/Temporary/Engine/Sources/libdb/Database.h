@@ -8,15 +8,15 @@
 
 namespace NVFS
 {
-	interface IVFS;
-	interface IFileCreator;
+	struct IVFS;
+	struct IFileCreator;
 }
 
 namespace NDb
 {
 
-interface IObjMan;
-interface IDbObserver;
+struct IObjMan;
+struct IDbObserver;
 struct STypeObjectHeader;
 struct SFullTypeHeader;
 namespace NTypeDef

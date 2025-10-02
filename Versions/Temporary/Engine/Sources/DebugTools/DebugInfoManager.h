@@ -32,7 +32,7 @@ namespace NDebugInfo
 	};
 }
 
-interface IDebugInfoManager : public CObjectBase
+struct IDebugInfoManager : public CObjectBase
 {
 	enum { tidTypeID = 0x31160C80 };
 

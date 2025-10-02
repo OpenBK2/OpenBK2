@@ -3,7 +3,7 @@
 // automatically generated file, don't change manually!
 
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

@@ -4,7 +4,7 @@ namespace NGScene
 {
 
 const float F_SKY_SINGLE_STRENGTH_MUL = 2.0f;
-interface IGScene;
+struct IGScene;
 struct SPerVertexLightState;
 struct SLightStateCalcSeed
 {

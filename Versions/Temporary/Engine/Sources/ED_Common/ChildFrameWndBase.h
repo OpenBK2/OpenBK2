@@ -31,7 +31,7 @@ class CChildFrameWndBase : public CWnd, public ICommandHandler
 	void RemoveInput(); 
 	void EnableInput( DWORD dwData );
 	void EnableAutoUpdate( DWORD dwData );
-	void EnableGameInput( interface IInterfaceCommand *pInterfaceCommand );
+	void EnableGameInput( struct IInterfaceCommand *pInterfaceCommand );
 	void DisableGameInput();
 	void GetDimensions( DWORD dwData );
 	void EnableRunMode( DWORD dwData );

@@ -488,7 +488,7 @@ void CWindowMiniMap::UpdateWarFog()
 	pWarFogLayer->SetNeedUpdate();
 }
 
-void CWindowMiniMap::Visit( interface IUIVisitor *pVisitor )
+void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
 		return;

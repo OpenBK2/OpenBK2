@@ -88,7 +88,7 @@ void CFile::GenerateCode( const string &szRootDir )
 		for ( list<string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
 			code.h << "#include " << qcomma << *iter << qcomma << endl;
 		code.h << separator;
-		code.h << "interface IXmlSaver;" << endl;
+		code.h << "struct IXmlSaver;" << endl;
 		code.h << separator;
 
 		int i = szFullHFileName.size() - 1;

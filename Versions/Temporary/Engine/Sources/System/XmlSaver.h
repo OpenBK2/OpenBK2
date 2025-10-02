@@ -21,7 +21,7 @@ namespace NFile
 // **
 // ************************************************************************************************************************ //
 
-interface IXmlSaver : public CObjectBase
+struct IXmlSaver : public CObjectBase
 {
 	typedef const char* chunk_id;
 private:

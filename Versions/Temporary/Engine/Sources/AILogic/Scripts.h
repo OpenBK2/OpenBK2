@@ -9,20 +9,20 @@ namespace NDb
 }
 class CUpdatableObj;
 class CAIUnit;
-interface IScriptWrapper;
+struct IScriptWrapper;
 class Script;
 struct SRegFunction;
-interface IGlobeScriptHandler;
+struct IGlobeScriptHandler;
 enum EActionNotify;
 
-interface IEnumerator
+struct IEnumerator
 {
 	// return true if enumeration should be finished
 	virtual bool AddUnit( CAIUnit *pUnit ) = 0;
 	virtual void Done() = 0;
 };
 
-interface IScriptAreaEnumerator : public IEnumerator
+struct IScriptAreaEnumerator : public IEnumerator
 {
 	virtual const NDb::SScriptArea &GetArea() const = 0;
 };
@@ -113,11 +113,11 @@ class CScripts
 	static bool ParseCommand( struct SAIUnitCmd *pCmd, Script &sctipt, bool bIDsAreScriptIDs );
 	static int ProcessCommand( struct lua_State *state, const bool bPlaceInQueue, const bool b2NdParamIsScriptID );
 	//	
-	interface ICheckObjects
+	struct ICheckObjects
 	{ 
 		virtual bool IsGoodObj( class CExistingObject *pObj ) const = 0; 
 	};
-	int GetCheckObjectsInScriptArea( const NDb::SScriptArea &area, const interface ICheckObjects &check );
+	int GetCheckObjectsInScriptArea( const NDb::SScriptArea &area, const struct ICheckObjects &check );
 	
 	void SendShowReinoforcementPlacementFeedback( list<CVec2> *pCenters );
 

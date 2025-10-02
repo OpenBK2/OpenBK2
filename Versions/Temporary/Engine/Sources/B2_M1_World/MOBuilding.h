@@ -50,9 +50,9 @@ public:
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 	void GetStatus( SObjectStatus *pStatus ) const;
-	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 
-	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, interface IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate );
+	virtual IClientUpdatableProcess* AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate );
 	void AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update );
 	void AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex );
 
@@ -65,8 +65,8 @@ public:
 	// on/of night windows
 	void ToggleNightWindows( const bool bNightOn, const NDb::ESeason eSeason );
 	//
-	bool Load( interface IMOUnit *pMO, bool bEnter ) { return false; }
-	bool LoadSquad( interface IMOSquad *pSquad, bool bEnter );
+	bool Load( struct IMOUnit *pMO, bool bEnter ) { return false; }
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter );
 	void UpdatePassangers() { }
 	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
 
@@ -86,7 +86,7 @@ public:
 	void SetCanSelect( bool bCanSelect );
 
 	void AIUpdateModifyEntranceState( bool _bOpen ) { bCanEnter = _bOpen; }
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
 	bool IsOpen() const { return true; }
 	
 	bool IsStorage() const { return bStorage; }

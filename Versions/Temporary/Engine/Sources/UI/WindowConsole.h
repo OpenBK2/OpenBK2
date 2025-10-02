@@ -10,7 +10,7 @@
 struct SWindowEditLine;
 class CWindowEditLine;
 
-interface IML;
+struct ISound;
 
 class CWindowConsole : public CWindow, public IConsole
 {
@@ -77,7 +77,7 @@ public:
 
 	virtual void Reposition( const CTRect<float> &rcParent );
 
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void Segment( const int timeDiff );
 	//virtual void RegisterObservers();
 
@@ -107,12 +107,12 @@ public:
 		saver.Add( 4, &bDebugShown );
 		return 0;
 	}
-	interface IWindow * GetConsole();
-	interface IWindow * GetDebug();
-	interface IWindow * GetDebugInfoWindow( const int nWindow );
+	struct IWindow * GetConsole();
+	struct IWindow * GetDebug();
+	struct IWindow * GetDebugInfoWindow( const int nWindow );
 	void ShowDebugInfo( const bool bShow );
 	void ShowStatsWindow( const bool bShow );
-	interface IStatsSystemWindow * GetStatsWindow();
+	struct IStatsSystemWindow * GetStatsWindow();
 };
 
 

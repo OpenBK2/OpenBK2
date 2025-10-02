@@ -22,7 +22,7 @@ int CCheckRunScript::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckRunScript::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
+int CCheckRunScript::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScript != 0, StrFmt( "CCheckRunScript function = \"%s\" but don't have script loaded", pDesc->szScriptFunction.c_str() ) );
 	if ( pScript )
@@ -50,7 +50,7 @@ int CCheckPreprogrammed::operator&( IBinSaver &saver )
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-int CCheckPreprogrammed::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
+int CCheckPreprogrammed::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pProg != 0, StrFmt("try to call check \"%s\" without preprogrammed checks provided", pDesc->szCheckName.c_str()) );
 	return ( pProg->NeedFlags() ? pProg->Check( pDesc->szCheckName, wKeyboardFlags ) : pProg->Check( pDesc->szCheckName ) );
@@ -69,7 +69,7 @@ int CCheckIsWindowEnabled::operator&( IBinSaver &saver )
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-int CCheckIsWindowEnabled::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
+int CCheckIsWindowEnabled::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	//DebugTrace( "Check window enabled/visible %s", pDesc->szWindowName.c_str() );
@@ -98,7 +98,7 @@ int CCheckIsWindowVisible::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckIsWindowVisible::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
+int CCheckIsWindowVisible::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	//DebugTrace( "Check window visible %s", pDesc->szWindowName.c_str() );
@@ -133,7 +133,7 @@ int CCheckIsTabActive::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckIsTabActive::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
+int CCheckIsTabActive::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	DebugTrace( "Check tab active %s (%d)", pDesc->szTabControlName.c_str(), pDesc->nTab );

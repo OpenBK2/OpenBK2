@@ -9,7 +9,7 @@
 //		CARSetForcedAction
 
 
-bool CARSetForcedAction::Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSetForcedAction::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 )
 		NInput::PostEvent( "set_forced_action", static_cast<int>(pDesc->eUserAction), 0 );
@@ -35,7 +35,7 @@ void CARSetForcedAction::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 //		CARSetSpecialAbility
 
 
-bool CARSetSpecialAbility::Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
+bool CARSetSpecialAbility::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const
 {
 	NInput::PostEvent( "set_special_ability", static_cast<int>(pDesc->eAbility), static_cast<int>(pDesc->eAbilityParam) );
 	//IGameEvent *pEvent = Input()->GetEvent( "set_special_ability" );

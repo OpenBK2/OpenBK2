@@ -1,6 +1,6 @@
 #pragma once
 
-interface IManipulator;
+struct IManipulator;
 
 namespace NEditorOptions
 {

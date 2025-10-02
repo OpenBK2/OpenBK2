@@ -4,7 +4,7 @@
 
 class CUnitGuns;
 class CTurret;
-interface IPath;
+struct IPath;
 class CFormation;
 class CAIUnit;
 class CArtilleryBulletStorage;

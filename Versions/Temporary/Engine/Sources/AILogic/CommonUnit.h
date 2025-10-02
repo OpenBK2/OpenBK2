@@ -48,9 +48,9 @@ public:
 	SBehaviour( const EMoving _moving, const EFire _fire ) : moving( _moving ), fire( _fire ) { }
 };
 
-interface IShootEstimator;
-interface ICollisionsCollector;
-//interface IScenarioUnit;
+struct IShootEstimator;
+struct ICollisionsCollector;
+//struct IScenarioUnit;
 class CAIUnit;
 class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit, public CQueueUnit
 {
@@ -218,7 +218,7 @@ public:
 	virtual EUnitAckType GetGunsRejectReason() const = 0;
 
 	// для целеразрешения
-	void SetShootEstimator( interface IShootEstimator *pShootEstimator );
+	void SetShootEstimator( struct IShootEstimator *pShootEstimator );
 	// сбросить всю информацию в shoot estimator и проинициализировать его юнитом pCurEnemy
 	// считается что сейчас стреляем по pCurEnemy, bDamageUpdated - был ли update на damage pCurEnemy нами
 	void ResetShootEstimator( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden = 0 );
@@ -235,7 +235,7 @@ public:
 	// просканировать на поиск цели
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun ) = 0;
 	// поиск препятствия
-	virtual interface IObstacle * LookForObstacle() { return 0; };
+	virtual struct IObstacle * LookForObstacle() { return 0; };
 	
 	// нужно ли пытаться подъезать близко к точке, которую охраняет (н-р, для поездов не нужно)
 	virtual bool CanMoveForGuard() const = 0;

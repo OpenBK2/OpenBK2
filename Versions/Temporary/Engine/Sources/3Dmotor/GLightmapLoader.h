@@ -11,7 +11,7 @@ namespace NGfx
 namespace NGScene
 {
 	class IRender;
-	interface IGScene;
+	struct IGScene;
 	class CLightmapsHolder;
 
 	class CLightmapsLoader: public CObjectBase

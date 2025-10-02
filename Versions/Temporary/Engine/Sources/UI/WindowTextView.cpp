@@ -117,7 +117,7 @@ int CWindowTextView::operator&( IBinSaver &saver )
 }
 
 
-void CWindowTextView::Visit( interface IUIVisitor *pVisitor )
+void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	

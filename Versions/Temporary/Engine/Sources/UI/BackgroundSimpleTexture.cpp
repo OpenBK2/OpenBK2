@@ -108,7 +108,7 @@ void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 	}
 };
 
-int CBackgroundSimpleTexture::operator&( interface IBinSaver &saver )
+int CBackgroundSimpleTexture::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CBackground*>( this ) );
 	saver.Add( 4, &pStats );

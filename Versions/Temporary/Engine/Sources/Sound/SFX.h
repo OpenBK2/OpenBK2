@@ -13,16 +13,16 @@ enum ESFXOutputType
 	SFX_OUTPUT_EAX3,
 };
 
-interface ISFXVisitor
+struct ISFXVisitor
 {
 	virtual int VisitSound2D( class CSFXSound *pSound ) = 0;
 	virtual int VisitSound3D( class CSFXSound *pSound ) = 0;
 };
 
-interface ISound : public CObjectBase
+struct ISound : public CObjectBase
 {
 	// visiting
-	virtual int Visit( interface ISFXVisitor *pVisitor ) = 0;
+	virtual int Visit( struct ISFXVisitor *pVisitor ) = 0;
 	
 	// 0.0f ... 1.0f
 	virtual void SetVolume( float nVolume ) = 0;
@@ -48,7 +48,7 @@ interface ISound : public CObjectBase
 	virtual unsigned int GetSampleRate() =0;
 };
 
-interface ISFX : public CObjectBase
+struct ISFX : public CObjectBase
 {
 	enum { tidTypeID = 0x110BDC40 };
 	//

@@ -41,7 +41,7 @@ namespace NCollision
 	};
 }
 
-interface ICollisionOld : public CAIObjectBase
+struct ICollisionOld : public CAIObjectBase
 {
 	virtual const int GetPriority() const = 0;
 	virtual CBasePathUnit* GetPushUnit() const = 0;
@@ -54,13 +54,13 @@ interface ICollisionOld : public CAIObjectBase
 	virtual void Segment( const NTimer::STime timeDiff ) = 0;
 };
 
-interface ICollisionsCollector : public CAIObjectBase
+struct ICollisionsCollector : public CAIObjectBase
 {
 	virtual void AddCollision( class CBasePathUnit *pUnit1, class CBasePathUnit *pUnit2, const float fDistance, const NCollision::ECollideType eCollideType ) = 0;
 	virtual void HandOutCollisions( CAIMap *pAIMap ) = 0;
 };
 
-interface ICollision : public CAIObjectBase
+struct ICollision : public CAIObjectBase
 {
 	virtual void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) = 0;
 

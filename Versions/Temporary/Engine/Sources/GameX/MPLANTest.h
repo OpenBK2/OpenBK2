@@ -14,7 +14,7 @@ private:
 	}
 
 	bool bIsServer;
-	CPtr<interface IMPToUIManager> pMPManager;
+	CPtr<struct IMPToUIManager> pMPManager;
 	int nMySlot;
 	hash_map<int,bool> gameClientsReady;
 	bool bStarted;

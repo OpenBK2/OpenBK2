@@ -4,7 +4,7 @@
 
 
 // basic interface for GameMessage observer
-interface IGMObserver : public CObjectBase
+struct IGMObserver : public CObjectBase
 {
 	virtual bool Execute( const SGameMessage &msg, CObjectBase *pThis ) { return false; }
 };

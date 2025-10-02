@@ -70,7 +70,7 @@ const NDb::SWindowPlacement* CForegroundTextString::GetPlacement() const
 	return 0;
 }
 
-void CForegroundTextString::Visit( interface IUIVisitor *pVisitor )
+void CForegroundTextString::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText ) 
 	{
@@ -117,7 +117,7 @@ void CPlacedText::Init()
 {
 }
 
-void CPlacedText::Visit( interface IUIVisitor *pVisitor )
+void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 {
 	static CTPoint<int> ptEmpty( 0, 0 );
 	if ( pGfxText )

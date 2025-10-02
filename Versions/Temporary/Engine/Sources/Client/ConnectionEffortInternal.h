@@ -42,7 +42,7 @@ public:
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }
 
-	virtual interface IConnection* CreateConnection() const;
+	virtual struct IConnection* CreateConnection() const;
 
 	virtual bool Segment();
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
@@ -82,7 +82,7 @@ public:
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }
 
-	virtual interface IConnection* CreateConnection() const;
+	virtual struct IConnection* CreateConnection() const;
 	virtual bool Segment();
 
 	//
@@ -109,7 +109,7 @@ public:
 
 	virtual bool Segment() { return true; }
 
-	virtual interface IConnection* CreateConnection() const;
+	virtual struct IConnection* CreateConnection() const;
 	class CConnectionEffort* CreateNextEffort( const int nOurGameID ) { return 0; }
 };
 

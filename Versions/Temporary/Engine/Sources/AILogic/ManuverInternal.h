@@ -18,7 +18,7 @@ struct SPlanesConsts
 };
 
 class CPlanesFormation;
-interface IPathFraction;
+struct IPathFraction;
 
 /**
  * в маневре в зависимости от участка траектории задается крен самолета (либо от вертикали, либо от направления
@@ -48,11 +48,11 @@ class CManuver : public IManuver
 	bool bToHorisontal;
 
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPlane); f.Add(3,&pPath); f.Add(4,&simplePaths); f.Add(5,&fProgress); f.Add(6,&fSpeed); f.Add(7,&vCenter); f.Add(8,&vSpeed); f.Add(9,&vNormal); f.Add(10,&bUsed); f.Add(11,&fCurTiltSpeed); f.Add(12,&fDistToGo); f.Add(13,&bToHorisontal); return 0; }
-	void InitInternal( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const float fSpeed, const CVec3 &vNormale, const bool _bToHorisontal );
+	void InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const float fSpeed, const CVec3 &vNormale, const bool _bToHorisontal );
 	void CheckToHorisontal();
 protected:
 
-	void InitCommon( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal );
+	void InitCommon( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal );
 	bool AdvanceCommon( const NTimer::STime timeDiff );
 
 private:

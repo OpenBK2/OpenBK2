@@ -1,6 +1,6 @@
 #pragma once
 
-interface IPointChecking : public CAIObjectBase
+struct IPointChecking : public CAIObjectBase
 {
 	virtual bool IsGoodTile( const SVector &curTile ) const = 0;
 };

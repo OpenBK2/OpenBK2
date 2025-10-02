@@ -34,14 +34,14 @@ struct SSWTParams
 };
 
 
-interface ILogger
+struct ILogger
 {
 	virtual void Log( ELogOutputType eLogOutputType, const string &szText ) = 0;
 	virtual void ClearLog() = 0;
 };
 
 
-interface IMainFrame : public ILogger
+struct IMainFrame : public ILogger
 {
 	// Наити координаты только что нажатой кнопки на toolbar
 	virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
@@ -93,7 +93,7 @@ interface IMainFrame : public ILogger
 };
 
 
-interface IMainFrameContainer : public CObjectBase
+struct IMainFrameContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x140943C1 };
 	// служебный метод ( не используется )

@@ -3,7 +3,7 @@
 namespace NMusicSystem
 {
 
-interface IPlayListElement : public CObjectBase
+struct IPlayListElement : public CObjectBase
 {
 	virtual void Segment() = 0;
 	virtual bool IsFinished() const = 0;

@@ -5,8 +5,8 @@
 #include "../Stats_B2_M1/AIUnitCmd.h"
 #include "../Common_RTS_AI/AIClasses.h"
 
-interface IStaticPathFinder;
-interface IStaticPath;
+struct IStaticPathFinder;
+struct IStaticPath;
 class CGroupMover;
 
 struct SGroupPathInfo
@@ -63,7 +63,7 @@ public:
 
 	const int GetID() const { return id; }
 
-	interface IStaticPath* CreateStaticPath( class CCommonUnit *pUnit );
+	struct IStaticPath* CreateStaticPath( class CCommonUnit *pUnit );
 
 	const int GetFlag() const { return nFlag; }
 	const void SetFlag( const int _nFlag ) { nFlag = _nFlag; }

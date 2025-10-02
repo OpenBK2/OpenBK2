@@ -42,8 +42,8 @@ public:
 
 	void GetStatus( SObjectStatus *pStatus ) const;
 
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
 	virtual void GetActions( CUserActions *pActions, EActionsType eActions ) const { }
 	virtual void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const { }
 	void Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason eSeason, const CVec3 &vCenter, const CVec3 &vDir );

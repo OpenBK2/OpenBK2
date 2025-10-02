@@ -32,13 +32,13 @@ enum ESoundAddMode
 	SAM_NEED_ID,													// вернется ID звука
 	SAM_ADD_N_FORGET,											// вернется 0, сцена сама удалит звук.
 };
-interface ISFX;
+struct ISFX;
 namespace NDb
 {
 	struct SComplexSoundDesc;
 }
 
-interface ISoundScene : public CObjectBase
+struct ISoundScene : public CObjectBase
 {
 	enum { tidTypeID = 0x1107C480 };
 	//

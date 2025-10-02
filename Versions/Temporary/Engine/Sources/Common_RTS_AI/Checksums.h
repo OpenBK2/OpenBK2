@@ -69,7 +69,7 @@ namespace NCheckSums
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
-COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, interface ICheckSumLog * pLog, const DWORD segmentTime );
+COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const DWORD segmentTime );
 
 
 

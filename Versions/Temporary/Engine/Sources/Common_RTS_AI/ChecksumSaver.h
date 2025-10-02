@@ -2,7 +2,7 @@
 #include "../zlib/zconf.h"
 
 
-interface ICheckSumLog;
+struct ICheckSumLog;
 class CCheckSumSaver : 	public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS( CCheckSumSaver );
@@ -37,7 +37,7 @@ class CCheckSumSaver : 	public IBinSaver
 	virtual int CountChunks( const chunk_id idChunk ) { return 0; }
 public:
 	CCheckSumSaver();
-	CCheckSumSaver( uLong *pCheckSum, interface ICheckSumLog * pLog, const NTimer::STime segmentTime );
+	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog * pLog, const NTimer::STime segmentTime );
 	~CCheckSumSaver();
 
 	virtual bool IsReading() { return false; }

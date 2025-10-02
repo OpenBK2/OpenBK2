@@ -5,7 +5,7 @@
 #include "../3dmotor/dbscene.h"
 #include "animationtype.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

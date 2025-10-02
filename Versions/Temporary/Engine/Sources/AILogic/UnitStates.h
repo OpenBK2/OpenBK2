@@ -90,7 +90,7 @@ enum ETryStateInterruptResult
 	TSIR_NO_COMMAND_INCOMPATIBLE,
 };
 
-interface IUnitState : public CAIObjectBase
+struct IUnitState : public CAIObjectBase
 {
 public:
 	virtual void Segment() = 0;
@@ -104,7 +104,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const = 0;
 };
 
-interface IUnitAttackingState : public IUnitState
+struct IUnitAttackingState : public IUnitState
 {
 	virtual bool IsAttacksUnit() const = 0;
 	virtual class CAIUnit* GetTargetUnit() const = 0;

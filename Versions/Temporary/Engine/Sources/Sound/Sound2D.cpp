@@ -111,7 +111,7 @@ CSound2D::CSound2D( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
 	Init();
 }
 
-int CSound2D::Visit( interface ISFXVisitor *pVisitor ) 
+int CSound2D::Visit( struct ISFXVisitor *pVisitor )
 { 
 	return pVisitor->VisitSound2D( this ); 
 }
@@ -155,7 +155,7 @@ CSound3D::CSound3D( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
 	Init();
 }
 
-int CSound3D::Visit( interface ISFXVisitor *pVisitor )
+int CSound3D::Visit( struct ISFXVisitor *pVisitor )
 {
 	return pVisitor->VisitSound3D( this );
 }

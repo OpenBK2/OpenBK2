@@ -18,7 +18,7 @@ struct SNetDriverConsts
 };
 
 // abstraction from SOCKET
-interface ILinksManager : public CObjectBase
+struct ILinksManager : public CObjectBase
 {
 	virtual bool MakeBroadcastAddr( class CNodeAddress *pRes, int nPort ) const = 0;
 	virtual bool IsLocalAddr( const CNodeAddress &test ) const = 0;
@@ -27,7 +27,7 @@ interface ILinksManager : public CObjectBase
 	virtual bool GetSelfAddress( class  CNodeAddressSet *pRes ) const = 0;
 };
 
-interface IDriver : public CObjectBase
+struct IDriver : public CObjectBase
 {
 	enum EState
 	{

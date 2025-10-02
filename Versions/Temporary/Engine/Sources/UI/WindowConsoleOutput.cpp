@@ -110,7 +110,7 @@ void CWindowConsoleOutput::ToEnd()
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
 }
 
-void CWindowConsoleOutput::Visit( interface IUIVisitor *pVisitor )
+void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 

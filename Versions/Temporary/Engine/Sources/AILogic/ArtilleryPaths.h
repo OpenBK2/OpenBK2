@@ -37,7 +37,7 @@ public:
 //ненужные функции
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit  ) { return true; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
 	virtual void Stop() {}
 	virtual const float GetSpeed() const 
 	{ 
@@ -80,7 +80,7 @@ public:
 		return true;
 	}
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit  ) { return true; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap )
 	{
 		CPtr<IMemento> p = pMemento;
 		return true;

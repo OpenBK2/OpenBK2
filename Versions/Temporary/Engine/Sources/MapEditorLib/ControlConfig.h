@@ -6,7 +6,7 @@
 // save / load selected / focused elements
 
 template <class TID, class TIDHash = hash<TID> >
-interface IControlConfig
+struct IControlConfig
 {
 	typedef hash_map<TID, int> CIDSet;
 	//

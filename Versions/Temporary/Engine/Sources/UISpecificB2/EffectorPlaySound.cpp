@@ -19,7 +19,7 @@ bool CEffectorPlaySound::IsFinished() const
 	return bFinished;
 }
 
-void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) 
+void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow )
 { 
 	const NDb::SUISPlaySound *pCmd( checked_cast<const NDb::SUISPlaySound*>( _pCmd ) );
 	CParam<CDBPtr<NDb::SComplexSoundDesc> > pS( pCmd->pSoundToPlay );
@@ -29,7 +29,7 @@ void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, interface IS
 	pSound = pS.Get();
 }
 
-const int CEffectorPlaySound::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
+const int CEffectorPlaySound::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 { 
 	Singleton<ISoundScene>()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, bFastForward ? timeDiff : 0, 2 );
 	bFinished = true;

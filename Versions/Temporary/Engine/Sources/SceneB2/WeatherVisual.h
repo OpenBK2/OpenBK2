@@ -24,7 +24,7 @@ namespace NGScene
 	class CAnimLight;
 };
 
-interface IFullScreenFader;
+struct IFullScreenFader;
 
 class CWeatherVisual : public CFuncBase<bool>
 {

@@ -7,12 +7,12 @@ class CBasePathUnit;
 class CAIMap;
 
 //! вот бы избавиться от этого...
-interface IMemento : public CAIObjectBase
+struct IMemento : public CAIObjectBase
 {
 };
 
 //! путь юнита
-interface IPath : public CAIObjectBase
+struct IPath : public CAIObjectBase
 {
 	virtual bool IsFinished() const = 0;
 
@@ -38,7 +38,7 @@ interface IPath : public CAIObjectBase
 };
 
 //! сглаженный путь юнита, именно вдоль этого пути и происходит движение юнита
-interface ISmoothPath : public CAIObjectBase
+struct ISmoothPath : public CAIObjectBase
 {
 	// возвращает - пошёл юнит по пути или нет
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) = 0;

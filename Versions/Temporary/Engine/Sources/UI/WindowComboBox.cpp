@@ -224,7 +224,7 @@ void CWindowComboBox::OnSelectData( CObjectBase *pData )
 		RunAnimationAndCommands( pInstance->onSelection, "", true, true );
 }
 
-void CWindowComboBox::Clicked( interface IWindow *pWho, const int nButton )
+void CWindowComboBox::Clicked( struct IWindow *pWho, const int nButton )
 {
 	if ( IsModalList() )
 	{

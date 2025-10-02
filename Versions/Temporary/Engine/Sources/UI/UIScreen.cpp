@@ -284,7 +284,7 @@ void CWindowScreen::RegisterEffect( const string &szEffect, const NDb::SUIStateS
 	commandSequiences[szEffect] = cmds;
 }
 
-void CWindowScreen::RegisterReaction( const string &szReactionKey, interface IMessageReactionB2 *pReaction )
+void CWindowScreen::RegisterReaction( const string &szReactionKey, struct IMessageReactionB2 *pReaction )
 {
 	messageReactions.Register( szReactionKey, pReaction );
 }
@@ -361,7 +361,7 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 	}
 }
 
-void CWindowScreen::RegisterToSegment( interface IWindow *pWnd, const bool bRegister )
+void CWindowScreen::RegisterToSegment( struct IWindow *pWnd, const bool bRegister )
 {
 	if ( bRegister )
 		segmentObjs.insert( pWnd );
@@ -369,7 +369,7 @@ void CWindowScreen::RegisterToSegment( interface IWindow *pWnd, const bool bRegi
 		segmentObjs.remove( pWnd );
 }
 
-bool CWindowScreen::IsRegisteredToSegment( interface IWindow *pWnd ) const
+bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
 {
 	return segmentObjs.find( pWnd ) != segmentObjs.end(); 
 }
@@ -570,7 +570,7 @@ void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGame
 	UpdateResolution();
 }
 
-int CWindowScreen::operator&( interface IBinSaver &saver )
+int CWindowScreen::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
 	saver.Add( 2, &stateSequiences );

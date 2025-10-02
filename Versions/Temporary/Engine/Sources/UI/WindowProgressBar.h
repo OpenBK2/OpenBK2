@@ -25,7 +25,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	virtual void Reposition( const CTRect<float> &parentRect );
 
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	
 	//IProgressBar{
 	virtual void SetPosition( const float fPos );
@@ -52,7 +52,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	virtual void Reposition( const CTRect<float> &parentRect );
 
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	
 	//IMultiTextureProgressBar{
 	virtual bool IsSolid() const;

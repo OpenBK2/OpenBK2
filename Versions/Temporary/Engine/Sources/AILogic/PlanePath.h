@@ -2,7 +2,7 @@
 
 #include "../Common_RTS_AI/Path.h"
 
-interface IAviationUnit;
+struct IAviationUnit;
 
 class CBasePlaneSmoothPath : public ISmoothPath
 {
@@ -32,7 +32,7 @@ public:
 
 	// empty functions
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { NI_ASSERT(false, "wrong call" ); return false; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { NI_ASSERT(false, "wrong call" ); return false; }
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { NI_ASSERT(false, "wrong call" ); return false; }
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { NI_ASSERT(false, "wrong call" ); return false; }
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) { NI_ASSERT(false, "wrong call" ); }
 	virtual bool const CanGoForward() const { NI_ASSERT(false, "wrong call" ); return true; }

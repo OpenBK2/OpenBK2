@@ -3,7 +3,7 @@
 
 #define INVALID_INPUT_STATE_INDEX (-1)
 
-interface IInputState
+struct IInputState
 {
 	virtual void Enter() = 0;
 	virtual void Leave() = 0;

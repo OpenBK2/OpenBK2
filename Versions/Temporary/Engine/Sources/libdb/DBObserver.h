@@ -10,7 +10,7 @@ namespace NDb
 http://jabberwocky/wiki/ResourceSystem/ObjectIdentifier
 */
 
-interface IDbObserver: public CObjectBase
+struct IDbObserver: public CObjectBase
 {
 	//! Сигнал на изменение объекта. Вызывается после изменения.
 	virtual void ObjectChanged( const CDBID &dbid ) = 0;

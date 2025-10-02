@@ -5,7 +5,7 @@
 
 #include "../MapEditorLib/ResizeDialog.h"
 
-interface IResourceManager;
+struct IResourceManager;
 
 class CRefListWaitDialog : public CResizeDialog
 {

@@ -5,7 +5,7 @@
 REGISTER_SAVELOAD_CLASS(0x110772C1, CWindowSimple)
 
 
-void CWindowSimple::Visit( interface IUIVisitor *pVisitor )
+void CWindowSimple::Visit( struct IUIVisitor *pVisitor )
 {
 	CTRect<float> rc;
 	FillWindowRect( &rc );

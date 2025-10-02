@@ -3,7 +3,7 @@
 #include "Interface_Builder.h"
 /**
 
-interface IReportCollector : public CObjectBase
+struct IReportCollector : public CObjectBase
 {
 	virtual void AddReport( const string &szObjectType,
 													const string &szObjectName, 
@@ -70,8 +70,8 @@ enum EXPORT_RESULT
 	ER_UNKNOWN			= 4,
 };
 
-interface IManipulator;
-interface IExporter : public CObjectBase
+struct IManipulator;
+struct IExporter : public CObjectBase
 {
 	// bForce - безусловный экспорт объектов (различные пункты меню)
 	// rszObjectTypeName используется при написании экспортеров для нескольких объектов 
@@ -113,7 +113,7 @@ interface IExporter : public CObjectBase
 };
 
 
-interface IExportTool : public CObjectBase
+struct IExportTool : public CObjectBase
 {
 	// Вызывается из StartDefaultExport
 	virtual void StartExportTool() = 0;
@@ -122,7 +122,7 @@ interface IExportTool : public CObjectBase
 };
 
 
-interface IExporterContainer : public CObjectBase
+struct IExporterContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C1 };
 	//

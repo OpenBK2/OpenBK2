@@ -12,7 +12,7 @@ namespace NDb
 namespace NBind
 {
 
-interface IArrayElementManipulator : public IArrayObjMan
+struct IArrayElementManipulator : public IArrayObjMan
 {
 	virtual void ReportArrayInsert( int nPos, int nAmount ) = 0;
 	virtual void ReportArrayRemove( int nPos, int nAmount ) = 0;

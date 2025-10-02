@@ -26,7 +26,7 @@ struct SFileStats
 };
 
 //! Virtual file system.
-interface IVFS : public CObjectBase
+struct IVFS : public CObjectBase
 {
 	//! Open file to read data
 	virtual CDataStream* OpenFile( const string &szPath ) = 0;
@@ -38,14 +38,14 @@ interface IVFS : public CObjectBase
 	virtual void GetAllFileNames( vector<string> *pFileNames, const string &rszFolder ) = 0;
 };
 
-interface ICombinerVFS : public IVFS
+struct ICombinerVFS : public IVFS
 {
 	virtual const vector< CObj<IVFS> > &GetVFSList() const = 0;
 	virtual void SetVFSList( const vector< CObj<IVFS> > &vfsList ) = 0;
 };
 SYSTEM_EXPORT ICombinerVFS *CreateCombinerVFS( IVFS *pVFS );
 
-interface IFileCreator : public CObjectBase
+struct IFileCreator : public CObjectBase
 {
 	//! Open existing file (with truncation) to write or create new one if does not exist
 	virtual CDataStream* CreateFile( const string &szPath ) = 0;

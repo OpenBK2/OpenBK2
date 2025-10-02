@@ -55,7 +55,7 @@ protected:
 	void OnSerialize( IBinSaver &f );
 	//
 	bool IsBruteMoving();
-	interface IStaticPath* BestSidePath();
+	struct IStaticPath* BestSidePath();
 	void CalculateProbabilitites();
 
 	void AnalyzeBruteMovingPosition();

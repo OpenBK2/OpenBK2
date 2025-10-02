@@ -2,7 +2,7 @@
 
 #include "../Stats_B2_M1/DBMapInfo.h"
 
-interface ICamera;
+struct ICamera;
 
 class CCameraMovement
 {

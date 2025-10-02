@@ -5,8 +5,8 @@
 #include "../System/Commands.h"
 #include "MPInterfaceData.h"
 
-interface IAILogicCommandB2;
-interface IRandomSeed;
+struct IAILogicCommandB2;
+struct IRandomSeed;
 typedef uLong CLogType;
 typedef hash_map<int/*#entry*/,CLogType> ChecksumLog; 
 typedef hash_map<int/*#segment*/, pair<CLogType,ChecksumLog> > CSegmentChecksum;
@@ -72,8 +72,8 @@ public:
 
 	const NDb::SMapInfo *GetMap() const { return replayInfo.pMap; }
 
-	void AddCommand( const int nSegment, interface IAILogicCommandB2 *pCmd );
-	void ExecuteSegmentCommands( const int nSegment, interface ITransceiver *pTranceiver );
+	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd );
+	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver );
 
 	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry );
 	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }

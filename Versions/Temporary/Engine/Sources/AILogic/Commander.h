@@ -71,7 +71,7 @@ class CCommander : public ICommander
 	{
 		CPtr<ICommander> pManager;
 		void operator()( IGeneralTask *pT ) { pT->ReleaseWorker( pManager, 0 ); }
-		STakeWorkersPredicate( interface ICommander *pManager ) : pManager( pManager ) {  }
+		STakeWorkersPredicate( struct ICommander *pManager ) : pManager( pManager ) {  }
 	};
 protected:
 

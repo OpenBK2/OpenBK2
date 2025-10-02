@@ -3,7 +3,7 @@
 #include "SceneB2_export.h"
 
 
-interface ICursor : public CObjectBase
+struct ICursor : public CObjectBase
 {
 	enum { tidTypeID = 0x3014EC00 };
 

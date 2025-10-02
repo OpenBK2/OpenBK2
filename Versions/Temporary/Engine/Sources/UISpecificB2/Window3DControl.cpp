@@ -25,7 +25,7 @@ CWindow3DControl::~CWindow3DControl()
 	HideObjects();
 }
 
-void CWindow3DControl::Visit( interface IUIVisitor *pVisitor )
+void CWindow3DControl::Visit( struct IUIVisitor *pVisitor )
 {
 	pVisitor->SetUpperLevel();
 	CWindow::Visit( pVisitor );

@@ -41,7 +41,7 @@ void CBackground::SetPos( const CVec2 &vPos, const CVec2 &vSize )
 	pos.right = vPos.x + vSize.x;
 }
 
-int CBackground::operator&( interface IBinSaver &saver )
+int CBackground::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, &pos );
 	saver.Add( 2, &fFadeValue );

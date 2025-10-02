@@ -59,7 +59,7 @@ public:
 	}
 };
 
-interface IGameTimer : public CObjectBase
+struct IGameTimer : public CObjectBase
 {
 	// type ID
 	enum { tidTypeID = 0x10075C05 };

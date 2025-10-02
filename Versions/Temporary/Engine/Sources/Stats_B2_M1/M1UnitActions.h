@@ -6,7 +6,7 @@
 #include "rpgstats.h"
 #include "commands_actions.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

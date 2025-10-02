@@ -53,7 +53,7 @@ public:
 
 struct SModelVisObjDesc : public SVisObjDescBase
 {
-	typedef hash_map< int, CObj<interface IAttachedObject> > TAttachOfOneType;
+	typedef hash_map< int, CObj<struct IAttachedObject> > TAttachOfOneType;
 	typedef hash_map<int, TAttachOfOneType> CAttaches;
 	ZDATA_( SVisObjDescBase )
 		CDBPtr<NDb::SModel> pModel;

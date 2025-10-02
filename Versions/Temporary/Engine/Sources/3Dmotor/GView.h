@@ -25,7 +25,7 @@ namespace NDb
 }
 namespace NAnimation
 {
-	interface ISkeletonAnimator;
+	struct ISkeletonAnimator;
 }
 namespace NGfx
 {
@@ -41,7 +41,7 @@ class CPolyline;
 class CParticles;
 class CParticleEffect;
 struct SRenderStats;
-interface IGScene;
+struct IGScene;
 class IPostProcess;
 class CDecalTarget;
 struct SDecalMappingInfo;

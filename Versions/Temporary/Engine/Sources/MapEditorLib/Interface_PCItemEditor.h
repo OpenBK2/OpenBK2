@@ -48,7 +48,7 @@ enum EPCIEType
 };
 
 
-interface  IPCItemEditor : public CObjectBase
+struct IPCItemEditor : public CObjectBase
 {
 	// Получить значение имени элемента дерева ( для совместимости )
 	virtual const string& GetName() const = 0;

@@ -7,7 +7,7 @@
 
 class CCommonUnit;
 class CAIUnit;
-interface ICollisionsCollector;
+struct ICollisionsCollector;
 enum EActionNotify;
 
 class CFreeGroupIDs

@@ -4,7 +4,7 @@
 
 #include "RegFunction.h"
 
-interface IScriptWrapper : public CObjectBase
+struct IScriptWrapper : public CObjectBase
 {
 	virtual void Init() = 0;
 	virtual void AddRegFunctions( const SRegFunction *pRegList ) = 0;

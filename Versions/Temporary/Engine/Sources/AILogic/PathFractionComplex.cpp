@@ -10,7 +10,7 @@ REGISTER_SAVELOAD_CLASS( 0x11097A80, CPathFractionComplex )
 //	SPrevManuverParams
 
 
-SPrevPathParams::SPrevPathParams( interface IPlane *pPlane )
+SPrevPathParams::SPrevPathParams( struct IPlane *pPlane )
 {
 	if ( pPlane->GetManuver() == 0 )
 	{

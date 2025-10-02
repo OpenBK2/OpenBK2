@@ -3,7 +3,7 @@
 #include "../Server_Client_Common/CommandsInterface.h"
 
 class CCommands;
-interface IMultiTester;
+struct IMultiTester;
 class CPinger;
 
 class CTestClient : virtual public CObjectBase

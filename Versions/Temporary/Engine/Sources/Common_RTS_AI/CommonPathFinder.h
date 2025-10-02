@@ -5,7 +5,7 @@
 
 #include "AIClasses.h"
 
-interface IPointChecking;
+struct IPointChecking;
 class CAIMap;
 class CTerrain;
 
@@ -107,12 +107,12 @@ public:
 		const int nBoundTileRadius,
 		const EAIClasses aiClass,
 		const CVec2 &vStartPoint, const CVec2 &vFinishPoint,
-		const SVector &lastKnownGoodTile, interface IPointChecking *pChecking, CAIMap *pAIMap );
+		const SVector &lastKnownGoodTile, struct IPointChecking *pChecking, CAIMap *pAIMap );
 
 	bool DoesPathExist();
 	// Specially to not realculate path twice. Calculate path after call DoesPathExist
-	interface IStaticPath* CreatePathAfterExistCheck();
-	interface IStaticPath* CreatePath( const bool bCreateNullPath );
+	struct IStaticPath* CreatePathAfterExistCheck();
+	struct IStaticPath* CreatePath( const bool bCreateNullPath );
 
 	const CVec2& GetStartPoint() const { return vStartPoint; }
 	const SVector& GetStartTile() const {  return startPoint; }

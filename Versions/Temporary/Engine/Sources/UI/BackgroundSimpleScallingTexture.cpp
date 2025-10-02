@@ -39,7 +39,7 @@ void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_
 #endif
 }
 
-void CBackgroundSimpleScallingTexture::Visit( interface IUIVisitor* pVisitor )
+void CBackgroundSimpleScallingTexture::Visit( struct IUIVisitor* pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats ) 
 		return;
@@ -54,7 +54,7 @@ void CBackgroundSimpleScallingTexture::Visit( interface IUIVisitor* pVisitor )
 	pVisitor->VisitUIRect( pTexture, 3, rects );
 }
 
-int CBackgroundSimpleScallingTexture::operator&( interface IBinSaver &saver )
+int CBackgroundSimpleScallingTexture::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CBackground*>( this ) );
 	saver.Add( 2, &pStats );

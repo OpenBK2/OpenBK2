@@ -16,8 +16,8 @@ class CAIUnit;
 class CBridgeSpan;
 struct SMiniMapUnitInfo;
 struct SAIBasicUpdate;
-interface ICheckSumLog;
-interface ICollisionsCollector;
+struct ICheckSumLog;
+struct ICollisionsCollector;
 
 typedef hash_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
 
@@ -189,7 +189,7 @@ public:
 	virtual CObjectBase* GetUpdate();
 	virtual void PrepareUpdates();
 	virtual void ToggleWarFog( const bool bWarFog );
-	interface ITerraAIObserver * CreateTerraAIObserver( const int nSizeX, const int nSizeY );
+	struct ITerraAIObserver * CreateTerraAIObserver( const int nSizeX, const int nSizeY );
 
 	virtual void PickedObj( const int nObjID );
 	virtual void PickEmpty();

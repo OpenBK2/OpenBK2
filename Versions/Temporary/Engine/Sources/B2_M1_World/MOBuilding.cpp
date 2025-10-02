@@ -301,7 +301,7 @@ void CMOBuilding::GetStatus( SObjectStatus *pStatus ) const
 	}
 }
 
-bool CMOBuilding::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
+bool CMOBuilding::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
 		return true;
@@ -355,7 +355,7 @@ bool CMOBuilding::NeedShowInterrior() const
 	return true;
 }
 
-IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) 
+IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 { 
 	nCurrentAmmo = 0;
 	for ( vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
@@ -465,7 +465,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 	return 0;
 }
 
-IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, interface IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate )
+IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, struct IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate )
 {
 	if ( projectilesAlreadyHit.find( nProjectileID ) != projectilesAlreadyHit.end() )
 		return 0;
@@ -976,7 +976,7 @@ const int CMOBuilding::AttachSubObjectToSlot( const int nSlot, const ESceneSubOb
 	return nResult;
 }
 
-void CMOBuilding::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOBuilding::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CAttachedObjIDs &attaches = attachedObjects[ESSOT_WINDOW];
 	IMOContainer::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );

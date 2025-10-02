@@ -7,7 +7,7 @@
  * самолет от этого наследуется.
  * @interface
  */
-interface IPlane
+struct IPlane
 {
 public:
 	// current speed
@@ -17,7 +17,7 @@ public:
 	// current vertical direction
 	virtual CVec3 GetNormalB2() const = 0;
 
-	virtual const interface IManuver * GetManuver() const = 0;
+	virtual const struct IManuver * GetManuver() const = 0;
 	
 	// next calculated position
 	virtual CVec3 GetPosNext() const = 0;

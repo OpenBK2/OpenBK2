@@ -1,6 +1,6 @@
 #pragma once
 
-interface IAnimUnit : public CAIObjectBase
+struct IAnimUnit : public CAIObjectBase
 {
 	virtual void AnimationSet( int nAnimation ) = 0;
 	virtual void Moved() = 0;

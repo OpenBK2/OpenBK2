@@ -9,7 +9,7 @@ using System.Runtime.Remoting.Channels.Tcp;
 
 [InterfaceType( ComInterfaceType.InterfaceIsDual )]
 [GuidAttribute("dcf300af-6fb9-4537-8978-2fcb77d311dd")]
-public interface IDBWatcherClient
+public struct IDBWatcherClient
 {
 	void ConnectWatcher();
 	bool DumpAllRefs( string szFileName );

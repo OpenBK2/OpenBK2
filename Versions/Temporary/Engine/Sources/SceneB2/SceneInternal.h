@@ -50,7 +50,7 @@ struct ICamera;
 struct SVisObjSelection;
 struct SVisObjSelectionHandler;
 struct SModelVisObjDesc;
-interface IFullScreenFader;
+struct IFullScreenFader;
 
 class CSceneSyncSrc: public CSyncSrc<IVisObj>
 {
@@ -457,7 +457,7 @@ public:
 	//	
 	void ClearScene( const EScene eScene2Clear );
 	// 
-	interface ITerraManager* GetTerraManager();
+	struct ITerraManager* GetTerraManager();
 	bool DoesTerraManagerExist() const { return data[eScene]->pTerraManager != 0; }
 	// add object to scene. returns new ID
 	int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale, 
@@ -472,7 +472,7 @@ public:
 	virtual NAnimation::ISkeletonAnimator* GetAnimator( const int nTargetID, const string &szBoneName );
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset );
 	virtual void AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const CVec3 &vOffset );
-	virtual interface IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
+	virtual struct IAttachedObject* GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
 
 	virtual void RemoveAllAttached( const int nTargetID, ESceneSubObjType eType );
 	virtual void RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber );
@@ -549,8 +549,8 @@ public:
 	void SetSoundSceneMode( const enum ESoundSceneMode eMode );
 
 	// UI screen manipulation
-	void AddScreen( interface IWindow *pScreen );
-	void RemoveScreen( interface IWindow *pScreen );
+	void AddScreen( struct IWindow *pScreen );
+	void RemoveScreen( struct IWindow *pScreen );
 	void RemoveAllScreens();
 	NGScene::I2DGameView *GetG2DView();
 	NGScene::IGameView *GetGView();

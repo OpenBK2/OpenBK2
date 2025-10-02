@@ -52,7 +52,7 @@ class UI_EXPORT CUIFactory : public IUIInitialization
 	static NInput::CGMORegContainer registeredMessages;
 
 private:
-	void RegisterMLHandlersInternal( interface IML *pML );
+	void RegisterMLHandlersInternal( struct IML *pML );
 public:
 	static void SetScreenDuringLoad( IScreen *_pScreen ) { pScreenDuringLoad = _pScreen; }
 	static IScreen * GetScreenDuringLoad() { return pScreenDuringLoad; }
@@ -66,11 +66,11 @@ public:
 	CUIFactory();
 	//{ IUIInitialization
 	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts ) { NUIFactory::pConsts = _pConsts; }
-	void SetMLHandler( const wstring &wsTAG, interface IMLHandler *pHandler );
+	void SetMLHandler( const wstring &wsTAG, struct IMLHandler *pHandler );
 	IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
 	IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc, 
 																	const NDb::SUIGameConsts *pConsts, 
-																	interface IProgrammedReactionsAndChecks *pReactionsAndChecks,
+																	struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
 																	NGScene::I2DGameView * p2DView, 
 																	NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView );
 	IVirtualScreenController * GetVirtualScreenController() { return pVirtualScreenController; }
@@ -80,13 +80,13 @@ public:
 	static const NDb::SUIGameConsts * GetConsts() { return NUIFactory::pConsts; }
 
 	static class CWindow * MakeWindow( const struct NDb::SUIDesc *pDesc );
-	static interface IWindowPart * MakeWindowPart( const struct NDb::SUIDesc *pDesc );
-	static interface IMessageReactionB2 *MakeReaction( const struct NDb::SUIDesc *pDesc );
-	static interface IMessageCheck *MakeCheck( const struct NDb::SUIDesc *pDesc );
-	static interface IUIEffector *MakeEffect( const NDb::SUIStateBase *pCmd, interface IScreen *pScreen, struct SWindowContext *pContext, const string &szAnimateWindow  );
+	static struct IWindowPart * MakeWindowPart( const struct NDb::SUIDesc *pDesc );
+	static struct IMessageReactionB2 *MakeReaction( const struct NDb::SUIDesc *pDesc );
+	static struct IMessageCheck *MakeCheck( const struct NDb::SUIDesc *pDesc );
+	static struct IUIEffector *MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, struct SWindowContext *pContext, const string &szAnimateWindow  );
 	//static NGScene::I2DGameView * Get2DGameView();
 
-	static void RegisterMLHandlers( interface IML *pML );
+	static void RegisterMLHandlers( struct IML *pML );
 
 	static void RegisterMessage( const string &szMessage );
 	static bool IsMessageRegistered( const SGameMessage &msg );

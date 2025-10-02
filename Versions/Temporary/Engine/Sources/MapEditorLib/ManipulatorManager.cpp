@@ -385,7 +385,7 @@ bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManip
 }
 
 
-bool CManipulatorManager::Remove2DArray( interface IManipulator *pManipulator, const string &rszName )
+bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, const string &rszName )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Remove2DArray(): pManipulator == 0" );
 	if ( pManipulator == 0 )

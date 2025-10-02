@@ -62,7 +62,7 @@ namespace NEditor
 		return NScene::LoadTerrain( pTerraManager, pDesc, szMapFilePath );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SaveTerrain( interface ITerraManager *pTerraManager )
+	bool SaveTerrain( struct ITerraManager *pTerraManager )
 	{
 		if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
 		{

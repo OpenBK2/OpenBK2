@@ -4,7 +4,7 @@
 
 #include "../sceneb2/dbsceneconsts.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

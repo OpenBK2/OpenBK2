@@ -37,7 +37,7 @@ class CSound : public CObjectBase
 	NTimer::STime timeLastPosUpdate;
 public:
 	CSound() {  }
-	CSound( int _nID, const NDb::SSoundDesc *pDesc, interface ISound *pSound, 
+	CSound( int _nID, const NDb::SSoundDesc *pDesc, struct ISound *pSound,
 		      const enum ESoundMixType eMixType, const CVec3 &vPos, const bool bLooped,
 					const NDb::ESoundType eCombatType, float fMinRadius, float fMaxRadius );
 	~CSound();

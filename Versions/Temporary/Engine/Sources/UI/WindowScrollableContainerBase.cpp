@@ -29,7 +29,7 @@ void CWindowScrollableContainerBase::AfterLoad()
 		pScrollBar->SetNotifySink( this );
 }
 
-void CWindowScrollableContainerBase::Visit( interface IUIVisitor *pVisitor )
+void CWindowScrollableContainerBase::Visit( struct IUIVisitor *pVisitor )
 {
 	CTRect<float> rc;
 	FillWindowRect( &rc );
@@ -463,12 +463,12 @@ void CWindowScrollableContainerBase::Select( IWindow *pElement )
 	//GetScreen()->RunAnimationSequienceForward( checked_cast<NDb::SWindowScrollableContainerBase*>(GetInstance())->onSelection, this );
 }
 
-void CWindowScrollableContainerBase::DoubleClicked( interface IWindow *pWho, int nButton )
+void CWindowScrollableContainerBase::DoubleClicked( struct IWindow *pWho, int nButton )
 {
 	GetScreen()->RunAnimationSequienceForward( checked_cast<NDb::SWindowScrollableContainerBase*>(GetInstance())->onDoubleClick, this );
 }
 
-void CWindowScrollableContainerBase::Clicked( interface IWindow *pWho, int nButton )
+void CWindowScrollableContainerBase::Clicked( struct IWindow *pWho, int nButton )
 {
 	if ( (MSTATE_BUTTON1 & nButton) )
 		Select( pWho );

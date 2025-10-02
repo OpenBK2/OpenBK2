@@ -10,8 +10,8 @@ class CEditorScene : public IEditorScene
 
 public:
 	virtual void RemoveAllScreens();
-	virtual void AddScreen( interface IWindow *pScreen );
-	virtual void RemoveScreen( interface IWindow *pScreen );
+	virtual void AddScreen( struct IWindow *pScreen );
+	virtual void RemoveScreen( struct IWindow *pScreen );
 
 	virtual NGScene::I2DGameView *GetG2DView();
 	virtual NGScene::IGameView *GetGView();

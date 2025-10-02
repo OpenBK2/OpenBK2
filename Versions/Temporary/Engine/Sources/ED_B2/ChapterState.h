@@ -4,13 +4,13 @@
 #include "../GameX/InterfaceChapterMapMenuHelper.h"
 
 class CChapterEditor;
-interface IScreen;
-interface IWindow;
-interface IPotentialLines;
+struct IScreen;
+struct IWindow;
+struct IPotentialLines;
 class CMaskManipulator;
-interface IView;
-interface IButton;
-interface ITextView;
+struct IView;
+struct IButton;
+struct ITextView;
 namespace NDb
 {
 	struct SWindowMSButton;

@@ -84,8 +84,8 @@ public:
 	//}
 
 	//{ IClickNotify
-	void Clicked( interface IWindow *pWho, int nButton );
-	void DoubleClicked( interface IWindow *pWho, int nButton ) {}
+	void Clicked( struct IWindow *pWho, int nButton );
+	void DoubleClicked( struct IWindow *pWho, int nButton ) {}
 	//}
 
 	//{ IFocusNotify

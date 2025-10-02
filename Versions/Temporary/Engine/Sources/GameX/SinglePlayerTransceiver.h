@@ -3,8 +3,8 @@
 #include "Transceiver.h"
 #include "../Main/CommandsHistory.hpp"
 
-interface ICommandsHistory;
-interface IAILogic;
+struct ICommandsHistory;
+struct IAILogic;
 
 class CSinglePlayerTransceiver : public ITransceiver
 {
@@ -32,7 +32,7 @@ public:
 	// perform segments for AI
 	void DoSegments();
 
-	void SendCommand( interface IAILogicCommandB2 *pCommand );
+	void SendCommand( struct IAILogicCommandB2 *pCommand );
 
 	// client commands
 	void CommandClientTogglePause();

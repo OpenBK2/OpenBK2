@@ -29,7 +29,7 @@ extern float g;
  * у кажддого маневра есть ID.
  * @interface
  */
-interface IManuver : public CAIObjectBase
+struct IManuver : public CAIObjectBase
 {
 	// world position
 	virtual CVec3 GetPos() const = 0;
@@ -55,7 +55,7 @@ interface IManuver : public CAIObjectBase
 	virtual CVec3 GetProspectiveSpeed( NTimer::STime nTime ) const = 0;
 	
 	// init manuver to specific point, or destination (COMBAT ONLY)
-	virtual void Init( const NDb::EManuverDestination dest, class CPlanesFormation *pPlane, interface IPlane *pEnemy = 0 ) { NI_ASSERT(false,"WRONG CALL");}
+	virtual void Init( const NDb::EManuverDestination dest, class CPlanesFormation *pPlane, struct IPlane *pEnemy = 0 ) { NI_ASSERT(false,"WRONG CALL");}
 	virtual void GetManuverParams( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wron call" ); }
 	virtual void SetPlane( class CPlanesFormation *pPlane ) = 0;
 

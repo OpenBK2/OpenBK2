@@ -19,7 +19,7 @@ REGISTER_SAVELOAD_CLASS( 0x1108D4C8, CInfantryGuns );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C9, SCommonGunInfo );
 BASIC_REGISTER_CLASS( CUnitGuns );
 
-bool CUnitGuns::AddGun( const interface IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo )
+bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo )
 {
 	NI_VERIFY( pWeapon != 0, "Gun w/o weapon! See next assert for unit ID", return false );
 	//

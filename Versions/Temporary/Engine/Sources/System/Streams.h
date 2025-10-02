@@ -3,8 +3,8 @@
 
 namespace NVFS
 {
-	interface IVFS;
-	interface IFileCreator;
+	struct IVFS;
+	struct IFileCreator;
 }
 
 class SYSTEM_EXPORT CDataStream

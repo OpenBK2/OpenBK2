@@ -57,7 +57,7 @@ public:
 	CSound2D() : fVolume( 0.0f ), fPan( 0.0f )
 	{  }
 
-	int Visit( interface ISFXVisitor *pVisitor );
+	int Visit( struct ISFXVisitor *pVisitor );
 	void Update( ISFX * pSFX );
 
 	// 2D
@@ -104,7 +104,7 @@ public:
 	CSound3D( const NDb::SSoundDesc *pDesc, const bool bLooped );
 	CSound3D() : vPos( VNULL3), vSpeed( VNULL3 ), fVolume( 1.0f ) {  }
 
-	int Visit( interface ISFXVisitor *pVisitor );
+	int Visit( struct ISFXVisitor *pVisitor );
 	void Update( ISFX * pSFX );
 
 

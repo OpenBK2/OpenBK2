@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // wrapper pattern
 // оболочка для всех препятствий, которые нужно уничтожать на своем пути
-interface IObstacle : public CAIObjectBase
+struct IObstacle : public CAIObjectBase
 {
 	// для того, чтобы не стрелять вем по 1 препятствию
 	virtual void UpdateTakenDamagePower( const float fUpdate ) = 0;
@@ -25,7 +25,7 @@ interface IObstacle : public CAIObjectBase
 	virtual class CUpdatableObj *GetObject() const = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-interface IObstacleEnumerator
+struct IObstacleEnumerator
 {
 	//true if enough objects enumerated.
 	virtual bool AddObstacle( IObstacle *pObstacle ) = 0;

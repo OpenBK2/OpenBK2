@@ -35,8 +35,8 @@ class CBitmapWindow : public CObjectBase
 	CVec2 vSize;
 
 public:
-	virtual void Visit( interface IUIVisitor * pVisitor );
-	virtual int operator&( interface IBinSaver &saver );
+	virtual void Visit( struct IUIVisitor * pVisitor );
+	virtual int operator&( struct IBinSaver &saver );
 
 	const CVec2 GetPos() const { return vPos; }
 	void SetPos( const CVec2 &vPos );

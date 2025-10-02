@@ -27,13 +27,13 @@ struct SAnimHandle
 		pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
 };
 
-interface IAnimMutator : public CObjectBase
+struct IAnimMutator : public CObjectBase
 {
 	virtual bool NeedUpdate() { return true; }
 	virtual void MutateSkeletonPose( granny_local_pose *pPose ) = 0;
 };
 
-interface ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChannelAnimator
+struct ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChannelAnimator
 {
 	typedef int SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
 

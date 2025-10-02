@@ -18,7 +18,7 @@
 #include "unittypes.h"
 #include "../system/filepath.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

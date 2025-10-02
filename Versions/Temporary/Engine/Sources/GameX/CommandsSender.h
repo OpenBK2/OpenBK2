@@ -2,7 +2,7 @@
 
 #include "../Stats_B2_M1/AIUnitCmd.h"
 
-interface ITransceiver;
+struct ITransceiver;
 class CCommandsSender : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CCommandsSender );
@@ -35,7 +35,7 @@ public:
 
 	bool LastCommandSkipped() const { return bLastCommandSkipped; }
 	//
-	void SendCommand( interface IAILogicCommandB2 *pCmd );
+	void SendCommand( struct IAILogicCommandB2 *pCmd );
 };
 
 

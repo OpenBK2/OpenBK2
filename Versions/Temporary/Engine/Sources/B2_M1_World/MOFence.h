@@ -13,7 +13,7 @@ public:
 	bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 	void GetStatus( SObjectStatus *pStatus ) const;
-	IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 	//
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;

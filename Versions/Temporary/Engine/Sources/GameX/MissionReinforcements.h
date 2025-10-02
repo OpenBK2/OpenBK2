@@ -66,7 +66,7 @@ class CMissionReinf : public CObjectBase
 	CObj<class CMissionUnitFullInfo> pUnitFullInfo;
 	CPtr<ITextView> pNoInfoView;
 	bool bBadWeather;
-	CPtr<interface IWindowRoundProgressBar> pRoundProgress;
+	CPtr<struct IWindowRoundProgressBar> pRoundProgress;
 	NDb::ESeason eSeason;
 	CPtr<IWindow> pRoundProgressMask;
 	int nCalls;

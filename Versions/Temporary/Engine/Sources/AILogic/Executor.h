@@ -3,7 +3,7 @@
 
 class CExecutor;
 
-extern interface IExecutorContainer * pTheExecutorsContainer;
+extern struct IExecutorContainer * pTheExecutorsContainer;
 
 enum EExecutorTypeID
 {
@@ -250,7 +250,7 @@ public:
 	const CVec2 &GetTarget() const { return vTarget; }
 };
 
-interface IExecutor :	public CAIObjectBase
+struct IExecutor :	public CAIObjectBase
 {
 	//  __it is optimization trick__
 	// if IsExecutorValid() return GetNextTime. (see CExecutor)
@@ -319,7 +319,7 @@ struct SExecutorPtrHash
 		{	return p->GetInstanceID(); }
 };
 
-interface IExecutorContainer : public CAIObjectBase
+struct IExecutorContainer : public CAIObjectBase
 {
 	// adds sleeping, have to be registered on event prior or after adding
 	virtual void AddSleeping( CExecutor *pExecutor ) = 0;

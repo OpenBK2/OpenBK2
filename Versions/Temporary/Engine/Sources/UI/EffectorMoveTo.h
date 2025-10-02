@@ -24,9 +24,9 @@ public:
 	virtual int operator&( IBinSaver &ss );
 
 	virtual bool IsFinished() const { return bFinished; }
-	virtual void Configure( const NDb::SUIStateBase *pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow );
-	virtual const int Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward );
-	virtual void Visit( interface IUIVisitor *pVisitor ) { }
+	virtual void Configure( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow );
+	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+	virtual void Visit( struct IUIVisitor *pVisitor ) { }
 	virtual void Reverse();
 };
 

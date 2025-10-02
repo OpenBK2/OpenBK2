@@ -25,8 +25,7 @@ static const int MAX_MAPBUFINDEX = 254;
 static float fWarFogBoundWidth = 256.0f;
 
 REGISTER_SAVELOAD_CLASS( 0x3008B3C0, CCommonPathFinder );
-BASIC_REGISTER_CLASS( CCommonPathFinder );
-
+//BASIC_REGISTER_CLASS( CCommonPathFinder );
 void CCommonPathFinder::Init()
 {
 	bPathFound = false;
@@ -112,7 +111,7 @@ void CCommonPathFinder::SetCheckingPathParameters(
 	const int nBoundTileRadius,
 	const EAIClasses aiClass,
 	const CVec2 &vStartPoint, const CVec2 &vFinishPoint,
-	const SVector &lastKnownGoodTile, interface IPointChecking *_pChecking, CAIMap *pAIMap )
+	const SVector &lastKnownGoodTile, struct IPointChecking *_pChecking, CAIMap *pAIMap )
 {
 	SetPathParameters( nBoundTileRadius, aiClass, vStartPoint, vFinishPoint, lastKnownGoodTile, pAIMap );
 	pChecking = _pChecking;

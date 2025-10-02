@@ -40,10 +40,10 @@ struct STerraSpotGFXInfo;
 struct STerraObjectInfo;
 struct SPrecipiceGFXInfo;
 class CTracksManager;
-interface ITerraAIObserver;
+struct ITerraAIObserver;
 struct STerrainInfo;
 
-interface ITerraManager : public CObjectBase
+struct ITerraManager : public CObjectBase
 {
 	enum { tidTypeID = 0x10096401 };
 	//
@@ -140,7 +140,7 @@ interface ITerraManager : public CObjectBase
 	virtual const STerrainInfo* const GetTerraInfo() const = 0;
 };
 
-interface ITerraGfxObserver : public CObjectBase
+struct ITerraGfxObserver : public CObjectBase
 {
 	// terrain itself
 	virtual void UpdatePatchGeometry( vector<NMeshData::SMeshData> *pMeshData, const int nPatchInd ) = 0;

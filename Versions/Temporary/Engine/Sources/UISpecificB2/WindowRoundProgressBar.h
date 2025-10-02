@@ -32,7 +32,7 @@ public:
 	CWindowRoundProgressBar();
 
 	//{ CWindow
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	//}
 	

@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-interface IObjMan;
+struct IObjMan;
 namespace NBind
 {
 class CBindArray;

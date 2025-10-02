@@ -65,7 +65,7 @@ int CBitmap::operator&( IBinSaver &saver )
 
 // CBitmapWindow
 
-void CBitmapWindow::Visit( interface IUIVisitor * pVisitor )
+void CBitmapWindow::Visit( struct IUIVisitor * pVisitor )
 {
 	if ( !pBitmap ) 
 		return;
@@ -77,7 +77,7 @@ void CBitmapWindow::Visit( interface IUIVisitor * pVisitor )
 	pVisitor->VisitUITextureRect( pBitmap, 3, rects );
 }
 
-int CBitmapWindow::operator&( interface IBinSaver &saver )
+int CBitmapWindow::operator&( struct IBinSaver &saver )
 {
 	saver.Add( 1, &pBitmap );
 	saver.Add( 1, &vPos );

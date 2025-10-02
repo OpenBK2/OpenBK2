@@ -13,7 +13,7 @@ namespace NDb
 //*                     UpdatableClient                             *
 //*******************************************************************
 
-interface IUpdatableClient
+struct IUpdatableClient
 {
 	virtual void ProcessUpdate( const struct SAIPointLightUpdate *pUpdate ) = 0;
 	virtual void ProcessUpdate( const struct SAIHeadLightUpdate *pUpdate ) = 0;

@@ -38,7 +38,7 @@ struct SGeneralHelper
 	{
 		IWorkerEnumerator * pEn;
 		enum EForceType eType;
-		SFindByEnumeratorPredicate( interface IWorkerEnumerator * pEnumerator, const enum EForceType eType ) : pEn( pEnumerator ), eType( eType ) {  }
+		SFindByEnumeratorPredicate( struct IWorkerEnumerator * pEnumerator, const enum EForceType eType ) : pEn( pEnumerator ), eType( eType ) {  }
 		bool operator()( class CCommonUnit *pU1 );
 	};
 	//
@@ -48,7 +48,7 @@ struct SGeneralHelper
 		enum EForceType eType;
 		float fRating;
 		CPtr<CCommonUnit> pBest;
-		SFindBestByEnumeratorPredicate( interface IWorkerEnumerator * pEn, const enum EForceType eType ) : pEn ( pEn ), eType( eType ) {  }
+		SFindBestByEnumeratorPredicate( struct IWorkerEnumerator * pEn, const enum EForceType eType ) : pEn ( pEn ), eType( eType ) {  }
 		void operator()( class CCommonUnit *pU1 );
 	};
 	//

@@ -9,7 +9,7 @@
 #include "B2_M1_Terrain_export.h"
 
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

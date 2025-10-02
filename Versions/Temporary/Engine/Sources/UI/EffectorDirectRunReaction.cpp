@@ -8,7 +8,7 @@ bool CEffectorDirectRunReaction::IsFinished() const
 	return bFinished; 
 }
 
-void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow ) 
+void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
 { 
 	szAnimatedWindow = _szAnimatedWindow;
 	const NDb::SUISDirectRunReaction *pCmd( checked_cast<const NDb::SUISDirectRunReaction*>( _pCmd ) );
@@ -18,7 +18,7 @@ void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, inte
 	bForward = true;
 }
 
-const int CEffectorDirectRunReaction::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
+const int CEffectorDirectRunReaction::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
 { 
 	// to do RUN COMMAND cmd.szParam
 	// in messageReaction

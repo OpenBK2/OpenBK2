@@ -6,9 +6,9 @@ namespace NGScene
 {
 	class I2DGameView;
 };
-interface IWindow;
+struct IWindow;
 
-interface IUIScene : public CObjectBase
+struct IUIScene : public CObjectBase
 {
 	enum { tidTypeID = 0x160B8D80 };
 	virtual void Create() = 0;

@@ -48,7 +48,7 @@ public:
 //*												Траектории																*
 //*******************************************************************
 
-interface IBallisticTraj : public CAIObjectBase
+struct IBallisticTraj : public CAIObjectBase
 {
 public:
 	virtual const NTimer::STime& GetExplTime() const = 0;

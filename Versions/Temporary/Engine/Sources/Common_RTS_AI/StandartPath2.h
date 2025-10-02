@@ -8,7 +8,7 @@
 class CCommonPathFinder;
 class CCommonStaticPath;
 class CBasePathUnit;
-interface IStaticPath;
+struct IStaticPath;
 
 class COMMON_RTS_AI_EXPORT CStandartPath2 : public IPath
 {

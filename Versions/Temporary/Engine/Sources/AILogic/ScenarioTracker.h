@@ -10,7 +10,7 @@ namespace NDb
 	struct SObjectBaseRPGStats;
 }
 
-interface IAIScenarioTracker : public CObjectBase
+struct IAIScenarioTracker : public CObjectBase
 {
 	enum { tidTypeID = 0x1116BC00 };
 

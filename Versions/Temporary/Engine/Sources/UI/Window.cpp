@@ -237,7 +237,7 @@ void CWindow::SetTextPlacement( const struct NDb::SWindowPlacement &placement )
 		pPlacedText->SetPlacement( placement );
 }
 
-interface IScreen* CWindow::GetScreen()
+struct IScreen* CWindow::GetScreen()
 {
 	if ( GetParent() == 0 )
 	{
@@ -976,7 +976,7 @@ int CWindow::GetTooltipIDForMLHandler() const
 	return nIDForMLHandler;
 }
 
-void CWindow::Visit( interface IUIVisitor *pVisitor )
+void CWindow::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
 		return;
@@ -1235,7 +1235,7 @@ void CWindow::SetInternalFadeValue( float fValue )
 	fInternalFadeValue = fValue;
 }
 
-void CWindow::VisitText( interface IUIVisitor *pVisitor )
+void CWindow::VisitText( struct IUIVisitor *pVisitor )
 {
 	if ( pPlacedText )
 	{

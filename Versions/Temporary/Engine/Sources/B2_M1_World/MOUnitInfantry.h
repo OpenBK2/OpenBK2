@@ -31,25 +31,25 @@ public:
 	void ChangeRPGStats( const struct SAIChangeDBIDUpdate &update, const NDb::ESeason eSeason );
 	void GetStatus( SObjectStatus *pStatus ) const;
 
-	void SetSquad( interface IMOSquad *_pSquad );
-	interface IMOSquad* GetSquad() const { return pSquad; }
+	void SetSquad( struct IMOSquad *_pSquad );
+	struct IMOSquad* GetSquad() const { return pSquad; }
 	virtual IB2MapObj* GetSquadB2MapObj() const { return pSquad; }
 	//
-	bool Load( interface IMOUnit *pMO, bool bEnter ) { return false; }
-	bool LoadSquad( interface IMOSquad *pSquad, bool bEnter ) { return false; }
+	bool Load( struct IMOUnit *pMO, bool bEnter ) { return false; }
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
 	void UpdatePassangers() { }
 	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const {}
 	int GetPassangersCount() const { return 0; }
 	int GetFreePlaces() const { return 0; }
 	int GetFreeMechPlaces() const { return 0; }
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason );
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
 	//
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetPossibleActions( CUserActions *pActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const	{}
-	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, interface ISoundScene *pSoundScene, interface IClientAckManager *pAckManager );
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	void AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason );
 	class CMOProjectile* LaunchProjectile( const SAINewProjectileUpdate *pUpdate );
 	void SetTransport( IMOContainer *_pTransport );

@@ -154,7 +154,7 @@ void CWindowScrollBar::Pushed( class CWindow *pWho )
 	}
 }
 
-void CWindowScrollBar::SetNotifySink( interface ISliderNotify *_pNotifySink ) 
+void CWindowScrollBar::SetNotifySink( struct ISliderNotify *_pNotifySink )
 { 
 	pSlider->SetNotifySink( _pNotifySink ); 
 }

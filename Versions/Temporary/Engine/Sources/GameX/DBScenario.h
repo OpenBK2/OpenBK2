@@ -6,7 +6,7 @@
 #include "../stats_b2_m1/uientries.h"
 #include "../system/filepath.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

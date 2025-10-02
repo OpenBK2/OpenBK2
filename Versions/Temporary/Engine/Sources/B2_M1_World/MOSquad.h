@@ -12,14 +12,14 @@ class CMOSquad : public IMOSquad
 	CPtr<IMOContainer> pContainer;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IMOSquad*)this); f.Add(2,&units); f.Add(3,&pServedGun); f.Add(5,&pContainer); return 0; }
 private:
-	bool IsInSquad( interface IMOUnit *pUnit );
+	bool IsInSquad( struct IMOUnit *pUnit );
 	void UpdateServedGunCrew( const bool bClearCrew );
 public:
 	CMOSquad();
 	~CMOSquad(void);
 
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason ) {}
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason ) {}
+	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
 
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor ) { return true; }
@@ -27,8 +27,8 @@ public:
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	void GetStatus( SObjectStatus *pStatus ) const;
 	// load unit onboard or unload it
-	bool Load( interface IMOUnit *pUnit, bool bEnter );
-	bool LoadSquad( interface IMOSquad *pSquad, bool bEnter ) { return false; }
+	bool Load( struct IMOUnit *pUnit, bool bEnter );
+	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
 	// show icons of the passangers
 	void UpdatePassangers() {}
 	void GetPassangers( vector<CMOSelectable*> *pBuffer ) const;
@@ -40,7 +40,7 @@ public:
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason ) { }
 	//
 	virtual bool NeedShowInterrior() const;
-	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
+	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
 	//
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetPossibleActions( CUserActions *pActions ) const;
@@ -54,7 +54,7 @@ public:
 	void AIUpdateModifyEntranceState( bool bOpen ) {}
 	bool IsOpen() const { return true; }
 
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	void AIUpdateServedArtillery( IMOUnit *pMOUnit );
 	
 	IMOUnit* GetServedGun() const { return pServedGun; }

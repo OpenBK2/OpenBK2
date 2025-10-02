@@ -42,7 +42,7 @@ public:
 			timeRestart ( 0 ), vOffset( VNULL2 ),
 			bNeedUpdate ( false ), vSoundPos( VNULL3 ), wSound( 0 ) {  }
 		//returns true if update of sounds is needed.
-		void SetSound( const NDb::SComplexSoundDesc *pStats, NTimer::STime timeWhenRestart, interface ISoundScene *pScene );
+		void SetSound( const NDb::SComplexSoundDesc *pStats, NTimer::STime timeWhenRestart, struct ISoundScene *pScene );
 		bool HasCycleSound() const { return !cycledSounds.empty(); }
 		void AddCycledSound( const NDb::SComplexSoundDesc *pStats );
 		void StartCycledSounds( ISFX *pSFX, bool bNonPeacefulOnly );
@@ -71,8 +71,8 @@ private:
 	bool bMuteAll;												// mute terrain sounds
 public:
 	CTerrainSounds() : vListener( CVec3(-1,-1,-1) ), lastUpdateTime( 0 ), bMuteAll( false ) {  }
-	void Init( interface ITerrainSounds *pTerrain );
-	void Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, interface ISoundScene *pScene  );
+	void Init( struct ITerrainSounds *pTerrain );
+	void Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, struct ISoundScene *pScene  );
 	void Mute( const bool bMute );
 	void Clear();
 	int operator&( IBinSaver &saver );

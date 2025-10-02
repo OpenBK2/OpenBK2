@@ -141,7 +141,7 @@ protected:
 	float GetTotalFadeValue() const { return fFadeValue * fInternalFadeValue; }
 
 	virtual bool IsActiveArea( const CVec2 &vPos ) const;
-	void VisitText( interface IUIVisitor *pVisitor );
+	void VisitText( struct IUIVisitor *pVisitor );
 public:
 	void InitStatic();
 
@@ -175,7 +175,7 @@ public:
 	CTRect<int> GetPlacement() const;
 	virtual void SetPlacement( const CTRect<int> &rc, const DWORD flags );
 
-	interface IScreen* GetScreen();
+	struct IScreen* GetScreen();
 	// is point (in screen coordinates) inside control
 	bool IsInside( const CVec2 &vPos ) const;
 	// Gives or removes focus from the current window
@@ -269,7 +269,7 @@ public:
 	virtual void SetTooltip( IWindow *pTooltipWindow );
 	
 	// DRAWING
-	virtual void Visit( interface IUIVisitor *pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void RegisterObservers();
 	// friends
 	friend struct SWindowCompare;

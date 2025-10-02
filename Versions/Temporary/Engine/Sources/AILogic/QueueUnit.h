@@ -4,7 +4,7 @@
 #include "ListsSet.h"
 
 class CAICommand;
-interface IUnitState;
+struct IUnitState;
 namespace NDb
 {
 	struct SUnitSpecialAblityDesc;
@@ -53,9 +53,9 @@ public:
 	static void CheckCmdsSize( const int id );
 	static void DelCmdQueue( const int id );
 
-	virtual interface IStatesFactory* GetStatesFactory() const = 0;
+	virtual struct IStatesFactory* GetStatesFactory() const = 0;
 	virtual IUnitState* GetState() const { return pState; }
-	virtual void SetCurState( interface IUnitState *pState );
+	virtual void SetCurState( struct IUnitState *pState );
 
 	// текущая команда кладётся в голову очереди, а сверху - pCommand
 	virtual void InsertUnitCommand( class CAICommand *pCommand );

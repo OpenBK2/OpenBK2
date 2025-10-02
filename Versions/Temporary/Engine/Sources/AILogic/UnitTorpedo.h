@@ -7,7 +7,7 @@
 #include "AIUnit.h"
 #include "UnitStates.h"
 #include "StatesFactory.h"
-interface ICollisionsCollector;
+struct ICollisionsCollector;
 
 class CTorpedoStatesFactory : public IStatesFactory
 {
@@ -23,8 +23,8 @@ public:
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 
-	virtual interface IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual interface IUnitState* ProduceRestState( class CQueueUnit *pUnit );
+	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
+	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
 
 	// for Saving/Loading of static members
 	friend class CStaticMembers;

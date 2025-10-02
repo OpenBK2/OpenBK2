@@ -31,7 +31,7 @@ public:
 		return true;
 	}
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit  ) { return true; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
 	{
 		pUnit = _pUnit;
 		CPtr<IMemento> p = pMemento;

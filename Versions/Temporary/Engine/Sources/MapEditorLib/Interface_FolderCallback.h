@@ -4,7 +4,7 @@
 
 // Последовательность создания объектов должна быть такова чтобы при удалении объектов сначала могли удалится более ранние объекты
 // это значить, что объект на который ссылаются необходимо создавать позже
-interface IFolderCallback : public CObjectBase
+struct IFolderCallback : public CObjectBase
 {
 	enum { tidTypeID = 0x140A7000 };
 

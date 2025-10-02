@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-interface IDbObserver;
+struct IDbObserver;
 
 class CDbObserverContainer
 {

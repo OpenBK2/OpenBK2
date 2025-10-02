@@ -107,10 +107,10 @@ bool FixLocators( const struct SObjectSet &objectSet, const string &szLocatorNam
 // Acquire attributes for a given model
 bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *pAttributeList );
 
-interface IManipulator* CreateModelManipulatorFromVisObj( interface IManipulator *pVisObjectManipulator, string *pModelName );
+struct IManipulator* CreateModelManipulatorFromVisObj( struct IManipulator *pVisObjectManipulator, string *pModelName );
 
 template<class TValue> 
-bool GetSeasonedValue( TValue *pData, interface IManipulator *pManipulator, const string &rszName, const string &rszSeasonArrayName, NDb::ESeason eSeason, string *pszDataPrefix )
+bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const string &rszName, const string &rszSeasonArrayName, NDb::ESeason eSeason, string *pszDataPrefix )
 {
 	NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );

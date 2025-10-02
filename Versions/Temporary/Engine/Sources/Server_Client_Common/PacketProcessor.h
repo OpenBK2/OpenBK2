@@ -8,7 +8,7 @@
 
 #define REGISTER_PACKET_PROCESSOR( FuncName )	Register( this, FuncName );
 
-interface IPacketProcessorFun : public CObjectBase
+struct IPacketProcessorFun : public CObjectBase
 {
 	virtual bool Process( CNetPacket *pRawPacket ) = 0;
 };

@@ -5,7 +5,7 @@
 #include "../stats_b2_m1/dbreinforcements.h"
 #include "../stats_b2_m1/rpgstats.h"
 
-interface IXmlSaver;
+struct IXmlSaver;
 
 namespace NDb
 {

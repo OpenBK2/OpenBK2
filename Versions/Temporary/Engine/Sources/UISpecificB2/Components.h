@@ -15,7 +15,7 @@ class CTextureRoundSegmentVisitor
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTexture); f.Add(3,&rect); f.Add(4,&fStartAngle); f.Add(5,&fFinishAngle); f.Add(6,&colors); return 0; }
 private:
-	void DrawTriangle( interface IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,	
+	void DrawTriangle( struct IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,
 		const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 );
 	bool ClampAngles( float *pStart, float *pFinish, float fMin, float fMax );
 public:
@@ -27,7 +27,7 @@ public:
 	// draw only: fStartAngle <= fFinishAngle
 	void SetAngles( float fStartAngle, float fFinishAngle );
 	
-	void Visit( interface IUIVisitor *pVisitor );
+	void Visit( struct IUIVisitor *pVisitor );
 };
 
 

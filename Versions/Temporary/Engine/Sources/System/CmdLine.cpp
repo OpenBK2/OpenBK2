@@ -43,7 +43,7 @@ static string GetErrorDesc( CCmdLine::EProcessResult eResult )
 // **
 // ************************************************************************************************************************ //
 
-interface CCmdLine::IObserver: public CObjectBase
+struct CCmdLine::IObserver: public CObjectBase
 {
 	virtual bool IsNeedValue() const = 0;
 	virtual CCmdLine::EProcessResult AcceptValue( const string &value ) = 0;

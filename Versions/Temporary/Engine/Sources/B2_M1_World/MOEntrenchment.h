@@ -43,9 +43,9 @@ public:
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 	void GetStatus( SObjectStatus *pStatus ) const;
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
 
-	IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
 	//
 	void SetParent( CMOEntrenchment *pTrench ) { pParent = pTrench; }
 	CMOEntrenchment* GetParent() { return pParent; }
@@ -77,10 +77,10 @@ public:
 
 	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats ) { SetStats(pStats); }
 
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, NDb::ESeason eSeason ) { }
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason ) { }
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, NDb::ESeason eSeason ) { }
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason ) { }
 	
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
 
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor ) { return true; }

@@ -65,8 +65,8 @@ public:
 		CMapSoundCell() : timeNextRun( 0 ) { }
 
 		void AddSound( const WORD wSoundID, const CVec3 &vPos, const RegisteredSounds &registeredSounds, const WORD wInstanceID, const bool bLooped );
-		void RemoveSound( const WORD wInstanceID, interface ISoundScene * pScene );
-		void Update( interface ISoundScene * pScene, const RegisteredSounds &registeredSounds );
+		void RemoveSound( const WORD wInstanceID, struct ISoundScene * pScene );
+		void Update( struct ISoundScene * pScene, const RegisteredSounds &registeredSounds );
 	};
 
 	CFreeIds soundIDs;									// для регистрации звуков
@@ -78,12 +78,12 @@ public:
 	// cell - sound instance id
 	hash_map<WORD, SIntThree> cells;
 
-	interface ISoundScene * pSoundScene; 
+	struct ISoundScene * pSoundScene;
 	NTimer::STime timeNextUpdate;
 
 public:
 	CMapSounds() : pSoundScene( 0 ), timeNextUpdate( 0 ) {  }
-	void SetSoundScene( interface ISoundScene *pSoundScene );
+	void SetSoundScene( struct ISoundScene *pSoundScene );
 	void Update( const CVec3 &vListener, const float fViewRadius );
 	void Clear();
 

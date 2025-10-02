@@ -1,6 +1,6 @@
 #pragma once
 
-interface IGlobeScriptHandler : public CObjectBase
+struct IGlobeScriptHandler : public CObjectBase
 {
 	virtual const int CallGlobeScriptFunction( const string &szFuncCall ) = 0;
 };

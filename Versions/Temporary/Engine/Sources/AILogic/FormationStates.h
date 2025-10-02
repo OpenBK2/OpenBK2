@@ -25,7 +25,7 @@ namespace NDb
 	enum EMineType;
 }
 
-interface IEngineerFormationState : public IUnitState
+struct IEngineerFormationState : public IUnitState
 {
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport ) = 0;
 };
@@ -42,8 +42,8 @@ public:
 		return 0;
 	}
 
-	virtual interface IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual interface IUnitState* ProduceRestState( class CQueueUnit *pUnit );
+	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
+	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
 
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 	// for Saving/Loading of static members

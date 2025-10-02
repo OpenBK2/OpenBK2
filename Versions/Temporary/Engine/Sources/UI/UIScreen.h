@@ -120,7 +120,7 @@ public:
 	void SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView );
 	NGScene::IGameView *GetInterface3DView() { return pInterface3DView; }
 
-	int operator&( interface IBinSaver &saver );
+	int operator&( struct IBinSaver &saver );
 
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
 	bool OnButtonUp( const CVec2 &vPos, const int nButton ); 
@@ -134,7 +134,7 @@ public:
 	int /*AnimationID*/RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow );
 	void RunAnimationSequienceBack( const int nAnimationID );
 	// run szCmdSeq effect. if nAnimationToWait provided, then wait untill animation is finished, then run szCmdSeq.
-	void RunStateCommandSequience( const string &szCmdSeq, interface IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 );
+	void RunStateCommandSequience( const string &szCmdSeq, struct IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 );
 	// instantly undo command sequence (run in backward direction)
 	void UndoStateCommandSequence( const string &szCmdSeq );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
@@ -150,9 +150,9 @@ public:
 	void SetWindowText( const string &szWindowName, const wstring &szText );
 	void RegisterEffect( const string &szEffect, const NDb::SUIStateSequence &cmds );
 	void RegisterEffect( const string &szEffect, const vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable );
-	void RegisterReaction( const string &szReactionKey, interface IMessageReactionB2 *pReaction );
-	void RegisterToSegment( interface IWindow *pWnd, const bool bRegister );
-	bool IsRegisteredToSegment( interface IWindow *pWnd ) const;
+	void RegisterReaction( const string &szReactionKey, struct IMessageReactionB2 *pReaction );
+	void RegisterToSegment( struct IWindow *pWnd, const bool bRegister );
+	bool IsRegisteredToSegment( struct IWindow *pWnd ) const;
 	void SetScreenSize( const CTRect<float> &rcScreen );
 	//virtual void OnMouseMove( const CVec2 &vPos, const int );
 	IWindow *Pick( const CVec2 &vPos, const bool bRecursive );

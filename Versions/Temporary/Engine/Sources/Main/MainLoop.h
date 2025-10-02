@@ -11,7 +11,7 @@
 // **
 // ************************************************************************************************************************ //
 
-interface IInterfaceBase : virtual public CObjectBase
+struct IInterfaceBase : virtual public CObjectBase
 {
 	//virtual bool Init() = 0;
 	virtual void OnGetFocus( bool bFocus ) = 0;
@@ -24,7 +24,7 @@ interface IInterfaceBase : virtual public CObjectBase
 	virtual void AfterLoad() {}
 	virtual bool IsModal() { return true; }
 };
-interface IInterfaceCommand : public CObjectBase
+struct IInterfaceCommand : public CObjectBase
 {
 	virtual void Exec() = 0;
 	virtual void Configure( const char *pszConfig ) {  }
@@ -43,7 +43,7 @@ MAIN_EXPORT void PopInterface();
 MAIN_EXPORT IInterfaceBase *GetTopInterface();
 MAIN_EXPORT IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface );
 void SetInputEnabled( bool bEnabled );
-MAIN_EXPORT void Serialize( IBinSaver &saver, interface IProgressHook *pHook = 0 );
+MAIN_EXPORT void Serialize( IBinSaver &saver, struct IProgressHook *pHook = 0 );
 void AfterLoad();
 }
 
@@ -55,20 +55,20 @@ void AfterLoad();
 // **
 // ************************************************************************************************************************ //
 
-interface IFilesInspector : public CObjectBase
+struct IFilesInspector : public CObjectBase
 {
 	enum { tidTypeID = 0x10075C03 };
 	// add new entry
-	virtual bool AddEntry( const string &szName, interface IFilesInspectorEntry *pEntry ) = 0;
+	virtual bool AddEntry( const string &szName, struct IFilesInspectorEntry *pEntry ) = 0;
 	// remove entry
 	virtual bool RemoveEntry( const string &szName ) = 0;
 	// get entry
-	virtual interface IFilesInspectorEntry* GetEntry( const string &szName ) = 0;
+	virtual struct IFilesInspectorEntry* GetEntry( const string &szName ) = 0;
 	// clear all entries
 	virtual void Clear() = 0;
 };
 
-interface IFilesInspectorEntry : public CObjectBase
+struct IFilesInspectorEntry : public CObjectBase
 {
 	// inspect one stream name
 	virtual void InspectStream( const string &szName ) = 0;

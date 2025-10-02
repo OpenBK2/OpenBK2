@@ -1,6 +1,6 @@
 #pragma once
 
-interface IClientUpdatableProcess : public CObjectBase
+struct IClientUpdatableProcess : public CObjectBase
 {
 	virtual bool Update( const NTimer::STime &time ) = 0;
 };

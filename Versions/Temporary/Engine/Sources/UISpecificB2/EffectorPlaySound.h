@@ -4,7 +4,7 @@
 #include "../UI/UI.h"
 
 
-interface IScene;
+struct IScene;
 namespace NDb
 {
 	struct SComplexSoundDesc;
@@ -20,9 +20,9 @@ class CEffectorPlaySound :	public IUIEffector
 public:
 	CEffectorPlaySound() : bFinished( false ) {  }
 	virtual bool IsFinished() const;
-	virtual void Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow );
-	virtual const int Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward );
-	virtual void Visit( interface IUIVisitor *pVisitor ) { }
+	virtual void Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow );
+	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward );
+	virtual void Visit( struct IUIVisitor *pVisitor ) { }
 	virtual void Reverse();
 	int operator&( IBinSaver &saver );
 };

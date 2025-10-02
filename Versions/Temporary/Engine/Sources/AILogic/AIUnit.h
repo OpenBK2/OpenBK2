@@ -9,7 +9,7 @@ class CAIUnitInfoForGeneral;
 class CExistingObject;
 class CExecutorUnitBonus;
 class CBuilding;
-interface ICollisionsCollector;
+struct ICollisionsCollector;
 
 namespace NDb
 {
@@ -32,7 +32,7 @@ class CAIUnit: public CCommonUnit
 	float fHitPoints;
 
 	CObj<CAntiArtillery> pAntiArtillery;
-	CObj<interface IAnimUnit> pAnimUnit;
+	CObj<struct IAnimUnit> pAnimUnit;
 
 	//окоп, в котором этот юнит тусуется
 	CObj<CExistingObject> pTankPit; 
@@ -180,7 +180,7 @@ public:
 	virtual const float GetMaxPossibleSpeed() const { return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); }
 	virtual const float GetPassability() const;
 	virtual const int GetBoundTileRadius() const { return GetStats()->nBoundTileRadius; }
-	//virtual interface IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, interface IPointChecking *pPointChecking );
+	//virtual struct IStaticPath* ( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, struct IPointChecking *pPointChecking );
 
 	virtual const CVec2 &GetAABBHalfSize() const { return GetStats()->vAABBHalfSize; }
 	virtual const float GetVisZ() const;
@@ -343,7 +343,7 @@ public:
 		// для того, чтобы искать врагов не только в секторе атаки, а во всём круге
 	void SetCircularAttack( const bool bCanAttack );
 	// поискать препятствие.
-	virtual interface IObstacle *LookForObstacle();
+	virtual struct IObstacle *LookForObstacle();
 	void UpdateNAttackingGrenages( const int nUpdate ) { nGrenades += nUpdate; NI_ASSERT( nGrenades >= 0, "Wrong number of grenades" ); }
 	const int GetNAttackingGrenages() const { return nGrenades; }
 

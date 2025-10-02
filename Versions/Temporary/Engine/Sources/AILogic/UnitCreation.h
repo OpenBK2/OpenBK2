@@ -10,10 +10,10 @@ namespace NDb
 	struct SMapPlayerInfo;
 	enum EReinforcementType;
 };
-interface ICollisionsCollector;
+struct ICollisionsCollector;
 
 // для унификации создания самолетов
-interface IPlaneCreation 
+struct IPlaneCreation
 {
 	virtual const CVec2 &GetDestPoint() const = 0;
 	virtual void CalcPositions( const int nMax,

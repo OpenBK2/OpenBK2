@@ -3,7 +3,7 @@
 #include "../DebugTools/DebugInfoManager.h"
 
 // большой статический потайловый  путь, вдоль которого идут юниты
-interface IStaticPath : public CAIObjectBase
+struct IStaticPath : public CAIObjectBase
 {
 	virtual const SVector GetStartTile() const	= 0;
 	virtual const SVector GetFinishTile() const = 0;

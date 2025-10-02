@@ -2,7 +2,7 @@
 
 #include "../Common_RTS_AI/Path.h"
 
-interface IPath;
+struct IPath;
 
 class CPresizePath : public ISmoothPath
 {
@@ -43,7 +43,7 @@ public:
 	
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit );
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
 	virtual void Stop();
 	virtual const bool CanGoBackward() const;
 	virtual const bool CanGoForward() const;
@@ -90,7 +90,7 @@ public:
 
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; } 
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
-	virtual bool Init( interface IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { return false; }
+	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { return false; }
 	virtual void Stop() {}
 	virtual const bool CanGoBackward() const { return false; }
 	virtual const bool CanGoForward() const { return true; }

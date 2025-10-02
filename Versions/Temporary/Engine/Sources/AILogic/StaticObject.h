@@ -89,7 +89,7 @@ public:
 //*******************************************************************
 
 // объект, внутри которого могут быть юниты
-interface ILoadableObject
+struct ILoadableObject
 {
 	// итерирование по fire slots
 	virtual void StartIterate() = 0;

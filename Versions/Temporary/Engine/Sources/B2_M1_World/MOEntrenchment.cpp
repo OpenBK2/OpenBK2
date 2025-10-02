@@ -31,7 +31,7 @@ bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUn
 	return true;
 }
 
-void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( placement.bNewFormat )
 	{

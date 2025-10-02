@@ -110,7 +110,7 @@ void CMOObject::GetStatus( SObjectStatus *pStatus ) const
 	CMapObj::GetStatus( pStatus );
 }
 
-IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) 
+IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 { 
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	CommonUpdateHP( fNewHP, stats, Scene(), eSeason );

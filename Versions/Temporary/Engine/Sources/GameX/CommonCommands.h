@@ -22,7 +22,7 @@ public:
 	//
 	bool NeedToBeStored() const { return false; }
 
-	static void Check( const int nOurNumber, interface IAILogic *pAI );
+	static void Check( const int nOurNumber, struct IAILogic *pAI );
 	static void Init( const WORD wMask );
 	static void SetMask( const WORD wMask );
 
@@ -51,7 +51,7 @@ public:
 		bool NeedToBeStored() const { return false; }
 
 		// only if CheckSum on nStartSegment is different, check other segments
-		static void Check( const int nOurNumber, const int nStartSegment, interface IAILogic *pAI );
+		static void Check( const int nOurNumber, const int nStartSegment, struct IAILogic *pAI );
 
 		static void Init( const WORD wMask );
 		static void SetMask( const WORD wMask );

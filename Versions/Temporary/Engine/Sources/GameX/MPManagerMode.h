@@ -6,7 +6,7 @@
 #include "../Net/NetAddress.h"
 
 
-interface IServerClient;
+struct IServerClient;
 class CLANTester;
 namespace NDb
 {
@@ -19,7 +19,7 @@ class CCommandsHistory;
 // General handler for messages and packets
 // Particular types (LAN, NivalNet) inherit from it
 
-interface CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBase, public CObjectBase
+struct CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBase, public CObjectBase
 {
 public:
 	enum ENetMode

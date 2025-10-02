@@ -13,7 +13,7 @@ enum
 	// +2, +3, +4, +5 - single string windows.
 };
 
-interface IConsoleBuffer : public CObjectBase
+struct IConsoleBuffer : public CObjectBase
 {
 	enum { tidTypeID = 0 };
 

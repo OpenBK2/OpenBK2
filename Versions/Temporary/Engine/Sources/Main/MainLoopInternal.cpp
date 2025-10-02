@@ -161,7 +161,7 @@ void SetInputEnabled( bool bEnabled )
 	bInputEnabled = bEnabled;
 }
 
-void Serialize( IBinSaver &saver, interface IProgressHook *pHook )
+void Serialize( IBinSaver &saver, struct IProgressHook *pHook )
 {
 	SerializeShared( &saver );
 	NSingleton::Serialize( 1, saver );

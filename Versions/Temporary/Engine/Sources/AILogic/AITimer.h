@@ -3,7 +3,7 @@
 
 class CAITimer
 {
-	static interface IGameTimer *pTimer;
+	static struct IGameTimer *pTimer;
 public:
 	CAITimer();
 	static NTimer::STime GetSegmentTime();
