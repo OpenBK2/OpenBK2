@@ -57,7 +57,6 @@ using namespace nstl;
 //
 typedef __int64 int64;									// due to lack of 'long long' type support
 typedef unsigned __int64 QWORD;					// quadra word
-#define for if(false); else for					// to achive standard variable scope resolving, declared inside 'for'
 
 namespace NTimer
 {
