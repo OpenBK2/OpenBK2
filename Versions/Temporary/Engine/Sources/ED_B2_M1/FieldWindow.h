@@ -43,3 +43,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_DW_FIELD_WINDOW__)
+

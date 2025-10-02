@@ -440,3 +440,4 @@ void Execute( IRender *pRender, NGfx::CRenderContext *pRC, const CTransformStack
 //START_REGISTER(GSceneInternal)
 //	REGISTER_VAR( "gfx_depth_sort", NGlobal::VarBoolHandler, &bUseHWHSR, 1, true )
 //FINISH_REGISTER
+

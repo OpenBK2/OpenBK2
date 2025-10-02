@@ -35,3 +35,4 @@ public:
 	int GetImagePosY() const { return nCurrY * nScreenSizeY; }
 };
 
+

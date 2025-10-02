@@ -201,3 +201,4 @@ interface ICamera : public CObjectBase
 SCENEB2_EXPORT ICamera* CreateCamera();
 inline ICamera* Camera() { return Singleton<ICamera>(); }
 
+

@@ -27,3 +27,4 @@ private:
 };
 
 #endif // !defined(__PROGRESS_BAR_WINDOW__)
+

@@ -282,3 +282,4 @@ void CTriVertexCacheOptimizer::Optimize( vector<STriangle> *pTris, vector<WORD> 
 }
 
 }
+

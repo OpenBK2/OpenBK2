@@ -560,3 +560,4 @@ void CFormationsState::ClearMaskManipulator()
 	}
 }
 
+

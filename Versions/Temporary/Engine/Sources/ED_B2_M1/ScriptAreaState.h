@@ -92,3 +92,4 @@ public:
 };
 
 #endif // #if !defined( __SCRIPT_AREA_STATE__ )
+

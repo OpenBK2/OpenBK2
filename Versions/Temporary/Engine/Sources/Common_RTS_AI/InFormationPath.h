@@ -11,3 +11,4 @@ class CInFormationPath : public CInGroupPathBasis
 public:
 };
 
+

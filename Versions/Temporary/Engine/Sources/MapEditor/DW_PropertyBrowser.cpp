@@ -61,3 +61,4 @@ void CDWPropertyBrowser::OnSize( UINT nType, int cx, int cy )
 // basement storage  
 
 
+

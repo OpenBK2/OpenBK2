@@ -28,3 +28,4 @@ interface IVisitor : public CObjectBase
 };
 }
 
+

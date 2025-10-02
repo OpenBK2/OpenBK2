@@ -833,3 +833,4 @@ int RESearch::Substitute(CharacterIndexer &ci, char *src, char *dst) {
 	*dst = (char) 0;
 	return 1;
 }
+

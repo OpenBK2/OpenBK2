@@ -816,3 +816,4 @@ void CMoviesEditorWindow::OnContextMenu( CWnd *pWnd, CPoint point )
 }
 
 
+

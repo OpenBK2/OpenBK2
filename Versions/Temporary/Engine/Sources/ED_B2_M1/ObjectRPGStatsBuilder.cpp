@@ -88,3 +88,4 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 
 // basement storage  
 
+

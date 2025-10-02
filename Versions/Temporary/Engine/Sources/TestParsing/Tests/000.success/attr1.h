@@ -5,3 +5,4 @@ attribute a4(WORD);
 attribute a5( DWORD);
 attribute a6(string );
 attribute a7( hexbinary );
+

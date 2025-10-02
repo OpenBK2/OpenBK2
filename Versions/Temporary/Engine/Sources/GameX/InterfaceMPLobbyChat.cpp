@@ -236,3 +236,4 @@ int CInterfaceMPLobby::GetButtonState( const string &szNick )
 	return 0;
 }
 
+

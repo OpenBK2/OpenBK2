@@ -714,3 +714,4 @@ CAIUnit* CMechUnitSupportFireState::GetTargetUnit() const
 
 REGISTER_SAVELOAD_CLASS( 0x1915D340, CMechUnitSupportFireState );
 
+

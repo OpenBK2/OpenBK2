@@ -1168,3 +1168,4 @@ REGISTER_SAVELOAD_CLASS_NM( 0x171C4C40, CReinfData, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS_NM( 0x171C4C41, CReinfViewer, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS_NM( 0x171C5440, CLeaderInfo, CInterfaceArmyScreen )
 
+

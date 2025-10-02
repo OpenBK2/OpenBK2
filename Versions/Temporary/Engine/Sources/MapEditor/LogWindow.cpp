@@ -88,3 +88,4 @@ bool CLogWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 
 // basement storage  
 
+

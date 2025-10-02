@@ -372,3 +372,4 @@ void CICProfileManager::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x19113481, CInterfaceProfileManager )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_PROFILE_MENU, CICProfileManager )
 
+

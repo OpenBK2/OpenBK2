@@ -127,3 +127,4 @@ void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const flo
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x12041162, CBind )
 REGISTER_SAVELOAD_CLASS( 0x2013BC80, CAnimatedBound )
+

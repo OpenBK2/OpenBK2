@@ -5,3 +5,4 @@ struct S
 };
 
 typedef S *S_Reference;
+

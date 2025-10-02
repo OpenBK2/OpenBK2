@@ -929,3 +929,4 @@ void CWindowSimpleSharedState::UndoRemove( const string & szTypeName, const CDBI
 }
 
 
+

@@ -33,3 +33,4 @@ void CPresizePath::OnSerialize( IBinSaver &saver )
   SerializeBasePathUnit( saver, 2, &pUnit );
 }
 
+

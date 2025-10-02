@@ -96,3 +96,4 @@ void CReinfPointsTypedTemplateAddDlg::OnBnClickedTemplate()
 }
 
 
+

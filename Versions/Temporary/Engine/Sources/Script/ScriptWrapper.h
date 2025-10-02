@@ -23,3 +23,4 @@ namespace NScript
 SCRIPT_EXPORT void RegisterCommonFunctionsToSaveLoad();
 SCRIPT_EXPORT void AddScriptFunctionsToSaveLoad( const SRegFunction *pRegList );
 }
+

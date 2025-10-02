@@ -257,3 +257,4 @@ int SField::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x14130C40, SField ) 
+

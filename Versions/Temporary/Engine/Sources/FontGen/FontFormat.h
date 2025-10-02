@@ -64,3 +64,4 @@ public:
 };
 
 #endif // __FONTFORMAT_H__
+

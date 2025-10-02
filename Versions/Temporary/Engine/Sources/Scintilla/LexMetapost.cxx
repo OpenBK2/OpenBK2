@@ -318,3 +318,4 @@ static const char * const metapostWordListDesc[] = {
 } ;
 
 LexerModule lmMETAPOST(SCLEX_METAPOST, ColouriseMETAPOSTDoc, "metapost", 0, metapostWordListDesc);
+

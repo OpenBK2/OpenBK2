@@ -346,3 +346,4 @@ static const char * const forthWordLists[] = {
         };
 
 LexerModule lmForth(SCLEX_FORTH, ColouriseForthDoc, "forth",FoldForthDoc,forthWordLists);
+

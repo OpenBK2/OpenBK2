@@ -30,3 +30,4 @@ public:
 	IWindow *CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen );
 };
 
+

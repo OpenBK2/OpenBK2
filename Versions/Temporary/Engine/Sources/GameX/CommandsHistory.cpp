@@ -198,3 +198,4 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x1007AB80, CCommandsHistory );
+

@@ -981,3 +981,4 @@ bool CAITransportUnit::CalculateUnitVisibility4Party( const BYTE party )
 		return CMilitaryCar::CalculateUnitVisibility4Party( party );
 }
 
+

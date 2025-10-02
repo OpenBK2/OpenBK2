@@ -278,3 +278,4 @@ struct SDBPtrHash
 	pTemp->ReportMetaInfo();			\
 	} } init##name##N;
 
+

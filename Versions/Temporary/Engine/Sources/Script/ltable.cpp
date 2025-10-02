@@ -65,3 +65,4 @@ const TObject *luaH_getglobal (lua_State *L, const char *name) {
   return gt->GetStr( luaS_new(L, name) );
 }
 
+

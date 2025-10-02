@@ -42,3 +42,4 @@ NDb::NTypeDef::STypeDef* GetRealType( NDb::NTypeDef::STypeDef *pType )
 
 }
 
+

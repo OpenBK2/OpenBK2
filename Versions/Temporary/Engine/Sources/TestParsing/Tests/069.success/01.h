@@ -8,3 +8,4 @@ class A
   [nocode]
   int n_vector[10], n1, n_unbound[];
 };
+

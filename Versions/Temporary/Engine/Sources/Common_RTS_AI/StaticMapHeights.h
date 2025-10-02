@@ -79,3 +79,4 @@ public:
 	const float GetZ( const CVec3 &vPoint ) const { return GetZ( vPoint.x, vPoint.y ); }
 };
 
+

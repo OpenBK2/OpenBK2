@@ -99,3 +99,4 @@ void CTestClientApp::Segment()
 	pConsole->Segment();
 }
 
+

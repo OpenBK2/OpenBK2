@@ -48,3 +48,4 @@ CVertexShader* CreateVertexShader( const string &szName );
 
 } // NAMESPACE
 
+

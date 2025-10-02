@@ -338,3 +338,4 @@ void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *
 
 }
 
+

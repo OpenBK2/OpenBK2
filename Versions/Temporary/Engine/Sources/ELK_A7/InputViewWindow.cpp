@@ -276,3 +276,4 @@ void CInputViewWindow::LoadGameImage( const string &rszGameImagePath )
 }
 
 
+

@@ -27,3 +27,4 @@ static struct SNormalizeInit
 	}
 } normalizeInit;
 
+

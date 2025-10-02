@@ -50,3 +50,4 @@ void CCommandsBase::PreprocessLine( string *pszLine, vector<string> *pszWords )
 	NStr::ToLower( &(*pszWords)[0] );
 }
 
+

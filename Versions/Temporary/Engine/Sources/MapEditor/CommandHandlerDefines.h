@@ -4,3 +4,4 @@
 
 
 #endif // !defined(__MAP_EDITOR__COMMAND_HANDLER_DEFINES__)
+

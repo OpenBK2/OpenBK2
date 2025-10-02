@@ -105,3 +105,4 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 
 // basement storage  
 
+

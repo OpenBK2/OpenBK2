@@ -955,3 +955,4 @@ bool CWindowEditLine::ProcessEvent( const struct SGameMessage &msg )
 	else 
 		return CWindow::ProcessEvent( msg );
 }
+

@@ -1262,3 +1262,4 @@ REGISTER_VAR_EX( "ui_common_show_warnings", NGlobal::VarBoolHandler, &s_bUICommo
 
 FINISH_REGISTER
 
+

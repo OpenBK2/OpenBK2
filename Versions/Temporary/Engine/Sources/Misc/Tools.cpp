@@ -26,3 +26,4 @@ const char * __stdcall StrFmt( const char *pszFormat, ... )
 	va_end( va );
 	return charBuff;
 }
+

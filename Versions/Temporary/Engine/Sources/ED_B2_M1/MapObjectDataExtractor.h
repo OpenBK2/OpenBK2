@@ -10,3 +10,4 @@ class CMapObjectDataExtractor : public CBasicDataExtractor
 	bool GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator );
 };
 
+

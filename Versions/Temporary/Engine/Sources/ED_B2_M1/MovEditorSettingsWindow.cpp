@@ -36,3 +36,4 @@ BOOL CMovEditorSettingsDlg::OnInitDialog()
 }
 
 
+

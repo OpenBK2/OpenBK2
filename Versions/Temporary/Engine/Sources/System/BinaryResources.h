@@ -11,3 +11,4 @@ namespace NBinResources
 	string GetExistentBinaryFileName( const string &rszDirPrefix, const int nRecordID, const GUID &uid );
 }
 
+

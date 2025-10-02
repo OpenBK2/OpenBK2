@@ -99,3 +99,4 @@ void CICMissionMovieBorder::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x17149C80, CInterfaceMissionMovieBorder );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_BORDER, CICMissionMovieBorder );
 
+

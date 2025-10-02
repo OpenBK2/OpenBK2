@@ -280,3 +280,4 @@ using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x201183C0, CLightmapTexture )
 REGISTER_SAVELOAD_CLASS( 0x20119C00, CLMGeometryGen )
 BASIC_REGISTER_CLASS( CLightmapTextureCache )
+

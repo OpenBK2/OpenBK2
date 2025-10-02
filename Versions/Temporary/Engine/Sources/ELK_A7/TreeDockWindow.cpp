@@ -82,3 +82,4 @@ void CTreeDockWindow::OnSize( UINT nType, int cx, int cy )
 	}
 }
 
+

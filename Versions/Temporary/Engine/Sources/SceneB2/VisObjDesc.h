@@ -214,3 +214,4 @@ public:
 	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 };
 
+

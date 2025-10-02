@@ -543,3 +543,4 @@ B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::S
 B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator );
 
 
+

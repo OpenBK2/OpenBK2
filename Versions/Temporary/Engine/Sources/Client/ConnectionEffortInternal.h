@@ -113,3 +113,4 @@ public:
 	class CConnectionEffort* CreateNextEffort( const int nOurGameID ) { return 0; }
 };
 
+

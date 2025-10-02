@@ -21,3 +21,4 @@ interface ITerrainSounds : public virtual CObjectBase
 	virtual float GetSoundVolume( int nTerrainType ) const = 0 ;
 };
 
+

@@ -69,3 +69,4 @@ public:
 	afx_msg void OnBnClickedParamType();
 };
 
+

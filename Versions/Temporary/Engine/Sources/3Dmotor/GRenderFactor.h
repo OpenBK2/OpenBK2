@@ -24,3 +24,4 @@ NGfx::CTexture* Get16bitDepthLookup();
 
 }
 #endif
+

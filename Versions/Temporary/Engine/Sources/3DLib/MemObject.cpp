@@ -406,3 +406,4 @@ void CMemObject::CalcBound( SBound *pRes ) const
 }
 
 REGISTER_SAVELOAD_CLASS( 0x2012CD00, CMemObject )
+

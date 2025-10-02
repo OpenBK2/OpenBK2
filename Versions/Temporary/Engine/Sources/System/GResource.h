@@ -205,3 +205,4 @@ template<class T>
 SIntResKey GetIntResKey( T *pResource ) { return SIntResKey( pResource->uid, pResource->GetRecordID() ); }
 
 #endif
+

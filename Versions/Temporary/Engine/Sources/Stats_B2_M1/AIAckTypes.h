@@ -23,3 +23,4 @@ struct SAIBoredAcknowledgement
 		: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), bPresent( _bPresent ) { }
 };
 
+

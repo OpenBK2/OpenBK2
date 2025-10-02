@@ -6,3 +6,4 @@
 // The License.txt file describes the conditions under which this software may be distributed.
 
 #define IDC_MARGIN                 400
+

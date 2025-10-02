@@ -537,3 +537,4 @@ int CStringManager::Compare( const string &rszLeft, const string &rszRight, bool
 
 // basement storage  
 
+

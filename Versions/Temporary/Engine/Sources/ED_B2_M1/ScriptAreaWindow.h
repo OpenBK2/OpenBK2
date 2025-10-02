@@ -104,3 +104,4 @@ public:
 };
 
 #endif // #if !defined( __SCRIPT_AREA_WINDOW__ )
+

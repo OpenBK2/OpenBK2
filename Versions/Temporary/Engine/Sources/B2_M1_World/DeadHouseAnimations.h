@@ -32,3 +32,4 @@ public:
 	const bool IsEmpty() const { return animations.empty(); }
 };
 
+

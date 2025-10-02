@@ -9,3 +9,4 @@ class CVSODataExtractor : public CBasicDataExtractor
 	bool GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator );
 };
 
+

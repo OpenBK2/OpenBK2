@@ -277,3 +277,4 @@ START_REGISTER(MusicSystem)
 REGISTER_VAR_EX( "Sound.MusicVolume", NGlobal::VarFloatHandler, &s_fMusicVolume, 0.99f, STORAGE_USER );
 FINISH_REGISTER
 
+

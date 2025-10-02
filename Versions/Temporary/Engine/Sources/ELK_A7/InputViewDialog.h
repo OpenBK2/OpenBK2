@@ -58,3 +58,4 @@ protected:
 };
 
 #endif // !defined(__ELK_INPUT_VIEW_DIALOG__)
+

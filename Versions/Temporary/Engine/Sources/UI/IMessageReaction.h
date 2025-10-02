@@ -23,3 +23,4 @@ interface IMessageCheck : public CObjectBase
 };
 
 #endif //_IReaction_h_included_
+

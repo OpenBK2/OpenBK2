@@ -495,3 +495,4 @@ public:
 	void OnChangeForcedAction( NDb::EUserAction eOldForcedAction );
 };
 
+

@@ -66,3 +66,4 @@ public:
 };
 
 #endif // #if !defined(__POINTS_LIST_DIALOG__)
+

@@ -43,3 +43,4 @@ CUIWindow *CreateUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::
 	return pUIWindow;
 }
 
+

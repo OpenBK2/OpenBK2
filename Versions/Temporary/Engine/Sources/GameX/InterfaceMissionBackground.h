@@ -48,3 +48,4 @@ public:
 };
 
 #endif //__INTERFACE_MISSION_BACKGROUND_H__
+

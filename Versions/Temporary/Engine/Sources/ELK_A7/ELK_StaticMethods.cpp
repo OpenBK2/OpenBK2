@@ -1645,3 +1645,4 @@ void CELK::DBIndex( const string &rszDBFolder )
 	pMainFileCreator = 0;
 }
 
+

@@ -65,3 +65,4 @@ struct SKnownEnum<NDb::NTypeDef::ETypeType>
 };
 
 
+

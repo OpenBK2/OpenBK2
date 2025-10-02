@@ -145,3 +145,4 @@ public:
 };
 
 #endif // !defined(__MULTI_INPUT_STATE__)
+

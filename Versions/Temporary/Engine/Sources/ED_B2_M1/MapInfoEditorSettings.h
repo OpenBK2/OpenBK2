@@ -50,3 +50,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_EDITOR_SETTINGS__)
+

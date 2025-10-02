@@ -12,3 +12,4 @@ interface IAICmdsAutoMagic : public CObjectBase
 };
 IAICmdsAutoMagic *CreateDefaultCmdsCreator();
 
+

@@ -67,3 +67,4 @@ interface IManuver : public CAIObjectBase
 	//CRAP}
 };
 #endif //IMANUVER_H
+

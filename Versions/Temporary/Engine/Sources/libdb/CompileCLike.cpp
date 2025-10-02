@@ -41,3 +41,4 @@ bool Compile( vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CT
 
 }
 
+

@@ -1010,3 +1010,4 @@ EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator* pManipulato
 	return ER_SUCCESS;
 }
 
+

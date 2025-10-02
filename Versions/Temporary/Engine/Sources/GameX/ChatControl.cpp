@@ -43,3 +43,4 @@ void CChatControlWrapper::AddItem( const wstring &wszText )
 	pList->Update();
 }
 
+

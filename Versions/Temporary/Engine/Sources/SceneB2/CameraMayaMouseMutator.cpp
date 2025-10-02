@@ -103,3 +103,4 @@ REGISTER_VAR_EX( "maya_camera_zoom_sensetivity", NGlobal::VarFloatHandler, &s_fM
 REGISTER_VAR_EX( "maya_free_camera", NGlobal::VarBoolHandler, &s_bMayaFreeCamera, false, STORAGE_NONE )
 FINISH_REGISTER
 
+

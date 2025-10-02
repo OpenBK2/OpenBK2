@@ -56,3 +56,4 @@ public:
 
 
 #endif //__BITMAP_H__
+

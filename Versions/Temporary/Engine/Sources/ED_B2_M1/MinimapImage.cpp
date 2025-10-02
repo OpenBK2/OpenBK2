@@ -1321,3 +1321,4 @@ CFileStream imageStream(  itCreateParameter->szImageFileName, CFileStream::CREAT
 //NImage::FlipY( minimapImage );
 NImage::SaveAsTGA( minimapImage, &imageStream );
 /**/
+

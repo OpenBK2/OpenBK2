@@ -65,3 +65,4 @@ public:
 	void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
+

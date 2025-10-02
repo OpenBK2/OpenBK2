@@ -54,3 +54,4 @@ interface IFileCreator : public CObjectBase
 };
 
 }
+

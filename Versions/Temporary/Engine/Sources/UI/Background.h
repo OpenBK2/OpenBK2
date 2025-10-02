@@ -43,3 +43,4 @@ public:
 };
 
 #endif // !defined(AFX_BACKGROUND_H__E331DA1D_E450_4271_9D2D_E39295F8A0AF__INCLUDED_)
+

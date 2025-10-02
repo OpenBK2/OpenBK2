@@ -1836,3 +1836,4 @@ if ( params.bMaximized )
 	PostMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 );
 }
 /**/
+

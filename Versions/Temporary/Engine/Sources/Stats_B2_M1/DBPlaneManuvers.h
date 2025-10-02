@@ -258,3 +258,4 @@ struct SKnownEnum<NDb::EManuverID>
 	static string ToString( NDb::EManuverID eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EManuverID ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EManuverID( szValue ); }
 };
+

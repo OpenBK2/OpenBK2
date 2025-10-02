@@ -78,3 +78,4 @@ inline void DoRadixSort( const unsigned int *pSrc, int nSize, vector<int> *pRes 
 	RadixSortStage( 16, (const int*)pSrc, pRes, RF_BACK );
 	RadixSortStage( 24, (const int*)pSrc, pRes, RF_NORMAL );
 }
+

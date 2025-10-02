@@ -1131,3 +1131,4 @@ START_REGISTER(PathFinderVars)
 REGISTER_VAR_EX( "warfog_bound_width", NGlobal::VarFloatHandler, &fWarFogBoundWidth, 256.0f, STORAGE_NONE );
 FINISH_REGISTER
 
+

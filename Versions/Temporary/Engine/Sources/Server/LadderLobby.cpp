@@ -1018,3 +1018,4 @@ namespace NLadder{
 #undef STEP_LENGTH_TIME
 
 BASIC_REGISTER_CLASS( CLadderClient ) 
+

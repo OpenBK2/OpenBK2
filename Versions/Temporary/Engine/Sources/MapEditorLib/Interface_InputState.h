@@ -44,3 +44,4 @@ interface IInputState
 };
 
 #endif // !defined(__INTERFACE__INPUT_STATE__)
+

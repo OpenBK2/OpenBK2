@@ -594,3 +594,4 @@ using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x00442130, CDecalGeometry )
 REGISTER_SAVELOAD_CLASS( 0x004c2170, CExplosionDecalGeometry )
 REGISTER_SAVELOAD_CLASS( 0x006c2160, CPerPolyDecalGeometry )
+

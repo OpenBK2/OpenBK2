@@ -113,3 +113,4 @@ protected:
 
 #endif // !defined(AFX_LUAEDITOR_H__C002AF8D_DFEF_4577_A494_10F2B3DF2458__INCLUDED_)
 
+

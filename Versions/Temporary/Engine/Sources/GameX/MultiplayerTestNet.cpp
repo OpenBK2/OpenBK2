@@ -285,3 +285,4 @@ bool CMPUITestServerClient::OnB2GameRoomPlayerPacket( class CB2GameRoomPlayerPac
 REGISTER_SAVELOAD_CLASS( 0x17130C40, CEmptyServerClient );
 //REGISTER_SAVELOAD_CLASS( 0x17130B00, CMPUITestServerClient );
 
+

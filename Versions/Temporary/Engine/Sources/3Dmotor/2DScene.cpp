@@ -97,3 +97,4 @@ I2DScene* Make2DScene()
 } // NAMESOACE
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0xF2005171, C2DScene );
+

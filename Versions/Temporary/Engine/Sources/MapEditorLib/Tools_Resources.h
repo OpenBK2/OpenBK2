@@ -300,3 +300,4 @@ void String2File( const string &rszText, bool bUnicode, const string &rszTextPat
 void String2File( vector<BYTE> *pBuffer, const wstring &rwszText, bool bAdd_0D );
 void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_0D );
 
+

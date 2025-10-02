@@ -219,3 +219,4 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 		}
 	}
 }
+

@@ -348,3 +348,4 @@ bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGe
 	return bRes;
 }
 
+

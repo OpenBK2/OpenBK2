@@ -36,3 +36,4 @@ public:
 };
 
 #endif // !defined(__CREATE_FILTER_NAME_DIALOG__)
+

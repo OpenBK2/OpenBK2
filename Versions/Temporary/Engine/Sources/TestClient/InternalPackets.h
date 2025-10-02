@@ -32,3 +32,4 @@ public:
 	CTestSpecGameInfo( const string &_szMapName ) : szMapName( _szMapName ) { }
 };
 
+

@@ -102,3 +102,4 @@ public:
 	void SetCrewSoldier( IMOUnit *pCrewSoldier ) { pOneFromCrew = pCrewSoldier; }
 };
 
+

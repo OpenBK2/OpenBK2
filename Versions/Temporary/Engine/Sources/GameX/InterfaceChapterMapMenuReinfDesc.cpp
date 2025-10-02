@@ -620,3 +620,4 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const string &szSender, bool bE
 	return true;
 }
 
+

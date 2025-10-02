@@ -28,3 +28,4 @@ bool CDeadHouseAnimation::Update( const NTimer::STime &time )
 	return true;
 }
 
+

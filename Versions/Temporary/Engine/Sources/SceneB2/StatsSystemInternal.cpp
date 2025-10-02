@@ -25,3 +25,4 @@ IStatSystem *CreateStatSystem()
 
 REGISTER_SAVELOAD_CLASS( 0x110AA3C0, CStatsSystem );
 
+

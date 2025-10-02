@@ -51,3 +51,4 @@ SYSTEM_EXPORT void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor = 0x
 SYSTEM_EXPORT bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor );
 SYSTEM_EXPORT bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor );
 SYSTEM_EXPORT void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );
+

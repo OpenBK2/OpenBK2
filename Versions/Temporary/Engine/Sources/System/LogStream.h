@@ -56,3 +56,4 @@ inline CLogStream& endl( CLogStream& sStream )
 }
 
 EXTERNVAR SYSTEM_EXPORT CLogStream csSystem, csScript;
+

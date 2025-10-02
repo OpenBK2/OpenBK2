@@ -26,3 +26,4 @@ namespace nstl
 		insert_iterator<_Container>& operator++(int) { return *this; }
 	};
 }
+

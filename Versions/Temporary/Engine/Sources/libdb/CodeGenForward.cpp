@@ -34,3 +34,4 @@ void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D04, CForwardDefinition );
+

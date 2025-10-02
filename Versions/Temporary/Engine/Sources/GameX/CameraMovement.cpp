@@ -61,3 +61,4 @@ void CCameraMovement::SetFinishPoint( const int nPoint, const int _nTimeToMove, 
 		bMovementFinished = false;
 	}
 }
+

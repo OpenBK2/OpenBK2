@@ -12,3 +12,4 @@ class CEditorTestInterface : public CEditorInterfaceBase
 INTERFACE_COMMAND_DECLARE( CEditorTestInterfaceCommand, CEditorTestInterface )
 
 #endif // !defined(__EDITOR_TEST_INTERFACE__)
+

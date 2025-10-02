@@ -35,3 +35,4 @@ int CKillCorpseExecutor::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x30147C40, CKillCorpseExecutor )
+

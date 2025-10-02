@@ -12,3 +12,4 @@ class CSceneFragments;
 void RenderShowLightmap( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, const CSceneFragments &scene );
 }
+

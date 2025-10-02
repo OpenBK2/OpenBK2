@@ -38,3 +38,4 @@ namespace NDb
 		DWORD CalcCheckSum() const { return 0; }
 	};
 }
+

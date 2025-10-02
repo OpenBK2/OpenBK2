@@ -38,3 +38,4 @@ protected:
 };
 
 #endif // !defined(__TEXTURE_EDITOR__)
+

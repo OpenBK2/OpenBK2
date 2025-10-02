@@ -32,3 +32,4 @@ int CExecutorSmokeShots::operator&( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( 0x1913B380, CExecutorSmokeShots )
 
+

@@ -70,3 +70,4 @@ void Reload( const string &szTextFileName )
 }
 
 }
+

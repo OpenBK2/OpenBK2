@@ -85,3 +85,4 @@ public:
 	virtual bool IsBridge( const int nX, const int nY ) const;
 };
 
+

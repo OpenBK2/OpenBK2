@@ -722,3 +722,4 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 //}
 
 }
+

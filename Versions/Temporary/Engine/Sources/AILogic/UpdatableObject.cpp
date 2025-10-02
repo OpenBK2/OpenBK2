@@ -20,3 +20,4 @@ const bool CUpdatableObj::IsVisibleByPlayer()
 	return IsVisible( theDipl.GetMyParty() );
 }
 
+

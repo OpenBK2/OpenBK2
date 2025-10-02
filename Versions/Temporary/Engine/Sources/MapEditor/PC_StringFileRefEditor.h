@@ -23,3 +23,4 @@ private:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_FILE_REF__)
+

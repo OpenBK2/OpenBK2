@@ -23,3 +23,4 @@ class CStaticMapHeights* GetHeights()
 	return pAIMap->GetHeights();
 }
 
+

@@ -107,3 +107,4 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&eState); f.Add(4,&visObjSelection); f.Add(5,&vPos); f.Add(6,&fScale); f.Add(7,&eSelType); f.Add(8,&timeStart); f.Add(9,&nFadeIn); f.Add(10,&nFadeOut); return 0; }
 };
 
+

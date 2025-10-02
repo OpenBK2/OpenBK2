@@ -111,3 +111,4 @@ public:
 
 /**/
 #endif // #ifndef __ADV_CLIPBOARD_WINDOW__
+

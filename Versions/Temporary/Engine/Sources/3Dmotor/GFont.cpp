@@ -16,3 +16,4 @@ void CFileFont::Recalc()
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x02321160, CFileFont );
+

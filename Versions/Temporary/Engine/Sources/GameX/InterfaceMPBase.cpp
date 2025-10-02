@@ -34,3 +34,4 @@ bool CInterfaceMPScreenBase::StepLocal( bool bAppActive )
 	return bResult;
 }
 
+

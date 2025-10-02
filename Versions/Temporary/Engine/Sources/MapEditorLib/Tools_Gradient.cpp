@@ -178,3 +178,4 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 
 // basement storage  
 
+

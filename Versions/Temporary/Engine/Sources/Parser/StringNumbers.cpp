@@ -84,3 +84,4 @@ bool IsFloat( const string &szVal )
 
 }
 
+

@@ -2,3 +2,4 @@
 
 IBinSaver* CreateLogSaver( string *pszLog );
 
+

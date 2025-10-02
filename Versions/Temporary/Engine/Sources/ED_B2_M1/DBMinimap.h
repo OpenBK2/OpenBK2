@@ -173,3 +173,4 @@ struct SKnownEnum<NDb::EImageScaleMethod>
 	static string ToString( NDb::EImageScaleMethod eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EImageScaleMethod ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EImageScaleMethod( szValue ); }
 };
+

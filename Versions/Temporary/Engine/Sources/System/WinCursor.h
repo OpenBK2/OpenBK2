@@ -8,3 +8,4 @@ namespace NWinCursor
 	SYSTEM_EXPORT HCURSOR (LoadCursor)( const string &szFileName );
 }
 
+

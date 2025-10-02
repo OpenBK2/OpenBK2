@@ -155,3 +155,4 @@ void CMissionSuperWeapon::UpdateObject( CMapObj *_pMO )
 
 REGISTER_SAVELOAD_CLASS( 0x17249BC0, CMissionSuperWeapon )
 
+

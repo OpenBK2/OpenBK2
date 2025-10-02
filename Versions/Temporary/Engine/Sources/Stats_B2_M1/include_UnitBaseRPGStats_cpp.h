@@ -145,3 +145,4 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 }
 
 }
+

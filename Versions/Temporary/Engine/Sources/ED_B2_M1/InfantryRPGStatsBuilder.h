@@ -29,3 +29,4 @@ protected:
 };
 
 #endif // !defined(__INFANTRYRPGSTATS_BUILDER__)
+

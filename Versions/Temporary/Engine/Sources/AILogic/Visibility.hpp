@@ -74,3 +74,4 @@ CWarFogVisibility* CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFog
 }
 
 
+

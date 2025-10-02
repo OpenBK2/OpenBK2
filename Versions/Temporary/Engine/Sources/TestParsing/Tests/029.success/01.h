@@ -26,3 +26,4 @@ e_1,
 };
 
 typedef e s_enum4;
+

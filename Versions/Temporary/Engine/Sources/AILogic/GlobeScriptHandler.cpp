@@ -4,3 +4,4 @@
 
 BASIC_REGISTER_CLASS( IGlobeScriptHandler );
 
+

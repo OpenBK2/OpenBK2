@@ -41,3 +41,4 @@ struct SReplayInfo
 };
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI );
 
+

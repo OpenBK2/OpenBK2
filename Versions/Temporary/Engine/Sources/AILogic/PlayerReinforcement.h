@@ -128,3 +128,4 @@ public:
 	void PlaceInitialUnits();				// Cheating method for placing a reinforcement and not reporting it
 	void GiveReinforcementCalls( const int nPlayer, const int nCalls, const bool bResetCounter );		// Adjust calls number (add/subtract) externally
 };
+

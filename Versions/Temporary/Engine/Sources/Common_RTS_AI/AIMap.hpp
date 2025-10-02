@@ -382,3 +382,4 @@ inline void CAIMap::GetTilesCoveredByRectSides( const SRect &rect, TContainter *
 	MakeLine2( rect.v4.x/GetTileSize(), rect.v4.y/GetTileSize(), rect.v1.x/GetTileSize(), rect.v1.y/GetTileSize(), a );
 }
 
+

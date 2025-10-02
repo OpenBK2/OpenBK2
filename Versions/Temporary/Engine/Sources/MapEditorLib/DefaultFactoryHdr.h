@@ -40,3 +40,4 @@ static struct SRegister##TYPE##name##classname##AutoMagicDelayed							\
 } aRegister##TYPE##name##classname##AutoMagicDelayed;
 */
 
+

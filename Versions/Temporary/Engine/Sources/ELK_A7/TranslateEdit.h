@@ -41,3 +41,4 @@ protected:
 };
 
 #endif // !defined(__ELK_TRANSLATE_EDIT__)
+

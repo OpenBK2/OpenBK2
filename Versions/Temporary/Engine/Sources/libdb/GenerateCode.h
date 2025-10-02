@@ -7,3 +7,4 @@ namespace NCodeGen
 	void GenerateCode( CCodeStructure *pCodeStructure, const string &szRootDir );
 }
 
+

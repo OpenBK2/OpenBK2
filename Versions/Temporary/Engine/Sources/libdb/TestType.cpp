@@ -224,3 +224,4 @@ void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 }
 
 }
+

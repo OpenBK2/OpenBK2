@@ -61,3 +61,4 @@ int AllocateNewObjectID( const string &szClassTypeName )
 }
 }
 
+

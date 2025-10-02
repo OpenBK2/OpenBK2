@@ -16,3 +16,4 @@ namespace NProgressBar
 
 
 #endif // !defined(__PROGRESS_BAR_INTERFACE__)
+

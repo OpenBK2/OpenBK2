@@ -43,3 +43,4 @@ void RegisterMapEditorTypeDelayed( const string &szType, const string &szName, O
 
 const IEditorModuleRegistrator* GetEditorModuleRegistrator() { return &theMapEditorModuleRegistrator; }
 
+

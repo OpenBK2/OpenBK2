@@ -257,3 +257,4 @@ const int CEffectorB2Move::Segment( const int timeDiff, interface IScreen *pScre
 REGISTER_SAVELOAD_CLASS(0x171B2B80,SWindowContextB2Move)
 REGISTER_SAVELOAD_CLASS(0x171B1C42,CEffectorB2Move)
 
+

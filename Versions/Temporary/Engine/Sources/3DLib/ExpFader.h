@@ -39,3 +39,4 @@ inline float GefFadeLatency( float fLatency )
 
 } // namespace NGScene
 
+

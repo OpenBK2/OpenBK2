@@ -372,3 +372,4 @@ void CScriptEditor::OnSize(UINT nType, int cx, int cy)
 	m_ctrlOK.SetWindowPos( 0, pt.x, pt.y, 0, 0, SWP_NOOWNERZORDER | SWP_NOSIZE | SWP_NOZORDER );
 }
 
+

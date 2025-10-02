@@ -9,3 +9,4 @@ void PostLoad( bool bInEditor )
     fPhaseOffset += DEF_WAVES_PHASE_OFFSET_VAR * ( 0.5f + (float)rand() / RAND_MAX * 0.5f );
   }
 }
+

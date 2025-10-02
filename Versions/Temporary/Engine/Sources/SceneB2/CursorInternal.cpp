@@ -146,3 +146,4 @@ ICursor *CreateCursor()
 
 REGISTER_SAVELOAD_CLASS( 0x1007AC00, CCursor )
 
+

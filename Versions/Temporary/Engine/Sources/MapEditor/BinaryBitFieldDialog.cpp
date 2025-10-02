@@ -126,3 +126,4 @@ void CBinaryBitFieldDialog::OnOK()
 		}
 	}
 }
+

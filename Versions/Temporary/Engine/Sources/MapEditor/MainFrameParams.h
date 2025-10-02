@@ -24,3 +24,4 @@ struct SMainFrameParams
 };
 
 #endif // !defined(__MAIN_FRAME__PARAMS__)
+

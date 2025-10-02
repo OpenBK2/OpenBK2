@@ -330,3 +330,4 @@ bool SaveAsTGA( const CArray2D<TColor> &image, CDataStream *pStream )
 }
 
 }
+

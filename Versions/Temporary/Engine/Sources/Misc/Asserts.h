@@ -111,3 +111,4 @@ inline TOut checked_cast_ptr( TIn ptr )
 #undef ASSERT
 #endif
 #define ASSERT(a) NI_ASSERT(a,#a)
+

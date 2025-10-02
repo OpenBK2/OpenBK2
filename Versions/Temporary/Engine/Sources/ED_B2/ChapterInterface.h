@@ -9,3 +9,4 @@ class CChapterInterface : public CEditorInterfaceBase
 
 INTERFACE_COMMAND_DECLARE( CChapterInterfaceCommand, CChapterInterface )
 
+

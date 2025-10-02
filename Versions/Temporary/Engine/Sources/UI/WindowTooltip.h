@@ -35,3 +35,4 @@ public:
 	const wstring &GetText() const { return wszText; }
 };
 
+

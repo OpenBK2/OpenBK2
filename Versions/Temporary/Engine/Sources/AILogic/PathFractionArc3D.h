@@ -39,3 +39,4 @@ public:
 	void GetSimplePath( CPathList *pPaths );
 	void Negate() { bNegative = true; }
 };
+

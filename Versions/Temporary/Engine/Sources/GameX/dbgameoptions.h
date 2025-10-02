@@ -144,3 +144,4 @@ struct SKnownEnum<NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEdi
 	static string ToString( NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SOptionSystem::SOptionsCategory::SOptionEntry::EOptionEditorType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SOptionSystem_SOptionsCategory_SOptionEntry_EOptionEditorType( szValue ); }
 };
+

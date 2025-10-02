@@ -81,3 +81,4 @@ public:
 	interface IManuver* CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
 };
 
+

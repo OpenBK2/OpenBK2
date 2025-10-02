@@ -189,3 +189,4 @@ void CTimeCounter::SetVar( const int nIndex, const float fValue )
 }
 
 }
+

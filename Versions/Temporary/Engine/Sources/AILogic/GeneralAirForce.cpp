@@ -426,3 +426,4 @@ void CGeneralAirForce::SetAAVisible( CAIUnit *pUnit, const bool bVisible )
 
 	antiAviation[pUnit->GetUniqueId()]->SetVisible( pUnit, bVisible );
 }
+

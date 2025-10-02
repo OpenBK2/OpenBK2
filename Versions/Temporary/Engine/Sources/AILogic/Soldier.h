@@ -364,3 +364,4 @@ struct SSniperTrace
 */
 
 #endif // __SOLDIER_H__
+

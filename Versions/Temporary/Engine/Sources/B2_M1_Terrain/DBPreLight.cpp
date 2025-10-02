@@ -98,3 +98,4 @@ int STwoSidedLight::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x10082C80, SPreLight ) 
 REGISTER_DATABASE_CLASS( 0x10087440, STwoSidedLight ) 
+

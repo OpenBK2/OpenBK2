@@ -26,3 +26,4 @@ public:
 	CShowLobbyGamesPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) { }
 };
 
+

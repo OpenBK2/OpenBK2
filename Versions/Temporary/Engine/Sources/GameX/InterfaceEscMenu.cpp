@@ -454,3 +454,4 @@ void CICEscMenu::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x170B6B80, CInterfaceEscMenu )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_ESC_MENU, CICEscMenu )
 REGISTER_SAVELOAD_CLASS_NM( 0x170B6B81, CReactions, CInterfaceEscMenu );
+

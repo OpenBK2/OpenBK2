@@ -24,3 +24,4 @@ CDummyInterface::~CDummyInterface()
 REGISTER_SAVELOAD_CLASS( 0x160AC441, CDummyInterface );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_DUMMY, CICDummy );
 
+

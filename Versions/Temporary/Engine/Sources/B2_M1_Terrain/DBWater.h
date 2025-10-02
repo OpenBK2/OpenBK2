@@ -154,3 +154,4 @@ struct SKnownEnum<NDb::SWater::EWaterType>
 	static string ToString( NDb::SWater::EWaterType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SWater::EWaterType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWater_EWaterType( szValue ); }
 };
+

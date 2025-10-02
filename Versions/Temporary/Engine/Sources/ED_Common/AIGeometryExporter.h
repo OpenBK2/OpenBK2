@@ -30,3 +30,4 @@ class CAIGeometryExporter : public CBasicSceneExporter
 };
 
 #endif // !defined(__AIGEOMETRY_EXPORTER__)
+

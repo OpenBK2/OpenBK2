@@ -35,3 +35,4 @@ namespace NEffortsFactory
 	void SetServerInfo( const string &szServerIP, const int nServerPort, const int nGameNetVersion );
 }
 
+

@@ -307,3 +307,4 @@ CEnumEntryNode* CFileNode::FindEnumEntry( const string &szEntyrName, bool bOnlyT
 
 using namespace NLang;
 BASIC_REGISTER_CLASS( CFileNode );
+

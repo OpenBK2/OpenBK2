@@ -103,3 +103,4 @@ void CreateStaticObjectLockedTilesInfo( list<SObjTileInfo> *pTiles,
 	}
 }
 };
+

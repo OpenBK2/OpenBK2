@@ -238,3 +238,4 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 using namespace NModelExporter;
 REGISTER_EXPORTER_IN_DLL( Model, CModelExporter )
 
+

@@ -223,3 +223,4 @@ static const char * const bullantWordListDesc[] = {
 };
 
 LexerModule lmBullant(SCLEX_BULLANT, ColouriseBullantDoc, "bullant", 0, bullantWordListDesc);
+

@@ -277,3 +277,4 @@ const bool CStormableObject::IsAnyInsiderVisible() const
 }
 
 
+

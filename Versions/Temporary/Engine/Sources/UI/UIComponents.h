@@ -25,3 +25,4 @@ interface IFocusNotify : public virtual CObjectBase
 };
 
 #endif //__UI_COMPONENTS_H__
+

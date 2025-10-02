@@ -115,3 +115,4 @@ int SComplexSoundDesc::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x11069BC3, SComplexSoundDesc ) 
+

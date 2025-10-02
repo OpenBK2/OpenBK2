@@ -23,3 +23,4 @@ class CPCBaseDialog : public ICommandHandler
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BASE_DIALOG__)
+

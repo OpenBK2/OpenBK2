@@ -192,3 +192,4 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 
 // basement storage  
 
+

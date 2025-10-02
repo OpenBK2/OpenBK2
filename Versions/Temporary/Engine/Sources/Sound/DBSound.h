@@ -80,3 +80,4 @@ struct SKnownEnum<NDb::ESoundType>
 	static string ToString( NDb::ESoundType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ESoundType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESoundType( szValue ); }
 };
+

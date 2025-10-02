@@ -611,3 +611,4 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	}
 }
 
+

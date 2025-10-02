@@ -27,3 +27,4 @@ private:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_VEC3_COLOR__)
+

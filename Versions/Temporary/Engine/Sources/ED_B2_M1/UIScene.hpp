@@ -24,3 +24,4 @@ public:
 
 #endif // !defined(__UI_SCENE_B2__)
 
+

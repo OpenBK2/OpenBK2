@@ -40,3 +40,4 @@ void CTimeCounter::Advance( float fMult, STime currentTime )
 }
 REGISTER_SAVELOAD_CLASS( 0x0251100c, CCTime )
 
+

@@ -555,3 +555,4 @@ int CDecksSet<T>::operator&( IBinSaver &saver )
 }
 
 #endif // __LISTS_SET_H__
+

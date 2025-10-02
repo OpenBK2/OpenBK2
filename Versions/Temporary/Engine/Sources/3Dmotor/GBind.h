@@ -54,3 +54,4 @@ void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const flo
 } // namespace
 
 #endif
+

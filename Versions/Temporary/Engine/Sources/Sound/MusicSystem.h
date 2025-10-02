@@ -61,3 +61,4 @@ interface IMusicSystem : public CObjectBase
 };
 
 SOUND_EXPORT IMusicSystem * CreateMusicSystem();
+

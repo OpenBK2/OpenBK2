@@ -59,3 +59,4 @@ inline void ReplaceColor( CArray2D<BYTE> *pImage, const BYTE nSrcColor, const BY
 	}
 }
 
+

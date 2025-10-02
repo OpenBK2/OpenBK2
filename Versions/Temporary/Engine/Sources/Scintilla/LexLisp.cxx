@@ -198,3 +198,4 @@ static const char * const lispWordListDesc[] = {
 };
 
 LexerModule lmLISP(SCLEX_LISP, ColouriseLispDoc, "lisp", FoldLispDoc, lispWordListDesc);
+

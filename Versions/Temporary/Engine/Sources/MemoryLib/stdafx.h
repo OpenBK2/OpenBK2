@@ -40,3 +40,4 @@
 void __cdecl DebugTraceMMgr( const char *pszFormat, ... );
 
 #endif // !defined(AFX_STDAFX_H__99C19B29_7D10_46A8_9B06_01AEC226210E__INCLUDED_)
+

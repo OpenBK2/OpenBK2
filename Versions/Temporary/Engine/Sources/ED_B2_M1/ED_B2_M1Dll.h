@@ -7,3 +7,4 @@ EXTERNVAR HINSTANCE theEDB2M1Instance;
 
 #endif // !defined(__EXPORTER_METHODS__)
 
+

@@ -135,3 +135,4 @@ public:
 
 #endif // !defined(__MAPOBJECT_MULTI_STATE__)
 
+

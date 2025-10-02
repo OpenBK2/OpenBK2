@@ -607,3 +607,4 @@
 #define ID_MOVIES_EDITOR_DW													(IDC_DOCKING_WINDOW_0 + 50)
 
 #endif // !defined(__ED_B2_M1__RESOURCE_DEFINES__)
+

@@ -60,3 +60,4 @@ public:
 	float GetWorkDone() const;
 	void CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate );
 };
+

@@ -585,3 +585,4 @@ void CMOUnitHelicopter::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 }
 
+

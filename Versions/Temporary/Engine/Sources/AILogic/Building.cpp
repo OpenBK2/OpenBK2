@@ -1947,3 +1947,4 @@ const float CBuilding::GetMinHP() const
 		return 0.0f;
 }
 
+

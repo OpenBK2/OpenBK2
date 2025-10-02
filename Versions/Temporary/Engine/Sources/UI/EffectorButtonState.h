@@ -29,3 +29,4 @@ public:
 };
 
 #endif //__EFFECTOR_BUTTON_STATE_H__
+

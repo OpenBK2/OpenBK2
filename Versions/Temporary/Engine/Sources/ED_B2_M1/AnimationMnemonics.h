@@ -25,3 +25,4 @@ extern CMayaAnimationMnemonics typeMayaAnimationMnemonics;
 extern CAnimationMnemonics typeAnimationMnemonics;
 
 #endif // !defined(__ANIMATION_MNEMONICS__)
+

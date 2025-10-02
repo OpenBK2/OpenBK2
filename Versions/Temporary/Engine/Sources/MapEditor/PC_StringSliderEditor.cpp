@@ -316,3 +316,4 @@ bool CPCStringSliderEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 
 // basement storage  
 
+

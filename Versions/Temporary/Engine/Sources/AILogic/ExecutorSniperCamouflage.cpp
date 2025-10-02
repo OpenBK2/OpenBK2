@@ -311,3 +311,4 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 	}
 	return false;
 }
+

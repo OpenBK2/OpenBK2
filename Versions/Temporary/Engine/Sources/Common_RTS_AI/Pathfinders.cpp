@@ -8,3 +8,4 @@ void RegisterPathfinderSingleton()
 	NSingleton::RegisterSingleton( new CCommonPathFinder(), CCommonPathFinder::tidTypeID );
 }
 
+

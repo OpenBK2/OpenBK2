@@ -49,3 +49,4 @@ struct SFormationWindowDialogData
 };
 
 #endif//#if !defined(__DIALOG_DATA__)
+

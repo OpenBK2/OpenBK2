@@ -402,3 +402,4 @@ static void FoldSolDoc(unsigned int startPos, int length, int initStyle,
 }
 
 LexerModule lmScriptol(SCLEX_SCRIPTOL, ColouriseSolDoc, "scriptol", FoldSolDoc);
+

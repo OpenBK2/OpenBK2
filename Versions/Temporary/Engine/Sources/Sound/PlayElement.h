@@ -13,3 +13,4 @@ interface IPlayListElement : public CObjectBase
 };
 
 }
+

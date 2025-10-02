@@ -164,3 +164,4 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 }
 
 CEditorAppSpecific theApp;
+

@@ -64,3 +64,4 @@ public:
 	afx_msg void OnLvnItemchangedListObjTypes( NMHDR *pNMHDR, LRESULT *pResult );
 };
 
+

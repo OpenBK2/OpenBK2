@@ -27,3 +27,4 @@ protected:
 };
 
 #endif // !defined(__ANIMATION_BUILDER__)
+

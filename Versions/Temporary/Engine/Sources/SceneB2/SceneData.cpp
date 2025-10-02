@@ -108,3 +108,4 @@ SVisObjSelectionHandler* SSceneData::GetNewSelection()
 
 REGISTER_SAVELOAD_CLASS( 0x3013C400, SSceneData );
 
+

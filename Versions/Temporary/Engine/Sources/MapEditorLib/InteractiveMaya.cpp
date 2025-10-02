@@ -200,3 +200,4 @@ bool CInteractiveMaya::TransactQuery( const string &szScript, string *pszResult 
 	}
 	return false;
 }
+

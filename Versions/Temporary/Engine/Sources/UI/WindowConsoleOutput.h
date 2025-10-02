@@ -52,3 +52,4 @@ public:
 	}
 	void Segment( const int timeDiff );
 };
+

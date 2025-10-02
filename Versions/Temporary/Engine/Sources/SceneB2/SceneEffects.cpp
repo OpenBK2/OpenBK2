@@ -101,3 +101,4 @@ void CScene::StopEffectGeneration( const int nID, NTimer::STime time )
 	data[eScene]->visObjects.erase( pos );
 }
 
+

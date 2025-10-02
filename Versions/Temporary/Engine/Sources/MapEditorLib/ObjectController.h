@@ -11,3 +11,4 @@ class CObjectController : public CObjectBaseController
 
 #endif // !defined(__OBJECT_CONTROLLER__)
 
+

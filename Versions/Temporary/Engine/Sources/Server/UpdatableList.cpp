@@ -117,3 +117,4 @@ void CUpdatableList::GetDiff( const int nNoIncludeID, const DWORD dwOldVersion, 
 	}
 }
 
+

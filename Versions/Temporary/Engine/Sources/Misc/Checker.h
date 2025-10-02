@@ -24,3 +24,4 @@ inline bool CheckRange( const TContainer &container, const int nIndex )
 #endif // use ctrl + }
 
 #endif // __CHECKER_H__
+

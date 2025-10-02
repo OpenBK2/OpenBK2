@@ -37,3 +37,4 @@ public:
 	int Segment();
 	int operator&( IBinSaver &saver );
 };
+

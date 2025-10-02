@@ -12,3 +12,4 @@ class CModelInterface : public CEditorInterfaceBase
 INTERFACE_COMMAND_DECLARE( CModelInterfaceCommand, CModelInterface )
 
 #endif // !defined(__MODEL_INTERFACE__)
+

@@ -320,3 +320,4 @@ public:
 	void GetObjects( vector<CMapObj*> *pObjects ) const;
 };
 
+

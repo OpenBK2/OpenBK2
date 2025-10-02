@@ -123,3 +123,4 @@ void CLockWithUnlockPossibilities::Unlock()
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
 }
 
+

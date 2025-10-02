@@ -131,3 +131,4 @@ void CSoundCell::Update( ISFX * pSFX )
 	if ( bSomeSoundErased )
 		RecountForDelete();
 }
+

@@ -110,3 +110,4 @@ public:
 	virtual const ENetMode GetMode() const { return ENM_NIVAL_NET; }
 	virtual void SetLanTester( class CLANTester *_pLANTester ) { NI_ASSERT( 0, "Wrong call" ) }
 };
+

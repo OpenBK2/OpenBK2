@@ -20,3 +20,4 @@ extern CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 extern CWeaponMnemonics typeWeaponMnemonics;
 
 #endif // !defined(__WEAPON_MNEMONICS__)
+

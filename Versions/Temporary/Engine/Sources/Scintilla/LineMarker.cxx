@@ -297,3 +297,4 @@ void LineMarker::Draw(Surface *surface, PRectangle &rcWhole, Font &fontForCharac
 				fore.allocated, back.allocated);
 	}
 }
+

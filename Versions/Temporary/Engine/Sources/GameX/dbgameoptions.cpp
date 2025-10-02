@@ -252,3 +252,4 @@ int SOptionSystem::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x100CCC01, SOptionSystem ) 
+

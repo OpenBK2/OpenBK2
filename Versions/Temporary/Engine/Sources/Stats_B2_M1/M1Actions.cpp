@@ -93,3 +93,4 @@ NDb::EM1Action NDb::StringToEnum_NDb_EM1Action( const string &szValue )
 }
 }
 using namespace NDb;
+

@@ -67,3 +67,4 @@ public:
 };
 
 #endif // __SMOKE_SCREEN_H__
+

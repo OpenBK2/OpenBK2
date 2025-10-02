@@ -22,3 +22,4 @@ CVec4 AddHomogen( const CVec4 &_v1, const CVec4 &_v2 )
 		_v1.z * _v2.w + _v2.z * _v1.w, 
 		_v1.w * _v2.w );
 }
+

@@ -130,3 +130,4 @@ void CICHelp::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x17136B01, CInterfaceHelp );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_HELP_SCREEN, CICHelp );
 
+

@@ -11,3 +11,4 @@ interface IStatSystem : public CObjectBase
 };
 SCENEB2_EXPORT IStatSystem *CreateStatSystem();
 
+

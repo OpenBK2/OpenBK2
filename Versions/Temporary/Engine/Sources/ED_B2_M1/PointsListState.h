@@ -157,3 +157,4 @@ public:
 };
 
 #endif//#if !defined(__POINTS_LIST_STATE__)
+

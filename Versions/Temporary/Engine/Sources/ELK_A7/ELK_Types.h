@@ -432,3 +432,4 @@ struct SMainFrameParams
 };
 
 #endif // !defined(__ELK_TYPES__)
+

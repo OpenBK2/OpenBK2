@@ -958,3 +958,4 @@ void ClipPolygon(	const TPolygonsList &sourceList, const TPolygonsList &clipSour
 	if ( pIntersRes != 0 )
 		polyClipper.Boolean( OP_INTERSECTION, pIntersRes );
 }
+

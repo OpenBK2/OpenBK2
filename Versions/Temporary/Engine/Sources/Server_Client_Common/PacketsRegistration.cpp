@@ -101,3 +101,4 @@ void ForcePacketRegistration()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x19245C01, SGameInfo );
+

@@ -41,3 +41,4 @@ bool ToAIUnits( bool bInEditor )
 } 
 
 friend struct SMechUnitRPGStats;
+

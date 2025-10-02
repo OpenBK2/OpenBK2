@@ -324,3 +324,4 @@ void Compile( const SHLSLSrcInfo &h )
 	}
 	hlslShaders.push_back( sg );
 }
+

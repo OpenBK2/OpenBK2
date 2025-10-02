@@ -13,3 +13,4 @@ void CWindowSimple::Visit( interface IUIVisitor *pVisitor )
 	CClipStore s( pVisitor, rc );
 	CWindow::Visit( pVisitor );
 }
+

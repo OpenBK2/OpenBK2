@@ -89,3 +89,4 @@ inline bool operator == ( const SVisObjIcons::SPresentIcon &a, const SVisObjIcon
 	return ( a.eType == b.eType );
 }
 
+

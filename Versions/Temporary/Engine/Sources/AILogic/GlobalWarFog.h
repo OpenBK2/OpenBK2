@@ -209,3 +209,4 @@ public:
 	friend class CWarFogTracer;
 };
 
+

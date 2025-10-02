@@ -32,3 +32,4 @@ void DrawWhiteCross( const CVec3 &vPoint );
 interface IAIScenarioTracker *GetScenarioTracker();
 
 
+

@@ -148,3 +148,4 @@ void CMapInfoAIMarkersSelectDlg::OnBnClickedButtonDefault()
 	SetDD();
 }
 
+

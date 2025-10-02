@@ -16,3 +16,4 @@ DWORD CalcCheckSum( const DWORD dwLastCheckSum, const BYTE *pBuf, const int nLen
 }
 }
 
+

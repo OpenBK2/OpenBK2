@@ -30,3 +30,4 @@ public:
 	virtual void AddLog( const string &rszLogMessage );
 };
 
+

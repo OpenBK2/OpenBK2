@@ -128,3 +128,4 @@ void CExecutorUnitBonus::ForceActivate()
 
 REGISTER_SAVELOAD_CLASS( 0x19126C80, CExecutorUnitBonus )
 
+

@@ -227,3 +227,4 @@ bool CResourceManagerWrapper::InitializeVersionControl()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x10074AC0, CResourceManagerWrapper );
+

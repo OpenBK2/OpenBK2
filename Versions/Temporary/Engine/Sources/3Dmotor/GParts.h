@@ -352,3 +352,4 @@ void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, flo
 	SFullStaticTrackers *pTrackers, bool bIsDynamic );
 CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV );
 }
+

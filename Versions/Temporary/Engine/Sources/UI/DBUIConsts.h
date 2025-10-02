@@ -69,3 +69,4 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 }
+

@@ -201,3 +201,4 @@ struct LIBDB_EXPORT STerminalClassReporter
 
 }
 }
+

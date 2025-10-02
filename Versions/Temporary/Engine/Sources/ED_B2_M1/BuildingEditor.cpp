@@ -369,3 +369,4 @@ int CBuildingRPGStatsEditorSettings::operator&( IXmlSaver &xs )
 	return 0;
 }
 
+

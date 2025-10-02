@@ -205,3 +205,4 @@ void CEdUnitStartCmd::UpdateTarget( const string &szNewTarget )
 	edTgtUnit.SetWindowText( szNewTarget.c_str() );
 }
 
+

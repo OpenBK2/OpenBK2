@@ -11,3 +11,4 @@ interface IAILogicCommandB2 : public CObjectBase
 #endif
 };
 
+

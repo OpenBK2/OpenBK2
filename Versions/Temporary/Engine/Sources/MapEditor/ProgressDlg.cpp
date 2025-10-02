@@ -150,3 +150,4 @@ void CProgressDlg::AddLog( const string &rszLogMessage )
 }
 
 
+

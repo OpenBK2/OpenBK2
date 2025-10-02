@@ -97,3 +97,4 @@ public:
 			szCDKey( _szCDKey ), szEmail( _szEmail ) { }
 };
 
+

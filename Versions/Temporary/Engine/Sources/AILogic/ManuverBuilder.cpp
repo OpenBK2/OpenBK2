@@ -223,3 +223,4 @@ interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPo
 	else*/
 		return CreateDefaultManuver( att, pPos, pEnemy );
 }
+

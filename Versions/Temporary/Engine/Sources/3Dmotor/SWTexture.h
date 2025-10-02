@@ -69,3 +69,4 @@ public:
 } // namespace
 
 #endif // __GTEXTURE_H__
+

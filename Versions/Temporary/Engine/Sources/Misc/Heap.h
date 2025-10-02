@@ -185,3 +185,4 @@ int CHeap<T, TCmp, TWillSwap>::operator&( IBinSaver &ss )
 }
 
 #endif // __HEAP_H__
+

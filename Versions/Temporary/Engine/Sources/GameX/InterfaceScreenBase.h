@@ -140,3 +140,4 @@ class CommandName : public CInterfaceCommandBase< InterfaceName >	\
 };
 
 #endif // __INTERFACESCREENBASE_H__
+

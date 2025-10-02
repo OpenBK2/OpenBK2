@@ -386,3 +386,4 @@ interface IUserDataContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__USER_DATA__)
 
+

@@ -14,3 +14,4 @@ virtual int GetRandomArmor( const int n ) const
 }
 //
 virtual const class CUserActions* GetUserActions( bool bActionsBy ) const { return 0; }
+

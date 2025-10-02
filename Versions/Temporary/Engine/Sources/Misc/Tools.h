@@ -510,3 +510,4 @@ inline void __stdcall DebugTrace( const char *pszFormat, ... ) {  }
 #define EXTERNVAR extern
 #endif
 #endif // __TOOLS_H__
+

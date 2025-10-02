@@ -22,3 +22,4 @@ public:
 };
 
 #endif // !defined(__DOCKING_WINDOW__PROPERTY_BROWSER__)
+

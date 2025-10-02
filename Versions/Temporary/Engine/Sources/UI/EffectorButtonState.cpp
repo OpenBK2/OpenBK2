@@ -76,3 +76,4 @@ void CEffectorButtonState::Reverse()
 	bFinished = false;
 }
 
+

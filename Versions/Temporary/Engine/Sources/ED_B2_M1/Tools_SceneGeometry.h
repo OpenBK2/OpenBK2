@@ -15,3 +15,4 @@ void SetCameraPosition( const CVec3 &rvCamAnchor );
 
 #endif // !defined(__COMMON_TOOLS_SCENE__GEOMETRY__)
 
+

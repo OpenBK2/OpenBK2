@@ -65,3 +65,4 @@ bool CPlanePreferences::IsManuverAllowed( const enum NDb::EManuverID eManuver ) 
 {
 	return pStats->manuverMap.find( eManuver ) != pStats->manuverMap.end();
 }
+

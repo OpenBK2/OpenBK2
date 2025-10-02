@@ -113,3 +113,4 @@ inline CVec3 ToEulerAngles( const CQuat &sQuat, unsigned int uiOrder )
 	return ToEulerAngles( SHMatrix( sQuat ), uiOrder );
 }
 
+

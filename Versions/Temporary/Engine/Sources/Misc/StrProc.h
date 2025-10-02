@@ -469,3 +469,4 @@ struct SASCIICharsComparer
 }; // end of namespace NStr
 
 #endif // __STRPROC_H__
+

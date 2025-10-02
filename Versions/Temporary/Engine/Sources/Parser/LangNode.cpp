@@ -104,3 +104,4 @@ void CSimpleValue::SetValue( const string &szDefValue, bool bString )
 
 }
 
+

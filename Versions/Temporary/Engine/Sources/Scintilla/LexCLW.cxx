@@ -439,3 +439,4 @@ LexerModule lmClw(SCLEX_CLW, ColouriseClwDocSensitive, "clw", NULL, rgWordListDe
 
 // Case Insensitive Clarion Language Lexer
 LexerModule lmClwNoCase(SCLEX_CLWNOCASE, ColouriseClwDocInsensitive, "clwnocase", NULL, rgWordListDescriptions);
+

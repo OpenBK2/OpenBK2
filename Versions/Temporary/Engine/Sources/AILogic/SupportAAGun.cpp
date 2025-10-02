@@ -42,3 +42,4 @@ void CSupportAAGun::Segment()
 
 
 REGISTER_SAVELOAD_CLASS( 0x11143C40, CSupportAAGun )
+

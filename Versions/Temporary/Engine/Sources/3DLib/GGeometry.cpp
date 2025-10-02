@@ -508,3 +508,4 @@ void SplitWrapping2( CObjectInfo::SData *pData )
 	SplitWrapping( pData, SGetTex2() );
 }
 }
+

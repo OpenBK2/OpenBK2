@@ -41,3 +41,4 @@ void CAIGenMobileDlg::OnOK()
 	CResizeDialog::OnOK();
 }
 
+

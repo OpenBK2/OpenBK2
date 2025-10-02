@@ -122,3 +122,4 @@ interface IUnitAttackingState : public IUnitState
 	NI_ASSERT( pObjTo != 0, msg );														\
 	if ( pObjTo == 0 ) break;
 
+

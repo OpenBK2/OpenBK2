@@ -30,3 +30,4 @@ public:
 };
 
 #endif // !defined(__FENCE_RPG_STATS_EXPORTER__)
+

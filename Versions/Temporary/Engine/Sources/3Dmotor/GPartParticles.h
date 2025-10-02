@@ -34,3 +34,4 @@ public:
 	CPtrFuncBase<CParticleEffect> *GetAnimator() const { return pParticles; }
 };
 }
+

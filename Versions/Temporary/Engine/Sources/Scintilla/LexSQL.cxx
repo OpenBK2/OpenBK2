@@ -180,3 +180,4 @@ static const char * const sqlWordListDesc[] = {
 };
 
 LexerModule lmSQL(SCLEX_SQL, ColouriseSQLDoc, "sql", 0, sqlWordListDesc);
+

@@ -131,3 +131,4 @@ bool TestSimpleArrayInsertRemove( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit
 }
 
 }
+

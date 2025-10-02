@@ -185,3 +185,4 @@ REGISTER_VAR_EX( "Sound.SFXVolume", NGlobal::VarFloatHandler, &g_fSFXVolume, 0.5
 REGISTER_VAR_EX( "Sound.VoiceVolume", NGlobal::VarFloatHandler, &g_fVoiceVolume, 0.5f, STORAGE_USER );
 FINISH_REGISTER
 
+

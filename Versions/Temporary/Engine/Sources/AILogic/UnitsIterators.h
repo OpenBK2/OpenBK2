@@ -125,3 +125,4 @@ public:
 	const bool IsFinished() const;
 };
 
+

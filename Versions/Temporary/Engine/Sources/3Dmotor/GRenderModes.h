@@ -107,3 +107,4 @@ struct SRTClearParams
 inline SBound MakeLargeHintBound() { SBound b; b.SphereInit( CVec3(0,0,0), 1e6 ); return b; }
 }
 #endif
+

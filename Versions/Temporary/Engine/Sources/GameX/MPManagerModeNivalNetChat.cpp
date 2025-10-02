@@ -175,3 +175,4 @@ bool CMPManagerModeNivalNet::OnChatAFKResponsePacket( class CChatAFKResponsePack
 	return true;
 }
 
+

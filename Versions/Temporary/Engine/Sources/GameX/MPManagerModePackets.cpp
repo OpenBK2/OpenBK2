@@ -256,3 +256,4 @@ bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 	return true;
 }
 
+

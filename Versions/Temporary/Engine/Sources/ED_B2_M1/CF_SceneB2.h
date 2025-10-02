@@ -14,3 +14,4 @@ public:
 };
 
 #endif // !defined(__CHILD_FRAME__SCENE_B2__)
+

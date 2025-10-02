@@ -5,3 +5,4 @@ class CA
 struct SA
 {
 };
+

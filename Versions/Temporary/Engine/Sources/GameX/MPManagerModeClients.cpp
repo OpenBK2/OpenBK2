@@ -192,3 +192,4 @@ void CMPManagerMode::UpdateMyConnectivityMask()
 	CheckJoinGameConditions();
 }
 
+

@@ -177,3 +177,4 @@ inline unsigned int CBitStream::ReadBit()
 	CheckCurrentR();
 	return nRes;
 }
+

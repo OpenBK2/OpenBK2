@@ -20,3 +20,4 @@ CMnemonicsCollector<int>(NDb::EPATCH_UNKNOWN, "EPATCH_UNKNOWN" )
 
 CAIGeneralParcelTypeMnemonics typeAIGeneralParcel;
 
+

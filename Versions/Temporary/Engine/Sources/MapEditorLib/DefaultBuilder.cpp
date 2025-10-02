@@ -12,3 +12,4 @@ static char THIS_FILE[] = __FILE__;
 
 REGISTER_BUILDER_IN_DLL( DEFAULT_BUILDER_LABEL, CDefaultBuilder )
 
+

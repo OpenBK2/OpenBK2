@@ -277,3 +277,4 @@ bool CMapInfoExporter::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	return false;
 }
 
+

@@ -145,3 +145,4 @@ public:
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
 };
 
+

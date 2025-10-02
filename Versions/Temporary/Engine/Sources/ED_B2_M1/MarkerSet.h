@@ -68,3 +68,4 @@ inline IEditorScene* GetEditorScene()
 }
 
 #endif // #if !defined(__MARKER_SET__)
+

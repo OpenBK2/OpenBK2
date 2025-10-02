@@ -7,3 +7,4 @@ struct S
   struct e1 { };
   forward class e1;
 };
+

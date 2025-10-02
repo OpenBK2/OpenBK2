@@ -12,3 +12,4 @@ interface IEditorAI : public CObjectBase
 
 #endif // !defined(__INTERFACE__EDITOR_AI__)
 
+

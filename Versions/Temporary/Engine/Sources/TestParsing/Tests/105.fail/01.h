@@ -8,3 +8,4 @@ struct S
 
   struct e1 { };
 };
+

@@ -8,3 +8,4 @@ struct S
 
   forward class e1;
 };
+

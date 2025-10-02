@@ -4,3 +4,4 @@
 
 REGISTER_SAVELOAD_CLASS( 0x31131400, CInFormationPath );
 
+

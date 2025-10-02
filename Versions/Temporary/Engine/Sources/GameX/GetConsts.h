@@ -27,3 +27,4 @@ const NDb::SNetGameConsts *GetNetConsts();
 const NDb::SMultiplayerConsts *GetMPConsts();
 
 }
+

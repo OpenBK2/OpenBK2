@@ -119,3 +119,4 @@ public:
 	void ResetScroller();
 	void SetDiscreteScroll( int nVisibleSlots );
 };
+

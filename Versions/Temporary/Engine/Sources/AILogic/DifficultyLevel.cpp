@@ -63,3 +63,4 @@ void CDifficultyLevel::OnSerialize( IBinSaver &saver )
 		Init();
 }
 
+

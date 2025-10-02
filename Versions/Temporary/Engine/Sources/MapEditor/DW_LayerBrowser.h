@@ -18,3 +18,4 @@ public:
 };
 
 #endif // !defined(__DOCKING_WINDOW__LAYER_BROWSER__)
+

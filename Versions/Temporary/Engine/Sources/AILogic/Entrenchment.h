@@ -317,3 +317,4 @@ public:
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 };
 
+

@@ -1777,3 +1777,4 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		}
 	}
 /**/
+

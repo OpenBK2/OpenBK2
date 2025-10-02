@@ -66,3 +66,4 @@ protected:
 };
 
 #endif // !defined(__ROAD_STATE__)
+

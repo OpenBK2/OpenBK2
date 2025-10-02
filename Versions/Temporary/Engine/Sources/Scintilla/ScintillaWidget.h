@@ -53,3 +53,4 @@ void		scintilla_release_resources(void);
 #endif
 
 #endif
+

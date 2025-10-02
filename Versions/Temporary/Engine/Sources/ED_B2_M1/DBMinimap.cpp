@@ -302,3 +302,4 @@ int SMinimap::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1414DB40, SMinimap ) 
+

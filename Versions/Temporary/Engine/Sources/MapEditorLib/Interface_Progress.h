@@ -17,3 +17,4 @@ namespace NProgress
 
 #endif // !defined(__INTERFACE__PROGRESS__)
 
+

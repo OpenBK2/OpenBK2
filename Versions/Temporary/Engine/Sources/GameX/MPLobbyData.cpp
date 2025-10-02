@@ -58,3 +58,4 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 	NMPSetData::SetText( pTxt, wszText );			
 }
 
+

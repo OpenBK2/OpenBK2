@@ -4,3 +4,4 @@ const NDb::SEffect *GetSceneEffect() const
 		return pSceneEffect;	
 	return sceneEffects[ rand() % sceneEffects.size() ];
 }
+

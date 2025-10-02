@@ -392,3 +392,4 @@ void CScene::RemoveAttachedMapping( int nAttachObjID )
 	data[eScene]->attachIDToMapObjID.erase( nAttachObjID );
 }
 
+

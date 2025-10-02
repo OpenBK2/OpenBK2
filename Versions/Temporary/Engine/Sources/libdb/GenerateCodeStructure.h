@@ -14,3 +14,4 @@ namespace NCodeGen
 																			const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 }
 
+

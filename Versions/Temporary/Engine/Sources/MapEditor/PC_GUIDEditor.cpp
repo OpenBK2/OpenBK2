@@ -300,3 +300,4 @@ bool CPCGUIDEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChec
 
 // basement storage  
 
+

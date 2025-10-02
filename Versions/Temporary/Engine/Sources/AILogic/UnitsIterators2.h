@@ -502,3 +502,4 @@ public:
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };
 
+

@@ -59,3 +59,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_BUILDER__)
+

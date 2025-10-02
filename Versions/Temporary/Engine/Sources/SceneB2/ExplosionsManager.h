@@ -46,3 +46,4 @@ public:
 	void AttachGameView( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; }
 };
 
+

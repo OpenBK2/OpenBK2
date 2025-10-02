@@ -229,3 +229,4 @@ void CEditorScene::SetWarFogBlend( const float fBlend )
 
 
 REGISTER_SAVELOAD_CLASS( 0x301CBC80, CEditorScene );
+

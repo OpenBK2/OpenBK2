@@ -55,3 +55,4 @@ public:
 	void SetLevel(int line, int level);
 	int IndentAmount(int line, int *flags, PFNIsCommentLeader pfnIsCommentLeader = 0);
 };
+

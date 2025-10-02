@@ -425,3 +425,4 @@ void Scale( CArray2D<DWORD> *pDst, const CArray2D<DWORD> &src, const EImageScale
 }
 
 }
+

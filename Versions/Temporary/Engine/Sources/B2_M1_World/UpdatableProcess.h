@@ -10,3 +10,4 @@ namespace NUpdatableProcess
 	void Register( IClientUpdatableProcess *pProcess );
 }
 
+

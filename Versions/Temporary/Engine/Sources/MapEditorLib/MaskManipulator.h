@@ -123,3 +123,4 @@ public:
 };
 
 #endif // !defined(__MASK_MANIPULATOR__)
+

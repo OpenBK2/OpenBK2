@@ -120,3 +120,4 @@ public:
 };
 
 #endif // __RESISTANCE_H__
+

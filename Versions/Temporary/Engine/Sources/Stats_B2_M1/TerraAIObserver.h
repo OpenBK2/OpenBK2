@@ -40,3 +40,4 @@ interface ITerraAIObserver : public CObjectBase
 	virtual bool IsBridge( const int nX, const int nY ) const { return false; }
 };
 
+

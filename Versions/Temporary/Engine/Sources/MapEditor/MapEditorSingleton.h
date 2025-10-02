@@ -44,3 +44,4 @@ public:
 	bool OpenFileOnApp( const string &rszFilePath ) const;
 };
 #endif // !defined(__MAP_EDITOR__WINDOW_SINGLETON__)
+

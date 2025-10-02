@@ -102,3 +102,4 @@ void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, 
 } // namespace
 
 #endif
+

@@ -310,3 +310,4 @@ CXmlReader::CXmlReader( const char *pszBegin, const char *pszEnd )
 
 using namespace NXml;
 REGISTER_SAVELOAD_CLASS( 0x3023C380, CXmlReader );
+

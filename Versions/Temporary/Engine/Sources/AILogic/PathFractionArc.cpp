@@ -54,3 +54,4 @@ CVec3 CPathFractionArc::GetTangent( const float fDist ) const
 
 	return CVec3( -nOrientation * vToR.y * circle.nDir, nOrientation * vToR.x * circle.nDir, 0 );
 }
+

@@ -86,3 +86,4 @@ DWORD SPassProfile::CalcCheckSum() const
 
 }
 using namespace NDb;
+

@@ -50,3 +50,4 @@ public:
 };
 
 #endif // !defined(__STORE_INPUT_STATE_TEMPLATE__)
+

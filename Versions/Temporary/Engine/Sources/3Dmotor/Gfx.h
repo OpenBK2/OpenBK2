@@ -105,3 +105,4 @@ struct SRenderStats
 };
 EXTERNVAR SRenderStats renderStats;
 }
+

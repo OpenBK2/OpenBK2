@@ -106,3 +106,4 @@ void CWindowFrameSequence::Reset()
 
 REGISTER_SAVELOAD_CLASS(0x1717A442, CWindowFrameSequence)
 
+

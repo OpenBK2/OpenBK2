@@ -45,3 +45,4 @@ public:
 };
 
 #endif //__INTERFACE_MP_WAIT_PLAYERS_H__
+

@@ -327,3 +327,4 @@ void CGeometryInfo::CalcBound()
 
 } // namespace
 using namespace NAI;
+

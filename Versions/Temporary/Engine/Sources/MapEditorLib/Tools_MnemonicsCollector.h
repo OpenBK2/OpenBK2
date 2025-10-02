@@ -74,3 +74,4 @@ public:
 };
 
 #endif // #if !defined(__COMMON_TOOLS__SYS_CODES__)
+

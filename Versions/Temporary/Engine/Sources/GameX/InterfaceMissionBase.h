@@ -40,3 +40,4 @@ public:
 };
 
 #endif //__INTERFACE_MISSION_BASE_H__
+

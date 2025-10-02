@@ -36,3 +36,4 @@ public:
 
 
 #endif //#define __TEXTMAP_SETTINGS__
+

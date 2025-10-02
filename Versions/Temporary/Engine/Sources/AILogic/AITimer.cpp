@@ -31,3 +31,4 @@ void CAITimer::SetSpeed( int nSpeed )
 	pTimer->SetSpeed( nSpeed );
 }
 
+

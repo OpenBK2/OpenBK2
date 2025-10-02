@@ -45,3 +45,4 @@ string GetExistentBinaryFileName( const string &rszDirPrefix, const int nRecordI
 }
 
 }
+

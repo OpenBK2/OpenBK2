@@ -25,3 +25,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_EX_TEXT_FILE__)
+

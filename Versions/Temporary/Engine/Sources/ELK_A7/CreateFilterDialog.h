@@ -82,3 +82,4 @@ public:
 };
 
 #endif // !defined(__CREATE_FILTER_DIALOG__)
+

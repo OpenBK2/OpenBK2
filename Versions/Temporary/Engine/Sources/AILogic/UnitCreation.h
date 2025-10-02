@@ -179,3 +179,4 @@ public:
 	void ApplyWeatherModifier( const bool bForward );
 };
 
+

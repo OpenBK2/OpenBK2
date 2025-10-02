@@ -288,3 +288,4 @@ void CFileStream::Flush()
 		SyncWith( *pStream );
 	}
 }
+

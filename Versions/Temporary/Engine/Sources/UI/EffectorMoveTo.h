@@ -32,3 +32,4 @@ public:
 	virtual void Reverse();
 };
 #endif // !defined(AFX_EFFECTORMOVETO_H__61F18B52_A5E3_4375_B24C_A297C73DFF29__INCLUDED_)
+

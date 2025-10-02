@@ -159,3 +159,4 @@ bool CMapEditorSingletonChecker::OpenFileOnApp( const string &rszFilePath ) cons
 
 // basement storage  
 
+

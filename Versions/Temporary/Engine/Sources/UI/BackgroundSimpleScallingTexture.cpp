@@ -63,3 +63,4 @@ int CBackgroundSimpleScallingTexture::operator&( interface IBinSaver &saver )
 	return 0;
 }
 
+

@@ -237,3 +237,4 @@ int SWater::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x10084340, SWaterSet ) 
 REGISTER_DATABASE_CLASS( 0x10084341, SWater ) 
+

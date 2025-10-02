@@ -259,3 +259,4 @@ public:
 	virtual void Destroy( const NTimer::STime time );
 };
 
+

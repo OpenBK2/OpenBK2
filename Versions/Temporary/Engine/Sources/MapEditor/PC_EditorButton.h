@@ -31,3 +31,4 @@ public:
 typedef vector<CPCEditorButton*> CPCEditorButtonList;
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_EDITOR_BUTTON__)
+

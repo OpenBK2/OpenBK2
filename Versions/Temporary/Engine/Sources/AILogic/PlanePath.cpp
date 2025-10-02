@@ -36,3 +36,4 @@ void CPlaneInFormationSmoothPath::Segment( NTimer::STime timeDiff )
 	pOwner->SetCenter( vNewPoint );
 }
 
+

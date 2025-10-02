@@ -8,3 +8,4 @@ namespace NXml
 	SYSTEM_EXPORT void ConvertToString( string *pStr );
 }
 
+

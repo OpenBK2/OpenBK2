@@ -176,3 +176,4 @@ int WindowAccessor::IndentAmount(int line, int *flags, PFNIsCommentLeader pfnIsC
 		return indent;
 }
 
+

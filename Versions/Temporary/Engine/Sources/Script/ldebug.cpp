@@ -496,3 +496,4 @@ void luaG_ordererror (lua_State *L, TObject *top) {
     luaO_verror(L, "attempt to compare %.10s with %.10s", t1, t2);
 }
 
+

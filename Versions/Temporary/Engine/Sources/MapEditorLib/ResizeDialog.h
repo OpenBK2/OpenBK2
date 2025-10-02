@@ -110,3 +110,4 @@ protected:
 #define RESIZE_DIALOG_OPTIONS_FILE_NAME "Editor\\ResizeDialogStyles\\"
 
 #endif // !defined(__COMMON_CONTROLS__RESIZE_DIALOG__)
+

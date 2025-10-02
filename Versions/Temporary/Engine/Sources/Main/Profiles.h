@@ -15,3 +15,4 @@ MAIN_EXPORT void GetAllProfiles( vector<wstring> *pRes );
 MAIN_EXPORT wstring GetCurrentProfileName();
 MAIN_EXPORT string GetCurrentProfileDir();
 }
+

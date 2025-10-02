@@ -17,3 +17,4 @@ void SInfantryRPGStats::ToAIUnits( bool bInEditor )
 }
 
 }
+

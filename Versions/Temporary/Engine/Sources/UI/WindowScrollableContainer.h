@@ -16,3 +16,4 @@ public:
 	virtual void Select( IWindow *pElement );
 };
 
+

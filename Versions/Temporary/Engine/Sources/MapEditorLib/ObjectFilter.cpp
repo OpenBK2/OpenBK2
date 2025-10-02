@@ -99,3 +99,4 @@ int CObjectFilter::operator&( IXmlSaver &saver )
 	return 0;
 }
 
+

@@ -66,3 +66,4 @@ public:
 	virtual void SetWarFogBlend( const float fBlend );
 };
 
+

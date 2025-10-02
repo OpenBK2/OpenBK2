@@ -346,3 +346,4 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 	while ( ToggleShow(SCENE_SHOW_OVERDRAW) != false );
 }
 
+

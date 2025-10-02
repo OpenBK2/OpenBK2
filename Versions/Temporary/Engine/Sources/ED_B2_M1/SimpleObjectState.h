@@ -48,3 +48,4 @@ protected:
 
 #endif // !defined(__SIMPLE_OBJECT_STATE__)
 
+

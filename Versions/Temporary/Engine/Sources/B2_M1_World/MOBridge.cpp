@@ -254,3 +254,4 @@ int CMOBridge::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x100A7480, CMOBridge );
+

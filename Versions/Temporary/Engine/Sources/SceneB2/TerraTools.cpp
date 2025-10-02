@@ -659,3 +659,4 @@ void WiseFillInArea( CArray2D<BYTE> *pMask, const int nMinX, const int nMinY, co
 	}
 }
 
+

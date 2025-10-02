@@ -198,3 +198,4 @@ int CVSOMultiState::SEditParameters::operator&( IXmlSaver &xs )
 
 // basement storage  
 
+

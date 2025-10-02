@@ -21,3 +21,4 @@ interface IStaticPath : public CAIObjectBase
 	virtual int MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const = 0;
 };
 
+

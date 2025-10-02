@@ -216,3 +216,4 @@ static const char * const cronWordListDesc[] = {
 };
 
 LexerModule lmNncrontab(SCLEX_NNCRONTAB, ColouriseNncrontabDoc, "nncrontab", 0, cronWordListDesc);
+

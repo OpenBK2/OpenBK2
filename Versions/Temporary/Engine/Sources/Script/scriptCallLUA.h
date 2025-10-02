@@ -34,3 +34,4 @@ void luaCreateCPtrVar( const string &szVarName, CObjectBase *pObj );
 }
 //
 #endif __SCRIPTCALLLUA_H_
+

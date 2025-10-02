@@ -62,3 +62,4 @@ int CRAPTooSmartCompilator_UISpecific()
 
 REGISTER_SAVELOAD_CLASS(0x1508A301, CARSetForcedAction)
 REGISTER_SAVELOAD_CLASS(0x1508D340, CARSetSpecialAbility)
+

@@ -7,3 +7,4 @@ namespace NBSU
 		const char *pszCondition, const char *pszDescription, 
 		const vector<SCallStackEntry> &entries, const char *pszExtInfo );
 }
+

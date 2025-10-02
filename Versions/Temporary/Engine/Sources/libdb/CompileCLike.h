@@ -22,3 +22,4 @@ namespace NCompileCLike
 								CNodes2TypeDefs *pNodes2TypeDefs, NLang::CNamespace *pRootNN );
 }
 
+

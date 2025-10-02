@@ -28,3 +28,4 @@ protected:
 
 #endif // !defined(__TEXTURE_STATE__)
 
+

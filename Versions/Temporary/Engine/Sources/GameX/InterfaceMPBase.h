@@ -18,3 +18,4 @@ public:
 };
 
 #endif //__INTERFACE_MP_BASE_H__
+

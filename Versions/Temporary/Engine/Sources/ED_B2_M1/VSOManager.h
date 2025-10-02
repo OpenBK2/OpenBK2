@@ -302,3 +302,4 @@ public:
 };
 
 #endif // #if !defined(__VSO_MANAGER__)
+

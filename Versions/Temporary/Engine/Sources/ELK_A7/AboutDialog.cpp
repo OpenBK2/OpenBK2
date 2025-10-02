@@ -45,3 +45,4 @@ BOOL CAboutDialog::OnInitDialog()
   return true;
 }
 
+

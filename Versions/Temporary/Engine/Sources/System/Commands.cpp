@@ -59,3 +59,4 @@ void VarStrHandler( const string &szID, const NGlobal::CValue &sValue, void *pCo
 }
 
 }
+

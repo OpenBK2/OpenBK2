@@ -76,3 +76,4 @@ public:
 
 CMusicSystem * GetMusicSystem();
 }
+

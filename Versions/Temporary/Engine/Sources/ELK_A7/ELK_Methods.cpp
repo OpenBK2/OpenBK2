@@ -614,3 +614,4 @@ const SSimpleFilter* SMainFrameParams::GetCurrentFilter() const
 	return 0;
 }
 
+

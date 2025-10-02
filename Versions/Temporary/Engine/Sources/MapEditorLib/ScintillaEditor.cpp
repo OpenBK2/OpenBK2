@@ -128,3 +128,4 @@ int CScintillaEditorWindow::GetText( string *pszText )
 
 // basement storage  
 
+

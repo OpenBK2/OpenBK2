@@ -40,3 +40,4 @@ public:
 };
 
 #endif // !defined(__OPEN_MOD_DIALOG__)
+

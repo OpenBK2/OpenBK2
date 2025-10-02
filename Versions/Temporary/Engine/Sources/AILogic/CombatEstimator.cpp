@@ -67,3 +67,4 @@ void CCombatEstimator::DelUnit( CAIUnit *pUnit )
 		registeredMechUnits.erase( pUnit->GetUniqueId() );
 }
 
+

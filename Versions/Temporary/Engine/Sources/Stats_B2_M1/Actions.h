@@ -328,3 +328,4 @@ public:
 		: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget ) {}
 };
 
+

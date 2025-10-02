@@ -108,3 +108,4 @@ void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pSce
 
 } // namespace NGScene
 
+

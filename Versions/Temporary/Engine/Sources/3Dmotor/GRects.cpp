@@ -77,3 +77,4 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
 
 } // namespace
 using namespace NGScene;
+

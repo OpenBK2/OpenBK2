@@ -51,3 +51,4 @@ public:
 	virtual bool IsWithFormation() const { return false; }
 };
 
+

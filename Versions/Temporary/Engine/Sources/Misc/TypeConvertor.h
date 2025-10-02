@@ -49,3 +49,4 @@ public:
 };
 
 #endif // __TYPECONVERTOR_H__
+

@@ -189,3 +189,4 @@ _3DMOTOR_EXPORT void SetLoadMode( ELoadMode eMode );
 }	// namespace NGScene
 
 #endif // __OBJECTINFO_H_
+

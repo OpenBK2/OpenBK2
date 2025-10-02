@@ -1202,3 +1202,4 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMe
 }
 
 }; // end of namespace NInput
+

@@ -8,3 +8,4 @@ namespace NImage
 };
 
 #endif // __IMAGE_BMP_H__
+

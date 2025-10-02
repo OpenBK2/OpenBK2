@@ -353,3 +353,4 @@ struct COMMON_RTS_AI_EXPORT STerrainModeSetter
 	~STerrainModeSetter();
 };
 
+

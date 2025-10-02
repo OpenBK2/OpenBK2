@@ -180,3 +180,4 @@ static const char * const emptyWordListDesc[] = {
 };
 
 LexerModule lmLot(SCLEX_LOT, ColourizeLotDoc, "lot", FoldLotDoc, emptyWordListDesc);
+

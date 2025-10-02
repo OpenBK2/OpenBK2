@@ -48,3 +48,4 @@ BOOL CEmptyGDBBrowser::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 
 // basement storage  
 
+

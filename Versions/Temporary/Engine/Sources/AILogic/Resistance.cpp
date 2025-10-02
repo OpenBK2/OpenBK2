@@ -280,3 +280,4 @@ void CResistancesContainer::CIter::Iterate()
 	}
 }
 
+

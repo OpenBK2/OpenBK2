@@ -43,3 +43,4 @@ public:
 	WORD GetDivingAngle() const;
 };
 #endif //CPLANEPREFERENCES_H
+

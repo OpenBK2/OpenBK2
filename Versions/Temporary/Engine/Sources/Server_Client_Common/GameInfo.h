@@ -31,3 +31,4 @@ public:
 		: nID( _nID ), szName( "" ), nPlayers( 0 ), nMaxPlayers( 0 ), bCanConnect( true ), bHasPassword( false ) { }
 };
 
+

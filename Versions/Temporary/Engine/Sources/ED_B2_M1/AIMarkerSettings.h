@@ -101,3 +101,4 @@ struct SAIMarkerSettings
 };
 
 #endif // #if !defined(__AIMARKERSETTINGS__)
+

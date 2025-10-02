@@ -61,3 +61,4 @@ const int GetPlatformsSize( const int nUniqueID ) const
 	}
 	return platforms.size();
 }
+

@@ -659,3 +659,4 @@ bool ConvertAndSaveAsDDS( CDataStream *pStream, const CArray2D<DWORD> &srcImage,
 }
 
 }
+

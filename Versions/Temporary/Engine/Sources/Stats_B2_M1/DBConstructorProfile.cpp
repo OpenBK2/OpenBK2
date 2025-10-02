@@ -131,3 +131,4 @@ DWORD SDBConstructorProfile::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x3013ECC0, SDBConstructorProfile ) 
+

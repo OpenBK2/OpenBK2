@@ -16,3 +16,4 @@ class A
   C_Reference pC;
   S_Reference S;
 };
+

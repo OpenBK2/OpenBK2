@@ -39,3 +39,4 @@ public:
 };
 
 #endif // #if !defined( __REINF_POINTS_TYPED_TEMPLATE_TYPED_DLG__ )
+

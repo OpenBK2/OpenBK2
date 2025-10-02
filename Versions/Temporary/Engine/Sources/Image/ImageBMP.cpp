@@ -233,3 +233,4 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 	return true;
 }
 
+

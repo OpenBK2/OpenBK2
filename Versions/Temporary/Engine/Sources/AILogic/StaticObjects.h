@@ -171,3 +171,4 @@ public:
 	friend class CStObjIter<true>;
 };
 
+

@@ -43,3 +43,4 @@ void CreateRefKey( string *pszKey, const SPropertyDesc *pPropertyDesc )
 	}
 }
 
+

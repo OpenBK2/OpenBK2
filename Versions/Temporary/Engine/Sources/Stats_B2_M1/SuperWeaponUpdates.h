@@ -40,3 +40,4 @@ public:
 		nPlayer( _nPlayer ), fPartComplete( _fPartComplete ) {}
 };
 
+

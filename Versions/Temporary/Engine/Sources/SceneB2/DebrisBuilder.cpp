@@ -199,3 +199,4 @@ void CTerraGen::CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, 
 	}
 }
 
+

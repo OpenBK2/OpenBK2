@@ -131,3 +131,4 @@ bool CTableManipulatorIteratorWrapper::GetName( string *pszName ) const
 	return false;
 }
 
+

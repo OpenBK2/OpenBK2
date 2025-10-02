@@ -417,3 +417,4 @@ DWORD CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) cons
 
 // basement storage  
 
+

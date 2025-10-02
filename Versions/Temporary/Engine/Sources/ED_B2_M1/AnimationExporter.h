@@ -30,3 +30,4 @@ class CAnimationExporter : public CBasicSceneExporter
 
 #endif // !defined(__SKELETON_EXPORTER__)
 
+

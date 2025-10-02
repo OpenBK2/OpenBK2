@@ -6856,3 +6856,4 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
 	//Platform::DebugPrintf("end wnd proc\n");
 	return 0l;
 }
+

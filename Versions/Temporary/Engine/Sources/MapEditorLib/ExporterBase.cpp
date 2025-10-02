@@ -511,3 +511,4 @@ START_REGISTER(DefaultExporterCommands)
 REGISTER_VAR_EX( "report_safe_refs", NGlobal::VarBoolHandler, &s_bReportSafeRefs, true, STORAGE_NONE );
 FINISH_REGISTER
 
+

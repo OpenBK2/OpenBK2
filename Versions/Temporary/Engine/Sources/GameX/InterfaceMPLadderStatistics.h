@@ -67,3 +67,4 @@ public:
 };
 
 #endif //__INTERFACE_MP_LADDER_STATISTICS_H__
+

@@ -152,3 +152,4 @@ bool GetFontCharsForCharset( vector<WORD> *pChars, HDC hDC, const string &szFace
 }
 
 }
+

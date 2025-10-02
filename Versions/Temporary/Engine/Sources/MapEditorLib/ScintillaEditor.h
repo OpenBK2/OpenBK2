@@ -37,3 +37,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__SCINTILLA_EDITOR_WINDOW__)
+

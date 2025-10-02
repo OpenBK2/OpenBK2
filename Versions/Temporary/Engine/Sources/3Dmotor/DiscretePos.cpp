@@ -47,3 +47,4 @@ CFBTransform* SDiscretePos::GetTransform() const
 
 REGISTER_SAVELOAD_CLASS( 0x025a1130, CFBTransform );
 
+

@@ -23,3 +23,4 @@ public:
 	void MutateSkeletonPose( granny_local_pose *pPose );
 };
 
+

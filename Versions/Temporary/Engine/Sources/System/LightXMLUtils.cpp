@@ -202,3 +202,4 @@ const char* ReadText( string *pszText, const char *pszBegin, const char *pszEnd,
 
 }; // end of namespace NLXML
 
+

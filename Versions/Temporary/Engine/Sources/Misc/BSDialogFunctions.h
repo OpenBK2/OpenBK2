@@ -30,3 +30,4 @@ void* GetDlgUserData( HWND hwndDlg );
 void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription, 
 	const vector<SCallStackEntry> &entries );
 }
+

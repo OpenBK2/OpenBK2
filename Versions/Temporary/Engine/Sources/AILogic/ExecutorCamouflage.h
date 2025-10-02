@@ -21,3 +21,4 @@ public:
 
 	virtual int Segment();
 };
+

@@ -500,3 +500,4 @@ void CICMPCustomGame::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x32194C00, CInterfaceMPCustomGame );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_CUSTOM_GAME_MENU, CICMPCustomGame );
 
+

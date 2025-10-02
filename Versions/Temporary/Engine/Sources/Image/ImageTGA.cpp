@@ -100,3 +100,4 @@ bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<DWORD> &image )
 }
 
 }
+

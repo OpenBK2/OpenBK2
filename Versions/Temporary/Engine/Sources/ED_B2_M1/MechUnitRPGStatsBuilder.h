@@ -29,3 +29,4 @@ protected:
 };
 
 #endif // !defined(__MECHUNITRPGSTATS_BUILDER__)
+

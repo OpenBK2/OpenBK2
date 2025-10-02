@@ -453,3 +453,4 @@ public:
   static void InitPriorities( const vector<NDb::SUnitTypePriority> &priorities );
 };
 
+

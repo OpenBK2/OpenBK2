@@ -27,3 +27,4 @@ namespace NLog
 }
 
 #endif //#define __INTERFACE_LOGGER__
+

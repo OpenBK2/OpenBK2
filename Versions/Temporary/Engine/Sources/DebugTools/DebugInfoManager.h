@@ -56,3 +56,4 @@ interface IDebugInfoManager : public CObjectBase
 
 DEBUGTOOLS_EXPORT IDebugInfoManager *CreateDebugInfoManager();
 inline IDebugInfoManager *DebugInfoManager() { return Singleton<IDebugInfoManager>(); }
+

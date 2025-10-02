@@ -105,3 +105,4 @@ void CCloudMover::Recalc()
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x20162300, CCloudMover )
+

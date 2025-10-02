@@ -87,3 +87,4 @@ CFileNode* GetCurFileNode();
 
 }
 
+

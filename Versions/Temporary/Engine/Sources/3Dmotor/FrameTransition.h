@@ -74,3 +74,4 @@ NGfx::CTexture *GetTexture( CRTPtr * pTex);
 
 }
 
+

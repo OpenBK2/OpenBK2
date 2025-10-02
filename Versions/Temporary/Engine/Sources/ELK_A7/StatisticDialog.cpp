@@ -318,3 +318,4 @@ void CStatisticDialog::OnCancel()
 	CResizeDialog::OnCancel();
 }
 
+

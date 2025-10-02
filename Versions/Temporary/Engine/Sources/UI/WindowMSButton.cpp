@@ -628,3 +628,4 @@ void CWindowMSButton::Visit( interface IUIVisitor *pVisitor )
 	CWindow::Visit( pVisitor );
 }
 
+

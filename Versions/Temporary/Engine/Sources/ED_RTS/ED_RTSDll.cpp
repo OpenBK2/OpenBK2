@@ -79,3 +79,4 @@ IEditorModule* GetEditorModule0()
 	return &theEDRTSModule;
 }
 
+

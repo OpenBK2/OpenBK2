@@ -226,3 +226,4 @@ static const char * const pbWordListDesc[] = {
 };
 
 LexerModule lmPB(SCLEX_POWERBASIC, ColourisePBDoc, "powerbasic", FoldPBDoc, pbWordListDesc);
+

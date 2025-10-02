@@ -90,3 +90,4 @@ interface IEditorScene : public CObjectBase
 };
 
 IEditorScene* EditorScene();
+

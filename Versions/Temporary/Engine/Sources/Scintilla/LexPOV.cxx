@@ -308,3 +308,4 @@ static const char * const povWordLists[] = {
 };
 
 LexerModule lmPOV(SCLEX_POV, ColourisePovDoc, "pov", FoldPovDoc, povWordLists);
+

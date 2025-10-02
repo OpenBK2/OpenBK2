@@ -18,3 +18,4 @@ public:
 };
 
 #endif // !defined(__EMPTY__GDB_BROWSER__)
+

@@ -342,3 +342,4 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 
 // basement storage  
 
+

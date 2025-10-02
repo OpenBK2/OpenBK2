@@ -65,3 +65,4 @@ const CVec2 MoveVectorByDirection( const CVec2 &vPoint, WORD wDir )
 	return CVec2( vPoint.x * fCos - vPoint.y * fSin, vPoint.x * fSin + vPoint.y * fCos );
 }
 
+

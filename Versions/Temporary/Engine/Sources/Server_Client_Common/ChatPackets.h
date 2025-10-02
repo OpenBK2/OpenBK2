@@ -209,3 +209,4 @@ public:
 		: CNetPacket( nClientID ), szNick( _szNick ), szChannel( _szChannel ) {}
 } ;
 
+

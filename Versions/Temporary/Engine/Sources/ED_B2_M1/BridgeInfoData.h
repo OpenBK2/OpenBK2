@@ -68,3 +68,4 @@ namespace NMapInfoEditor
 };
 
 #endif // !defined(__MAPINFO_EDITOR_DATA__BRIDGE_INFO__)
+

@@ -335,3 +335,4 @@ void SampleNURBSCurve( vector<CVec3> *pRes, const float fSampleStep, const vecto
 
 #pragma optimize ( "", off )
 #pragma optimize ( "", on )
+

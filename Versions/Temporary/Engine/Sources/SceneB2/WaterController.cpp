@@ -1335,3 +1335,4 @@ void CWaterController::InitOceanWater( const CArray2D<BYTE> &seaMap,
 
 REGISTER_SAVELOAD_CLASS( 0x130C8300, SWaterNode );
 
+

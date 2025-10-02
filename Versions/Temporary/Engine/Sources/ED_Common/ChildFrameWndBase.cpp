@@ -1044,3 +1044,4 @@ void CChildFrameWndBase::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 
 // basement storage  
 
+

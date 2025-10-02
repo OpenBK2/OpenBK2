@@ -6,3 +6,4 @@ class C
 {
   int a = 0x134;
 };
+

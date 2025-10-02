@@ -166,3 +166,4 @@ public:
 };
 
 #endif // __SPELLCHECKER_H__
+

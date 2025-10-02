@@ -461,3 +461,4 @@ DWORD SAIGameConsts::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x11074CC0, SAIGameConsts ) 
+

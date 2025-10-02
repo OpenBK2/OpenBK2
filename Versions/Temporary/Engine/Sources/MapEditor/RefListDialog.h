@@ -56,3 +56,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__REFLIST_DIALOG__)
+

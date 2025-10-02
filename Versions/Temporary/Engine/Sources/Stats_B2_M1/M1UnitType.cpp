@@ -83,3 +83,4 @@ DWORD SM1UnitType::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x33193B01, SM1UnitType ) 
+

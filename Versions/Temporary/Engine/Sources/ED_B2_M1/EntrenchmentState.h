@@ -126,3 +126,4 @@ protected:
 };
 
 #endif // #if !defined(__ENTRENCHMENT_STATE__)
+

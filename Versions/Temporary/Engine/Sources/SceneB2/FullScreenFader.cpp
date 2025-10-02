@@ -146,3 +146,4 @@ IFullScreenFader *CreateFullScreenFader()
 BASIC_REGISTER_CLASS( IFullScreenFader );
 REGISTER_SAVELOAD_CLASS( 0x3423B300, CFullScreenFader )
 
+

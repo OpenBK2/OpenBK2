@@ -74,3 +74,4 @@ int CWindController::operator&( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( 0x30135500, CWindController );
 
+

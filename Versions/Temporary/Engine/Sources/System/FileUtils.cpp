@@ -289,3 +289,4 @@ void SetCurrDir( const string &szDir )
 
 }; // namespace NFile ends
 
+

@@ -74,3 +74,4 @@ void CDiplomacy::SetNetGame( bool _bNetGame )
 		theDifficultyLevel.SetLevel( 1 );
 }
 
+

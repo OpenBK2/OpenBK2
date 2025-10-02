@@ -38,3 +38,4 @@ public:
 	void SendCommand( interface IAILogicCommandB2 *pCmd );
 };
 
+

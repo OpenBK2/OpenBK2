@@ -78,3 +78,4 @@ protected:
 };
 
 #endif // !defined(__VISOBJ_BUILDER__)
+

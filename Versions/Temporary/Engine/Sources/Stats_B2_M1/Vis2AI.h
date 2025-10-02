@@ -87,3 +87,4 @@ inline const SVector GetAIMapTile( const float x, const float y, const int nTile
 }
 
 #endif // __VIS2AI_H__
+

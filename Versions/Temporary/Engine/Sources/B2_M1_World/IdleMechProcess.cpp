@@ -42,3 +42,4 @@ bool CIdleMechProcess::Update( const NTimer::STime &time )
 	return true;
 }
 
+

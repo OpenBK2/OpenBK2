@@ -184,3 +184,4 @@ typedef CIBFast<D3DFMT_INDEX16> CIB16Fast;
 
 }
 #endif
+

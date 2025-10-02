@@ -24,3 +24,4 @@ public:
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_FREE; }
 };
 
+

@@ -264,3 +264,4 @@ bool CWindowComboBox::IsRelatedFocus( IWindow *pWindow ) const
 	return this == pWindow || dynamic_cast_ptr<IWindow*>( pList ) == pWindow; 
 }
 
+

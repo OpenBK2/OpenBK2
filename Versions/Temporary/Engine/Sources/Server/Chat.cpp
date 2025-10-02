@@ -388,3 +388,4 @@ void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, 
 	}
 }
 
+

@@ -25,3 +25,4 @@ interface IB2MapObj : virtual public CObjectBase
 	virtual const bool IsMousePicked() { return false; }
 };
 
+

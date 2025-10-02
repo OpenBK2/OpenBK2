@@ -136,3 +136,4 @@ void CSmokeScreen::GetCoveredTiles( list<SVector> *pTiles ) const
 	}
 }
 
+

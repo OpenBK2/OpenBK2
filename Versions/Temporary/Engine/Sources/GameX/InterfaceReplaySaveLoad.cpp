@@ -477,3 +477,4 @@ void CICInterfaceReplaySaveLoad::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( 0x19288C40, CInterfaceReplaySaveLoad );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_REPLAY_SAVE_LOAD, CICInterfaceReplaySaveLoad );
+

@@ -87,3 +87,4 @@ void CFreeFireManager::SShotInfo::SetInfo( CAIUnit *pNewTarget, CBasicGun *pGun 
 	gunDir = pGun->GetGlobalDir();
 }
 
+

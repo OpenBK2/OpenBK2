@@ -50,3 +50,4 @@ bool CManuverStateDesc::CheckSuitable( const NDb::SManuverDescriptor *pDesc ) co
 		IsParamSuitable( selfSpeed, pDesc->conditions.pSelfSpeed ) &&
 		IsParamSuitable( enemySpeed, pDesc->conditions.pEnemySpeed );
 }
+

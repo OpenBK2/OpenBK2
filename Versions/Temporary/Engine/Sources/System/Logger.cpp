@@ -192,3 +192,4 @@ NLog::CLogger logError( "Error", 0 );
 NLog::CLogger logCritical( "Critical", 0 );
 NLog::CLogger logAlert( "Alert", 0 );
 NLog::CLogger logEmergency( "Emergency", 0 );
+

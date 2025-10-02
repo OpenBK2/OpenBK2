@@ -7,3 +7,4 @@ void ToAIUnits( bool bInEditor )
 }
 
 virtual const CVec3 GetShootPointPos() const { return VNULL3; }
+

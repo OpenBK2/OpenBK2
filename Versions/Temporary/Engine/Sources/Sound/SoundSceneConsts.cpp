@@ -66,3 +66,4 @@ void SSoundSceneConsts::Load()
 	MIN_SOUND_COUNT_TO_PLAY_LOOPED = NGlobal::GetVar( "Scene.Sound.MapSounds.MinCountToPlayLooped", 1 );
 	
 }
+

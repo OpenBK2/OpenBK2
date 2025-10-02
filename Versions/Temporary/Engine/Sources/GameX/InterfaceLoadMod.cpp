@@ -302,3 +302,4 @@ void CICLoadMod::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x17263C01, CInterfaceLoadMod )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_LOAD_MOD, CICLoadMod )
 
+

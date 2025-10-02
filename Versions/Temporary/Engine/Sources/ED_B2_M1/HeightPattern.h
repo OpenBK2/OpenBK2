@@ -398,3 +398,4 @@ static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 
 
 #endif //#if !defined(__HEIGHT_PATTERN__)
+

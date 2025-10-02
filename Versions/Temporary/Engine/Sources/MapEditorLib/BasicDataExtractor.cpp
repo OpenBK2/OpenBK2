@@ -163,3 +163,4 @@ UINT CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 	return nResult;
 }
 
+

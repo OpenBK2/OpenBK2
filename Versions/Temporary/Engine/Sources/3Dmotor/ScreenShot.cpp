@@ -105,3 +105,4 @@ void CScreenshotTexture::Recalc()
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0xB2030101, CScreenshotTexture );
+

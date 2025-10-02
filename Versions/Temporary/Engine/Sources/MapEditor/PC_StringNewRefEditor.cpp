@@ -215,3 +215,4 @@ void CPCStringNewRefEditor::SetWindowTextByTypeAndName( const string &szTableNam
 
 // basement storage  
 
+

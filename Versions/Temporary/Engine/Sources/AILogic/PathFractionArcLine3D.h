@@ -29,3 +29,4 @@ public:
 	IPathFraction * GetLine();
 	virtual void GetSimplePath( CPathList *pPaths );
 };
+

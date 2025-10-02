@@ -150,3 +150,4 @@ void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture 
 
 }
 #endif
+

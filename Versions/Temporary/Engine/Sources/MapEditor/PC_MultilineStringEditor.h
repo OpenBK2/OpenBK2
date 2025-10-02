@@ -44,3 +44,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MULTILUNE_STRING_EDITOR__)
+

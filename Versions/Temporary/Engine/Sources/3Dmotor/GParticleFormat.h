@@ -122,3 +122,4 @@ class CParticlesLoader: public CLazyResourceLoader<int, CParticlesInfo>
 }
 
 #endif
+

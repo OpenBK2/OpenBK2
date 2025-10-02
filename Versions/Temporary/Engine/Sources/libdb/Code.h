@@ -34,3 +34,4 @@ interface ICode : public CXmlResource
 
 }
 
+

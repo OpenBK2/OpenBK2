@@ -92,3 +92,4 @@ interface ISFX : public CObjectBase
 SOUND_EXPORT ISFX *CreateSoundEngine();
 
 #endif // __SFX_H__
+

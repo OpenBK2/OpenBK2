@@ -87,3 +87,4 @@ interface IEditorContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__EDITOR__)
 
+

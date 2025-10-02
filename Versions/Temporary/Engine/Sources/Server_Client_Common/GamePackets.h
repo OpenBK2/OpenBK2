@@ -427,3 +427,4 @@ public:
 		: CNetPacket( nClientID ), nFromID( _nFromID ), nSendTime( _nSendTime ) {}
 };
 
+

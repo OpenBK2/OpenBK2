@@ -26,3 +26,4 @@ public:
 };
 
 #endif // !defined(__TREE__GDB_BROWSER__SEARCH_OBJECT_DIALOG__)
+

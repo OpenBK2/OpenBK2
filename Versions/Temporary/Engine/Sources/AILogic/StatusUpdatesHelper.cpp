@@ -49,3 +49,4 @@ void CStatusUpdatesHelper::SetStatus( const EUnitStatus _eStatus )
 	}
 }
 
+

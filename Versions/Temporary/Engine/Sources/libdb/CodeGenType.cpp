@@ -634,3 +634,4 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, N
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D02, CTypeDefinition );
+

@@ -15,3 +15,4 @@ interface ICommonB2M1AI : public CObjectBase
 	virtual void DumpAfterAssinc() {}
 };
 
+

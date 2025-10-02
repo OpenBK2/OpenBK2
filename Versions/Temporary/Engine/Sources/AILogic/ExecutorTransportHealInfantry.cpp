@@ -32,3 +32,4 @@ bool CExecutorTransportHealInfantry::NotifyEvent( const CExecutorEvent &event )
 {
 	return false;
 }
+

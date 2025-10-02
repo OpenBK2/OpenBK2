@@ -16,3 +16,4 @@
 #include <toolkit\olbar.h>								// Objective Toolkit Shortcut bar
 
 #endif // !defined(__SPECIFIC__)
+

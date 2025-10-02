@@ -7,3 +7,4 @@ namespace NHashMapConvertor
 	void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vector<int> *pValue, const bool bRead );
 };
 
+

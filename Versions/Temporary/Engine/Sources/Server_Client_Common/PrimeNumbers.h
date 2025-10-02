@@ -16,3 +16,4 @@ public:
 	bool IsPrime( const int nNumber ) { return isPrime.find( nNumber ) != isPrime.end(); }
 };
 
+

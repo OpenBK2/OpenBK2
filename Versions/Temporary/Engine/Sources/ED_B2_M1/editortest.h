@@ -10,3 +10,4 @@ namespace NDb
 	struct SWindowBaseShared;
 	struct SWindowSimpleShared;
 }
+

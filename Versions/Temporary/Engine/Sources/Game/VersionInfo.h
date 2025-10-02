@@ -7,3 +7,4 @@ namespace NVersionInfo
 	const string szTime = "16:33:57";
 }
 
+

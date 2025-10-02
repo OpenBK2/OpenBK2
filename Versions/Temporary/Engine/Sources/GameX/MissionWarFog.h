@@ -42,3 +42,4 @@ private:
 	void Blur( CArray2D<float> *pDst, const CArray2D<float> &src );
 };*/
 
+

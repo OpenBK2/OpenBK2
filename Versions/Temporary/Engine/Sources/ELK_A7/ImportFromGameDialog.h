@@ -42,3 +42,4 @@ public:
 	void GetFilePath( string *pszFilePath );
 };
 #endif // !defined(__ELK_IMPORT_FROM_GAME_DIALOG__)
+

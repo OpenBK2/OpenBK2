@@ -39,3 +39,4 @@ void ScriptError( const string &message );
 }
 //
 #endif __SCRIPTCOMMON_H_
+

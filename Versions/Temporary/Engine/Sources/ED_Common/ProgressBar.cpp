@@ -57,3 +57,4 @@ void SetCaption( const string & szCaption )
 
 };
 
+

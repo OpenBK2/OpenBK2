@@ -6,3 +6,4 @@ namespace NSlnAnalyzer
 	void GetTypesDescriptorsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pFiles );
 }
 
+

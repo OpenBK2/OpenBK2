@@ -114,3 +114,4 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 // just for using by MakeObjectVirtual( int nTypeID )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_LOADING_2D, CInterfaceMPLoading2D )
 
+

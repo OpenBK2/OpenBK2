@@ -186,3 +186,4 @@ void CPlanesFormation::Init( const NDb::SMechUnitRPGStats *pStats, const CVec3 &
 	vNewSpeed = vSpeed = _vSpeed;
 	vNormal = vNewNormal = _vNormale;
 }
+

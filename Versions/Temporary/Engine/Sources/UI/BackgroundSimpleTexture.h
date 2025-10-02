@@ -21,3 +21,4 @@ public:
 	virtual void SetOutline( const CDBID &outlineType );
 };
 
+

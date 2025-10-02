@@ -27,3 +27,4 @@ interface IDbObserver: public CObjectBase
 };
 
 }
+

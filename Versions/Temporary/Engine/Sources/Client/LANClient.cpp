@@ -204,3 +204,4 @@ void CLANClient::Kick( int nClient )
 	pNetDriver->Kick( nClient );
 }
 
+

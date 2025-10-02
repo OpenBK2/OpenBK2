@@ -112,3 +112,4 @@ void CProgressHook::AddLog( const string &rszLogMessage )
 }
 
 
+

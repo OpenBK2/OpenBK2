@@ -51,3 +51,4 @@ public:
 };
 
 #endif // !defined(__TREE__GDB_BROWSER__NEW_OBJECT_DIALOG__)
+

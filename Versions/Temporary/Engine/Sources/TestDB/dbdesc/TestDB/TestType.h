@@ -141,3 +141,4 @@ class CMapInfo2
 	SMapObject _Objects[];
 };
 
+

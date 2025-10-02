@@ -21,3 +21,4 @@ public:
 };
 
 #endif // !defined(__OBJECTRPGSTATS_EXPORTER__)
+

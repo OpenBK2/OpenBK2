@@ -46,3 +46,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_EXPORTER__)
+

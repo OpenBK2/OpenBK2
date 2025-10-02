@@ -154,3 +154,4 @@ DWORD SM1UnitHelicopter::CalcCheckSum() const
 using namespace NDb;
 BASIC_REGISTER_DATABASE_CLASS( SM1UnitSpecific )
 REGISTER_DATABASE_CLASS( 0x31197340, SM1UnitHelicopter ) 
+

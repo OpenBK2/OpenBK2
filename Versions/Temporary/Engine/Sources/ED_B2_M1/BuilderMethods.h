@@ -9,3 +9,4 @@ bool CheckIntValue( string *pszDescription, const string &szValueName, int nMin,
 
 #endif // !defined(__BUILDER_METHODS__)
 
+

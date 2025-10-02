@@ -601,3 +601,4 @@ int CMOUnit::operator&( IBinSaver &saver )
 START_REGISTER( MOUnit )
 REGISTER_VAR_EX( "objective_dynamic_pointer_offset", NGlobal::VarFloatHandler, &s_fPointerOffset, 3.0f, STORAGE_NONE );
 FINISH_REGISTER
+

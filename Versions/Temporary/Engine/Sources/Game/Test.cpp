@@ -143,3 +143,4 @@ IConsoleFunc *MakeConsoleFunc( void (*_pfnFunc)( T1 _p1, T2 _p2 ), T1 _p1, T2 _p
 
 }
 
+

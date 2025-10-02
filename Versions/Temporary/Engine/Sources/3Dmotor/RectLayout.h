@@ -72,3 +72,4 @@ inline CRectLayout MakeLayout( float fScrX, float fScrY, float fScrW, float fScr
 }
 
 #endif
+

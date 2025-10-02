@@ -402,3 +402,4 @@ static void ColouriseCppDocInsensitive(unsigned int startPos, int length, int in
 LexerModule lmCPP(SCLEX_CPP, ColouriseCppDocSensitive, "cpp", FoldCppDoc, cppWordLists);
 LexerModule lmCPPNoCase(SCLEX_CPPNOCASE, ColouriseCppDocInsensitive, "cppnocase", FoldCppDoc, cppWordLists);
 LexerModule lmTCL(SCLEX_TCL, ColouriseCppDocSensitive, "tcl", FoldCppDoc, cppWordLists);
+

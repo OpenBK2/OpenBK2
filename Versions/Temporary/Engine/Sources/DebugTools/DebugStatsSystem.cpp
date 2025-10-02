@@ -21,3 +21,4 @@ void UpdateEntry( const string &szName, const string &szValue, const DWORD dwCol
 
 }
 
+

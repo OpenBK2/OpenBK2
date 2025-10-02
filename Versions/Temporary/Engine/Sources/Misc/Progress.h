@@ -62,3 +62,4 @@ namespace NProgressHook
 #define LOCK_RANGE( pProgressHook, nLength ) NProgressHook::LockRange( pProgressHook, nLength );
 #define UNLOCK_RANGE( pProgressHook ) NProgressHook::UnlockRange( pProgressHook );
 #endif
+

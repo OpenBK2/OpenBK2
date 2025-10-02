@@ -348,3 +348,4 @@ const int CMountedTurret::GetOwnerParty() const
 	return theDipl.GetNParty( pBuilding->GetPlayer() );
 }
 
+

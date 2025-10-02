@@ -29,3 +29,4 @@ namespace NML
 	int Parse( CMLMBCSText *pMLMBCSText, const CString &rstrText, bool bJoinTags, int nCodePage );
 };
 #endif // !defined(__ELK_MLPARSER__)
+

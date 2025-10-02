@@ -251,3 +251,4 @@ bool CModelEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck
 
 // basement storage  
 
+

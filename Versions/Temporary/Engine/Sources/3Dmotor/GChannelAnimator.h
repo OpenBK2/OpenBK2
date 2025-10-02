@@ -14,3 +14,4 @@ namespace NAnimation
 		virtual float GetChannelValue( int nChannelIndex ) = 0;
 	};
 } // namespace NAnimation
+

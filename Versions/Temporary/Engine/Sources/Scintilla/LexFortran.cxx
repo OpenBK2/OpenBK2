@@ -448,3 +448,4 @@ static void FoldFortranDocFixFormat(unsigned int startPos, int length, int initS
 /***************************************/
 LexerModule lmFortran(SCLEX_FORTRAN, ColouriseFortranDocFreeFormat, "fortran", FoldFortranDocFreeFormat, FortranWordLists);
 LexerModule lmF77(SCLEX_F77, ColouriseFortranDocFixFormat, "f77", FoldFortranDocFixFormat, FortranWordLists);
+

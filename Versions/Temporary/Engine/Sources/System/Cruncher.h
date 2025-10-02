@@ -38,3 +38,4 @@ public:
 
 	friend struct SNetCompressorInit;
 };
+

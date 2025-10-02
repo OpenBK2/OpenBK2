@@ -22,3 +22,4 @@ interface IControlConfig
 };
 
 #endif // !defined(__COMMON_CONTROLS__CONTROL_CONFIG__)
+

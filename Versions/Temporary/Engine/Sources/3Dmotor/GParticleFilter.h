@@ -8,3 +8,4 @@ public:
 	virtual void FilterParticles( const vector<CVec3> &positions, const vector<char> &skipped, vector<char> *pFilter ) = 0;
 };
 }
+

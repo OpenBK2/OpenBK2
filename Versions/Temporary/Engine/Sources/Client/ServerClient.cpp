@@ -234,3 +234,4 @@ IServerClient* IServerClient::Create( const char* pServerIPAddress, const int nN
 }
 
 BASIC_REGISTER_CLASS( IServerClient );
+

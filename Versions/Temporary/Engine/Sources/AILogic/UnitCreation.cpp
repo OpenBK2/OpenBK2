@@ -826,3 +826,4 @@ void CUnitCreation::ApplyWeatherModifier( const bool bForward )
 	units.ApplyModifierToAll( pConsts->common.pBadWeatherStatModifier, bForward );
 }
 
+

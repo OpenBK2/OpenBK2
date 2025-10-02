@@ -185,3 +185,4 @@ public:
 };
 
 #endif // !defined(AFX_UISCREEN_H__B9599715_34A7_477E_9D09_8DE9B2953C08__INCLUDED_)
+

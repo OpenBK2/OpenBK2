@@ -697,3 +697,4 @@ void CScriptAreaState::PostDraw( CPaintDC *pPaintDC )
 	}
 }
 
+

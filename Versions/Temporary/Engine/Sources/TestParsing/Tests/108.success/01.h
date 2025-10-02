@@ -6,3 +6,4 @@ class C
 
   E e_array[] = e1;
 };
+

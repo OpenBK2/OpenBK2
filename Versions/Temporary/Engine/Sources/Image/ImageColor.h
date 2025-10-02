@@ -181,3 +181,4 @@ TColor GetARGBColorGradient( TColor zeroColor, TColor fullColor, float fGradient
 }
 
 #endif // #if !defined(__COMMON_TOOLS__COLORS__)
+

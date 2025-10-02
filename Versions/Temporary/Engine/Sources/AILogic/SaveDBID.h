@@ -25,3 +25,4 @@ inline void LoadDBID( IBinSaver *pSaver, const int nChunk, int *pDBID )
 */
 
 #endif // __SAVE_DBID_H__
+

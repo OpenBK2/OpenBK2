@@ -28,3 +28,4 @@ public:																																		\
 };
 
 #endif // !defined(__INTERFACE_COMMAND_DECLARE__)
+

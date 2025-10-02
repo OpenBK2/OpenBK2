@@ -42,3 +42,4 @@ void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int
 
 }
 
+

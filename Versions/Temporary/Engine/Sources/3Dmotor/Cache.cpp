@@ -16,3 +16,4 @@ struct SCacheInit
 	}
 } init;
 }
+

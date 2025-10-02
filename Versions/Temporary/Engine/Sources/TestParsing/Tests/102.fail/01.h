@@ -7,3 +7,4 @@ struct S
   enum E1 { e2 = e3 };
 };
 
+

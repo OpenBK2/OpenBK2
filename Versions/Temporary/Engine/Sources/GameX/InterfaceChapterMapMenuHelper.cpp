@@ -215,3 +215,4 @@ void SChapterMapMenuHelper::ReReadPotentials()
 
 REGISTER_SAVELOAD_CLASS( 0x1721A380, SChapterMapMenuHelper )
 
+

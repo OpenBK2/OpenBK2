@@ -270,3 +270,4 @@ bool TestXmlSaxParser( const char *pszTestFileName )
 }
 
 }
+

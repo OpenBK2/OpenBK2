@@ -10,3 +10,4 @@ namespace NImage
 	void Load2Bitmap( CBitmap *pBitmap, const CArray2D<DWORD> &rImage, const CTPoint<int> &rSize );
 };
 
+

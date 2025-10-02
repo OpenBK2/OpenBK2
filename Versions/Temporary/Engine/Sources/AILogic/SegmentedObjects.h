@@ -135,3 +135,4 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime, const NTimer::STime
 };
 
 #endif // __SEGMENTED_OBJECTS_H__
+

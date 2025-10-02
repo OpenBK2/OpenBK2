@@ -48,3 +48,4 @@ public:
 
 	CDataStream *OpenFile( int nIndex );
 };
+

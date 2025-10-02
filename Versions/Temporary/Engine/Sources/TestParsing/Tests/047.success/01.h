@@ -13,3 +13,4 @@ class CA
 [a3] struct SA : public SS
 {
 };
+

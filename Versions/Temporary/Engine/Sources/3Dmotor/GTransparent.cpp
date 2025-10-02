@@ -537,3 +537,4 @@ void CTransparentRenderer::Render( const STransparentRenderContext &trc )
 
 }
 using namespace NGScene;
+

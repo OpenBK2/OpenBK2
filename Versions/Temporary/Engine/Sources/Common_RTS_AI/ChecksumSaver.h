@@ -44,3 +44,4 @@ public:
 	virtual int GetVersion() const { return 0; }
 	virtual bool IsChecksum() { return true; }
 };
+

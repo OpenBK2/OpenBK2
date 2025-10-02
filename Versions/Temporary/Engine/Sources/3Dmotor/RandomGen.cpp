@@ -229,3 +229,4 @@ void CRandomGenerator::FillRandRsl()
 		randrsl[i] ^= rand();
 }
 
+

@@ -375,3 +375,4 @@ void CAIGeneralPointsWindow::OnNMDblclkAigenListParcels(NMHDR *pNMHDR, LRESULT *
 }
 
 
+

@@ -158,3 +158,4 @@ const string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field 
 
 }
 
+

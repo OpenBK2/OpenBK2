@@ -214,3 +214,4 @@ void RemoveIgnoreAccessViolationRegion( const void *pStart, int nSize )
 	else
 		ASSERT(0);
 }
+

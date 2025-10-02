@@ -71,3 +71,4 @@ SYSTEM_EXPORT void ResetVarsToDefault( EStorageClass storage );
 SYSTEM_EXPORT void SaveAllVars( const string &szGlobalName, const string &szUserName );
 
 }
+

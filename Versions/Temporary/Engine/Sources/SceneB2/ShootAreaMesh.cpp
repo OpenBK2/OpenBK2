@@ -264,3 +264,4 @@ void CShootAreaMesh::BuildSector( vector<NGScene::SVertex> &verts, vector<STrian
 
 REGISTER_SAVELOAD_CLASS( 0x101554C0, CShootAreaMesh )
 
+

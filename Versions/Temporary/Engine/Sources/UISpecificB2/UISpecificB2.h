@@ -134,3 +134,4 @@ interface IProgressHookB2 : public IProgressHook
 	virtual void RunFinishScreen() = 0;
 };
 
+

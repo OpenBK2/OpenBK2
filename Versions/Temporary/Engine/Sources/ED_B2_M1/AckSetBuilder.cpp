@@ -480,3 +480,4 @@ bool CAcksBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck
 }
 
 
+

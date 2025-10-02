@@ -51,3 +51,4 @@ public:
 	void GetUnitsPreventing( list< CPtr<CAIUnit> > * units ){}
 	virtual bool IsCheatPath() const { return true; }
 };
+

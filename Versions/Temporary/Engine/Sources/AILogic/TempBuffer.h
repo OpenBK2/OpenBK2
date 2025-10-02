@@ -19,3 +19,4 @@ TYPE* GetLocalTempBuffer( int nAmount )
 }
 
 
+

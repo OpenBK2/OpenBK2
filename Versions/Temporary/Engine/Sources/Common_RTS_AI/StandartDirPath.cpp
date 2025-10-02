@@ -90,3 +90,4 @@ void CStandartDirPath::MarkPath( const int nID, const NDebugInfo::EColor color )
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
 
+

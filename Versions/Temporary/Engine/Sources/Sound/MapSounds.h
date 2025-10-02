@@ -91,3 +91,4 @@ public:
 	WORD AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pDesc );
 	void RemoveSound( const WORD wInstanceID );
 };
+

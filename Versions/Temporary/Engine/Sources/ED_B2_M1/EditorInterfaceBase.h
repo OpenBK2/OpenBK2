@@ -17,3 +17,4 @@ public:
 };
 
 #endif // !defined(__CAMERA_MOVEMENT_INTERFACE__)
+

@@ -204,3 +204,4 @@ void CLightState::CreateSimple( SLightStateCalcSeed *pSeed, const SSphere &_boun
 	CreateScattered( pSeed, _bounds, l, 0, nSkyDirs );
 }
 }
+

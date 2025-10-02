@@ -12,3 +12,4 @@ class A
   D_Reference *pD;
 };
 
+

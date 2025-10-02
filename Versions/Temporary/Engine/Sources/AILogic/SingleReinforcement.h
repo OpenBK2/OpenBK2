@@ -31,3 +31,4 @@ void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *
 	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget );
 }
 
+

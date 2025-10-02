@@ -89,3 +89,4 @@ interface ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public ICha
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
 	const SGrannySkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace
+

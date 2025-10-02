@@ -78,3 +78,4 @@ int luaIsValid( lua_State* pState )
 using namespace NScript;
 //
 //REGISTER_SAVELOAD_TEMPL_CLASS( 0x11061440, CDBPtrWrapper<NDb::CDBCamera> ,CDBPtrWrapper )
+

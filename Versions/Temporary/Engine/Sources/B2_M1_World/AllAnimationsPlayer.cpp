@@ -56,3 +56,4 @@ void CAllAnimationsPlayer::Update()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x300BA500, CAllAnimationsPlayer )
+

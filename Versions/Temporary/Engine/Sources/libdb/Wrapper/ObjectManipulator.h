@@ -57,3 +57,4 @@ public:
 	bool IsFolder() const { return false; }
 };
 
+

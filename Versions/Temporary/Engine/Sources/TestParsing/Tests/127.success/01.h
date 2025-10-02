@@ -8,3 +8,4 @@ class C
   // very important variable
   int a[0x00a];
 };
+

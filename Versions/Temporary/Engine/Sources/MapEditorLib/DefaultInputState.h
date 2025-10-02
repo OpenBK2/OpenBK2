@@ -43,3 +43,4 @@ public:
 };
 
 #endif // !defined(__DEFAULT_INPUT_STATE__)
+

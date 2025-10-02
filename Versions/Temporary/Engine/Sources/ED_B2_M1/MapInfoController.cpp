@@ -14,3 +14,4 @@ const char CMapInfoController::TEMPORARY_LABEL[] = "CMapInfoController::TEMPORAR
 
 // basement storage  
 
+

@@ -886,3 +886,4 @@ static const char * const perlWordListDesc[] = {
 };
 
 LexerModule lmPerl(SCLEX_PERL, ColourisePerlDoc, "perl", FoldPerlDoc, perlWordListDesc);
+

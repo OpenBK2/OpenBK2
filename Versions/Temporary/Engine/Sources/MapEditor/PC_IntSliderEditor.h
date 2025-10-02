@@ -28,3 +28,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_INT_SLIDER__)
+

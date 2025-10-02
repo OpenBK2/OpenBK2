@@ -304,3 +304,4 @@ public:
 };
 
 #endif // __GENERALINTENDANT_H__
+

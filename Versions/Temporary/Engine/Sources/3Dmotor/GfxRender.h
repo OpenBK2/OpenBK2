@@ -292,3 +292,4 @@ void SetDithering( EDithering a );
 }
 
 #endif
+

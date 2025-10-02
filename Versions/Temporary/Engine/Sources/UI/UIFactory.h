@@ -92,3 +92,4 @@ public:
 	static bool IsMessageRegistered( const SGameMessage &msg );
 };
 
+

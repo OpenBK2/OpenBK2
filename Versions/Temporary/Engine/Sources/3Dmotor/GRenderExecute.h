@@ -34,3 +34,4 @@ void SetupNLShadowsProjection( NGfx::CRenderContext *pRC, const SPerspDirectiona
 
 }
 #endif
+

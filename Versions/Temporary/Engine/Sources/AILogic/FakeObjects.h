@@ -50,3 +50,4 @@ public:
 	virtual CObjectProfile* GetPassProfile() const { return pPassProfile; }
 };
 
+

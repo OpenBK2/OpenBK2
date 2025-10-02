@@ -201,3 +201,4 @@ NDb::EAnimationType NDb::StringToEnum_NDb_EAnimationType( const string &szValue 
 }
 }
 using namespace NDb;
+

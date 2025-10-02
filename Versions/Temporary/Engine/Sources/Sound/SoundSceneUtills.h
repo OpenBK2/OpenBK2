@@ -35,3 +35,4 @@ public:
 	bool operator()( const CSound * sound ) const;
 };
 
+

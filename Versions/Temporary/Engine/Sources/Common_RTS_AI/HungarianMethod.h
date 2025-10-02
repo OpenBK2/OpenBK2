@@ -33,3 +33,4 @@ public:
 	const int GetResult( const int nIndex ) const { return result[nIndex]; }
 };
 
+

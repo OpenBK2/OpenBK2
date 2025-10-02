@@ -552,3 +552,4 @@ void SConsts::InitPriorities( const vector<NDb::SUnitTypePriority> &priorities )
 		PRIORITIES[ it->eUnitType ] = it->nPriority;
 }
 
+

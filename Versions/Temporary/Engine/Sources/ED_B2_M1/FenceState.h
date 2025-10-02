@@ -111,3 +111,4 @@ public:
 };
 
 #endif // #if !defined(__FENCE_STATE__)
+

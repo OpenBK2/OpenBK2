@@ -108,3 +108,4 @@ bool CExecutorAttackGroup::IsExecutorValid() const
 	return true;
 }
 
+

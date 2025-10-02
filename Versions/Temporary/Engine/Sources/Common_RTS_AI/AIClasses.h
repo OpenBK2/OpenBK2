@@ -40,3 +40,4 @@ inline const int GetClassIndex( const BYTE aiClass )
 	}
 }
 
+

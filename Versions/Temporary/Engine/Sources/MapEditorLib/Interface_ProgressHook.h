@@ -26,3 +26,4 @@ interface IProgressHook : public CObjectBase
 };
 
 
+

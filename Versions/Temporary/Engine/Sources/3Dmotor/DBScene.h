@@ -1058,3 +1058,4 @@ struct SKnownEnum<NDb::SMaterial::EDynamicMode>
 	static string ToString( NDb::SMaterial::EDynamicMode eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SMaterial::EDynamicMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EDynamicMode( szValue ); }
 };
+

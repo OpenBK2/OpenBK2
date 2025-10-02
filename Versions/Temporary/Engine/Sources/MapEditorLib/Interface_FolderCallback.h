@@ -37,3 +37,4 @@ interface IFolderCallback : public CObjectBase
 
 #endif // !defined(__INTERFACE__CC_FOLDER_CALLBACK__)
 
+

@@ -8,3 +8,4 @@ struct S
   enum E { e1 = c };
 };
 
+

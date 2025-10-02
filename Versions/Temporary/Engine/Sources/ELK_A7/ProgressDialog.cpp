@@ -130,3 +130,4 @@ void CProgressDialog::OnStartTimer()
 	ShowWindow( SW_SHOW );
 }
 
+

@@ -37,3 +37,4 @@ public:
 };
 
 #endif // !defined(__GDB__SELECT_TABLES_DIALOG__)
+

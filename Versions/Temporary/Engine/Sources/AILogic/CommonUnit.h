@@ -295,3 +295,4 @@ public:
 	const bool TryExecuteCommand( class CAICommand *pCommand, const bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 };
 
+

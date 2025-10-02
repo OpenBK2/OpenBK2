@@ -4,3 +4,4 @@
 
 BASIC_REGISTER_CLASS( IAILogicCommandB2 );
 
+

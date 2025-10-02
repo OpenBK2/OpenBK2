@@ -96,3 +96,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_DB_LINK_DIALOG__)
+

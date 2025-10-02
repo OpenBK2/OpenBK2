@@ -47,3 +47,4 @@ public:
 	( SUPERSUBCLASS( T, U ) && \
 	(!NMeta::CConversion<const T, const U>::sameType) )
 
+

@@ -110,3 +110,4 @@ public:
 	static CVec2 GetSizeAdd() { return CVec2( 16, 16 ); }
 	static float GetTextStretchX() { return 1; }
 };
+

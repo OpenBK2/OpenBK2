@@ -72,3 +72,4 @@ bool CCameraMapIterator::Next()
 	return false;
 }
 
+

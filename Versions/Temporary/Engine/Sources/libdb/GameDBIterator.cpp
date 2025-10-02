@@ -49,3 +49,4 @@ IDBIterator *CreateDBIterator( int nTypeID )
 }
 
 }
+

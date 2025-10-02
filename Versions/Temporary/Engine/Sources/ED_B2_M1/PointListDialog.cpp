@@ -271,3 +271,4 @@ bool CPointListDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 }
 
 
+

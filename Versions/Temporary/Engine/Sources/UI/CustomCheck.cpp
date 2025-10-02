@@ -152,3 +152,4 @@ void CCheckIsTabActive::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pDesc = checked_cast<const NDb::SCheckIsTabActive*>( _pDesc );
 }
 
+

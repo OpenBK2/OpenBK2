@@ -17,3 +17,4 @@ public:
 INTERFACE_COMMAND_DECLARE( CMapInfoInterfaceCommand, CMapInfoInterface )
 
 #endif // !defined(__MAPINFO_INTERFACE__)
+

@@ -148,3 +148,4 @@ void CWindowConsoleOutput::Visit( interface IUIVisitor *pVisitor )
 		}
 	}
 }
+

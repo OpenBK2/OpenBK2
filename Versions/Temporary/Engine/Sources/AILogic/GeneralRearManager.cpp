@@ -205,3 +205,4 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 		}
 	}
 }
+

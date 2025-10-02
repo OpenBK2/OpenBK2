@@ -283,3 +283,4 @@ ILinksManager* CreateServerLinksManager(  const int nPort )
 
 BASIC_REGISTER_CLASS( NNet::ILinksManager )
 BASIC_REGISTER_CLASS( NNet::CLinksManager )
+

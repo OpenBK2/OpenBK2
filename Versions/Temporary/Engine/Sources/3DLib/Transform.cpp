@@ -717,3 +717,4 @@ void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &
 	pRes->Push43( projection.backward * ts.Get().forward );
 }
 
+

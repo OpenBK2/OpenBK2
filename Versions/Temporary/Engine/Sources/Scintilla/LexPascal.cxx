@@ -367,3 +367,4 @@ static const char * const pascalWordListDesc[] = {
 };
 
 LexerModule lmPascal(SCLEX_PASCAL, ColourisePascalDoc, "pascal", FoldPascalDoc, pascalWordListDesc);
+

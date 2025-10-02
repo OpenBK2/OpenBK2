@@ -30,3 +30,4 @@ public:
 };
 
 #endif // #if !defined(__COMMON_TOOLS__STRING_MANAGER__)
+

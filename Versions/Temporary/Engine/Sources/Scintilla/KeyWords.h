@@ -72,3 +72,4 @@ inline bool isoperator(char ch) {
 		return true;
 	return false;
 }
+

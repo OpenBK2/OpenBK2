@@ -24,3 +24,4 @@ public:
 	CMemGeometry( const vector<CVec3> &points );
 };
 }
+

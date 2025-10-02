@@ -79,3 +79,4 @@ public:
 	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }
 };
 
+

@@ -1736,3 +1736,4 @@ bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 	return bResult;
 }
 /**/
+

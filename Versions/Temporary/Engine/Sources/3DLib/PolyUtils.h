@@ -20,3 +20,4 @@ void ClipPolygon(	const TPolygonsList &vPolygon, const TPolygonsList &vClipPolyg
 void DumpPolyList( const TPolygonsList &polygonsList );
 
 #endif
+

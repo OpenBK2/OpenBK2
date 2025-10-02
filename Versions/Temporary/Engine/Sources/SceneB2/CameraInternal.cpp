@@ -720,3 +720,4 @@ REGISTER_VAR_EX( "camera_validate_diff", NGlobal::VarFloatHandler, &s_fValidateD
 
 FINISH_REGISTER
 
+

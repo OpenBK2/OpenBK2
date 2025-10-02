@@ -52,3 +52,4 @@ public:
 };
 
 #endif // !defined(__COMMON_TOOLS__GRANNY__)
+

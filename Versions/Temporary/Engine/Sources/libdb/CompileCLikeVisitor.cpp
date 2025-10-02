@@ -522,3 +522,4 @@ void CVisitor::Visit( NLang::CNamespace *pNM )
 
 }
 
+

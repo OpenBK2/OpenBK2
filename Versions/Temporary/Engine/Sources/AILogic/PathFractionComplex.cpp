@@ -107,3 +107,4 @@ CVec3 CPathFractionComplexBase::GetNormale( const float fDist ) const
 		return fr.first->GetNormale( fDist - fr.second );
 	return V3_AXIS_Z;
 }
+

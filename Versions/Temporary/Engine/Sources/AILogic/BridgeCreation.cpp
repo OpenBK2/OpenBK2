@@ -194,3 +194,4 @@ float CBridgeCreation::GetPrice()
 	return pStats->fMaxHP * pStats->fRepairCost * SConsts::REPAIR_COST_ADJUST/ pFullBridge->GetNSpans();
 }
 
+

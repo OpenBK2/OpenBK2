@@ -81,3 +81,4 @@ interface IVisualNotifications : public CObjectBase
 	virtual void PlaceMarker( const CVec2 &vPos ) {}
 };
 
+

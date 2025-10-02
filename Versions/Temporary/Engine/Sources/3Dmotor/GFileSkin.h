@@ -45,3 +45,4 @@ inline void ConvertWeights( vector<SVertexWeight> *pRes, const vector<SLoadVerte
 } // namespace
 
 #endif
+

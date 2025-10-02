@@ -75,3 +75,4 @@ public:
 	friend class CStaticMembers;
 };
 
+

@@ -59,3 +59,4 @@ public:
 };
 
 #endif // !defined(__MODEL_EDITOR_SETTINGS__)
+

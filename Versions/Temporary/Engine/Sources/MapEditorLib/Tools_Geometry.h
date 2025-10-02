@@ -49,3 +49,4 @@ inline void UpdateBoundingBox( CVec3 *pvMin, CVec3 *pvMax, const CVec3 &rvPositi
 float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection );
 
 #endif // #if !defined(__COMMON_TOOLS__GEOMETRY__)
+

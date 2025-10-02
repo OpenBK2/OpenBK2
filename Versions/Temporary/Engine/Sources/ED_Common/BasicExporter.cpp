@@ -69,3 +69,4 @@ void CBasicExporter::FinishExport( const string &rszObjectTypeName, bool bForce 
 	pMayaProcess = 0;
 }
 
+

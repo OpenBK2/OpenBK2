@@ -17,3 +17,4 @@ bool CanCalcLM();
 int GetShadowsQuality();
 bool IsUsing16bitShadows();
 }
+

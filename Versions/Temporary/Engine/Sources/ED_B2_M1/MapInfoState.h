@@ -107,3 +107,4 @@ public:
 
 #endif // !defined(__MAPINFO_STATE__)
 
+

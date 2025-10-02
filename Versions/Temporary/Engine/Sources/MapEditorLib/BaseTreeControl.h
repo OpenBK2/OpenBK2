@@ -53,3 +53,4 @@ class CBaseTreeControl
 };
 
 #endif // !defined(__COMMON_CONTROLS__BASE_TREE_CONTROL__)
+

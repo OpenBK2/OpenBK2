@@ -46,3 +46,4 @@ public:
 
 STATS_B2_M1_EXPORT CConstructorInfo* CreateConstructorInfo();
 
+

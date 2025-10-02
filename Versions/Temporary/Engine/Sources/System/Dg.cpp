@@ -35,3 +35,4 @@ void MarkNewDGFrame()
 
 REGISTER_SAVELOAD_CLASS( 0x1009DCC3, CVersioningBase )
 
+

@@ -20,3 +20,4 @@ public:
 
 #endif // !defined(__EFFECT_STATE__)
 
+

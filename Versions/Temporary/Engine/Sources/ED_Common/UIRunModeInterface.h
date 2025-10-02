@@ -32,3 +32,4 @@ protected:
 INTERFACE_COMMAND_DECLARE( CUIRunModeIC, CUIRunModeInterface )
 
 #endif // __UI_RUN_MODE_INTERFACE__
+

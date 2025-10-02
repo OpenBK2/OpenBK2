@@ -1452,3 +1452,4 @@ void Platform_Finalise() {
 	ListBoxX_Unregister();
 	::DeleteCriticalSection(&crPlatformLock);
 }
+

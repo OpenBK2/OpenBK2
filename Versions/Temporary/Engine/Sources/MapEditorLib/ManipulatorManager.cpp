@@ -449,3 +449,4 @@ void CManipulatorManager::Trace( const string &rszPrefix, IManipulator* pManipul
 
 // basement storage  
 
+

@@ -44,3 +44,4 @@ const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, interface 
 	bFinished = true;
 	return 0;
 }
+

@@ -302,3 +302,4 @@ struct IVisObj: virtual public CObjectBase
 	//	virtual void Visit( ISoundVisitor* ) {}
 };
 
+

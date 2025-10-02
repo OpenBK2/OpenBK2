@@ -48,3 +48,4 @@ CAddBoneFilter::~CAddBoneFilter()
 }
 using namespace NAnimation;
 REGISTER_SAVELOAD_CLASS( 0x10441190, CAddBoneFilter )
+

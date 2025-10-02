@@ -44,3 +44,4 @@ public:
 	const NDb::SMapInfo *GetMap() const;
 };
 
+

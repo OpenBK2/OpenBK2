@@ -39,3 +39,4 @@ void CStandartDirectPath::MarkPath( const int nID, const NDebugInfo::EColor colo
 
 REGISTER_SAVELOAD_CLASS( 0x31224300, CStandartDirectPath );
 
+

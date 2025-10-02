@@ -16,3 +16,4 @@ interface IFullScreenFader : public CObjectBase
 };
 
 IFullScreenFader *CreateFullScreenFader();
+

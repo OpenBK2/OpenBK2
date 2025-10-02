@@ -624,3 +624,4 @@ void CFenceDesignTool::GetSectionsInfo( vector<SFenceSectionInfo> *pSectionInfo,
 	vLastPos = cp;
 }
 
+

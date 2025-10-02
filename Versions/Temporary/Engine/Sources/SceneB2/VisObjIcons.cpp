@@ -267,3 +267,4 @@ void CScene::RemoveIcon( const int nID )
 
 REGISTER_SAVELOAD_CLASS( 0x1311E302, CVisObjIconInfo );
 
+

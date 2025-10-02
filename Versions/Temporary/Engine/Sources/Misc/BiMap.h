@@ -95,3 +95,4 @@ struct CBiMap
 		return map12.empty() /*&& map21.empty()*/;
 	}
 };
+

@@ -589,3 +589,4 @@ int CWindowListCtrl::GetRowHeight() const
 	}
 	return nHeight;
 }
+

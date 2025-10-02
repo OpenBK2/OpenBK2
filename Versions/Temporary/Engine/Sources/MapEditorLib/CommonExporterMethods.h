@@ -151,3 +151,4 @@ void MoveTempFileToDestination( const string &szTempFileFullName, const string &
 
 #endif // !defined(__COMMON_EXPORTER_METHODS__)
  
+

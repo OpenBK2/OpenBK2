@@ -186,3 +186,4 @@ struct SKnownEnum<NDb::ENotificationEventType>
 	static string ToString( NDb::ENotificationEventType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ENotificationEventType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ENotificationEventType( szValue ); }
 };
+

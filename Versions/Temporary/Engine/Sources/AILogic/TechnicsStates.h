@@ -151,3 +151,4 @@ public:
 	EUnitStateNames GetName() { return EUSN_MECHUNIT_REST_ON_BOARD; }
 };
 
+

@@ -235,3 +235,4 @@ int lua_State::operator&( IBinSaver &f )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x70813170, CLuaThread );
+

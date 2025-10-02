@@ -106,3 +106,4 @@ DWORD CDBPtr<TUserObj,TPtr>::CalcCheckSum() const
 		return GetBarePtr()->CalcCheckSum();
 }
 
+

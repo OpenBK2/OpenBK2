@@ -88,3 +88,4 @@ INT_PTR CEnterNameDialog::DoModal()
 }
 
 
+

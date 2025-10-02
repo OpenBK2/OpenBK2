@@ -1775,3 +1775,4 @@ IUnitState *CCommonPatrolState::Instance( CCommonUnit *pUnit, CVec2 &vTarget )
 	return 0;
 }
 
+

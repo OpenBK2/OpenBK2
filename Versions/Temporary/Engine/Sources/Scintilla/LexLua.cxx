@@ -327,3 +327,4 @@ static const char * const luaWordListDesc[] = {
 };
 
 LexerModule lmLua(SCLEX_LUA, ColouriseLuaDoc, "lua", FoldLuaDoc, luaWordListDesc);
+

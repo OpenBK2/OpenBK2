@@ -22,3 +22,4 @@ public:
 	unsigned int GetSizeY() const { return noise.GetSizeY(); }
 };
 
+

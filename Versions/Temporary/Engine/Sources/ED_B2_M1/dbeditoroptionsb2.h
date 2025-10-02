@@ -19,3 +19,4 @@ namespace NDb
 	struct SSkeleton;
 	struct SMinimap;
 }
+

@@ -54,3 +54,4 @@ void CPCBoolCheckBoxEditor::GetValue( CVariant *pValue )
 
 // basement storage  
 
+

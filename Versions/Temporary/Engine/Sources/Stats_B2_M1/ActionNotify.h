@@ -251,3 +251,4 @@ inline bool DoWeNeedAction( const int nAction )
 }
 
 #endif
+

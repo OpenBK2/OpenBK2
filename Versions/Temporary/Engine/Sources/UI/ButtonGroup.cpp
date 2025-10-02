@@ -89,3 +89,4 @@ void CButtonGroup::Remove_All()
 	pPressed = 0;
 }
 
+

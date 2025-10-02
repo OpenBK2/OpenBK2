@@ -45,3 +45,4 @@ bool CObjectFader::Update( void *p )
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x13168B80, CObjectFader )
+

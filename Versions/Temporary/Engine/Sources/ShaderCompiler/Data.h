@@ -51,3 +51,4 @@ struct SHLSLShaderGroup
 extern vector<SVShader> vertexShaders;
 extern vector<SPShader> pixelShaders;
 extern vector<SHLSLShaderGroup> hlslShaders;
+

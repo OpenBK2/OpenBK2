@@ -74,3 +74,4 @@ unsigned int UCS2FromUTF8(const char *s, unsigned int len, wchar_t *tbuf, unsign
 	}
 	return ui;
 }
+

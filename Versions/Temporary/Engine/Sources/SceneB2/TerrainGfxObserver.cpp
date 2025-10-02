@@ -299,3 +299,4 @@ START_REGISTER(TerrainGfxObserverCommands)
 REGISTER_VAR_EX( "disable_rivers", NGlobal::VarBoolHandler, &bDisableRivers, false, STORAGE_NONE );
 FINISH_REGISTER
 
+

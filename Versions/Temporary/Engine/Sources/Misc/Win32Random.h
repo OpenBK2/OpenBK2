@@ -27,3 +27,4 @@ namespace NWin32Random
 };
 
 #endif // __WIN32RANDOM_H__
+

@@ -16,3 +16,4 @@ void CCommandRegistratorForScript::Called( int nCommand )
 		pScripts->CallScriptFunction( StrFmt( "OnRegisteredCommand( %i )", nCommand ) );
 }
 
+

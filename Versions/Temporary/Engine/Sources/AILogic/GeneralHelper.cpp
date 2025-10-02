@@ -100,3 +100,4 @@ bool SGeneralHelper::RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer )
 	return bDeleted;
 }
 
+

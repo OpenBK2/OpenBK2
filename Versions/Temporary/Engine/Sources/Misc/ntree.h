@@ -805,3 +805,4 @@ class _Compare, class _Alloc> inline bool _STLP_CALL
 					// Local Variables:
 					// mode:C++
 					// End:
+

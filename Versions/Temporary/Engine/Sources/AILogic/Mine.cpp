@@ -176,3 +176,4 @@ bool CMineStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) cons
 		eAction == ACTION_NOTIFY_SILENT_DEATH );
 }
 
+

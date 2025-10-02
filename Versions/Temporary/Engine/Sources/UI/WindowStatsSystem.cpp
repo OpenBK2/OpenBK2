@@ -77,3 +77,4 @@ void CWindowStatsSystem::Visit( interface IUIVisitor *pVisitor )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x110AC482, CWindowStatsSystem );
+

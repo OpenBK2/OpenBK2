@@ -15,3 +15,4 @@ struct SAckEntry
 bool LoadAcksTable( vector<SAckEntry> *pRes, const string &szFileName );
 
 }
+

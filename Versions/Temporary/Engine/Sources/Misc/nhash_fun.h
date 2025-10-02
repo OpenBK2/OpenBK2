@@ -84,3 +84,4 @@ template<> struct hash<unsigned long> {
 };
 
 }
+

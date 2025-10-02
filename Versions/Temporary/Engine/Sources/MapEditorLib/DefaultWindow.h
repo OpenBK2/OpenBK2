@@ -22,3 +22,4 @@ public:
 };
 
 #endif // !defined(__DEFAULT_WINDOW__)
+

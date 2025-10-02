@@ -88,3 +88,4 @@ bool CanCreate##TYPE( const string &szName )																				 \
 }																																										 \
 };
 
+

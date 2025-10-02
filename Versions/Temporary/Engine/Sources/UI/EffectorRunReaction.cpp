@@ -59,3 +59,4 @@ void CEffectorRunReaction::Reverse()
 	bFinished = false;
 }
 
+

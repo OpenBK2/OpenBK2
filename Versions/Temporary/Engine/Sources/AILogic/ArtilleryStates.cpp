@@ -1631,3 +1631,4 @@ void CArtilleryAttackAviationState::Segment()
 		CSoldierAttackAviationState::Segment();
 }
 
+

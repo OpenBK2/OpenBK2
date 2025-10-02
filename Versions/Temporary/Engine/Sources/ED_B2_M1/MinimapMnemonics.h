@@ -20,3 +20,4 @@ extern CMinimapLayerMnemonics typeMinimapLayer;
 extern CImageScaleMethod typeImageScaleMethod;
 
 #endif //#if !defined(__MINIMAP_MNEMONICS__)
+

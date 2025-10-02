@@ -74,3 +74,4 @@ public:
 };
 
 #endif // __POINT_CHECKING_H__
+

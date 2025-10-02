@@ -48,3 +48,4 @@ public:
 };
 
 #endif //__INTERFACE_MISC_H__
+

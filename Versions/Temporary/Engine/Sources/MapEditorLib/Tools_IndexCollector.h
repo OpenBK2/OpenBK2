@@ -196,3 +196,4 @@ public:
 };
 
 #endif // #if !defined(__COMMON_TOOLS__INDEX_COLLECTOR__)
+

@@ -989,3 +989,4 @@ const bool CArtillery::CanHook() const
 	return ( pStats && pStats->GetUserActions( false )->HasAction( ACTION_COMMAND_TAKE_ARTILLERY ) );
 }
 
+

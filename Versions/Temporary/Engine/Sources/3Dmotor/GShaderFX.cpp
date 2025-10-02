@@ -387,3 +387,4 @@ BASIC_REGISTER_CLASS( CPixelShader )
 BASIC_REGISTER_CLASS( CVertexShader )
 
 
+

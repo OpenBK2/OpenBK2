@@ -64,3 +64,4 @@ interface IMultiplayer : public CObjectBase
 IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts );
 IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress );
 
+

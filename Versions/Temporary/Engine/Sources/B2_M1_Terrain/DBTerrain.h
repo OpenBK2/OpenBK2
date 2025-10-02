@@ -250,3 +250,4 @@ struct SKnownEnum<NDb::EWeatherType>
 	static string ToString( NDb::EWeatherType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EWeatherType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EWeatherType( szValue ); }
 };
+

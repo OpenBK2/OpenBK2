@@ -73,3 +73,4 @@ interface IResourceManager : CObjectBase
 	static void UninitSingleton();
 };
 
+

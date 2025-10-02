@@ -329,3 +329,4 @@ int CSceneTerrain::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x1006DC40, CSceneTerrain )
+

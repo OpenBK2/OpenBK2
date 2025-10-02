@@ -20,3 +20,4 @@ public:
 };
 
 #endif // !defined(__LOG_WINDOW__)
+

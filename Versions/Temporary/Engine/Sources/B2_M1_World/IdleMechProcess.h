@@ -22,3 +22,4 @@ public:
 	bool Update( const NTimer::STime &time );
 };
 
+

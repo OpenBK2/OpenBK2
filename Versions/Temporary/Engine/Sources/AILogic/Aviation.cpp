@@ -357,3 +357,4 @@ void CAviation::GetRPGStats( struct SAINotifyRPGStats *pStats )
 	pStats->fFuel = fFuel;
 }
 
+

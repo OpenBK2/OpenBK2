@@ -695,3 +695,4 @@ const struct OpProperties luaK_opproperties[NUM_OPCODES] = {
   {iAB, VD, 0}	/* OP_CLOSURE */
 };
 
+

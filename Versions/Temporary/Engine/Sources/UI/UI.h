@@ -616,3 +616,4 @@ inline TCheck* GetChildChecked( IWindow *pParent, const string &szName, const bo
 }
 
 #endif //_interfaceBase_h_included_
+

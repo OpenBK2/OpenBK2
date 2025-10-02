@@ -20,3 +20,4 @@ virtual void ToAIUnits( bool bInEditor )
 	for ( int i = 0; i < shells.size(); ++i )
 		shells[i].ToAIUnits( bInEditor ); 
 }
+

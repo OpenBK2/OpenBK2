@@ -306,3 +306,4 @@ float GetDispByRadius( const float fDispRadius, const float fRangeMax, const flo
 const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner );
 
 #endif // __GUNS_H__
+

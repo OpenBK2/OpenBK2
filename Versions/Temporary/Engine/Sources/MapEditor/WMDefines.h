@@ -10,3 +10,4 @@
 #define WM_PC_MANIPULATOR_CHANGE		( WM_USER + 7 )
 
 #endif // !defined(__MAP_EDITOR__WM_DEFINES__)
+

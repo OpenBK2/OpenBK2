@@ -75,3 +75,4 @@ interface IFilesInspectorEntry : public CObjectBase
 	// clear entry
 	virtual void Clear() = 0;
 };
+

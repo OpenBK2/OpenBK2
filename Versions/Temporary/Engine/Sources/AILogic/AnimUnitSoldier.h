@@ -55,3 +55,4 @@ public:
 };
 
 #endif // __ANIM_UNIT_INTERNAL_H__
+

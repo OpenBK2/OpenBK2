@@ -240,3 +240,4 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	return true;
 }
 
+

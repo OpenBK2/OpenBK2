@@ -269,3 +269,4 @@ DWORD SGameRoot::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1007B4C1, SGameRoot ) 
+

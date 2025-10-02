@@ -14,3 +14,4 @@ public:
 };
 
 #endif // __STATES_FACTORY_H__
+

@@ -17,3 +17,4 @@ public:
 };
 
 #endif // !defined(__GAME_INPUT_INTERFACE__)
+

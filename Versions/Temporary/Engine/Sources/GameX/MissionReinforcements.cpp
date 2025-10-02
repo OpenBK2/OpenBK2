@@ -1309,3 +1309,4 @@ REGISTER_VAR_EX( "auto_show_reinf", NGlobal::VarIntHandler, &s_nAutoShowReinf, 1
 
 FINISH_REGISTER
 
+

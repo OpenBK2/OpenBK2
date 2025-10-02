@@ -19,3 +19,4 @@ struct SHLSLSrcInfo
 
 void Parse( SHLSLSrcInfo *pRes, const char *psz );
 void Compile( const SHLSLSrcInfo &h );
+

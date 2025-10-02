@@ -10,3 +10,4 @@ struct S
 
   class e1 { };
 };
+

@@ -89,3 +89,4 @@ DWORD STerrainSpotInstance::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x100AC382, STerrainSpotDesc ) 
+

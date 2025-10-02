@@ -259,3 +259,4 @@ void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResu
 		NAnimation::ISkeletonAnimator *pAnimator
 		);
 }
+

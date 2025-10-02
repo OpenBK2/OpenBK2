@@ -41,3 +41,4 @@ public:
 
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
 };
+

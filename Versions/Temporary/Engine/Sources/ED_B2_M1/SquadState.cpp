@@ -163,3 +163,4 @@ bool CSquadState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck 
 	return false;
 }
 
+

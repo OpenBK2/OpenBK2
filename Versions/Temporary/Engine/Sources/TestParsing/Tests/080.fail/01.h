@@ -7,3 +7,4 @@ class A
   [nocode]
   C c1;
 };
+

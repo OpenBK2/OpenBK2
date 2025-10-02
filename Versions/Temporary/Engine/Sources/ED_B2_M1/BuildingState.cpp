@@ -184,3 +184,4 @@ bool CBuildingState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	return false;
 }
 
+

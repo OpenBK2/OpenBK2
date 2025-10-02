@@ -52,3 +52,4 @@ void CPCStringBrowseEditor::GetButtonTitle( CString *pstrTitle, EButtonType eBut
 
 // basement storage  
 
+

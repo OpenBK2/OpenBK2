@@ -71,3 +71,4 @@ public:
 	IMOContainer* GetContainer() const { return pTransport ? pTransport.GetPtr() : pSquad.GetPtr(); }
 };
 
+

@@ -1566,3 +1566,4 @@ REGISTER_SAVELOAD_CLASS( ML_COMMAND_CHAPTER_MAP_MENU, CICChapterMapMenu )
 REGISTER_SAVELOAD_CLASS_NM( 0x170C1382, CReactions, CInterfaceChapterMapMenu );
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
 
+

@@ -342,3 +342,4 @@ int SNotificationEvent::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x17135D40, SNotification ) 
 REGISTER_DATABASE_CLASS( 0x171BCB00, SNotificationEvent ) 
+

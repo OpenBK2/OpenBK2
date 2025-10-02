@@ -18,3 +18,4 @@ interface IDBWatcherClient : public CObjectBase
 void RegisterSingleton();
 
 }
+

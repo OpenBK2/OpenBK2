@@ -48,3 +48,4 @@ BOOL CDefaultWindow::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 
 // basement storage  
 
+

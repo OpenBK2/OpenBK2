@@ -36,3 +36,4 @@ EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
+

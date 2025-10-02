@@ -551,3 +551,4 @@ REGISTER_CMD( "exec", NGlobal::CmdLoadConfig )
 REGISTER_CMD( "setvar", NGlobal::CmdSetVar )
 REGISTER_CMD( "alias", NGlobal::CmdAlias )
 FINISH_REGISTER
+

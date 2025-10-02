@@ -159,3 +159,4 @@ void CProgressThread::AddLog( const string &rszLogMessage )
 }
 
 
+

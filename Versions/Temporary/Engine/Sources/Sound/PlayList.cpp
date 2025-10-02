@@ -183,3 +183,4 @@ void CPlayList::OnResetTimer()
 
 }
 REGISTER_SAVELOAD_CLASS_NM( 0x111813C0, CPlayList, NMusicSystem  )
+

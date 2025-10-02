@@ -764,3 +764,4 @@ void CCreateFilterDialog::OnState3()
 		}
 	}
 }
+

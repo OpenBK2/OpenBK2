@@ -25,3 +25,4 @@ void CWindowScrollableContainer::Select( IWindow *pElement )
 		RunAnimationAndCommands( pInstance->onSelection, "", true, true );
 	}
 }
+

@@ -22,3 +22,4 @@ CTerraAIObserverInEditor::CTerraAIObserverInEditor( const int nAIMapSizeX, const
 }
 
 
+

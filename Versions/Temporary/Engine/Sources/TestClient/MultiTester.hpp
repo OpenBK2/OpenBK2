@@ -72,3 +72,4 @@ public:
 	bool ProcessGameKilled( class CGameKilled *pPacket );
 };
 
+

@@ -25,3 +25,4 @@ int CExecutorAdrenalineRush::operator&( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( 0x19129441, CExecutorAdrenalineRush )
 
+

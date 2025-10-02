@@ -375,3 +375,4 @@ UINT CMaskManipulatorIterator::GetID() const
 
 // basement storage  
 
+

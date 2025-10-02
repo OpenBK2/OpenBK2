@@ -440,3 +440,4 @@ void CFileStream::Open( const char *pszFName, const char *pszMode, int _nFlags )
 		throw SFileIOError( string("error opening file ") + pszFName );//SetFailed();
 }
 
+

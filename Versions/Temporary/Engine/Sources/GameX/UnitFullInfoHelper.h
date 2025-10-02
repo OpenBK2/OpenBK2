@@ -86,3 +86,4 @@ bool IsResourcesCarrier( const CUserActions &userActions );
 
 } //namespace NUnitFullInfo
 
+

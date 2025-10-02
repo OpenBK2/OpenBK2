@@ -35,3 +35,4 @@ void CEditorInterfaceBase::Step( bool bAppActive )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
+

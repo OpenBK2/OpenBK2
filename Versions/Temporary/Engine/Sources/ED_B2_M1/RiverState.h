@@ -131,3 +131,4 @@ protected:
 	void RemoveVSO( int nVSOID );
 };
 /**/
+

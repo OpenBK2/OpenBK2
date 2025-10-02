@@ -41,3 +41,4 @@ public:
 	virtual float GetLength() const;
 	virtual void GetSimplePath( CPathList *pPaths );
 };
+

@@ -41,3 +41,4 @@ public:
 	virtual void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
 };
 
+

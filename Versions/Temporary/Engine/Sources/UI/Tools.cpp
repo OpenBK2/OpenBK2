@@ -102,3 +102,4 @@ void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float>
 }
 
 }
+

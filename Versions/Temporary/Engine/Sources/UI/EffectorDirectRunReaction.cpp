@@ -50,3 +50,4 @@ void CEffectorDirectRunReaction::Reverse()
 	bFinished = false;
 }
 
+

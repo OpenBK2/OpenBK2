@@ -61,3 +61,4 @@ interface IViewContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__VIEW__)
 
+

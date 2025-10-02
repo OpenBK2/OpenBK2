@@ -360,3 +360,4 @@ int CWindowSimpleSharedEditorSettings::operator&( IXmlSaver &xs )
 	return 0;
 }
 
+

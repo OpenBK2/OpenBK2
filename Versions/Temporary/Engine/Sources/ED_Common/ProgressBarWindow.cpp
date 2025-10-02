@@ -80,3 +80,4 @@ void CProgressBarWindow::SetCaption( const string & szCaption )
 }
 
 
+

@@ -187,3 +187,4 @@ int Scintilla_LinkLexers() {
 
 	return 1;
 }
+

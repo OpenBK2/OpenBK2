@@ -110,3 +110,4 @@ public:
 // return number of bytes, free for the caller on the selected drive
 double GetFreeDiskSpace( const char *pszDrive );
 }
+

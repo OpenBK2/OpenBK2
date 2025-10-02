@@ -40,3 +40,4 @@ CMnemonicsCollector<int>( NDb::IMAGE_SCALE_METHOD_DEFAULT, "IMAGE_SCALE_METHOD_D
 CMinimapLayerMnemonics typeMinimapLayer;
 CImageScaleMethod typeImageScaleMethod;
 
+

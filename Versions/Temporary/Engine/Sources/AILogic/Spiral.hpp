@@ -124,3 +124,4 @@ void GenerateSpiral( vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, 
 	}
 }
 
+

@@ -130,3 +130,4 @@ DWORD SPixelConvertInfo::DecompColor( DWORD dwColor ) const
 	return (r | g | b | a);
 }
 
+

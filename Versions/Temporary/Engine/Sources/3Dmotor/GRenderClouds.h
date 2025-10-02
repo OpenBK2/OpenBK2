@@ -28,3 +28,4 @@ public:
 		: pTime(_pTime), vWrapSize(_vWrapSize), fAngle(_fAngle), fSpeed(_fSpeed) {}
 };
 }
+

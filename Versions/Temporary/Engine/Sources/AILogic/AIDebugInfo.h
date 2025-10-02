@@ -14,3 +14,4 @@ namespace NAIVisInfo
 	AILOGIC_EXPORT void ToggleLockProfiles();
 }
 
+

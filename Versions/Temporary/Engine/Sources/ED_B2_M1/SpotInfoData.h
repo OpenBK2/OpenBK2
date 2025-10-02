@@ -155,3 +155,4 @@ namespace NMapInfoEditor
 };
 
 #endif // !defined(__SPOT_INFO_DATA__)
+

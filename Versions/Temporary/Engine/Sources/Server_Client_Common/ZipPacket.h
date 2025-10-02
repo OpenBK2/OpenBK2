@@ -18,3 +18,4 @@ public:
 	void UnZip( CMemoryStream *pOutStream ) const;
 };
 
+

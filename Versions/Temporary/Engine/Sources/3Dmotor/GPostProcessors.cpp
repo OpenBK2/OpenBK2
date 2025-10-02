@@ -82,3 +82,4 @@ void COccludedColorer::Render( SPostProcessData *pDst, const vector<SObject> &re
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x022a2151, CPostColorer )
 REGISTER_SAVELOAD_CLASS( 0x17221B00, COccludedColorer )
+

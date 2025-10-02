@@ -127,3 +127,4 @@ void CTerraGen::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb:
 START_REGISTER(ExplosionsBuiler)
 REGISTER_VAR_EX( "misc_max_explosions_per_tile", NGlobal::VarIntHandler, &s_nMaxExplosionsPerTile, 10, STORAGE_USER )
 FINISH_REGISTER
+

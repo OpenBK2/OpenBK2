@@ -1105,3 +1105,4 @@ START_REGISTER(MapObjectCommands)
 REGISTER_VAR_EX( "object_icons_faded_alpha", NGlobal::VarFloatHandler, &FADED_ICON_ALPHA, 0.5f, STORAGE_NONE );
 FINISH_REGISTER
 
+

@@ -92,3 +92,4 @@ void CBitLocker::Free()
 		pData = 0; 
 	} 
 }
+

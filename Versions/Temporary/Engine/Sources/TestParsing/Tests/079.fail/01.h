@@ -7,3 +7,4 @@ class A
   [nocode]
   E *e1, e2[10];
 };
+

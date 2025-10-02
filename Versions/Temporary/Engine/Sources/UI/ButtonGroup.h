@@ -26,3 +26,4 @@ public:
 	IWindow* GetButton( int i );
 };
 
+

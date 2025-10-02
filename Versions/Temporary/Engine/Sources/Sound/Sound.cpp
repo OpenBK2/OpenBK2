@@ -141,3 +141,4 @@ ISound * CSound::GetSound()
 		return pSubstitute->GetSound();
 	return pSample;
 }
+

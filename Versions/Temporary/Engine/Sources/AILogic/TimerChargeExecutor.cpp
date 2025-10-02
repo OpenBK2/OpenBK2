@@ -30,3 +30,4 @@ bool CTimerChargeExecutor::IsExecutorValid() const
 	return IsValidObj( pCharge );
 }
 
+

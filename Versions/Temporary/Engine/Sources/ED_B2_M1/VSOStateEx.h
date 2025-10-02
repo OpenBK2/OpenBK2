@@ -64,3 +64,4 @@ public:
 };
 
 #endif // !defined(__VSO_STATE_EX__)
+

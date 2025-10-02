@@ -199,3 +199,4 @@ public:
 	void OnWeaponOverOff( const string &szSender );
 };
 
+

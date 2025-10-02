@@ -197,3 +197,4 @@ EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDesc
 	return eRetCode;
 }
 }
+

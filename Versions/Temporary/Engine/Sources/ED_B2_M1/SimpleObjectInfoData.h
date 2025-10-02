@@ -32,3 +32,4 @@ namespace NMapInfoEditor
 };
 
 #endif // !defined(__MAPINFO_EDITOR_DATA__SIMPLE_OBJECT_INFO__)
+

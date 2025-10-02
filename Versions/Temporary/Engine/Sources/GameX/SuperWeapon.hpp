@@ -48,3 +48,4 @@ public:
 	void UpdateObject( CMapObj *pMO );
 };
 
+

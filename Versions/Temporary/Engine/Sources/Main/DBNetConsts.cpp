@@ -53,3 +53,4 @@ int SNetGameConsts::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x300A7B40, SNetGameConsts ) 
+

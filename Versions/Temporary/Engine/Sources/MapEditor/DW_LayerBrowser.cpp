@@ -65,3 +65,4 @@ void CDWLayerBrowser::OnSize( UINT nType, int cx, int cy )
 // basement storage  
 
 
+

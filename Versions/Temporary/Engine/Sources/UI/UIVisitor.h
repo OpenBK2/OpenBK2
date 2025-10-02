@@ -48,3 +48,4 @@ public:
 	~CClipStore() { pVisitor->ClipRestore(); }
 };
 
+

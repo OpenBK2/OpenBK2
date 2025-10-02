@@ -152,3 +152,4 @@ void Style::Realise(Surface &surface, int zoomLevel, Style *defaultStyle) {
 	aveCharWidth = surface.AverageCharWidth(font);
 	spaceWidth = surface.WidthChar(font, ' ');
 }
+

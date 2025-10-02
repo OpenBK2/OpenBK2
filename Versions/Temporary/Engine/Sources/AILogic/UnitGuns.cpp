@@ -396,3 +396,4 @@ void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 	}
 }
 
+

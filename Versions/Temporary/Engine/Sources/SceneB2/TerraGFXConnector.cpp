@@ -856,3 +856,4 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 }
 
 
+

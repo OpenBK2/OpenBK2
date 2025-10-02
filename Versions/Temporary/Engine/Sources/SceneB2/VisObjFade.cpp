@@ -96,3 +96,4 @@ void CScene::AddPostEffectObjects( const list<int> &objects, const CVec4 &vColor
 		new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
 }
 
+

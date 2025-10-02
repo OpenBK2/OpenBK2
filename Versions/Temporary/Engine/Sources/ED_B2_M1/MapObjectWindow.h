@@ -79,3 +79,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_TAB_MAPOBJECT__)
+

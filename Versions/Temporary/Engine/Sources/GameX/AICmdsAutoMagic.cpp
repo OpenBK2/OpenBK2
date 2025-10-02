@@ -43,3 +43,4 @@ IAICmdsAutoMagic *CreateAICmdsAutoMagic()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x300A7AC1, CAICmdsAutomagic )
+

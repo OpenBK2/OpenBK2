@@ -12,3 +12,4 @@ inline void WriteMSG( const char* pszFormat, ... )
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, buff );
 }
 
+

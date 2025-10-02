@@ -49,3 +49,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_GUID__)
+

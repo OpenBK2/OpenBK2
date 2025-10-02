@@ -50,3 +50,4 @@ void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
 
 REGISTER_SAVELOAD_CLASS( 0x3119AB00, CWingScaleMutator );
 
+

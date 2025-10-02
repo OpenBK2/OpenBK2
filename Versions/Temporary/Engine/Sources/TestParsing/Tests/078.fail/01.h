@@ -9,3 +9,4 @@ class A
   [nocode]
   SUnknown *s1, s2[10];
 };
+

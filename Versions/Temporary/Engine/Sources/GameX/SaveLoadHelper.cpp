@@ -433,3 +433,4 @@ REGISTER_VAR_EX( "recording_replay", NGlobal::VarBoolHandler, &NSaveLoad::RECORD
 
 FINISH_REGISTER
 
+

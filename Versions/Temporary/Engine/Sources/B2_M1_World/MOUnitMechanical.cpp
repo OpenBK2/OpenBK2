@@ -1288,3 +1288,4 @@ void CMOUnitMechanical::SendAcknowledgement( interface IClientAckManager *pAckMa
 }
 
 REGISTER_SAVELOAD_CLASS( 0x100A7487, CMOUnitMechanical );
+

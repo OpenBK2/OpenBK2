@@ -235,3 +235,4 @@ void CICArmyBranchDlg::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x17267B81, CInterfaceArmyBranchDlg )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_ARMY_BRANCH_DLG, CICArmyBranchDlg )
 
+

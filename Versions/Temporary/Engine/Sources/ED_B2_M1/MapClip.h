@@ -291,3 +291,4 @@ public:
 
 /**/
 #endif //#ifndef __MAP_CLIP__
+

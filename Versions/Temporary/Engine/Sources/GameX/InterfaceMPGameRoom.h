@@ -150,3 +150,4 @@ public:
 #endif // _SINGLE_DEMO
 
 #endif //__INTERFACE_MP_GAME_ROOM_H__
+

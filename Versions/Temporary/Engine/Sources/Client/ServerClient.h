@@ -52,3 +52,4 @@ public:
 	void TogglePauseConnectGamer( const int nGamer, bool bPause );
 };
 
+

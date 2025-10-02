@@ -191,3 +191,4 @@ void PackRects( vector<SRect> *pRes, CTPoint<int> *pSize )
 }
 
 }
+

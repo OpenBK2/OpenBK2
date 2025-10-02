@@ -101,3 +101,4 @@ bool SaveGrayTGAImage( CDataStream *pStream, CArray2D<BYTE> &data )
 }
 
 
+

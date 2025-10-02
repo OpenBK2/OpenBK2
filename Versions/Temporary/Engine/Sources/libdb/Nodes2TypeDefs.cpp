@@ -14,3 +14,4 @@ int SNodesHash::operator()( NDb::NTypeDef::STypeDef *pNode ) const
 	return reinterpret_cast<int>( pNode );
 }
 
+

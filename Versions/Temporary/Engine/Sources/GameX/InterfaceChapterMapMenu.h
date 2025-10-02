@@ -371,3 +371,4 @@ public:
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
 
 #endif //__INTERFACE_CHAPTER_MAP_MENU_H__
+

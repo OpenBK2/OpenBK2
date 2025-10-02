@@ -124,3 +124,4 @@ protected:
 };
 
 #endif // !defined(__STORE_INPUT_STATE__)
+

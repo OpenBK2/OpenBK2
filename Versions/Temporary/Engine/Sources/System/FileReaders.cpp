@@ -132,3 +132,4 @@ void CMemoryMappedFileFragment::FlushFile( void *p )
 	else
 		ASSERT(0);
 }
+

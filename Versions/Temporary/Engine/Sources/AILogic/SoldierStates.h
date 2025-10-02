@@ -649,3 +649,4 @@ public:
 	EUnitStateNames GetName() { return EUSN_LEAVE_SELF_ENTRENCH; }
 };
 
+

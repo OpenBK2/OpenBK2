@@ -143,3 +143,4 @@ void CWeather::Segment()
 	}
 }
 
+

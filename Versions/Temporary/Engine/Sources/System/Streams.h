@@ -195,3 +195,4 @@ public:
 	operator CDataStream*() { return pStream; }
 };
 
+

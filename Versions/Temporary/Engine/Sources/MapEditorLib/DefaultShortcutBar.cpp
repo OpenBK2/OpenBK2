@@ -108,3 +108,4 @@ CWnd* CDefaultShortcutBar::GetShortcutWindow( int nShortcutIndex )
 
 // basement storage  
 
+

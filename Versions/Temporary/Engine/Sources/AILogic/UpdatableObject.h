@@ -74,3 +74,4 @@ public:
 	virtual bool IsFree() const { return true; }
 };
 
+

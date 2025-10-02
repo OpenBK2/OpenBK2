@@ -40,3 +40,4 @@ public:
 };
 
 #endif // #if !defined( __ENTER_NAME_DIALOG__ )
+

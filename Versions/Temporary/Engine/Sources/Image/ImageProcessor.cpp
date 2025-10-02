@@ -90,3 +90,4 @@ bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<
 }
 
 }
+

@@ -31,3 +31,4 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
 }
 
 #endif
+

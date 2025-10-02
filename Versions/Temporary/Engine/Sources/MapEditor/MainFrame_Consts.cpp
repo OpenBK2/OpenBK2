@@ -218,3 +218,4 @@ const int CMainFrame::DOCKING_WINDOWS_WIDTH[DOCKING_WINDOWS_COUNT] =
 
 // basement storage  
 
+

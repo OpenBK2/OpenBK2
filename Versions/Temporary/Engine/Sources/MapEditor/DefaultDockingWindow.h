@@ -17,3 +17,4 @@ public:
 };
 
 #endif // !defined(__DEFAULT_DOCKING_WINDOW__)
+

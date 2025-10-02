@@ -23,3 +23,4 @@ public:
 	int operator&( IBinSaver &f ) { f.Add( 1, &first ); f.Add( 2, &second ); return 0; }
 	DWORD CalcCheckSum() const { return 0; }
 };
+

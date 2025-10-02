@@ -28,3 +28,4 @@ typedef hash_map<int, SStoredPiece > CStoredPieceMap;
 const int N_PIECES_CHUNK = 4;
 
 #endif // __AIGEOMETRYFORMAT_H_
+

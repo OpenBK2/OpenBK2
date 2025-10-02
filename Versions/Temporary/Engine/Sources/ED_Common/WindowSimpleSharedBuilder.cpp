@@ -152,3 +152,4 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 
 // basement storage  
 
+

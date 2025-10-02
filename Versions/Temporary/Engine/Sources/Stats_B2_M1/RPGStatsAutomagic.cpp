@@ -118,3 +118,4 @@ int StatsB2M1LinkCheatFunction()
 {
 	return 0;
 }
+

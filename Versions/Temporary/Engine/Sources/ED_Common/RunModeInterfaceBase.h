@@ -29,3 +29,4 @@ protected:
 };
 
 #endif // __RUN_MODE_INTERFACE_BASE__
+

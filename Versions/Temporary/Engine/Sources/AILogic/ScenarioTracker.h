@@ -93,3 +93,4 @@ interface IAIScenarioTracker : public CObjectBase
 	virtual const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf ) = 0;
 };
 
+

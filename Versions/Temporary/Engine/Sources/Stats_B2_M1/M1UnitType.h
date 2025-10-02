@@ -55,3 +55,4 @@ struct SKnownEnum<NDb::EM1UnitBaseType>
 	static string ToString( NDb::EM1UnitBaseType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EM1UnitBaseType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EM1UnitBaseType( szValue ); }
 };
+

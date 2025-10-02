@@ -437,3 +437,4 @@ static const char * const pythonWordListDesc[] = {
 
 LexerModule lmPython(SCLEX_PYTHON, ColourisePyDoc, "python", FoldPyDoc,
 					 pythonWordListDesc);
+

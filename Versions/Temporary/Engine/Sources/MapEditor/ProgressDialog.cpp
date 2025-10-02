@@ -130,3 +130,4 @@ void CProgressDialog::OnStartTimer()
 	UpdateControls();
 }
 
+

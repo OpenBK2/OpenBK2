@@ -898,3 +898,4 @@ bool CVisObjBuilder::RemoveObject( const string &rszObjectTypeName, const string
 
 // basement storage  
 
+

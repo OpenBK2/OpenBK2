@@ -75,3 +75,4 @@ public:
 	static void InitByDB();
 };
 
+

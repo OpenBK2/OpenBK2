@@ -119,3 +119,4 @@ I2DGameView* CreateNew2DView()
 using namespace NGScene;
 BASIC_REGISTER_CLASS( I2DGameView );
 REGISTER_SAVELOAD_CLASS( 0xF1741142, C2DGameView );
+

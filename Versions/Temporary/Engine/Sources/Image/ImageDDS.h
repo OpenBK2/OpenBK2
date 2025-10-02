@@ -19,3 +19,4 @@ bool ConvertAndSaveAsDDS( CDataStream *pStream, const CArray2D<DWORD> &srcImage,
 												 EImageType eImageType, NGfx::EPixelFormat eSubFormat, int _nNumMipLevels, 
 												 bool bWrapX, bool bWrapY, float fMappingSize );
 }
+

@@ -231,3 +231,4 @@ void WriteResult( const char *pszOutput )
 		DeleteFile( szTempFileName.c_str() );
 	}
 }
+

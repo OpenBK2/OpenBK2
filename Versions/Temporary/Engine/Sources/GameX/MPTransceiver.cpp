@@ -528,3 +528,4 @@ REGISTER_SAVELOAD_CLASS( 0x1713C440, CMPTransceiver );
 START_REGISTER(MPTransceiver)
 REGISTER_VAR_EX( "multiplayer_pause_timeout", NGlobal::VarIntHandler, &s_nInterruptTimeout, 5000, STORAGE_NONE );
 FINISH_REGISTER
+

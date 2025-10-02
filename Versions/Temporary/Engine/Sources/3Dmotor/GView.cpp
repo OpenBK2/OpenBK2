@@ -1890,3 +1890,4 @@ REGISTER_SAVELOAD_TEMPL_CLASS( 0x028b2122, CResourcePrecache<NAnimation::CGranny
 BASIC_REGISTER_CLASS( IGameView )
 using namespace NAnimation;
 REGISTER_SAVELOAD_TEMPL_CLASS( 0x50161480, CAnimatedChannel<CTransparencyToOpacityFunc>, CAnimatedChannel)
+

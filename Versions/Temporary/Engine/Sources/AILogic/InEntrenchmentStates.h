@@ -92,3 +92,4 @@ public:
 };
 
 #endif // __IN_ENTRENCHMENT_STATES_H__
+

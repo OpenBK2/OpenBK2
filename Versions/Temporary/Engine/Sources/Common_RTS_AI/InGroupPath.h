@@ -91,3 +91,4 @@ class CInGroupPath : public CInGroupPathBasis
 public:
 };
 
+

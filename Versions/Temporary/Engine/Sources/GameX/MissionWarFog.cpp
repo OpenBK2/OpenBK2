@@ -313,3 +313,4 @@ REGISTER_VAR_EX( "clouds_shadow_speed_x", NGlobal::VarFloatHandler, &CLOUDS_NOIS
 REGISTER_VAR_EX( "clouds_shadow_speed_y", NGlobal::VarFloatHandler, &CLOUDS_NOISE_SPEED_Y, 1.0f, STORAGE_NONE );
 FINISH_REGISTER
 */
+

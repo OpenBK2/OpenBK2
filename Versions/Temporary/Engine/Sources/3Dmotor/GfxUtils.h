@@ -126,3 +126,4 @@ void MakeQuadTriList( int nRects, STriangleList *pRes );
 }
 
 #endif
+

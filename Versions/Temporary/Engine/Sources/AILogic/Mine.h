@@ -78,3 +78,4 @@ public:
 };
 
 #endif // __MINE_H__
+

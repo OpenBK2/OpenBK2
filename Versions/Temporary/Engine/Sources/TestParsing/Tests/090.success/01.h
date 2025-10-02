@@ -6,3 +6,4 @@ class A
 {
   EE e = e1;
 };
+

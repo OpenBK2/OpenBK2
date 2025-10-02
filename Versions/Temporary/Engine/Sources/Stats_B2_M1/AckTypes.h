@@ -161,3 +161,4 @@ struct SKnownEnum<NDb::EAckPosition>
 	static string ToString( NDb::EAckPosition eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EAckPosition ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAckPosition( szValue ); }
 };
+

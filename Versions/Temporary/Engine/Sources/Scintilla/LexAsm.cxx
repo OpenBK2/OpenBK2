@@ -175,3 +175,4 @@ static const char * const asmWordListDesc[] = {
 
 LexerModule lmAsm(SCLEX_ASM, ColouriseAsmDoc, "asm", 0, asmWordListDesc);
 
+

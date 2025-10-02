@@ -129,3 +129,4 @@ void CDecalFader::Unfreeze()
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x131AB340, CDecalFader )
+

@@ -111,3 +111,4 @@ class CStandartSmoothPath : public CStandartSmoothPathBasis
 public:
 };
 
+

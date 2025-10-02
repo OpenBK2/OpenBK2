@@ -296,3 +296,4 @@ REGISTER_SAVELOAD_CLASS( 0x1108D48E, CInEntrenchmentStatesFactory );
 REGISTER_SAVELOAD_CLASS( 0x1108D48F, CSoldierRestInEntrenchmentState );
 REGISTER_SAVELOAD_CLASS( 0x1108D490, CSoldierAttackInEtrenchState );
 
+

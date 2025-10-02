@@ -92,3 +92,4 @@
 #define CHID_MOVIES_EDITOR_STATE							0x1B215401
 
 #endif // !defined(__ED_B2_M1__COMMAND_HANDLER_DEFINES__)
+

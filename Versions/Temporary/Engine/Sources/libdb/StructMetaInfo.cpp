@@ -485,3 +485,4 @@ void SStructMetaInfo::LinkWithTypeDef( const string &szAddName, NTypeDef::STypeS
 
 };
 
+

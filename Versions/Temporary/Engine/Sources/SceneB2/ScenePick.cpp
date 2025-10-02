@@ -387,3 +387,4 @@ void CScene::GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter 
 */
 }
 
+

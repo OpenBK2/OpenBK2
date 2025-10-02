@@ -56,3 +56,4 @@ void CAIGenParcelDlg::OnOK()
 	CResizeDialog::OnOK();
 }
 
+

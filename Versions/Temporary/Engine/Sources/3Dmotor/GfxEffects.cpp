@@ -83,3 +83,4 @@ REGISTER_VAR_EX( "gfx_simple_particles", NGlobal::VarBoolHandler, &bSimplePartic
 FINISH_REGISTER
 */
 }
+

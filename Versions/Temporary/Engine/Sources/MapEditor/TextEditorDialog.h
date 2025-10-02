@@ -77,3 +77,4 @@ public:
 
 //{{AFX_INSERT_LOCATION}}
 #endif // !defined(__COMMON_CONTROLS__TEXT_EDITOR_DIALOG__)
+

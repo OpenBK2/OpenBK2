@@ -43,3 +43,4 @@ SMPUIMessage* CMPUIMessageProcessor::PeekMessage()
 	return messages.front();
 }
 
+

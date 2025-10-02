@@ -74,3 +74,4 @@ struct SGeneralHelper
 };
 
 #endif // __GENERAL_HELPER__
+

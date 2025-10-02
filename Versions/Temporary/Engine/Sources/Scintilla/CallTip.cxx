@@ -272,3 +272,4 @@ void CallTip::SetHighlight(int start, int end) {
 		}
 	}
 }
+

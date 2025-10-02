@@ -581,3 +581,4 @@ START_REGISTER( CommandsLimit )
 REGISTER_VAR_EX( "commands_limit", NGlobal::VarIntHandler, &g_nDefaultCommandsLimit, -1, STORAGE_NONE );
 FINISH_REGISTER
 
+

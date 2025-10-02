@@ -875,3 +875,4 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 
 REGISTER_SAVELOAD_CLASS_NM( 0x1117BB00, CScenarioTrackerMultiplayer, NScenarioTracker );
 
+

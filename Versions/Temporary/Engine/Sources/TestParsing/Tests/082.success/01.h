@@ -7,3 +7,4 @@ class A
   enum E { };
   E C;
 };
+

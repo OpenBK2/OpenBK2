@@ -321,3 +321,4 @@ bool CMiniMapWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	return false;
 }
 
+

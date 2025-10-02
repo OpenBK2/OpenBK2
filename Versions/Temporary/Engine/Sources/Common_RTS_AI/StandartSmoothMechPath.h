@@ -52,3 +52,4 @@ public:
 	virtual const bool CanGoForward() const { return bCanGoForward; }
 };
 
+

@@ -162,3 +162,4 @@ void CAnimUnitSoldier::StopCurAnimation()
 		updater.AddUpdate( 0, pOwner->GetMovingAction(), pOwner, -1 );
 }
 
+

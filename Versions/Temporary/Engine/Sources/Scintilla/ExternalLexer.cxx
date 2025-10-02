@@ -255,3 +255,4 @@ LMMinder::~LMMinder()
 }
 
 LMMinder minder;
+

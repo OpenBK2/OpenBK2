@@ -122,3 +122,4 @@ void CPCBinaryBitFieldEditor::OnBrowse()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 }
 
+

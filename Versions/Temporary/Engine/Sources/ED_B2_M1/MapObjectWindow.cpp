@@ -586,3 +586,4 @@ void CMapObjectWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 
 // basement storage  
 
+

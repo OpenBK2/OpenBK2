@@ -42,3 +42,4 @@ public:
 };
 
 #endif // !defined(__ELK_IMPORT_FROM_XLS_DIALOG__)
+

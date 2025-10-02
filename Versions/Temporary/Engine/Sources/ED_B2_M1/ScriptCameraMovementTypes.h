@@ -13,3 +13,4 @@ public:
 extern CScriptCameraRunTypeMnemonics typeScriptCameraRunTypeMnemonics;
 
 #endif // __SCRIPT_CAMERA_RUN_TYPES_H__
+

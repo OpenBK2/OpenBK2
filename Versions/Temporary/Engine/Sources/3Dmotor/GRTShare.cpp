@@ -103,3 +103,4 @@ void InitRTShare( const SUserRTInfo &rtInfo, NGfx::SRenderTargetsInfo *pRes )
 	texCubeShare.Init( rtInfo.cubeTex, &pRes->cubeTargets );
 }
 }
+

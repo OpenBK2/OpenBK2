@@ -1195,3 +1195,4 @@ REGISTER_VAR_EX( "minimap_light_warfog_alpha", NGlobal::VarIntHandler, &s_nLight
 
 FINISH_REGISTER
 
+

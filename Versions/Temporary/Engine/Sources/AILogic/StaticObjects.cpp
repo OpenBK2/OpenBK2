@@ -577,3 +577,4 @@ void CStaticObjects::UpdateAllObjectsPos()
 	
 }
 
+

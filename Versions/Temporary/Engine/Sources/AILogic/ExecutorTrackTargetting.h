@@ -39,3 +39,4 @@ public:
 	bool IsExecutorValid() const { return IsValid( pUnit ); }
 	int Segment();
 };
+

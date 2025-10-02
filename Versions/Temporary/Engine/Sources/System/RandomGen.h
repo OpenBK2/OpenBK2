@@ -39,3 +39,4 @@ namespace NRandom
 	const SRandomFunc& RndFunc();
 };
 
+

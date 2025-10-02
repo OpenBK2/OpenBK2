@@ -46,3 +46,4 @@ public:
 	void Set( const CArray2D<NGfx::SPixel8888> &src );
 };
 
+

@@ -141,3 +141,4 @@ public:
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nReason( _nReason	) {}
 };
 
+

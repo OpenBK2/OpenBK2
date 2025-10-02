@@ -244,3 +244,4 @@ float CComplexObstacleCreation::GetWorkDone() const
 		return pFenceCreation->GetWorkDone();
 }
 REGISTER_SAVELOAD_CLASS( 0x11147C00, CComplexObstacleCreation );
+

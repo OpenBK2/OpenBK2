@@ -139,3 +139,4 @@ public:
 	float GetPan() const { NI_ASSERT( false, "WRONG CALL" ); return 0.0f; }
 
 };
+

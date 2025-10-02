@@ -82,3 +82,4 @@ namespace NLang
 	bool Parse( const vector<string> &files, const string &szBaseFileName );
 }
 
+

@@ -48,3 +48,4 @@ CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *
 }; // namespace 
 
 #endif
+

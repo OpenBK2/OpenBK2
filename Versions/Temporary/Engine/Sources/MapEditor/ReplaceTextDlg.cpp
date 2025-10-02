@@ -64,3 +64,4 @@ void CReplaceTextDlg::OnBnClickedReplaceall()
 	if ( IsValid( pHandler ) )
 		pHandler->ReplaceAll( (LPCSTR)m_szFindWhat, (LPCSTR)m_szReplaceWith, bWholeWord, bMatchCase );
 }
+

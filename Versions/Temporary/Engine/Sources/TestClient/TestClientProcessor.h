@@ -75,3 +75,4 @@ public:
 	bool ProcessPingPacket( class CPingPacket *pPacket );
 };
 
+

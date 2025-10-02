@@ -25,3 +25,4 @@ namespace NText
 #define GET_TEXT( name ) NText::GetText( sz##name##FileRef )
 // CRAP}
 
+

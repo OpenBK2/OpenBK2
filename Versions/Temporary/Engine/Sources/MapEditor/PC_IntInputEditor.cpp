@@ -281,3 +281,4 @@ bool CPCIntInputEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 
 // basement storage  
 
+

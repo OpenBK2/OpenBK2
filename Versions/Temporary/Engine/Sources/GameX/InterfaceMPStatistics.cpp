@@ -384,3 +384,4 @@ void CICMPStatistics::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x1719C300, CInterfaceMPStatistics )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_STATISTICS, CICMPStatistics )
 
+

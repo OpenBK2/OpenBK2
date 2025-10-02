@@ -132,3 +132,4 @@ public:
 	bool ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket );
 };
 
+

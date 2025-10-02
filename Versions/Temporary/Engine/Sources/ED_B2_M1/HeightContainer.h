@@ -61,3 +61,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_HEIGHT_CONTAINER__)
+

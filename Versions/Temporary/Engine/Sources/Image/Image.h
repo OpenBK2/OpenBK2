@@ -44,3 +44,4 @@ struct SColor
   operator DWORD() const { return dwColor; }
 };
 }
+

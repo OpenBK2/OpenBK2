@@ -147,3 +147,4 @@ struct SKnownEnum<NDb::ESpecialAbilityParam>
 	static string ToString( NDb::ESpecialAbilityParam eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ESpecialAbilityParam ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESpecialAbilityParam( szValue ); }
 };
+

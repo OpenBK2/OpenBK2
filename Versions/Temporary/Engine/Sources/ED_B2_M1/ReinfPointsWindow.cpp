@@ -307,3 +307,4 @@ void CReinfPointsWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
+

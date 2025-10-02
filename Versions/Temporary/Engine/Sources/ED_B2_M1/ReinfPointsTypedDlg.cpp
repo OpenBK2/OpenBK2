@@ -186,3 +186,4 @@ void CReinfPointsTypedDlg::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
+

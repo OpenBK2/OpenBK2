@@ -67,3 +67,4 @@ public:
 };
 
 #endif // !defined(AFX_CUSTOMCHECK_H__4B1CA8EE_B9DF_40E8_A49E_866FE4D81D91__INCLUDED_)
+

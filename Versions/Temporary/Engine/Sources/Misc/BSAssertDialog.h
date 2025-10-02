@@ -10,3 +10,4 @@ EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 	const vector<SCallStackEntry> &entries, SIgnoresList &ignores,
 	const char *pszExtInfo );
 }
+

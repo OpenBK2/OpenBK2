@@ -22,3 +22,4 @@ public:
 	bool GetCommand( SCommand *pCmd );
 };
 
+

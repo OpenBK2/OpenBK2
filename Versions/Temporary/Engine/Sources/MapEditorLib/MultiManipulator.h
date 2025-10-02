@@ -101,3 +101,4 @@ public:
 };
 
 #endif // !defined(__MULTI_MANIPULATOR__)
+

@@ -177,3 +177,4 @@ void CWindowTextView::SetIDForMLHandler( int nID )
 		InitText();
 }
 
+

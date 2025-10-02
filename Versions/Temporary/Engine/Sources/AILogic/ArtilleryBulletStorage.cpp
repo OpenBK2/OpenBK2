@@ -17,3 +17,4 @@ void CArtilleryBulletStorage::MoveTo( const CVec3 &newCenter )
 	Init();
 }
 
+

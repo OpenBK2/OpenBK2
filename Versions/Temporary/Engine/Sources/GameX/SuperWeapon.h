@@ -12,3 +12,4 @@ interface IMissionSuperWeapon : public CObjectBase
 	virtual void OnUpdateSuperWeaponRecycle( float fProgress ) = 0;
 };
 
+

@@ -805,3 +805,4 @@ REGISTER_SAVELOAD_CLASS_NM( 0x17235BC0, SUnit, SChapterReinfBase )
 REGISTER_SAVELOAD_CLASS_NM( 0x17237BC0, SChapterDesc, CInterfaceChapterMapMenu )
 REGISTER_SAVELOAD_CLASS_NM( 0x17237BC1, SMissionDesc, CInterfaceChapterMapMenu )
 
+

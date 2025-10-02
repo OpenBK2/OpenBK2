@@ -22,3 +22,4 @@ public:
 };
 
 #endif // !defined(__CHILD_FRAME_BASE__)
+

@@ -452,3 +452,4 @@ BOOL CResizeDialog::OnNeedToolTipText( UINT id, NMHDR *pTTTStruct, LRESULT *pRes
 
 // basement storage  
 
+

@@ -128,3 +128,4 @@ LONG CRegistrySection::SaveDWORD( LPCTSTR pszRegistryKey, DWORD dwSaveValue ) co
 
 // basement storage  
 
+

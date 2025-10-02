@@ -404,3 +404,4 @@ FINISH_REGISTER
 //
 using namespace NScript;
 REGISTER_SAVELOAD_CLASS( 0x11061442, CLUACallParam )
+

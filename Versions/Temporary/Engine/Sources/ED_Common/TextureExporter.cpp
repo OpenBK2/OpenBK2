@@ -417,3 +417,4 @@ bool CTextureExporter::CheckDestination( const string &szFileName, const string 
 	return true;
 }
 
+

@@ -66,3 +66,4 @@ public:
 	bool EditPointTypedTemplate();
 };
 
+

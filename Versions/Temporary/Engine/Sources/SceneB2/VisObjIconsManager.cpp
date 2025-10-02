@@ -400,3 +400,4 @@ void CVisObjIconsManager::DrawIcons()
 
 REGISTER_SAVELOAD_CLASS( 0x17146CC0, CVisObjIconsManager );
 
+

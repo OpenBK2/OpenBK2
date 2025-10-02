@@ -15,3 +15,4 @@ public:
 INTERFACE_COMMAND_DECLARE( CTexturelIC, CTextureInterface )
 
 #endif // __TEXTURE_RUN_MODE_INTERFACE__
+

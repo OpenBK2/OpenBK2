@@ -126,3 +126,4 @@ void NMPSetData::SetChildText( IListControlItem *pItem, const string &szName, co
 	SetText( pTxt, szText );			
 }
 
+

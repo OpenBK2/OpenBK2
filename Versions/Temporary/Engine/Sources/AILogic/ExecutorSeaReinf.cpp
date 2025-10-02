@@ -127,3 +127,4 @@ int CExecutorTransportReinforcement::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x19174C40, CExecutorTransportReinforcement )
+

@@ -28,3 +28,4 @@ int CMeshBound::operator&( CStructureSaver &f )
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x12061180, CMeshBound )
+

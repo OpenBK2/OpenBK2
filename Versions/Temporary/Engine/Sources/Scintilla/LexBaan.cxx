@@ -187,3 +187,4 @@ static void FoldBaanDoc(unsigned int startPos, int length, int initStyle, WordLi
 }
 
 LexerModule lmBaan(SCLEX_BAAN, ColouriseBaanDoc, "baan", FoldBaanDoc);
+

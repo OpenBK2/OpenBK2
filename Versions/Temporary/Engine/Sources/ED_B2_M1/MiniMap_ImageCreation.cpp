@@ -95,3 +95,4 @@ bool CMapInfoEditor::CreateMinimapImage()
 	}
 	return true;
 }
+

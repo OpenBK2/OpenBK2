@@ -251,3 +251,4 @@ static CXmlExporterB2 theExporter;
 CXmlExporter *GetExporter() { return &theExporter; }
 
 }
+

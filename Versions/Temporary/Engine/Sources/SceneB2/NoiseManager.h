@@ -69,3 +69,4 @@ public:
 	CNoiseAccessor GetNoise( const string &szName );
 };
 
+

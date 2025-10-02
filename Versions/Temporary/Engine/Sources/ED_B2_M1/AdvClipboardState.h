@@ -305,3 +305,4 @@ public:
 
 /**/
 #endif // #if !defined( __ADV_CLIPBOARD_STATE__ )
+

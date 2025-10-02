@@ -30,3 +30,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_3_BUTTON__)
+

@@ -303,3 +303,4 @@ static void FoldYAMLDoc(unsigned int startPos, int length, int /*initStyle - unu
 }
 
 LexerModule lmYAML(SCLEX_YAML, ColouriseYAMLDoc, "yaml", FoldYAMLDoc, yamlWordListDesc);
+

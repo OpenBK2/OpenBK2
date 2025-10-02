@@ -1026,3 +1026,4 @@ void CMissionUnitFullInfo::SetMemberTooltip( IWindow *pWnd )
 
 REGISTER_SAVELOAD_CLASS( 0x17169340, CMissionUnitFullInfo )
 
+

@@ -718,3 +718,4 @@ void CFullEntrenchment::SetVisible()
 	}
 }
 
+

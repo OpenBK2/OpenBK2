@@ -8,3 +8,4 @@ CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeo
 CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom, CFuncBase<SFBTransform> *pPlace );
 CObjectBase *GetWindDeformerSource( CObjectBase *p );
 }
+

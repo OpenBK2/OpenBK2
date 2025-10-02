@@ -119,3 +119,4 @@ bool CInfantryRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 
 // basement storage  
 
+

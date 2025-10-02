@@ -40,3 +40,4 @@ NTimer::STime CPlayTime::GetPlayTime(  ) const
 	return nPlayTime;
 }
 }
+

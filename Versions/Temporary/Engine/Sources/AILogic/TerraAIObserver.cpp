@@ -126,3 +126,4 @@ int CTerraAIObserverInGame::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x1B214300, CTerraAIObserverInGame )
+

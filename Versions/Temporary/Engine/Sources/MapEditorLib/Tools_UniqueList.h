@@ -66,3 +66,4 @@ public:
 };
 
 #endif // #if !defined(__COMMON_TOOLS__UNIQUE_LIST__)
+

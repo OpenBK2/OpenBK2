@@ -451,3 +451,4 @@ void CMPManagerModeLAN::ExtractGameInfo( SNetGameInfo *pDst, NNet::IDriver::SGam
 	}
 }
 
+

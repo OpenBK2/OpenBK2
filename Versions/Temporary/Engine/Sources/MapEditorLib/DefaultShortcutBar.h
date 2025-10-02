@@ -47,3 +47,4 @@ public:
 };
 
 #endif // !defined(__DEFAULT_SHORTCUT_BAR__)
+

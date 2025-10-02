@@ -793,3 +793,4 @@ UINT CMultiManipulatorIterator::GetID() const
 
 // basement storage  
 
+

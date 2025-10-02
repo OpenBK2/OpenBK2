@@ -889,3 +889,4 @@ void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 	}
 }
 
+

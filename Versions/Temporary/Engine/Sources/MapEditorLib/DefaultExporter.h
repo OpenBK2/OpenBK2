@@ -13,3 +13,4 @@ class CDefaultExporter : public CExporterBase
 };
 
 #endif // !defined(__DEFAULT_OBJECT_EXPORTER__)
+

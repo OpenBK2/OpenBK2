@@ -83,3 +83,4 @@ void CPCEditorSlider::OnKillFocus( CWnd* pNewWnd )
 
 // basement storage  
 
+

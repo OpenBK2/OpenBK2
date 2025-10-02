@@ -32,3 +32,4 @@ public:
 	const CTRect<float>& GetAABBRect() const { return aabbRect; }
 };
 
+

@@ -259,3 +259,4 @@ static const char * const cssWordListDesc[] = {
 };
 
 LexerModule lmCss(SCLEX_CSS, ColouriseCssDoc, "css", FoldCSSDoc, cssWordListDesc);
+

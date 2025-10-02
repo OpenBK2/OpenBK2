@@ -103,3 +103,4 @@ DWORD SUIGameConsts::CalcCheckSum() const
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x15087B80, STooltipContext ) 
 BASIC_REGISTER_DATABASE_CLASS( SUIGameConsts )
+

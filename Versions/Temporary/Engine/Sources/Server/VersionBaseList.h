@@ -87,3 +87,4 @@ const list<TData> TVersionBaseList<TData>::GetRemoveDiff( const DWORD _dwVersion
 }
 
 #undef MAX_HISTORY_LENGTH
+

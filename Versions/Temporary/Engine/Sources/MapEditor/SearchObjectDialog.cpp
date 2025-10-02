@@ -47,3 +47,4 @@ string CSearchObjectDialog::GetText()
 
 // basement storage  
 
+

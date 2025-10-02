@@ -76,3 +76,4 @@ public:
 	const EAbilitySwitchState GetState() const { return EAbilitySwitchState( state.eState ); }
 };
 
+

@@ -648,3 +648,4 @@ void CLuaEditor::ReplaceAll( const string &szText, const string &szWith, bool bW
 }
 
 
+

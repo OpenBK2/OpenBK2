@@ -9,3 +9,4 @@ namespace NImage
 	bool LoadImagePSD( CArray2D<DWORD> &pRes, CDataStream *pStream );
 };
 
+

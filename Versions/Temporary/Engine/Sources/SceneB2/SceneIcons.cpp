@@ -151,3 +151,4 @@ void CScene::MoveSceneIcon( const int nID, const CVec3 &vCenter )
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->data[eScene]->
+

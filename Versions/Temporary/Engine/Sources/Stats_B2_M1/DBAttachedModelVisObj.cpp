@@ -83,3 +83,4 @@ int SAttachedModelVisObj::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x3013FC00, SAttachedModelVisObj ) 
+

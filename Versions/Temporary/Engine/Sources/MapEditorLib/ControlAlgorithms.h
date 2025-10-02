@@ -33,3 +33,4 @@ namespace NCA
 };
 
 #endif // !defined(__COMMON_CONTROLS__CONTROL_ALGORITHMS__)
+

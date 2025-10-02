@@ -230,3 +230,4 @@ __forceinline const char* GetChar( const char *p, char *pValue )
 }
 
 }
+

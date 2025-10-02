@@ -101,3 +101,4 @@ int SAnimB2::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x10093480, SAnimB2 ) 
+

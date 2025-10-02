@@ -1108,3 +1108,4 @@ int CellBuffer::GetLevel(int line) {
 void CellBuffer::ClearLevels() {
 	lv.ClearLevels();
 }
+

@@ -812,3 +812,4 @@ bool CGeneral::IsInResistanceCircle( const CVec2 &vPoint ) const
 	return resContainer.IsInResistanceCircle( vPoint );
 }
 
+

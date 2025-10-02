@@ -61,3 +61,4 @@ void CRefListWaitDialog::OnDestroy()
 	CResizeDialog::OnDestroy();
 }
 
+

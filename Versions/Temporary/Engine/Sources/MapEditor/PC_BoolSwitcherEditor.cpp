@@ -54,3 +54,4 @@ void CPCBoolSwitcherEditor::GetValue( CVariant *pValue )
 
 // basement storage  
 
+

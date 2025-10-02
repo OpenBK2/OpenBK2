@@ -52,3 +52,4 @@ public:
 	static float CalcFallTime( const float fZ );
 };
 
+

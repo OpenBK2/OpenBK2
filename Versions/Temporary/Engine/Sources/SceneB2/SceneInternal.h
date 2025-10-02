@@ -627,3 +627,4 @@ public:
 	virtual bool ToggleGetSizeFromTarget( bool bGetSizesFromTarget );
 };
 
+

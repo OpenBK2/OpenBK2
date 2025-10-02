@@ -13,3 +13,4 @@ public:
 extern CEntrenchmentSegmentTypeMnemonics typeEntrenchmentSegment;
 
 #endif //#if !defined(__TRENCH_MNEMONICS__)
+

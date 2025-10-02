@@ -125,3 +125,4 @@ void CTranslateButton::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 	CButton::OnChar( nChar, nRepCnt, nFlags );
 }
+

@@ -156,3 +156,4 @@ public:
 	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const { return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit ); }
 };
 
+

@@ -188,3 +188,4 @@ bool TestDirectSetMetaGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 }
 
 }
+

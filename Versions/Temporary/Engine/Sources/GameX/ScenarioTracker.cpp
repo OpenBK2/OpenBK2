@@ -1962,3 +1962,4 @@ BASIC_REGISTER_CLASS( IScenarioTracker )
 BASIC_REGISTER_CLASS( IAIScenarioTracker )
 using namespace NScenarioTracker;
 REGISTER_SAVELOAD_CLASS_NM( 0x33234C40, SLeaderInfo, IScenarioTracker )
+

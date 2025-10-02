@@ -203,3 +203,4 @@ void CPlacedText::SetInternalFadeValue( float fValue )
 	}
 }
 
+

@@ -17,3 +17,4 @@ public:
 INTERFACE_COMMAND_DECLARE( CICDummy, CDummyInterface );
 
 #endif // __DUMMY_INTERFACE_H__
+

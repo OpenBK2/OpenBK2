@@ -16,3 +16,4 @@ void lua_AddString( IBinSaver &f, IBinSaver::chunk_id idChunk, TString **ppszStr
 void lua_StartSerialize( lua_State *pL ); 
 
 #endif
+

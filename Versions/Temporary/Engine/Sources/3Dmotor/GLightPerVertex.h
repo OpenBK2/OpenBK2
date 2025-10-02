@@ -86,3 +86,4 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, vector<float> *pRes );
 
 }
+

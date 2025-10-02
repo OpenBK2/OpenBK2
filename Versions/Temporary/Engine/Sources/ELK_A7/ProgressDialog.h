@@ -40,3 +40,4 @@ public:
 
 #endif // !defined(__ELK_PROGRESS_DIALOG__)
 
+

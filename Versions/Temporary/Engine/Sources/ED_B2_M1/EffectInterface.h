@@ -12,3 +12,4 @@ class CEffectInterface : public CEditorInterfaceBase
 INTERFACE_COMMAND_DECLARE( CEffectInterfaceCommand, CEffectInterface )
 
 #endif // !defined(__EFFECT_INTERFACE__)
+

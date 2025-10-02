@@ -81,3 +81,4 @@ IBinSaver* CreateLogSaver( string *pszLog )
 	return new CLogSaver( pszLog );
 }
 
+

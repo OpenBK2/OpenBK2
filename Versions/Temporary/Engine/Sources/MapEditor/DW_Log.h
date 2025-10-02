@@ -32,3 +32,4 @@ public:
 };
 
 #endif // !defined(__DOCKING_WINDOW__LOG__)
+

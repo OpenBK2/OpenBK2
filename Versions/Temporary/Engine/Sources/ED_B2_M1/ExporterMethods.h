@@ -154,3 +154,4 @@ bool GetSeasonedValue( TValue *pData, interface IManipulator *pManipulator, cons
 
 bool ExportFilesList( const string &szFilesListFileName, bool bForce, const char *pszBase );
 
+

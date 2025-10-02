@@ -75,3 +75,4 @@ protected:
 
 #endif // !defined(__ELK_STATISTIC_DIALOG__)
 
+

@@ -18,3 +18,4 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase 
 	const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder );
 void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD  );
 }
+

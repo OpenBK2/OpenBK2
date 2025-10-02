@@ -97,3 +97,4 @@ public:
 
 	~CStructureSaver() { Finish(); }
 };
+

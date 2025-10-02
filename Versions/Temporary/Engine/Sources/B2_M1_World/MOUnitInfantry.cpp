@@ -648,3 +648,4 @@ REGISTER_VAR_EX( "test_draw_weapon", NGlobal::VarBoolHandler, &s_bTestDrawWeapon
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( 0x100A7486, CMOUnitInfantry );
+

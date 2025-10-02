@@ -70,3 +70,4 @@ bool CMapInfoEditorSettings::MustRotateTo90Degrees( const string &rsObjectTypeNa
 
 // basement storage  
 
+

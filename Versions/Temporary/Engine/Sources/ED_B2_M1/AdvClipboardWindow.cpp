@@ -239,3 +239,4 @@ void CAdvClipboardWindow::OnBnClickedButtonLoadClip()
 }
 /**/
 
+

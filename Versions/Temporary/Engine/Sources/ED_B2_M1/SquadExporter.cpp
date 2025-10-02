@@ -101,3 +101,4 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
+

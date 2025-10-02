@@ -145,3 +145,4 @@ void CPCIntSliderEditor::OnChangePos( int nPos )
 
 // basement storage  
 
+

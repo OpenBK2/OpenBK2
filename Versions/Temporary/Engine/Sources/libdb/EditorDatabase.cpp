@@ -647,3 +647,4 @@ bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const string &szClass
 }
 
 }
+

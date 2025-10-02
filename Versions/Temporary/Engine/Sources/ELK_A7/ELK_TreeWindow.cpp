@@ -1083,3 +1083,4 @@ void CELKTreeWindow::OnViewTreeStatistic()
 	pwndMainFrame->SendMessage( WM_ELK_TREE_NOTIFY, ETN_SHOW_TREE_STATISTIC, 0 );
 }
 
+

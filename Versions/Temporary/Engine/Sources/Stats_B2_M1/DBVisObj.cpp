@@ -83,3 +83,4 @@ int SVisObj::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x11073C40, SVisObj ) 
+

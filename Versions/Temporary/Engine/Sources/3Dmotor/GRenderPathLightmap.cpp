@@ -27,3 +27,4 @@ void RenderShowLightmap( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	Execute( pRender, pRC, *pTS, lightOps, scene, lightInfo );
 }
 }
+

@@ -42,3 +42,4 @@ public:
 };
 
 #endif // __IMAGEINTERNAL_H__
+

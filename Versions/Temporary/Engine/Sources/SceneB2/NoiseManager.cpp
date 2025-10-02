@@ -77,3 +77,4 @@ void CNoiseManager::LoadNoise( unsigned int nNoiseNum )
 	noises[nNoiseNum].bLoaded = true;
 }
 
+

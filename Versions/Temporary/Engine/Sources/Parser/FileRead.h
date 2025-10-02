@@ -7,3 +7,4 @@ namespace NLang
 	int ReadData( char *pBuf, int nMaxSize );
 }
 
+

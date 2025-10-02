@@ -34,3 +34,4 @@ class C
 class B
 {
 };
+

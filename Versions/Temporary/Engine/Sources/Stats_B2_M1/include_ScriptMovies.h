@@ -20,3 +20,4 @@ bool HasValidSequence() const
 }
 
 
+

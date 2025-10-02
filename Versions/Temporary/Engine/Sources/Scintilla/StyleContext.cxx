@@ -49,3 +49,4 @@ static void getRangeLowered(unsigned int start,
 void StyleContext::GetCurrentLowered(char *s, unsigned int len) {
 	getRangeLowered(styler.GetStartSegment(), currentPos - 1, styler, s, len);
 }
+

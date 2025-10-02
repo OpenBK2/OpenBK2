@@ -633,3 +633,4 @@ REGISTER_VAR_EX( "segment_period_check", NGlobal::VarIntHandler, &SEGMENT_PERIOD
 REGISTER_VAR_EX( "tiles_for_path_direction", NGlobal::VarIntHandler, &TILES_FOR_PATH_DIRECTION, 48, STORAGE_NONE );
 FINISH_REGISTER
 
+

@@ -11,3 +11,4 @@
 #define CONSOLE_BUFFER_LOG1(n,s,c) ;
 #define CONSOLE_BUFFER_LOG2(n,s,c,b) ;
 #endif
+

@@ -10,3 +10,4 @@ public:
 	const string& GetDesc() const { return szDescription; }
 };
 
+

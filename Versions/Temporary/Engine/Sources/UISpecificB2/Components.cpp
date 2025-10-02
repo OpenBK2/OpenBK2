@@ -200,3 +200,4 @@ bool CTextureRoundSegmentVisitor::ClampAngles( float *pStart, float *pFinish, fl
 	return *pStart < *pFinish;
 }
 
+

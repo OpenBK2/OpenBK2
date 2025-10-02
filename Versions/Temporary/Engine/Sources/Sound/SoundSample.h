@@ -27,3 +27,4 @@ public:
 	void SetKey( const CDBID &dbid );
 };
 
+

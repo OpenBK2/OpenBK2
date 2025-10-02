@@ -34,3 +34,4 @@ void DumpAllObjects();
 CXmlExporter *GetExporter();
 
 }
+

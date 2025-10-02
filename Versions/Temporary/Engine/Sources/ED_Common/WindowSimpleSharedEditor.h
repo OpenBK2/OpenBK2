@@ -124,3 +124,4 @@ public:
 };
 
 #endif // !defined(__WINDOW_SIMPLE_SHARED_EDITOR__)
+

@@ -1629,3 +1629,4 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
 };
 
+

@@ -119,3 +119,4 @@ template <> void Invalidate( string *pID ) { if ( pID != 0 ) { pID->clear(); } }
 /**/
 
 #endif // !defined(__COMMON_DATA_ID__)
+

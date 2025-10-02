@@ -265,3 +265,4 @@ void CNewObjectDialog::OnAddTypeCheckBox()
 
 // basement storage  
 
+

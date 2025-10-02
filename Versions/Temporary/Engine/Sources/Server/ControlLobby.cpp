@@ -318,3 +318,4 @@ bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pP
 	return true;
 }
 
+

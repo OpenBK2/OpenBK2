@@ -37,3 +37,4 @@ interface IChildFrameContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__CHILD_FRAME__)
 
+

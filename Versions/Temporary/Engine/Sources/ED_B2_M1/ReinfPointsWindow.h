@@ -142,3 +142,4 @@ public:
 };
 
 #endif // #if !defined( __REINF_POINTS_WINDOW__ )
+

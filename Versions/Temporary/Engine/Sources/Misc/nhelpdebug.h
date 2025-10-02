@@ -138,3 +138,4 @@ inline string LookPrivate( const pair<K, T> *el )
 }
 
 #endif //_NSTL_HELP_DEBUG
+

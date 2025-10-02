@@ -21,3 +21,4 @@ CFormationMnemonics::CFormationMnemonics() : CMnemonicsCollector<int>( NDb::SWea
 
 CFormationMnemonics typeFormationMnemonics;
 
+

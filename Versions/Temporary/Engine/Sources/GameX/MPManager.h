@@ -50,3 +50,4 @@ public:
 	bool SaveReplay( const string &szFileName ) { return pCurrentNetMode->SaveReplay( szFileName ); }
 	//void UpdateInfoForReplay( SMultiplayerReplayInfo *pReplayInfo ) { pCurrentNetMode->UpdateInfoForReplay( pReplayInfo ); }
 };
+

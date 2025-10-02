@@ -128,3 +128,4 @@ void CClients::DBLogRawGameResult( const hash_map<string,int> &info )
 #endif
 }
 
+

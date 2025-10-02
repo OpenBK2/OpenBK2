@@ -26,3 +26,4 @@ public:
 };
 
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_COMBO_REF__)
+

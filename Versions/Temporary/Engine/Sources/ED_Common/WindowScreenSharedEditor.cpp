@@ -13,3 +13,4 @@ static char THIS_FILE[] = __FILE__;
 REGISTER_EDITOR_IN_DLL( WindowScreenShared, CWindowSimpleSharedEditor )
 
 
+

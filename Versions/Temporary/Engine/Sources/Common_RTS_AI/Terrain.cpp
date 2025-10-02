@@ -1807,3 +1807,4 @@ CTemporaryUnitProfileLocker::~CTemporaryUnitProfileLocker()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x3015A481, CTerrain )
+

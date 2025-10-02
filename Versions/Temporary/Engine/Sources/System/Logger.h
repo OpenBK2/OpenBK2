@@ -65,3 +65,4 @@ EXTERNVAR NLog::CLogger logCritical;
 EXTERNVAR NLog::CLogger logAlert;
 // Всё упало - unhandled exception - используется из обработчика unhandled exception
 EXTERNVAR NLog::CLogger logEmergency;
+

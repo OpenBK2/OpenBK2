@@ -575,3 +575,4 @@ static void CmdStartInterface ( const string &szID, const vector<wstring> &param
 START_REGISTER(Interfaces)
 REGISTER_CMD( "start_interface", NInterface::CmdStartInterface )
 FINISH_REGISTER
+

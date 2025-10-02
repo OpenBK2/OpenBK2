@@ -52,3 +52,4 @@ struct SConfigFile
 };
 
 #endif // !defined(__COMMON_TOOLS__CONFIG_FILE__)
+

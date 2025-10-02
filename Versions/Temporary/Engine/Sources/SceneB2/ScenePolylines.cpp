@@ -43,3 +43,4 @@ void CScene::RemovePolyline( const int nID )
 	data[eScene]->polylines.erase( nID );
 }
 
+

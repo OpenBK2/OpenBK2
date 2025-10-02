@@ -169,3 +169,4 @@ struct SKnownEnum<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType>
 	static string ToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( szValue ); }
 };
+

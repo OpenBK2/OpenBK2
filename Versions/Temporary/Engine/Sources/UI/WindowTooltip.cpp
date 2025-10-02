@@ -91,3 +91,4 @@ void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 	NGlobal::SetVar( "TOOLTIP_Y", nY );
 }
 
+

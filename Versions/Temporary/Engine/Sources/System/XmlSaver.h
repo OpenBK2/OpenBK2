@@ -526,3 +526,4 @@ namespace NXml
 	struct SPool;
 }
 SYSTEM_EXPORT IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode );
+

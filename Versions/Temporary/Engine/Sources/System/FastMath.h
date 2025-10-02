@@ -97,3 +97,4 @@ inline float GetAngle( const CVec2 &v1, const CVec2 &v2 )
 }
 
 #endif // __FAST_MATH_H__
+

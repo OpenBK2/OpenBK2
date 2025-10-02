@@ -77,3 +77,4 @@ public:
 };
 
 #endif // !defined(__MAP_EDITOR_APP__)
+

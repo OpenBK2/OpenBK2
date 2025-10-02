@@ -21,3 +21,4 @@ CMnemonicsCollector<int>( NDb::EST_LINE, "EST_LINE" )
 
 CEntrenchmentSegmentTypeMnemonics typeEntrenchmentSegment;
 
+

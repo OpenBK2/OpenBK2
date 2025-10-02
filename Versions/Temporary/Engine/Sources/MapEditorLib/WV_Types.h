@@ -182,3 +182,4 @@ namespace NWV
 };
 
 #endif // !defined(__WV_Types__)
+

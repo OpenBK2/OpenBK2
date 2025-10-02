@@ -383,3 +383,4 @@ void CCFCSceneB2::DrawFrameBorders( CPaintDC *pDC )
 
 // basement storage  
 
+

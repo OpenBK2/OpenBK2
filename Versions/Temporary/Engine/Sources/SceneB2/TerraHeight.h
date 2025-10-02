@@ -130,3 +130,4 @@ inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &ver
 }
 
 
+

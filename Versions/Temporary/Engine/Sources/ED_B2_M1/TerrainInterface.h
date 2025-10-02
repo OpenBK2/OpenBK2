@@ -12,3 +12,4 @@ class CTerrainInterface : public CEditorInterfaceBase
 INTERFACE_COMMAND_DECLARE( CTerrainInterfaceCommand, CTerrainInterface )
 
 #endif // !defined(__TERRAIN_INTERFACE__)
+

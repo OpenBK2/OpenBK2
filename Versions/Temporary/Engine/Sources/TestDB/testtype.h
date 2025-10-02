@@ -218,3 +218,4 @@ struct SKnownEnum<NDb::SUnitBase::EUnitType>
 	static string ToString( NDb::SUnitBase::EUnitType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SUnitBase::EUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SUnitBase_EUnitType( szValue ); }
 };
+

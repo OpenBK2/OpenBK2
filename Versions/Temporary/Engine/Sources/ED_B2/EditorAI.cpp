@@ -17,3 +17,4 @@ ITerraAIObserver* CEditorAI::CreateTerraAIObserver( const int nAIMapSizeX, const
 
 // basement storage  
 
+

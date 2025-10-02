@@ -2006,3 +2006,4 @@ inline bool ApplyTilesInCircle( const CTRect<int> &rRect,
 }
 
 #endif // #if !defined(__PLANE_GEOMETRY_H__)
+

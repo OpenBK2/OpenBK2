@@ -29,3 +29,4 @@ public:
 };
 
 #endif // #if !defined( __SOUND_DESC_EXPORTER__ )
+

@@ -75,3 +75,4 @@ void CEffectorSendUIMessage::Reverse()
 	bForward = !bForward;
 	bFinished = false;
 }
+

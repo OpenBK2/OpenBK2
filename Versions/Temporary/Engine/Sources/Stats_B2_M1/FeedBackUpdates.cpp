@@ -10,3 +10,4 @@ int CRAP_LinkerTooSmart_FeedBackUpdates()
 REGISTER_SAVELOAD_CLASS( 0x120B7302, SAIFeedbackUpdate )
 REGISTER_SAVELOAD_CLASS( 0x111BEC80, SFeedBackObjectiveState )
 REGISTER_SAVELOAD_CLASS( 0x111BEC81, SFeedBackUnitsArray )
+

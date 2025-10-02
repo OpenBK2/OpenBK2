@@ -127,3 +127,4 @@ void CICInterfaceCredist::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x1119C382, CInterfaceCredits )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_CREDITS, CICInterfaceCredist )
 REGISTER_SAVELOAD_CLASS_NM( 0x1119C381, CReactions, CInterfaceCredits );
+

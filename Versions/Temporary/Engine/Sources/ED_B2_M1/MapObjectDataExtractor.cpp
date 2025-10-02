@@ -28,3 +28,4 @@ bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const string &rszObj
 	return false;
 }
 
+

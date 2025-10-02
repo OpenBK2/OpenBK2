@@ -389,3 +389,4 @@ void CICMPLadderStatistics::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x19263380, CInterfaceMPLadderStatistics );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_LADDER_STATISTICS, CICMPLadderStatistics );
 
+

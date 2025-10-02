@@ -19,3 +19,4 @@ protected:
 	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
 };
 
+

@@ -18,3 +18,4 @@ protected:
 };
 
 #endif // !defined(__BASE_UI_BUILDER__)
+

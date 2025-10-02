@@ -245,3 +245,4 @@ void CAIMap::Clear()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x30159B00, CAIMap );
+

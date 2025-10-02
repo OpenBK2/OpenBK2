@@ -42,3 +42,4 @@ interface IWingScaleMutator : public IAnimMutator
 	virtual void ShowStatic( const bool bShow ) = 0;
 };
 
+

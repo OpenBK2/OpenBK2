@@ -123,3 +123,4 @@ public:
 //void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size );
 }
 #endif
+

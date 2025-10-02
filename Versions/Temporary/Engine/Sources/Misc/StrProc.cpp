@@ -321,3 +321,4 @@ void String2GUID( const string &szString, GUID *pGuid )
 
 }; // end of namespace NStr
 
+

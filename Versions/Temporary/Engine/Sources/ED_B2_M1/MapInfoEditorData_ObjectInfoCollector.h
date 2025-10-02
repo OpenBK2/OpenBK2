@@ -459,3 +459,4 @@ namespace NMapInfoEditor
 };
 
 #endif // !defined(__MAPINFO_EDITOR_DATA__OBJECT_INFO_COLLECTOR__)
+

@@ -113,3 +113,4 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 	UpdateVectorAreaInfo( vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y, TERRAIN_UPDATE_ALL );
 }
 
+

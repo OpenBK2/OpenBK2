@@ -41,3 +41,4 @@ int CAllowFakeObjToCrushExecutor::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( 0x3014AC01, CAllowFakeObjToCrushExecutor )
+

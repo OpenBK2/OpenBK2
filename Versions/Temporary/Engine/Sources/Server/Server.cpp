@@ -376,3 +376,4 @@ CGameServer::~CGameServer()
 }
 
 #undef REGISTER_CMD_FUNC
+

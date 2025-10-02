@@ -20,3 +20,4 @@ void SerializeOwner( const int nChunk, T **pOwner, IBinSaver* pSaver )
 }
 
 #endif // __SERIALIZE_OWNER_H__
+

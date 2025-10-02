@@ -28,3 +28,4 @@ protected:
 };
 
 #endif // !defined(__STATICDEBRISSET_BUILDER__)
+

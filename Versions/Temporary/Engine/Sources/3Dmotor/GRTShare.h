@@ -42,3 +42,4 @@ void InitRTShare( const SUserRTInfo &rtInfo, NGfx::SRenderTargetsInfo *pRes );
 int GetDepthTexResolution();
 const int N_DEFAULT_RT_RESOLUTION = 512;
 }
+

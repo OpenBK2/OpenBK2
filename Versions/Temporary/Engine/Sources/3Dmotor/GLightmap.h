@@ -84,3 +84,4 @@ void EnableLMGeometryDump(bool flag);
 bool GetDumpFlag();
 void SetDumpDirectory(const string &szDirectoryName);
 }
+

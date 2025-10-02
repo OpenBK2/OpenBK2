@@ -156,3 +156,4 @@ inline bool IsASpaceOrTab(unsigned int ch) {
 inline bool IsADigit(unsigned int ch) {
 	return (ch >= '0') && (ch <= '9');
 }
+

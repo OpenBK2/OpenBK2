@@ -275,3 +275,4 @@ void CTimeSliderControl::OnSize( UINT nType, int cx, int cy )
 }
 
 
+

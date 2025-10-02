@@ -72,3 +72,4 @@ public:
 	virtual class CAIUnit* GetTargetUnit() const;
 
 };
+

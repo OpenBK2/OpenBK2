@@ -43,3 +43,4 @@ const bool CEnemyRememberer::IsTimeToForget() const
 {
 	return timeLastSeen && curTime - timeLastSeen > timeBeforeForget;
 }
+

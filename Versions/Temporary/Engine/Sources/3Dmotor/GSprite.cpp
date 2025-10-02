@@ -83,3 +83,4 @@ void CSpriteAnimator::Recalc()
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0xB4414160, CSpriteEffect )
 REGISTER_SAVELOAD_CLASS( 0xB4414161, CSpriteAnimator )
+

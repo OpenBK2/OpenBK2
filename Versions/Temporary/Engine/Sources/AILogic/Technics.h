@@ -267,3 +267,4 @@ public:
 	bool CalculateUnitVisibility4Party( const BYTE party );
 };
 
+

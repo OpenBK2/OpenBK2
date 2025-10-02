@@ -109,3 +109,4 @@ inline IInterfaceState* InterfaceState() { return Singleton<IInterfaceState>(); 
 
 IInterfaceState* CreateInterfaceState();
 
+

@@ -16,3 +16,4 @@ enum
 	AI_TRAIN_ARTILLERY		= 0x312583C0,
 };
 
+

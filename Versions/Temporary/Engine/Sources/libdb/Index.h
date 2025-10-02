@@ -29,3 +29,4 @@ inline bool LoadIndexData( vector<SFullTypeHeader> *pRes, CDataStream *pStream )
 }
 
 }
+

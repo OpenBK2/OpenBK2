@@ -355,3 +355,4 @@ inline CVec2 UnPackCoords( int _nPacked )
 }
 
 #endif // __GAME_MESSAGE_H__
+

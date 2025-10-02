@@ -113,3 +113,4 @@ float CAverageValuePerTime::GetValue() const
 	return nTimeDiff == 0ULL ? 0.0f : ( fEventsSum / nTimeDiff * 1000 );
 }
 
+

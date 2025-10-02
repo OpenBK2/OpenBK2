@@ -104,3 +104,4 @@ class CRegistrySection
 #endif //#if !defined(__COMMON_TOOLS__REGISTRY__)
 
 
+

@@ -74,3 +74,4 @@ namespace NMapInfoEditor
 }//namespace
 
 #endif // __ENTRENCHMENT_INFO_DATA__
+

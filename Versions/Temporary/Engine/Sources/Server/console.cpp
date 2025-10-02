@@ -252,3 +252,4 @@ void CConsole::Segment()
 	}
 }
 
+

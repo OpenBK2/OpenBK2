@@ -134,3 +134,4 @@ void CTextEditorDialog::GetText( string *pszText )
 
 // basement storage  
 
+

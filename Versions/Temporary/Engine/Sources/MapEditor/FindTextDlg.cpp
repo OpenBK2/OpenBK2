@@ -52,3 +52,4 @@ void CFindTextDlg::OnCancel()
 {
 	ShowWindow( SW_HIDE );
 }
+

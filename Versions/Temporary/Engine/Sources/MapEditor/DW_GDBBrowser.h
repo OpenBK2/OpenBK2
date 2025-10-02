@@ -69,3 +69,4 @@ public:
 };
 
 #endif // !defined(__DOCKING_WINDOW__GDB_BROWSER__)
+

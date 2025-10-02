@@ -22,3 +22,4 @@ _3DLIB_EXPORT void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 
 }
 
+

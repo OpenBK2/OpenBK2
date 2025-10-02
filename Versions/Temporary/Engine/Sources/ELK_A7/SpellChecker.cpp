@@ -648,3 +648,4 @@ void CSpellChecker::GetTextCounts( const CString &rstrText, int nCodePage, int *
 	}
 }
 
+

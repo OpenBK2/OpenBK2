@@ -87,3 +87,4 @@ public:
 };
 
 #endif // !defined(__MAPINFO_DW_HEIGHT_WINDOW_V3__)
+

@@ -7,3 +7,4 @@ typedef int a;
 
 [a1 = 10]
 typedef e e_typedef;
+

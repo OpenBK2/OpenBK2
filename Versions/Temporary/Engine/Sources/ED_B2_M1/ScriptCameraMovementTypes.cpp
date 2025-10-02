@@ -18,3 +18,4 @@ CMnemonicsCollector<int>( NDb::SCRT_DIRECT_MOVE, "SCRT_DIRECT_MOVE" )
 
 CScriptCameraRunTypeMnemonics typeScriptCameraRunTypeMnemonics;
 
+

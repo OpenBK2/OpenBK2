@@ -174,3 +174,4 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 	return ETOL_SAFE;
 }
 
+

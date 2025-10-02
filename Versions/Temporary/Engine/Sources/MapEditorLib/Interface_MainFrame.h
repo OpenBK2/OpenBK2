@@ -123,3 +123,4 @@ interface IMainFrameContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__MAIN_FRAME__)
 
+

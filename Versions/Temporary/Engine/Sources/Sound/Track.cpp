@@ -137,3 +137,4 @@ int CTrack::operator&( IBinSaver &f )
 }
 }
 REGISTER_SAVELOAD_CLASS_NM( 0x111813C3, CTrack, NMusicSystem )
+

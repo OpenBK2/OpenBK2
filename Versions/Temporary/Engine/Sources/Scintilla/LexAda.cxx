@@ -518,3 +518,4 @@ static inline bool IsWordCharacter(int ch) {
 static inline bool IsWordStartCharacter(int ch) {
 	return isalpha(ch) || ch == '_';
 }
+

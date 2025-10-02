@@ -3428,3 +3428,4 @@ struct SKnownEnum<NDb::EReinforcementType>
 	static string ToString( NDb::EReinforcementType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EReinforcementType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EReinforcementType( szValue ); }
 };
+

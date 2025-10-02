@@ -517,3 +517,4 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
+

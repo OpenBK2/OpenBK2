@@ -230,3 +230,4 @@ public:
 };
 
 #endif __SHOOT_ESTIMATOR_INTERNAL_H__
+

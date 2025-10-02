@@ -106,3 +106,4 @@ bool IsElementExistsInList( const TContainer &rList, const TElement &rElement )
 
 /**/
 #endif // !defined(__HASH_SET_INSERT_FUNCTION__)
+

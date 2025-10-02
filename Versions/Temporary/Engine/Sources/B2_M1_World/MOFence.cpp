@@ -103,3 +103,4 @@ int CMOFence::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x11121C01, CMOFence );
+

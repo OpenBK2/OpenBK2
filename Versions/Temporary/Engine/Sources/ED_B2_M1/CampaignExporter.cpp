@@ -34,3 +34,4 @@ EXPORT_RESULT CCampaignExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
+

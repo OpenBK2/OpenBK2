@@ -664,3 +664,4 @@ void CStandartSmoothMechPath::Stop()
 }
 
 REGISTER_SAVELOAD_CLASS( STANDART_SMOOTH_MECH_PATH, CStandartSmoothMechPath );
+

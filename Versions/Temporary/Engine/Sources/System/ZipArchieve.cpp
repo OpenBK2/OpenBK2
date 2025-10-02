@@ -302,3 +302,4 @@ CDataStream *CZipFile::OpenFile( int nIndex )
 	return OpenFile( papDir[nIndex] );
 }
 
+

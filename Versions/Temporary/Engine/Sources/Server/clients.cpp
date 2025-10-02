@@ -880,3 +880,4 @@ void CClients::DBLogServerStatistics( const vector<string> &names, const vector<
 
 #undef MYSQL_QUERY
 #undef MYSQL_CHECK_RESULT
+

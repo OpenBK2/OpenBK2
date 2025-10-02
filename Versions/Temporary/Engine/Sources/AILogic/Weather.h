@@ -36,3 +36,4 @@ public:
 };
 
 #endif // __WEATHER_H__
+

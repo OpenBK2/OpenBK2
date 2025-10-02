@@ -46,3 +46,4 @@ protected:
 
 #endif // !defined(__SPOT_STATE__)
 
+

@@ -56,3 +56,4 @@ public:
 };
 
 #endif // !defined(__BRIDGERPGSTATS_EXPORTER__)
+

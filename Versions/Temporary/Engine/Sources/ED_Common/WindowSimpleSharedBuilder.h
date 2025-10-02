@@ -30,3 +30,4 @@ protected:
 };
 
 #endif // !defined(__WINDOW_SIMPLE_SHARED_BUILDER__)
+

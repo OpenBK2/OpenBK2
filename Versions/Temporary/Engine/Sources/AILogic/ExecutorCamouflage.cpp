@@ -76,3 +76,4 @@ void CExecutorCamouflage::SwitchOnEnd()
 
 REGISTER_SAVELOAD_CLASS( 0x19139380, CExecutorCamouflage )
 
+

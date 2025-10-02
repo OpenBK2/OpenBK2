@@ -608,3 +608,4 @@ void CTestClient::Segment()
 }
 
 #undef REGISTER_CMD_FUNC
+

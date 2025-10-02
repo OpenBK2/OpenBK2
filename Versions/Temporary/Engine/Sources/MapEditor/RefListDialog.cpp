@@ -290,3 +290,4 @@ void CRefListDialog::OnClearAll()
 	}
 }
 
+

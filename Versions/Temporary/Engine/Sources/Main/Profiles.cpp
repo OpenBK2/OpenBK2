@@ -210,3 +210,4 @@ REGISTER_CMD( "change_profile", ChangeProfile );
 REGISTER_VAR( "profile_name", 0, "default", STORAGE_GLOBAL )
 FINISH_REGISTER
 }
+

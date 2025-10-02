@@ -29,3 +29,4 @@ int CExecutorAmbush::operator&( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( 0x19124C00, CExecutorAmbush )
 
+

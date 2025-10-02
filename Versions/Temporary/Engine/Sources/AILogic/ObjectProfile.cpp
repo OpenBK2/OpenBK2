@@ -282,3 +282,4 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 }
 
 REGISTER_SAVELOAD_CLASS( 0x30156B00, CObjectProfile )
+

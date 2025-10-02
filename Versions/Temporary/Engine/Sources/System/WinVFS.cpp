@@ -391,3 +391,4 @@ IFileCreator* CreateWinFileCreator( const string &szBasePath )
 }
 
 }
+

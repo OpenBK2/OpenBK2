@@ -88,3 +88,4 @@ interface  IPCItemEditor : public CObjectBase
 };
 
 #endif // !defined(__INTERFACE__PROPERTY_CONTROL_ITEM_EDITOR__)
+

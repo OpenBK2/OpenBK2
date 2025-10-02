@@ -181,3 +181,4 @@ int DocumentAccessor::IndentAmount(int line, int *flags, PFNIsCommentLeader pfnI
 		return indent;
 }
 
+

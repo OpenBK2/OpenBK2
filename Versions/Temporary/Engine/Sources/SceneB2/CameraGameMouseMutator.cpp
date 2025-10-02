@@ -192,3 +192,4 @@ REGISTER_VAR_EX( "game_camera_keyboard_zoom_sensetivity", NGlobal::VarFloatHandl
 
 FINISH_REGISTER
 
+

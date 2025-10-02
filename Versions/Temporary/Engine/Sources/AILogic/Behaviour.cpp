@@ -291,3 +291,4 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 	}
 }
 
+

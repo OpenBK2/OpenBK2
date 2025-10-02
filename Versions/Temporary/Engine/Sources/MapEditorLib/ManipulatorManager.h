@@ -619,3 +619,4 @@ public:
 };
 
 #endif // !defined(__MANIPULATOR_MANAGER__)
+

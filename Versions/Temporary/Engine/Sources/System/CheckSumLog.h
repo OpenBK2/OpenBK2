@@ -7,3 +7,4 @@ interface ICheckSumLog : virtual public CObjectBase
 	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) = 0;
 };
 
+

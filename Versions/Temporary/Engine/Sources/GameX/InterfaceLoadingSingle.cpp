@@ -697,3 +697,4 @@ REGISTER_SAVELOAD_CLASS( 0x171933C0, CInterfaceLoadingSingleFinished )
 
 BASIC_REGISTER_CLASS( CInterfaceLoadingBase::CLoadingScene )
 
+

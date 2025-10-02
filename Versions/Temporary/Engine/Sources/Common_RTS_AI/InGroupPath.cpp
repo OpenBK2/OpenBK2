@@ -345,3 +345,4 @@ void CInGroupPathBasis::OnSerialize( IBinSaver &f )
 	SerializeBasePathUnit( f, 3, &pFormation );
 }
 
+

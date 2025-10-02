@@ -52,3 +52,4 @@ struct SHLSLShader
 	//	pPShader20(_pPShader20), pPShader20a(_pPShader20a) {}
 };
 
+

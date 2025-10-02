@@ -14,3 +14,4 @@ EXTERNVAR HINSTANCE theEDCommonInstance;
 
 #endif // !defined(__SPECIFIC__)
 
+

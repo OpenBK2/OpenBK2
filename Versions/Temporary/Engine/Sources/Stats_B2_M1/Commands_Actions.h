@@ -112,3 +112,4 @@ public:
 	void ReportMetaInfo( const string &szAddName, BYTE *pThis ) const;
 };
 
+

@@ -284,3 +284,4 @@ void ViewStyle::SetStyleFontName(int styleIndex, const char *name) {
 bool ViewStyle::ProtectionActive() const {
     return someStylesProtected;
 }
+

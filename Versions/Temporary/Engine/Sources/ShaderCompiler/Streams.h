@@ -462,3 +462,4 @@ public:
 inline CTextStream& endl( CTextStream& sStream ) { sStream << "\n"; return sStream; }
 
 #endif
+

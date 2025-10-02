@@ -47,3 +47,4 @@ interface ICommandHandlerContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__COMMAND_HANDLER__)
 
+

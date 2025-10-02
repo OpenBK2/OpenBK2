@@ -76,3 +76,4 @@ public:
 	virtual void SetLevel(int line, int level)=0;
 	virtual int IndentAmount(int line, int *flags, PFNIsCommentLeader pfnIsCommentLeader = 0)=0;
 };
+

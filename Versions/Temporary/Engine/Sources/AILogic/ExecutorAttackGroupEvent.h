@@ -28,3 +28,4 @@ public:
 		float GetRange() const { return fRange; }
 };
 
+

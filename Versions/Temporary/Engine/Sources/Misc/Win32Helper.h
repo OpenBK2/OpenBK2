@@ -132,3 +132,4 @@ typedef CTLock<CSimpleCriticalSection> CSimpleCriticalSectionLock;
 }
 
 #endif
+

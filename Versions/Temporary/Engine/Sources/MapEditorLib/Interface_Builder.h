@@ -138,3 +138,4 @@ interface IBuilderContainer : public CObjectBase
 
 #endif // !defined(__INTERFACE__BUILDER__)
 
+

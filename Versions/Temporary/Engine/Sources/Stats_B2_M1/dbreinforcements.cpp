@@ -434,3 +434,4 @@ DWORD SPlayerReinforcementEnable::CalcCheckSum() const
 
 }
 using namespace NDb;
+

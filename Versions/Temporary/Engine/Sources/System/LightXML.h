@@ -320,3 +320,4 @@ public:
 }; // end of namespace NLXML
 
 #endif // __LIGHTXML_H__
+

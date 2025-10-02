@@ -348,3 +348,4 @@ int SVisObjIconsSet::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1311B302, SIconsSet ) 
 REGISTER_DATABASE_CLASS( 0x1313C400, SVisObjIconsSet ) 
+

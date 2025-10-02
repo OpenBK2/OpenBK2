@@ -57,3 +57,4 @@ void CBlitzkriegELKRecordset::Dump(CDumpContext& dc) const
 	CRecordset::Dump(dc);
 }
 #endif //_DEBUG
+

@@ -13,3 +13,4 @@ namespace NDb
 {
 	enum EEntrenchSegmType;
 }
+

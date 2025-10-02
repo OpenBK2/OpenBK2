@@ -89,3 +89,4 @@ public:
 	NDb::ESoundType GetCombatType() const { return eCombatType; }
 };
 
+

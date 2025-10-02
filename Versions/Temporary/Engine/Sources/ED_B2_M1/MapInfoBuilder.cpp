@@ -561,3 +561,4 @@ bool CMapInfoBuilder::InsertObject( string *pszObjectTypeName,
 
 // basement storage  
 
+

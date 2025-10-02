@@ -32,3 +32,4 @@ public:
 	int operator&( IXmlSaver &saver );
 };
 
+

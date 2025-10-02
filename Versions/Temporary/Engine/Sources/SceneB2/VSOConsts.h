@@ -110,3 +110,4 @@ inline int GetVSOSeed( const NDb::SVSOInstance *pInstance )
 	return (int)( fLength * 1000 );
 }
 
+

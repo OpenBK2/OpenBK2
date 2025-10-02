@@ -21,3 +21,4 @@ public:
 	NTimer::STime GetPlayTime() const;
 };
 }
+

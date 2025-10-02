@@ -168,3 +168,4 @@ void NGlobalObjects::Serialize( int idChunk, IBinSaver &saver )
 	saver.Add( idChunk, &globalSerializer );
 }
 
+

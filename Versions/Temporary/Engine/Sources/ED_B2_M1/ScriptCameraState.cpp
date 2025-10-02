@@ -1419,3 +1419,4 @@ int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) c
 }
 
 
+

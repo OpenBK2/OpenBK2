@@ -98,3 +98,4 @@ interface IAILogic : public ICommonB2M1AI
 	virtual void DumpAfterAssinc() const = 0;
 };
 
+

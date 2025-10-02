@@ -12,3 +12,4 @@ bool CGameInputInterface::ProcessEvent( const struct SGameMessage &msg )
 	return NInput::CGMORegContainer::ProcessEvent( msg, this );
 }
 
+

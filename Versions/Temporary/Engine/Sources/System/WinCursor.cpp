@@ -31,3 +31,4 @@ HCURSOR LoadCursor( const string &szFileName )
 }
 }
 
+

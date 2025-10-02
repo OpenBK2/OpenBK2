@@ -120,3 +120,4 @@ bool CMPManager::OnBackFromGameListMessage( SMPUIMessage *pMsg )
 	return true;
 }
 
+

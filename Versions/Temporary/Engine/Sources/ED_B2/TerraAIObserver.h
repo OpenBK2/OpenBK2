@@ -20,3 +20,4 @@ public:
 	virtual ~CTerraAIObserverInEditor() {}
 };
 
+

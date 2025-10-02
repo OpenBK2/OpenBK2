@@ -89,3 +89,4 @@ public:
 	void Attach2DView( NGScene::I2DGameView *_p2DView ) { p2DView = _p2DView; }
 };
 
+

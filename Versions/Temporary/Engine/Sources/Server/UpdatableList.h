@@ -53,3 +53,4 @@ public:
 	void GetDiff( const int nNoIncludeID, const DWORD dwOldVersion, SUpdateInfo *pUpdate );
 };
 
+

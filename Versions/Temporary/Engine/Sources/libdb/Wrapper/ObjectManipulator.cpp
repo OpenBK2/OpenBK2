@@ -288,3 +288,4 @@ bool CObjectManipulatorIteratorWrapper::GetType( string *pszType ) const
 	return true;
 }
 
+

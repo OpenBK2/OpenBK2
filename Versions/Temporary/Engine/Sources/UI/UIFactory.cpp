@@ -191,3 +191,4 @@ IUIInitialization* CreateUIInitialization()
 REGISTER_SAVELOAD_CLASS( 0x11069C80, SWindowContextCommon );
 REGISTER_SAVELOAD_CLASS( 0x1109BC00, CUIFactory );
 REGISTER_SAVELOAD_CLASS( 0x110B5CC0, CVirtualScreenController );
+

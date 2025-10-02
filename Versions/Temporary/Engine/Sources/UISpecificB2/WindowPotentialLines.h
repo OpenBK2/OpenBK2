@@ -201,3 +201,4 @@ public:
 	void ClearArrows() { arrows.clear(); }
 	void AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour );
 };
+

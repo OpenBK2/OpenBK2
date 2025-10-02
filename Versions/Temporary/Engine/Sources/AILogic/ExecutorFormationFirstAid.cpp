@@ -98,3 +98,4 @@ int CExecutorFormationFirstAid::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x11136340, CExecutorFormationFirstAid )
+

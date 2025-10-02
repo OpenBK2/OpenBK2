@@ -115,3 +115,4 @@ void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, cons
 }
 
 
+

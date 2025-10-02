@@ -87,3 +87,4 @@ CUIWindow *CreateUIWindow( int x, int y, int w, int h, DWORD _color, const NDb::
 
 #endif // !defined(__UI_WINDOW__)
 
+

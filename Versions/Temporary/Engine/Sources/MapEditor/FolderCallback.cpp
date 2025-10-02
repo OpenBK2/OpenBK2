@@ -274,3 +274,4 @@ bool CFolderCallback::SetColor( const string &rszObjectTypeName, const string &r
 
 // basement storage  
 
+

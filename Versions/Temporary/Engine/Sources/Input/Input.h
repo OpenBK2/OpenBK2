@@ -65,3 +65,4 @@ INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, stri
 };
 
 #endif
+

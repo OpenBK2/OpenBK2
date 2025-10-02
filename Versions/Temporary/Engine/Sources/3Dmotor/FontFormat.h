@@ -66,3 +66,4 @@ public:
 	friend void NFontGen::CreateFontFormat( CFontFormatInfo *pRes, const NFontGen::CFontInfo &fi );
 };
 
+

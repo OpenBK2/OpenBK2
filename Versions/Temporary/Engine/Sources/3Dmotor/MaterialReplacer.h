@@ -12,3 +12,4 @@ const NDb::SMaterial *GetReplacedMaterial( const string &szName, int nInd );
 
 }
 
+

@@ -8,3 +8,4 @@ interface IScriptDictionary : public CObjectBase
 	virtual void GetKeywords( int nDictionary, vector< string > &vszKeywords ) = 0;
 	virtual DWORD GetKeywordsColor( int nDictionary ) = 0;
 };
+

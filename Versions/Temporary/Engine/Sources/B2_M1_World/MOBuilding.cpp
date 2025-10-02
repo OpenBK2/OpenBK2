@@ -1016,3 +1016,4 @@ bool CMOBuilding::IsHitbarVisible() const
 }
 
 REGISTER_SAVELOAD_CLASS( 0x100A7481, CMOBuilding );
+

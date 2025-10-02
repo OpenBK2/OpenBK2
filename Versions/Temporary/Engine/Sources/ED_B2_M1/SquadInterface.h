@@ -12,3 +12,4 @@ class CSquadInterface : public CEditorInterfaceBase
 INTERFACE_COMMAND_DECLARE( CSquadInterfaceCommand, CSquadInterface )
 
 #endif // !defined(__SQUAD_INTERFACE__)
+

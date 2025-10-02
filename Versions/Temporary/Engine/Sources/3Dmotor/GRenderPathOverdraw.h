@@ -13,3 +13,4 @@ void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene );
 void ColorOverdraw( NGfx::CRenderContext *pRC );
 }
+

@@ -26,3 +26,4 @@ inline void MPLog( const char *pszInfo, ... )
 }
 
 #endif // __MP_LOG_H__
+

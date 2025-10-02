@@ -24,3 +24,4 @@ struct SRailRoadSystem
 
 	void AddRailRoad( const NDb::SVSOInstance *pVSO );
 };
+

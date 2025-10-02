@@ -68,3 +68,4 @@ const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType, c
 
 }
 
+

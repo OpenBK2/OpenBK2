@@ -143,3 +143,4 @@ public:
 
 	const SVector& GetDirection() const { return dir; }
 };
+

@@ -136,3 +136,4 @@ void CMessageReactions::Register( const string &szReactionKey, IMessageReactionB
 {
 	reactions[szReactionKey] = pReaction;
 }
+

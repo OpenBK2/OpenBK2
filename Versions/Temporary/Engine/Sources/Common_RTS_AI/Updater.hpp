@@ -24,3 +24,4 @@ public:
 	virtual void AddUpdate( IContinuosUpdate *pContinuosUpdate );
 };
 
+

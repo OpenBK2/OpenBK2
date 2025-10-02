@@ -70,3 +70,4 @@ struct SKnownEnum<NDb::EAnimationType>
 	static string ToString( NDb::EAnimationType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EAnimationType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAnimationType( szValue ); }
 };
+

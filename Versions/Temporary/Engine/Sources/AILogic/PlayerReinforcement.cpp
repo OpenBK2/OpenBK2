@@ -808,3 +808,4 @@ void CPlayerReinforcementArray::GiveReinforcementCalls( const int nPlayer, const
 		operator[]( nPlayer ).GiveReinforcementCalls( nCalls, bResetCounter );
 }
 
+

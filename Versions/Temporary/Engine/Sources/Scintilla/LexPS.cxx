@@ -342,3 +342,4 @@ static const char * const psWordListDesc[] = {
 };
 
 LexerModule lmPS(SCLEX_PS, ColourisePSDoc, "ps", FoldPSDoc, psWordListDesc);
+

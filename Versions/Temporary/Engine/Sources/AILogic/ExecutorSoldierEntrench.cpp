@@ -126,3 +126,4 @@ void CExecutorSoldierEntrench::RegisterOnEvents( IExecutorContainer *pContainer 
 }
 
 REGISTER_SAVELOAD_CLASS( 0x110AB2C0, CExecutorSoldierEntrench )
+

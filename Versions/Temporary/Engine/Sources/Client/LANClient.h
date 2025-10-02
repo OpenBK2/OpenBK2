@@ -44,3 +44,4 @@ public:
 	int GetOwnClientID() { return pNetDriver->GetSelfClientID(); }
 };
 
+

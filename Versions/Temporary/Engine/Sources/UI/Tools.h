@@ -18,3 +18,4 @@ namespace NUITools
 		CTRect<float> *pRect );
 }
 
+

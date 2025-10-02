@@ -457,3 +457,4 @@ void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x100A7485, CMOSquad );
+

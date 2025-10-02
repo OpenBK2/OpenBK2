@@ -61,3 +61,4 @@ interface ISmoothPath : public CAIObjectBase
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return true; }
 };
 
+

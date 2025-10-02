@@ -130,3 +130,4 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
+

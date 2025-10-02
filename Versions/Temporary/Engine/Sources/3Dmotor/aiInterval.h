@@ -65,3 +65,4 @@ void FillIntersectionResults( vector<SSimpleInterval> *pRes,
 
 }
 #endif
+

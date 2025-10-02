@@ -21,3 +21,4 @@ EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipu
 	return ER_SUCCESS;
 }
 
+

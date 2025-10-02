@@ -12,3 +12,4 @@ const NDb::SClientGameConsts * CClientGameConsts::GetClientGameConsts()
 	return NGameX::GetClientConsts();
 }
 
+

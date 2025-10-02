@@ -109,3 +109,4 @@ void CLongObjectCreation::UnlockPreventingUnits( list<CPtr<CAIUnit> > &preventin
 			pUnit->UnlockTiles();
 	}
 }
+

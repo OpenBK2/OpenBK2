@@ -117,3 +117,4 @@ int CBackgroundSimpleTexture::operator&( interface IBinSaver &saver )
 	return 0;
 }
 
+

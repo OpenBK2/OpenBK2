@@ -39,3 +39,4 @@ public:
 };
 
 #endif // !defined(__EFFECT_EDITOR__)
+

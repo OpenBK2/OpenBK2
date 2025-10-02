@@ -37,3 +37,4 @@ private:
 };
 
 #endif // !defined(__WINDOW_MSBUTTON_SHARED_BUILDER__)
+

@@ -23,3 +23,4 @@ class CPCIEMnemonics : public CMnemonicsCollector<int>
 EXTERNVAR CPCIEMnemonics typePCIEMnemonics;
 
 #endif // !defined(__PROPERTY_CONTROL_ITEM_EDITOR_TYPE_MNEMONICS__)
+

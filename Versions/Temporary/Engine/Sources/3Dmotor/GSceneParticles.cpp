@@ -26,3 +26,4 @@ using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x01561150, CParticlesTriList )
 REGISTER_SAVELOAD_CLASS( 0x01561151, CShaderParticlesGeometry )
 REGISTER_SAVELOAD_CLASS( 0x01561152, CTnLParticlesGeometry )
+

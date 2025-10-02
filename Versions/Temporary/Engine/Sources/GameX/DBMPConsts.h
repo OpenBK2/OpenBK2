@@ -178,3 +178,4 @@ struct SKnownEnum<NDb::EHistoricalSide>
 	static string ToString( NDb::EHistoricalSide eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EHistoricalSide ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EHistoricalSide( szValue ); }
 };
+

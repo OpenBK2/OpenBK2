@@ -625,3 +625,4 @@ static void MMXTransformVector3( NGfx::SCompactVector *pRes, const NGfx::SCompac
 	}
 }
 #pragma warning( default : 4799 )
+

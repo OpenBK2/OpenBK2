@@ -962,3 +962,4 @@ bool CWorldClient::ActionPlaceMarker( const CVec2 &vPos, const CMapObj *pMO, boo
 	return true;
 }
 
+

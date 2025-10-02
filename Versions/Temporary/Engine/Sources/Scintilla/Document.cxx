@@ -1430,3 +1430,4 @@ int Document::ExtendStyleRange(int pos, int delta, bool singleLine) {
 	}
 	return pos;
 }
+

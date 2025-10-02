@@ -309,3 +309,4 @@ public:
 
 #endif // !defined(__MAPOBJECT_STATE__)
 
+

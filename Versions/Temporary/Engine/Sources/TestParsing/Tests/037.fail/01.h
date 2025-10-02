@@ -6,3 +6,4 @@ typedef int n;
 enum e { };
 
 typedef c_int n;
+

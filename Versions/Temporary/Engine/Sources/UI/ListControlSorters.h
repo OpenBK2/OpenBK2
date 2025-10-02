@@ -24,3 +24,4 @@ public:
 	virtual bool IsAscending() const;
 };
 
+

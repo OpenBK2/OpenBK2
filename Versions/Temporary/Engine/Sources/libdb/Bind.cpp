@@ -171,3 +171,4 @@ bool CStructIterator::Next()
 }
 }
 
+

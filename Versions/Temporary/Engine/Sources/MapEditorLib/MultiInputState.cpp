@@ -180,3 +180,4 @@ void CMultiInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 
 // basement storage  
 
+

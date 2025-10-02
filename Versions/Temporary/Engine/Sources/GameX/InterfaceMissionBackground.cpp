@@ -169,3 +169,4 @@ void CICMissionBackground::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x17117B81, CInterfaceMissionBackground )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_BACKGROUND, CICMissionBackground )
 
+

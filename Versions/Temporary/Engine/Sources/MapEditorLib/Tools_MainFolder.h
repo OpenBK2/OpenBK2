@@ -11,3 +11,4 @@ struct SMainFolder
 };
 
 #endif // !defined(__COMMON_TOOLS__MAIN_FOLDER__)
+

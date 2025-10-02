@@ -38,3 +38,4 @@ public:
 	virtual const class CPlanePreferences & GetPreferencesB2() const = 0;
 };
 #endif //IPLANE_H
+

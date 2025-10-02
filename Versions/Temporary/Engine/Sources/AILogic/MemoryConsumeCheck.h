@@ -71,3 +71,4 @@ public:
 };
 
 #endif // __MEMORYCONSUMECHECK_H__
+

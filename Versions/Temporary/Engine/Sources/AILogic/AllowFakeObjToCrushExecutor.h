@@ -24,3 +24,4 @@ public:
 	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
 };
 
+

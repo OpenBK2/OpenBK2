@@ -140,3 +140,4 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 const SRect GetUnitSmallRect( const CBasePathUnit *pUnit );
 const SRect GetUnitNormalRect( const CBasePathUnit *pUnit );
 
+

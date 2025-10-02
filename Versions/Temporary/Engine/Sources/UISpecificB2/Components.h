@@ -30,3 +30,4 @@ public:
 	void Visit( interface IUIVisitor *pVisitor );
 };
 
+

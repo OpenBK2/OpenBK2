@@ -6,3 +6,4 @@ class C
   int c[1..15];
   int a[5..];
 };
+

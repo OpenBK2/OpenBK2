@@ -225,3 +225,4 @@ bool IsPointNearPoint( const CVec2 &point1, const CVec2 &point2 )
 	return fabs2(point1-point2) < sqr(static_cast<int>(SConsts::TILE_SIZE) );
 }
 
+

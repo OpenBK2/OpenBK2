@@ -94,3 +94,4 @@ inline float SRand::GetFloat( float fpMin, float fpMax )
 extern CRandomGenerator random;
 
 #endif
+

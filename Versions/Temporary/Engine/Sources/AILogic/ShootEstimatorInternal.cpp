@@ -1109,3 +1109,4 @@ const float CShootEstimatorSupportAAGun::CalcRating( CAIUnit *pEnemy, CBasicGun 
 	return
 		F( fEnemyHPPercent, fTimeToGo, 0, fKillEnemyTime, pEnemy->GetStats()->fPrice );
 }
+

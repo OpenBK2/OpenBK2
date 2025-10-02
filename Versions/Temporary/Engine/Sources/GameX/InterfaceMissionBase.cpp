@@ -138,3 +138,4 @@ int CInterfaceMissionBase::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x11135C00, CVisualNotificationsEmpty );
+

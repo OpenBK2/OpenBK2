@@ -93,3 +93,4 @@ CFontInfo* CTextLocaleInfo::GetFont( const SFont &sFont )
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x02931162, CTextLocaleInfo )
 REGISTER_SAVELOAD_CLASS( 0x020c1140, CFontInfo )
+

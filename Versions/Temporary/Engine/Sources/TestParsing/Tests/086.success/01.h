@@ -9,3 +9,4 @@ class A
   typedef SS SSS;
   SSS s1, s2[10];
 };
+

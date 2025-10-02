@@ -1183,3 +1183,4 @@ using namespace NGScene;
 REGISTER_SAVELOAD_TEMPL_CLASS( 0x028b2140, CResourcePrecache<CLoadAIGeometryFromA5Exporter>, CResourcePrecache )
 REGISTER_SAVELOAD_TEMPL_CLASS( 0x028b2141, CResourcePrecache<CFileSkinPointsLoadFromA5Exporter>, CResourcePrecache )
 REGISTER_SAVELOAD_CLASS( 0x01443110, CUserHullsTracker )
+

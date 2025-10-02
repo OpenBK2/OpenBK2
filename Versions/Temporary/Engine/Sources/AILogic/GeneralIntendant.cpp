@@ -962,3 +962,4 @@ void CGeneralIntendant::MarkCellsDangerous( const SVector &vCell )
 	}
 }
 
+

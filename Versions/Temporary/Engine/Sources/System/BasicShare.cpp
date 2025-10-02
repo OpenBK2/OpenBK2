@@ -27,3 +27,4 @@ void SerializeShared( IBinSaver *pFile )
 		(*pTest) & ( *pFile );
 }
 
+

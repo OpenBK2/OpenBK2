@@ -40,3 +40,4 @@ void CGeneralTaskToResupplyCell::OnSerialize( IBinSaver &saver )
 {
 	SerializeOwner( 2, &pCells, &saver );
 }
+

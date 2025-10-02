@@ -42,3 +42,4 @@ public:
 };
 #endif // __COMBATESTIMATOR_H__
 
+

@@ -66,3 +66,4 @@ public:
 };
 
 #endif // __BUILDING_STATE__
+

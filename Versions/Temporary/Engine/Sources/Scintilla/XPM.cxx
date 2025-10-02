@@ -295,3 +295,4 @@ int XPMSet::GetWidth() {
 	}
 	return (width > 0) ? width : 0;
 }
+

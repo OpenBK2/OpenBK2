@@ -139,3 +139,4 @@ public:
 	virtual bool LineEntered( const string &szLine, string *pszErr );
 };
 
+

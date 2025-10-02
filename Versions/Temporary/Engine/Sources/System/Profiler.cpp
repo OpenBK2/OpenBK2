@@ -72,3 +72,4 @@ static void Profile( const string &szID, const vector<wstring> &paramsSet, void 
 START_REGISTER(ProfileCommands)
 REGISTER_CMD( "profile", Profile )
 FINISH_REGISTER
+

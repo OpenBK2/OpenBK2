@@ -9,3 +9,4 @@ class A
   typedef CC CCC;
   CCC *c;
 };
+

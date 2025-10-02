@@ -28,3 +28,4 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 
 }
 
+

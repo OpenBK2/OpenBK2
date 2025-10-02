@@ -168,3 +168,4 @@ bool TestComplexArray2InsertRemove( NDb::IObjMan *pBind, const string &szFieldNa
 
 }
 
+

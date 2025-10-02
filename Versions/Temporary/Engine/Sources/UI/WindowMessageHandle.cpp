@@ -43,3 +43,4 @@ IMPLEMENT_MESSAGE_HANDLER(CWindow,Enable)
 	return pChild;
 }
 
+

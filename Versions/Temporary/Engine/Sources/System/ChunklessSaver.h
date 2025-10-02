@@ -10,3 +10,4 @@ interface IPointerSerialization : virtual public CObjectBase
 
 class CMemoryStream;
 SYSTEM_EXPORT IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pStream, ESaverMode mode );
+

@@ -71,3 +71,4 @@ bool CPCBaseDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChec
 
 // basement storage  
 
+

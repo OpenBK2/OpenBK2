@@ -45,3 +45,4 @@ public:
 };
 
 #endif // #if !defined(__MAPINFO_AI_MARKERS_DLG__)
+

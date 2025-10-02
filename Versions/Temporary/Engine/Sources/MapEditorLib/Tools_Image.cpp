@@ -67,3 +67,4 @@ void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<DWORD> &rImage, const
 
 // basement storage  
 
+

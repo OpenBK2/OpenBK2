@@ -78,3 +78,4 @@ void CExecutorPlaceCharge::RegisterOnEvents( IExecutorContainer *pContainer )
 	pContainer->RegisterOnEvent( this, par );
 }
 
+

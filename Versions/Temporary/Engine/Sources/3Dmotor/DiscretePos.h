@@ -120,3 +120,4 @@ inline void SDiscretePos::InvMoveAndRotate( CVec3 *pPoint ) const
 	SDiscretePos pos( 0, VNULL3, nInvR );
 	pos.MoveAndRotate( pPoint );
 }
+

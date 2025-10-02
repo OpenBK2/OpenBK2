@@ -37,3 +37,4 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
+

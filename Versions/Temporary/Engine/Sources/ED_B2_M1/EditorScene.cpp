@@ -7,3 +7,4 @@ IEditorScene* EditorScene()
 	return Singleton<IEditorScene>();
 }
 
+

@@ -79,3 +79,4 @@ public:
 
 	class CMOProjectile* LaunchProjectile( const SAINewProjectileUpdate *pUpdate );
 };
+

@@ -286,3 +286,4 @@ static const char * const texWordListDesc[] = {
 } ;
 
 LexerModule lmTeX(SCLEX_TEX, ColouriseTeXDoc, "tex", 0, texWordListDesc);
+

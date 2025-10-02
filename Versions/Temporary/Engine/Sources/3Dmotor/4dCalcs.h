@@ -10,3 +10,4 @@ inline CVec3 SafeUnhomogen( const CVec4 &v )
 	return CVec3( v.x / v.w, v.y / v.w, v.z / v.w );
 }
 inline CVec3 Unhomogen( const CVec4 &a ) { ASSERT( a.w != 0 ); return CVec3(a.x/a.w, a.y/a.w, a.z/a.w ); }
+

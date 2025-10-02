@@ -281,3 +281,4 @@ void ContractionState::ShowAll() {
 	lines = 0;
 	size = 0;
 }
+

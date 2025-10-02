@@ -50,3 +50,4 @@ public:
 };
 
 #endif // __AI_UNIT_INFO_FOR_GENERAL_H__
+

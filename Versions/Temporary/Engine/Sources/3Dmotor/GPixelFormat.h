@@ -240,3 +240,4 @@ struct SCompactTransformer
 }; // namespace NGfx
 
 #endif // __GPIXELFORMAT_H__
+

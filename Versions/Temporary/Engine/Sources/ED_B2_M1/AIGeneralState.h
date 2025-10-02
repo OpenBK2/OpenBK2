@@ -60,3 +60,4 @@ public:
 };
 
 #endif // #if !defined( __AIGENERAL_STATE__ )
+

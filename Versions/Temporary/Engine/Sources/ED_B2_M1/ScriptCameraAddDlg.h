@@ -26,3 +26,4 @@ public:
 };
 
 #endif // if !defined( __SCAM_ADD_DLG__ )
+

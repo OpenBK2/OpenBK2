@@ -26,3 +26,4 @@ struct SSoundTerrainInfo
 	int nTerrainType;											// type of this terrain
 	SSoundTerrainInfo() : fWeight( 0.0f ), vPos( VNULL3 ), nTerrainType( -1 ) {}
 };
+

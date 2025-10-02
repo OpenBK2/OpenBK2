@@ -11,3 +11,4 @@ NDb::EUserAction GetActionByCommand( EActionCommand actionCommand );
 STATS_B2_M1_EXPORT EActionCommand GetCommandByAction( NDb::EUserAction action );
 STATS_B2_M1_EXPORT NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility );
 
+

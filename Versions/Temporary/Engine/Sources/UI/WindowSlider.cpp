@@ -443,3 +443,4 @@ bool CWindowSlider::OnButtonUp( const CVec2 &vPos, const int nButton )
 	return false;
 }
 
+

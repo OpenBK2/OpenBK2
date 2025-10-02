@@ -435,3 +435,4 @@ const WORD GetVisibleAngle( const CVec2 &point, const SRect rect )
 	return Max( Max ( Max( diff1, diff2 ), Max( diff3, diff4 ) ), Max( diff5, diff6 ) );
 }
 
+

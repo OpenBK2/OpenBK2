@@ -7,3 +7,4 @@ class A
   typedef int e1; 
   e1 n = 10;
 };
+

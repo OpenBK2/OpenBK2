@@ -65,3 +65,4 @@ void ColorOverdraw( NGfx::CRenderContext *pRC )
 	pRC->SetStencil( NGfx::STENCIL_NONE );
 }
 }
+

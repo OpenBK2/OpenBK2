@@ -233,3 +233,4 @@ static const char * const eiffelWordListDesc[] = {
 
 LexerModule lmEiffel(SCLEX_EIFFEL, ColouriseEiffelDoc, "eiffel", FoldEiffelDocIndent, eiffelWordListDesc);
 LexerModule lmEiffelkw(SCLEX_EIFFELKW, ColouriseEiffelDoc, "eiffelkw", FoldEiffelDocKeyWords, eiffelWordListDesc);
+

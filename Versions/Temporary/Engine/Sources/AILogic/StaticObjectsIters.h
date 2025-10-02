@@ -228,3 +228,4 @@ CStObjCircleIter<bOnlyContainers>::CStObjCircleIter<bOnlyContainers>( const CVec
 	CStObjIter<bOnlyContainers>::Init( nMinX, nMaxX, nMinY, nMaxY );
 }
 
+

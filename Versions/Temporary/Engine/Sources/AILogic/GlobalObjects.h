@@ -10,3 +10,4 @@ namespace NGlobalObjects
 };
 
 #endif // __GLOBAL_OBJECTS_H__
+

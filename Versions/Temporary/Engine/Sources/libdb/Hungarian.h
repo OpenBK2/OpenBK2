@@ -11,3 +11,4 @@ bool ConvertToShortName( string *pszShortFieldName, const string &szFullFieldNam
 const string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field );
 }
 
+

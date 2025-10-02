@@ -22,3 +22,4 @@ inline CString RCStr( const UINT nStringID )
 
 #endif // #if !defined(__STRING_RESOURCES__)
 
+

@@ -311,3 +311,4 @@ void CICPlayerStats::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( 0x1722A301, CInterfacePlayerStats )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_PLAYER_STATS, CICPlayerStats )
 
+

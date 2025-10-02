@@ -148,3 +148,4 @@ void SCheats::CheckPassword( const string &szPassword )
 		NGlobal::SetVar( "VVP", 1 );
 }
 
+

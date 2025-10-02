@@ -27,3 +27,4 @@ public:
 	bool IsExecutorValid() const { return true; }
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 };
+

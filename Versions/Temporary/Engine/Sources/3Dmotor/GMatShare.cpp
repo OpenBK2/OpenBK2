@@ -179,3 +179,4 @@ IMaterial* CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoe
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x01671182, CMaterialShare )
 REGISTER_SAVELOAD_CLASS( 0x01812140, CSkyAdapter )
+

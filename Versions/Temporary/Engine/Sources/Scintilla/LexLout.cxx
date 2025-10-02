@@ -206,3 +206,4 @@ static const char * const loutWordLists[] = {
         };
 
 LexerModule lmLout(SCLEX_LOUT, ColouriseLoutDoc, "lout", FoldLoutDoc, loutWordLists);
+

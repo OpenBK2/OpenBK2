@@ -143,3 +143,4 @@ public:
 	void UnRegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject );
 };
 
+

@@ -8,3 +8,4 @@ void CreateRefKey( string *pszKey, const struct SPropertyDesc *pPropertyDesc );
 
 #endif // !defined(__COMMON_EDITOR_METHODS__)
 
+

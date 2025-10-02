@@ -16,3 +16,4 @@ interface IAnimUnit : public CAIObjectBase
 };
 
 #endif // __ANIM_UNIT_H__
+

@@ -60,3 +60,4 @@ void CMinesIter::Reset()
 	IterateToNextMine();
 }
 
+

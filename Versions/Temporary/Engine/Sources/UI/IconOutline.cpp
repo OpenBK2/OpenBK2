@@ -270,3 +270,4 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 }
 
 REGISTER_SAVELOAD_CLASS( 0x20147BC0, CIconOutliner )
+

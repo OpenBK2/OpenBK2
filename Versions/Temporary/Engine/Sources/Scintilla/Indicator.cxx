@@ -69,3 +69,4 @@ void Indicator::Draw(Surface *surface, const PRectangle &rc, const PRectangle &r
 	}
 }
 
+

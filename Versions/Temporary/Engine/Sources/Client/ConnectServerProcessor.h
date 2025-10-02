@@ -37,3 +37,4 @@ public:
 	bool ProcessNewClient( class CNetNewClient *pPacket );
 };
 
+

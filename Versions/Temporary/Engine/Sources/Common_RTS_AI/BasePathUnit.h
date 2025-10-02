@@ -365,3 +365,4 @@ public:
 //! пользоваться SerializeBasePathUnit( ... )
 COMMON_RTS_AI_EXPORT void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit );
 
+

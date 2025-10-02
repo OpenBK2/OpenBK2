@@ -382,3 +382,4 @@ bool RenameNode( const string &szOldName, const string &szNewName )
 }
 
 }
+

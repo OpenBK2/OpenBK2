@@ -50,3 +50,4 @@ void GenerateCode( CCodeStructure *pCodeStructure, const string &szRawRootDir )
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D00, CCodeStructure );
+

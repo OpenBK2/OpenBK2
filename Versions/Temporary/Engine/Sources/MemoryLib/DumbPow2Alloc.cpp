@@ -365,3 +365,4 @@ void __cdecl DebugTraceMMgr( const char *pszFormat, ... )
 	OutputDebugString( buff );
 	ASSERT( strlen( buff ) < 20000 );
 }
+

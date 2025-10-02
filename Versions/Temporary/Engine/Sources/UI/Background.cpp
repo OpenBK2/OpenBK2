@@ -47,3 +47,4 @@ int CBackground::operator&( interface IBinSaver &saver )
 	saver.Add( 2, &fFadeValue );
 	return 0;
 }
+

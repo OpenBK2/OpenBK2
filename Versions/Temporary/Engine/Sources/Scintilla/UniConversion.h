@@ -10,3 +10,4 @@ void UTF8FromUCS2(const wchar_t *uptr, unsigned int tlen, char *putf, unsigned i
 unsigned int UCS2Length(const char *s, unsigned int len);
 unsigned int UCS2FromUTF8(const char *s, unsigned int len, wchar_t *tbuf, unsigned int tlen);
 
+

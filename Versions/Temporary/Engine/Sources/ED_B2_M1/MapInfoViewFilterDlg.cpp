@@ -202,3 +202,4 @@ void CMapInfoViewFilterDlg::Apply()
 																												0 );
 }
 
+

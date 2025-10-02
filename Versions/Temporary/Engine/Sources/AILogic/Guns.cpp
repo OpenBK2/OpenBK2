@@ -1943,3 +1943,4 @@ const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner )
 	return pStats->fRangeMax;
 }
 
+

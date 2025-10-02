@@ -67,3 +67,4 @@ public:
 
 const int ANY_PARTY = EDI_FRIEND | EDI_ENEMY | EDI_NEUTRAL;
 
+

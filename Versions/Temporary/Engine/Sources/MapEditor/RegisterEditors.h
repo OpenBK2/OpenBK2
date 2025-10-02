@@ -36,3 +36,4 @@ public:
 extern CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
 
 #endif //__REGISTER_EDITORS_H__
+

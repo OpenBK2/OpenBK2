@@ -19,3 +19,4 @@ _3DLIB_EXPORT CPtrFuncBase<CObjectInfo>* CreateObjectInfo( CMemObject *pO );
 } // namespace
 
 #endif
+

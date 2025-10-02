@@ -32,3 +32,4 @@ public:
 	afx_msg void OnBnClickedReplaceall();
 };
 
+

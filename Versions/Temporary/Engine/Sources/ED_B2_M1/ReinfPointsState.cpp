@@ -756,3 +756,4 @@ void CReinfPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 }
 
 
+

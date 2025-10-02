@@ -254,3 +254,4 @@ void Create( const NDb::SMapInfo *pMapInfo,
 }
 
 #endif // !defined(__MINIMAP_IMAGE__)
+

@@ -56,3 +56,4 @@ public:
 };
 
 #endif // !defined(__SQUAD_STATE__)
+

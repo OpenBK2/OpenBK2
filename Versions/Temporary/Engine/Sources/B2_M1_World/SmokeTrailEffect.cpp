@@ -87,3 +87,4 @@ void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const strin
 }
 
 REGISTER_SAVELOAD_CLASS( 0x101BCCC0, CSmokeTrailEffect )
+
