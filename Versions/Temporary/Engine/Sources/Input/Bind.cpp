@@ -421,7 +421,7 @@ static void Update( DWORD dwTime )
 		SCommand &sCommand = iTempCommand->second;
 		
 		bool bActive = false;
-		int64 nValue = 0;
+		int64_t nValue = 0;
 		for( list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled )

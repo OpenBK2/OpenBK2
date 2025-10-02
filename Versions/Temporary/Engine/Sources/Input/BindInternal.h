@@ -1,6 +1,8 @@
 #pragma once
 #include "../Input/Bind.h"
 
+#include <cstdint>
+
 namespace NInput
 {
 
@@ -8,8 +10,8 @@ class CKeyAccumulator
 {
 protected:
 	bool bActive;
-	int64 nValue;
-	int64 nPower;
+	int64_t nValue;
+	int64_t nPower;
 	DWORD dwTime;
 
 public:
@@ -36,11 +38,11 @@ public:
 	void Deactivate( DWORD _dwTime )
 	{
 		nPower = 0;
-		nValue += int64( _dwTime - dwTime ) * nPower;
+		nValue += int64_t( _dwTime - dwTime ) * nPower;
 		bActive = false;
 	}
 
-	int64 Sample( DWORD _dwTime )
+	int64_t Sample( DWORD _dwTime )
 	{
 		int nTemp = nValue;
 		DWORD dwTimeDelta = _dwTime - dwTime;
@@ -49,7 +51,7 @@ public:
 		dwTime = _dwTime;
 
 		if ( bActive )
-			return nTemp + int64( dwTimeDelta ) * nPower;
+			return nTemp + int64_t( dwTimeDelta ) * nPower;
 		else
 			return nTemp;
 	}
@@ -63,17 +65,17 @@ class CDoubleAccumulator
 {
 protected:
 	bool bActive;
-	int64 nValue;
-	int64 nPower;
+	int64_t nValue;
+	int64_t nPower;
 	DWORD dwTime;
 
-	int64 GetDelta( DWORD _dwTime )
+	int64_t GetDelta( DWORD _dwTime )
 	{
 		// не надо так делать, из-за этого в aiMap камера дергается
 		if ( nPower > -POWER_MIN_LIMIT && nPower < POWER_MIN_LIMIT )
 			return 0;
 
-		return int64( _dwTime - dwTime ) * nPower;
+		return int64_t( _dwTime - dwTime ) * nPower;
 	}
 
 public:
@@ -104,7 +106,7 @@ public:
 		nPower = 0;
 		bActive = false;
 	}
-	int64 Sample( DWORD _dwTime )
+	int64_t Sample( DWORD _dwTime )
 	{
 		int nTemp = nValue;
 		DWORD dwTimeDelta = _dwTime - dwTime;
@@ -121,7 +123,7 @@ public:
 class CAxisAccumulator
 {
 protected:
-	int64 nValue;
+	int64_t nValue;
 	DWORD dwActivationTime;
 
 public:
@@ -131,9 +133,9 @@ public:
 		dwActivationTime = dwTime;
 		nValue += nPoint;
 	}
-	int64 Sample( DWORD dwTime )
+	int64_t Sample( DWORD dwTime )
 	{
-		int64 nTemp = nValue;
+		int64_t nTemp = nValue;
 		nValue = 0;
 		return nTemp;
 	}
@@ -146,7 +148,7 @@ struct SAccumulator
 	CAxisAccumulator sAxisAccumulator;
 	CDoubleAccumulator sLimAxisAccumulator;
 
-	int64 Sample( DWORD dwTime ) { return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) + sAxisAccumulator.Sample( dwTime ); }
+	int64_t Sample( DWORD dwTime ) { return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) + sAxisAccumulator.Sample( dwTime ); }
 	void Reset() { sKeyAccumulator.Reset(); sPOVAccumulator.Reset(); sLimAxisAccumulator.Reset(); }
 };
 

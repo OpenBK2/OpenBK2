@@ -11,7 +11,7 @@ double NHPTimer::GetSeconds( const NHPTimer::STime &a )
 
 // Time counters
 
-static inline void GetCounter( int64 *pTime )
+static inline void GetCounter( int64_t *pTime )
 {
 	__asm
 	{
@@ -41,7 +41,7 @@ double NHPTimer::GetTimePassed( STime *pTime )
 
 void NHPTimer::UpdateHPTimerFrequency()
 {
-	static int64 freq, start, fin;
+	static int64_t freq, start, fin;
 	static double fTStart, fTFinish, fPassed;
 	static STime tStart;
 	static DWORD dwStart;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 /////////////////////////////////////////////////////////////////////////////////////
 namespace nstl
 {
@@ -67,7 +69,7 @@ private:
 		int nID;
 		UCID addr; // broadcast sender address
 	};
-	typedef int64 PEER_ID;
+	typedef int64_t PEER_ID;
 	struct SPeerClient
 	{
 		UCID addr;

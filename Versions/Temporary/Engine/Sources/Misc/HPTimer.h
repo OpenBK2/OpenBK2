@@ -1,9 +1,11 @@
 #pragma once
 #include "Misc_export.h"
 
+#include <cstdint>
+
 namespace NHPTimer
 {
-	typedef int64 STime;
+	typedef int64_t STime;
 	double GetSeconds( const STime &a );
 	// получить текущее время
 	MISC_EXPORT void GetTime( STime *pTime );

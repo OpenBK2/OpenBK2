@@ -4,6 +4,8 @@
 #include "../Image/DDS.h"
 #include "../Image/GUnpackDXT.h"
 
+#include <cstdint>
+
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr );
 namespace NGScene
 {
@@ -179,7 +181,7 @@ void CBilinearTexture::Recalc()
 		fdV = ( (float)pic.GetSizeY() - 1.01f ) / ( nYSize - 1 );
 	int nUPos, nDU = Float2Int( fdU * 0x8000 ), nVPos, nDV = Float2Int( fdV * 0x8000 );
 	int nNextY = pic.GetSizeX() * 4;
-	int64 shift = 0x10001000100010;
+	int64_t shift = 0x10001000100010;
 	nVPos = 0;
 	for ( int y = 0; y < nYSize; ++y )
 	{

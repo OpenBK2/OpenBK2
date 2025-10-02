@@ -55,10 +55,6 @@ using namespace nstl;
 
 #include "../Misc/nhelpdebug.h"
 
-//
-typedef __int64 int64;									// due to lack of 'long long' type support
-typedef unsigned __int64 QWORD;					// quadra word
-
 namespace NTimer
 {
 	typedef DWORD STime;
