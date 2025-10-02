@@ -9,13 +9,13 @@
 #include "..\3dmotor\GTexture.h"
 #include "..\System\BasicShare.h"
 #include "..\3DMotor\GRects.h"
-//////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTexShare;
 EXTERNVAR _3DMOTOR_EXPORT CTexShare shareTextures;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRLBuilder : public NGScene::ILayoutFakeView
 {
 	NGScene::ISW2DScene *pScene;
@@ -62,15 +62,15 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 	}
 	SRLBuilder( NGScene::ISW2DScene *_pScene ) : pScene(_pScene) {}
 };
-//////////////////////////////////////////////////////////////////////////
+
 //vector<int> CIconOutliner::OutlineIDs;
-//////////////////////////////////////////////////////////////////////////
+
 CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, const CTPoint<int> &_size )
 : bNeedUpdate(true), fixedSize(_size), eUsage( _eUsage ), nOutlineType(_nOutlineType), size(1,1)
 {
 	//ASSERT( OutlineIDs.size() ); //call before SetOutlineIDs 
 }
-//////////////////////////////////////////////////////////////////////////
+
 /*void CIconOutliner::SetOutlineIDs( const vector<int> &_OutlineIDs ) 
 {
 	if ( OutlineIDs.size() )
@@ -81,20 +81,20 @@ CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, 
 		OutlineIDs.push_back( _OutlineIDs[i] );
 	}
 }*/
-//////////////////////////////////////////////////////////////////////////
+
 bool CIconOutliner::NeedUpdate() 
 { 
 	bool bRes = bNeedUpdate; 
 	bNeedUpdate = false; 
 	return bRes; 
 }
-//////////////////////////////////////////////////////////////////////////
+
 CVec2 CIconOutliner::GetOutlineAdd( const CDBID &nOutlineType )
 {
 	const NDb::STexture *pMask = NDb::Get<NDb::STexture>( nOutlineType );
 	return pMask? CVec2( pMask->nWidth, pMask->nWidth ):CVec2();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CIconOutliner::Recalc()
 {	
 	NGfx::EPixelFormat pf = NGfx::Is16BitTextures() ? NGfx::CF_A4R4G4B4 : NGfx::CF_A8R8G8B8;
@@ -140,7 +140,7 @@ void CIconOutliner::Recalc()
 	}
 	p2DScene->Draw( pValue, size, true );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 {
 	if ( fmt == _fmt )
@@ -268,5 +268,5 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 
 	bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x20147BC0, CIconOutliner )

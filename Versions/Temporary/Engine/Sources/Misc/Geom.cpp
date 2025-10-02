@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "geom.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 {
 	const float x2 = x*x;
@@ -13,7 +13,7 @@ void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 	*pfPitch = -asin( 2*(z*x - w*y) );
 	*pfRoll = atan2( 2*(z*y + w*x), w2 + z2 - x2 - y2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetDirectionByVector( float x, float y )
 {
 	if ( IsAlmostZero( x, y ) )
@@ -52,12 +52,12 @@ const WORD GetDirectionByVector( float x, float y )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetDirectionByVector( const CVec2 &vec )
 {
 	return GetDirectionByVector( vec.x, vec.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 GetVectorByDirection( const WORD dir )
 {
 	const float fDir = float(dir % 16384) / 16384.0f;
@@ -82,7 +82,7 @@ const CVec2 GetVectorByDirection( const WORD dir )
 	Normalize( &result );
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD DirsDifference( const WORD dir1, const WORD dir2 )
 {
 	const	WORD clockWise = dir1-dir2;
@@ -90,7 +90,7 @@ const WORD DirsDifference( const WORD dir1, const WORD dir2 )
 
 	return Min( clockWise, antiClockWise );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int DifferenceSign( const WORD dir1, const WORD dir2 )
 {
 	const	WORD clockWise = dir1-dir2;
@@ -98,34 +98,34 @@ const int DifferenceSign( const WORD dir1, const WORD dir2 )
 
 	return Sign(int(antiClockWise) - int(clockWise));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsInTheAngle( const WORD dir, const WORD startAngleDir, const WORD finishAngleDir )
 {
 	return 
 		WORD( dir - startAngleDir ) + WORD( finishAngleDir - dir ) == WORD( finishAngleDir - startAngleDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsInTheMinAngle( const WORD dir, const WORD dir1, const WORD dir2 )
 {
 	return
 		(int)DirsDifference( dir, dir1 ) + (int)DirsDifference( dir, dir2 ) == DirsDifference( dir1, dir2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetZDirectionBy3DVector( const float x, const float y, const float z )
 {
 	return GetDirectionByVector( fabs( x, y ), z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetZDirectionBy3DVector( const CVec2 &vec, const float z )
 {
 	return GetZDirectionBy3DVector( vec.x, vec.y, z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetZAngle( const CVec2 &vec, const float z )
 {
 	return GetZAngle( vec.x, vec.y, z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetZAngle( const float x, const float y, const float z )
 {
 	const WORD wZDir = GetZDirectionBy3DVector( x, y, z );
@@ -133,16 +133,16 @@ const WORD GetZAngle( const float x, const float y, const float z )
 	const WORD wZAngle = Min( DirsDifference( wZDir, 16384 * 3 ), DirsDifference( wZDir, 16384 ) );
 	return z >= 0.0f ? wZAngle : 65536 - wZAngle;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetZAngle( const CVec3 &vPoint )
 {
 	return GetZAngle( vPoint.x, vPoint.y, vPoint.z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															SRect																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SRect::InitRect( const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4 )
 {
 	v1 = _v1;
@@ -161,7 +161,7 @@ void SRect::InitRect( const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, cons
 
 	width = fabs( v2 - v1 ) * 0.5f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float length, const float _width )
 {
 	center = _center;
@@ -182,7 +182,7 @@ void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float lengt
 	v3 = pointForward + dirPerp * width;
 	v4 = pointForward - dirPerp * width;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float _lengthAhead, const float _lengthBack, const float _width )
 {
 	center = _center;
@@ -203,7 +203,7 @@ void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float _leng
 	v3 = pointForward + dirPerp * width;
 	v4 = pointForward - dirPerp * width;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, const CVec2 &dir, const float min, const float max ) const
 {
 	const float proj1 = v1 * dir;
@@ -219,7 +219,7 @@ bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v
 	return 
 		!( Min( min12, min34 ) >= max || Max( max12, max34 ) <= min );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsIntersected( const CSegment &segment ) const
 {
 	CVec2 vSegmetDir = segment.p2 - segment.p1;
@@ -233,7 +233,7 @@ bool SRect::IsIntersected( const CSegment &segment ) const
 		IsIntersectProject( v1 - segment.p1, v2 - segment.p1, v3 - segment.p1, v4 - segment.p1, vSegmetDir, 0.0f, fSegmLength ) &&
 		IsIntersectProject( v1 - segment.p1, v2 - segment.p1, v3 - segment.p1, v4 - segment.p1, vSegmentDirPerp, 0.0f, 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsIntersected( const SRect &rect ) const
 {
 	return 
@@ -242,7 +242,7 @@ bool SRect::IsIntersected( const SRect &rect ) const
 		IsIntersectProject( rect.v1 - center, rect.v2 - center, rect.v3 - center, rect.v4 - center, dir, -lengthBack, lengthAhead ) &&
 		IsIntersectProject( rect.v1 - center, rect.v2 - center, rect.v3 - center, rect.v4 - center, dirPerp, -width, width );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsPointInside( const CVec2 &point ) const
 {
 	const CVec2 center( ( v1.x + v2.x + v3.x + v4.x ) / 4, ( v1.y + v2.y + v3.y + v4.y ) / 4 );
@@ -256,7 +256,7 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 		Sign( TriangleAAA ( v1, v2, point ) ) == rightSign && Sign( TriangleAAA ( v2, v3, point ) ) == rightSign &&
 		Sign( TriangleAAA ( v3, v4, point ) ) == rightSign && Sign( TriangleAAA ( v4, v1, point ) ) == rightSign;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 {
 	if ( IsPointInside( circleCenter ) )
@@ -279,7 +279,7 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 
 	return fDist <= sqr( r );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVec2 &vTr3 ) const
 {
 	if ( IsPointInsideTriangle( vTr1, vTr2, vTr3, v1 ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v2 ) ||
@@ -300,7 +300,7 @@ bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVe
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int SRect::GetSide( const WORD dirFromRectCenter ) const
 {
 	// разница по модулю 65536	
@@ -317,12 +317,12 @@ const int SRect::GetSide( const WORD dirFromRectCenter ) const
 	else
 		return SIDE_FRONT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int SRect::GetSide( const CVec2 &point ) const
 {
 	return GetSide( GetDirectionByVector( point - center ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SRect::Compress( const float fFactor )
 {
 	lengthAhead *= fFactor;
@@ -331,7 +331,7 @@ void SRect::Compress( const float fFactor )
 
 	InitRect( center, dir, lengthAhead, lengthBack, width );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float fabs( const SRect rect1, const SRect rect2 )
 {
 	CVec2 dir( rect1.center - rect2.center );
@@ -360,7 +360,7 @@ const float fabs( const SRect rect1, const SRect rect2 )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect )
 {
 	if ( pvResult )
@@ -417,7 +417,7 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD GetVisibleAngle( const CVec2 &point, const SRect rect )
 {
 	const WORD wAngle1 = GetDirectionByVector( rect.v1 - point );
@@ -434,4 +434,4 @@ const WORD GetVisibleAngle( const CVec2 &point, const SRect rect )
 
 	return Max( Max ( Max( diff1, diff2 ), Max( diff3, diff4 ) ), Max( diff5, diff6 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

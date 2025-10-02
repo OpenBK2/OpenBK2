@@ -8,18 +8,18 @@
 #include "../Misc/NAlgoritm.h"
 #include "../DebugTools/DebugInfoManager.h"
 #include "../Misc/Bresenham.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												  CTerrain																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const SVector offsets[4] = { SVector( 1, 0 ), SVector( 0, -1 ), SVector( -1, 0 ), SVector( 0, 1 ) };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerrain::CTerrain()
 : eMode( ELM_ALL ), bInitMode( false ), nTmpLockUnitID( -1 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerrain::CTerrain( CAIMap *_pAIMap, const bool _bInitMode )
 : eMode( ELM_ALL ), bInitMode( false ), nTmpLockUnitID( -1 )
 {
@@ -77,18 +77,18 @@ CTerrain::CTerrain( CAIMap *_pAIMap, const bool _bInitMode )
 	nDebugLockInfoPos = 0;
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTerrain::CanDigEntrenchment( const int x, const int y ) const
 {
 	return !digImpossible.GetData( x, y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const void CTerrain::AddUndigableTiles( const list<SVector> &tiles )
 {
 	for ( list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		digImpossible.SetData( it->x, it->y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::PrepareTerraTypes( const int nCount )
 {
 	tileDigImpossible.resize( nCount, 0 );
@@ -96,7 +96,7 @@ void CTerrain::PrepareTerraTypes( const int nCount )
 	passabilities.resize( nCount, 0 );
 	soilParams.resize( nCount, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::SetTerraTypes( const int nIndex, const float fPass, const DWORD passClass, const BYTE soilType, const BYTE digImpossible )
 {
 	passabilities[nIndex] = fPass;
@@ -104,7 +104,7 @@ void CTerrain::SetTerraTypes( const int nIndex, const float fPass, const DWORD p
 	soilParams[nIndex] = soilType;
 	tileDigImpossible[nIndex] = digImpossible;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<BYTE> &tiles )
 {
 	for ( int y = nY1; y < nY2; ++y )
@@ -208,7 +208,7 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 	InitExplosionTerrainTypes();
 	InitMaxes( nX1, nX2, nY1, nY2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const ETerrainTypes CTerrain::GetTerrainType( const int nX, const int nY ) const
 {
 	if ( !pAIMap->IsTileInside( nX, nY ) || IsBridge( SVector( nX, nY ) ) )
@@ -216,7 +216,7 @@ const ETerrainTypes CTerrain::GetTerrainType( const int nX, const int nY ) const
 	else
 		return ETerrainTypes( terrainTypes.GetData( nX, nY ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddWaterTiles( const list<SVector> &tiles )
 {
 	for ( list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
@@ -226,7 +226,7 @@ void CTerrain::AddWaterTiles( const list<SVector> &tiles )
 			terrainTypes.SetData( tile.x, tile.y, ETT_WATER_TERRAIN );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench )
 {
 	const ELockMode oldMode = eMode;
@@ -325,7 +325,7 @@ void CTerrain::AddTiles( const list<SVector> vTiles, const EAIClasses aiPassClas
 
 	SetMode( oldMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddMarineTiles( const list<SVector> coastTiles, const BYTE coastSoilType, const list<SVector> waterTiles, const BYTE waterSoilType )
 {
 	for ( list<SVector>::const_iterator it = coastTiles.begin(); it != coastTiles.end(); ++it )
@@ -350,7 +350,7 @@ void CTerrain::AddMarineTiles( const list<SVector> coastTiles, const BYTE coastS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::InitMaxesDefault( const int nSizeX, const int nSizeY )
 {
 	maxes.SetSizes( GetClassIndex(EAC_COUNT), 2 );
@@ -381,7 +381,7 @@ void CTerrain::InitMaxesDefault( const int nSizeX, const int nSizeY )
 		maskForSmooth.SetData( nSizeX - 1, y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::InitMaxes( const int _nX1, const int _nX2, const int _nY1, const int _nY2 )
 {
 	const int nX1 = Max( 0, 2*_nX1 - pAIMap->GetMaxUnitTileRadius() );
@@ -419,7 +419,7 @@ void CTerrain::InitMaxes( const int _nX1, const int _nX2, const int _nY1, const 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVector *pDownTile, SVector *pUpTile, const bool bWater )
 {
 	RemoveTemporaryUnlocking( id );
@@ -481,7 +481,7 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 	pUpTile->x = upX;
 	pUpTile->y = upY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUpTile, bool *pbWater )
 {
 	RemoveTemporaryUnlocking( id );
@@ -545,7 +545,7 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUpDownFinder
 {
 	SVector &downTile, &upTile;
@@ -574,7 +574,7 @@ struct SUpDownFinder
 		upTile.y = Max( upTile.y, el.y );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::LockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
 {
 	for ( list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
@@ -583,7 +583,7 @@ void CTerrain::LockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, S
 	SUpDownFinder finder( *pDownTile, *pUpTile, pAIMap );
 	for_each( tiles.begin(), tiles.end(), finder );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UnlockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile )
 {
 	for ( list<SObjTileInfo>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
@@ -592,7 +592,7 @@ void CTerrain::UnlockTiles( const list<SObjTileInfo> &tiles, SVector *pDownTile,
 	SUpDownFinder finder( *pDownTile, *pUpTile, pAIMap );
 	for_each( tiles.begin(), tiles.end(), finder );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::InitExplosionTerrainTypes()
 {
 	CArray2D4Bit terrainTypesOld( terrainTypes );
@@ -627,7 +627,7 @@ void CTerrain::InitExplosionTerrainTypes()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater )
 {
 	hash_map< int, pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
@@ -674,7 +674,7 @@ bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &uni
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveTemporaryUnlocking( const int id )
 {
 	hash_map< int, pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
@@ -695,7 +695,7 @@ void CTerrain::RemoveTemporaryUnlocking( const int id )
 		tmpUnlockUnitsMap.erase( pos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CTerrain::GetTerrainPassabilityType( const int nX, const int nY ) const
 {
 	if ( !pAIMap->IsTileInside( nX, nY ) )
@@ -703,7 +703,7 @@ const int CTerrain::GetTerrainPassabilityType( const int nX, const int nY ) cons
 	else
 		return passTypes[nY >> 1][nX >> 1];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveTerrainPassability( const int nX, const int nY )
 {
 	if ( pAIMap->IsTileInside( nX, nY ) )
@@ -712,7 +712,7 @@ void CTerrain::RemoveTerrainPassability( const int nX, const int nY )
 		UnlockTile( nX, nY, aiClass );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::SetTerrainPassability( const int nX, const int nY, const int nTerrainType )
 {
 	if ( pAIMap->IsTileInside( nX, nY ) && nTerrainType != 0xff /*water, just crap*/ )
@@ -722,7 +722,7 @@ void CTerrain::SetTerrainPassability( const int nX, const int nY, const int nTer
 		LockTile( nX, nY, aiClass );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateTerrainPassabilityRect( const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, bool bRemove )
 {
 	for ( int x = nMinX; x <= nMaxX; ++x )
@@ -736,7 +736,7 @@ void CTerrain::UpdateTerrainPassabilityRect( const int nMinX, const int nMinY, c
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTerrain::IsBridge( const SVector &tile ) const
 {
 	if ( pAIMap->IsTileInside( tile.x, tile.y ) )
@@ -744,7 +744,7 @@ const bool CTerrain::IsBridge( const SVector &tile ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddBridgeTile( const SVector &tile )
 {
 	if ( pAIMap->IsTileInside( tile.x, tile.y ) )
@@ -752,29 +752,29 @@ void CTerrain::AddBridgeTile( const SVector &tile )
 		bridgeTiles.SetData( tile.x, tile.y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveBridgeTile( const SVector &tile )
 {
 	if ( pAIMap->IsTileInside( tile.x, tile.y ) )
 		bridgeTiles.RemoveData( tile.x, tile.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const
 { 
 	return ( !pAIMap->IsTileInside( x, y ) || ( (buf[y][x] & aiClass) == aiClass ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::IsLocked( const int x, const int y, const EAIClasses aiClass ) const 
 { 
 	return IsStaticLocked( x, y, aiClass ) || 
 		( ( eMode == ELM_ALL ) && ( ( unitsBuf[0][y][x] > 0 && ( aiClass & EAC_TERRAIN ) ) || ( unitsBuf[1][y][x] > 0 && ( aiClass & EAC_WATER ) ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::IsStaticLockedWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const
 { 
 	return (buf[y][x] & aiClass) == aiClass;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const
 { 
 	if ( IsStaticLockedWOBoundaryCheck( x, y, aiClass ) )
@@ -784,7 +784,7 @@ bool CTerrain::IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EA
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrain::IsLocked4Class( const int x, const int y, const EAIClasses aiClass ) const
 { 
 	if ( IsStaticLocked( x, y, aiClass ) )
@@ -794,7 +794,7 @@ bool CTerrain::IsLocked4Class( const int x, const int y, const EAIClasses aiClas
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &tile, const EAIClasses aiClass ) const 	
 {
 	if ( !pAIMap->IsTileInside( tile.x, tile.y ) )
@@ -824,13 +824,13 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 	}
 	return eResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EFreeTileInfo CTerrain::CanUnitGoToPoint( const int nBoundTileRadius, const CVec2 &point, const EAIClasses aiClass, CAIMap *pAIMap ) const
 {
 	const SVector tileToGo( pAIMap->GetTile( point ) );
 	return CanUnitGo( nBoundTileRadius, tileToGo, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vStart, const CVec2 &vEnd, const EAIClasses aiClass, const bool bFindWayBack, CAIMap *pAIMap ) const
 {
 	const SVector vStartTile( pAIMap->GetTile( vStart ) );
@@ -865,14 +865,14 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 	}
 	return vStart;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BYTE CTerrain::GetSoilType( const SVector &tile ) const 
 { 
 	const int nX = Clamp( tile.x, 0, soil.GetSizeX() - 1 );
 	const int nY = Clamp( tile.y, 0, soil.GetSizeY() - 1 );
 	return soil[nY][nX];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CTerrain::GetPass( const int nX, const int nY ) const
 {
 	if ( !pAIMap->IsPointInside( nX, nY ) )
@@ -888,7 +888,7 @@ const float CTerrain::GetPass( const int nX, const int nY ) const
 		//CRAP}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // залокать от статического объекта
 void CTerrain::LockTile( const int x, const int y, const EAIClasses aiClasses )
 {
@@ -899,7 +899,7 @@ void CTerrain::LockTile( const int x, const int y, const EAIClasses aiClasses )
 		DebugTrace( "CTerrain::LockTile( %d, %d, 0x%04x ) (0x%04x -> 0x%04x)", x, y, aiClasses, aiClass, buf[y][x] );
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // разлокать от статич. объекта
 void CTerrain::UnlockTile( const int x, const int y, const EAIClasses aiClasses )
 { 
@@ -910,7 +910,7 @@ void CTerrain::UnlockTile( const int x, const int y, const EAIClasses aiClasses 
 		DebugTrace( "CTerrain::UnlockTile( %d, %d, 0x%04x ) (0x%04x -> 0x%04x)", x, y, aiClasses, aiClass, buf[y][x] );
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IncreaseUpdateRect( int *pDownX, int *pUpX, int *pDownY, int *pUpY, CAIMap *pAIMap )
 {
 	*pDownX = Max( *pDownX - pAIMap->GetMaxUnitTileRadius() - 1, 0 );
@@ -918,7 +918,7 @@ void IncreaseUpdateRect( int *pDownX, int *pUpX, int *pDownY, int *pUpY, CAIMap 
 	*pUpX = Min( *pUpX + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeX() - 1 );
 	*pUpY = Min( *pUpY + pAIMap->GetMaxUnitTileRadius() + 1, pAIMap->GetSizeY() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int upY, const EAIClasses aiClass )
 {
 	if ( bInitMode )
@@ -1030,7 +1030,7 @@ void CTerrain::UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int up
 	}
 	SmoothLock( downX, downY, upX, upY, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateMaxesForAddedTiles( int downX, int upX, int downY, int upY, const EAIClasses aiClass )
 {
 	if ( bInitMode )
@@ -1139,7 +1139,7 @@ void CTerrain::UpdateMaxesForAddedTiles( int downX, int upX, int downY, int upY,
 	}
 	SmoothLock( downX, downY, upX, upY, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsLockAround( const CArray2D4Bit &thisMaxes, const int x, const int y, const BYTE bValue )
 {
 	int nCount = 0;
@@ -1153,7 +1153,7 @@ bool IsLockAround( const CArray2D4Bit &thisMaxes, const int x, const int y, cons
 		++nCount;
 	return nCount >= 3;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsFreeAround( const CArray2D4Bit &thisMaxes, const int x, const int y, const BYTE bValue )
 {
 	int nCount = 0;
@@ -1167,7 +1167,7 @@ bool IsFreeAround( const CArray2D4Bit &thisMaxes, const int x, const int y, cons
 		++nCount;
 	return nCount >= 4;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, const int _yMax, const EAIClasses aiClass )
 {
 	const int nAIClassIndex = GetClassIndexFast( aiClass );
@@ -1246,7 +1246,7 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 		maskForSmooth.RemoveData( tile.x, tile.y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::SmoothLock()
 {
 	{
@@ -1270,7 +1270,7 @@ void CTerrain::SmoothLock()
 		SmoothLock( 0, 0, pAIMap->GetSizeX(), pAIMap->GetSizeY(), EAC_WATER );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateMaxesForAddedStObject( const SVector &downTile, const SVector &upTile )
 {
 	const int downX = downTile.x;
@@ -1296,7 +1296,7 @@ void CTerrain::UpdateMaxesForAddedStObject( const SVector &downTile, const SVect
 
 	eMode = oldMode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UpdateMaxesForRemovedStObject( const SVector &downTile, const SVector &upTile )
 {
 	const int downX = downTile.x;
@@ -1322,7 +1322,7 @@ void CTerrain::UpdateMaxesForRemovedStObject( const SVector &downTile, const SVe
 
 	eMode = oldMode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddStaticObjectTiles( const list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
@@ -1330,7 +1330,7 @@ void CTerrain::AddStaticObjectTiles( const list<SObjTileInfo> &tiles )
 
 	UpdateMaxesForAddedStObject( downTile, upTile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveStaticObjectTiles( const list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
@@ -1339,7 +1339,7 @@ void CTerrain::RemoveStaticObjectTiles( const list<SObjTileInfo> &tiles )
 
 	UpdateMaxesForRemovedStObject( downTile, upTile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveStaticObjectTilesForBridge( const list<SObjTileInfo> &tiles )
 {
 	SVector downTile, upTile;
@@ -1347,7 +1347,7 @@ void CTerrain::RemoveStaticObjectTilesForBridge( const list<SObjTileInfo> &tiles
 
 	UpdateMaxesForRemovedStObject( downTile, upTile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddUnitTiles( const int id, const SRect &rect, const bool bWater )
 {
 //	DebugTrace( "CTerrain::AddUnitTiles( %d, ... )", id );
@@ -1359,7 +1359,7 @@ void CTerrain::AddUnitTiles( const int id, const SRect &rect, const bool bWater 
 	UpdateMaxesForAddedTiles( downTile.x, upTile.x, downTile.y, upTile.y, EAC_WATER );
 	UpdateMaxesForAddedTiles( downTile.x, upTile.x, downTile.y, upTile.y, EAC_ANY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FINALRELEASE
 void CTerrain::AddLockInfo( const int nUnitID, const bool bLock, const SUnitProfile &profile )
 {
@@ -1373,9 +1373,9 @@ void CTerrain::AddLockInfo( const int nUnitID, const bool bLock, const SUnitProf
 	if ( nDebugLockInfoPos == debugLockInfo.size() )
 		nDebugLockInfoPos = 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpLockInfo() const
 {
 #ifndef _FINALRELEASE
@@ -1395,7 +1395,7 @@ void CTerrain::DumpLockInfo() const
 	DebugTrace( "[CTerrain] DumpLockInfo not works in FINAL RELEASE" );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::AddUnitTiles( const int id, const SUnitProfile &profile, const bool bWater )
 {
 //	DebugTrace( "CTerrain::AddUnitTiles( %d, ... )", id );
@@ -1410,7 +1410,7 @@ void CTerrain::AddUnitTiles( const int id, const SUnitProfile &profile, const bo
 	UpdateMaxesForAddedTiles( downTile.x, upTile.x, downTile.y, upTile.y, EAC_WATER );
 	UpdateMaxesForAddedTiles( downTile.x, upTile.x, downTile.y, upTile.y, EAC_ANY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveUnitTiles( const int id )
 {
 //	DebugTrace( "CTerrain::RemoveUnitTiles( %d, ... )", id );
@@ -1427,7 +1427,7 @@ void CTerrain::RemoveUnitTiles( const int id )
 		UpdateMaxesForRemovedTiles( downTile.x, upTile.x, downTile.y, upTile.y, EAC_ANY );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpStaticLock( const EAIClasses aiClass, const string &szFileName )
 {
 	CArray2D<DWORD> image;
@@ -1447,19 +1447,19 @@ void CTerrain::DumpStaticLock( const EAIClasses aiClass, const string &szFileNam
 	CFileStream stream( szFileName, CFileStream::WIN_CREATE );
 	NImage::SaveImageAsTGA( &stream, image );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName )
 {
 	vector<SVector> tiles;
 	DumpMaxes( lockMode, aiClass, szFileName, tiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &markTiles )
 {
 	vector<SVector> tiles;
 	DumpMaxes( lockMode, aiClass, szFileName, markTiles, tiles, false );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShowMarkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVector> tiles, const NImage::SColor color )
 {
 	if ( tiles.empty() )
@@ -1475,7 +1475,7 @@ void ShowMarkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVect
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShowLinkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVector> tiles, const NImage::SColor color )
 {
 	if ( tiles.empty() )
@@ -1496,7 +1496,7 @@ void ShowLinkedTiles( CArray2D<DWORD> *pImage, const int nCellSize, vector<SVect
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const string &szFileName, const vector<SVector> &tiles1, const vector<SVector> &tiles2, const bool bLink )
 {
 	const int IMAGE_CELL_SIZE = 10;
@@ -1576,7 +1576,7 @@ void CTerrain::DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, co
 		CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 		NImage::SaveImageAsTGA( &imageStream, image );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpPassability( const string &szFileName )
 {
 	CArray2D<DWORD> image;
@@ -1592,7 +1592,7 @@ void CTerrain::DumpPassability( const string &szFileName )
 	CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 	NImage::SaveImageAsTGA( &imageStream, image );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpBridges( const string &szFileName )
 {
 	CArray2D<DWORD> image;
@@ -1608,7 +1608,7 @@ void CTerrain::DumpBridges( const string &szFileName )
 	CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 	NImage::SaveImageAsTGA( &imageStream, image );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::DumpUnitsBuf( const string &szFileName )
 {
 	CArray2D<DWORD> image;
@@ -1637,7 +1637,7 @@ void CTerrain::DumpUnitsBuf( const string &szFileName )
 		CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 		NImage::SaveImageAsTGA( &imageStream, image );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::FinishInitMode()
 {
 	bInitMode = false;
@@ -1648,7 +1648,7 @@ void CTerrain::FinishInitMode()
 	UpdateMaxesForAddedStObject( downTile, upTile );
 	SmoothLock();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EAIClasses CTerrain::GetTileLockInfo( const int x, const int y ) const
 {
 	if ( x < 0 || y < 0 || x >= pAIMap->GetSizeX() || y >= pAIMap->GetSizeY() )
@@ -1656,7 +1656,7 @@ EAIClasses CTerrain::GetTileLockInfo( const int x, const int y ) const
 	else
 		return (EAIClasses)buf[y][x];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::GetLockedTiles( vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo )
 {
 	STerrainModeSetter modeSetter( ELM_ALL, this );
@@ -1671,7 +1671,7 @@ void CTerrain::GetLockedTiles( vector<SVector> *pTiles, const EAIClasses aiClass
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrain::ShowUnitLock( const int nUnitID, const int nMarkerID ) const
 {
 	CUnitsRects::const_iterator pos = unitsRects.find( nUnitID );
@@ -1693,7 +1693,7 @@ int CTerrain::ShowUnitLock( const int nUnitID, const int nMarkerID ) const
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrain::TemporaryLockUnitProfile( const SUnitProfile &profile, const EAIClasses aiClass )
 {
 	list<SObjTileInfo> tiles;
@@ -1712,7 +1712,7 @@ int CTerrain::TemporaryLockUnitProfile( const SUnitProfile &profile, const EAICl
 
 	return TemporaryLockTiles( tiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrain::TemporaryLockTiles( list<SObjTileInfo> &tiles )
 {
 	CTmpLockInfoBuf2 tmpLockInfo;
@@ -1725,7 +1725,7 @@ int CTerrain::TemporaryLockTiles( list<SObjTileInfo> &tiles )
 	tmpLockUnitsMap[nTmpLockUnitID] = tmpLockInfo;
 	return nTmpLockUnitID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::RemoveTemporaryLock( const int nLockID )
 {
 	hash_map< int, CTmpLockInfoBuf2 >::iterator pos = tmpLockUnitsMap.find( nLockID );
@@ -1746,38 +1746,38 @@ void CTerrain::RemoveTemporaryLock( const int nLockID )
 		UpdateMaxesForRemovedStObject( downTile, upTile );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::LockTile( const SObjTileInfo &tileInfo )
 {
 	LockTile( tileInfo.tile.x, tileInfo.tile.y, tileInfo.lockInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrain::UnlockTile( const SObjTileInfo &tileInfo )
 {
 	UnlockTile( tileInfo.tile.x, tileInfo.tile.y, tileInfo.lockInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CTemporaryUnitProfileUnlocker   					*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTemporaryUnitProfileUnlocker::CTemporaryUnitProfileUnlocker( const int nUnitID, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater, CTerrain *_pTerrain )
 {
 	nID = nUnitID;
 	pTerrain = _pTerrain;
 	bLocking = pTerrain->TemporaryUnlockUnitProfile( nUnitID, unitProfile, nDecrease, bWater );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTemporaryUnitProfileUnlocker::~CTemporaryUnitProfileUnlocker()
 {
 	if ( bLocking )
 		pTerrain->RemoveTemporaryUnlocking( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												STerrainModeSetter												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STerrainModeSetter::STerrainModeSetter( const ELockMode &eMode, CTerrain *_pTerrain )
 {
 	pTerrain = _pTerrain;
@@ -1785,25 +1785,25 @@ STerrainModeSetter::STerrainModeSetter( const ELockMode &eMode, CTerrain *_pTerr
 	eMemMode = pTerrain->eMode;
 	pTerrain->SetMode( eMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STerrainModeSetter::~STerrainModeSetter()
 {
 	pTerrain->SetMode( eMemMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /************************************************************************/
 /* CTemporaryUnitProfileLocker                                          */
 /************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTemporaryUnitProfileLocker::CTemporaryUnitProfileLocker( const SUnitProfile &profile, const EAIClasses aiClass, CTerrain *_pTerrain )
 {
 	pTerrain = _pTerrain;
 	nLockID = pTerrain->TemporaryLockUnitProfile( profile, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTemporaryUnitProfileLocker::~CTemporaryUnitProfileLocker()
 {
 	pTerrain->RemoveTemporaryLock( nLockID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3015A481, CTerrain )

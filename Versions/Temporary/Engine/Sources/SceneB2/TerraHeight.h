@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class THeightCalc>
 inline float GetHeight( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p1, const CVec3fEx &p2, const THeightCalc &heightCalc )
 {
@@ -12,7 +12,7 @@ inline float GetHeight( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p1, 
 		return -1.0f;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class THeightCalc>
 inline float GetHeightInv( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p1, const CVec3fEx &p2, const THeightCalc &heightCalc )
 {
@@ -25,7 +25,7 @@ inline float GetHeightInv( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p
 		return -1.0f;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class THeightCalc>
 inline bool GetIncRidgeHeight( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
@@ -55,7 +55,7 @@ inline bool GetIncRidgeHeight( const CVec2 &v, const vector<CVec3fEx> &ridge, fl
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class THeightCalc>
 inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
@@ -80,7 +80,7 @@ inline bool GetIncRidgeHeightMaxLaw( const CVec2 &v, const vector<CVec3fEx> &rid
 	return bFlag;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class THeightCalc>
 inline bool GetIncRidgeHeightMinLaw( const CVec2 &v, const vector<CVec3fEx> &ridge, float *pIncHeight, const THeightCalc &heightCalc )
 {
@@ -107,7 +107,7 @@ inline bool GetIncRidgeHeightMinLaw( const CVec2 &v, const vector<CVec3fEx> &rid
 	return bFlag;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &vert, CVec3 &vResNorm, int &nNormsCount )
 {
 	CVec3 vNorm;
@@ -129,4 +129,4 @@ inline void FindNormalsInTile( const STerrainInfo::STile &tile, const CVec3 &ver
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

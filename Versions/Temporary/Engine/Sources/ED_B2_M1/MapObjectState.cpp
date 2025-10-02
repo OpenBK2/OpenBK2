@@ -21,10 +21,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD CMapObjectState::SELECTION_LINE_COLOR	= 0xFF00FF00;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -137,7 +137,7 @@ void CMapObjectSelectState::OnMouseButtonDown( UINT nFlags, const CTPoint<int> &
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnMouseButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint, UINT nButtonType )
 {
 	if ( pParentState->selector.IsValid() )
@@ -157,7 +157,7 @@ void CMapObjectSelectState::OnMouseButtonUp( UINT nFlags, const CTPoint<int> &rM
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 {
 	if ( pParentState->selector.IsValid() )
@@ -198,7 +198,7 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -254,7 +254,7 @@ void CMapObjectSelectState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouse
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -265,7 +265,7 @@ void CMapObjectSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMou
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -276,7 +276,7 @@ void CMapObjectSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -287,7 +287,7 @@ void CMapObjectSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMou
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -298,7 +298,7 @@ void CMapObjectSelectState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -316,7 +316,7 @@ void CMapObjectSelectState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMou
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectSelectState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -385,7 +385,7 @@ void CMapObjectSelectState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->nSelectedSceneID != INVALID_NODE_ID )
@@ -441,7 +441,7 @@ void CMapObjectEditState::RecalculateSelection( UINT nFlags, const CTPoint<int> 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMousePoint, bool bSave )
 {
 	if ( ( nFlags & MK_LBUTTON ) > 0 )
@@ -512,7 +512,7 @@ void CMapObjectEditState::OperateSelection( UINT nFlags, const CTPoint<int> &rMo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -526,7 +526,7 @@ void CMapObjectEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -540,7 +540,7 @@ void CMapObjectEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -560,7 +560,7 @@ void CMapObjectEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -574,7 +574,7 @@ void CMapObjectEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -593,7 +593,7 @@ void CMapObjectEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -611,7 +611,7 @@ void CMapObjectEditState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -691,7 +691,7 @@ void CMapObjectEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnSetFocus( CWnd* pNewWnd )
 {
 	if ( pParentState->CanEdit() )
@@ -707,7 +707,7 @@ void CMapObjectAddState::OnSetFocus( CWnd* pNewWnd )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnKillFocus( CWnd* pOldWnd )
 {
 	if ( pParentState->CanEdit() )
@@ -723,7 +723,7 @@ void CMapObjectAddState::OnKillFocus( CWnd* pOldWnd )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -740,7 +740,7 @@ void CMapObjectAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -757,7 +757,7 @@ void CMapObjectAddState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -774,7 +774,7 @@ void CMapObjectAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -791,7 +791,7 @@ void CMapObjectAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -808,7 +808,7 @@ void CMapObjectAddState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -825,7 +825,7 @@ void CMapObjectAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -842,7 +842,7 @@ void CMapObjectAddState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -859,7 +859,7 @@ void CMapObjectAddState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -876,7 +876,7 @@ void CMapObjectAddState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -893,7 +893,7 @@ void CMapObjectAddState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -931,7 +931,7 @@ void CMapObjectAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectAddState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -958,7 +958,7 @@ void CMapObjectAddState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::Enter()
 {
 	if ( pParentState->CanEdit() )
@@ -981,7 +981,7 @@ void CMapObjectPasteState::Enter()
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::Leave()
 {
 	if ( pParentState->CanEdit() )
@@ -994,7 +994,7 @@ void CMapObjectPasteState::Leave()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -1018,7 +1018,7 @@ void CMapObjectPasteState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -1046,7 +1046,7 @@ void CMapObjectPasteState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -1056,7 +1056,7 @@ void CMapObjectPasteState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectPasteState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -1070,7 +1070,7 @@ void CMapObjectPasteState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapObjectState::GetNextSceneID( int nSceneID, list<int> *pSceneIDList )
 {
 	if ( ( pSceneIDList != 0 ) && ( !pSceneIDList->empty() ) )
@@ -1093,7 +1093,7 @@ int CMapObjectState::GetNextSceneID( int nSceneID, list<int> *pSceneIDList )
 	return nSceneID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::ClearSelection()
 {
 	nSelectedSceneID = INVALID_NODE_ID;
@@ -1101,26 +1101,26 @@ void CMapObjectState::ClearSelection()
 	GetMapInfoEditor()->objectInfoCollector.ClearSelection();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NMapInfoEditor::SObjectInfoCollector* CMapObjectState::GetObjectInfoCollector()
 { 
 	return &( pParentState->pMapInfoEditor->objectInfoCollector );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoEditor* CMapObjectState::GetMapInfoEditor()
 { 
 	return pParentState->pMapInfoEditor;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::OnSetFocus( CWnd* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::Enter()
 {
 	if ( GetActiveInputStateIndex() == IS_ADD )
@@ -1149,7 +1149,7 @@ void CMapObjectState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::Leave()
 {
 	if ( GetActiveInputStateIndex() == IS_ADD )
@@ -1174,7 +1174,7 @@ void CMapObjectState::Leave()
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::Draw( CPaintDC *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1218,7 +1218,7 @@ void CMapObjectState::Draw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::PostDraw( class CPaintDC *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1239,13 +1239,13 @@ void CMapObjectState::PostDraw( class CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectState::CanEdit() 
 {
 	return ( ( GetObjectInfoCollector() != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && GetParentState()->GetEditParameters() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1271,7 +1271,7 @@ void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::InsertSelectionLink( UINT nLinkToSceneID )
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -1281,7 +1281,7 @@ void CMapObjectState::InsertSelectionLink( UINT nLinkToSceneID )
 		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::RemoveSelectionLinkTo()
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -1293,7 +1293,7 @@ void CMapObjectState::RemoveSelectionLinkTo()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::RemoveSelectionLinks()
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -1304,7 +1304,7 @@ void CMapObjectState::RemoveSelectionLinks()
 		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::RemoveSelection()
 {
 	CString strMessage;
@@ -1331,7 +1331,7 @@ void CMapObjectState::RemoveSelection()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1358,7 +1358,7 @@ void CMapObjectState::MoveSelection( const CVec3 &rvPosition, bool bExactPositio
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1390,7 +1390,7 @@ void CMapObjectState::RotateSelection( const CVec3 &rvPosition, bool bExactDirec
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectState::SwitchToAddState()
 {
 	ClearSelection();
@@ -1398,7 +1398,7 @@ void CMapObjectState::SwitchToAddState()
 	InsertObjectEnter();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -1443,7 +1443,7 @@ bool CMapObjectState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectState::UpdateCommand(), pbEnable == 0" );
@@ -1486,6 +1486,6 @@ bool CMapObjectState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCh
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

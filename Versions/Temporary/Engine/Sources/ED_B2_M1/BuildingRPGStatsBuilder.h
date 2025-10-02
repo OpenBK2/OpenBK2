@@ -2,7 +2,7 @@
 #define __BUILDINGRPGSTATS_BUILDER__
 
 #include "..\MapEditorLib\BuildDataBuilder.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuildingRPGStatsBuilder : public CBuildDataBuilder
 {
 	static const string BUILD_DATA_TYPE_NAME;
@@ -26,5 +26,5 @@ protected:
 														 bool *pbNeedEdit,
 														 IManipulator *pBuildDataManipulator );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__BUILDINGRPGSTATS_BUILDER__)

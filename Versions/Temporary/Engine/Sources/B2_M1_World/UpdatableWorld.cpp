@@ -47,15 +47,15 @@
 #endif // _PROFILER
 //CRAP}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_UPDATE( RPGName, Name ) newFuncs[RPGName::typeID] = Name##::New##Name
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define SELECTION_DELTA 90.0f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CLIENT_UNIQUE_ID_UNDER_CONSTRUCTION_LIST = -10; // look for other CLIENT_UNIQUE_ID_xxx (криво, но менять поздно)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static list< CPtr<IClientUpdatableProcess> > processesToUpdate;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** functions to extract unique ID from update
@@ -63,7 +63,7 @@ static list< CPtr<IClientUpdatableProcess> > processesToUpdate;
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TUpdate>
 inline const int GetIDFromInfo( const SAIBasicUpdate *_pUpdate )
 {
@@ -116,7 +116,7 @@ inline const int GetID2<SAINewUnitUpdate>( const SAIBasicUpdate *pUpdate )
 {
 	return GetIDFromInfo<SAINewUnitUpdate>( pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** updatable world itself
@@ -124,13 +124,13 @@ inline const int GetID2<SAINewUnitUpdate>( const SAIBasicUpdate *pUpdate )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCombatMusic::CCombatMusic()
 : eState( ESSS_IDLE ), timeLastCombatNotify( 0 )
 {
 	combatPlayWONotify = NGlobal::GetVar( "Scene.Sound.StreamingSounds.CombatMusicPlayWONotify", 30000);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCombatMusic::Update( bool bCombatNotify )
 {
 	if ( 1 >= Singleton<IMusicSystem>()->GetNPlayLists() )
@@ -180,7 +180,7 @@ void CCombatMusic::Update( bool bCombatNotify )
 
 	bCombatNotify = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** updatable world itself
@@ -188,12 +188,12 @@ void CCombatMusic::Update( bool bCombatNotify )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUpdatableWorld::CUpdatableWorld()
 {
 	InitPrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUpdatableWorld::CUpdatableWorld( IVisualNotifications *_pNotifications, ICommonB2M1AI *_pAI )
 {
 	InitPrivate();
@@ -205,7 +205,7 @@ CUpdatableWorld::CUpdatableWorld( IVisualNotifications *_pNotifications, ICommon
 	fReinfRecycleProgress = 0.0f;
 	nReinfCallsLeft = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUpdatableWorld::~CUpdatableWorld()
 {
 	if ( !bEditor )
@@ -215,7 +215,7 @@ CUpdatableWorld::~CUpdatableWorld()
 	pNotifications = 0;
 	processesToUpdate.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::InitPrivate()
 {
 	eSeason = NDb::SEASON_SUMMER;
@@ -239,7 +239,7 @@ void CUpdatableWorld::InitPrivate()
 	eDayTime = NDb::DAY_DAY;
 	bEditor = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::InitEverySegmentFunctions()
 {
 	everySegment.push_back( &CUpdatableWorld::UpdateBasicUpdates );
@@ -247,7 +247,7 @@ void CUpdatableWorld::InitEverySegmentFunctions()
 	everySegment.push_back( &CUpdatableWorld::UpdateAcknowledgemets );
 	everySegment.push_back( &CUpdatableWorld::UpdateClientData );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateAcknowledgemets()
 {
 	const bool bNoVisual = NGlobal::GetVar( "temp.no_visual_updates", 0 );
@@ -296,12 +296,12 @@ void CUpdatableWorld::UpdateAcknowledgemets()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::AIUpdateCombatSituationInfo()
 {
 	combatMusic.Update( pAI->IsCombatSituation() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateBasicUpdates()
 {
 	const bool bNoVisual = NGlobal::GetVar( "temp.no_visual_updates", 0 );
@@ -324,7 +324,7 @@ void CUpdatableWorld::UpdateBasicUpdates()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::PerformUpdate( CObjectBase * pRawUpdate )
 {
 	const bool bNoVisual = NGlobal::GetVar( "temp.no_visual_updates", 0 );
@@ -340,7 +340,7 @@ void CUpdatableWorld::PerformUpdate( CObjectBase * pRawUpdate )
 			pUpdate->ProcessClient( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateClientData()
 {
 	const bool bNoVisual = NGlobal::GetVar( "no_visual_updates", 0 );
@@ -356,12 +356,12 @@ void CUpdatableWorld::UpdateClientData()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::RegisterProcess( IClientUpdatableProcess *pProcess )
 {
 	NUpdatableProcess::Register( pProcess );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::InitUpdateTypeFunctions()
 {
 	updateType[ACTION_NOTIFY_NEW_UNIT]					= &CUpdatableWorld::UpdateNewUnits;
@@ -475,7 +475,7 @@ void CUpdatableWorld::InitUpdateTypeFunctions()
 	updateType[ACTION_NOTIFY_PLAY_ATTACHED_EFFECT]			= &CUpdatableWorld::ObjectPlayAttachedEffect;
 	updateType[ACTION_NOTIFY_STOP_ATTACHED_EFFECT]			= &CUpdatableWorld::ObjectStopAttachedEffect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDiveBomberDive( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -484,7 +484,7 @@ void CUpdatableWorld::UpdateDiveBomberDive( const SAIBasicUpdate * _pUpdate )
 		pMO->SetDiveSound( pUpdate->nParam );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDeadPlane( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -493,7 +493,7 @@ void CUpdatableWorld::UpdateDeadPlane( const SAIBasicUpdate * _pUpdate )
 	else if ( CMOUnitHelicopter *pMOHelicopter = dynamic_cast<CMOUnitHelicopter *>( GetMapObj(pUpdate->nObjUniqueID) ) )
 		pMOHelicopter->AIUpdateDeadPlane( pUpdate, GetSeason() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateReinfTypeAvail( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIAvailableReinfUpdate *pUpdate( checked_cast<const SAIAvailableReinfUpdate*>( _pUpdate ) );
@@ -519,7 +519,7 @@ void CUpdatableWorld::UpdateReinfTypeAvail( const SAIBasicUpdate * _pUpdate )
 	nReinfCallsLeft = pUpdate->nReinforcementCallsLeft;
 	NInput::PostEvent( "new_update_reinf_avail", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateReinfRecycle( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIReinfRecycleUpdate *pUpdate( checked_cast<const SAIReinfRecycleUpdate*>( _pUpdate ) );
@@ -530,7 +530,7 @@ void CUpdatableWorld::UpdateReinfRecycle( const SAIBasicUpdate * _pUpdate )
 	reinfTimeRecycleEnd = pUpdate->timeRecycleEnd;
 	NInput::PostEvent( "new_update_reinf_avail", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateReinforcmentPoint( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIReinfPointUpdate *pUpdate( checked_cast<const SAIReinfPointUpdate*>( _pUpdate ) );
@@ -544,7 +544,7 @@ void CUpdatableWorld::UpdateReinforcmentPoint( const SAIBasicUpdate * _pUpdate )
 	if ( bWasEmpty != bIsEmpty )
 		NInput::PostEvent( "new_update_reinf_point", !bIsEmpty, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateChageDBID( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIChangeDBIDUpdate *pUpdate( checked_cast<const SAIChangeDBIDUpdate*>( _pUpdate ) );
@@ -554,7 +554,7 @@ void CUpdatableWorld::UpdateChageDBID( const SAIBasicUpdate * _pUpdate )
 	if ( pMO && dynamic_cast<CMOUnitInfantry*>( pMO ) )
 		checked_cast<CMOUnitInfantry*>( pMO )->ChangeRPGStats( *pUpdate, GetSeason() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::SendUpdateReinfPoints( int nFactoryID )
 {
 	/*
@@ -578,7 +578,7 @@ void CUpdatableWorld::SendUpdateReinfPoints( int nFactoryID )
 		NInput::PostEvent( "update_reinforcement_points", checked_cast<int>( (fRecycle + 0.0005f) * 1000.0f ), bEnabled );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateMove( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -592,7 +592,7 @@ void CUpdatableWorld::UpdateMove( const SAIBasicUpdate * _pUpdate )
 	if ( pProcess != 0 )
 		RegisterProcess( pProcess );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateIdleTrench( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIEntranceUpdate T;
@@ -608,7 +608,7 @@ void CUpdatableWorld::UpdateIdleTrench( const SAIBasicUpdate * _pUpdate )
 
 	Scene()->ShowObject( nInfantryUniqueID, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateStop( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -621,7 +621,7 @@ void CUpdatableWorld::UpdateStop( const SAIBasicUpdate * _pUpdate )
 	if ( pProcess != 0 )
 		RegisterProcess( pProcess );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDelayedShoot( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -631,7 +631,7 @@ void CUpdatableWorld::UpdateDelayedShoot( const SAIBasicUpdate * _pUpdate )
 		return;
 	pMO->AIUpdateAction( pUpdate, eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSelectable( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -656,7 +656,7 @@ void CUpdatableWorld::UpdateSelectable( const SAIBasicUpdate * _pUpdate )
 		UpdateSpecialSelection( pUpdate->nObjUniqueID, bCanSelect ? pMO : 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDeadProjectile( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIDissapearObjUpdate *pUpdate( checked_cast<const SAIDissapearObjUpdate*>( _pUpdate ) );
@@ -664,7 +664,7 @@ void CUpdatableWorld::UpdateDeadProjectile( const SAIBasicUpdate * _pUpdate )
 	Scene()->RemoveAllAttached( nUniqueID, ESSOT_PROJECTILE );
 	RemoveMapObj( nUniqueID, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDeadUnit( const SAIBasicUpdate * _pUpdate )
 {																					 
 	//SAIDeadUnitUpdate
@@ -687,7 +687,7 @@ void CUpdatableWorld::UpdateDeadUnit( const SAIBasicUpdate * _pUpdate )
 
 	OnDeadOrRemoveMapObj( nUniqueID );
 }	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSpecialAbility( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAISpecialAbilityUpdate T;
@@ -699,7 +699,7 @@ void CUpdatableWorld::UpdateSpecialAbility( const SAIBasicUpdate * _pUpdate )
 	if ( pMO && pMO->AIUpdateSpecialAbility( *pUpdate ) )
 		DoUpdateSpecialAbility( pMO );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateTreeBroken( const SAIBasicUpdate * _pUpdate )
 {
 	const SAITreeBrokenUpdate *pUpdate = checked_cast<const SAITreeBrokenUpdate*>( _pUpdate );
@@ -710,7 +710,7 @@ void CUpdatableWorld::UpdateTreeBroken( const SAIBasicUpdate * _pUpdate )
 	if ( pTree != 0 )
 		pTree->AIUpdateFall( pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNewEntrenchment( const SAIBasicUpdate * _pUpdate )
 {
 	CDynamicCast<const SAITrenchUpdate> pUpdate = _pUpdate;
@@ -736,7 +736,7 @@ void CUpdatableWorld::UpdateNewEntrenchment( const SAIBasicUpdate * _pUpdate )
 	//DebugTrace( "Linking part to entrenchment: %d -> %d", pMOPart->GetID(), pMOEntrenchment->GetID() );
 	pMOEntrenchment->AddPart( pMOPart, pUpdate->bLast, pUpdate->bDigBySegment );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateAnimationChanged( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -748,7 +748,7 @@ void CUpdatableWorld::UpdateAnimationChanged( const SAIBasicUpdate * _pUpdate )
 		pMO->AIUpdateAnimationChanged( pAnim, pUpdate->nUpdateTime );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ObjectPlayAttachedEffect( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -759,7 +759,7 @@ void CUpdatableWorld::ObjectPlayAttachedEffect( const SAIBasicUpdate *_pUpdate )
 		pMO->ForceSwitchLightFX( pUpdate->nParam, true, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ObjectStopAttachedEffect( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -770,7 +770,7 @@ void CUpdatableWorld::ObjectStopAttachedEffect( const SAIBasicUpdate *_pUpdate )
 		pMO->ForceSwitchLightFX( pUpdate->nParam, false, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateModifyEntranceState( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIModifyEntranceStateUpdate *pUpdate = checked_cast<const SAIModifyEntranceStateUpdate*>( _pUpdate );
@@ -784,16 +784,16 @@ void CUpdatableWorld::UpdateModifyEntranceState( const SAIBasicUpdate *_pUpdate 
 	if ( pMO )
 		DoUpdateObjectStats( pMO );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateShootBuilding( const SAIBasicUpdate * _pUpdate )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateThrowbuilding( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateHit( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIHitUpdate *pUpdate = checked_cast<const SAIHitUpdate*>( _pUpdate );
@@ -859,7 +859,7 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate * _pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDeleteObject( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIDissapearObjUpdate T;
@@ -894,7 +894,7 @@ void CUpdatableWorld::UpdateDeleteObject( const SAIBasicUpdate * _pUpdate )
 		RemoveMapObj( nUniqueID, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSilentDeath( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -940,7 +940,7 @@ void CUpdatableWorld::UpdateSilentDeath( const SAIBasicUpdate * _pUpdate )
 		pMO->SetSilentlyDead();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDissapearObj( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIDissapearObjUpdate T;
@@ -956,7 +956,7 @@ void CUpdatableWorld::UpdateDissapearObj( const SAIBasicUpdate * _pUpdate )
 
 	RemoveMapObj( nUniqueID, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRevealArtillery( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAICircleUpdate T;
@@ -970,27 +970,27 @@ void CUpdatableWorld::UpdateRevealArtillery( const SAIBasicUpdate * _pUpdate )
 			pNotifications->Notify( EVNT_ENEMY_ARTILLERY_SEEN, 0, pUpdate->info.center );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSetCamouflage( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRemoveCamouflage( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSetAmbush( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRemoveAmbush( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateBreakTrack( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -1004,7 +1004,7 @@ void CUpdatableWorld::UpdateBreakTrack( const SAIBasicUpdate * _pUpdate )
 		pMOUnit->SetTrackBroken( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRepairTrack( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -1018,27 +1018,27 @@ void CUpdatableWorld::UpdateRepairTrack( const SAIBasicUpdate * _pUpdate )
 		pMOUnit->SetTrackBroken( false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRepairStateBegin( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRepairStateEnd( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateResuplyStateBegin( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateResuplyStateEnd( const SAIBasicUpdate * _pUpdate )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateChangeVisibility( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIChangeVisibilityUpdate *pUpdate( dynamic_cast<const SAIChangeVisibilityUpdate*>( _pUpdate ) );
@@ -1062,7 +1062,7 @@ void CUpdatableWorld::UpdateChangeVisibility( const SAIBasicUpdate * _pUpdate )
 			pMO->SetVisible( pOldUpdate->nParam, eSeason, ( eDayTime == NDb::DAY_NIGHT ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateStateChanged( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIActionUpdate T;
@@ -1074,7 +1074,7 @@ void CUpdatableWorld::UpdateStateChanged( const SAIBasicUpdate * _pUpdate )
 		return;
 	pMO->AIUpdateState( pUpdate->nParam );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateServedArtillery( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIActionUpdate T;
@@ -1087,7 +1087,7 @@ void CUpdatableWorld::UpdateServedArtillery( const SAIBasicUpdate * _pUpdate )
 		DoUpdateSpecialAbility( pMOSquad );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSelectionGroup( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIActionUpdate T;
@@ -1101,7 +1101,7 @@ void CUpdatableWorld::UpdateSelectionGroup( const SAIBasicUpdate * _pUpdate )
 
 	OnReplaceSelectionGroup( pMOPattern, pMO );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNotifyFeedback( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIFeedbackUpdate T;
@@ -1109,7 +1109,7 @@ void CUpdatableWorld::UpdateNotifyFeedback( const SAIBasicUpdate * _pUpdate )
 	
 	OnUpdateNotifyFeedback( pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDiplomacy( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIDiplomacyUpdate T;
@@ -1126,7 +1126,7 @@ void CUpdatableWorld::UpdateDiplomacy( const SAIBasicUpdate * _pUpdate )
 	}
 	OnUpdateDiplomacy( pMO, pUpdate->info.nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateKeyBuildingCaptured( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIKeyBuildingUpdate T;
@@ -1143,7 +1143,7 @@ void CUpdatableWorld::UpdateKeyBuildingCaptured( const SAIBasicUpdate * _pUpdate
 		OnUpdateDiplomacy( pMO, pUpdate->info.nPlayer );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateKeyBuildingLost( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIKeyBuildingUpdate T;
@@ -1161,7 +1161,7 @@ void CUpdatableWorld::UpdateKeyBuildingLost( const SAIBasicUpdate * _pUpdate )
 		OnUpdateDiplomacy( pMO, pUpdate->info.nPlayer );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateKeyBuildingCaptureProgress( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIKeyBuildingCaptureUpdate T;
@@ -1174,7 +1174,7 @@ void CUpdatableWorld::UpdateKeyBuildingCaptureProgress( const SAIBasicUpdate * _
 		OnUpdateKeyObjectProgress( pMO, pUpdate->fProgress, pUpdate->nNewSide );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNewKeyBuilding( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIKeyBuildingUpdate T;
@@ -1191,7 +1191,7 @@ void CUpdatableWorld::UpdateNewKeyBuilding( const SAIBasicUpdate * _pUpdate )
 		OnUpdateDiplomacy( pMO, pUpdate->info.nPlayer );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateShootAreas( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIShootAreaUpdate *pUpdate = checked_cast<const SAIShootAreaUpdate*>( _pUpdate );
@@ -1199,7 +1199,7 @@ void CUpdatableWorld::UpdateShootAreas( const SAIBasicUpdate *_pUpdate )
 	if ( pMO )
 		pMO->AIUpdateShootAreas( pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRangeAreas( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIShootAreaUpdate *pUpdate = checked_cast<const SAIShootAreaUpdate*>( _pUpdate );
@@ -1222,7 +1222,7 @@ void CUpdatableWorld::UpdateRangeAreas( const SAIBasicUpdate *_pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateMechShoot( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIMechShotUpdate *pUpdate( checked_cast<const SAIMechShotUpdate*>( _pUpdate ) );
@@ -1232,7 +1232,7 @@ void CUpdatableWorld::UpdateMechShoot( const SAIBasicUpdate * _pUpdate )
 	if ( pMO )
 		checked_cast<IMOContainer*>(pMO)->AIUpdateShot( pUpdate->info, pUpdate->info.time, Scene(), eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateInfantryShoot( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIInfantryShotUpdate *pUpdate( checked_cast<const SAIInfantryShotUpdate*>( _pUpdate ) );
@@ -1243,7 +1243,7 @@ void CUpdatableWorld::UpdateInfantryShoot( const SAIBasicUpdate * _pUpdate )
 		return;
 	checked_cast<IMOContainer*>(pMO)->AIUpdateShot( pUpdate->info, pUpdate->info.time, Scene(), eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateTurretTurn( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAITurretUpdate T;
@@ -1252,7 +1252,7 @@ void CUpdatableWorld::UpdateTurretTurn( const SAIBasicUpdate * _pUpdate )
 	if ( CMapObj *pMO = GetMapObj( nID ) )
 		pMO->AIUpdateTurretTurn( pUpdate->info, pUpdate->nUpdateTime, Scene(), pUpdate->eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIEntranceUpdate T;
@@ -1334,7 +1334,7 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate * _pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNewFormation( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIFormationUpdate T;
@@ -1353,7 +1353,7 @@ void CUpdatableWorld::UpdateNewFormation( const SAIBasicUpdate * _pUpdate )
 	if ( pSquad->IsSelected() )
 		Select( pSoilder );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate ) 
 {
 	// don't use ScenarioTracker when uncomment this code because tracker doesn't exist in B2_M1_World (shared part )
@@ -1431,7 +1431,7 @@ void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate )
 	//CRAP}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSelection( const SAIBasicUpdate *_pUpdate )
 {
 	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
@@ -1444,7 +1444,7 @@ void CUpdatableWorld::UpdateSelection( const SAIBasicUpdate *_pUpdate )
 	else
 		DeSelect( pMO );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateRPGChanged( const SAIBasicUpdate *_pUpdate )
 {
 	typedef SAIRPGUpdate T;
@@ -1465,7 +1465,7 @@ void CUpdatableWorld::UpdateRPGChanged( const SAIBasicUpdate *_pUpdate )
 			DoUpdateObjectStats( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdatePlacement( const SAIBasicUpdate *_pUpdate )
 {
 	typedef SAIPlacementUpdate T;
@@ -1475,7 +1475,7 @@ void CUpdatableWorld::UpdatePlacement( const SAIBasicUpdate *_pUpdate )
 	if ( pMO )
 		pMO->AIUpdatePlacement( pUpdate->info, Scene(), SoundScene(), eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::AIUpdateAreas( const SAIBasicUpdate *_pUpdate )
 {
 	//	const SAIShootAreaUpdate *pUpdate( checked_cast<const SAIShootAreaUpdate*>( _pUpdate ) );
@@ -1483,7 +1483,7 @@ void CUpdatableWorld::AIUpdateAreas( const SAIBasicUpdate *_pUpdate )
 	// Scene()->SetAreas( &pUpdate->info[0], pUpdate->info.size() );
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNewBridgeSpan( const SAIBasicUpdate *_pUpdate )
 {
 	typedef SAINewUnitUpdate T;
@@ -1496,7 +1496,7 @@ void CUpdatableWorld::UpdateNewBridgeSpan( const SAIBasicUpdate *_pUpdate )
 	if ( pMO )
 		pMO->SetDiplomacy( pUpdate->info.eDipl );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNewUnits( const SAIBasicUpdate *_pUpdate )
 {
 	CDynamicCast<SAINewUnitUpdate> pUpdate( _pUpdate );
@@ -1522,7 +1522,7 @@ void CUpdatableWorld::UpdateNewUnits( const SAIBasicUpdate *_pUpdate )
 		OnUpdateNewUnit( pUpdate, pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAINewProjectileUpdate *pUpdate )
 {
 	if ( CMapObj *pMO = GetMapObj( pUpdate->info.nSourceUniqueID ) )
@@ -1540,12 +1540,12 @@ void CUpdatableWorld::ProcessUpdate( const SAINewProjectileUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAIDeadProjectileUpdate *pUpdate )
 {
 	RemoveMapObj( pUpdate->nProjectileUnqiueID, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateAction( const SAIBasicUpdate * _pUpdate )
 {
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -1555,7 +1555,7 @@ void CUpdatableWorld::UpdateAction( const SAIBasicUpdate * _pUpdate )
 		pMO->AIUpdateAction( pUpdate, eSeason );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate * _pUpdate )
 {
 	static int nGreenTilesID = -1;
@@ -1622,7 +1622,7 @@ void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate * _pU
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 void CUpdatableWorld::UpdateInstall( const SAIBasicUpdate * _pUpdate )
 {
@@ -1633,7 +1633,7 @@ if ( CMapObj *pMO = GetMapObj(nUniqueID) )
 pMO->AIUpdateAction( pUpdate, eSeason );
 }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateUnInstall( const SAIBasicUpdate * _pUpdate )
 {
 const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -1644,7 +1644,7 @@ pMO->AIUpdateAction( pUpdate, eSeason );
 }
 DebugTrace( "Update uninstall" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateFinishInstall( const SAIBasicUpdate * _pUpdate )
 {
 const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
@@ -1655,13 +1655,13 @@ pMO->AIUpdateAction( pUpdate, eSeason );
 }
 DebugTrace( "Update finish install" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateFinishUnInstall( const SAIBasicUpdate * _pUpdate )
 {
 DebugTrace( "Update finish uninstall" );
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::AfterLoad()
 {
 	for ( CMapObjMap::iterator it = objects.begin(); it != objects.end(); ++it )
@@ -1670,14 +1670,14 @@ void CUpdatableWorld::AfterLoad()
 		pMO->AfterLoad();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::AddMapObj( int nID, CMapObj *pMO )
 {
 	objects[nID] = pMO;
 	
 	OnNewMapObj( nID, pMO );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::RemoveMapObj( int nID, bool bGlobalRemove )
 { 
 	if ( bGlobalRemove )
@@ -1692,7 +1692,7 @@ void CUpdatableWorld::RemoveMapObj( int nID, bool bGlobalRemove )
 	}
 	OnDeadOrRemoveMapObj( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::GetObjects( list<int> *pObjects ) const
 {
 	for ( CMapObjMap::const_iterator it = objects.begin(); it != objects.end(); ++it )
@@ -1700,7 +1700,7 @@ void CUpdatableWorld::GetObjects( list<int> *pObjects ) const
 		pObjects->push_back( it->second->GetID() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::GetObjects( vector<IB2MapObj*> *pObjects ) const
 {
 	pObjects->reserve( objects.size() );
@@ -1710,7 +1710,7 @@ void CUpdatableWorld::GetObjects( vector<IB2MapObj*> *pObjects ) const
 		pObjects->push_back( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::GetObjects( vector<CMapObj*> *pObjects ) const
 {
 	pObjects->reserve( objects.size() );
@@ -1720,7 +1720,7 @@ void CUpdatableWorld::GetObjects( vector<CMapObj*> *pObjects ) const
 		pObjects->push_back( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, const SAIBasicUpdate *_pUpdate )
 {
 	CNewFuncsMap::iterator pos = newFuncs.find( nTypeID );
@@ -1786,7 +1786,7 @@ void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::Update()
 {
 #ifdef _PROFILER
@@ -1818,7 +1818,7 @@ void CUpdatableWorld::Update()
 #endif
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAIPointLightUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
@@ -1838,7 +1838,7 @@ void CUpdatableWorld::ProcessUpdate( const SAIPointLightUpdate *pUpdate )
 			NI_ASSERT( false, StrFmt( "Obj %d can't have pointlights", pUpdate->nObjUniqueID ) );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSwitchLightFX( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIActionUpdate T;
@@ -1851,7 +1851,7 @@ void CUpdatableWorld::UpdateSwitchLightFX( const SAIBasicUpdate * _pUpdate )
 	if ( pMO )
 		pMO->ForceSwitchLightFX( pUpdate->nParam, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAIHeadLightUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
@@ -1861,7 +1861,7 @@ void CUpdatableWorld::ProcessUpdate( const SAIHeadLightUpdate *pUpdate )
 	/*if ( pMO )
 		pMO->ChangeLight( pUpdate->nHeadLight, eSeason, pUpdate->bLight );*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAIToggleDayNightWindowsUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
@@ -1876,7 +1876,7 @@ void CUpdatableWorld::ProcessUpdate( const SAIToggleDayNightWindowsUpdate *pUpda
 			pMOBuilding->ToggleNightWindows( pUpdate->bNightOn, eSeason );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SAIBreakWindowUpdate *pUpdate )
 {
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
@@ -1896,12 +1896,12 @@ void CUpdatableWorld::ProcessUpdate( const SAIBreakWindowUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SEnableAirStrike *pUpdate )
 {
 	NInput::PostEvent( "enable_air_strike", pUpdate->bEnable ? 1 : 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateStartFinishParadrop( const SAIBasicUpdate * _pUpdate )
 {
 	const SParadropStartFinishUpdate *pUpdate = dynamic_cast<const SParadropStartFinishUpdate *>( _pUpdate );
@@ -1913,13 +1913,13 @@ void CUpdatableWorld::UpdateStartFinishParadrop( const SAIBasicUpdate * _pUpdate
 	if ( IClientUpdatableProcess *pProcess = pMO->AIUpdateStartFinishParadrop( pUpdate, eSeason ) )
 		RegisterProcess( pProcess );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdatePlayAllAnimations()
 {
 	if ( pAllAnimationsPlayer )
 		pAllAnimationsPlayer->Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::PlayAllObjectsAnimations()
 {
 	if ( !pAllAnimationsPlayer )
@@ -1930,7 +1930,7 @@ void CUpdatableWorld::PlayAllObjectsAnimations()
 
 	pAllAnimationsPlayer->SwitchToNextAnimation();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateDamage( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIDamageUpdate T;
@@ -1956,7 +1956,7 @@ void CUpdatableWorld::UpdateDamage( const SAIBasicUpdate * _pUpdate )
 			DoUpdateObjectStats( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateParentOfAtomObj( const SAIBasicUpdate *pRawUpdate )
 {
 	CDynamicCast<SParentOfAtomObjectUpdate> pUpdate = pRawUpdate;
@@ -1967,7 +1967,7 @@ void CUpdatableWorld::UpdateParentOfAtomObj( const SAIBasicUpdate *pRawUpdate )
 	if ( pMO )
 		pMO->SetParentID( pUpdate->nParentID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateScriptCameraRun( const SAIBasicUpdate * _pUpdate )
 {
 	CDynamicCast<SScriptCameraRunUpdate> pUpdate = _pUpdate;
@@ -2067,14 +2067,14 @@ void CUpdatableWorld::UpdateScriptCameraRun( const SAIBasicUpdate * _pUpdate )
 	NGlobal::SetVar( "temp.script_movie", true );
 	//NGlobal::SetVar( "game_camera_track_heights", 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateScriptCameraReset( const SAIBasicUpdate * _pUpdate )
 {
 	Camera()->FinishMovie();
 
 	NGlobal::SetVar( "temp.script_movie", false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateScriptCameraStartMovie( const SAIBasicUpdate * _pUpdate )
 {
 	CDynamicCast<SScriptCameraStartMovieUpdate> pUpdate = _pUpdate;
@@ -2101,7 +2101,7 @@ void CUpdatableWorld::UpdateScriptCameraStartMovie( const SAIBasicUpdate * _pUpd
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateScriptCameraStopMovie( const SAIBasicUpdate * _pUpdate )
 {
 	CDynamicCast<SScriptCameraStopMovieUpdate> pUpdate = _pUpdate;
@@ -2113,7 +2113,7 @@ void CUpdatableWorld::UpdateScriptCameraStopMovie( const SAIBasicUpdate * _pUpda
 		pMoviesHolder->Stop();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateWeatherChanged( const SAIBasicUpdate * _pUpdate )
 {
 	CDynamicCast<SWeatherChangedUpdate> pUpdate = _pUpdate;
@@ -2123,12 +2123,12 @@ void CUpdatableWorld::UpdateWeatherChanged( const SAIBasicUpdate * _pUpdate )
 	NInput::PostEvent( "bad_weather", pUpdate->bActive, 0 );
 	Scene()->SwitchWeather( pUpdate->bActive, pUpdate->nTimeTo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdatePlaneReturns( const SAIBasicUpdate * _pUpdate )
 {
 	NInput::PostEvent( "avia_returns", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNotifyDisableAction( const SAIBasicUpdate *_pUpdate )
 {
 	typedef const SAIActionUpdate* T;
@@ -2140,7 +2140,7 @@ void CUpdatableWorld::UpdateNotifyDisableAction( const SAIBasicUpdate *_pUpdate 
 			DoUpdateSpecialAbility( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateNotifyEnableAction( const SAIBasicUpdate *_pUpdate )
 {
 	typedef const SAIActionUpdate* T;
@@ -2152,14 +2152,14 @@ void CUpdatableWorld::UpdateNotifyEnableAction( const SAIBasicUpdate *_pUpdate )
 			DoUpdateSpecialAbility( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdatePlayEffect( const SAIBasicUpdate *_pUpdate )
 {
 	typedef const SPlayEffectUpdate* T;
 	T pUpdate( checked_cast<T>( _pUpdate ) );
 	PlayComplexEffect( 0, pUpdate->pEffect, pUpdate->nUpdateTime, pUpdate->vPos );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateStatus( const SAIBasicUpdate *_pUpdate )
 {
 	const SUnitStatusUpdate* pUpdate( checked_cast<const SUnitStatusUpdate*>( _pUpdate ) );
@@ -2171,21 +2171,21 @@ void CUpdatableWorld::UpdateStatus( const SAIBasicUpdate *_pUpdate )
 		OnUpdateVisualStatus( pUpdate, pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSuperWeaponControl( const SAIBasicUpdate *_pUpdate )
 {
 	const SSuperWeaponControl* pUpdate( checked_cast<const SSuperWeaponControl*>( _pUpdate ) );
 	//DebugTrace( "SSuperWeaponControl: player: %d, unit: %d, stats: %s, enabled: %s", pUpdate->nPlayer, pUpdate->nUnitID, pUpdate->pUnit ? NDb::GetResName( pUpdate->pUnit ) : "null", pUpdate->bEnabled ? "true" : "false" );
 	OnUpdateSuperWeaponControl( *pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::UpdateSuperWeaponRecycle( const SAIBasicUpdate *_pUpdate )
 {
 	const SSuperWeaponRecycle* pUpdate( checked_cast<const SSuperWeaponRecycle*>( _pUpdate ) );
 	//DebugTrace( "SSuperWeaponRecycle: player: %d, complete: %2.3f", pUpdate->nPlayer, pUpdate->fPartComplete );
 	OnUpdateSuperWeaponRecycle( *pUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 {
 	if ( pUpdate->info.nUnitID == -1 )
@@ -2231,7 +2231,7 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void CUpdatableWorld::ProcessUpdate( const SAINewProjectileM1 *pUpdate )
 //{
 //	CPtr<CMOProjectile> pProjectile = 0;
@@ -2260,7 +2260,7 @@ void CUpdatableWorld::ProcessUpdate( const SLaserMarkUpdate *pUpdate )
 //		Scene()->ShowObject( pProjectile->GetID(), false );
 //	}
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SExplodeProjectileUpdate *pUpdate )
 {
 	if ( CMapObj *pObj = GetMapObj( pUpdate->nProjectileID ) )
@@ -2269,17 +2269,17 @@ void CUpdatableWorld::ProcessUpdate( const SExplodeProjectileUpdate *pUpdate )
 			pProjectile->Explode( pUpdate->eHitType, eSeason, pUpdate->vExplCenter, pUpdate->vExplDir );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SClientUpdateButtonsUpdate *pUpdate )
 {
 	NInput::PostEvent( "update_buttons", 0 ,0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SClientUpdateSingleUnitUpdate *pUpdate )
 {
 	NInput::PostEvent( "mission_update_unit_stats", pUpdate->nUnitID, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SChatMessageUpdate *pUpdate )
 {
 	if ( !pUpdate->bAnotherChat )
@@ -2291,22 +2291,22 @@ void CUpdatableWorld::ProcessUpdate( const SChatMessageUpdate *pUpdate )
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SWinLoseUpdate *pUpdate )
 {
 	NInput::PostEvent( "winlose", pUpdate->bWin ? 1 : 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SMoneyChangedUpdate *pUpdate )
 {
 	NInput::PostEvent( "money_changed", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SChatClear *pUpdate )
 {
 	NInput::PostEvent( "chat_clear", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const struct SStartStopSequenceUpdate *pUpdate )
 {
 	if ( pUpdate->bStart )
@@ -2314,32 +2314,32 @@ void CUpdatableWorld::ProcessUpdate( const struct SStartStopSequenceUpdate *pUpd
 	else
 		NInput::PostEvent( "end_script_movie_sequence", 2, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SMSChangePlaylistUpdate *pUpdate )
 {
 	Singleton<IMusicSystem>()->ChangePlayList( pUpdate->nPlayList );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void CUpdatableWorld::ProcessUpdate( const SMSPlayVoiceUpdate *pUpdate )
 //{
 //	Singleton<IMusicSystem>()->PlayVoice( NDb::Get<NDb::SVoice>( pUpdate->nVoiceID ) );
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SMSSetVolumeUpdate *pUpdate )
 {
 	Singleton<IMusicSystem>()->SetVolume( (EMusicSystemVolume)pUpdate->nVolumeType, pUpdate->fVolume );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SMSPauseMusicUpdate *pUpdate )
 {
 	Singleton<IMusicSystem>()->PauseMusic( (EMusicSystemVolume)pUpdate->nVolumeType, pUpdate->bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUpdatableWorld::ProcessUpdate( const SObjectiveChanged *pUpdate )
 {
 	PlayerObjectiveChanged( pUpdate->nObjectiveNumber, (EMissionObjectiveState)pUpdate->nStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CUpdatableWorld::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &objects );
@@ -2364,9 +2364,9 @@ int CUpdatableWorld::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace NUpdatableProcess
 {
 	void Register( IClientUpdatableProcess *pProcess )
@@ -2374,4 +2374,4 @@ namespace NUpdatableProcess
 		processesToUpdate.push_back( pProcess );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

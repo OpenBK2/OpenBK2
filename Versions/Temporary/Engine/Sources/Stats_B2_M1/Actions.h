@@ -1,14 +1,14 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "AITypes.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SWeaponRPGStats;
 	struct SHPObjectRPGStats;
 	enum EReinforcementType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** notify structures
@@ -16,13 +16,13 @@ namespace NDb
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EMovingType
 {
 	MOVE_TYPE_MOVE = 0,										// на самом деле либо Move либо Turn
 	MOVE_TYPE_DIVE = 1,										//for dive bombers
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSuspendedUpdate
 {
 	ZDATA
@@ -32,7 +32,7 @@ public:
 	SSuspendedUpdate() : nObjUniqueID( 0 ) { }
 	SSuspendedUpdate( const int _nObjUniqueID ) : nObjUniqueID( _nObjUniqueID ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for chage unit's visual representation
 struct SChangeDBIDUpdate : public SSuspendedUpdate
 {
@@ -43,7 +43,7 @@ struct SChangeDBIDUpdate : public SSuspendedUpdate
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(4,&pStats); return 0; }
 public:
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyAction : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
@@ -117,7 +117,7 @@ public:
 	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer ) 
 		: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ), bFriendLost( false ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // update на вход/выход, юниты сначала входят не в стрелковую ячейку
 struct SAINotifyEntranceState
 {
@@ -235,7 +235,7 @@ public:
 	SAINotifyTurretTurn( const int _nObjUniqueID, const int &_nPlantform, const WORD &_wAngle, const NTimer::STime &_endTime )
 		: nObjUniqueID( _nObjUniqueID ), nPlantform( _nPlantform ), wAngle( _wAngle ), endTime( _endTime ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyBaseShot
 {
 	ZDATA
@@ -250,7 +250,7 @@ public:
 	SAINotifyBaseShot( const BYTE _typeID, const int _nObjUniqueID, const BYTE _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: typeID( _typeID ), nObjUniqueID( _nObjUniqueID ), cShell( _cShell ), time( _time ), vDestPos( _vDestPos ) {  }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyMechShot : public SAINotifyBaseShot
 {
 	ZDATA_( SAINotifyBaseShot )
@@ -263,7 +263,7 @@ public:
 		: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun ) {  }
 	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyInfantryShot : public SAINotifyBaseShot
 {
 	ZDATA_(SAINotifyBaseShot)
@@ -282,7 +282,7 @@ public:
 	SAINotifyInfantryShot( const BYTE _typeID, const int nObjUniqueID, const int _nSlot, const BYTE _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos ), nSlot( _nSlot ), nPlatform( 0 ), nGun( 0 ) {  }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifySelections
 {
 	ZDATA
@@ -291,7 +291,7 @@ struct SAINotifySelections
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); f.Add(3,&bSelectable); return 0; }
 public:
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyNewProjectile
 {
 	ZDATA
@@ -310,7 +310,7 @@ public:
 	SAINotifyNewProjectile( const int _nObjUniqueID, const int _nSourceUniqueID, const int _nPlatform, const int _nGun, const int _nShell, const CVec3 &_vAIStartPos, const NTimer::STime _timeToEqualizePos )
 		: nObjUniqueID( _nObjUniqueID ), nSourceUniqueID( _nSourceUniqueID ), nPlatform( _nPlatform ), nGun( _nGun ), nShell( _nShell ), vAIStartPos( _vAIStartPos ), timeToEqualizePos( _timeToEqualizePos ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINotifyUpdateLaseMark
 {
 	ZDATA
@@ -327,4 +327,4 @@ public:
 	SAINotifyUpdateLaseMark( const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
 		: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

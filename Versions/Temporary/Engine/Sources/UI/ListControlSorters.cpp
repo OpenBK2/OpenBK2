@@ -2,7 +2,7 @@
 #include "listcontrolsorters.h"
 
 REGISTER_SAVELOAD_CLASS(SCRNE_UI_LIST_SORTER_ALPHABET, CListControlSorterAlphabet)
-/////////////////////////////////////////////////////////////////////////////
+
 bool CListControlSorterAlphabet::Compare( IWindow *pSubItem1, IWindow *pSubItem2 )
 {
 	IListControlItem *p1 = dynamic_cast<IListControlItem*>( pSubItem1 );
@@ -30,12 +30,12 @@ bool CListControlSorterAlphabet::Compare( IWindow *pSubItem1, IWindow *pSubItem2
 	else
 		return (nCompare != 0) ? nCompare > 0 : pColumnItem1 > pColumnItem2;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CListControlSorterAlphabet::SetDirection( const bool _bAscending )
 {
 	bAscending = _bAscending;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CListControlSorterAlphabet::IsAscending() const
 {
 	return bAscending;

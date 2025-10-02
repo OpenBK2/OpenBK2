@@ -7,13 +7,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		SCRIPT CAMERA WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CScriptCameraWindow, CResizeDialog)
 	ON_WM_SIZE()
 	ON_WM_TIMER()
@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CScriptCameraWindow, CResizeDialog)
 	ON_EN_CHANGE( IDC_SMOV_FOV_EDIT, OnChangeFOV )
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptCameraWindow::CScriptCameraWindow( CWnd *pParentWindow )
 	:	CResizeDialog( CScriptCameraWindow::IDD, pParentWindow ),
 		bIsDataSetting( true ),
@@ -57,13 +57,13 @@ CScriptCameraWindow::CScriptCameraWindow( CWnd *pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SCRIPT_CAMERA_WINDOW, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptCameraWindow::~CScriptCameraWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_CAMERA_WINDOW );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CScriptCameraWindow::OnInitDialog()
 {
 	bIsDataSetting = true;
@@ -87,7 +87,7 @@ BOOL CScriptCameraWindow::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::ShowManualControls( bool bShow )
 {
 	if ( CWnd* pwndStatic = GetDlgItem( IDC_SMOV_YAW_LABEL_LEFT ) )
@@ -112,7 +112,7 @@ void CScriptCameraWindow::ShowManualControls( bool bShow )
 		pwndStatic->ShowWindow( bShow ? SW_SHOW : SW_HIDE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
@@ -122,7 +122,7 @@ void CScriptCameraWindow::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_SMOV_BUTTON_RUN, btnRun );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SScriptCameraWindowData *pData = reinterpret_cast<SScriptCameraWindowData*>( dwData );
@@ -234,7 +234,7 @@ bool CScriptCameraWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptCameraWindow::UpdateCommand(), pbEnable == 0" );
@@ -267,7 +267,7 @@ bool CScriptCameraWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::NotifyHandler()
 {
 	if ( bIsDataSetting )
@@ -278,7 +278,7 @@ void CScriptCameraWindow::NotifyHandler()
 																												ID_SCRIPT_CAMERA_WINDOW_UI_EVENT, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // useful NotifyHandler
 void CScriptCameraWindow::NotifyHandler( SScriptCameraWindowData::EScriptCameraLastAction eAction )
 {
@@ -287,25 +287,25 @@ void CScriptCameraWindow::NotifyHandler( SScriptCameraWindowData::EScriptCameraL
 	SetLastAction( SScriptCameraWindowData::SCA_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnBnClickedScriptCameraAdd()
 {
 	NotifyHandler( SScriptCameraWindowData::SCA_CAMERA_ADD );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnBnClickedScriptCameraSave()
 {
 	NotifyHandler( SScriptCameraWindowData::SCA_CAMERA_SAVE);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnBnClickedScriptCameraDelete()
 {
 	NotifyHandler( SScriptCameraWindowData::SCA_CAMERA_DELETE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnLvnItemchangedListScriptCameras( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -323,7 +323,7 @@ void CScriptCameraWindow::OnLvnItemchangedListScriptCameras( NMHDR *pNMHDR, LRES
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnNMDblclkListScriptCameras( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -335,13 +335,13 @@ void CScriptCameraWindow::OnNMDblclkListScriptCameras( NMHDR *pNMHDR, LRESULT *p
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnBnClickedScriptCameraRun()
 {
 	NotifyHandler( SScriptCameraWindowData::SCA_CAMERA_RUN );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 {
 	if ( !pData )
@@ -374,7 +374,7 @@ void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 	bIsDataSetting = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::GetDialogData( SScriptCameraWindowData *pData )
 {
 	if ( !pData )
@@ -391,7 +391,7 @@ void CScriptCameraWindow::GetDialogData( SScriptCameraWindowData *pData )
 	pData->eLastAction = dialogData.eLastAction;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -416,7 +416,7 @@ void CScriptCameraWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnChangeYaw()
 {
 	if ( !bIsDataSetting )
@@ -425,7 +425,7 @@ void CScriptCameraWindow::OnChangeYaw()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnChangePitch()
 {
 	if ( !bIsDataSetting )
@@ -434,7 +434,7 @@ void CScriptCameraWindow::OnChangePitch()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnChangeFOV()
 {
 	if ( !bIsDataSetting )
@@ -443,7 +443,7 @@ void CScriptCameraWindow::OnChangeFOV()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnTimer( UINT nIDEvent ) 
 {
   if ( nIDEvent == GetYawTimerID() )
@@ -456,28 +456,28 @@ void CScriptCameraWindow::OnTimer( UINT nIDEvent )
 	CResizeDialog::OnTimer( nIDEvent );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::SetYawTimer()
 {
   KillYawTimer();
   nYawTimerID = SetTimer( GetYawTimerID(), GetYawTimerInterval(), 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::SetPitchTimer()
 {
   KillPitchTimer();
   nPitchTimerID = SetTimer( GetPitchTimerID(), GetPitchTimerInterval(), 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::SetFOVTimer()
 {
   KillFOVTimer();
   nFOVTimerID = SetTimer( GetFOVTimerID(), GetFOVTimerInterval(), 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::KillYawTimer()
 {
   if ( nYawTimerID != 0 )
@@ -487,7 +487,7 @@ void CScriptCameraWindow::KillYawTimer()
   nYawTimerID = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::KillPitchTimer()
 {
   if ( nPitchTimerID != 0 )
@@ -497,7 +497,7 @@ void CScriptCameraWindow::KillPitchTimer()
   nPitchTimerID = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::KillFOVTimer()
 {
   if ( nFOVTimerID != 0 )
@@ -507,26 +507,26 @@ void CScriptCameraWindow::KillFOVTimer()
   nFOVTimerID = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnYawTimer()
 {
 	KillYawTimer();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_STATE, ID_SCRIPT_CAMERA_GET_YAW, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnPitchTimer()
 {
 	KillPitchTimer();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_STATE, ID_SCRIPT_CAMERA_GET_PITCH, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraWindow::OnFOVTimer()
 {
 	KillFOVTimer();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_STATE, ID_SCRIPT_CAMERA_GET_FOV, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

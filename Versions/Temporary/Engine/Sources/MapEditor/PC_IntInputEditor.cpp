@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCIntInputEditor::GetPCItemStringValue() pszValue == 0" );
@@ -20,7 +20,7 @@ bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pValue != 0, "CPCIntInputEditor::GetPCItemValue() pValue == 0" );
@@ -33,18 +33,18 @@ bool CPCIntInputEditor::GetPCItemValue( CVariant *pValue, const string &rszValue
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCIntInputEditor::CPCIntInputEditor() : nDefaultValue( 0 ), bCreateControls( true )
 {	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCIntInputEditor::~CPCIntInputEditor()
 {
 	DestroyWindow();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CPCIntInputEditor, CEdit)
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
@@ -52,7 +52,7 @@ BEGIN_MESSAGE_MAP(CPCIntInputEditor, CEdit)
 	ON_CONTROL_REFLECT(EN_CHANGE, OnEnChange)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CPCIntInputEditor::PreTranslateMessage( MSG* pMsg ) 
 {
 	if ( pMsg->message == WM_KEYDOWN )	
@@ -67,7 +67,7 @@ BOOL CPCIntInputEditor::PreTranslateMessage( MSG* pMsg )
 	return CEdit::PreTranslateMessage( pMsg );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::OnSetFocus( CWnd* pOldWnd )
 {
 	CEdit::OnSetFocus( pOldWnd );
@@ -75,7 +75,7 @@ void CPCIntInputEditor::OnSetFocus( CWnd* pOldWnd )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::OnKillFocus( CWnd* pNewWnd ) 
 {	
 	CEdit::OnKillFocus( pNewWnd );
@@ -88,7 +88,7 @@ void CPCIntInputEditor::OnKillFocus( CWnd* pNewWnd )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
@@ -106,7 +106,7 @@ void CPCIntInputEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	CEdit::OnChar( nChar, nRepCnt, nFlags );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::OnEnChange()
 {
 	if ( !bCreateControls )
@@ -115,9 +115,9 @@ void CPCIntInputEditor::OnEnChange()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPCItemEditor
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
@@ -142,14 +142,14 @@ bool CPCIntInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 {
 	MoveWindow( rPlaceRect.left, rPlaceRect.top, rPlaceRect.Width() > 40 ? rPlaceRect.Width() : 40, rPlaceRect.Height(), true );
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::ActivateEditor( CDialog *pwndActiveDialog )
 {
 	ShowWindow( SW_SHOW );
@@ -161,7 +161,7 @@ bool CPCIntInputEditor::ActivateEditor( CDialog *pwndActiveDialog )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::SetValue( const CVariant &rValue )
 {
 	nDefaultValue = (int)rValue;
@@ -171,7 +171,7 @@ void CPCIntInputEditor::SetValue( const CVariant &rValue )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::GetValue( CVariant *pValue )
 {
 	if ( !pValue )
@@ -187,7 +187,7 @@ void CPCIntInputEditor::GetValue( CVariant *pValue )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::SetDefaultValue()
 {
 	CPCItemEditor::SetDefaultValue();
@@ -199,14 +199,14 @@ void CPCIntInputEditor::SetDefaultValue()
 	bCreateControls = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCIntInputEditor::EnableEdit( bool bEnable )
 {
 	CPCItemEditor::EnableEdit( bEnable );
 	SetReadOnly( !bEnable );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -235,7 +235,7 @@ bool CPCIntInputEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCIntInputEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCIntInputEditor::UpdateCommand(), pbEnable == 0" );
@@ -278,6 +278,6 @@ bool CPCIntInputEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 			return false;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -13,14 +13,14 @@
 #include "DBGameRoot.h"
 #include "../Sound/MusicSystem.h"
 #include "../UI/WindowTooltip.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wchar_t* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
 const wchar_t* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
 const wchar_t* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Too much is done in ChapterMap's Init() 
 // So it has been moved to this file
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::InitLoadControls()
 {
 	pChapterMap = GetChildChecked<IWindow>( pScreen, "ChapterMap", true );
@@ -151,7 +151,7 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 
 	HideDialogs();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::InitReinforcements()
 {
 	const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
@@ -217,7 +217,7 @@ void CInterfaceChapterMapMenu::InitReinforcements()
 	nUpgradeMissionSelected = -1;
 	nUpgradeRewardSelected = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::InitMissions()
 {
 	const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
@@ -478,7 +478,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 	SelectTarget( nRecommendedTarget );
 	pFrontlines->SetParams( pChapter->szSeaNoiseMask, pChapter->szDifferentColourMap, pHelper->vMainStrike, pChapter->nPositiveColour, pChapter->nNegativeColour );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::EffectStart( EExitDestination eWhereTo )
 {
 	pScreen->Enable( false ); // CRAP
@@ -520,7 +520,7 @@ void CInterfaceChapterMapMenu::EffectStart( EExitDestination eWhereTo )
 
 	bNeedToRunAnimation = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnEffectFinish()
 {
 	--nEffectCounter;
@@ -606,4 +606,4 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

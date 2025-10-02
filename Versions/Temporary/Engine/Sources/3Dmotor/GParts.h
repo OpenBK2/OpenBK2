@@ -5,7 +5,7 @@
 #include "..\3Dlib\Transform.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCombinedKey
 {
 	ZDATA
@@ -36,7 +36,7 @@ struct SFullStaticTrackers
 	CObj<CFuncBase<SPerVertexLightState> > pLightState;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pLightState); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IHZBuffer;
 class CVolumeNode;
 class CCombinedPart;
@@ -66,7 +66,7 @@ public:
 	const SPerPartVariables &GetVars() const { return vars; }
 	void SetPriority( int _n );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CNonePart : public ISomePart
 {
 	OBJECT_NOCOPY_METHODS(CNonePart);
@@ -76,7 +76,7 @@ public:
 		: ISomePart( pData, _pMaterial, _gInfo ) {}
 	virtual ETransformType GetTransformType() const { return TT_NONE; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSimplePart : public ISomePart
 {
 	OBJECT_NOCOPY_METHODS(CSimplePart);
@@ -89,7 +89,7 @@ public:
 	virtual ETransformType GetTransformType() const { return TT_SIMPLE; }
 	virtual const SFBTransform& GetSimplePos() { return pos; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // animated in some bounds part
 class CStaticAnimatedPart : public ISomePart
 {
@@ -109,7 +109,7 @@ public:
 	const SBound &GetBound() const { return bv; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices ) p->AddHandle( pAnimation ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGenericDynamicPart : public ISomePart
 {
 protected:
@@ -128,7 +128,7 @@ public:
 	CGenericDynamicPart() : bt(BT_NONE) {}
 	CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDynamicPart : public CGenericDynamicPart
 {
 	OBJECT_NOCOPY_METHODS( CDynamicPart );
@@ -148,7 +148,7 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices) p->AddHandle( pTransform ); }
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAnimatedBoundPart : public CGenericDynamicPart
 {
 	ZDATA_(CGenericDynamicPart)
@@ -162,7 +162,7 @@ public:
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 	CFuncBase<SBound> *GetBound() const { return pBound; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDynamicPartWithAnimatedBound : public CAnimatedBoundPart
 {
 	OBJECT_NOCOPY_METHODS( CDynamicPartWithAnimatedBound );
@@ -179,7 +179,7 @@ public:
 	CFuncBase<SFBTransform>* GetSimplePosNode() { return pTransform; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices) p->AddHandle( pTransform ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAnimatedPart : public CAnimatedBoundPart
 {
 	OBJECT_NOCOPY_METHODS( CAnimatedPart );
@@ -198,7 +198,7 @@ public:
 	virtual CFuncBase< vector<NGfx::SCompactTransformer> >* GetMMXAnimationNode() { return pMMXAnimation; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) { if ( bVertices ) p->AddHandle( pAnimation ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // since we have got pBound here we can skip checking geometry changes in Update() and only watch them with CChangeTrackPtr
 class CDynamicGeometryPart : public CGenericDynamicPart
 {
@@ -217,7 +217,7 @@ public:
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices );
 	bool Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCombinedPart: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CCombinedPart);
@@ -270,7 +270,7 @@ public:
 	const CPartFlags& GetIgnoredParts() const { return ignoredParts; }
 	void PartHasChanged() { bRecalcPartInfo = true; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! node size
 const int N_MINIMAL_OCTREE_NODE = 8;//16; 
 class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE>
@@ -347,7 +347,7 @@ public:
 private:	
 	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE> CParent;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR, 
 	SFullStaticTrackers *pTrackers, bool bIsDynamic );
 CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV );

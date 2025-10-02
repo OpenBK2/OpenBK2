@@ -1,6 +1,6 @@
 #pragma once
 #include "ExecutorUnitCombatBonus.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExecutorAdrenalineRush : public CExecutorUnitCombatBonus
 {
 	OBJECT_BASIC_METHODS( CExecutorAdrenalineRush );

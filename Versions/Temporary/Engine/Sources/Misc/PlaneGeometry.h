@@ -5,7 +5,7 @@
 #include "Misc_export.h"
 
 // Приведения типов
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TPoint>
 inline const TPoint GetPointType( const CVec2 &vec, TPoint *pTargetType )
 {
@@ -38,7 +38,7 @@ inline const CVec3 GetPointType<CVec3>( const CVec3 &vec, CVec3 *pVec3 )
 	return vec;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //определитель что разность элементов меньше заданного значения
 template <class TElement>
 struct SInRangeFunctional
@@ -54,7 +54,7 @@ struct SInRangeFunctional
 };
 
 // геометрия с плавающей точкой
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EClassifyEdge
 {
 	CE_UNKNOWN	= 0,
@@ -71,7 +71,7 @@ enum EClassifyEdge
 };
 EXTERNVAR const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EClassifyPolygon
 {
 	CP_UNKNOWN	= 0,
@@ -85,7 +85,7 @@ enum EClassifyPolygon
 };
 EXTERNVAR MISC_EXPORT const EClassifyPolygon NEGATIVE_CLASSIFY_POLYGON[CP_COUNT + 1];
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EClassifyIntersection
 {
 	CI_UNKNOWN				= 0,
@@ -99,7 +99,7 @@ enum EClassifyIntersection
 	CI_COUNT					= 6,
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EClassifyRotation
 {
 	CR_UNKNOWN					= 0,
@@ -112,31 +112,31 @@ enum EClassifyRotation
 };
 EXTERNVAR const EClassifyRotation NEGATIVE_CLASSIFY_ROTATION[CR_COUNT + 1];
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EClassifyEdge GetNegativeClassifyEdge( EClassifyEdge classifyEdge )
 {
 	return NEGATIVE_CLASSIFY_EDGE[static_cast<int>(classifyEdge)];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EClassifyPolygon GetNegativeClassifyPolygon( EClassifyPolygon classifyPolygon )
 {
 	return NEGATIVE_CLASSIFY_POLYGON[static_cast<int>(classifyPolygon)];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EClassifyRotation GetNegativeClassifyRotation( EClassifyRotation classifyRotation )
 {
 	return NEGATIVE_CLASSIFY_ROTATION[static_cast<int>(classifyRotation)];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EClassifyEdge GetClassifyNormal()
 {
 	return CE_LEFT;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EClassifyEdge GetClassifyEdgeInnerSpace( EClassifyRotation classifyRotation )
 {
 	if ( classifyRotation == CR_CLOCKWISE )
@@ -153,7 +153,7 @@ inline EClassifyEdge GetClassifyEdgeInnerSpace( EClassifyRotation classifyRotati
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //                                  *CE_LEFT
 //
@@ -198,7 +198,7 @@ EClassifyEdge ClassifyEdge( const TPoint &rvBegin, const TPoint &rvEnd, const TP
 	return CE_BETWEEN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 EClassifyIntersection ClassifyIntersect( const TPoint &rvBegin0, const TPoint &rvEnd0, const TPoint &rvBegin1, const TPoint &rvEnd1, float *pfIntersectionPoint )
 {
@@ -231,7 +231,7 @@ EClassifyIntersection ClassifyIntersect( const TPoint &rvBegin0, const TPoint &r
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 EClassifyIntersection ClassifyCross( const TPoint &rvBegin0, const TPoint &rvEnd0,  const TPoint &rvBegin1, const TPoint &rvEnd1, float *pfIntersectionPoint )
 {
@@ -267,7 +267,7 @@ EClassifyIntersection ClassifyCross( const TPoint &rvBegin0, const TPoint &rvEnd
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Точка в полигоне или нет
 template<class TPolygon, class TPoint>
 EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &v )
@@ -336,7 +336,7 @@ EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &
 	return CP_INSIDE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 {
@@ -397,7 +397,7 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 	return classifyPolygon;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPolygon &rPolygonCheck )
 {
@@ -424,7 +424,7 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPolygon &rPol
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Периметр полигона
 template<class TPolygon>
 float GetPolygonPerimeter( const TPolygon &rPolygon )
@@ -459,7 +459,7 @@ float GetPolygonPerimeter( const TPolygon &rPolygon )
 	return fPerimeter;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Площадь полигона
 template<class TPolygon>
 float GetSignedPolygonSquare( const TPolygon &rPolygon )
@@ -507,7 +507,7 @@ float GetSignedPolygonSquare( const TPolygon &rPolygon )
 	return ( fSquare / 2.0f );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Центральная точка
 template<class TPolygon, class TPoint>
 bool GetPolygonMassCenter( const TPolygon &rPolygon, TPoint *pvMassCenter )
@@ -531,7 +531,7 @@ bool GetPolygonMassCenter( const TPolygon &rPolygon, TPoint *pvMassCenter )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 EClassifyRotation ClassifyRotation( const TPoint &v0, const TPoint &v1, const TPoint &v2 )
 {
@@ -547,7 +547,7 @@ EClassifyRotation ClassifyRotation( const TPoint &v0, const TPoint &v1, const TP
 	return CR_LINE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon>
 EClassifyRotation ClassifyRotation( const TPolygon &rPolygon )
 {
@@ -563,7 +563,7 @@ EClassifyRotation ClassifyRotation( const TPolygon &rPolygon )
 	return CR_LINE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 float GetSignedAngle( const TPoint &rvBegin, const TPoint &rvEnd, const TPoint &v )
 {
@@ -595,18 +595,18 @@ float GetSignedAngle( const TPoint &rvBegin, const TPoint &rvEnd, const TPoint &
 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon>
 TPolygon GetPointOnEdge( const TPolygon &rvBegin, const TPolygon &rvEnd, float fPoint )
 {
 	return ( rvBegin + fPoint * ( rvEnd - rvBegin ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec2 CreateFromPolarCoord( float r, float a ) { return CVec2( r * cos( a ), r * sin( a ) ); }
 inline CVec3 CreateFromPolarCoord( float r, float a, float fZ ) { return CVec3( r * cos( a ), r * sin( a ), fZ ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 float GetPolarAngle( const TPoint &v )
 {
@@ -632,14 +632,14 @@ float GetPolarAngle( const TPoint &v )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 float GetPolarLength( const TPoint &v )
 {
 	return fabs( v.x, v.y );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 TPoint GetNormal( const TPoint &v )
 {
@@ -649,11 +649,11 @@ TPoint GetNormal( const TPoint &v )
 	return vNormal;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 inline void MovePoint( TPoint *pPoint, const TPoint &rvMove ) { ( *pPoint ) += rvMove; }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 inline void RotatePoint( TPoint *pPoint, float a )
 { 
@@ -666,7 +666,7 @@ inline void RotatePoint( TPoint *pPoint, float a )
 template<class TPoint>
 inline void RotatePoint( TPoint *pPoint, float a, const TPoint &rCenterPoint ) { TPoint point = ( *pPoint ) - rCenterPoint; RotatePoint( &point, a ); ( *pPoint ) = point + rCenterPoint; }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void NormalazeDirection( float *pDirection )
 {
 	if ( pDirection != 0 )
@@ -682,7 +682,7 @@ inline void NormalazeDirection( float *pDirection )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 void MovePoints( TPolygon *pPolygon, const TPoint &rvMove )
 {
@@ -692,7 +692,7 @@ void MovePoints( TPolygon *pPolygon, const TPoint &rvMove )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 void RotatePoints( TPolygon *pPolygon, float a )
 {
@@ -706,7 +706,7 @@ void RotatePoints( TPolygon *pPolygon, float a )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 void RotatePoints( TPolygon *pPolygon, float a, const TPoint &rCenterPoint )
 {
@@ -722,7 +722,7 @@ void RotatePoints( TPolygon *pPolygon, float a, const TPoint &rCenterPoint )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 void RotateEdgeToPI2( TPoint *pvBegin, TPoint *pvEnd )
 {
@@ -736,7 +736,7 @@ void RotateEdgeToPI2( TPoint *pvBegin, TPoint *pvEnd )
 	( *pvEnd ) = m + 0.5f * vNormal;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 void FlipEdgeToPI( TPoint *pvBegin, TPoint *pvEnd )
 {
@@ -748,7 +748,7 @@ void FlipEdgeToPI( TPoint *pvBegin, TPoint *pvEnd )
 	( *pvBegin ) = vTemp;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const TPoint &rvEnd, TPolygon *pLeftPolygon, TPolygon *pRightPolygon )
 {
@@ -910,7 +910,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, TPolygon *pCutPolygon )
 {
@@ -992,7 +992,7 @@ bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, T
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const vector<float> &weights, const TPoint &rPoint, float fWeight, TPolygon *pVoronoyPolygon )
 {
@@ -1049,7 +1049,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoints, const TPoint &rPoint, TPolygon *pVoronoyPolygon )
 {
@@ -1124,7 +1124,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPoint &rPoint, TPolygon *pVoronoyPolygon )
 {
@@ -1132,7 +1132,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPoint &rPoint, 
 	return GetVoronoyPolygon( rBoundingPolygon, points, rPoint, pVoronoyPolygon );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Убирание пар точек из вектора расположенных на расстоянии fRange между друг другом
 //возвращает число удаленных элементов
 template<class TPolygon, class TPoint>
@@ -1147,7 +1147,7 @@ void UniquePolygon( TPolygon *pPolygon, float fRange )
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPoint>
 inline void UpdateBoundingBox( TPoint *pvMin, TPoint *pvMax, const TPoint &rvPoint )
 {
@@ -1170,7 +1170,7 @@ inline void UpdateBoundingBox( TPoint *pvMin, TPoint *pvMax, const TPoint &rvPoi
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Минимальный прямоугольник в корорый входят все точки полигона
 template<class TPolygon>
 void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBox )
@@ -1206,7 +1206,7 @@ void GetPolygonBoundingBox( const TPolygon &rPolygon, CTRect<float> *pBoundingBo
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon>
 inline CTRect<float> GetPolygonBoundingBox( const TPolygon &rPolygon )
 {
@@ -1215,7 +1215,7 @@ inline CTRect<float> GetPolygonBoundingBox( const TPolygon &rPolygon )
 	return boundingBox;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // *----|--------------------|----*
 //      |
@@ -1253,7 +1253,7 @@ TPoint GetRandomEdgePoint( const TPoint &rvBegin, const TPoint &rvEnd, float fMi
 	return vPoint;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSideDistanceRatio, const CTPoint<float> &rShiftRatio, TPolygon *pRandomizedSequence, float fMinEdgeLength, float fMaxEdgeLength, bool bPolygon )
 {
@@ -1385,7 +1385,7 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TPolygon, class TPoint>
 bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPolygon, float fDistance, TPolygon *pEnlargedPolygon )
 {
@@ -1484,7 +1484,7 @@ bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPoly
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // 0 - на границе
 // > 0 - внутри
 // < 0 - снарукжи
@@ -1559,7 +1559,7 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 	}
 	return ( fDistance * ( ( classifyPolygon == CP_INSIDE ) ? ( 1.0f ) : ( -1.0f ) ) );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Целочисленная геометрия
 //
 //bounds.maxy +----------------------------+
@@ -1576,7 +1576,7 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 //            bounds.minx                  bounds.max
 //
 // * - точки входящие в bounds
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает только для нормальных Bounds ( min < max )
 template<class TRect>
 inline bool IsValidPoint( const TRect &rBounds, int x, int y )
@@ -1585,7 +1585,7 @@ inline bool IsValidPoint( const TRect &rBounds, int x, int y )
 				 ( y >= rBounds.miny ) && ( y < rBounds.maxy );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает только для нормальных Bounds ( min < max )
 template<class TRect, class TPoint>
 inline bool IsValidPoint( const TRect &rBounds, const TPoint &rPoint )
@@ -1593,7 +1593,7 @@ inline bool IsValidPoint( const TRect &rBounds, const TPoint &rPoint )
 	return IsValidPointForNormalRect( rBounds, rPoint.x, rPoint.y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает для любых Bounds ( min < max ) || ( min > max )
 template<class TRect>
 inline bool IsValidPointSlow( const TRect &rBounds, const int x, const int y )
@@ -1620,7 +1620,7 @@ inline bool IsValidPointSlow( const TRect &rBounds, const int x, const int y )
 	return ( bXIsValid && bYIsValid );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает для любых Bounds ( min < max ) || ( min > max )
 template<class TRect, class TPoint>
 inline bool IsValidPointSlow( const TRect &rBounds, const TPoint &rPoint )
@@ -1628,7 +1628,7 @@ inline bool IsValidPointSlow( const TRect &rBounds, const TPoint &rPoint )
 	return IsValidPoint( rBounds, rPoint.x, rPoint.y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает только для нормальных Bounds ( min < max )
 //если вернули 0 - произошел сдвиг точки на границу
 //если вернули 1 - точка не изменилась
@@ -1662,7 +1662,7 @@ inline int ValidatePoint( const TRect &rBounds, TPoint *pPoint )
 	return nResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Работает только для нормальных Bounds ( min < max )
 //если вернули -1 - ни одна точка pIndices не попадает в прямоугольник rBounds
 //если вернули 0 - произошло отсечение по одной из сторон
@@ -1708,7 +1708,7 @@ inline int ValidateRect( const TRect &rBounds, TRect *pRect )
 	return nResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал коллекционирующий пары чисел (координаты точек)
 template<class TList, class TPoint>
 struct StoreTilesFunctional
@@ -1722,7 +1722,7 @@ struct StoreTilesFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал изменяющий pLockArray на заданное значение
 template<class TArray, class TElement>
 struct SModifyTilesFunctional
@@ -1742,7 +1742,7 @@ struct SModifyTilesFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал определяющий есть ли тайл заданного значения в pLockArray
 template<class TArray, class TElement>
 struct SCheckTilesFunctional
@@ -1767,7 +1767,7 @@ struct SCheckTilesFunctional
 };
 
 /**
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для поля pLockArray, функционалы перечислены выше
 //некоторые функционалы могут изменять массив
 template<class TYPE>
@@ -1843,7 +1843,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect, const SMapObjectI
 }
 /**/
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для для всех точек сетки входящих в полигон, функционалы перечислены выше
 template<class Type, class TPolygon, class TPoint>
 bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//границы применимости функционалов
@@ -1879,7 +1879,7 @@ bool ApplyPointsInPolygon( const CTRect<int> &rRect,					//границы при
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для для всех тайлов входящих в полигон, функционалы перечислены выше
 template<class Type, class TPolygon, class TPoint>
 bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//границы применимости функционалов
@@ -1916,7 +1916,7 @@ bool ApplyTilesInPolygon( const CTRect<int> &rRect,						//границы при
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для для всех тайлов входящих в прямоуголник (включительно, как у дорог)
 template<class Type>
 bool ApplyTilesInRange( const CTRect<int> &rRect,	//границы применимости функционалов
@@ -1963,7 +1963,7 @@ bool ApplyTilesInRange( const CTRect<int> &rRect,
 }
 
 //CRAP{оптимизировать колекционирование тайлов в круге
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //в радиусе нет локаных тайлов 
 template<class Type>
 bool ApplyTilesInCircle( const CTRect<int> &rRect,	//границы применимости функционалов
@@ -1995,7 +1995,7 @@ bool ApplyTilesInCircle( const CTRect<int> &rRect,	//границы примен
 }
 //CRAP}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class Type>
 inline bool ApplyTilesInCircle( const CTRect<int> &rRect,
 																const CTPoint<int> &rCenter,
@@ -2004,5 +2004,5 @@ inline bool ApplyTilesInCircle( const CTRect<int> &rRect,
 {
 	return ApplyTilesInCircle( rRect, rCenter.x, rCenter.y, nRadius, rApplyFunctional );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // #if !defined(__PLANE_GEOMETRY_H__)

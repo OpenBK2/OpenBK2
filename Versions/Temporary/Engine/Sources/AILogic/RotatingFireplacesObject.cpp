@@ -3,9 +3,9 @@
 #include "RotatingFireplacesObject.h"
 #include "Soldier.h"
 #include "Guns.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplace )
 {
 	list<SUnitInfo>::iterator iter = units.begin();
@@ -37,7 +37,7 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 
 	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
 {
 	list<SUnitInfo>::iterator iter = units.begin();
@@ -49,7 +49,7 @@ void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
 	if ( iter != units.end() )
 		units.erase( iter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, const int nFireplace ) const
 {
 	CSoldier *pFireplaceSoldier = GetSoldierInFireplace( nFireplace );
@@ -102,7 +102,7 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRotatingFireplacesObject::Segment()
 {
 	if ( GetNFirePlaces() != 0 )
@@ -142,4 +142,4 @@ void CRotatingFireplacesObject::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

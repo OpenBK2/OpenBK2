@@ -11,20 +11,20 @@
 
 REGISTER_SAVELOAD_CLASS( 0x1108D4A1, CAntiArtillery );
 REGISTER_SAVELOAD_CLASS( 0x191442C0, CRevealCircle );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
 extern CAntiArtilleryManager theAAManager;
 extern SCheats theCheats;
 extern CFeedBackSystem theFeedBackSystem;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAntiArtillery::CAntiArtillery( CAIUnit *_pOwner )
 : pOwner( _pOwner ), fMaxRadius( 0.0f ), nParty( -1 ), lastScan( 0 ), bIsAA( false )
 {
 	SetUniqueIdForObjects();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 {
 	bIsAA = false;
@@ -47,7 +47,7 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 	lastShotTime.resize( 3, 0 );
 	lastRevealCircleTime.resize( 3, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAntiArtillery::Scan( const CVec2 &center )
 {
 	memset( &(closestEnemyDist2[0]), 0, closestEnemyDist2.size() );
@@ -64,7 +64,7 @@ void CAntiArtillery::Scan( const CVec2 &center )
 
 	lastScan = curTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float GetRadius( const float nShots, const float fRevealRadius )
 {
 	float fMax = fRevealRadius * ( 1.0f - nShots / SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS );
@@ -81,7 +81,7 @@ float GetRadius( const float nShots, const float fRevealRadius )
 	/*return SConsts::ARTILLERY_REVEAL_COEEFICIENT/fRevealRadius * 
 	(SConsts::MAX_ANTI_ARTILLERY_RADIUS - ( SConsts::MAX_ANTI_ARTILLERY_RADIUS - SConsts::MIN_ANTI_ARTILLERY_RADIUS ) / SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS * nShots); */
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 {
 	if ( curTime - lastScan >= SConsts::ANTI_ARTILLERY_SCAN_TIME )
@@ -129,18 +129,18 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CCircle CAntiArtillery::GetRevealCircle( const int nParty ) const
 {
 	return CCircle( lastRevealCenter[nParty], 
 									GetRadius( Min( (float)nHeardShots[nParty], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fMaxRadius ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NTimer::STime CAntiArtillery::GetLastHeardTime( const int nParty ) const
 {
 	return lastShotTime[nParty];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAntiArtillery::Segment( bool bOwnerVisible )
 {
 	const int nMyParty = theDipl.GetMyParty();	
@@ -178,4 +178,4 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

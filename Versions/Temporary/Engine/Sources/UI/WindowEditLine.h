@@ -1,6 +1,6 @@
 // WindowEditLine.h: interface for the CWindowEditLine class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_)
 #define AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_
@@ -11,7 +11,7 @@
 #include "UIComponents.h"
 
 interface IML;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for edit text. keep focus if being clicked upon
 class CWindowEditLine : public CWindow, public IEditLine
 {
@@ -126,6 +126,6 @@ public:
 	void OnSelectAll( const struct SGameMessage &msg );
 	//end message sinks
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #endif // !defined(AFX_WINDOWEDITLINE_H__7531A3C4_0749_49AD_8A73_4500671399F2__INCLUDED_)

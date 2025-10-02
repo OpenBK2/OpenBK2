@@ -16,7 +16,7 @@
 #include "../Sound/MusicSystem.h"
 #include "GetConsts.h"
 #include "ScenarioTracker.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVisualNotificationsEmpty : public IVisualNotifications
 {
 	OBJECT_NOCOPY_METHODS( CVisualNotificationsEmpty );
@@ -25,19 +25,19 @@ public:
 	bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return true; }
 	void Step( const NTimer::STime nDeltaTime, bool bAppActive ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMissionBase
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMissionBase::CInterfaceMissionBase( const string &szInterfaceType, const string &szBindSection ) :
 	CInterfaceScreenBase( szInterfaceType, szBindSection ), bFrozen( false )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMissionBase::~CInterfaceMissionBase()
 {
 	Unload();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( false );
@@ -45,7 +45,7 @@ void CInterfaceMissionBase::OnGetFocus( bool bFocus )
 	if ( pWorld ) 
 		pWorld->OnGetFocus( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMissionBase::StepLocal( bool bAppActive )
 {
 	const bool bRet = CInterfaceScreenBase::StepLocal( bAppActive );
@@ -60,12 +60,12 @@ bool CInterfaceMissionBase::StepLocal( bool bAppActive )
 
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::Freeze( const bool bFreeze )
 {
 	bFrozen = bFreeze;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *_pScenarioTracker )
 {
 	pTransceiver = _pTransceiver;
@@ -93,13 +93,13 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	Singleton<IAILogic>()->PostMapLoad();
 	pWorld->Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::StartNewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *pScenarioTracker )
 {
 	_pTransceiver->StartMission( _pMap, Singleton<IAILogic>() );
 	NewMap( _pMap, _pTransceiver, pScenarioTracker );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::Unload()
 {
 	if ( pWorld )
@@ -114,7 +114,7 @@ void CInterfaceMissionBase::Unload()
 
 	Singleton<ISoundScene>()->ClearSounds();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionBase::AfterLoad()
 {
 	CInterfaceScreenBase::AfterLoad();
@@ -122,7 +122,7 @@ void CInterfaceMissionBase::AfterLoad()
 	if ( pWorld )
 		pWorld->AfterLoad( pMap );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMissionBase::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CInterfaceScreenBase*)this );
@@ -136,5 +136,5 @@ int CInterfaceMissionBase::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11135C00, CVisualNotificationsEmpty );

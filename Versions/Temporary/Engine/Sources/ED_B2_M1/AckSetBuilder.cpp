@@ -22,7 +22,7 @@
 #include "../libdb/EditorDb.h"
 #include "../libdb/ObjMan.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ACK_SET_TYPE_NAME "AckSetRPGStats"
 #define COMPLEX_SOUND_DESC_TYPE_NAME "ComplexSoundDesc"
 #define SOUND_DESC_TYPE_NAME "SoundDesc"
@@ -33,10 +33,10 @@
 #define COMMON_ADD_PATH "Sounds\\Acks\\"
 
 REGISTER_BUILDER_IN_DLL( AckSetRPGStats, CAcksBuilder )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAcks
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAckDesc
 {
 	const char *pszExcelName;
@@ -90,7 +90,7 @@ static struct SEditorAckTypesAutoMagic
 			s_AckTypesMap[pAck->pszExcelName] = pAck->pszCodeName;
 	}
 } aEditorAckTypesAutoMagic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CollectEntries( CDBIDMap *pRes, const string &szFolderInEditor, const string &szTypeName )
 {
 	CDBID dbid1( szFolderInEditor );
@@ -114,7 +114,7 @@ void CollectEntries( CDBIDMap *pRes, const string &szFolderInEditor, const strin
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // type: artillery, tanks, infantry, etc.  \
 // subtype: artillery1, artillery2, etc.    > addresses acks set
 // voice ID: 0, 1, 2, 3                    /
@@ -136,7 +136,7 @@ struct SAckSetKey
 	}
 };
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace nstl
 {
 	template<> struct hash<NAcks::SAckSetKey>
@@ -144,7 +144,7 @@ namespace nstl
 		size_t operator()( const NAcks::SAckSetKey &key ) const { return hash<string>()( key.szTypeName ) + key.nSubtype + key.nVoiceID; }
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAcks
 {
 struct SAckSet
@@ -157,7 +157,7 @@ struct SAckSet
 	};
 	hash_map<string, list<SAck> > acks;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEditor, const string &szSoundSource )
 {
 	vector<SAckEntry> entries;
@@ -318,9 +318,9 @@ bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEdito
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** builder itself
@@ -328,23 +328,23 @@ bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEdito
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CAcksBuilder::CAcksBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ACKS_BUILDER, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_ACKS_BUILDER, ID_TOOLS_CREATE_ACK_SETS, ID_TOOLS_CREATE_ACK_SETS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAcksBuilder::~CAcksBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_ACKS_BUILDER );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ACKS_BUILDER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CRAP{ PLAIN_TEXT
 bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
@@ -373,13 +373,13 @@ bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAcksBuilder::IsUniqueObjectName( const string &szObjectType, const string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAcksBuilder::UpdateAckSets( const string &rszAnimationFolder )
 {
 	CWaitCursor waitCursor;
@@ -423,7 +423,7 @@ bool CAcksBuilder::UpdateAckSets( const string &rszAnimationFolder )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAcksBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -449,7 +449,7 @@ bool CAcksBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAcksBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAcksBuilder::UpdateCommand(), pbEnable == 0" );
@@ -479,4 +479,4 @@ bool CAcksBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

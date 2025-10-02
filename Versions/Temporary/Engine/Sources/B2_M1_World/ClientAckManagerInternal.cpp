@@ -10,12 +10,12 @@
 #include "../Misc/StrProc.h"
 #include "../System/Commands.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x110AE400, CClientAckManager);
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDBPtr<NDb::SClientGameConsts> CClientAckManager::pConsts;
 IClientAckManager* AckManager() { return Singleton<IClientAckManager>(); }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SAckParameter* GetParam( const NDb::EUnitAckType eAck, const CUnitAcksInfo &acksInfo, const NDb::SClientGameConsts * pConsts )
 {
 //	NI_ASSERT( acksInfo.find( eAck ) != acksInfo.end(), StrFmt( "wrong ack type %i", eAck ) );
@@ -42,11 +42,11 @@ const NDb::SAckParameter* GetParam( const NDb::EUnitAckType eAck, const CUnitAck
 		return &par;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*		 								   CAckPredicate															*
 //*******************************************************************
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClientAckManager::CAckPredicate::operator()( const SAck & a ) 
 { 
 	const NDb::SAckParameter *pParam = ::GetParam( a.eAck, acksInfo, pConsts );
@@ -54,11 +54,11 @@ bool CClientAckManager::CAckPredicate::operator()( const SAck & a )
 		return pParam->eAckClass == eType;
 	return false;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*		 								   CBoredUnitsContainer												*
 //*******************************************************************
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClientAckManager::CBoredUnitsContainer::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &boredUnits );							
@@ -66,25 +66,25 @@ int CClientAckManager::CBoredUnitsContainer::operator&( IBinSaver &saver )
 	saver.Add( 3, &timeLastBored );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::CBoredUnitsContainer::Clear()
 {
 	boredUnits.clear();
 	nCounter = 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CClientAckManager::CBoredUnitsContainer::CBoredUnitsContainer() 
 : nCounter( 0 ), timeLastBored ( 0 )
 {  
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::CBoredUnitsContainer::Copy( const CClientAckManager::CBoredUnitsContainer &cp )
 {
 	nCounter = cp.nCounter;
 	boredUnits = cp.boredUnits;
 	timeLastBored = cp.timeLastBored;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::CBoredUnitsContainer::AddUnit( interface IMOUnit *pUnit )
 {
 	CBoredUnits::iterator it = boredUnits.find( pUnit );
@@ -94,7 +94,7 @@ void CClientAckManager::CBoredUnitsContainer::AddUnit( interface IMOUnit *pUnit 
 		++nCounter;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::CBoredUnitsContainer::DelUnit( interface IMOUnit *pUnit )
 {
 	CBoredUnits::iterator it = boredUnits.find( pUnit );
@@ -104,7 +104,7 @@ void CClientAckManager::CBoredUnitsContainer::DelUnit( interface IMOUnit *pUnit 
 		--nCounter;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTime, 
 																											const NDb::EUnitAckType eBored, 
 																											IClientAckManager *pAckManager,
@@ -143,11 +143,11 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 		return bSayAck;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // ** particular actions
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClientAckManager::operator&(IBinSaver &saver) 
 {
 	saver.Add( 1, &pConsts );
@@ -164,20 +164,20 @@ int CClientAckManager::operator&(IBinSaver &saver)
 	saver.Add( 9, &acksPresence );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::SetClientConsts( const NDb::SClientGameConsts *_pConsts )
 {
 	pConsts = _pConsts;
 	InitConsts();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClientAckManager::SDeathAck::operator& (IBinSaver &saver) 
 {
 	saver.Add( 1, &pSound );
 	saver.Add( 2, &vPos );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClientAckManager::SUnitAck::operator& (IBinSaver &saver) 
 {
 	saver.Add( 1, &acks );
@@ -186,7 +186,7 @@ int CClientAckManager::SUnitAck::operator& (IBinSaver &saver)
 	saver.Add( 4, &eCurrentAck );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClientAckManager::SAck::operator& (IBinSaver &saver) 
 {
 	saver.Add( 1, &eMixType );
@@ -198,18 +198,18 @@ const NDb::SAckParameter* CClientAckManager::GetParam( const NDb::EUnitAckType e
 {
 	return ::GetParam( eAck, acksInfo, pConsts );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClientAckManager::IsNegative( const NDb::EUnitAckType eAck )
 {
 	return GetParam( eAck ) && GetParam( eAck )->eAckClass == NDb::ACKT_NEGATIVE;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CClientAckManager::CClientAckManager() 
 : TIME_ACK_WAIT( 0 ), 
 	nSelectionCounter( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::InitConsts()
 {
 	TIME_ACK_WAIT = 666;
@@ -222,7 +222,7 @@ void CClientAckManager::InitConsts()
 	for ( int i = 0; i < params.size(); ++i )
 		acksInfo[params[i].eAckType] = i;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::Init()
 {
 	InitConsts();
@@ -230,7 +230,7 @@ void CClientAckManager::Init()
 	pGameTimer = Singleton<IGameTimer>();
 	timeLastDeath = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::Clear()
 {
 	unitAcks.clear();
@@ -240,7 +240,7 @@ void CClientAckManager::Clear()
 	boredUnits.clear();
 	acksPresence.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::AddDeathAcknowledgement( const CVec3 &vPos, const NDb::SComplexSoundDesc *pSound, const unsigned int timeSinceStart )
 {
 	if ( pGameTimer->GetPauseType() != -1 ) 
@@ -258,7 +258,7 @@ void CClientAckManager::AddDeathAcknowledgement( const CVec3 &vPos, const NDb::S
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::AddAcknowledgement( interface IMOUnit *pUnit, const NDb::EUnitAckType eAck, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSinceStart )
 {
 	if ( GetParam( eAck ) == 0 )
@@ -365,12 +365,12 @@ void CClientAckManager::RegisterAck( SUnitAck *ack, const NTimer::STime curTime 
 	ack->eCurrentAck = (*ack->acks.begin()).eAck;
 	acksPresence[ack->eCurrentAck] = curTime;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::UnregisterAck( SUnitAck *ack )
 {
 	ack->eCurrentAck = -1;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::Update( interface ISoundScene *pSoundScene )
 {
 	NTimer::STime curTime = pGameTimer->GetAbsTime();
@@ -450,7 +450,7 @@ void CClientAckManager::Update( interface ISoundScene *pSoundScene )
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::UnitDead( struct IMOUnit *pUnit, interface ISoundScene *pSoundScene )
 {
 	IMOUnit * pTipaUnit = pUnit;
@@ -472,7 +472,7 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, interface ISoundScene *
 		it->second.DelUnit( pTipaUnit );
 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject )
 {
 	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
@@ -480,15 +480,15 @@ void CClientAckManager::RegisterAsBored( const NDb::EUnitAckType eBored, interfa
 
 	boredUnits[eBored].AddUnit( pObject );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientAckManager::UnRegisterAsBored( const NDb::EUnitAckType eBored, interface IMOUnit *pObject )
 {
 	NI_ASSERT( acksInfo.find( eBored ) != acksInfo.end(), StrFmt( "unredistered Ack %d", eBored ) );
 	boredUnits[eBored].DelUnit( pObject );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientAckManager *CreateAckManager()
 {
 	return new CClientAckManager();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

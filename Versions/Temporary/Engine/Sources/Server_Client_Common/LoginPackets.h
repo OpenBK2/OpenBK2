@@ -1,7 +1,7 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "NetPacket.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLoginPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLoginPacket );
@@ -15,7 +15,7 @@ public:
 	CLoginPacket( const int nClient, const string &_szNick, const string &_szPassword )
 		: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CRegisterPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CRegisterPacket )
@@ -31,7 +31,7 @@ public:
 	CRegisterPacket( const int nClient, const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail )
 		: CNetPacket( nClient ), szNick( _szNick ), szPassword( _szPassword ), szCDKey( _szCDKey ), szEmail( _szEmail ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CForgottenPasswordPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CForgottenPasswordPacket )
@@ -45,7 +45,7 @@ public:
 	CForgottenPasswordPacket( const string &_szNick, const string &_szEMail )
 		: CNetPacket( 0 ), szNick( _szNick ), szEMail( _szEMail ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CForgottenPasswordAnswerPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CForgottenPasswordAnswerPacket )
@@ -59,9 +59,9 @@ public:
 	CForgottenPasswordAnswerPacket( const int nClient, const EAnswer _eAnswer )
 		: CNetPacket( nClient ), eAnswer( _eAnswer ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // packets for internal use!
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckConnectPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CCheckConnectPacket )
@@ -73,7 +73,7 @@ public:
 	CCheckConnectPacket() { }
 	CCheckConnectPacket( const __int64 _nNumber ) : nNumber( _nNumber ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckConnectAnswerPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CCheckConnectAnswerPacket )
@@ -96,4 +96,4 @@ public:
 			eConnectType( _eConnectType ), szNick( _szNick ), szPassword( _szPassword ),
 			szCDKey( _szCDKey ), szEmail( _szEmail ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

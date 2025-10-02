@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
 #include "CameraBasicMouseMutator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCamera
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static inline float CyclicClamp( const float fValue, const float fMin, const float fMax )
 {
 	if ( fValue < fMin )
@@ -12,7 +12,7 @@ static inline float CyclicClamp( const float fValue, const float fMin, const flo
 	else
 		return fMin + fmod( fValue - fMin, fMax - fMin );
 } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera )
 {
 	fTimeDiff *= 0.001f;
@@ -41,7 +41,7 @@ float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float f
 	else
 		return fCurrValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCameraBasicMouseMutator::CCameraBasicMouseMutator()
 	:	vAnchor( VNULL3 ),
 	sliderFwd( "camera_forward" ),
@@ -70,14 +70,14 @@ CCameraBasicMouseMutator::CCameraBasicMouseMutator()
 	bAutoPositioning = NGlobal::GetVar( "disable_auto_camera", 0 ) == 0;
 	bWasUpdated = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::ResetToDefault()
 {
 	fDistance = distanceLimit.fAve;
 	fPitch = pitchLimit.fAve + ToRadian( 180.0f );
 	fYaw = yawLimit.fAve;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits )
 {
 	switch ( eLimitsType ) 
@@ -124,7 +124,7 @@ void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::GetLimits( const NCamera::ELimitsType eLimitsType, NCamera::SCameraLimits *pLimits )
 {
 	switch ( eLimitsType )
@@ -166,18 +166,18 @@ void CCameraBasicMouseMutator::GetLimits( const NCamera::ELimitsType eLimitsType
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::SetAnchorLimits( const CTRect<float> &vLimits )
 {
 	rcAnchorLimit = vLimits;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::SwitchAutoPositioning( const bool bAllowAutoPositioning )
 { 
 	if ( NGlobal::GetVar( "disable_auto_camera", 0 ) == 0 )
 		bAutoPositioning = bAllowAutoPositioning; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::SwitchManualScrolling( const string &szLocker, const bool bManualOn )
 {
 	if ( bManualOn )
@@ -185,7 +185,7 @@ void CCameraBasicMouseMutator::SwitchManualScrolling( const string &szLocker, co
 	else
 		manualLockers[szLocker] = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CCameraBasicMouseMutator::GetListener() const
 {
 	const float fScreenWidth = fDistance * tan( ToRadian(fFOV/2.0f) );
@@ -199,7 +199,7 @@ const CVec3 CCameraBasicMouseMutator::GetListener() const
 	vPos.z = fHeight / 2;
 	return vPos;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraBasicMouseMutator::ProcessEvent( const SGameMessage &msg )
 {
 	if ( CGMORegContainer::ProcessEvent( msg, this ) == false )
@@ -217,7 +217,7 @@ bool CCameraBasicMouseMutator::ProcessEvent( const SGameMessage &msg )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraBasicMouseMutator::ClearSliders()
 {
 	sliderMousePitch.GetDelta();
@@ -231,7 +231,7 @@ void CCameraBasicMouseMutator::ClearSliders()
 	sliderMouseZoom.GetDelta();
 	sliderZoom.GetDelta();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCameraBasicMouseMutator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CCameraPlacement *>(this) );
@@ -256,6 +256,6 @@ int CCameraBasicMouseMutator::operator&( IBinSaver &saver )
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

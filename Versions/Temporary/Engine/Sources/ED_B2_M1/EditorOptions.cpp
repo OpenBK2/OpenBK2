@@ -12,12 +12,12 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NEditorOptions
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char MAIN_EDITOR_OPTIONS_TYPE_NAME[] = "EditorOptions";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** editor options manipulator
@@ -25,13 +25,13 @@ static const char MAIN_EDITOR_OPTIONS_TYPE_NAME[] = "EditorOptions";
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IManipulator* CreateOptionsManipulator()
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	return Singleton<IResourceManager>()->CreateObjectManipulator( MAIN_EDITOR_OPTIONS_TYPE_NAME, pUserData->dbidMainOptions );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** data retrieving
@@ -39,7 +39,7 @@ IManipulator* CreateOptionsManipulator()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int FindBySeason( const string &szDesiredSeason, const string &szName, IManipulator *pOptsMan )
 {
 	int nAmount = 0;
@@ -61,7 +61,7 @@ int FindBySeason( const string &szDesiredSeason, const string &szName, IManipula
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 pair<int, int> FindBySeasonAndTime( const string &szDesiredSeason, const string &szDesiredTime, const string &szName, IManipulator *pOptsMan )
 {
 	const int nSeason = FindBySeason( szDesiredSeason, szName, pOptsMan );
@@ -88,7 +88,7 @@ pair<int, int> FindBySeasonAndTime( const string &szDesiredSeason, const string 
 	}
 	return pair<int, int>( nSeason, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 bool GetFromOptionsForSeason( TYPE *pRes, const string &szPreName, const string &szPostName, 
 															const string &szDesiredSeason, IManipulator *pOptsMan )
@@ -100,7 +100,7 @@ bool GetFromOptionsForSeason( TYPE *pRes, const string &szPreName, const string 
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const string &szPreName, const string &szPostName, 
 														         const string &szDesiredSeason, const string &szDesiredTime, 
@@ -113,7 +113,7 @@ bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const string &szPreName, const 
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 bool GetFromOptions( TYPE *pRes, const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
@@ -127,7 +127,7 @@ bool GetFromOptions( TYPE *pRes, const string &szPreName, const string &szPostNa
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 bool GetFromOptions( TYPE *pRes, const string &szPreName, const string &szPostName, 
 										 const string &szDesiredSeason, const string &szDesiredTime )
@@ -142,7 +142,7 @@ bool GetFromOptions( TYPE *pRes, const string &szPreName, const string &szPostNa
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetStringFromOptions( const string &szPreName, const string &szPostName, 
 														 const string &szDesiredSeason, const string &szDesiredDayTime )
 {
@@ -151,7 +151,7 @@ string GetStringFromOptions( const string &szPreName, const string &szPostName,
 		return szValue;
 	return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetStringFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
 	string szValue;
@@ -159,7 +159,7 @@ string GetStringFromOptions( const string &szPreName, const string &szPostName, 
 		return szValue;
 	return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetIntFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
 	int nValue;
@@ -167,7 +167,7 @@ int GetIntFromOptions( const string &szPreName, const string &szPostName, const 
 		return nValue;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float GetFloatFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
 	float fValue;
@@ -175,7 +175,7 @@ float GetFloatFromOptions( const string &szPreName, const string &szPostName, co
 		return fValue;
 	return 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 GetVec2FromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
 	CVec2 vValue;
@@ -183,7 +183,7 @@ CVec2 GetVec2FromOptions( const string &szPreName, const string &szPostName, con
 		return vValue;
 	return VNULL2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 GetVec3FromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason )
 {
 	CVec3 vValue;
@@ -191,7 +191,7 @@ CVec3 GetVec3FromOptions( const string &szPreName, const string &szPostName, con
 		return vValue;
 	return VNULL3;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** MapInfo data
@@ -199,37 +199,37 @@ CVec3 GetVec3FromOptions( const string &szPreName, const string &szPostName, con
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetPeakMaskTexture( const string &szDesiredSeason )
 {
 	return GetStringFromOptions( "MapInfo", "PeakMask", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetTileset( const string &szDesiredSeason )
 {
 	return GetStringFromOptions( "MapInfo", "Tileset", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetOceanWater( const string &szDesiredSeason )
 {
 	return GetStringFromOptions( "MapInfo", "OceanWater", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetMinimap( const string &szDesiredSeason )
 {
 	return GetStringFromOptions( "MapInfo", "Minimap", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetLight( const string &szDesiredSeason, const string &szDayTime )
 {
 	return GetStringFromOptions( "MapInfo", "Light", szDesiredSeason, szDayTime );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetPreLight( const string &szDesiredSeason, const string &szDayTime )
 {
 	return GetStringFromOptions( "MapInfo", "PreLight", szDesiredSeason, szDayTime );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** backgrounds
@@ -237,17 +237,17 @@ string GetPreLight( const string &szDesiredSeason, const string &szDayTime )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetBgMap( const string &szDesiredSeason )
 {
 	return GetStringFromOptions( "Backgrounds", "Map", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 GetBgMapAnchor( const string &szDesiredSeason )
 {
 	return GetVec3FromOptions( "Backgrounds", "Anchor", szDesiredSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetMiscString( const string &szName )
 {
 	CPtr<IManipulator> pMan = CreateOptionsManipulator();
@@ -257,6 +257,6 @@ string GetMiscString( const string &szName )
 	else
 		return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

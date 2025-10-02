@@ -1,25 +1,25 @@
 #include "StdAfx.h"
 //#include "Commands.h"
 #include "LogStream.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int nID = 0;
 bool bConsoleUpdated = false;
 list<SConsoleLine> consoleLines;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream csSystem( CONSOLE_STREAM_CONSOLE );	// Ответы на консольные комманды
 CLogStream csScript( CONSOLE_STREAM_CONSOLE );//CONSOLE_STREAM_SCRIPT );		// сообщения скрипта
 // максимальное кол-во строк в консоле
 const int CONSOLE_MAX_SIZE = 256;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Console stream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const bool &bVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += bVal ? L"<green>true<white>" : L"<red>false<white>";
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const int &nVal )
 {
 	wchar_t wszBuffer[1024];
@@ -29,7 +29,7 @@ CLogStream& CLogStream::operator<< ( const int &nVal )
 	wsStreamBuffer = wsStreamBuffer + wszBuffer;
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const long &lVal )
 {
 	wchar_t wszBuffer[1024];
@@ -39,7 +39,7 @@ CLogStream& CLogStream::operator<< ( const long &lVal )
 	wsStreamBuffer = wsStreamBuffer + wszBuffer;
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const double &dVal )
 {
 	wchar_t wszBuffer[1024];
@@ -49,7 +49,7 @@ CLogStream& CLogStream::operator<< ( const double &dVal )
 	wsStreamBuffer = wsStreamBuffer + wszBuffer;
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const char* szText )
 {
 	int nLen = 0;
@@ -66,7 +66,7 @@ CLogStream& CLogStream::operator<< ( const char* szText )
 
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const wchar_t* szText ) 
 {
 	bConsoleUpdated = true;
@@ -75,7 +75,7 @@ CLogStream& CLogStream::operator<< ( const wchar_t* szText )
 
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const wstring &szText )
 {
 	bConsoleUpdated = true;
@@ -102,7 +102,7 @@ CLogStream& CLogStream::operator<< ( const wstring &szText )
 	}
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( const EConsoleColor &eColor )
 {
 	switch( eColor )
@@ -140,13 +140,13 @@ CLogStream& CLogStream::operator<< ( const EConsoleColor &eColor )
 	}
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLogStream& CLogStream::operator<< ( CLogStream& (*Func)( CLogStream& csStream ) )
 {
 	return Func( *this );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //START_REGISTER(LogStream)
 //	REGISTER_VAR_EX( "ui_messages", NGlobal::VarBoolHandler, &bConsoleMessages, 1, true )
 //FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

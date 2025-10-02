@@ -19,12 +19,12 @@
 #undef LADDER_TEST_LOG
 
 const int TESTER_CREATION_TIMEOUT = 2000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
 processCmdsFuncs[cmd] = &CTestClient::##FuncName;
 
 void ForcePacketRegistration(); // For too smart linker
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
 {
 	pCommands = _pCommands;
@@ -90,7 +90,7 @@ CTestClient::CTestClient( CCommands *_pCommands, const string &szCfgFile )
 
 	ForcePacketRegistration();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLogin( const SCommand &cmd )
 {
 	pServerClient = new CServerClient( szIP.c_str(), nNetVersion, nPort, 30 );
@@ -106,7 +106,7 @@ void CTestClient::CommandLogin( const SCommand &cmd )
 	pTestClientProcessor->SetServerClient( pServerClient );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandRegister( const SCommand &cmd )
 {
 	pServerClient = new CServerClient( szIP.c_str(), nNetVersion, nPort, 30 );
@@ -122,7 +122,7 @@ void CTestClient::CommandRegister( const SCommand &cmd )
 
 	pTestClientProcessor->SetServerClient( pServerClient );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatLobby( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -133,7 +133,7 @@ void CTestClient::CommandChatLobby( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatPrivate( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -144,7 +144,7 @@ void CTestClient::CommandChatPrivate( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandAFK( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -155,7 +155,7 @@ void CTestClient::CommandAFK( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatJoin( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -166,7 +166,7 @@ void CTestClient::CommandChatJoin( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatChannels( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -178,7 +178,7 @@ void CTestClient::CommandChatChannels( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatIgnore( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -192,7 +192,7 @@ void CTestClient::CommandChatIgnore( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatFriend( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -206,7 +206,7 @@ void CTestClient::CommandChatFriend( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandChatWhere( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -217,7 +217,7 @@ void CTestClient::CommandChatWhere( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandEnterLobby( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -235,7 +235,7 @@ void CTestClient::CommandEnterLobby( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLeaveLobby( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -246,7 +246,7 @@ void CTestClient::CommandLeaveLobby( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandClientState( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -257,7 +257,7 @@ void CTestClient::CommandClientState( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandGetLobbyClients( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -265,7 +265,7 @@ void CTestClient::CommandGetLobbyClients( const SCommand &cmd )
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "not connected yet\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandCreateGame( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -274,7 +274,7 @@ void CTestClient::CommandCreateGame( const SCommand &cmd )
 		consoleCommandPackets.push_back( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandKillGame( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -285,7 +285,7 @@ void CTestClient::CommandKillGame( const SCommand &cmd )
 			consoleCommandPackets.push_back( new CKillGamePacket( 0, cmd.GetInt( 0 ) ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandSendGameInfo( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -299,25 +299,25 @@ void CTestClient::CommandSendGameInfo( const SCommand &cmd )
 		consoleCommandPackets.push_back( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandGetLobbyGames( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CGetLobbyGamesPacket( 0, 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLeaveGame( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CLeaveGamePacket( 0, 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandConnectGame( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CConnectGamePacket( 0, cmd.GetInt(0), cmd.GetStr(1) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandGameBroadcastMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -326,7 +326,7 @@ void CTestClient::CommandGameBroadcastMsg( const SCommand &cmd )
 		pServerClient->SendGamePacket( pPacket, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandGameDirectMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
@@ -336,55 +336,55 @@ void CTestClient::CommandGameDirectMsg( const SCommand &cmd )
 		pServerClient->SendGamePacket( pPacket, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandGameKickClient( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CGameKickClient( 0, 0, cmd.GetInt( 0 ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandDirectMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
 		pServerClient->SendPacket( new CTestDirectPacket( cmd.GetInt( 0 ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandShowGameClients( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CTestShowGameClients() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandSendSpecGameInfo( const SCommand &cmd )
 {
 	if ( pServerClient )
 		consoleCommandPackets.push_back( new CTestSpecGameInfo( cmd.GetStr( 0 ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandPauseServerConn( const SCommand &cmd )
 {
 	if ( pServerClient )
 		pServerClient->TogglePauseServerConnection( cmd.GetInt( 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandPauseAccept( const SCommand &cmd )
 {
 	if ( pServerClient )
 		pServerClient->TogglePauseAcceptGamers( cmd.GetInt( 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandPauseConnect( const SCommand &cmd )
 {
 	if ( pServerClient )
 		pServerClient->TogglePauseConnectGamer( cmd.GetInt( 0 ), cmd.GetInt( 1 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandPauseClient( const SCommand &cmd )
 {
 	if ( pServerClient )
 		pServerClient->TogglePause( cmd.GetInt( 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RandomizeList( list<int> *pList )
 {
 	hash_map< int, int > tempHash;
@@ -408,7 +408,7 @@ void RandomizeList( list<int> *pList )
 		pList->push_back( tempHash[ i ] );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLadderTest( const SCommand &cmd )
 {
 	if ( !pServerClient )
@@ -453,10 +453,10 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 
 	pServerClient->SendPacket( pPacketToSend );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern list<int> ladderGameTeam1;
 extern list<int> ladderGameTeam2;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLadderWin( const SCommand &cmd )
 {
 	if ( !pServerClient )
@@ -500,13 +500,13 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandLadderInfo( const SCommand &cmd )
 {
 	CNetPacket *pPacket = new CLadderStatisticsRequestPacket( 0, cmd.GetStr( 0 ), true );
 	pServerClient->SendPacket( pPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandForgotPassword( const SCommand &cmd )
 {
 	pServerClient = new CServerClient( szIP.c_str(), nNetVersion, nPort, 30 );
@@ -521,7 +521,7 @@ void CTestClient::CommandForgotPassword( const SCommand &cmd )
 
 	pTestClientProcessor->SetServerClient( pServerClient );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandMultiTestServer( const SCommand &cmd )
 {
 	testers.clear();
@@ -529,7 +529,7 @@ void CTestClient::CommandMultiTestServer( const SCommand &cmd )
 	const int nNumberOfTesters = NStr::ToInt( cmd.params[0] );
 	testers.resize( nNumberOfTesters, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::CommandPing( const SCommand &cmd )
 {
 	if ( !pServerClient )
@@ -542,7 +542,7 @@ void CTestClient::CommandPing( const SCommand &cmd )
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Ping sent.\n"	);
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::ProcessCommands()
 {
 	SCommand cmd;
@@ -567,7 +567,7 @@ void CTestClient::ProcessCommands()
 		pTestClientProcessor->ProcessPacket( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClient::Segment()
 {
 	ProcessCommands();
@@ -606,5 +606,5 @@ void CTestClient::Segment()
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #undef REGISTER_CMD_FUNC

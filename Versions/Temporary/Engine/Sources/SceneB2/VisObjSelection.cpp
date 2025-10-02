@@ -7,9 +7,9 @@
 #include "VisObjDesc.h"
 #include "VisObjSelection.h"
 #include "../3DMotor/Fader.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float DEFAULT_SELECTION_SIZE = 1.5f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjSelectionInfo::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -25,7 +25,7 @@ void CVisObjSelectionInfo::Recalc()
 	pValue->AssignFast( &objData );
 	bUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjSelectionInfo::SetInfo( const SSelectionInfo &_info ) 
 { 
 	if ( info == _info )
@@ -33,7 +33,7 @@ void CVisObjSelectionInfo::SetInfo( const SSelectionInfo &_info )
 	info = _info;
 	ForceUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SelectObject( const int nID, const CVec3 &vPos, const float fSelScale, const NDb::ESelectionType eSelType )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -55,7 +55,7 @@ void CScene::SelectObject( const int nID, const CVec3 &vPos, const float fSelSca
 	SVisObjSelection &selection = pVOD->selection;	
 	MakeSelection( selection, pVOD, vPos, fSelScale, eSelType, -1.0f, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD, const CVec3 &vPos, 
 	float fSelScale, NDb::ESelectionType eSelType, float fDeltaTime, bool bOn )
 {
@@ -173,7 +173,7 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 		selection.selHolder.pPatch->ForceUpdate();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UpdateSelectionHandlers()
 {
 	NTimer::STime timeCurrent = GetAbsTimer()->GetValue();
@@ -219,7 +219,7 @@ void CScene::UpdateSelectionHandlers()
 		data[eScene]->selectionHandlers.erase( obsoletes[i] );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UnselectObject( const int nID )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -231,7 +231,7 @@ void CScene::UnselectObject( const int nID )
 	pVOD->bSelected = false;
 	pVOD->selection.selHolder.pHolder = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType, 
 	float fFadeInTime, float fFadeOutTime )
 {
@@ -253,16 +253,16 @@ int CScene::AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESel
 
 	return pHandler->nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveSelection( int nID )
 {
 	data[eScene]->selectionHandlers.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ClearSelection()
 {
 	data[eScene]->selectionHandlers.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1311E300, CVisObjSelectionInfo );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

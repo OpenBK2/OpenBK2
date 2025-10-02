@@ -9,16 +9,16 @@
 #include "GCombiner.h"
 #include "..\3DLib\GGeometry.h"
 #include "GRenderExecute.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 const int N_RESERVE_DEPTH_BUFFER = 4096;
 const int N_PARTICLES_PER_EFFECT_LG2 = 17;
 const unsigned int N_PARTICLE_OVER_FLAG = 0x80000000;
 const unsigned int N_OVER_SRC_INFO = N_PARTICLE_OVER_FLAG >> N_PARTICLES_PER_EFFECT_LG2;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTransparentRenderer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize, 
 	bool _bUseFakeLM, DWORD _dwLitColor, DWORD _dwNormalColor, const SPerVertexLightState *_pLightState )
 	: nTotalParticles(0), nLitParticles(0), dwLitColor(_dwLitColor), dwNormalColor(_dwNormalColor),
@@ -54,7 +54,7 @@ CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTP
 	}
 	NGfx::CalcCompactVector( &vNormal, -orientation.vBasic[2] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STransparentInfo* CTransparentRenderer::AddFragment() 
 { 
 	nInfoIdx += 1 << N_PARTICLES_PER_EFFECT_LG2;
@@ -67,7 +67,7 @@ STransparentInfo* CTransparentRenderer::AddFragment()
 	infoStartIdx.push_back( nElementPtr );
 	return &*infos.insert( infos.end() ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::AllocParticlesWriteBuffer()
 {
 	if ( bTnLMode )
@@ -77,7 +77,7 @@ void CTransparentRenderer::AllocParticlesWriteBuffer()
 	pParticlesTrilist = new CParticlesTriList;
 	nTargetParticle = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::FinishParticles() 
 {
 	if ( IsValid(pParticlesGeometry) )
@@ -87,7 +87,7 @@ void CTransparentRenderer::FinishParticles()
 	pShaderParticlesGeometry = 0;
 	pParticlesTrilist = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::FinishParticlesPiece()
 {
 	int nParticles = nTargetParticle - nPieceStart;
@@ -101,7 +101,7 @@ void CTransparentRenderer::FinishParticlesPiece()
 			nParticles, bv );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::StartParticlesPiece()
 {
 	STransparentInfo *pWriteParticles = AddFragment();
@@ -113,7 +113,7 @@ void CTransparentRenderer::StartParticlesPiece()
 	int nEffectParticle = nTargetParticle - nTargetStart;
 	pParticlesGeometry->Start( pCurrentEffect, nEffectParticle, currentEffectBV, *pLMAlloc, dwCurrentParticleColor );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv, 
 	IReportParticlesGeometry *pStore ) 
 {
@@ -154,7 +154,7 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, co
 		nLitParticles += nTargetParticle - nTargetStart;
 	bc.Add( bv );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 	float fDepth )
 {
@@ -172,7 +172,7 @@ void CTransparentRenderer::AddParticleOverflow( const CVec3 vPos[4], DWORD dwCol
 
 	StartParticlesPiece();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::AddParticle( const CVec3 vPos[4], DWORD dwColor, const STransparentTexturePlace &tPlace,
 	float fDepth )
 {
@@ -192,7 +192,7 @@ void CTransparentRenderer::AddParticle( const CVec3 vPos[4], DWORD dwColor, cons
 	else
 		AddParticleOverflow( vPos, dwColor, tPlace, fDepth );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::SampleWarFog( const vector<CVec3> &vPos, vector<float> *pRes )
 {
 	if ( !pLightState )
@@ -202,7 +202,7 @@ void CTransparentRenderer::SampleWarFog( const vector<CVec3> &vPos, vector<float
 	}
 	return NGScene::SampleWarFog( vPos, *pLightState, pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::AddElement( SRenderGeometryInfo *pGeometry, IMaterial *pMaterial, const SPerPartVariables &vars, int nIndex, float fDepth )
 {
 	STransparentObjectInfo *pObjInfo = objInfoPool.Alloc();
@@ -218,13 +218,13 @@ void CTransparentRenderer::AddElement( SRenderGeometryInfo *pGeometry, IMaterial
 	sourcePtrs[ nElementPtr ] = nInfoIdx;
 	++nElementPtr;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DoRadixSort( const vector<float> &src, vector<int> *pRes )
 {
 	if ( !src.empty() )
     ::DoRadixSort( &src[0], src.size(), pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetObjectEffect( const STransparentRenderContext &trc, const SMaterialParams &material )
 {
 	if ( trc.renderPath == RP_SHOWOVERDRAW )
@@ -237,7 +237,7 @@ static void SetObjectEffect( const STransparentRenderContext &trc, const SMateri
 	}
 	pMaterial->SetTransparentRenderMode( trc.pRC, material.vars, trc.lightInfo, trc.pRPC );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetParticlesEffect( const STransparentRenderContext &trc )
 {
 	if ( trc.renderPath == RP_SHOWOVERDRAW )
@@ -256,7 +256,7 @@ static void SetParticlesEffect( const STransparentRenderContext &trc )
 		trc.pRC->SetEffect( &eff );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTransform, IVBCombiner *_pCombiner, int nPart, const NGfx::STriangleList &sList )
 {
 	CDGPtr<IVBCombiner> pCombiner = _pCombiner;
@@ -309,7 +309,7 @@ static void ReorderTransparent( vector<STriangle> *pRet, const SFBTransform &sTr
 		(*pRet)[nTemp] = sList.pTri[nIndex];
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_UNUSED_SRC_PTR = 0xffffffff & ~N_OVER_SRC_INFO;
 class CPreciseTranspRender
 {
@@ -420,7 +420,7 @@ public:
 		pRC->Flush();
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCmpFragments
 {
 	const vector<STransparentInfo> &infos;
@@ -430,7 +430,7 @@ struct SCmpFragments
 		return infos[n1].fDepth < infos[n2].fDepth;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 {
 	NGfx::CRenderContext &rc = *trc.pRC;
@@ -521,7 +521,7 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransparentRenderer::Render( const STransparentRenderContext &trc )
 {
 	FinishParticles();
@@ -534,6 +534,6 @@ void CTransparentRenderer::Render( const STransparentRenderContext &trc )
 	RealRender( trc );
 	infoStartIdx.pop_back();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;

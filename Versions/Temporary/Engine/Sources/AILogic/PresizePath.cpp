@@ -4,14 +4,14 @@
 #include "TankpitPath.h"
 #include "Technics.h"
 #include "..\Common_RTS_AI\StandartSmoothMechPath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4C4, CPresizePath );
 REGISTER_SAVELOAD_CLASS( 0x11123400, CMechUnitRestOnBoardPath);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CPresizePath															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir )
 :	vEndPoint( vEndPoint ), vEndDir( vEndDir ), eState( EPPS_APPROACH_BY_STANDART ), fSpeedLen( 0.0f ),
 	pUnit( _pUnit )
@@ -29,7 +29,7 @@ CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint,
 	pPathStandart->SetOwner( pUnit );
 */
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPresizePath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 {
 	pUnit =_pUnit;
@@ -39,7 +39,7 @@ bool CPresizePath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPresizePath::InitByFormationPath( CFormation *pFormation, CBasePathUnit *_pUnit )
 {
 	pUnit = _pUnit;
@@ -48,7 +48,7 @@ bool CPresizePath::InitByFormationPath( CFormation *pFormation, CBasePathUnit *_
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPresizePath::Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIMap )
 {
 	CPtr<IMemento> p = pMemento;
@@ -58,12 +58,12 @@ bool CPresizePath::Init( IMemento *pMemento, CBasePathUnit *_pUnit, CAIMap *pAIM
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPresizePath::IsFinished() const
 {
 	return EPPS_FINISHED == eState;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPresizePath::Segment( const NTimer::STime timeDiff )
 {
 	// CRAP{ unknown bug
@@ -114,13 +114,13 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 	}
 //	return CVec3( pUnit->GetCenter(), 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPresizePath::Stop()
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		pPathStandart->Stop();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 float& CPresizePath::GetSpeedLen()
 { 
@@ -131,7 +131,7 @@ float& CPresizePath::GetSpeedLen()
 	return fSpeedLen;
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 void CPresizePath::NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) 
 {
@@ -139,7 +139,7 @@ void CPresizePath::NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const flo
 		pPathStandart->NotifyAboutClosestThreat( pCollUnit, fDist ) ;
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 void CPresizePath::SlowDown()
 {
@@ -147,21 +147,21 @@ void CPresizePath::SlowDown()
 		pPathStandart->SlowDown();
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CPresizePath::CanGoBackward() const 
 { 
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->CanGoBackward();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CPresizePath::CanGoForward() const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->CanGoForward();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 void CPresizePath::GetNextTiles( list<SVector> *pTiles ) 
 {
@@ -169,21 +169,21 @@ void CPresizePath::GetNextTiles( list<SVector> *pTiles )
 		pPathStandart->GetNextTiles( pTiles ) ;
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CPresizePath::PeekPathPoint( const int nToShift ) const 
 { 
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->PeekPathPoint( nToShift );
 	return VNULL2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMemento* CPresizePath::CreateMemento() const 
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->CreateMemento();
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 void CPresizePath::SetOwner( CBasePathUnit *_pUnit )
 { 
@@ -195,17 +195,17 @@ void CPresizePath::SetOwner( CBasePathUnit *_pUnit )
 		pPathCheat->SetOwner( pUnit );
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CMechUnitRestOnBoardPath															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMechUnitRestOnBoardPath::CMechUnitRestOnBoardPath( CBasePathUnit *_pUnit, CMilitaryCar *_pTransport )
 : pUnit( _pUnit ), pTransport( _pTransport ), fSpeedLen( 0.0f )
 {
 	vFormerPlacement = vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit*>( pUnit ), 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRestOnBoardPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( pUnit )
@@ -217,7 +217,7 @@ void CMechUnitRestOnBoardPath::Segment( const NTimer::STime timeDiff )
 		pUnit->SetCenter( vCurrentPlacement, true );			// Set unit to where it belongs
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRestOnBoardPath::Advance()
 {
 	//CRAP{ UNTILL 
@@ -231,17 +231,17 @@ void CMechUnitRestOnBoardPath::Advance()
 	}
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CMechUnitRestOnBoardPath::GetPoint( NTimer::STime timeDiff )
 {
 	return vCurrentPlacement;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRestOnBoardPath::GetSpeed3( CVec3 *vSpeed ) const
 {
 	*vSpeed = ( vCurrentPlacement - vFormerPlacement ) / SConsts::AI_SEGMENT_DURATION;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRestOnBoardPath::OnSerialize( IBinSaver &saver )
 {
   SerializeBasePathUnit( saver, 127, &pUnit );

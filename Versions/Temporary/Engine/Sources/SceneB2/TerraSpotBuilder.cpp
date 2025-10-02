@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_VERTICES_NUM_ALLOC 256
 #define DEF_TRIANGLES_NUM_ALLOC 256
 #define DEF_TERRASPOT_HEIGHT 0.1f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AddUniqueTerraSpotVertex( vector<NGScene::SVertex> &arr, const CVec3 &vert, const int nTileX, const int nTileY,
 																		 const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vNorm4,
 																		 const CVec2 &vTex, NGScene::SVertex &templ,
@@ -26,7 +26,7 @@ inline int AddUniqueTerraSpotVertex( vector<NGScene::SVertex> &arr, const CVec3 
 	arr.push_back( templ );
 	return ( arr.size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::STerrainSpotInstance *pInstance )
 {
 	if ( pInstance->pDescriptor == 0 )
@@ -214,7 +214,7 @@ void CTerraGen::CreateTerraSpotGfx( STerrainInfo::STerraSpot *pSpot, const NDb::
 	if ( pGfxObserver )
 		pGfxObserver->AddTerraSpot( &gfxInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddTerraSpot( const NDb::STerrainSpotInstance *pInstance )
 {
 	NI_ASSERT( pInstance->points.size() == 4, "TerraSpot must contain 4 points for building" );
@@ -229,7 +229,7 @@ void CTerraGen::AddTerraSpot( const NDb::STerrainSpotInstance *pInstance )
 
 	//TIME_STAT_FINISH( CTerraGen__AddTerraSpot )
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddAllTerraSpots()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -239,7 +239,7 @@ void CTerraGen::AddAllTerraSpots()
 		AddTerraSpot( &(*it) );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveAllTerraSpots()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -253,7 +253,7 @@ void CTerraGen::RemoveAllTerraSpots()
 	terrainGfxInfo.terraspots.clear();
 	terrainInfo.terraspots.clear();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateTerraSpot( const int nSpotID )
 {
 	RemoveTerraSpot( nSpotID );
@@ -267,7 +267,7 @@ void CTerraGen::UpdateTerraSpot( const int nSpotID )
 	}
 	NI_ASSERT( false, "Updated TerraSpot is not exists" );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveTerraSpot( const int nSpotID )
 {
 	for ( list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
@@ -291,7 +291,7 @@ void CTerraGen::RemoveTerraSpot( const int nSpotID )
 	if ( pGfxObserver )
 		pGfxObserver->RemoveTerraSpot( nSpotID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::STerrainSpotInstance* CTerraGen::FindTerraSpot( int nID ) const
 {
 	for ( vector<NDb::STerrainSpotInstance>::const_iterator it = pDesc->spots.begin(); it != pDesc->spots.end(); ++it )
@@ -301,4 +301,4 @@ const NDb::STerrainSpotInstance* CTerraGen::FindTerraSpot( int nID ) const
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -20,13 +20,13 @@ enum EMusicSystemVolume
 
 	_EMS_COUNT,
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EStreamType
 {
 	EST_MUSIC,
 	EST_VOICE,
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // music has 2 streams: MUSIC & voice. "MUSIC STREAM" generally is music. 
 // "VOICE STREAM" is generally voice over and some short streaming sounds.
 // MUSIC STREAM is running always with settings, set in MapMusic structure. It has pauses and fade in/fade out.
@@ -59,5 +59,5 @@ interface IMusicSystem : public CObjectBase
 	// Need to call after reseting timer
 	virtual void OnResetTimer() = 0;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SOUND_EXPORT IMusicSystem * CreateMusicSystem();

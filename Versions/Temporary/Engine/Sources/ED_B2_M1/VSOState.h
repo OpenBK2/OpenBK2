@@ -11,7 +11,7 @@
 #include "..\MapEditorLib\MultiInputState.h"
 #include "MapInfoStoreInputState.h"
 #include "..\B2_M1_Terrain\DBVSO.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NExtraDraw
 {
 	enum
@@ -33,7 +33,7 @@ namespace NExtraDraw
 
 	void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, UINT uMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVSOSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -57,7 +57,7 @@ class CVSOSelectState : public CDefaultInputState
 	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVSOEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -85,7 +85,7 @@ class CVSOEditState : public CDefaultInputState
 	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVSOAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -116,7 +116,7 @@ class CVSOAddState : public CDefaultInputState
 	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVSOState : public CMultiInputState, public ICommandHandler
 {
 private:
@@ -312,5 +312,5 @@ public:
 	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__VSO_STATE__)

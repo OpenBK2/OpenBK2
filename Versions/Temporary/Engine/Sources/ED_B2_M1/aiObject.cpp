@@ -9,12 +9,12 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAI
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CEdgesInfo
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SelectNonZero( const vector<int> & count )
 {
 	for ( int i = 0; i < count.size(); ++i )
@@ -22,7 +22,7 @@ int SelectNonZero( const vector<int> & count )
 			return i;
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CountEdge( vector<int> *pRes, int n )
 {
 	if ( n & 0x8000 )
@@ -30,7 +30,7 @@ inline void CountEdge( vector<int> *pRes, int n )
 	else
 		(*pRes)[n&0x7fff]++;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount, vector<STriangle> *pTris)
 {
 	WORD i1, i2, i3;
@@ -62,7 +62,7 @@ int PushTri( const STriangle &t, const vector<SEdge> &edges, vector<int> *pCount
 		return t.i3 & 0x7fff;
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEdgesInfo::IsClosed() const
 {
 	vector<int> count;
@@ -79,7 +79,7 @@ bool CEdgesInfo::IsClosed() const
 		bRes &= ( count[k] == 0 );
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEdgesInfo::BuildClosedMeshes( vector<vector<STriangle> > *pMeshes ) const
 {
 	vector<vector<STriangle> > &meshes = *pMeshes;
@@ -137,7 +137,7 @@ void CEdgesInfo::BuildClosedMeshes( vector<vector<STriangle> > *pMeshes ) const
 	}
 	ASSERT( SelectNonZero( count ) == -1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
 {
 	ASSERT( pRes != 0 );
@@ -164,7 +164,7 @@ void CEdgesInfo::BuildTriangleList( vector<STriangle> *pRes ) const
 		(*pRes)[i] = STriangle( i1, i2, i3 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 WORD CEdgesInfo::InsertEdge( WORD i1, WORD i2, const vector<CVec3> &pts )
 {
 	for ( int i = 0; i < edges.size(); i++ )
@@ -207,7 +207,7 @@ WORD CEdgesInfo::InsertEdge( WORD i1, WORD i2, const vector<CVec3> &pts )
 	edges.push_back( edge );
 	return (edges.size() - 1) | f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEdgesInfo::GenerateEdgeList( const vector<STriangle> &tris, const vector<CVec3> &pts )
 {
 	for ( int i = 0; i < tris.size(); ++i )
@@ -221,9 +221,9 @@ void CEdgesInfo::GenerateEdgeList( const vector<STriangle> &tris, const vector<C
 			InsertEdge( t.i3, t.i1, pts ) ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGeometryInfo
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SPiece* CGeometryInfo::GetPiece( int nPieceID ) 
 { 
 	CPieceMap::iterator i = pieces.find( nPieceID );
@@ -256,7 +256,7 @@ void CGeometryInfo::AddPiece( int nPieceID, const vector<CVec3> &_points,
 	}*/
 	//ASSERT( !_bClosed || p.edges.IsClosed() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeometryInfo::CalcBound()
 {
 	SBoundCalcer b;
@@ -265,7 +265,7 @@ void CGeometryInfo::CalcBound()
 	
 	b.Make( &bound );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CGeometryInfo::PrecalcCollideInfo( bool bTerrain )
 {
 	CPieceMap::iterator i;
@@ -279,7 +279,7 @@ void CGeometryInfo::CalcBound()
 		GeneratePrecalcSpheres( &p.precalc, p.points, tris );
 	}
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CGeometryInfo::SetCollideInfo( const CPrecalcPieces &precalc )
 {
 	CPrecalcPieces::const_iterator it;
@@ -293,7 +293,7 @@ void CGeometryInfo::CalcBound()
 		p.precalc.push_back( it->second );
 	}
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size )
 {
 	vector<CVec3> &gpos = pRes->points;
@@ -324,6 +324,6 @@ void CGeometryInfo::CalcBound()
 	//
 	GenerateEdgeList( pRes, tris );
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
 using namespace NAI;

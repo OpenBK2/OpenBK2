@@ -14,7 +14,7 @@
 #include "../System/VFSOperations.h"
 
 extern CBasicShare<CDBID, CSoundSample> shareSoundSample;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NWin32Helper::CCriticalSection critSection;
 REGISTER_SAVELOAD_CLASS( 0x1107BC01, CSoundEngine );
 static float s_fDistanceFactor = 10.0f;
@@ -26,7 +26,7 @@ static float s_fRollofFactor = 0.3f;
 CPlayLog playLog;
 static const int SOUND_PLAY_LOG_SIZE = 1000;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayLog::ClearLog()
 {
 	log.clear();
@@ -34,12 +34,12 @@ void CPlayLog::ClearLog()
 	nCurPos = 0;
 	bLogIsFull = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayLog::CPlayLog()
 {
 	ClearLog();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayLog::Add( const string &szName, bool bLooped, int nStartPos )
 {
 	log[nCurPos].szName = szName;
@@ -50,7 +50,7 @@ void CPlayLog::Add( const string &szName, bool bLooped, int nStartPos )
 	bLogIsFull |= nCurPos == SOUND_PLAY_LOG_SIZE;
 	nCurPos %= SOUND_PLAY_LOG_SIZE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayLog::SaveToFile( const string &szFileName )
 {
 	const int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos + 1;
@@ -68,7 +68,7 @@ void CPlayLog::SaveToFile( const string &szFileName )
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 	operator&( *pSaver.GetPtr() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayLog::PlayFile( const string &szFileName, int nMaxSize )
 {
 	CFileStream stream( StrFmt( "%s.soundlog", szFileName.c_str() ), CFileStream::WIN_READ_ONLY );
@@ -117,7 +117,7 @@ void CPlayLog::PlayFile( const string &szFileName, int nMaxSize )
 
 #endif
 //DEBUG}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlayVisitor : public ISFXVisitor
 {
 	CSoundEngine *pSFX;
@@ -149,15 +149,15 @@ public:
 		return nChannel;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CPlayVisitor thePlayVisitor;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoundEngine::CSoundEngine() 
 : bInited( false ), bPaused( false ), bEnableSFX( true ), bEnableStreaming( true ), 
 bSoundCardPresent( false ), timeLastUpdate( -1 )
 {  
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::SearchDevices()
 {
 	if ( FSOUND_GetVersion() < FMOD_VERSION )
@@ -181,19 +181,19 @@ bool CSoundEngine::SearchDevices()
 	}
 	return ( nNumDrivers != 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::IsInitialized()
 {
 	return bInited;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CSoundEngine::QI( int nInterfaceTypeID )
 {
 	if ( nInterfaceTypeID == 0 ) 
 		return reinterpret_cast<CObjectBase*>( FSOUND_GetOutputHandle() );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels )
 {
 	if ( !SearchDevices() )
@@ -259,7 +259,7 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 	bInited = true;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoundEngine::~CSoundEngine()
 {
 	drivers.clear();
@@ -267,18 +267,18 @@ CSoundEngine::~CSoundEngine()
 	soundsMap.clear();
 	FSOUND_Close();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::SetDistanceFactor( float fFactor )
 {
 	FSOUND_3D_SetDistanceFactor( fFactor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::SetRolloffFactor( float fFactor )
 {
 	NI_VERIFY( (fFactor >= 0) && (fFactor <= 10), StrFmt("Rolloff factor (%g) must be in range [0..10]", fFactor), return );
 	FSOUND_3D_SetRolloffFactor( fFactor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTimer::STime timeDiff )
 {
 	if ( b3DMode )
@@ -314,18 +314,18 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 	if ( nNumChannels > 0 )
 		ClearChannels();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::MapSound( ISound *pSound, int nChannel )
 {
 	channelsMap.insert( pair<ISound*, int>( pSound, nChannel ) );
 	soundsMap.insert( pair<int, CPtr<ISound> >( nChannel, pSound ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::IsPaused()
 {
 	return bPaused;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::Pause( bool bPause )
 {
 	if ( bPaused != bPause ) 
@@ -338,7 +338,7 @@ bool CSoundEngine::Pause( bool bPause )
 	}
 	return bPause;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::ClearChannels()
 {
 	if ( bPaused )
@@ -367,7 +367,7 @@ void CSoundEngine::ClearChannels()
 		channelsMap.erase( pSound );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartPos )
 {
 	if ( pSound == 0 || !bEnableSFX )
@@ -407,12 +407,12 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 	
 	return nChannel;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::UpdateSample( ISound *pSound )
 {
 	checked_cast<CSFXSound*>( pSound )->Update( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::StopSample( ISound *pSound )
 {
 	CSoundChannelMap::iterator pos = channelsMap.find( pSound );
@@ -421,7 +421,7 @@ void CSoundEngine::StopSample( ISound *pSound )
 		StopChannel( pos->second );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSoundEngine::IsPlaying( ISound *pSound )
 {
 	if ( !pSound )
@@ -430,7 +430,7 @@ bool CSoundEngine::IsPlaying( ISound *pSound )
 	CSoundChannelMap::iterator pos = channelsMap.find( pSound );
 	return pos != channelsMap.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::StopChannel( int nChannel )
 {
  	if ( nChannel == -1 )
@@ -445,7 +445,7 @@ void CSoundEngine::StopChannel( int nChannel )
 		soundsMap.erase( pos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CSoundEngine::GetCurrentPosition( ISound * pSound )
 {
 	CSoundChannelMap::iterator pos = channelsMap.find( pSound );
@@ -456,7 +456,7 @@ unsigned int CSoundEngine::GetCurrentPosition( ISound * pSound )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::SetCurrentPosition( ISound * pSound, unsigned int pos )
 {
 	CSoundChannelMap::iterator it = channelsMap.find( pSound );
@@ -466,7 +466,7 @@ void CSoundEngine::SetCurrentPosition( ISound * pSound, unsigned int pos )
 		FSOUND_SetCurrentPosition( nChannel, pos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::Set3DMode( bool _b3DMode )
 {
 	b3DMode = _b3DMode;
@@ -478,7 +478,7 @@ void CSoundEngine::Set3DMode( bool _b3DMode )
 	}
 	ClearChannels();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoundEngine::ReEnableSounds()
 {
 	// turn all SFXes off
@@ -493,7 +493,7 @@ void CSoundEngine::ReEnableSounds()
 		channelsMap.clear();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSoundEngine::operator&( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
@@ -515,9 +515,9 @@ int CSoundEngine::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ISFX *CreateSoundEngine() { return new CSoundEngine(); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SoundParams( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
@@ -527,7 +527,7 @@ void SoundParams( const string &szID, const vector<wstring> &paramsSet, void *pC
 	FSOUND_3D_SetDopplerFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[1] ) ) );
 	FSOUND_3D_SetRolloffFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[2] ) ));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SaveSoundLog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
@@ -536,7 +536,7 @@ void SaveSoundLog( const string &szID, const vector<wstring> &paramsSet, void *p
 	playLog.SaveToFile( NStr::ToMBCS( paramsSet[0] ) );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaySoundLog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
@@ -550,14 +550,14 @@ void PlaySoundLog( const string &szID, const vector<wstring> &paramsSet, void *p
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(SFXParams)
 REGISTER_VAR_EX( "Sound.DistanceFactor", NGlobal::VarFloatHandler, &s_fDistanceFactor, 10.0f, STORAGE_USER );
 REGISTER_VAR_EX( "Sound.DopplerFactor", NGlobal::VarFloatHandler, &s_fDopplerFactor, 1.0f, STORAGE_USER );
 REGISTER_VAR_EX( "Sound.RollofFactor", NGlobal::VarFloatHandler, &s_fRollofFactor, 0.3f, STORAGE_USER );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_CMD( "SoundParams", SoundParams );
 REGISTER_CMD( "PlaySoundLog", PlaySoundLog );
 REGISTER_CMD( "SaveSoundLog", SaveSoundLog );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 FINISH_REGISTER

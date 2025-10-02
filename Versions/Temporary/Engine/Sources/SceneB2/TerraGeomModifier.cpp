@@ -2,13 +2,13 @@
 
 #include "GenTerrain.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int nDiffHeightsX1 = -1;
 static int nDiffHeightsY1 = -1;
 static int nDiffHeightsX2 = -1;
 static int nDiffHeightsY2 = -1;
 static CArray2D<float> diffHeights;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisTileY, bool bCenter,
 																						const CArray2D<float> &brush,
 																						const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
@@ -114,7 +114,7 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 		pScene->UpdateGrid( nFirstTileX, nFirstTileY, nLastTileX, nLastTileY );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs )
 {
 	if ( nDiffHeightsX1 != -1 )
@@ -212,7 +212,7 @@ void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CAr
 	nDiffHeightsX1 = nDiffHeightsY1 = nDiffHeightsX2 = nDiffHeightsY2 = -1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsBrushTrue( const int nX, const int nY, const CArray2D<float> &brush )
 {
 	if ( (nX >= 0) && (nX < brush.GetSizeX()) && (nY >= 0) && (nY < brush.GetSizeY()) )
@@ -222,7 +222,7 @@ static bool IsBrushTrue( const int nX, const int nY, const CArray2D<float> &brus
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 )
 {
 	for ( int g = nTileY1; g <= nTileY2; ++g )
@@ -238,7 +238,7 @@ void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const i
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAllObjectsInGeomModifyingArea()
 {
 	if ( vGeomModAreaMin.x == -1 )
@@ -250,7 +250,7 @@ void CTerraGen::UpdateAllObjectsInGeomModifyingArea()
 	vGeomModAreaMax.Set( -1, -1 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	const int nTileX1 = max( min(nX1, nX2), 0 );
@@ -274,7 +274,7 @@ void CTerraGen::GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, co
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAfterTilesModifying()
 {
 	UpdateAITerraTypes( false );
@@ -283,4 +283,4 @@ void CTerraGen::UpdateAfterTilesModifying()
 	vTexModMax.Set( -1, -1 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

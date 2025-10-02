@@ -1,8 +1,8 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "../Server_Client_Common/CommonClientState.h"
 #include "ChatPackets.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CNetNewClient : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CNetNewClient );
@@ -10,7 +10,7 @@ class CNetNewClient : public CNetPacket
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CNetRemoveClient : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CNetRemoveClient );
@@ -20,7 +20,7 @@ public:
 
 	CNetRemoveClient() { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 * Connection to server result
 */
@@ -57,7 +57,7 @@ public:
 	CConnectServerPacket( const EConnectionState _eConnectionState, const ERejectReason _eRejectReason )
 		: eConnectionState( _eConnectionState ), eRejectReason( _eRejectReason ), CNetPacket( 0 ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 * Packet with my id.
 */
@@ -73,7 +73,7 @@ public:
 	CMyIDPacket( const int nClientID )
 		: CNetPacket( nClientID ), nMyID( nClientID ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSystemBroadcastPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CSystemBroadcastPacket )
@@ -86,7 +86,7 @@ public:
 	CSystemBroadcastPacket( const int nClientID, const wstring &_wszText )
 		: CNetPacket( nClientID ), wszText( _wszText ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 * Packet to enter to lobby
 */
@@ -102,7 +102,7 @@ public:
 	CEnterLobbyPacket( const int nClientID, const int _nLobbyID ) 
 		: CNetPacket( nClientID ), nLobbyID( _nLobbyID ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 * Packet to leave the lobby
 */
@@ -116,7 +116,7 @@ public:
 	CLeaveLobbyPacket() { }
 	CLeaveLobbyPacket( const int nClientID ) : CNetPacket( nClientID ) { }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /** set new client state */
 class CCommonClientStatePacket : public CNetPacket
 {
@@ -130,7 +130,7 @@ public:
 	CCommonClientStatePacket( const int nClientID, const ECommonClientState _eState )
 		: CNetPacket( nClientID ), eState( _eState ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /** get lobby clients */
 class CGetLobbyClientsPacket : public CNetPacket
 {
@@ -145,7 +145,7 @@ public:
 	CGetLobbyClientsPacket( const int nClientID, const DWORD _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /** get lobby games */
 class CGetLobbyGamesPacket : public CNetPacket
 {
@@ -160,10 +160,10 @@ public:
 	CGetLobbyGamesPacket( const int nClientID, const DWORD _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // packets for internal use!
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDirectPacketToClient : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CDirectPacketToClient )
@@ -177,7 +177,7 @@ public:
 	CDirectPacketToClient( const int nClient, const int nClientTo, CNetPacket *_pPacket )
 		: CNetPacket( nClient ), nClient( nClientTo ), pPacket( _pPacket ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTestDirectPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTestDirectPacket );
@@ -188,7 +188,7 @@ public:
 	CTestDirectPacket() { }
 	CTestDirectPacket( const int nClientID ) : CNetPacket( nClientID ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 

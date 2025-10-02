@@ -3,7 +3,7 @@
 #include "GParticleInfo.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IParticleFilter;
 class CRainAnimator : public CPtrFuncBase<CParticleEffect>
 {

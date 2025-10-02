@@ -13,9 +13,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // static consts
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CVSOManager::DEFAULT_LEFT_BANK_HEIGHT = 1.0f;
 const float CVSOManager::DEFAULT_RIGHT_BANK_HEIGHT = 1.0f;
 
@@ -41,7 +41,7 @@ const DWORD CVSOManager::DEFAULT_POINT_PARTS	= 8;
 const DWORD CVSOManager::DEFAULT_POINT_COLOR	= 0xFFFFFF80;
 const DWORD CVSOManager::DEFAULT_LINE_COLOR		= 0xFFFFFF80;
 const float	CVSOManager::OPACITY_DELIMITER		= 100.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::SaveKeyPoints( const CVSOPointList &rVSOPointList )
 {
 	keyPointList.clear();
@@ -60,7 +60,7 @@ void CVSOManager::SBackupKeyPoints::SaveKeyPoints( const CVSOPointList &rVSOPoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::LoadKeyPoints( CVSOPointList *pVSOPointList )
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SBackupKeyPoints::LoadKeyPoints(): Wrong parameter: pVSOPointList == 0" );
@@ -78,7 +78,7 @@ void CVSOManager::SBackupKeyPoints::LoadKeyPoints( CVSOPointList *pVSOPointList 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::AddKeyPoint( int nKeyPointIndex, float fWidth, float fHeight, float fOpacity )
 {
 	CKeyPointList::iterator posKeyPoint = keyPointList.end();
@@ -107,7 +107,7 @@ void CVSOManager::SBackupKeyPoints::AddKeyPoint( int nKeyPointIndex, float fWidt
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::RemoveKeyPoint( int nKeyPointIndex )
 {
 	if ( ( nKeyPointIndex >= 0 ) && ( nKeyPointIndex < keyPointList.size() ) )
@@ -121,7 +121,7 @@ void CVSOManager::SBackupKeyPoints::RemoveKeyPoint( int nKeyPointIndex )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::InsertToFront( float fWidth, float fHeight, float fOpacity  )
 {
 	CKeyPointList::iterator posKeyPoint = keyPointList.insert( keyPointList.begin(), SKeyPoint() );
@@ -133,7 +133,7 @@ void CVSOManager::SBackupKeyPoints::InsertToFront( float fWidth, float fHeight, 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::InsertToBack( float fWidth, float fHeight, float fOpacity )
 {
 	CKeyPointList::iterator posKeyPoint = keyPointList.insert( keyPointList.end(), SKeyPoint() );
@@ -145,25 +145,25 @@ void CVSOManager::SBackupKeyPoints::InsertToBack( float fWidth, float fHeight, f
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::SetFrontOpacity( float fOpacity )
 {
 	keyPointList.front().fOpacity = fOpacity;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::SetBackOpacity( float fOpacity )
 {
 	keyPointList.back().fOpacity = fOpacity;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SBackupKeyPoints::Clear()
 {
 	keyPointList.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::SVSOCircle::CreateFromDirection( const CVec2 &vBegin, const CVec2 &vEnd, float _fRadius, EClassifyRotation _classifyRotation, bool bBegin )
 {
 	r = _fRadius;
@@ -195,7 +195,7 @@ bool CVSOManager::SVSOCircle::CreateFromDirection( const CVec2 &vBegin, const CV
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::SVSOCircle::GetTangentPoint( const CVec2 &v, CVec2 *pTangentPoint ) const
 {
 	const CVec2 vCenterV = center - v;
@@ -233,7 +233,7 @@ bool CVSOManager::SVSOCircle::GetTangentPoint( const CVec2 &v, CVec2 *pTangentPo
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCount, list<CVec2> *pPointsSequence ) const
 {
 	NI_ASSERT( pPointsSequence != 0,
@@ -272,9 +272,9 @@ bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCo
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // static methods
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 															list<NDb::SVSOPoint> *pPoints,
 															float *pfRest,
@@ -322,7 +322,7 @@ int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 	return nCounter;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 															 CVSOPointList *pVSOPointList,
 															 float fStep, 
@@ -405,7 +405,7 @@ void CVSOManager::SampleCurve( const vector<CVec3> &rControlPointList,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SmoothCurve( const vector<int> &rKeyPointList, vector<float> *pPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pPointList != 0, "CVSOManager::SmoothCurveWidth(): pPointList == 0" );
@@ -496,7 +496,7 @@ void CVSOManager::SmoothCurve( const vector<int> &rKeyPointList, vector<float> *
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SmoothCurveWidth( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveWidth(): pVSOPointList == 0" );
@@ -522,7 +522,7 @@ void CVSOManager::SmoothCurveWidth( CVSOPointList *pVSOPointList, bool bCircle, 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SmoothCurveHeight( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveWidth(): pVSOPointList == 0" );
@@ -562,7 +562,7 @@ void CVSOManager::SmoothCurveHeight( CVSOPointList *pVSOPointList, bool bCircle,
 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::SmoothCurveOpacity( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pVSOPointList != 0, "CVSOManager::SmoothCurveOpacity(): pVSOPointList == 0" );
@@ -619,7 +619,7 @@ void CVSOManager::SmoothCurveOpacity( CVSOPointList *pVSOPointList, bool bCircle
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::Update( NDb::SVSOInstance *pVSO,
 													bool bResampleCurve,
 													bool bKeepKeyPoints,
@@ -671,7 +671,7 @@ bool CVSOManager::Update( NDb::SVSOInstance *pVSO,
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRect<float> &rRect, float fStepOut, bool bBothEdges, bool bFixedStepOut )
 {
 	NI_ASSERT( pVSO != 0, "CVSOManager::Update(): Wrong parameter: pVSO == 0" );
@@ -728,7 +728,7 @@ bool CVSOManager::MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRec
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	NI_ASSERT( pBoundingPolygon != 0, "CVSOManager::GetBoundingPolygon(): Wrong parameter: pBoundingPolygon == 0" );
@@ -793,7 +793,7 @@ bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOP
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	NI_ASSERT( pBoundingPolygon != 0, "CVSOManager::GetBoundingPolygon(): Wrong parameter: pBoundingPolygon == 0" );
@@ -841,7 +841,7 @@ bool CVSOManager::GetBoundingPolygon( list<CVec3> *pBoundingPolygon, const CVSOP
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::GetBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth )
 {
 	if ( pBoundingPolygon == 0 )
@@ -881,7 +881,7 @@ void CVSOManager::GetBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID )
 {
 	if ( pBoundingPolygon == 0 )
@@ -932,7 +932,7 @@ void CVSOManager::GetCragBoundingPolygon( vector<CVec2> *pBoundingPolygon, const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, list<CVec2> *pPointsSequence )
 {
 	NI_ASSERT( pPointsSequence != 0,
@@ -1003,7 +1003,7 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOC
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, float fRadius0, int nSegmentsCount0, bool bBegin0,
 																		 const CVec2 &vBegin1, const CVec2 &vEnd1, float fRadius1, int nSegmentsCount1, bool bBegin1,
 																		 list<CVec2> *pPointsSequence )
@@ -1094,7 +1094,7 @@ bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, f
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegin0,
 														const CVec2 &vBegin1, const CVec2 &vEnd1, bool bBegin1,
 														float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance,
@@ -1245,7 +1245,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //первый VSO продолжается на 2 controlPoints, край уводится в 0
 bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 												 NDb::SVSOInstance *pVSO1, bool bVSO1Begin )
@@ -1381,7 +1381,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //вернуть первую не нулевую высоту или высоту на конце ( true )
 float CVSOManager::GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst )
 {
@@ -1412,7 +1412,7 @@ float CVSOManager::GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin
 	return fHeight;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 																	 const CVec3 &rvPos,
 																	 const CVec3 &rvOrigin,
@@ -1509,7 +1509,7 @@ bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1715,11 +1715,11 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 {
 	NI_ASSERT( pVSO != 0, "CVSOManager::UpdateZ(): Wrong parameter: pVSO " );

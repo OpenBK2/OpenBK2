@@ -2,7 +2,7 @@
 #include "Executor.h"
 #include "Soldier.h"
 #include "..\Stats_B2_M1\SpecialAbilities.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExecutorPlaceCharge : public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorPlaceCharge)

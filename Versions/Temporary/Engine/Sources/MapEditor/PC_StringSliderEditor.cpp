@@ -11,19 +11,19 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCStringSliderEditor::CPCStringSliderEditor() : bCreateControls( true )
 {	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCStringSliderEditor::~CPCStringSliderEditor()
 {
 	wndSlider.DestroyWindow();
 	DestroyWindow();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CPCStringSliderEditor, CEdit)
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP(CPCStringSliderEditor, CEdit)
 	ON_CONTROL_REFLECT(EN_CHANGE, OnEnChange)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CPCStringSliderEditor::PreTranslateMessage( MSG* pMsg ) 
 {
 	if ( pMsg->message == WM_KEYDOWN )	
@@ -55,7 +55,7 @@ BOOL CPCStringSliderEditor::PreTranslateMessage( MSG* pMsg )
 	return CEdit::PreTranslateMessage( pMsg );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::OnSetFocus( CWnd* pOldWnd )
 {
 	CEdit::OnSetFocus( pOldWnd );
@@ -63,7 +63,7 @@ void CPCStringSliderEditor::OnSetFocus( CWnd* pOldWnd )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::OnKillFocus( CWnd* pNewWnd ) 
 {	
 	CEdit::OnKillFocus( pNewWnd );
@@ -79,7 +79,7 @@ void CPCStringSliderEditor::OnKillFocus( CWnd* pNewWnd )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
@@ -97,7 +97,7 @@ void CPCStringSliderEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	CEdit::OnChar( nChar, nRepCnt, nFlags );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::OnEnChange()
 {
 	if ( !bCreateControls )
@@ -107,7 +107,7 @@ void CPCStringSliderEditor::OnEnChange()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT CPCStringSliderEditor::OnMessageEditorSliderChange( WPARAM wParam, LPARAM lParam )
 {
 	if ( !bCreateControls )
@@ -128,9 +128,9 @@ LRESULT CPCStringSliderEditor::OnMessageEditorSliderChange( WPARAM wParam, LPARA
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPCItemEditor
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
@@ -163,7 +163,7 @@ bool CPCStringSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEdi
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringSliderEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 {
 	CTRect<int> editRect( rPlaceRect );
@@ -177,7 +177,7 @@ bool CPCStringSliderEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringSliderEditor::ActivateEditor( CDialog *pwndActiveDialog )
 {
 	ShowWindow( SW_SHOW );
@@ -190,7 +190,7 @@ bool CPCStringSliderEditor::ActivateEditor( CDialog *pwndActiveDialog )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::SetValue( const CVariant &rValue )
 {
 	szDefaultValue = rValue.GetStringRecode();
@@ -200,7 +200,7 @@ void CPCStringSliderEditor::SetValue( const CVariant &rValue )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::GetValue( CVariant *pValue )
 {
 	if ( !pValue )
@@ -213,7 +213,7 @@ void CPCStringSliderEditor::GetValue( CVariant *pValue )
 	*pValue = string( strText );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::SetDefaultValue()
 {
 	CPCItemEditor::SetDefaultValue();
@@ -222,7 +222,7 @@ void CPCStringSliderEditor::SetDefaultValue()
 	bCreateControls = false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringSliderEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam )
 {
 	if ( !bCreateControls )
@@ -241,7 +241,7 @@ void CPCStringSliderEditor::ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -270,7 +270,7 @@ bool CPCStringSliderEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringSliderEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringSliderEditor::UpdateCommand(), pbEnable == 0" );
@@ -313,6 +313,6 @@ bool CPCStringSliderEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 			return false;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -22,9 +22,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_BUILDER_IN_DLL( VisObj, CVisObjBuilder )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CVisObjBuilder::VISOBJ_TYPE_NAME[]							= "VisObj";
 const char CVisObjBuilder::MODEL_TYPE_NAME[]							= "Model";
 const char CVisObjBuilder::MATERIAL_TYPE_NAME[]						= "Material";
@@ -51,21 +51,21 @@ const string CVisObjBuilder::RESOURCE_PREFIX[RT_COUNT] =
 //	StrFmt( "%s\\%s", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::SKELETON_TYPE_NAME ),
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisObjBuilder::CVisObjBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_VISOBJ_BUILDER, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_VISOBJ_BUILDER, ID_TOOLS_CREATE_VIS_OBJ, ID_TOOLS_CREATE_VIS_OBJ );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisObjBuilder::~CVisObjBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_VISOBJ_BUILDER );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_VISOBJ_BUILDER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjBuilder::GetSeasonedFolderName( string *pszFileName, NDb::ESeason eSeason )
 {
 	if ( pszFileName )
@@ -79,7 +79,7 @@ void CVisObjBuilder::GetSeasonedFolderName( string *pszFileName, NDb::ESeason eS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjBuilder::GetSeasonedFileName( string *pszFileName, NDb::ESeason eSeason )
 {
 	if ( pszFileName )
@@ -93,7 +93,7 @@ void CVisObjBuilder::GetSeasonedFileName( string *pszFileName, NDb::ESeason eSea
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjBuilder::GetResourceFileName( string *pszResourceFileName, EResourceType eResourceType, const string &rszVisObjFileName )
 {
 	if ( pszResourceFileName )
@@ -108,7 +108,7 @@ void CVisObjBuilder::GetResourceFileName( string *pszResourceFileName, EResource
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 																		 IManipulator *pBuildDataManipulator,	
 																		 const string &rszMBFullFileName,
@@ -348,7 +348,7 @@ bool CVisObjBuilder::AddVisObjEntry( const string &rszUniqueObjectName,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CRAP{ PLAIN_TEXT
 bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
@@ -406,7 +406,7 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, stri
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::InternalInsertObject( string *pszObjectTypeName,
 																					 string *pszUniqueObjectName,
 																					 bool bFromMainMenu,
@@ -440,7 +440,7 @@ bool CVisObjBuilder::InternalInsertObject( string *pszObjectTypeName,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -626,7 +626,7 @@ bool CVisObjBuilder::CreateVisObj( const string &rszVisObjFolder )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -652,7 +652,7 @@ bool CVisObjBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
@@ -682,28 +682,28 @@ bool CVisObjBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveTexture( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, true );
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveAIGeometry( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, true );
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveAnimation( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, true );
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveMaterial( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -730,7 +730,7 @@ bool CVisObjBuilder::RemoveMaterial( const string &rszObjectTypeName, const stri
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveGeometry( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -757,7 +757,7 @@ bool CVisObjBuilder::RemoveGeometry( const string &rszObjectTypeName, const stri
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveSkeleton( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -796,7 +796,7 @@ bool CVisObjBuilder::RemoveSkeleton( const string &rszObjectTypeName, const stri
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveModel( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -857,7 +857,7 @@ bool CVisObjBuilder::RemoveModel( const string &rszObjectTypeName, const string 
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisObjBuilder::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -895,6 +895,6 @@ bool CVisObjBuilder::RemoveObject( const string &rszObjectTypeName, const string
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

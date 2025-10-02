@@ -20,12 +20,12 @@
 #include "../System/Text.h"
 #include "../UI/UI.h"
 #include "MultiplayerCommandManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NISB
 {
 	static CVec2 vCursorStoredPos = VNULL2;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool AddUIScreen( IScreen *pWindowScreen, const string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions )
 {
 	IScreen *pScr = dynamic_cast<IScreen*>( pWindowScreen );
@@ -43,7 +43,7 @@ bool AddUIScreen( IScreen *pWindowScreen, const string &szScreenEntryName, IProg
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceScreenBase::CInterfaceScreenBase( const string &_szInterfaceType, const string &_szBindSection )
 : szInterfaceType( _szInterfaceType ), szBindSection( _szBindSection ),
 	bShowScreenOnGetFocus( false ), bIsTransparent( true )
@@ -63,7 +63,7 @@ CInterfaceScreenBase::CInterfaceScreenBase( const string &_szInterfaceType, cons
 
 	AddObserver( "mission_win_mouse_move_emit", &CInterfaceScreenBase::MsgMouseMove );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::Init()
 {
 	//ChangeResolution(); //COMMENTED: it changes UI resolution in editor
@@ -77,7 +77,7 @@ bool CInterfaceScreenBase::Init()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceScreenBase::~CInterfaceScreenBase()
 {
 	Cursor()->SetMode( NDb::USER_ACTION_UNKNOWN );
@@ -93,7 +93,7 @@ CInterfaceScreenBase::~CInterfaceScreenBase()
 		InterfaceState()->UnregisterIDForMLHandler( nID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::ShowVersionInfo()
 {
 	if ( pVersionWindow == 0 && pScreen )
@@ -116,7 +116,7 @@ void CInterfaceScreenBase::ShowVersionInfo()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( importantMsgs.ProcessEvent( msg, this ) )
@@ -156,40 +156,40 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 
 	return Scene()->ProcessEvent( msg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::OnMouseMove( const CVec2 &vPos  )
 {
 	//if ( pScreen )
 	//	pScreen->OnMouseMove( vPos, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::OnButtonDown( const CVec2 &vPos, int nButton )
 {
 	//if ( pScreen )
 	//	pScreen->OnButtonDown( vPos, nButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::OnButtonUp( const CVec2 &vPos, int nButton )
 {
 	//if ( pScreen )
 	//	pScreen->OnButtonUp( vPos, nButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::OnButtonDblClk( const CVec2 &vPos, int nButton )
 {
 	//if ( pScreen )
 	//	pScreen->OnButtonDblClk( vPos, nButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::StartInterface()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::Draw( NGScene::CRTPtr *pTexture ) 
 {
 	Scene()->Draw( pTexture ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::Step( bool bAppActive )
 {
 	if ( bAppActive == false ) 
@@ -276,7 +276,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 		Draw();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::ChangeResolution()
 {
 	CVec2 vScreenSize = Scene()->GetScreenRect();
@@ -289,7 +289,7 @@ bool CInterfaceScreenBase::ChangeResolution()
 	vLastScreenSize = vScreenSize;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::OnGetFocus( bool bFocus ) 
 {
 	if ( bFocus && bShowScreenOnGetFocus )
@@ -314,12 +314,12 @@ void CInterfaceScreenBase::OnGetFocus( bool bFocus )
 		nTime = Singleton<IGameTimer>()->GetAbsTime();;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::RestoreBindSection()
 {
 	NInput::SetSection( szBindSection );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgMouseMove( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -327,7 +327,7 @@ bool CInterfaceScreenBase::MsgMouseMove( const struct SGameMessage &msg )
 	OnMouseMove( vPos );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgLButtonDown( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -335,7 +335,7 @@ bool CInterfaceScreenBase::MsgLButtonDown( const SGameMessage &msg )
 	OnButtonDown( vPos, MSTATE_BUTTON1 );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgLButtonUp( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -343,7 +343,7 @@ bool CInterfaceScreenBase::MsgLButtonUp( const SGameMessage &msg )
 	OnButtonUp( vPos, MSTATE_BUTTON1 );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgLButtonDblClk( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -351,7 +351,7 @@ bool CInterfaceScreenBase::MsgLButtonDblClk( const SGameMessage &msg )
 	OnButtonDblClk( vPos, MSTATE_BUTTON1 );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgRButtonDown( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -359,7 +359,7 @@ bool CInterfaceScreenBase::MsgRButtonDown( const SGameMessage &msg )
 	OnButtonDown( vPos, MSTATE_BUTTON2 );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgRButtonUp( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -367,7 +367,7 @@ bool CInterfaceScreenBase::MsgRButtonUp( const SGameMessage &msg )
 	OnButtonUp( vPos, MSTATE_BUTTON2 );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgRButtonDblClk( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -375,12 +375,12 @@ bool CInterfaceScreenBase::MsgRButtonDblClk( const SGameMessage &msg )
 	OnButtonDblClk( vPos, MSTATE_BUTTON2 );
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::MsgHelpScreen( const struct SGameMessage &msg )
 {
 	return CheckedShowHelpScreen( true );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::OnShowConsole( const struct SGameMessage &msg )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -407,7 +407,7 @@ bool CInterfaceScreenBase::OnShowConsole( const struct SGameMessage &msg )
 	//	pScreen->RunStateCommandSequience( "ShowConsole", pConsole, 0, false );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::AfterLoad()
 {
 	Singleton<IScene>()->SetSceneConsts( NGameX::GetSceneConsts() );
@@ -422,7 +422,7 @@ void CInterfaceScreenBase::AfterLoad()
 
 	SetVersionWindowAfterLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::PauseIntermission( bool bPause )
 {
 	if ( bPause )
@@ -437,21 +437,21 @@ void CInterfaceScreenBase::PauseIntermission( bool bPause )
 	}
 	NInput::PostEvent( "show_game_paused", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::AddScreen( interface IProgrammedReactionsAndChecks *pReactions )
 {
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen( pScreen, szInterfaceType, pReactions ) == false )
 		pScreen = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::FillVersionWindow()
 {
 	wstring wszVersionInfo = NGlobal::GetVar( "version.info", "" ).GetString();
 	wszVersionInfo = L"<color=green>" + wszVersionInfo;
 	pVersionWindow->SetText( wszVersionInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceScreenBase::CheckedShowHelpScreen( bool bForced )
 {
 	if ( NGlobal::GetVar("game_mode_editor", 0) != 0 )
@@ -475,7 +475,7 @@ bool CInterfaceScreenBase::CheckedShowHelpScreen( bool bForced )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::SetVersionWindowAfterLoad()
 {
 	if ( pVersionWindow )
@@ -496,7 +496,7 @@ void CInterfaceScreenBase::SetVersionWindowAfterLoad()
 		pScreen->AddChild( pVersionWindow, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::HideUnfocusedScreen()
 {
 	if ( pScreen )
@@ -506,7 +506,7 @@ void CInterfaceScreenBase::HideUnfocusedScreen()
 			pScreen->ShowWindow( false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView, const vector< pair<wstring, wstring> > &params )
 {
 	if ( pView )
@@ -519,7 +519,7 @@ void CInterfaceScreenBase::SetDynamicTextView( ITextView *pView, const vector< p
 		pView->SetIDForMLHandler( nID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::SetDynamicTooltip( IWindow *pWnd, const wstring &wszTooltip, const vector< pair<wstring, wstring> > &params )
 {
 	if ( pWnd )
@@ -533,14 +533,14 @@ void CInterfaceScreenBase::SetDynamicTooltip( IWindow *pWnd, const wstring &wszT
 		pWnd->SetTooltip( wszTooltip );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceScreenBase::SetMainWindowTexture( IWindow *pMainWindow, const NDb::STexture *pTexture )
 {
 	pMainWindow->SetTexture( pTexture );
 	if ( pTexture )
 		bIsTransparent = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceScreenBase::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, const_cast<string*>( &szInterfaceType ) );
@@ -554,11 +554,11 @@ int CInterfaceScreenBase::operator&( IBinSaver &saver )
 	saver.Add( 9, &bIsTransparent );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace NInterface
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdStartInterface ( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
@@ -571,7 +571,7 @@ static void CmdStartInterface ( const string &szID, const vector<wstring> &param
 	NGlobal::SetVar( "mainmenu", "1" );
 }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(Interfaces)
 REGISTER_CMD( "start_interface", NInterface::CmdStartInterface )
 FINISH_REGISTER

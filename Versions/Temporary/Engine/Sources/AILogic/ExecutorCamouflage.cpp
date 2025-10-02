@@ -7,12 +7,12 @@
 
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorCamouflage::CExecutorCamouflage( CAIUnit *_pUnit	) :
 CExecutorUnitCombatBonus ( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE ), nextCheckTime( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & ~CExecutorUnitCombatBonus::EUM_MOVING ) )
@@ -25,7 +25,7 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChan
 	}
 	return EACR_IGNORE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorCamouflage::Segment()
 {
 	const BYTE cPartyToCheck = GetAIUnit()->GetParty() == theDipl.GetNeutralParty() ? theDipl.GetNeutralParty() : 1 - GetAIUnit()->GetParty();
@@ -37,7 +37,7 @@ int CExecutorCamouflage::Segment()
 
 	return CExecutorUnitCombatBonus::Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorCamouflage::SwitchingOffEnd()
 {
 	CExecutorUnitCombatBonus::SwitchingOffEnd();
@@ -45,7 +45,7 @@ void CExecutorCamouflage::SwitchingOffEnd()
 	GetAIUnit()->SetBehaviourFire( SBehaviour::EFAtWill );
 	GetAIUnit()->RemoveCamouflage( ECRR_USER_COMMAND );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorCamouflage::SwitchOnEnd()
 {
 	CExecutorUnitCombatBonus::SwitchOnEnd();
@@ -73,6 +73,6 @@ void CExecutorCamouflage::SwitchOnEnd()
 		GetAIUnit()->SetCamoulfage();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19139380, CExecutorCamouflage )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

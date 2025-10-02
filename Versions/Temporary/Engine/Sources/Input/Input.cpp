@@ -1,15 +1,15 @@
 #include "StdAfx.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <dinput.h>
 #include "..\Input\Input.h"
 #include "..\Input\GameMessage.h"
 #include "..\Misc\Win32Helper.h"
 #include "..\Misc\StrProc.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 extern "C" WINBASEAPI BOOL WINAPI IsDebuggerPresent(void);
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool bMouseDisabledDebug = false;
 static const int POV_RANGE_VALUE = 1000;
 static const int AXIS_RANGE_VALUE = 10000;
@@ -20,14 +20,14 @@ const DWORD TIME_DIFF_DBL_CLK = 500;
 #define INPUT_KEYIDEX( vID, vOFFS, vSPECIAL )		( ( ( vID & 0xFF ) << 24 ) | ( ( vSPECIAL & 0xFF ) << 16 ) | ( vOFFS ) )
 #define INPUT_GETACTIONOFFS( vKeyID )						( ( vKeyID ) & 0xFFFF )
 #define INPUT_GETACTIONDEVICEID( vKeyID )				( ( vKeyID ) >> 24 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NInput
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // вспомогательные структуры данных
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SKeyInfo
 {
 	const char *pszName;
@@ -198,7 +198,7 @@ const SKeyInfo kiKeyInfoList [] =
 	{ "",								0 }
 };
 const int DIK_DBLCLK_MODIFIER = 0x4000;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SKey
 {
 	int nAction;
@@ -248,7 +248,7 @@ struct SInputDataFormat
 	LONG  lPOV;
 	BYTE  bButton[32];
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef vector<SInputEvent> CEventList;
 typedef vector<SInputDevice> CDevicesList;
 ///
@@ -277,11 +277,11 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice );
 static void AddDeviceKeys( int nID, int nDevType );
 static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext );
 static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lpdidObject, PVOID pContext );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // Initialization / Deinitialization / message handling
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Инициализировать DirectInput
 bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampleBufferSize )
 {
@@ -382,7 +382,7 @@ bool InitInput( HWND hWnd, bool bDebugMouse, bool _bNonExclusiveMode, int nSampl
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool DoneInput()
 {
 	if ( !bInitialized )
@@ -395,7 +395,7 @@ bool DoneInput()
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetCoopLevel()
 {
 	if ( bCoopLevelSet )
@@ -424,7 +424,7 @@ static bool SetCoopLevel()
 	
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // выкачать все event'ы, произошедшие с последней выкачки
 struct SSeqNumberLessThenFunctional
 {
@@ -433,7 +433,7 @@ struct SSeqNumberLessThenFunctional
 		return ( sEvent1.dwSequence < sEvent2.dwSequence ); 
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FillEventInfo( SInputEvent &sEvent, SKey &sKey, const DIDEVICEOBJECTDATA &did )
 {
 	sEvent.dwSequence = did.dwSequence;
@@ -447,7 +447,7 @@ static void FillEventInfo( SInputEvent &sEvent, SKey &sKey, const DIDEVICEOBJECT
 
 	sKey.dwLastValue = did.dwData;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD dwPrevPump;
 void PumpMessages( bool bFocus )
 {
@@ -576,7 +576,7 @@ void PumpMessages( bool bFocus )
 		ResyncDevice( *iTempDevice );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 static void ResyncDevice( const SInputDevice &sDevice )
 {
@@ -626,7 +626,7 @@ static void ResyncDevice( const SInputDevice &sDevice )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetMessage( SMessage *pMsg )
 {
 	ASSERT( pMsg );
@@ -641,7 +641,7 @@ bool GetMessage( SMessage *pMsg )
 	sLastEventTime = pMsg->tTime;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsDInputDiscardableKey( const SMessage &mMsg )
 {
 	if ( mMsg.cType != CT_KEY )
@@ -656,12 +656,12 @@ bool IsDInputDiscardableKey( const SMessage &mMsg )
 	//return idNames[ key.nAction ] != "ESC";
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STime GetLastEventTime()
 {
 	return sLastEventTime;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetControlID( const string &sCommand )
 {
 	if ( nameIDs.find( sCommand ) == nameIDs.end() )
@@ -669,7 +669,7 @@ int GetControlID( const string &sCommand )
 
 	return nameIDs[sCommand];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 {
 	DIPROPDWORD diProp;
@@ -715,7 +715,7 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetControlLocalName( int nAction )
 {
 	if ( actionIDs.find( nAction ) == actionIDs.end() )
@@ -734,27 +734,27 @@ string GetControlLocalName( int nAction )
 	}
 	return "";
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartSaveInput( CDataStream *pStream )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StopSaveInput()
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartEmulateInput( CDataStream *pStream )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StopEmulateInput()
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	Internal functions
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // получит / отдать контроль над девайсами
 static bool SetFocus( bool bFocus )
 {
@@ -792,7 +792,7 @@ static bool SetFocus( bool bFocus )
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // добавить информацию про девайс
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize )
 {
@@ -826,7 +826,7 @@ static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, DWORD dwFormatSize )
 
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Добавить информацию про неизвестный девайс
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 {
@@ -925,7 +925,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Занести в hash действия для данного устройства
 static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlType cType, const char *pszName )
 {
@@ -938,7 +938,7 @@ static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlT
 	nameIDs[ pszName ] = nAction;
 	idNames[ nAction ] = pszName;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddDeviceKeys( int nID, int nDevType )
 {
 	int nTemp = 0;
@@ -958,7 +958,7 @@ static void AddDeviceKeys( int nID, int nDevType )
 		nTemp++;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext )
 {
 	HRESULT hRes;
@@ -974,7 +974,7 @@ static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, 
 
 	return DIENUM_CONTINUE;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lpdidObject, PVOID pContext )
 {
 	SInputDeviceEnum *psDeviceEnum = static_cast<SInputDeviceEnum*>(pContext);
@@ -1121,13 +1121,13 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 
 	return DIENUM_CONTINUE;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsMouseDisabledDebug()
 {
 	return bMouseDisabledDebug;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
 {
 	NI_ASSERT( pszGameMessage != 0, "Wrong Parameter: pszGameMessage == 0" );
@@ -1200,5 +1200,5 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, string *pszGameMe
 	( *pnCount ) = 1;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }; // end of namespace NInput

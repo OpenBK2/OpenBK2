@@ -104,20 +104,20 @@
 #include "../ED_Common/TempAttributesTool.h"
 //DEBUG{
 //DEBUG}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( MechUnitRPGStats, CMechUnitRPGStatsExporter )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char VISUALOBJECT[]					= "visualObject";
 const char ANIMATEMODEL[]					= "AnimableModel";
 const char TRANSPORTABLEMODEL[]				= "TransportableModel";
 const char SKELETON_FIELD_IN_MODEL[]		= "Skeleton";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
 {
 	CVariant var;
@@ -131,7 +131,7 @@ void CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, co
 	CopyVector2D( pSrc, pDst, szSrc + ".Center", szDst + ".Center" );
 	CopyVector2D( pSrc, pDst, szSrc + ".HalfSize", szDst + ".HalfSize" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGunInfo
 {
 	int nDirection;			// поворот пушки односительно оси юнита в горизонтальной плоскости
@@ -264,7 +264,7 @@ struct SGunInfo
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPlatformInfo
 {
 	//
@@ -325,7 +325,7 @@ struct SPlatformInfo
 //
 typedef vector<SPlatformInfo>::const_iterator CPlatformsInfoConstIter;
 typedef vector<SPlatformInfo>::iterator CPlatformsInfoIter;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SConstraintInfo
 {
 	string szName;
@@ -340,7 +340,7 @@ struct SConstraintInfo
 	bool bRotConstrMaxEnable[3];
 	CVec3 rotLimitMax;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	// расположение стрелков у пушек в 3-х возможных моделях пушки (стрельба+разворот+транспортировка)
@@ -382,7 +382,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
 								const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 								const char *pszNamePattern )
@@ -405,7 +405,7 @@ static string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
 	}
 	return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
 									const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 									const vector<SPlatformInfo> &rPlatformsInfo )
@@ -426,7 +426,7 @@ static string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
 	}
 	return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsPlatformExist( IManipulator* pManipulator, int nPlatformNo )
 {
 	CVariant v;
@@ -435,7 +435,7 @@ static bool IsPlatformExist( IManipulator* pManipulator, int nPlatformNo )
 	int nArraySize = v;
 	return (nPlatformNo >= 0) && (nPlatformNo < nArraySize);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsGunExist( IManipulator* pManipulator, int nPlatformNo, int nGunNo )
 {
 	char pszDBA[64] = {0};
@@ -446,19 +446,19 @@ static bool IsGunExist( IManipulator* pManipulator, int nPlatformNo, int nGunNo 
 	int nArraySize = v;
 	return (nGunNo >= 0) && (nGunNo < nArraySize);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool AddPlatform( IManipulator* pManipulator )
 {
 	return pManipulator->InsertNode( "platforms" ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool AddGun( IManipulator *pManipulator, int nPlatformNo )
 {
 	char pszDBA[64] = {0};
 	sprintf( pszDBA, "platforms.[%d].guns", nPlatformNo );
 	return pManipulator->InsertNode( pszDBA ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetGunShootPoint(	IManipulator* pManipulator, 
 								const SSkeletonLocatorInfo *pLocatorInfo, 
 								int nPlatformNo, 
@@ -468,7 +468,7 @@ static bool SetGunShootPoint(	IManipulator* pManipulator,
 	sprintf( pszDBA, "platforms.[%d].guns.[%d].ShootPoint", nPlatformNo, nGunNo );
 	return CManipulatorManager::SetValue( pLocatorInfo->szName, pManipulator, pszDBA, false ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
@@ -476,7 +476,7 @@ const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const vector
 			return i;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	//
@@ -522,7 +522,7 @@ static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkele
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetConstraintInfoFromFile( vector<SConstraintInfo> *pConstraints, IManipulator *pMan )
 {
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( VISUALOBJECT, pMan, 0, 0, 0 );
@@ -627,12 +627,12 @@ static void GetConstraintInfoFromFile( vector<SConstraintInfo> *pConstraints, IM
 		pConstraints->push_back( inf );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetModelConstraints( vector<SConstraintInfo> *pConstraints, IManipulator* pRPGStatsManipulator )
 {
 	GetConstraintInfoFromFile( pConstraints, pRPGStatsManipulator );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** animations & AABB processing
@@ -640,12 +640,12 @@ static void GetModelConstraints( vector<SConstraintInfo> *pConstraints, IManipul
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsStringEmpty( const string &szArg )
 {
 	return szArg.empty() || szArg == " ";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 {
 	// AABB information about this unit (from AI geometry)
@@ -682,7 +682,7 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -796,7 +796,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManipulator )
 {
 	CVariant var;
@@ -820,7 +820,7 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAttachedManipulator, const string &szVisObj )
 {
 	CVariant var;
@@ -848,7 +848,7 @@ static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAtt
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRPGStatsExporter::CopyAnimationsToObject( IManipulator *pUnitManipulator, IManipulator *pAttachedManipulator )
 {
 	CopyAnimationsTo( pUnitManipulator, pAttachedManipulator, "visualObject" );
@@ -872,7 +872,7 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToObject( IManipulator *pUnitManip
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitManipulator )
 {
 	CVariant var;
@@ -896,7 +896,7 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ProcessGun(	SGunInfo *pGunInfo, 
 						const SSkeletonLocatorInfo &rGunLocator,
 						const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
@@ -921,7 +921,7 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 	// часть пушки, которая участвует в отдаче 
 	pGunInfo->szRecoilPoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*MainBarrel*" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vector<SGunInfo> &rGuns )
 {
 	const string szGunsDba = StrFmt( "platforms.[%d].guns", nPlatformIdx );
@@ -1049,7 +1049,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *pP, const int nElementIndex )
 {
 	bool bRes;
@@ -1081,7 +1081,7 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 	szWarnMsg = "WARNING: can't write: " + szDBA;
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformInfo> &rPlatforms )
 { 
 	// обновить существующие платформы
@@ -1147,7 +1147,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 		++nNewElemIdx;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	// собрать данные о кол-ве платформ
@@ -1303,7 +1303,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	// записать в базу
 	UpdatePlatforms( pManipulator, platformsInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //
@@ -1312,7 +1312,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 //
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int FindLocator( const string &szLocatorName, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	int i = 0;
@@ -1321,7 +1321,7 @@ static int FindLocator( const string &szLocatorName, const vector<SSkeletonLocat
 
 	return i < rLocatorsInfo.size() ? i : -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	CVariant v;
@@ -1364,7 +1364,7 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																											 const string &rszObjectTypeName,
 																											 const string &rszObjectName,
@@ -1426,7 +1426,7 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 	//
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** check RPG stats
@@ -1434,7 +1434,7 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 																											const string &rszObjectTypeName,
 																											const string &rszObjectName,
@@ -1464,4 +1464,4 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator
 	//
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

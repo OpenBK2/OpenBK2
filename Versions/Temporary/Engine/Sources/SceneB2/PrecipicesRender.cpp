@@ -5,7 +5,7 @@
 #include "../3DMotor/DBScene.h"
 #include "GenTerrain.h"
 #include "VersionInfo.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_PRECIPICE_SAMPLES_PER_PATCH 4
 //
 #define DEF_PRECIPICE_SAMP_HEIGHT 1.0f
@@ -21,12 +21,12 @@
 #define DEF_STAYED_ON_TERRAIN_ERROR DEF_RIVER_DEPTH/*DEF_TILE_SIZE*/
 //
 #define DEF_MIN_PRECIPICE_HEIGHT 0.025f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STriangleEx
 {
 	int i1, i2, i3;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CTerraGen::GetSmoothPrecipiceNorm( const CVec2 &vPos )
 {
 	float fWeight = 0.0f;
@@ -59,7 +59,7 @@ CVec3 CTerraGen::GetSmoothPrecipiceNorm( const CVec2 &vPos )
 	return vNorm;
 	//return ( vNorm / fWeight );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const float fHeight )
 {
 	int nInd = 0;
@@ -83,7 +83,7 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 	}
 	pNode->verts.insert( itFind, CVec3( pNode->vPos.x, pNode->vPos.y, fHeight ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNode, const int nNodeInd )
 {
 	if ( !pNode )
@@ -158,7 +158,7 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *pPrec )
 {
 	for ( int i = 0; i < pPrec->nodes.size(); ++i )
@@ -167,7 +167,7 @@ void CTerraGen::CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *
 			pPrec->visibles[i] = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const bool bNeedRiversClamping )
 {
 	SPrecipiceGFXInfo gfxInfo;
@@ -542,7 +542,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	if ( pGfxObserver )
 		pGfxObserver->AddPrecipice( &gfxInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 {
 	static vector<BYTE> nodesHash( 2048 );
@@ -610,4 +610,4 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

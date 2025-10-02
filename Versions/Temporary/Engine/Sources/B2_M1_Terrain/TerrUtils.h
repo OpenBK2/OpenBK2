@@ -2,16 +2,16 @@
 
 #include "B2_M1_Terrain_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <math.h>
 #include "DBVSO.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_EPS 0.0001f
 #define DEF_EPS2 (DEF_EPS * DEF_EPS)
 #define DEF_FLOAT_EPS 0.01f
 #define DEF_FLOAT_EPS2 (DEF_FLOAT_EPS * DEF_FLOAT_EPS)
 const float invCoeffs[] = { 0.0f, 1.0f, 0.5f, 0.3333333f, 0.25f, 0.2f };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVec2i
 {
 public:
@@ -32,22 +32,22 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsBBIntersect( const CVec2i &vMin1, const CVec2i &vMax1, const CVec2i &vMin2, const CVec2i &vMax2 )
 {
 	return ( vMin1.x <= vMax2.x ) && ( vMin1.y <= vMax2.y ) && ( vMax1.x >= vMin2.x ) && ( vMax1.y >= vMin2.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsBBIntersect( const CVec2 &vMin1, const CVec2 &vMax1, const CVec2 &vMin2, const CVec2 &vMax2 )
 {
 	return ( vMin1.x <= vMax2.x ) && ( vMin1.y <= vMax2.y ) && ( vMax1.x >= vMin2.x ) && ( vMax1.y >= vMin2.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsInsideBB( const CVec2 &v, const CVec2 &vMin, const CVec2 &vMax )
 {
 	return ( v.x >= vMin.x ) && ( v.y >= vMin.y ) && ( v.x <= vMax.x ) && ( v.y <= vMax.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TReal> class CVec3Ex // CRAP {not properly connected yet} CRAP
 {
 public:
@@ -80,7 +80,7 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVec3dEx;
 class CVec3fEx
 {
@@ -119,7 +119,7 @@ public:
 	CVec2 GetVec2() const { return CVec2( x, y ); }
 	CVec3dEx GetVec3dEx() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVec3dEx
 {
 public:
@@ -157,7 +157,7 @@ public:
 	CVec2 GetVec2() const { return CVec2( x, y ); }
 	CVec3fEx GetVec3fEx() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SIntersectPoint
 {
 	CVec3 vPoint;
@@ -172,12 +172,12 @@ struct SIntersectPoint
 	bool operator < ( const SIntersectPoint &v ) const { return fDist < v.fDist; }
 	bool operator == ( const SIntersectPoint &v	) const { return fabs( fDist - v.fDist ) < DEF_EPS; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec2 GetVec2( const CVec3 &v )
 {
 	return CVec2( v.x, v.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 inline bool PushBackUnique( vector<TYPE> *arr, const TYPE &elem )
 {
@@ -189,7 +189,7 @@ inline bool PushBackUnique( vector<TYPE> *arr, const TYPE &elem )
 	arr->push_back( elem );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline bool PushBackUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 {
@@ -201,7 +201,7 @@ inline bool PushBackUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 	arr->push_back( elem );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline bool PushBackUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
 {
@@ -213,7 +213,7 @@ inline bool PushBackUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &ele
 	arr->push_back( elem );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline bool PushBackUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &elem )
 {
@@ -225,7 +225,7 @@ inline bool PushBackUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &ele
 	arr->push_back( elem );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 inline int AddUnique( vector<TYPE> *arr, const TYPE &elem )
 {
@@ -237,7 +237,7 @@ inline int AddUnique( vector<TYPE> *arr, const TYPE &elem )
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 inline void AddUnique( list<TYPE> *arr, const TYPE &elem )
 {
@@ -248,7 +248,7 @@ inline void AddUnique( list<TYPE> *arr, const TYPE &elem )
 	}
 	arr->push_back( elem );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline int AddUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 {
@@ -260,7 +260,7 @@ inline int AddUnique<CVec3>( vector<CVec3> *arr, const CVec3 &elem )
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline int AddUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
 {
@@ -272,7 +272,7 @@ inline int AddUnique<CVec3fEx>( vector<CVec3fEx> *arr, const CVec3fEx &elem )
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 inline int AddUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &elem )
 {
@@ -284,17 +284,17 @@ inline int AddUnique<CVec3dEx>( vector<CVec3dEx> *arr, const CVec3dEx &elem )
 	arr->push_back( elem );
 	return ( arr->size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsCCW( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx &p3 )
 {
 	return ( ((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)) >= 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsCCW( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
 	return ( ((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)) >= 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsCCW( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3, const CVec3 &vNorm )
 {
 	CVec3 vDot = ( p2 - p1 ) ^ ( p3 - p1 );
@@ -302,17 +302,17 @@ inline bool IsCCW( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3, const CVec
 	const float fAng = vDot * vNorm;
 	return fAng >= 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsTrgSingular( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx &p3 )
 {
 	return ( abs((p1.x - p2.x) * (p3.y - p2.y) - (p1.y - p2.y) * (p3.x - p2.x)) < DEF_EPS );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsTrgSingular( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
 	return ( fabs((p1.x - p2.x) * (p3.y - p2.y) - (p1.y - p2.y) * (p3.x - p2.x)) < DEF_EPS2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetTrueNormal( CVec3 *pNorm, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
 {
 	const CVec3 dv1 = v1 - v2;
@@ -320,7 +320,7 @@ inline void GetTrueNormal( CVec3 *pNorm, const CVec3 &v1, const CVec3 &v2, const
 	(*pNorm) = dv1 ^ dv2;
 	Normalize( pNorm );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const float px, const float py, const float p0x, const float p0y,
 													 const float p1x, const float p1y, const float p2x, const float p2y,
 													 CVec2 *pBary )
@@ -338,7 +338,7 @@ inline void GetBaryCoords( const float px, const float py, const float p0x, cons
 		pBary->y = -1.0f;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, CVec2 *pBary )
 {
 	float d = ( p1.x - p0.x ) * ( p2.y - p0.y ) - ( p1.y - p0.y ) * ( p2.x - p0.x );
@@ -371,45 +371,45 @@ inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec3fEx &p, const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, CVec2 *pBary )
 {
 	//GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 	GetBaryCoords( p.GetVec3() , p0, p1, p2, pBary );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec3 &p, const CVec3fEx &p0, const CVec3fEx &p1, const CVec3fEx &p2, CVec2 *pBary )
 {
 	//GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 	GetBaryCoords( p, p0.GetVec3(), p1.GetVec3(), p2.GetVec3(), pBary );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //inline void GetBaryCoords( const CVec3 &p, const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, CVec2 *pBary )
 //{
 //	GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec2 &p, const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, CVec2 *pBary )
 {
 	GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec2 &p, const CVec3fEx &p0, const CVec3fEx &p1, const CVec3fEx &p2, CVec2 *pBary )
 {
 	GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetBaryCoords( const CVec3fEx &p, const CVec3dEx &p0, const CVec3dEx &p1, const CVec3dEx &p2, CVec2 *pBary )
 {
 	//GetBaryCoords( p.x, p.y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, pBary );
 	GetBaryCoords( p.GetVec3(), p0.GetVec3(), p1.GetVec3(), p2.GetVec3(), pBary );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsBaryIn( const CVec2 &v )
 {
 	return ( v.x > -EPS_VALUE ) && ( v.y > -EPS_VALUE ) && ( (v.x + v.y) < (1.0f + EPS_VALUE) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetPointDistOnSegment( const CVec3 &p, const CVec3 &p1, const CVec3 &p2 )
 {
 	if ( fabs(p2.x - p1.x) > DEF_EPS )
@@ -419,7 +419,7 @@ inline float GetPointDistOnSegment( const CVec3 &p, const CVec3 &p1, const CVec3
 			return ( p.y - p1.y ) / ( p2.y - p1.y );
 	return 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Calc normalized canonical line equation ax+by+c=0
 inline void GetLineEq( const float x1, const float y1, const float x2, const float y2, float *a, float *b, float *c )
 {
@@ -439,7 +439,7 @@ inline void GetLineEq( const float x1, const float y1, const float x2, const flo
 	*b = tb * sq;
 	*c = tc * sq;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetLineEq( const double x1, const double y1, const double x2, const double y2, double *a, double *b, double *c )
 {
 	const double ta = y1 - y2;
@@ -458,7 +458,7 @@ inline void GetLineEq( const double x1, const double y1, const double x2, const 
 	*b = tb * sq;
 	*c = tc * sq;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTriangleEx
 {
 public:
@@ -487,7 +487,7 @@ public:
 		GetLineEq( p3.x, p3.y, p1.x, p1.y, &(coeffs[2].x), &(coeffs[2].y), &(coeffs[2].z) );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetDistToSegment( const CVec2 &v, const CVec2 &v1, const CVec2 &v2 )
 {
 	const float fDist = fabs2( v2.x - v1.x ) + fabs2( v2.y - v1.y );
@@ -501,7 +501,7 @@ inline float GetDistToSegment( const CVec2 &v, const CVec2 &v1, const CVec2 &v2 
 	}
 	return min( fabs2(v - v1), fabs2(v - v2) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // return error between source point and point on segment
 inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx &v2, float *pRes )
 {
@@ -530,7 +530,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3fEx &v1, const CVec3fEx
 		}
 	return FP_MAX_VALUE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, float *pRes )
 {
 	if ( fabs(v2.x - v1.x) > DEF_EPS )
@@ -556,7 +556,7 @@ inline float GetErrorDist( const CVec3fEx &v, const CVec3 &v1, const CVec3 &v2, 
 		}
 		return FP_MAX_VALUE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert/*, bool bIncludeBorders = false*/ )
 {
 	int nCount = 0;
@@ -592,7 +592,7 @@ inline bool IsInside( const CTriangleEx &trg, const CVec3dEx &vert/*, bool bIncl
 	}
 	return ( (nCount == 3) || (nCount == -3) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsInside( const vector<CVec3> &lineCoeffs, const CVec3 &vert )
 {
 	int nCountL = 0, nCountR = 0;
@@ -612,7 +612,7 @@ inline bool IsInside( const vector<CVec3> &lineCoeffs, const CVec3 &vert )
 	}
 	return ( (nCountL == lineCoeffs.size()) || (nCountR == lineCoeffs.size()) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
@@ -650,7 +650,7 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsIntersect( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx &v1, const CVec3dEx &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
@@ -665,7 +665,7 @@ inline bool IsIntersect( const CVec3dEx &p1, const CVec3dEx &p2, const CVec3dEx 
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsIntersectOneOf( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const double fDet = (double)( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
@@ -679,7 +679,7 @@ inline bool IsIntersectOneOf( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1,
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddIntersection( vector<CVec3> *pIntersection, const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, const CVec3 &v2 )
 {
 	const float fDet = ( p2.x - p1.x ) * ( v2.y - v1.y ) - ( p2.y - p1.y ) * ( v2.x - v1.x );
@@ -694,7 +694,7 @@ inline void AddIntersection( vector<CVec3> *pIntersection, const CVec3 &p1, cons
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddIntersectionOneSide( vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
@@ -707,7 +707,7 @@ inline void AddIntersectionOneSide( vector<SIntersectPoint> *pIntersection, cons
 			PushBackUnique( pIntersection, SIntersectPoint(p1 + (p2 - p1) * k, t) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddIntersection( vector<SIntersectPoint> *pIntersection, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2 )
 {
 	const float fDet = ( v2.x - v1.x ) * ( p2.y - p1.y ) - ( v2.y - v1.y ) * ( p2.x - p1.x );
@@ -720,7 +720,7 @@ inline void AddIntersection( vector<SIntersectPoint> *pIntersection, const CVec3
 			PushBackUnique( pIntersection, SIntersectPoint( v1 + (v2 - v1) * t, t ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // whether "rV" is inside "rPoly"
 B2_M1_TERRAIN_EXPORT bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders = false );
 B2_M1_TERRAIN_EXPORT bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV );
@@ -732,7 +732,7 @@ void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb
 B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 );
 B2_M1_TERRAIN_EXPORT bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 );
 B2_M1_TERRAIN_EXPORT void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
 bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, bool bIncludeBorders = false );
 bool AreTrianglesTakenUp( const CTriangleEx rOuterTriangle, const CTriangleEx rInnerTriangle, bool bIncludeBorders = true );

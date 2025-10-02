@@ -14,13 +14,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		REINF POINTS STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::CreateReinfPoint()
 {
 	CVec3 vCamAnchor;
@@ -61,7 +61,7 @@ bool CReinfPointsState::CreateReinfPoint()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::DeleteSelectedReinfPoint()
 {
 	CPtr<IManipulator> pMapInfoMan = pMapInfoEditor->GetViewManipulator();
@@ -92,7 +92,7 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::GetReinfPointsFromWindow()
 {
 	CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator();
@@ -137,7 +137,7 @@ bool CReinfPointsState::GetReinfPointsFromWindow()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint )
 {
 	CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator();
@@ -230,7 +230,7 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinf
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::Enter()
 {
 	reinfPoints.clear();
@@ -245,7 +245,7 @@ void CReinfPointsState::Enter()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::Leave()
 {
 	reinfPoints.clear();
@@ -255,14 +255,14 @@ void CReinfPointsState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::OnSetFocus( class CWnd* pNewWnd )
 {
 	CDefaultInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch ( nCommandID )
@@ -347,7 +347,7 @@ bool CReinfPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CReinfPointsState::UpdateCommand(), pbEnable == 0" );
@@ -379,7 +379,7 @@ bool CReinfPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReinfPointsState::CReinfPointsState( CMapInfoEditor* _pMapInfoEditor )
 	: pMapInfoEditor( _pMapInfoEditor )
 {
@@ -388,7 +388,7 @@ CReinfPointsState::CReinfPointsState( CMapInfoEditor* _pMapInfoEditor )
 	NI_ASSERT( pMapInfoEditor != 0, "CReinfPointsState(): Invalid parameter: pMapInfoEditor == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::RefreshReinfPointsWindow()
 {
 	if ( nSelectedPlayer == -1 )
@@ -426,7 +426,7 @@ void CReinfPointsState::RefreshReinfPointsWindow()
 																												0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::Draw( CPaintDC *pPaintDC )
 {
 	ICamera *pCam = Camera();
@@ -501,7 +501,7 @@ void CReinfPointsState::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::PostDraw( CPaintDC *pPaintDC )
 {
 	ICamera *pCamera = Camera();
@@ -524,7 +524,7 @@ void CReinfPointsState::PostDraw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
@@ -583,7 +583,7 @@ void CReinfPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 	nSelectedReinfPoint = -1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
@@ -657,7 +657,7 @@ void CReinfPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoin
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( reinfPoints.size() == 0 ) // no points
@@ -679,7 +679,7 @@ void CReinfPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoin
 	bRotate = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::EditPointDeployTemplate()
 {
 	if ( nSelectedReinfPoint < 0 )
@@ -703,7 +703,7 @@ bool CReinfPointsState::EditPointDeployTemplate()
 		return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsState::EditPointTypedTemplate()
 {
 	if ( nSelectedReinfPoint < 0 )
@@ -724,7 +724,7 @@ bool CReinfPointsState::EditPointTypedTemplate()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -755,4 +755,4 @@ void CReinfPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

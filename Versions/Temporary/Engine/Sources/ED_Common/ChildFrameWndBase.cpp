@@ -18,10 +18,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CChildFrameWndBase, CWnd)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
@@ -53,7 +53,7 @@ BEGIN_MESSAGE_MAP(CChildFrameWndBase, CWnd)
 	ON_WM_VSCROLL()
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CChildFrameWndBase::CChildFrameWndBase() 
 	: nUpdateSceneTimer( 0 ), 
 		nUpdateSceneTimerInterval( 0 ), 
@@ -71,13 +71,13 @@ CChildFrameWndBase::CChildFrameWndBase()
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SCENE, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CChildFrameWndBase::~CChildFrameWndBase()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SCENE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CChildFrameWndBase::PreCreateWindow( CREATESTRUCT &rCreateStruct ) 
 {
 	if ( !CWnd::PreCreateWindow( rCreateStruct ) )
@@ -96,7 +96,7 @@ BOOL CChildFrameWndBase::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CChildFrameWndBase::OnCreate( LPCREATESTRUCT pCreateStruct ) 
 {
 	if ( CWnd::OnCreate( pCreateStruct ) == -1 )
@@ -114,7 +114,7 @@ int CChildFrameWndBase::OnCreate( LPCREATESTRUCT pCreateStruct )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnDestroy() 
 {
 	KillUpdateSceneTimer();
@@ -125,7 +125,7 @@ void CChildFrameWndBase::OnDestroy()
 	CWnd::OnDestroy();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnTimer( UINT nIDEvent ) 
 {
 	if ( nIDEvent == GetUpdateSceneTimerID() )
@@ -136,7 +136,7 @@ void CChildFrameWndBase::OnTimer( UINT nIDEvent )
 }
 
 //DebugTrace( "CChildFrameWndBase::On...(), flags: %u, ( %d, %d )\n", nFlags, point.x, point.y );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnSetFocus( CWnd* pOldWnd )
 {
 	CWnd::OnSetFocus( pOldWnd );
@@ -151,7 +151,7 @@ void CChildFrameWndBase::OnSetFocus( CWnd* pOldWnd )
 	//Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnKillFocus( CWnd* pNewWnd )
 {
 	CWnd::OnKillFocus( pNewWnd );
@@ -165,7 +165,7 @@ void CChildFrameWndBase::OnKillFocus( CWnd* pNewWnd )
 	NMainLoop::SetInputEnabled( false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnMouseMove( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnMouseMove( nFlags, point );
@@ -186,7 +186,7 @@ void CChildFrameWndBase::OnMouseMove( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CChildFrameWndBase::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 {
 	const BOOL bResult = CWnd::OnMouseWheel( nFlags, zDelta, point );
@@ -207,7 +207,7 @@ BOOL CChildFrameWndBase::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnLButtonDown( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonDown( nFlags, point );
@@ -225,7 +225,7 @@ void CChildFrameWndBase::OnLButtonDown( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnLButtonUp( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonUp( nFlags, point );
@@ -242,7 +242,7 @@ void CChildFrameWndBase::OnLButtonUp( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnLButtonDblClk( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnLButtonDblClk( nFlags, point );
@@ -259,7 +259,7 @@ void CChildFrameWndBase::OnLButtonDblClk( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnRButtonDown( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonDown( nFlags, point );
@@ -277,7 +277,7 @@ void CChildFrameWndBase::OnRButtonDown( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnRButtonUp( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonUp( nFlags, point );
@@ -294,7 +294,7 @@ void CChildFrameWndBase::OnRButtonUp( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnRButtonDblClk( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnRButtonDblClk( nFlags, point );
@@ -311,7 +311,7 @@ void CChildFrameWndBase::OnRButtonDblClk( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnMButtonDown( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonDown( nFlags, point );
@@ -325,7 +325,7 @@ void CChildFrameWndBase::OnMButtonDown( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnMButtonUp( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonUp( nFlags, point );
@@ -338,7 +338,7 @@ void CChildFrameWndBase::OnMButtonUp( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnMButtonDblClk( UINT nFlags, CPoint point ) 
 {
 	CWnd::OnMButtonDblClk( nFlags, point );
@@ -351,7 +351,7 @@ void CChildFrameWndBase::OnMButtonDblClk( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnKeyDown( nChar, nRepCnt, nFlags );
@@ -391,7 +391,7 @@ void CChildFrameWndBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnKeyUp( nChar, nRepCnt, nFlags );
@@ -404,7 +404,7 @@ void CChildFrameWndBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnChar( nChar, nRepCnt, nFlags );
@@ -424,7 +424,7 @@ void CChildFrameWndBase::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnSysKeyDown( nChar, nRepCnt, nFlags );
@@ -438,7 +438,7 @@ void CChildFrameWndBase::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnSysKeyUp( nChar, nRepCnt, nFlags );
@@ -451,7 +451,7 @@ void CChildFrameWndBase::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWnd::OnSysChar( nChar, nRepCnt, nFlags );
@@ -464,7 +464,7 @@ void CChildFrameWndBase::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnContextMenu( CWnd *pWnd, CPoint point )
 {
 	CWnd::OnContextMenu( pWnd, point );
@@ -477,13 +477,13 @@ void CChildFrameWndBase::OnContextMenu( CWnd *pWnd, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CChildFrameWndBase::OnEraseBkgnd( CDC* pDC )
 {
 	return FALSE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnPaint() 
 {
 	if ( bWasResized )
@@ -525,7 +525,7 @@ void CChildFrameWndBase::OnPaint()
 	OnResizeChildFrameWnd( size.Width(), size.Height() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnSize( UINT nType, int cx, int cy )
 {
 	if ( bIsSettingUp )
@@ -551,7 +551,7 @@ void CChildFrameWndBase::OnSize( UINT nType, int cx, int cy )
 	bWasResized = true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::AlignWndAspect()
 {
 	bIsSettingUp = true;
@@ -596,7 +596,7 @@ void CChildFrameWndBase::AlignWndAspect()
 	bIsSettingUp = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::SetUpdateSceneTimer()
 {
 	KillUpdateSceneTimer();
@@ -610,7 +610,7 @@ void CChildFrameWndBase::SetUpdateSceneTimer()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::KillUpdateSceneTimer()
 {
 	if ( nUpdateSceneTimer != 0 )
@@ -620,7 +620,7 @@ void CChildFrameWndBase::KillUpdateSceneTimer()
 	nUpdateSceneTimer = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnUpdateSceneTimer()
 {
 	if ( GetFocus() == this )
@@ -638,7 +638,7 @@ void CChildFrameWndBase::OnUpdateSceneTimer()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::RemoveInput()
 {
 	MSG msg;
@@ -646,14 +646,14 @@ void CChildFrameWndBase::RemoveInput()
 	PeekMessage( &msg, GetSafeHwnd(), WM_KEYFIRST, WM_KEYLAST, PM_REMOVE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableInput( DWORD dwData )
 {
 	DebugTrace( "CChildFrameWndBase::EnableInput( %d )", dwData );
 	bInputEnabled = ( dwData != 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableAutoUpdate( DWORD dwData )
 {
 	if ( dwData != 0 )
@@ -667,7 +667,7 @@ void CChildFrameWndBase::EnableAutoUpdate( DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableRunMode( DWORD dwData )
 {
 	bRunModeEnabled = ( dwData != 0 );
@@ -684,7 +684,7 @@ void CChildFrameWndBase::EnableRunMode( DWORD dwData )
 	EnableAutoUpdate( dwData );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 {
 	NInput::InitInput( m_hWnd, false, true );
@@ -697,7 +697,7 @@ void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 	EnableAutoUpdate( DEFAULT_REFRESH_RATE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::DisableGameInput()
 {
 	NInput::DoneInput();
@@ -706,13 +706,13 @@ void CChildFrameWndBase::DisableGameInput()
 	EnableAutoUpdate( 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableRender( DWORD dwData )
 {
 	bRenderEnabled = ( dwData != 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableScrollbars( DWORD dwData )
 {
 	if ( bEnableScroll != ( dwData > 0 ) )
@@ -743,7 +743,7 @@ void CChildFrameWndBase::EnableScrollbars( DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::EnableMouseCapture( DWORD dwData )
 {
 	if ( dwData > 0 )
@@ -756,7 +756,7 @@ void CChildFrameWndBase::EnableMouseCapture( DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::GetDimensions( DWORD dwData )
 {
 	if ( dwData != 0 )
@@ -769,7 +769,7 @@ void CChildFrameWndBase::GetDimensions( DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChildFrameWndBase::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -850,7 +850,7 @@ bool CChildFrameWndBase::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChildFrameWndBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CChildFrameWndBase::UpdateCommand(), pbEnable == 0" );
@@ -926,7 +926,7 @@ bool CChildFrameWndBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 {
 	if ( bEnableScroll )
@@ -984,7 +984,7 @@ void CChildFrameWndBase::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChildFrameWndBase::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar )
 {
 	if ( bEnableScroll )
@@ -1041,6 +1041,6 @@ void CChildFrameWndBase::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

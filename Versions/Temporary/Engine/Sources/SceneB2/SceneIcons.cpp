@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "SceneInternal.h"
 //#include "TerrUtils.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
 {
 	const float fMaxSize = max( vHalfSize.x * 2.0f, vHalfSize.y * 2.0f );
@@ -16,7 +16,7 @@ void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
 	//pVisitor->AddHull( NDb::Get<NDb::SAIGeometry>( 1136 ), trans, 0, 0, 1 );
 	pVisitor->AddHull( pAIGeometry, matr, 0, 0, 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneIconInfo::OrientToViewer()
 {
 	const SHMatrix matrix = pCamera->GetViewMatrix();
@@ -39,7 +39,7 @@ void CSceneIconInfo::OrientToViewer()
 	data.vertices[3].pos = vCenter + s[3];
 	data.vertices[3].normal = vNorm;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneIconInfo::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -54,12 +54,12 @@ void CSceneIconInfo::Recalc()
 	pValue->AssignFast( &objData );
 	bUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool CSceneIconInfo::NeedUpdate()
 {
 	return bUpdate || pCamera->WasUpdated();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneIconInfo::CreateIcon( const int _nID, const CVec3 &_vCenter, const CVec2 &_vSize,
 																 const CVec2 &_vTexMin, const CVec2 &_vTexMax, const NDb::SMaterial *_pMaterial,
 																 const NDb::SAIGeometry *_pAIGeometry, CSyncSrc<CSceneIconInfo> *pSyncSrc )
@@ -103,7 +103,7 @@ void CSceneIconInfo::CreateIcon( const int _nID, const CVec3 &_vCenter, const CV
 
 	AttachSyncSrc( pSyncSrc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CSceneIconInfo::MoveIcon( const CVec3 &_vCenter )
 {
 	vCenter = _vCenter;
@@ -115,7 +115,7 @@ inline void CSceneIconInfo::MoveIcon( const CVec3 &_vCenter )
 		pBound = new CCSBound();
 	pBound->Set( bound );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddSceneIcon( const int nID, const CVec3 &vCenter, const CVec2 &vSize, const CVec2 &vTexMin, const CVec2 &vTexMax,
 													const NDb::SMaterial *pMaterial )
 {
@@ -135,12 +135,12 @@ int CScene::AddSceneIcon( const int nID, const CVec3 &vCenter, const CVec2 &vSiz
 
 	return nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveSceneIcon( const int nID )
 {
 	data[eScene]->iconsMap.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::MoveSceneIcon( const int nID, const CVec3 &vCenter )
 {
 	SSceneData::CSceneIconsMap::iterator it = data[eScene]->iconsMap.find( nID );

@@ -6,21 +6,21 @@
 #include "VisObjIconsManager.h"
 #include "DBSceneConsts.h"
 #include "VisObjIcons.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_ICON_SIZE 1.5f
 //#define DEF_ICON_ADD_HEIGHT_SCALE 0.1f
 #define DEF_ICON_HPBAR_WIDTH ( 0.15f / 2 )
 #define DEF_ICON_HPBAR_BORDER_WIDTH ( 0.0375f / 2 )
 #define DEF_ICON_ELEM_WIDTH ( 0.3f / 2 )
 #define DEF_ICON_ELEM_WIDTH_BETWEEN ( 0.2f / 2 )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void inline SetCompactVcetorAndSaveW( NGfx::SCompactVector &dst, const NGfx::SCompactVector &src )
 {
 	dst.x = src.x;
 	dst.y = src.y;
 	dst.z = src.z;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconInfo::OrientToViewer()
 {
 	//SHMatrix matrix;
@@ -59,7 +59,7 @@ void CVisObjIconInfo::OrientToViewer()
 		//data.vertices[nInd + 3].normal = vNorm;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconInfo::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -74,12 +74,12 @@ void CVisObjIconInfo::Recalc()
 	pValue->AssignFast( &objData );
 	bUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool CVisObjIconInfo::NeedUpdate()
 {
 	 return bUpdate || pCamera->WasUpdated();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddSingleIcon( CVisObjIconInfo *pIconInfo, const float x1, const float y1, const float x2, const float y2,
 													const CTRect<float> &rcRect, NGScene::SVertex &vert )
 {
@@ -104,7 +104,7 @@ inline void AddSingleIcon( CVisObjIconInfo *pIconInfo, const float x1, const flo
 	pIconInfo->iconsSizesMin.push_back( CVec2( x1, y1 ) );
 	pIconInfo->iconsSizesMax.push_back( CVec2( x2, y2 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIconsSet *pIconSet, const CVec3 &vPos )
 {
 	if ( iconHolder.pPatch == 0 )
@@ -193,7 +193,7 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 
 	iconHolder.pPatch->ForceUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 {
 	if ( iconHolder.pPatch == 0 )
@@ -216,7 +216,7 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 
 	iconHolder.pPatch->ForceUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetVisObjIconsBase( CVec3 *pvPos, const SModelVisObjDesc *pVOD )
 {
 	NI_ASSERT( pVOD->pModel, StrFmt( "No model for VisObj %d", pVOD->GetID()) );
@@ -228,7 +228,7 @@ inline void GetVisObjIconsBase( CVec3 *pvPos, const SModelVisObjDesc *pVOD )
 	//*pvPos = pVOD->GetPlacement().forward.GetTrans3();
 	//pvPos->z += pVOD->pModel->pGeometry->pAIGeometry->vAABBHalfSize.z;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 {
 	if ( iconInfo.IsEmpty() )
@@ -258,12 +258,12 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 		data[eScene]->pVisObjIconsManager->SetIcon( iconInfo, vPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveIcon( const int nID )
 {
 	if ( data[eScene]->pVisObjIconsManager )
 		data[eScene]->pVisObjIconsManager->RemoveIcon( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1311E302, CVisObjIconInfo );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

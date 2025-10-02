@@ -18,7 +18,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD CalcColor( NDb::EParcelType eType )
 {
 	switch ( eType )
@@ -39,13 +39,13 @@ static DWORD CalcColor( NDb::EParcelType eType )
 	return PARCEL_COLOR_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		AI GENERAL POINTS STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIGeneralPointsState::CAIGeneralPointsState( CMapInfoEditor *_pMapInfoEditor )
 	:	pMapInfoEditor( _pMapInfoEditor ),
 	bMoveParcel( false ),
@@ -57,7 +57,7 @@ CAIGeneralPointsState::CAIGeneralPointsState( CMapInfoEditor *_pMapInfoEditor )
 	dialogData.nCurrentPlayer = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::Enter()
 {
 	sceneDrawTool.Clear();
@@ -73,7 +73,7 @@ void CAIGeneralPointsState::Enter()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::Leave()
 {
 	SaveDataToDB();
@@ -84,14 +84,14 @@ void CAIGeneralPointsState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnSetFocus( class CWnd* pNewWnd )
 {
 	CDefaultInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 {
 	sceneDrawTool.Clear();
@@ -183,7 +183,7 @@ void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID ) 
@@ -250,7 +250,7 @@ bool CAIGeneralPointsState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIGeneralPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsState::UpdateCommand(), pbEnable == 0" );
@@ -284,7 +284,7 @@ bool CAIGeneralPointsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( dialogData.players[dialogData.nCurrentPlayer].parcels.size() == 0 )
@@ -359,7 +359,7 @@ void CAIGeneralPointsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMou
 	RefreshWindowData();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint )
@@ -374,7 +374,7 @@ void CAIGeneralPointsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	bMoveParcel = false;
@@ -387,7 +387,7 @@ void CAIGeneralPointsState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMouse
 	RefreshWindowData();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !(bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint) )
@@ -453,7 +453,7 @@ void CAIGeneralPointsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -476,7 +476,7 @@ void CAIGeneralPointsState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::GetDataFromDB()
 {
 	dialogData.Clear();
@@ -514,7 +514,7 @@ void CAIGeneralPointsState::GetDataFromDB()
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::SaveDataToDB()
 {
 	if ( CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController() )
@@ -559,7 +559,7 @@ void CAIGeneralPointsState::SaveDataToDB()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::RefreshWindowData()
 {
 	if ( dialogData.nCurrentPlayer == -1 )
@@ -571,7 +571,7 @@ void CAIGeneralPointsState::RefreshWindowData()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::AddID()
 {
 	if ( dialogData.CurrentPlayer() < 0 )
@@ -603,7 +603,7 @@ void CAIGeneralPointsState::AddID()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::AddParcel()
 {
 	if ( dialogData.CurrentPlayer() < 0 )
@@ -651,7 +651,7 @@ void CAIGeneralPointsState::AddParcel()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 {
 	if ( (dialogData.CurrentParcel() < 0) || (dialogData.CurrentParcel() >= dialogData.players[dialogData.CurrentPlayer()].parcels.size()) )
@@ -691,7 +691,7 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::DeletePoint()
 {
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) || (dialogData.CurrentPoint() < 0) )
@@ -729,7 +729,7 @@ void CAIGeneralPointsState::DeletePoint()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::DeleteID()
 {
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentID() < 0) )
@@ -767,7 +767,7 @@ void CAIGeneralPointsState::DeleteID()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::DeleteParcel()
 {
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) )
@@ -805,7 +805,7 @@ void CAIGeneralPointsState::DeleteParcel()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsState::EditParcel()
 {
 	NDb::EParcelType newParcelType = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].eType;
@@ -823,4 +823,4 @@ void CAIGeneralPointsState::EditParcel()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

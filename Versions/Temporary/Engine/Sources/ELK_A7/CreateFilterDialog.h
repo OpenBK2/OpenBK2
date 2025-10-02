@@ -10,7 +10,7 @@
 #include "..\MapEditorLib\Tools_Resources.h"
 
 int CALLBACK FiltersCompareFunc( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCreateFilterDialog : public CResizeDialog
 {
 	friend int CALLBACK FiltersCompareFunc( LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort );
@@ -80,5 +80,5 @@ public:
 	CFilterMap filterMap;
 	string szCurrentFilter;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__CREATE_FILTER_DIALOG__)

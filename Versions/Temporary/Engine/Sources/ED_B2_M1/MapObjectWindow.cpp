@@ -20,12 +20,12 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CMapObjectWindow::FILTER_TYPE[] = "MAPOBJECT";
 const char CMapObjectWindow::MAPOBJECT_EXTRACTOR_TYPE[] = "MAPOBJECT";
 const char CMapObjectWindow::SPOT_EXTRACTOR_TYPE[] = "SPOT";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapObjectWindow::CMapObjectWindow( bool _bFull, CWnd* pParent )
 	: CResizeDialog( _bFull ? CMapObjectWindow::IDD_FULL : CMapObjectWindow::IDD_NO_BUTTONS, pParent ), bCreateControls( true ), bFull( _bFull ), nStyle( LVS_ICON )
 {
@@ -75,14 +75,14 @@ CMapObjectWindow::CMapObjectWindow( bool _bFull, CWnd* pParent )
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_MAPOBJECT_WINDOW, ID_MIMOOLCM_LIST, ID_MIMOOLCM_PROPERTIES );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapObjectWindow::~CMapObjectWindow()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_MAPOBJECT_WINDOW );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_WINDOW );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 CWMMnemonicCodes mnemonicCodes;
 LRESULT CMapObjectWindow::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
@@ -92,7 +92,7 @@ LRESULT CMapObjectWindow::WindowProc( UINT message, WPARAM wParam, LPARAM lParam
 }
 /**/
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::DoDataExchange( CDataExchange* pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -103,7 +103,7 @@ void CMapObjectWindow::DoDataExchange( CDataExchange* pDX )
 	DDX_Control( pDX, IDC_TMIMO_OBJECT_LIST, wndObjectList );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CMapObjectWindow, CResizeDialog)
 	ON_WM_SIZE()
 	ON_CBN_SELCHANGE(IDC_TMIMO_FILTER_COMBO, OnSelchangeFilterComboBox)
@@ -124,7 +124,7 @@ BEGIN_MESSAGE_MAP(CMapObjectWindow, CResizeDialog)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMapObjectWindow::OnInitDialog() 
 {
 	CResizeDialog::OnInitDialog();
@@ -143,7 +143,7 @@ BOOL CMapObjectWindow::OnInitDialog()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapObjectWindow::GetSelectedFilterIndex()
 {
 	if ( bFull )
@@ -181,7 +181,7 @@ int CMapObjectWindow::GetSelectedFilterIndex()
 	return INVALID_NODE_ID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectWindow::GetEditParameters( CMapObjectMultiState::SEditParameters *pEditParameters )
 {
 	NI_ASSERT( pEditParameters != 0, "CMapObjectWindow::GetEditParameters(), pEditParameters == 0" );
@@ -226,7 +226,7 @@ bool CMapObjectWindow::GetEditParameters( CMapObjectMultiState::SEditParameters 
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectWindow::SetEditParameters( const CMapObjectMultiState::SEditParameters &rEditParameters )
 {
 	if ( rEditParameters.nFlags & ( MIMOSEP_PLAYER_COUNT | MIMOSEP_PLAYER_INDEX ) )
@@ -252,7 +252,7 @@ bool CMapObjectWindow::SetEditParameters( const CMapObjectMultiState::SEditParam
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::UpdateObjectsListStyle()
 {
 	if ( ::IsWindow( wndObjectList.m_hWnd ) )
@@ -266,14 +266,14 @@ void CMapObjectWindow::UpdateObjectsListStyle()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::SetObjectsListStyle( int _nStyle )
 {
 	nStyle = _nStyle;
 	UpdateObjectsListStyle();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::FillFilterComboBox()
 {
 	bCreateControls = true;
@@ -302,7 +302,7 @@ void CMapObjectWindow::FillFilterComboBox()
 	bCreateControls = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::FillObjectList()
 {
 	CWaitCursor waitCursor;
@@ -342,13 +342,13 @@ void CMapObjectWindow::FillObjectList()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnSetFocus( CWnd* pOldWnd )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_OBJECT_STORAGE, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::UpdateSelection()
 {
 	if ( !bCreateControls )
@@ -383,7 +383,7 @@ void CMapObjectWindow::UpdateSelection()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::ClearSelection()
 {
 	bCreateControls = true;
@@ -398,7 +398,7 @@ void CMapObjectWindow::ClearSelection()
 	bCreateControls = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -473,7 +473,7 @@ bool CMapObjectWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectWindow::UpdateCommand(), pbEnable == 0" );
@@ -515,7 +515,7 @@ bool CMapObjectWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnSize( UINT nType, int cx, int cy ) 
 {
 	CResizeDialog::OnSize( nType, cx, cy );
@@ -523,7 +523,7 @@ void CMapObjectWindow::OnSize( UINT nType, int cx, int cy )
 	UpdateObjectsListStyle();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnSelchangeFilterComboBox()
 {
 	if ( !bCreateControls )
@@ -533,7 +533,7 @@ void CMapObjectWindow::OnSelchangeFilterComboBox()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnDirectionRadio()
 {
 	if ( !bCreateControls )
@@ -542,7 +542,7 @@ void CMapObjectWindow::OnDirectionRadio()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnChangeDirection()
 {
 if ( !bCreateControls )
@@ -551,18 +551,18 @@ if ( !bCreateControls )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnFilterRadio()
 {
 	FillObjectList();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnItemchangedObjectList( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	UpdateSelection();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObjectWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 {
 	CResizeDialog::OnContextMenu( pwnd, point );
@@ -583,6 +583,6 @@ void CMapObjectWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

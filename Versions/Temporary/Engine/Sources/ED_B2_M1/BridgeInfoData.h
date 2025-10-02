@@ -3,7 +3,7 @@
 #pragma once
 
 #include "MapInfoEditorData.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMapInfoEditor
 {
 	typedef list<CVec3> CBridgeCenterPointList;
@@ -66,5 +66,5 @@ namespace NMapInfoEditor
 		bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 	};
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPINFO_EDITOR_DATA__BRIDGE_INFO__)

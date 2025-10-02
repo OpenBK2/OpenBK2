@@ -1,9 +1,9 @@
 #pragma once
 #include "..\Input\Bind.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NInput
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CKeyAccumulator
 {
 protected:
@@ -55,10 +55,10 @@ public:
 	}
 	void Reset() { bActive = false; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // При значении меньше данного CDoubleAccumulator считает что LimAxis вернулась в нулевое положение
 const int POWER_MIN_LIMIT = 10;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDoubleAccumulator
 {
 protected:
@@ -117,7 +117,7 @@ public:
 	}
 	void Reset() { bActive = false; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAxisAccumulator
 {
 protected:
@@ -138,7 +138,7 @@ public:
 		return nTemp;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAccumulator
 {
 	CKeyAccumulator sKeyAccumulator;
@@ -149,7 +149,7 @@ struct SAccumulator
 	int64 Sample( DWORD dwTime ) { return sKeyAccumulator.Sample( dwTime ) + sPOVAccumulator.Sample( dwTime ) + sLimAxisAccumulator.Sample( dwTime ) + sAxisAccumulator.Sample( dwTime ); }
 	void Reset() { sKeyAccumulator.Reset(); sPOVAccumulator.Reset(); sLimAxisAccumulator.Reset(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EActionState
 {
 	STATE_DEFAULT,
@@ -167,7 +167,7 @@ struct SActionInfo
 
 	SActionInfo(): eState( STATE_DEFAULT ), bActive( false ), fCoeff( 1.0f ), fGranularity( 1.0f ), eType( CT_UNKNOWN ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMapping
 {
 	int nPower;
@@ -182,7 +182,7 @@ struct SMapping
 
 	SMapping(): nPower( 0 ), bActive( false ), bDisabled( true ), mType( MTYPE_UNKNOWN ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCommand
 {
 	bool bActive;
@@ -194,5 +194,5 @@ struct SCommand
 
 	SCommand(): bActive(false), fCoeff( 1.0f ), fDelta( 0.0f ), fSpeed( 0.0f ), dwTime( 0 ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };

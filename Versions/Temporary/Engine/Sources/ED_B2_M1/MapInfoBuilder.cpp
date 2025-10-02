@@ -26,10 +26,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_BUILDER_IN_DLL( MapInfo, CMapInfoBuilder )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMapInfoBuilder::MIN_PLAYER_COUNT = 3;
 const int CMapInfoBuilder::MAX_PLAYER_COUNT = 17;
 const int CMapInfoBuilder::MIN_TERRAIN_SIZE_X = 1;
@@ -44,7 +44,7 @@ const string CMapInfoBuilder::MAPINFO_TYPE_NAME = "MapInfo";
 const string CMapInfoBuilder::MAPINFO_DEFAULT_FOLDER = "Custom\\Missions\\";
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectManipulator, const CDBID &dbid )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -91,7 +91,7 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( string *pszObjectName, const string &szFolder )
 {
 	try
@@ -136,7 +136,7 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( string *pszObjectName, cons
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
@@ -158,7 +158,7 @@ bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, str
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CRAP{ PLAIN_TEXT
 bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
@@ -201,13 +201,13 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, s
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::IsValidDataCopier( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::InternalInsertObject( string *pszObjectTypeName,
 																						string *pszUniqueObjectName,
 																						bool bFromMainMenu,
@@ -337,7 +337,7 @@ bool CMapInfoBuilder::InternalInsertObject( string *pszObjectTypeName,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	SBuildDataParams buildDataParams;
@@ -371,7 +371,7 @@ bool CMapInfoBuilder::CopyObject( const string &rszObjectTypeName, const string 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void TrippleCopy( const string &szSrcFileName, const string &szDstFileName, const SUserData *pUserData )
 {
 	NFile::CopyFile( szSrcFileName, pUserData->constUserData.szDataStorageFolder + szDstFileName );
@@ -379,7 +379,7 @@ void TrippleCopy( const string &szSrcFileName, const string &szDstFileName, cons
 	//NFile::CopyFile( szSrcFileName, pUserData->constUserData.szExportSourceFolder + szDstFileName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::InternalCopy( const string &rszObjectTypeName, const string &_szDestination, const string &rszSource, IManipulator *pBuildDataManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -438,7 +438,7 @@ bool CMapInfoBuilder::InternalCopy( const string &rszObjectTypeName, const strin
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -493,7 +493,7 @@ bool CMapInfoBuilder::RemoveObject( const string &rszObjectTypeName, const strin
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoBuilder::GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder )
 {
 	if ( rszObjectTypeName == MAPINFO_TYPE_NAME )
@@ -507,7 +507,7 @@ void CMapInfoBuilder::GetDefaultFolder( const string &rszObjectTypeName, string 
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoBuilder::InsertObject( string *pszObjectTypeName,
 																		string *pszUniqueObjectName,
 																		bool bFromMainMenu,
@@ -558,6 +558,6 @@ bool CMapInfoBuilder::InsertObject( string *pszObjectTypeName,
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

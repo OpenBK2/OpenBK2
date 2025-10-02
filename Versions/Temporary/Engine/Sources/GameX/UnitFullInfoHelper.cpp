@@ -5,22 +5,22 @@
 #include "../Stats_B2_M1/DBAnimB2.h"
 #include "../Stats_B2_M1/DBVisObj.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NUnitFullInfo
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats );
 void MakeSquadWeapons( vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats );
 void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats );
 void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats );
 void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SWeaponsSort
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SWeaponsSort::operator()( const SWeapon &weapon1, const SWeapon &weapon2 ) const
 {
 	if ( weapon1.bPrimary != weapon2.bPrimary )
@@ -33,7 +33,7 @@ bool SWeaponsSort::operator()( const SWeapon &weapon1, const SWeapon &weapon2 ) 
 		return weapon1.nPenetration > weapon2.nPenetration;
 	return weapon1.nDamage > weapon2.nDamage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWeaponsSort::GetWeaponPriority( const SWeapon &weapon ) const
 {
 	switch ( weapon.pWeapon->eWeaponType )
@@ -84,7 +84,7 @@ int SWeaponsSort::GetWeaponPriority( const SWeapon &weapon ) const
 			return 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats )
 {
 	weapons.clear();
@@ -119,7 +119,7 @@ void MakeMechWeapons( vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pS
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeSquadWeapons( vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pStats )
 {
 	weapons.clear();
@@ -133,7 +133,7 @@ void MakeSquadWeapons( vector<SWeapon> &weapons, const NDb::SSquadRPGStats *pSta
 	}
 	sort( weapons.begin(), weapons.end(), SWeaponsSort() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats *pStats )
 {
 	// Weapons
@@ -163,7 +163,7 @@ void AddInfantryWeapons( vector<SWeapon> &weapons, const NDb::SInfantryRPGStats 
 			AddWeapon( weapons, weapon );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon )
 {
 	vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
@@ -182,7 +182,7 @@ void AddWeapon( vector<SWeapon> &weapons, const SWeapon &weapon )
 			weapons.push_back( weapon );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeWeapons( vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
@@ -194,7 +194,7 @@ void MakeWeapons( vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats
 		MakeSquadWeapons( weapons, pSquadStats );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeArmors( vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
@@ -206,7 +206,7 @@ void MakeArmors( vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
 		MakeSquadArmors( armors, pSquadStats );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats )
 {
 	if ( pStats->armors.size() >= ARMOR_COUNT )
@@ -228,7 +228,7 @@ void MakeMechArmors( vector<int> &armors, const NDb::SMechUnitRPGStats *pStats )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats )
 {
 	armors.resize( ARMOR_COUNT );
@@ -257,7 +257,7 @@ void MakeSquadArmors( vector<int> &armors, const NDb::SSquadRPGStats *pStats )
 	if ( armors[ES_ARMOR_FRONT] + armors[ES_ARMOR_SIDE] + armors[ES_ARMOR_BACK] + armors[ES_ARMOR_TOP] <= 0 )
 		armors.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int MakeHP( const NDb::SHPObjectRPGStats *pStats )
 {
 	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
@@ -269,7 +269,7 @@ int MakeHP( const NDb::SHPObjectRPGStats *pStats )
 		return pStats->fMaxHP;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SAnimB2* FindAnimation( const NDb::SInfantryRPGStats *pStats )
 {
 	if ( !pStats )
@@ -298,7 +298,7 @@ const NDb::SAnimB2* FindAnimation( const NDb::SInfantryRPGStats *pStats )
 	}
 	return pAnim;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	if ( pVisObj )
@@ -312,13 +312,13 @@ const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SModel* GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	const NDb::SModel *pExactModel = GetExactModel( pVisObj, eSeason );
 	return pExactModel != 0 ? pExactModel : GetExactModel( pVisObj, NDb::SEASON_SUMMER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsResourcesCarrier( const CUserActions &userActions )
 {
 	return userActions.HasAction( NDb::USER_ACTION_ENGINEER_REPAIR ) ||
@@ -330,6 +330,6 @@ bool IsResourcesCarrier( const CUserActions &userActions )
 		userActions.HasAction( NDb::USER_ACTION_ENGINEER_PLACE_MINES ) ||
 		userActions.HasAction( NDb::USER_ACTION_ENGINEER_CLEAR_MINES );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } //namespace NUnitFullInfo
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

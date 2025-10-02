@@ -1,9 +1,9 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "NetPacket.h"
 #include "LadderStatistics.h"
 #include "../System/XmlSaver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderInfoPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderInfoPacket )
@@ -25,7 +25,7 @@ public:
 	CLadderInfoPacket( const int nClientID, const int _nSide, const bool _bHistoricity, const int _nTeamSize, const list<int> &_techLevels, const list<int> &_maps, const UINT _uCheckSum )
 		: CNetPacket( nClientID ), nSide( _nSide ), bHistoricity( _bHistoricity ), nTeamSize( _nTeamSize ), techLevels( _techLevels ), maps( _maps ), uCheckSum( _uCheckSum ) {} 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderGameResultPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderGameResultPacket )
@@ -53,7 +53,7 @@ public:
 		: CNetPacket( nClientID ),  nGameID( _nGameID ), winners( _winners ), races( _races ), reinfUsed( _reinfUsed ) {}
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderInvitePacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderInvitePacket )
@@ -76,7 +76,7 @@ public:
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nMapID( _nMapID ), nTechLevel( _nTechLevel ),
 			team1( _team1 ), team2( _team2 ) 	{} 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderStatisticsRequestPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderStatisticsRequestPacket );
@@ -89,7 +89,7 @@ public:
 	CLadderStatisticsRequestPacket( int nClientID, const string &_szNick, const bool &_bSendFullStatistics )
 		: CNetPacket( nClientID ), szNick( _szNick ), bSendFullStatistics( _bSendFullStatistics ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderStatisticsPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderStatisticsPacket )
@@ -102,7 +102,7 @@ public:
 	CLadderStatisticsPacket( int nClientID, const string &_szNick, const SLadderStatistics &_info )
 		: CNetPacket( nClientID ), szNick( _szNick ), info( _info ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderShortStatisticsPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderShortStatisticsPacket )
@@ -116,7 +116,7 @@ public:
 	CLadderShortStatisticsPacket( const int nClientID, const string &_szNick, const int _nLevel, const int _nRace )
 		: CNetPacket( nClientID ), szNick( _szNick ), nLevel( _nLevel ), nRace( _nRace ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderSurrenderPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderSurrenderPacket )
@@ -127,7 +127,7 @@ public:
 	CLadderSurrenderPacket() {}
 	CLadderSurrenderPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderInvalidStatisticsPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLadderInvalidStatisticsPacket )
@@ -140,4 +140,4 @@ public:
 	CLadderInvalidStatisticsPacket( const int nClientID, const int _nGameID, const int _nReason ) 
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nReason( _nReason	) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

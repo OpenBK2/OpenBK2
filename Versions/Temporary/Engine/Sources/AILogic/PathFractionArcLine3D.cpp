@@ -6,7 +6,7 @@
 
 REGISTER_SAVELOAD_CLASS(0x11095C41, CPathFractionArcLine3D)
 
-/////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FINALRELEASE
 void DrawWhiteCross( const CVec3 &vPoint )
 {
@@ -23,11 +23,11 @@ void DrawWhiteCross( const CVec3 &vPoint )
 	}
 }
 #endif
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CPathFractionArcLine3D
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 {
 	if ( pArc )
@@ -35,27 +35,27 @@ void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 	if ( pLine )
 		pPaths->push_back( pLine.GetPtr() );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CPathFractionArc3D * CPathFractionArcLine3D::GetArc() 
 { 
 	return pArc; 
 }
-/////////////////////////////////////////////////////////////////////////////
+
 IPathFraction * CPathFractionArcLine3D::GetLine() 
 { 
 	return pLine; 
 }
-/////////////////////////////////////////////////////////////////////////////
+
 float CPathFractionArcLine3D::GetLength() const 
 { 
 	return (pArc ? pArc->GetLength(): 0.0f) + (pLine? pLine->GetLength(): 0.0f); 
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CPathFractionArcLine3D::Init( const SPrevPathParams &prevPath, const CVec3 &x1, const float fR/*circle radius*/)
 {
 	Init( prevPath.p2, prevPath.vSpeed, x1, fR );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec3 &x1, const float fR/*circle radius*/ )
 {
 	CVec3 v0 = _v0;
@@ -105,7 +105,7 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec
 	if ( pArc && pLine->GetLength() < 10 )
 		pLine = 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const CVec3 &x1, const float fR, const int nDir, CVec3 *vT )
 {
 	CVec3 x0x1 = x1 - x0;									

@@ -7,7 +7,7 @@
 #include "../Server_Client_Common/LoginPackets.h"
 #include "../Server_Client_Common/Net.h"
 #include "../Server_Client_Common/PrimeNumbers.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckConnect )
 {
 	pServer = _pServer;
@@ -20,7 +20,7 @@ CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckCo
 	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessNewClient );
 	REGISTER_PACKET_PROCESSOR( &CConnectServerProcessor::ProcessForgottenPasswordPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::Segment()
 {
 	switch( eConnectState )
@@ -67,7 +67,7 @@ bool CConnectServerProcessor::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckConnectPacket )
 {
 	if ( bCheckConnect )
@@ -109,7 +109,7 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::ProcessLoginPacket( CLoginPacket *pLoginPacket )
 {
 	eConnectType = ECT_LOGIN;
@@ -118,7 +118,7 @@ bool CConnectServerProcessor::ProcessLoginPacket( CLoginPacket *pLoginPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::ProcessRegisterPacket( CRegisterPacket *pRegisterPacket )
 {
 	eConnectType = ECT_REGISTER;
@@ -129,7 +129,7 @@ bool CConnectServerProcessor::ProcessRegisterPacket( CRegisterPacket *pRegisterP
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pPacket )
 {
 	eConnectType = ECT_FORGOT_PASSWORD;
@@ -138,7 +138,7 @@ bool CConnectServerProcessor::ProcessForgottenPasswordPacket( CForgottenPassword
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConnectServerProcessor::ProcessNewClient( CNetNewClient *pPacket )
 {
 	if ( !bCheckConnect )				
@@ -146,4 +146,4 @@ bool CConnectServerProcessor::ProcessNewClient( CNetNewClient *pPacket )
 	
 	return pPacket->nClientID == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

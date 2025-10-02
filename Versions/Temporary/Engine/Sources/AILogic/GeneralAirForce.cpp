@@ -20,21 +20,21 @@ extern CPlayerReinforcementArray theReinfArray;
 // time to wait for reinforcement system to process aviation call 
 static const int TIME_WAIT_FOR_REINFORCE_SYSTEM = 1000;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CGlobalWarFog theWarFog;
 extern CDiplomacy theDipl;
 extern CUnitCreation theUnitCreation;
 extern NTimer::STime curTime;
 extern CSupremeBeing theSupremeBeing;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D4AE, CGeneralAirForce );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS(CGeneralAirForce);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CGeneralAirForce*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyContainer ) 
 	: pEnemyContainer( pEnemyContainer ), 
 	nParty( nParty ), bOurTurn( false ),
@@ -49,17 +49,17 @@ CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyCon
 	}
 	requests.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::PassTurn()
 {
 	bOurTurn = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralAirForce::TurnReturned() const
 {
 	return !bOurTurn;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::Segment()
 {
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 5, (bOurTurn ? "aviation's turn" : "ground general's turn") );
@@ -122,7 +122,7 @@ void CGeneralAirForce::Segment()
 		deleted.pop_front();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 {
 	bool bFound = false;
@@ -150,7 +150,7 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 	}
 	return bFound;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::GiveOrders( const int nPlayer )
 {
 	if ( nCurrentRequest == -1 )
@@ -193,7 +193,7 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 	pRequest->clear();
 	nCurrentRequest = FT_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::CallReinforcement( const int nPlayer, NDb::EReinforcementType eType, RequestsByForceType *pRequests, EForceType eForceType )
 {
 	RequestsByForceType::const_iterator pos = pRequests->find( eForceType );
@@ -208,7 +208,7 @@ void CGeneralAirForce::CallReinforcement( const int nPlayer, NDb::EReinforcement
 		theReinfArray[nPlayer].AddCallReinforcementCommand( eType, posReq->second.vPoint );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vFinish, const float fFlyHeight )
 {
 	CLine2 line( vStart, vFinish );
@@ -252,7 +252,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints, const int nPlayer )
 {
 	bOurTurn = false;
@@ -296,7 +296,7 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const list<CVec2> &vPoints
 	Singleton<IAILogic>()->UnregisterGroup( nGroupID );
 	Singleton<IAILogic>()->SetNeedNewGroupNumber();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforcementType eType )
 {
 	const float fSizeX = GetAIMap()->GetSizeX();
@@ -370,7 +370,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	if ( !vPointsToFly.empty() )
 		LaunchPlane( FT_AIR_SCOUT, vPointsToFly, nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int /*request ID*/CGeneralAirForce::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber )
 {
 	if ( nResistanceCellNumber != -1 )
@@ -393,7 +393,7 @@ int /*request ID*/CGeneralAirForce::RequestForSupport( const CVec2 &vSupportCent
 	requests[eType][nID] = info;
 	return nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::CancelRequest( int nRequestID, enum EForceType eType )
 {
 	if ( 0 != nRequestID )
@@ -403,17 +403,17 @@ void CGeneralAirForce::CancelRequest( int nRequestID, enum EForceType eType )
 		requestsID.Return( nRequestID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::Give( CCommonUnit *pWorker )
 {
 	createdAviation.push_back( checked_cast<CAIUnit*>( pWorker ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::DeleteAA( CAIUnit *pUnit )
 {
 	antiAviation.erase( pUnit->GetUniqueId() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralAirForce::SetAAVisible( CAIUnit *pUnit, const bool bVisible )
 {
 	AntiAviation::iterator it = antiAviation.find( pUnit->GetUniqueId() );

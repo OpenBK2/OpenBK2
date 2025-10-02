@@ -1,12 +1,12 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "..\input\gamemessage.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CScene;
 class CMapObj;
 class CSelector;
 interface IGameEvent;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EButtonState
 {
 	BS_NONE,
@@ -21,7 +21,7 @@ enum EActionState
 	AS_TARGET,
 	AS_MOVE
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define SA_PRESERVE               0x00000000   //
 #define SA_CLEAR_IF_NEW_NOT_EMPTY	0x00000001   //  нельзя комбинировать
 #define SA_CLEAR_ALWAYS           0x00000002   //
@@ -31,7 +31,7 @@ enum EActionState
 #define SA_ONE_TYPE								0x00000010
 #define SA_ON_WORLD								0x00000020
 #define SA_SELECT_BY_RECT					0x00000040
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*****************************************************************************************************************************
 События от MouseTranslator:        Параметры события:
 Map:
@@ -61,7 +61,7 @@ bTwoPointAction указывает на необходимоть генерац�
 отмены действия, если между нажатием на кнопку мыши и ее отпусканием был нажат ESC. При
 это генерируются события из секции Target
 *****************************************************************************************************************************/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMouseTranslator : protected NInput::CGMORegContainer, public CObjectBase
 {
 	CPtr<CSelector> pSelector;
@@ -172,7 +172,7 @@ public:
 	bool IsCtrlDown() const { return bindCtrl.IsActive(); }
 	bool IsAltDown() const { return bindAlt.IsActive(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMouseTranslatorB1 : public CMouseTranslator
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB1 );
@@ -188,7 +188,7 @@ public:
 	CMouseTranslatorB1() : CMouseTranslator( 0 )	{ };
 	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector )	{ };
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMouseTranslatorB2Base : public CMouseTranslator
 {
 	ZDATA_(CMouseTranslator)
@@ -222,7 +222,7 @@ public:
 	CMouseTranslatorB2Base();
 	CMouseTranslatorB2Base( CSelector *_pSelector );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Game );
@@ -235,7 +235,7 @@ public:
 	{
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Replay );

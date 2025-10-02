@@ -2,11 +2,11 @@
 
 #include "TerrainManager.h"
 #include "SceneInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const CVec4 CLR_CENTER = CVec4(0.8f, 0.8f, 0.8f, 1.0f);
 static const CVec4 CLR_BORDER = CVec4(1.0f, 1.0f, 1.0f, 1.0f);
 static const bool bGridDepthTest = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CreatePolylineForOnePatch( vector<CVec3> *pVertices, vector<WORD> *pIndicesCenter, vector<WORD> *pIndicesBorder, 
 																			 const int nStartX, const int nStartY, const int fTileSizeInAIUnits, const int nNumTilesInPatch )
 {
@@ -59,7 +59,7 @@ static void CreatePolylineForOnePatch( vector<CVec3> *pVertices, vector<WORD> *p
 		pIndicesBorder->push_back( nSizeX*(i + 1) + nNumTilesInPatch );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ShowTerrainGrid( ESceneShow eShow )
 {
 	bool bShow = data[eScene]->showModes[eShow];
@@ -99,7 +99,7 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY )
 {
 	if ( IsShowOn(SCENE_SHOW_AI_GRID) )
@@ -107,7 +107,7 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY )
 	else if ( IsShowOn(SCENE_SHOW_GRID) )
 		UpdateGrid( nMinX, nMinY, nMaxX, nMaxY, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGrid )
 {
 	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
@@ -158,4 +158,4 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

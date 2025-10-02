@@ -1,6 +1,6 @@
 #pragma once
 #include "Executor.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // object registed here if it is needed to restore it's transparency
 // to avoid lags in game during massive static object deletion
 class CExecutorRestoreTransparencyQueue :	public CExecutor

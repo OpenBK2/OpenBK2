@@ -3,9 +3,9 @@
 #include "../Misc/Win32Random.h"
 #include "TerraTools.h"
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_DEBRIS_HEIGHT_DISPERSION 0.1f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SmoothMaskSharp( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
@@ -37,7 +37,7 @@ static void SmoothMaskSharp( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SmoothMaskMedium( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad, CNoiseManager &noiseManager )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
@@ -76,7 +76,7 @@ static void SmoothMaskMedium( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SmoothMaskBlur( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, const int nSmoothRad )
 {
 	pImage->SetSizes( mask.GetSizeX(), mask.GetSizeY() );
@@ -105,7 +105,7 @@ static void SmoothMaskBlur( CArray2D<BYTE> *pImage, const CArray2D<BYTE> &mask, 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, CVec2 *pOrigin,
 															const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
 															const NDebrisBuilder::EMaskSmoothType smoothType )
@@ -198,4 +198,4 @@ void CTerraGen::CreateDebris( const string &szFileName, CArray2D<BYTE> *pImage, 
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

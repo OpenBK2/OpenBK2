@@ -4,7 +4,7 @@
 
 #include "../libdb/Manipulator.h"
 #include "Interface_Controller.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Вставить индекс нового типа в EPCIEType
 // Изменить bmp в IDB_PC_TYPES_IMAGE_LIST ( в начало и в конец )
 // Найти по коду все вхождения подобного индейкса и вставить новые обработчики:
@@ -12,7 +12,7 @@
 //	[x] 2. GetPCItemStringValue() - получить строку из CVariant
 //  [x] 3. GetPCItemValue() - получить CVariant из строки
 //  [x] 4. IPCItemEditor* CPCMainTreeControl::CreatePCItemEditor( HTREEITEM hItem ) - вставить вызов конструктора
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EPCIEType
 {
 	PCIE_UNKNOWN								= 0,
@@ -49,7 +49,7 @@ enum EPCIEType
 	PCIE_COUNT									= 31,
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface  IPCItemEditor : public CObjectBase
 {
 	// Получить значение имени элемента дерева ( для совместимости )
@@ -86,5 +86,5 @@ interface  IPCItemEditor : public CObjectBase
 	// Используется для получения сообщений от Slider
 	virtual void ProcessMessage( UINT nMessage, WPARAM wParam, LPARAM lParam ) = 0;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__PROPERTY_CONTROL_ITEM_EDITOR__)

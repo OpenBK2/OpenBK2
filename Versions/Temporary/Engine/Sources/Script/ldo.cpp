@@ -145,7 +145,7 @@ void luaD_callTM (lua_State *L, int nClosure, int nParams, int nResults)
 ** function position.
 ** The number of results is nResults, unless nResults=LUA_MULTRET.
 */ 
-//////////////////////////////////////////////////////////////////////////
+
 bool luaD_startCall( lua_State *L, StkId func, int nResults ) 
 {
 	//
@@ -186,7 +186,7 @@ bool luaD_startCall( lua_State *L, StkId func, int nResults )
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////
+
 void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult ) 
 {
 	ASSERT( firstResult );
@@ -214,7 +214,7 @@ void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult )
 	luaC_checkGC(L);
 	L->callInfos.erase( nCI );
 }
-//////////////////////////////////////////////////////////////////////////
+
 void luaD_call( lua_State *L, StkId func, int nResults )
 {
 	++L->nNoWait;

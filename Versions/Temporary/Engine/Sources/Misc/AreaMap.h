@@ -3,9 +3,9 @@
 
 #include <float.h>
 #include "Win32Helper.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma ONCE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE, class TStorageType = CPtr<TYPE>, class TPosition = CVec3, class TCoeffType = float>
 class CAreaMap : public CArray2D< list<TStorageType> >
 {
@@ -112,7 +112,7 @@ public:
 			(vPos.x < GetSizeX() * tCellSize ) && ( vPos.y < GetSizeY() * tCellSize );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 class CStructAreaMapComparator
 {
@@ -121,7 +121,7 @@ public:
 	CStructAreaMapComparator( const TYPE &_obj ) : obj( _obj ) {  }
 	const bool operator()( const TYPE &obj2 ) const { return obj == obj2; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE, class TPosition = CVec3, class TComparator = CStructAreaMapComparator<TYPE>, class TCoeffType = float>
 class CStructAreaMap : public CArray2D< list<TYPE> >
 {
@@ -212,5 +212,5 @@ public:
 		return ( vPos.x >= 0 ) && (vPos.y >= 0) && (vPos.x < GetSizeX()*tCellSize) && (vPos.y < GetSizeY()*tCellSize);
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __AREA_MAP_H__

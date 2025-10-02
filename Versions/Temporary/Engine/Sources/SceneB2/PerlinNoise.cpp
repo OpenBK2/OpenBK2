@@ -2,7 +2,7 @@
 
 #include "../Misc/Win32Random.h"
 #include "PerlinNoise.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_NOISE_EPS 0.00001f
 
 #define B 0x100
@@ -29,7 +29,7 @@ static void InitNoiseParameters( void );
 	b1 = ( b0 + 1 ) & BM;\
 	r0 = t - (int)t;\
 	r1 = r0 - 1.;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline static float GetNoise1D( float fArg )
 {
 	int bx0, bx1;
@@ -51,7 +51,7 @@ inline static float GetNoise1D( float fArg )
 
 	return lerp( sx, u, v );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline static float GetNoise2D( float fVecX, float fVecY )
 {
 	int bx0, bx1, by0, by1, b00, b10, b01, b11;
@@ -91,7 +91,7 @@ inline static float GetNoise2D( float fVecX, float fVecY )
 
 	return lerp( sy, a, b );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline static void Normalize2( float v[2] )
 {
 	float s;
@@ -100,7 +100,7 @@ inline static void Normalize2( float v[2] )
 	v[0] = v[0] / s;
 	v[1] = v[1] / s;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void InitNoiseParameters(void)
 {
 	int i, j, k;
@@ -130,7 +130,7 @@ static void InitNoiseParameters(void)
 			g3[B + i][j] = g3[i][j];
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPerlinNoise::Create( const int nSizeX, const int nSizeY, const long nOctsNum, const float fPers, const float fScale )
 {
 	NI_ASSERT( ( nSizeX > 0 ) && ( nSizeY > 0 ) && ( nOctsNum > 0 ) && ( fScale > 0 ), "Wrong parameters" );
@@ -179,7 +179,7 @@ int CPerlinNoise::Create( const int nSizeX, const int nSizeY, const long nOctsNu
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float CPerlinNoise::GetFullNoise( const int x, const int y, const int nOctsNum, const float fScale, const float fPers,
 																				 const float fTexOffsX, const float fTexOffsY )
 {
@@ -198,7 +198,7 @@ inline float CPerlinNoise::GetFullNoise( const int x, const int y, const int nOc
 
 	return fRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPerlinNoise::CreateTiled( const int nSizeX, const int nSizeY, const long nOctsNum, const float fPers, const float fScale )
 {
 	NI_ASSERT( ( nSizeX > 0 ) && ( nSizeY > 0 ) && ( nOctsNum > 0 ) && ( fScale > 0 ), "Wrong parameters" );
@@ -263,4 +263,4 @@ int CPerlinNoise::CreateTiled( const int nSizeX, const int nSizeY, const long nO
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

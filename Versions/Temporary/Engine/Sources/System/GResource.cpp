@@ -3,10 +3,10 @@
 #include "GResource.h"
 #include "VFSOperations.h"
 #include "..\Misc\Win32Helper.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vector<CPtr<IPrecache> > precacheUpdateList;
 void LoadPrecached()
 {
@@ -18,12 +18,12 @@ void LoadPrecached()
 	}
 	precacheUpdateList.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddToPrecachedUpdate( IPrecache *pAdd )
 {
 	precacheUpdateList.push_back( pAdd );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline string GetFileResourceName( const char *pszResName, int nFileID )
 {
 	if ( nFileID == 0 )
@@ -32,7 +32,7 @@ inline string GetFileResourceName( const char *pszResName, int nFileID )
 	sprintf( szBuf, "bin\\%s\\%d", pszResName, nFileID );
 	return szBuf;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline string GetFileResourceUidName( const char *pszResName, const GUID &fileUID )
 {
 	if ( NBinResources::IsEmptyGUID( fileUID ) )
@@ -41,12 +41,12 @@ inline string GetFileResourceUidName( const char *pszResName, const GUID &fileUI
 	sprintf( szBuf, "bin\\%s\\%s", pszResName, NBinResources::GUIDToString( fileUID ).c_str() );
 	return szBuf;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static inline bool DoesFileExist( const char *pszResName, int nID )
 {
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceName( pszResName, nID ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static inline bool DoesFileExist( const char *pszResName, const GUID &fileUID )
 {
 	if ( NBinResources::IsEmptyGUID( fileUID ) )
@@ -54,14 +54,14 @@ static inline bool DoesFileExist( const char *pszResName, const GUID &fileUID )
 
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceUidName( pszResName, fileUID ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFileResource
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileResource::CFileResource( const char *pszResName, int nFileID )
 : f( NVFS::GetMainVFS(), GetFileResourceName( pszResName, nFileID ) )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
 : f(	NVFS::GetMainVFS(),
 			DoesFileExist( pszResName, key.uidKey ) ? 
@@ -70,14 +70,14 @@ CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
 	 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TypeReq( const char *pszResName, int nID )
 {
 	char szBuf[1024];
 	sprintf( szBuf, "%s %x\n", pszResName, nID );
 	OutputDebugString( szBuf );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDoesExistKey
 {
 	string szRes;
@@ -105,24 +105,24 @@ bool CResourceFileOpener::DoesExist( const char *pszResName, const SResKey<int> 
 	deh[ k ] = bRes;
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResourceFileOpener::Clear()
 {
 	deh.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CFileRequest::CFileRequest( const char *_pszResName, int _nID, bool _bDelayedLoad ) 
 	: pszResName(_pszResName), nID(_nID), bIsReady(false), bDelayedLoad(_bDelayedLoad)
 {
 	Zero( uid );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileRequest::CFileRequest( const char *_pszResName, const SResKey<int> &key, bool _bDelayedLoad )
 : pszResName(_pszResName), nID(key.tKey), uid(key.uidKey), bIsReady(false), bDelayedLoad(_bDelayedLoad)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NWin32Helper::CCriticalSection readResource;
 static bool bIsFileReading = false;
 void CFileRequest::Read()
@@ -144,16 +144,16 @@ void CFileRequest::Read()
 	bIsFileReading = false;
 	bIsReady = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Resource loading thread
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NWin32Helper::CCriticalSection reqQueue, pendingCheck;
 static NWin32Helper::CEvent newRequest;
 static HANDLE hLoaderThread;
 static list<CPtr<CFileRequest> > holdRequests;
 static list<CFileRequest*> requests;
 static HANDLE hEventEnableLoadingThread = INVALID_HANDLE_VALUE;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // STARFORCE{
 #ifdef _FINALRELEASE
 void __declspec(dllexport) SFINIT0_CreateLoadingThreadEvent()
@@ -167,7 +167,7 @@ void __declspec(dllexport) SFINIT1_EnableLoadingThreadEvent()
 }
 #endif // _FINALRELEASE
 // STARFORCE}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WaitAllPendingLoad()
 {
 	for(;;)
@@ -181,7 +181,7 @@ static void WaitAllPendingLoad()
 		Sleep(0);
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD WINAPI LoaderThread( void* )
 {
 	// STARFORCE{
@@ -214,7 +214,7 @@ static DWORD WINAPI LoaderThread( void* )
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddFileRequest( NGScene::CFileRequest *pReq )
 {
 	if ( pReq->IsReady() )
@@ -229,32 +229,32 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 	requests.push_front( pReq );
 	newRequest.Set();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool HasFileRequestsInFly()
 {
 	NWin32Helper::CCriticalSectionLock l( reqQueue );
 	return bIsFileReading || !requests.empty();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CountFileRequestsInFly()
 {
 	NWin32Helper::CCriticalSectionLock l( reqQueue );
 	return requests.size();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ReleaseFileRequestHolder()
 {
 	NWin32Helper::CCriticalSectionLock l( reqQueue );
 	if ( requests.empty() )
 		holdRequests.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void __declspec(dllexport) SFLB3_RunResourceLoadingThread()
 {
 	DWORD dwThread;
 	hLoaderThread = CreateThread( 0, 102400, LoaderThread, 0, 0, &dwThread );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SKillLoaderThread
 {
 	~SKillLoaderThread()
@@ -271,4 +271,4 @@ struct SKillLoaderThread
 	}
 } killLoaderThread;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

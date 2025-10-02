@@ -3,7 +3,7 @@
 #include "../3Dmotor/Interpolate.h"
 #include "../SceneB2/Scene.h"
 #include "CameraScriptMutators.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll, 
 									const float fYaw1, const float fPitch1, const float fRoll1,
 									const float fYaw2, const float fPitch2, const float fRoll2, 
@@ -16,7 +16,7 @@ void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll,
 	qRes.DecompEulerAngles( pfYaw, pfPitch, pfRoll );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSCamDMoveFlightMutator::Recalc()
 {
 	static bool bIsFinishing = false;
@@ -73,7 +73,7 @@ void CSCamDMoveFlightMutator::Recalc()
 	AI2Vis( &this->vPosition );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSCamDFollowFlightMutator::Recalc()
 {
 	if ( pTimer == 0 || pBaseFlight == 0 )
@@ -121,7 +121,7 @@ void CSCamDFollowFlightMutator::Recalc()
 	AI2Vis( &this->vPosition );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSCamDRotateFlightMutator::Recalc()
 {
 	if ( pTimer == 0 || pBaseFlight == 0 )
@@ -178,7 +178,7 @@ void CSCamDRotateFlightMutator::Recalc()
 	AI2Vis( &this->vPosition );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSCamSplineMutator::Recalc()
 {
 	if ( pTimer == 0 )
@@ -230,7 +230,7 @@ void CSCamSplineMutator::Recalc()
 	AI2Vis( &this->vPosition );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData, int _nMovieIndex, CFuncBase<STime> *_pTimer )
 	: moviesData( rMoviesData ),
 	nMovieIndex( _nMovieIndex ),
@@ -274,7 +274,7 @@ CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies
 	szCallbackFuncName = "";
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::Recalc()
 {
 	NI_VERIFY( pTimer, "CScriptMoviesMutatorHolder::Recalc() >> pTimer == 0!", return );
@@ -373,13 +373,13 @@ void CScriptMoviesMutatorHolder::Recalc()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NCamera::CCameraPlacement CScriptMoviesMutatorHolder::GetValue() const
 {
 	return placement;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CScriptMoviesMutatorHolder::GetAnchor() const
 {
 	NCamera::CCameraPlacement placementTmp;
@@ -393,37 +393,37 @@ const CVec3 CScriptMoviesMutatorHolder::GetAnchor() const
 	return vAnchor;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CScriptMoviesMutatorHolder::GetPos() const
 {
   return placement.vPosition;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CScriptMoviesMutatorHolder::GetDistance() const
 {
 	return placement.GetDistance();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CScriptMoviesMutatorHolder::GetYaw() const
 {
 	return placement.fYaw;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CScriptMoviesMutatorHolder::GetPitch() const
 {
 	return placement.fPitch;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CScriptMoviesMutatorHolder::GetFOV() const
 {
 	return placement.fFOV;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw ) const
 {
 	(*pfDist) = AI2Vis( placement.GetDistance() );
@@ -431,7 +431,7 @@ void CScriptMoviesMutatorHolder::GetPlacement( float *pfDist, float *pfPitch, fl
 	(*pfYaw) = placement.fYaw;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScriptMoviesMutatorHolder::GetLength() const
 {
 	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
@@ -445,7 +445,7 @@ float CScriptMoviesMutatorHolder::GetLength() const
 	return ( itPosKeyLast->fStartTime - itPosKeyFirst->fStartTime );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::SetTime( float _fTime )
 {
 	fCurrTime = _fTime;
@@ -453,7 +453,7 @@ void CScriptMoviesMutatorHolder::SetTime( float _fTime )
 	movieStartTime = pTimer->GetValue() - fCurrTime*1000.0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::Stop()
 {
 	ScriptCallback( -1 );
@@ -461,7 +461,7 @@ void CScriptMoviesMutatorHolder::Stop()
 	eMode = PM_STOPPED;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::JumpFirstKey()
 {
 	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
@@ -473,7 +473,7 @@ void CScriptMoviesMutatorHolder::JumpFirstKey()
 	SetTime( itPosKeyFirst->fStartTime );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::JumpLastKey()
 {
 	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
@@ -486,7 +486,7 @@ void CScriptMoviesMutatorHolder::JumpLastKey()
 	SetTime( itPosKeyLast->fStartTime );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::StepNextKey()
 {
 	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
@@ -510,7 +510,7 @@ void CScriptMoviesMutatorHolder::StepNextKey()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::StepPrevKey()
 {
 	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
@@ -534,13 +534,13 @@ void CScriptMoviesMutatorHolder::StepPrevKey()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::SetCallbackFuncName( const string &_szCallbackFuncName )
 {
 	szCallbackFuncName = _szCallbackFuncName;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptMoviesMutatorHolder::ScriptCallback( int nKeyID )
 {
 	if ( !szCallbackFuncName.empty() )
@@ -548,7 +548,7 @@ void CScriptMoviesMutatorHolder::ScriptCallback( int nKeyID )
 		WriteToPipe( PIPE_SCRIPT_CMDS, StrFmt("%s(%d)", szCallbackFuncName.c_str(), nKeyID) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScriptMoviesMutatorHolder::operator&( IBinSaver &Saver )
 {
 	Saver.Add( 6, &moviesData );
@@ -569,10 +569,10 @@ int CScriptMoviesMutatorHolder::operator&( IBinSaver &Saver )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1B1C84C0, CSCamDMoveFlightMutator )
 REGISTER_SAVELOAD_CLASS( 0x1B1C84C2, CSCamDFollowFlightMutator )
 REGISTER_SAVELOAD_CLASS( 0x1B1C84C3, CSCamDRotateFlightMutator )
 REGISTER_SAVELOAD_CLASS( 0x1B1C84C4, CSCamSplineMutator )
 REGISTER_SAVELOAD_CLASS( 0x1B224400, CScriptMoviesMutatorHolder )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

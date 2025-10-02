@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Interface_Controller.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Последовательность создания объектов должна быть такова чтобы при удалении объектов сначала могли удалится более ранние объекты
 // это значить, что объект на который ссылаются необходимо создавать позже
 interface IFolderCallback : public CObjectBase
@@ -34,6 +34,6 @@ interface IFolderCallback : public CObjectBase
 	// Установить свойство объекта
 	virtual bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__CC_FOLDER_CALLBACK__)
 

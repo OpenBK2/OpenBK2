@@ -1,6 +1,6 @@
 #if !defined(__MAP_EDITOR_LIB__COMMAND_HANDLER_DEFINES__)
 #define __MAP_EDITOR_LIB__COMMAND_HANDLER_DEFINES__
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define CHID_MAIN									0x1408AC40
 #define CHID_SELECTION						0x1408AC41
 #define CHID_CONTROLLER_CONTAINER	0x1408AC42
@@ -13,5 +13,5 @@
 #define CHID_PC_DIALOG						0x140A1380
 #define CHID_PC_DB_LINK_DIALOG		0x140A1381
 #define CHID_PC_BUILD_DATA_DIALOG	0x140A1382
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAP_EDITOR_LIB__COMMAND_HANDLER_DEFINES__)

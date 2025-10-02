@@ -2,13 +2,13 @@
 #define __TRANSPORT_STATES__
 
 #pragma ONCE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "UnitStates.h"
 #include "StatusUpdatesHelper.h"
 #include "StatesFactory.h"
 #include "..\Stats_B2_M1\RPGStats.h"
 #include "..\Stats_B2_M1\StatusUpdates.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormation;
 class CAIUnit;
 class CBuilding;
@@ -20,7 +20,7 @@ namespace NDb
 {
 	enum EMineType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CTransportStatesFactory );
@@ -39,7 +39,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportWaitPassengerState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CTransportWaitPassengerState );
@@ -63,7 +63,7 @@ public:
 
 	void AddFormationToWait( class CFormation *pFormation );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //состояние выгрузки солдат из транспорта (& mech units )
 //
 class CTransportLandState : public IUnitState, public CStatusUpdatesHelper
@@ -103,7 +103,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportLoadRuState );
@@ -147,7 +147,7 @@ public:
 	
 	bool IsSubStateFinished() const { return eState == ETLRS_SUBSTATE_FINISHED; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
 {
 	enum ETransportServeState
@@ -200,7 +200,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return vServePoint; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportResupplyState: public CTransportServeState
 {
 	OBJECT_BASIC_METHODS( CTransportResupplyState );
@@ -223,7 +223,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_RESUPPLY_UNIT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportRepairState: public CTransportServeState
 {
 	OBJECT_BASIC_METHODS( CTransportRepairState );
@@ -245,7 +245,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_UNIT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // погрузка пушки
 class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
@@ -299,9 +299,9 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_HOOK_ARTILLERY; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // отцепление ариллерии
 class CTransportUnhookArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
@@ -341,7 +341,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return vDestPoint; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportBuildState : public IUnitState, public CStatusUpdatesHelper
 {
 	enum ETransportBuildState
@@ -400,7 +400,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vStartPoint; }
 };
 class CLongObjectCreation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportBuildLongObjectState : public CTransportBuildState
 {
 protected:
@@ -427,7 +427,7 @@ public:
 	virtual void SetEndPoint( const CVec2& _vEndPoint );
 	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportBuildFenceState : public CTransportBuildLongObjectState
 {
 	OBJECT_BASIC_METHODS( CTransportBuildFenceState );
@@ -443,7 +443,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_FENCE; }
 	void PreCreate();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportBuildEntrenchmentState : public CTransportBuildLongObjectState
 {
 	OBJECT_BASIC_METHODS( CTransportBuildEntrenchmentState );
@@ -459,7 +459,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_ENTRENCHMENT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportClearMineState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportClearMineState );
@@ -485,7 +485,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_CLEAR_MINE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportPlaceMineState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportPlaceMineState );
@@ -516,7 +516,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_PLACE_MINE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportPlaceAntitankState : public CTransportBuildState 
 {
 	OBJECT_BASIC_METHODS( CTransportPlaceAntitankState );
@@ -542,7 +542,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_PLACE_ANTITANK; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFullBridge;
 class CBridgeSpan;
 class CTransportRepairBridgeState : public CTransportBuildState
@@ -572,7 +572,7 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BRIDGE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBridgeCreation;
 class CTransportBuildBridgeState : public CTransportBuildState
 {
@@ -601,7 +601,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_BRIDGE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuilding;
 class CTransportRepairBuildingState : public CTransportBuildState
 {
@@ -630,7 +630,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BUILDING; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMoveToPointNotPresize : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CMoveToPointNotPresize );
@@ -658,7 +658,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vPurposePoint; }
 	virtual EUnitStateNames GetName() { return EUSN_MOVE_TO_RESUPPLY_CELL; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransportWaitForUnload : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CTransportWaitForUnload );
@@ -683,5 +683,5 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vPurposePoint; }
 	virtual EUnitStateNames GetName() { return EUSN_LAND; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __TRANSPORT_STATES__

@@ -144,7 +144,7 @@ static unsigned char *GetNextInstruction(unsigned char *func)
 	}
 	return func;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bWasInitialized = false;
 static LPTOP_LEVEL_EXCEPTION_FILTER pPrevExceptionFilter = 0;
 struct SRegion
@@ -161,7 +161,7 @@ struct SRegionHash
 };
 typedef hash_map<SRegion,int,SRegionHash> TIgnoreHash;
 static TIgnoreHash ignoreRegions;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static LONG WINAPI SkipWrongAddress( _EXCEPTION_POINTERS* ExceptionInfo )
 {
 	if ( ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION )
@@ -187,7 +187,7 @@ static LONG WINAPI SkipWrongAddress( _EXCEPTION_POINTERS* ExceptionInfo )
 		return pPrevExceptionFilter( ExceptionInfo );
 	return UnhandledExceptionFilter( ExceptionInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void InitCatchGPF()
 {
 	if ( bWasInitialized )
@@ -195,13 +195,13 @@ void InitCatchGPF()
 	bWasInitialized = true;
 	pPrevExceptionFilter = SetUnhandledExceptionFilter( SkipWrongAddress );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddIgnoreAccessViolationRegion( const void *pStart, int nSize )
 {
 	SRegion r( pStart, nSize );
 	++ignoreRegions[r];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RemoveIgnoreAccessViolationRegion( const void *pStart, int nSize )
 {
 	SRegion r( pStart, nSize );

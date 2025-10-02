@@ -7,7 +7,7 @@
 #include "Cache.h"
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransformStack;
 namespace NGfx
 {
@@ -16,7 +16,7 @@ namespace NGfx
 	class CTriList;
 	class CCubeTexture;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 class CParticleEffect;
@@ -24,7 +24,7 @@ class IVBCombiner;
 class IMaterial;
 struct SRenderGeometryInfo;
 struct SRenderFragmentInfo;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMaterialParams
 {
 	IMaterial *pMaterial;
@@ -36,13 +36,13 @@ struct SMaterialParams
 	void Clear() { pMaterial = 0; }
 	bool IsEmpty() const { return pMaterial == 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STransparentObjectInfo
 {
 	SRenderGeometryInfo *pGeometry;
 	SMaterialParams material;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IParticles: public CObjectBase
 {
 public:
@@ -50,7 +50,7 @@ public:
 	virtual void SetFade( float fVal ) = 0;
 	virtual void Unlink() = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTranspLightTexture : 
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTranspLightTexture>
 {
@@ -59,14 +59,14 @@ class CTranspLightTexture :
 public:
 	CTRect<int> region;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IReportParticlesGeometry
 {
 public:
 	virtual void AddParticles( IVBCombiner *pVertices, CFuncBase<vector<NGfx::STriangleList> > *pTrilists, 
 		int nPart, int nParticles, const SBound &bv ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STransparentInfo
 {
 	CObj<IVBCombiner> pGeom;
@@ -74,7 +74,7 @@ struct STransparentInfo
 	float fDepth;
 	int nOffset; // address of first particle or part in object combiner
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBaseParticlesGeometry;
 class CShaderParticlesGeometry;
 class CTnLParticlesGeometry;
@@ -97,7 +97,7 @@ struct STransparentRenderContext
 		SRenderPathContext *_pRPC, const SLightInfo &_lightInfo ) 
 		: bTnLMode(_bTnLMode), pRC(_pRC), pParticleLight(_pParticleLight), pSky(_pSky), renderPath(_renderPath), pRPC(_pRPC), lightInfo(_lightInfo) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransparentRenderer : public CObjectBase, public IParticleOutput
 {
 	OBJECT_NOCOPY_METHODS(CTransparentRenderer);
@@ -158,6 +158,6 @@ public:
 	void GetBound( SBound *pRes ) { bc.Make( pRes ); }
 	bool IsEmpty() { return bc.IsEmpty(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

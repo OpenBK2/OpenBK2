@@ -1,7 +1,7 @@
 #pragma once
 
 #include "VisObjDesc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 	class IGameView;
@@ -18,7 +18,7 @@ namespace NAnimation
 }
 class CCSTime;
 class CCCVec3;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IAttachedObject : virtual public CObjectBase, virtual public IVisObj
 {
 	virtual void Destroy( const NTimer::STime time ) = 0;
@@ -44,11 +44,11 @@ interface IAttachedObject : virtual public CObjectBase, virtual public IVisObj
 	static IAttachedObject* CreateStaticLightEffect( const NDb::SAttachedLightEffect *pEffect, const int nObjectID,
 																									 const NTimer::STime nStartTime, const bool bInEditor = false );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // CAttachedLightEffectTransform - keeps a constant offset from a changing point
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAttachedLightEffectTransform: public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS(CAttachedLightEffectTransform)
@@ -66,7 +66,7 @@ public:
 	CAttachedLightEffectTransform() : pBaseTransform(0), pvTranslatePart(0) {}
 	CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier ); 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 {
 	OBJECT_NOCOPY_METHODS( CConstantOffsetTransform )
@@ -88,7 +88,7 @@ public:
 	CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform );
 	CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // fixed offset from the center of the parent object
 class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 {
@@ -108,4 +108,4 @@ public:
 	CCenterOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ) {}
 	CCenterOffsetTransform( const int _nTargetID, CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -3,7 +3,7 @@
 #include "Script_export.h"
 
 #include "RegFunction.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IScriptWrapper : public CObjectBase
 {
 	virtual void Init() = 0;
@@ -15,7 +15,7 @@ interface IScriptWrapper : public CObjectBase
 	virtual int RunScript( const char *pszScriptText ) = 0;
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SCRIPT_EXPORT IScriptWrapper* CreateScriptWrapper();
 //
 namespace NScript

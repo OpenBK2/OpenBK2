@@ -2,7 +2,7 @@
 #define __UI_VISITOR_IMPLEMENTATION__
 #pragma once
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "..\3dmotor\rectlayout.h"
 #include "..\ui\commandparam.h"
 #include "..\ui\dbuserinterface.h"
@@ -10,7 +10,7 @@
 #include "..\UI\UIVisitor.h"
 #include "..\UI\UIML.h"
 #include "..\UI\UI.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CUIVisitor : public IUIVisitor
 {
 	CObj<NGScene::I2DGameView> p2DView;
@@ -82,6 +82,6 @@ public:
 		}
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__UI_VISITOR_IMPLEMENTATION__)
 

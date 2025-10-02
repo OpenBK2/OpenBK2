@@ -3,7 +3,7 @@
 #include "VisObjDesc.h"
 #include "SceneInternal.h"
 #include "SceneHoldQueue.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &_vPos, const CQuat &qRot )
 {
 	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return -1 );
@@ -37,7 +37,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 		return nObjectID;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
 	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return -1 );
@@ -68,7 +68,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 		return nObjectID;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddEffect( const int nID, const string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
 	NI_VERIFY( pEffect != 0, StrFmt("Adding effect %d with empty descriptor", nID), return );
@@ -83,7 +83,7 @@ void CScene::AddEffect( const int nID, const string &szBoneName, const NDb::SEff
 	//
 	AddEffect( OBJECT_ID_FORGET, pEffect, timeStart, mPlacement );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::StopEffectGeneration( const int nID, NTimer::STime time )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -100,4 +100,4 @@ void CScene::StopEffectGeneration( const int nID, NTimer::STime time )
 	SetToSceneHoldQueue( pos->second, true );
 	data[eScene]->visObjects.erase( pos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

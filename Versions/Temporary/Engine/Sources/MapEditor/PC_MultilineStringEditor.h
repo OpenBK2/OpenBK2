@@ -6,7 +6,7 @@
 #include "../MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCMultilineStringEditor : public CScintillaEditorWindow, public CPCItemEditor, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CPCMultilineStringEditor );
@@ -42,5 +42,5 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_MULTILUNE_STRING_EDITOR__)

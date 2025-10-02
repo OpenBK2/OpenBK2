@@ -13,9 +13,9 @@
 #include "../SceneB2/Scene.h"
 #include "../Misc/Win32Random.h"
 #include "CommandsHistory.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMPManagerMode - game control - scoring, different modes, win/lose conditions, etc
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::StartGame()
 {
 	// Do all initialising
@@ -99,7 +99,7 @@ void CMPManagerMode::StartGame()
 	timeEndMatch = 0;
 	bOutcomeKnown = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::WinGame()
 {
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You won the game" ) );
@@ -110,7 +110,7 @@ void CMPManagerMode::WinGame()
 	pTransceiver->EndGame();
 	EndGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::LoseGame()
 {
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You lost the game" ) );
@@ -121,7 +121,7 @@ void CMPManagerMode::LoseGame()
 	pTransceiver->EndGame();
 	EndGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::ScheduleLoseGame()
 {
 	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( 0 ) );
@@ -129,7 +129,7 @@ void CMPManagerMode::ScheduleLoseGame()
 	bWinOnGameEnd = false;
 	bOutcomeKnown = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::EndGame()
 {
 	if ( IsValid( pTransceiver ) )
@@ -139,7 +139,7 @@ void CMPManagerMode::EndGame()
 	SaveReplay( "LastMatch" );
 	pTransceiver = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::CheckEndGameConditions()
 {
 	if ( !IsGameRunning() )
@@ -171,7 +171,7 @@ void CMPManagerMode::CheckEndGameConditions()
 
 	return;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::CheckAllLeftWin()
 {
 	if ( !pTransceiver || pTransceiver->IsGameEnded() )
@@ -193,7 +193,7 @@ bool CMPManagerMode::CheckAllLeftWin()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::CheckScoreWinLose()
 {
 	IGameTimer *pTimer = Singleton<IGameTimer>();
@@ -230,7 +230,7 @@ bool CMPManagerMode::CheckScoreWinLose()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMPManagerMode::GetTeamWithLowestScore()
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
@@ -254,7 +254,7 @@ int CMPManagerMode::GetTeamWithLowestScore()
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::CheckKeyBuildingsWinLose()
 {
 	IGameTimer *pTimer = Singleton<IGameTimer>();
@@ -301,7 +301,7 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 	NGlobal::SetVar( "multiplayer_loss_timeout", nSecondsLeft );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::CheckInstantLose()
 {
 	IGameTimer *pTimer = Singleton<IGameTimer>();
@@ -322,7 +322,7 @@ bool CMPManagerMode::CheckInstantLose()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::AnalyzeLaggers()
 {
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
@@ -405,7 +405,7 @@ void CMPManagerMode::AnalyzeLaggers()
 	if ( lagsUpdate.CheckNeedUpdate() )
 		SendLagInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::CreateRehash( vector<BYTE> *pOrder )
 {
 	vector<BYTE> &order = *pOrder;
@@ -424,7 +424,7 @@ void CMPManagerMode::CreateRehash( vector<BYTE> *pOrder )
 		swap( order[nIndex1], order[nIndex2] );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerMode::RehashSlots( const vector<BYTE> &order )
 {
 	string szDebugOut = "+++ Rehash slots:";
@@ -453,4 +453,4 @@ void CMPManagerMode::RehashSlots( const vector<BYTE> &order )
 			DebugTrace( "+++ New Slot %d: %s, CID %d, side %d, team %d", i, slot.szName.c_str(), slot.nClientID, slot.nCountry, slot.nTeam );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

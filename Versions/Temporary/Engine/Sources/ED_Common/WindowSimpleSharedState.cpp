@@ -23,7 +23,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 namespace 
 {
@@ -55,13 +55,13 @@ namespace
 	};
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowSimpleSharedState::CWindowSimpleSharedState( CWindowSimpleSharedEditor *_pEditor ) 
 	: pEditor( _pEditor ), pScreen( 0 ), pMainWindow( 0 ), pPickedWindow( 0 ), bDragging( false )
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::Enter()
 {
 	DebugTrace( "CWindowSimpleSharedState::Enter()" );
@@ -82,7 +82,7 @@ void CWindowSimpleSharedState::Enter()
 	CDefaultInputState::Enter();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::Leave()
 {
 	DebugTrace( "CWindowSimpleSharedState::Leave()" );
@@ -101,7 +101,7 @@ void CWindowSimpleSharedState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::LoadWindow()
 {
 	NI_ASSERT( Singleton<IUIScene>() != 0, "CWindowSimpleSharedEditor::LoadWindow: Singleton<IUIScene>() == 0" );
@@ -171,7 +171,7 @@ void CWindowSimpleSharedState::LoadWindow()
 	// avoid fitting UI to viewport size
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::MakeUIScreenWithElement( const struct NDb::SUIDesc *pElement )
 {
 	if ( pElement == 0 )
@@ -209,14 +209,14 @@ void CWindowSimpleSharedState::MakeUIScreenWithElement( const struct NDb::SUIDes
 		pScreen->AddChild( pMainWindow, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::ResetSelection()
 {
 	pPickedWindow = 0;
 	bDragging = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWaitCursor wc;
@@ -252,7 +252,7 @@ void CWindowSimpleSharedState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags 
 	CDefaultInputState::OnKeyDown( nChar, nRepCnt, nFlags );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyArrows( int dx, int dy )
 {
 	if ( pPickedWindow != 0 )
@@ -262,13 +262,13 @@ void CWindowSimpleSharedState::OnKeyArrows( int dx, int dy )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyTab()
 {
 	pEditor->PushRunModeState( szEditorTypeName, editorDBID );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyDelete()
 {
 	IWindow *pWindow = pPickedWindow; //BUGFIX: RemoveChild redraws screen
@@ -278,7 +278,7 @@ void CWindowSimpleSharedState::OnKeyDelete()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyEnter()
 {
 	if ( pPickedWindow != 0 )
@@ -297,14 +297,14 @@ void CWindowSimpleSharedState::OnKeyEnter()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnKeyBack()
 {
 	if ( pEditor->HasMoreThanOnePushedStates() )
 		pEditor->PopState();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	//CVec2 vScreenPos;
@@ -328,7 +328,7 @@ void CWindowSimpleSharedState::OnLButtonDown( UINT nFlags, const CTPoint<int> &r
 	CDefaultInputState::OnLButtonDown( nFlags, rMousePoint );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
@@ -349,7 +349,7 @@ void CWindowSimpleSharedState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMo
 	}
 	CDefaultInputState::OnLButtonUp( nFlags, rMousePoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
@@ -367,7 +367,7 @@ void CWindowSimpleSharedState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMo
 	CDefaultInputState::OnMouseMove( nFlags, rMousePoint );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	CWaitCursor wc;
@@ -380,7 +380,7 @@ void CWindowSimpleSharedState::OnRButtonDown( UINT nFlags, const CTPoint<int> &r
 	CDefaultInputState::OnRButtonDown( nFlags, rMousePoint );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 {
 	CDBID sharedDBID;
@@ -417,7 +417,7 @@ void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::PostDraw( CPaintDC *pPaintDC )
 {
 	CTRect<float> wrc;
@@ -500,7 +500,7 @@ void CWindowSimpleSharedState::PostDraw( CPaintDC *pPaintDC )
 	CDefaultInputState::PostDraw( pPaintDC );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::RemoveChild( IWindow *pWindow )
 {
 	NI_ASSERT( pWindow != 0, "CWindowSimpleSharedEditor::RemoveChild: pWindow != 0" );
@@ -545,7 +545,7 @@ void CWindowSimpleSharedState::RemoveChild( IWindow *pWindow )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::ReplaceChild( IWindow *pWindow, const CTPoint<int> &rPoint, int nFlags )
 {
 	NI_ASSERT( pWindow != 0, "CWindowSimpleSharedEditor::ReplaceChild: pWindow != 0" );
@@ -608,7 +608,7 @@ void CWindowSimpleSharedState::ReplaceChild( IWindow *pWindow, const CTPoint<int
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 {
 	SObjectSet objectSet;
@@ -637,7 +637,7 @@ void CWindowSimpleSharedState::InsertChild( const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::CheckInsertChild( const string & szTypeName, const CDBID &rDBID )
 {
 	string instanceTypeName;
@@ -656,7 +656,7 @@ bool CWindowSimpleSharedState::CheckInsertChild( const string & szTypeName, cons
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::FindInstanceTypeNameByShared( const string & szSharedName, string * szInstanceName )
 {
 	for ( int i = 0; 0 != tblChildTypes[i].szSharedName; ++i )
@@ -670,7 +670,7 @@ bool CWindowSimpleSharedState::FindInstanceTypeNameByShared( const string & szSh
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::IsPushableType( const string & szTypeName )
 {
 	for ( int i = 0; 0 != tblPushableTypes[i]; ++i )
@@ -684,7 +684,7 @@ bool CWindowSimpleSharedState::IsPushableType( const string & szTypeName )
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::InsertChildInstanceToDB( const string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID )
 {
 	string instanceTypeName;
@@ -718,7 +718,7 @@ bool CWindowSimpleSharedState::InsertChildInstanceToDB( const string & szSharedT
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const string & szInstanceTypeName, const CDBID &rInstanceDBID )
 {
 	CPtr<IWindow> pChildWindow;
@@ -750,7 +750,7 @@ IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const string & szIn
 	return pChildWindow;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::GetEditorObjName( string *pObjName )
 {
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( WINDOW_SIMPLE_SHARED_TYPE_NAME );
@@ -760,7 +760,7 @@ bool CWindowSimpleSharedState::GetEditorObjName( string *pObjName )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::MakeInstanceName( const string & szInstanceTypeName, const string & szSharedShortName, string *pShortName, string *pFullName, string *pObjName )
 {
 	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szInstanceTypeName );
@@ -791,7 +791,7 @@ bool CWindowSimpleSharedState::MakeInstanceName( const string & szInstanceTypeNa
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::MakeSharedName( const string & szSharedTypeName, const CDBID &rDBID, string *pSharedShortName, string *pSharedFullName )
 {
 	string objName = rDBID.ToString();
@@ -803,7 +803,7 @@ bool CWindowSimpleSharedState::MakeSharedName( const string & szSharedTypeName, 
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedState::GenerateChildInstance( const string & szSharedTypeName, const CDBID &rSharedDBID, string *szInstanceFullName, CDBID *pInstanceDBID )
 {
 	string instanceTypeName;
@@ -868,7 +868,7 @@ bool CWindowSimpleSharedState::GenerateChildInstance( const string & szSharedTyp
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::UndoChange( const string & szTypeName, const CDBID &rDBID, const string & szName, const CVariant & oldValue )
 {
 	/**
@@ -893,7 +893,7 @@ void CWindowSimpleSharedState::UndoChange( const string & szTypeName, const CDBI
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::UndoInsert( const string & szTypeName, const CDBID &rDBID, const string & szName )
 {
 	/**
@@ -912,7 +912,7 @@ void CWindowSimpleSharedState::UndoInsert( const string & szTypeName, const CDBI
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedState::UndoRemove( const string & szTypeName, const CDBID &rDBID, const string & szName )
 {
 	/**
@@ -928,4 +928,4 @@ void CWindowSimpleSharedState::UndoRemove( const string & szTypeName, const CDBI
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

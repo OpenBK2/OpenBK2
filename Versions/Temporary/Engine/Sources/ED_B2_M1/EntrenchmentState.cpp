@@ -20,19 +20,19 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::ClearData()
 {
 	designTool.Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::CanBuildEntrenchment()
 {
 	return ( selectedEntrenchmentInfo.pEntrenchmentRPGStats != 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::InsertObjectEnter()
 {
 	ClearData();
@@ -42,14 +42,14 @@ void CEntrenchmentState::InsertObjectEnter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::InsertObjectLeave()
 {
 	ClearData();
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ENTRENCHMENTS_STATE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::InsertObjectDraw( CPaintDC *pPaintDC )
 {
 	if ( !designTool.Draw( &sceneDrawTool ) )
@@ -62,7 +62,7 @@ void CEntrenchmentState::InsertObjectDraw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerrainPos )
 {
 	designTool.ProcessMovePoint( rTerrainPos ); 
@@ -70,7 +70,7 @@ bool CEntrenchmentState::InsertObjectMouseMove( UINT nFlags, const CVec3 &rTerra
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTerrainPos )
 {
 	bool bResult = designTool.ProcessLClickPoint( rTerrainPos ); 
@@ -78,7 +78,7 @@ bool CEntrenchmentState::InsertObjectLButtonDown( UINT nFlags, const CVec3 &rTer
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos )
 {
 	bool bResult = designTool.ProcessRClickPoint( rTerrainPos ); 
@@ -86,7 +86,7 @@ bool CEntrenchmentState::InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerra
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::InsertObjectLButtonDblClk( UINT nFlags, const CVec3 &rTerrainPos )
 {
 	designTool.Complete();
@@ -94,7 +94,7 @@ bool CEntrenchmentState::InsertObjectLButtonDblClk( UINT nFlags, const CVec3 &rT
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos )
 {
 	if ( nChar == VK_ESCAPE )
@@ -109,7 +109,7 @@ bool CEntrenchmentState::InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVe
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::InsertEntrenchment()
 {
 	if ( CanEdit() )
@@ -169,7 +169,7 @@ void CEntrenchmentState::InsertEntrenchment()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
@@ -189,7 +189,7 @@ bool CEntrenchmentState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CEntrenchmentState::UpdateCommand(), pbEnable == 0" );
@@ -212,7 +212,7 @@ bool CEntrenchmentState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 {
 	CWaitCursor waitCursor;
@@ -245,17 +245,17 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //
 //
 //
 //										ENTRENCHMENT DESIGN TOOL
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD CEntrenchmentDesignTool::segColors[CEntrenchmentDesignTool::ST_COUNT] = 
 {
 	NMapInfoEditor::PLACEMENT_COLOR,
@@ -269,7 +269,7 @@ CEntrenchmentDesignTool::CEntrenchmentDesignTool()
 	Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::Clear()
 { 
 	// половина острого угла в модели Arc (15градусов)
@@ -284,7 +284,7 @@ void CEntrenchmentDesignTool::Clear()
 	memset( segAABBSizes, 0, sizeof(CVec3)*ST_COUNT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentDesignTool::Draw( CSceneDrawTool *pDrawTool )
 {
 	if ( segments.empty() )
@@ -321,7 +321,7 @@ bool CEntrenchmentDesignTool::Draw( CSceneDrawTool *pDrawTool )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, DWORD clr )
 {
 	CVec3 vNormale = GetNormal( dp - cp );
@@ -346,7 +346,7 @@ void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &c
 	pDrawTool->DrawPolyline( pointList, clr, true, false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 {
 	if ( nSegIndex < 0 || nSegIndex >= segments.size() )
@@ -424,7 +424,7 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 	return fAngle;	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 {
 	// позиция начала сегмента
@@ -447,7 +447,7 @@ CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 	return cp;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentDesignTool::ProcessLClickPoint( const CVec3 &p )
 {
 	if ( bComplete )
@@ -471,7 +471,7 @@ bool CEntrenchmentDesignTool::ProcessLClickPoint( const CVec3 &p )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentDesignTool::ProcessRClickPoint( const CVec3 &p )
 {
 	if ( bComplete )
@@ -514,7 +514,7 @@ bool CEntrenchmentDesignTool::ProcessRClickPoint( const CVec3 &p )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentDesignTool::ProcessEscape()
 {
 	if ( bComplete )
@@ -530,7 +530,7 @@ bool CEntrenchmentDesignTool::ProcessEscape()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 {
 	if ( bComplete  || segments.empty() )
@@ -594,7 +594,7 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::Complete()
 {
 	if ( bComplete )
@@ -609,13 +609,13 @@ void CEntrenchmentDesignTool::Complete()
 	bComplete = true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentDesignTool::IsComplete() 
 { 
 	return bComplete; 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo )
 {
 	pEntrenchmentElementsInfo->clear();
@@ -679,7 +679,7 @@ void CEntrenchmentDesignTool::GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmen
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 {
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
@@ -689,7 +689,7 @@ CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 	return segAABBSizes[eSegType]; 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 {
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
@@ -698,7 +698,7 @@ CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 	return segAABBCentr[eSegType];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::SetSegAABBSize( NDb::EEntrenchSegmType eSegType, const CVec3 &v )
 {
 	switch ( eSegType )
@@ -716,7 +716,7 @@ void CEntrenchmentDesignTool::SetSegAABBSize( NDb::EEntrenchSegmType eSegType, c
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentDesignTool::SetSegAABBCenter( NDb::EEntrenchSegmType eSegType, const CVec2 &v )
 {
 	switch ( eSegType )
@@ -733,4 +733,4 @@ void CEntrenchmentDesignTool::SetSegAABBCenter( NDb::EEntrenchSegmType eSegType,
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

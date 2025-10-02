@@ -21,6 +21,6 @@ NGfx::CTexture* GetDefaultLightmap();
 NGfx::CTexture* GetLightFallLookup();
 NGfx::CTexture* GetCheckerTexture();
 NGfx::CTexture* Get16bitDepthLookup();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

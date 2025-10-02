@@ -6,10 +6,10 @@
 
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11082300, CExecutorSniperCamouflage )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced )
 	: CExecutor(TID_SNIPER_CAMOUFLAGE, 1000/SConsts::AI_SEGMENT_DURATION), 
 	pUnit( _pUnit ), nEnemysAround( 0 ), bWasSomeAction( false ), fCamoflage( 0.0f ),
@@ -18,12 +18,12 @@ CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAd
 	eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE ) 
 { 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorSniperCamouflage::IsExecutorValidInternal() const
 {
 	return IsValidObj( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorSniperCamouflage::Segment()
 {
 	if ( !IsExecutorValidInternal() )
@@ -84,7 +84,7 @@ int CExecutorSniperCamouflage::Segment()
 
 	return UpdateCamoflage( eAbilityType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSniperCamouflage::UpdateState( const enum EAbilitySwitchState eState, const float fParam )
 {
 	if ( !pUpdate )
@@ -102,19 +102,19 @@ void CExecutorSniperCamouflage::UpdateState( const enum EAbilitySwitchState eSta
 		pUpdate = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSniperCamouflage::UnCamoUnit()
 {
 	// SET UNIT TO visible STATE
 	pUnit->RemoveCamouflage( ECRR_USER_COMMAND );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSniperCamouflage::CamoUnit()
 {
 	// SET UNIT TO CAMO STATE
 	pUnit->SetCamoulfage();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbility )
 {
 	switch( eState )
@@ -197,7 +197,7 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 	}
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSniperCamouflage::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par;
@@ -221,12 +221,12 @@ void CExecutorSniperCamouflage::RegisterOnEvents( IExecutorContainer *pContainer
 	par.eEventID = EID_ABILITY_DEACTIVATE;
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorSniperCamouflage::IsCamoflageAbility( const EUnitSpecialAbility eAbility )
 {
 	return eAbility == NDb::ABILITY_CAMOFLAGE_MODE || eAbility == NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 {
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )

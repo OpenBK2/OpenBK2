@@ -6,9 +6,9 @@
 
 namespace NBSU
 {
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam );
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SExceptionDlgInitParams
 {
 	const char *pszCondition;
@@ -22,7 +22,7 @@ struct SExceptionDlgInitParams
 		entries(_entries), pszExtInfo(szExtInfo) {  }
 };
 static const SExceptionDlgInitParams *g_pParams = 0;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EBSUReport __cdecl ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszCondition, const char *pszDescription, 
 																		const vector<SCallStackEntry> &entries, const char *pszExtInfo ) 
@@ -50,7 +50,7 @@ EBSUReport __cdecl ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 		return BSU_DEBUG;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam ) 
 { 
 	switch (message) 
@@ -89,5 +89,5 @@ static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, UINT message, WPARAM 
 	} 
 	return FALSE; 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

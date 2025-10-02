@@ -13,9 +13,9 @@
 #include "InterfaceState.h"
 
 #include "MPLANTest.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMPManagerMode - packet handling methods
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 {
 	DebugTrace( "+++ Slot Info packet from client %d for slot %d, name %s, conn %d", 
@@ -61,14 +61,14 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnGameClientRemoved( class CGameClientRemoved *pPacket )
 {
 	DebugTrace( "+++ Client Removed packet from client %d", pPacket->nClientID );
 	RemoveClient( pPacket->nClientID, false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 {
 	DebugTrace( "+++ GameKilled packet from client %d, game %d", pPacket->nClientID, pPacket->nGame );
@@ -98,7 +98,7 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePacket *pPacket )
 {
 	NI_VERIFY( IsInGameRoom() && !IsGameHost(), "PRG: StartGame received by not a client", return true );
@@ -116,7 +116,7 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket *pPacket )
 {
 	//DebugTrace( "+++ SpecificInfo packet from client %d, players %d", pPacket->nClientID, pPacket->info.nPlayers );
@@ -129,7 +129,7 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 {
 	if ( IsGameRunning() )
@@ -143,7 +143,7 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 {
 	DebugTrace( "+++ SlotNumber packet from client %d, assigned slot %d", pPacket->nClientID, pPacket->nSlot );
@@ -162,7 +162,7 @@ bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 	OnSetMySlotNumber();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnConnectGameFailedPacket( class CConnectGameFailed *pPacket )
 {
 	PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_GAME_FULL ) );
@@ -170,7 +170,7 @@ bool CMPManagerMode::OnConnectGameFailedPacket( class CConnectGameFailed *pPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket )
 {
 	for ( int i = 0; i < slots.size(); ++i )
@@ -184,7 +184,7 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPacket )
 {
 	if ( !IsGameRunning() || !IsPlayerPresent( pPacket->nPlayer ) )
@@ -196,7 +196,7 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 {
 	if ( !IsGameRunning() || bOutcomeKnown || pPacket->nGameID != nGameID )
@@ -220,7 +220,7 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 {
 	if ( pPacket->nFromID != nOwnSlot )		// Pong
@@ -255,4 +255,4 @@ bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -2,7 +2,7 @@
 
 #include "DebugTools_export.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDebugInfo
 {
 	enum
@@ -31,7 +31,7 @@ namespace NDebugInfo
 		SArrowHead( const CVec3 &_vPosition, const float _fWidth, const float _fHeight ) : vPosition( _vPosition ), fWidth( _fWidth ), fHeight( _fHeight ) {}
 	};
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IDebugInfoManager : public CObjectBase
 {
 	enum { tidTypeID = 0x31160C80 };
@@ -53,6 +53,6 @@ interface IDebugInfoManager : public CObjectBase
 	//показать оси из точки (0; 0; 0), Красная - X, Зеленая - Y, Синяя - Z
 	virtual void ShowAxes( const bool bShow ) = 0;
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DEBUGTOOLS_EXPORT IDebugInfoManager *CreateDebugInfoManager();
 inline IDebugInfoManager *DebugInfoManager() { return Singleton<IDebugInfoManager>(); }

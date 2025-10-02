@@ -8,7 +8,7 @@
 #include "B2AI.h"
 
 extern CGroupLogic theGroupLogic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
 {
 	CSegment segm;
@@ -22,7 +22,7 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 	segm.dir = segm.p2 - segm.p1;
 	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorTransportReinforcement::CExecutorTransportReinforcement( list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget ) :
 CExecutor(TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION), 
 vStart( _vStart ), vTarget( _vTarget )
@@ -69,7 +69,7 @@ vStart( _vStart ), vTarget( _vTarget )
 	theGroupLogic.UnregisterGroup( nGroup );
 	Singleton<IAILogic>()->SetNeedNewGroupNumber();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorTransportReinforcement::Segment()
 {
 	// Check if transports reached the shore
@@ -125,5 +125,5 @@ int CExecutorTransportReinforcement::Segment()
 	else
 		return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19174C40, CExecutorTransportReinforcement )

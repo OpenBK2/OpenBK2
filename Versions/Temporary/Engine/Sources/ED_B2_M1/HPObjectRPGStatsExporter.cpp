@@ -14,7 +14,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SModelSurfacePoint> &rPoints )
 {
 	if ( !pManipulator )
@@ -56,7 +56,7 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SMod
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CreateSingleSurfacePoints( IManipulator *pMan )
 {
 	bool bNeedSurfacePoints = true;
@@ -83,7 +83,7 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STempLightInfo
 {
 	string szLocatorName;
@@ -102,7 +102,7 @@ struct STempLightInfo
 	CVec3 vPointLightColour;
 	bool bPointLightColourDataPresent;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 {
 	CVec3 vEffectPos;
@@ -308,7 +308,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan, 
 																									 const string &szObjectTypeName, 
 																									 const string &szObjectName )
@@ -369,7 +369,7 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulator,
 																											const string &rszObjectTypeName,
 																											const string &rszObjectName,
@@ -395,4 +395,4 @@ EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulato
 	}
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

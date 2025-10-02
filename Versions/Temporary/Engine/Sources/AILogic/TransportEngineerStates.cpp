@@ -24,12 +24,12 @@
 #include "FeedBackSystem.h"
 #include "../DebugTools/DebugInfoManager.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D470, CTransportRepairState );
 REGISTER_SAVELOAD_CLASS( 0x1108D471, CTransportResupplyState );
 REGISTER_SAVELOAD_CLASS( 0x1108D472, CTransportHookArtilleryState );
 REGISTER_SAVELOAD_CLASS( 0x1108D473, CTransportUnhookArtilleryState );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
@@ -38,22 +38,22 @@ extern CGroupLogic theGroupLogic;
 extern CUnits units;
 extern NTimer::STime curTime;
 extern CStaticObjects theStatObjs;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportResupplyState											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportResupplyState::Instance( CAITransportUnit *pTransport, const CVec2 &vServePoint, CAIUnit *_pPreferredUnit )
 {
 	return new CTransportResupplyState( pTransport, vServePoint, _pPreferredUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportResupplyState::CTransportResupplyState( CAITransportUnit *_pTransport, const CVec2 &vServePoint, CAIUnit *_pPreferredUnit )
 : CTransportServeState( _pTransport, vServePoint, _pPreferredUnit )
 {
 	SetStatus( EUS_RESUPPLY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportResupplyState::FindUnitToServe( bool *pIsNotEnoughRU )
 {
 	CFormationServeUnitState::CFindFirstUnitPredicate pred;
@@ -64,43 +64,43 @@ bool CTransportResupplyState::FindUnitToServe( bool *pIsNotEnoughRU )
 	*pIsNotEnoughRU = pred.IsNotEnoughRu();
 	return pred.HasUnit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportResupplyState::UpdateActionBegin()
 {
 	if ( !bUpdatedActionsBegin )
 		pTransport->SendAcknowledgement( ACK_START_SERVICE_RESUPPLY );
 	bUpdatedActionsBegin = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportResupplyState::SendLoaders()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_RESUPPLY_UNIT, pPreferredUnit ? pPreferredUnit->GetUniqueId() : 0 ), pLoaderSquad, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_SET_HOME_TRANSPORT, pTransport->GetUniqueId()), pLoaderSquad, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_CATCH_TRANSPORT, pTransport->GetUniqueId()), pLoaderSquad, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportRepairState													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportRepairState::Instance( CAITransportUnit *pTransport, const CVec2 &vServePoint, CAIUnit *_pPreferredUnit )
 {
 	return new CTransportRepairState( pTransport, vServePoint, _pPreferredUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportRepairState::CTransportRepairState( CAITransportUnit *pTransport, const CVec2 &vServePoint, CAIUnit *_pPreferredUnit )
 : CTransportServeState( pTransport, vServePoint, _pPreferredUnit )
 {
 	SetStatus( EUS_REPAIR );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairState::UpdateActionBegin()
 {
 	if ( !bUpdatedActionsBegin )
 		pTransport->SendAcknowledgement( ACK_START_SERVICE_REPAIR );
 	bUpdatedActionsBegin = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairState::FindUnitToServe( bool *pIsNotEnoughRU )
 {
 	CFormationServeUnitState::CFindFirstUnitPredicate pred;
@@ -112,23 +112,23 @@ bool CTransportRepairState::FindUnitToServe( bool *pIsNotEnoughRU )
 	*pIsNotEnoughRU |= pred.IsNotEnoughRu();
 	return pred.HasUnit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairState::SendLoaders()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_REPAIR_UNIT, pPreferredUnit ? pPreferredUnit->GetUniqueId() : 0 ), pLoaderSquad, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_SET_HOME_TRANSPORT, pTransport->GetUniqueId()), pLoaderSquad, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_CATCH_TRANSPORT, pTransport->GetUniqueId()), pLoaderSquad, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportLoadRuState												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportLoadRuState::Instance( CAITransportUnit *pTransport, const bool bSubState, CBuilding *_pPreferredStorage )
 {
 	return new CTransportLoadRuState( pTransport, bSubState, _pPreferredStorage );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportLoadRuState::CTransportLoadRuState ( CAITransportUnit *_pTransport, const bool bSubState, CBuilding *_pPreferredStorage )
 : CStatusUpdatesHelper( EUS_FILL_RESOURCE, _pTransport ), pTransport( _pTransport ), eState( ETLRS_SEARCH_FOR_STORAGE ), nEntrance( -1 ), bSubState( bSubState ),
 	pStorage( _pPreferredStorage )
@@ -136,7 +136,7 @@ CTransportLoadRuState::CTransportLoadRuState ( CAITransportUnit *_pTransport, co
 	if ( pTransport->GetResursUnitsLeft() == SConsts::TRANSPORT_RU_CAPACITY )
 		pTransport->SetCommandFinished();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBuilding* CTransportLoadRuState::FindNearestSource()
 {
 	// для поиска ближайшего хранилища
@@ -169,7 +169,7 @@ CBuilding* CTransportLoadRuState::FindNearestSource()
 																	 &pred );
 	return pred.GetNearest();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportLoadRuState::Segment()
 {
 	if ( ETLRS_SEARCH_FOR_STORAGE != eState && ( !IsValidObj( pStorage ) || theDipl.GetNParty(pStorage->GetPlayer()) != pTransport->GetParty() ) )
@@ -284,7 +284,7 @@ void CTransportLoadRuState::Segment()
 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportLoadRuState::Interrupt()
 {
 	if ( bSubState )
@@ -292,7 +292,7 @@ void CTransportLoadRuState::Interrupt()
 	else 
 		TryInterruptState( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportLoadRuState::CreateSquad()
 {
 	pTransport->Unlock();
@@ -310,7 +310,7 @@ void CTransportLoadRuState::CreateSquad()
 		//pTransport->Lock( pLoaderSquad );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportLoadRuState::TryInterruptState( class CAICommand *pCommand )
 {
 	// если грузчики еще не в транспорте, то послать их догонять.
@@ -339,11 +339,11 @@ ETryStateInterruptResult CTransportLoadRuState::TryInterruptState( class CAIComm
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportServeState												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportServeState::CTransportServeState( class CAITransportUnit *_pTransport, const CVec2 & _vServePoint, CAIUnit *_pPreferredUnit )
 : CStatusUpdatesHelper( EUS_UNDEFINED, _pTransport ), pTransport( _pTransport ),eState( ETRS_WAIT_FOR_UNLOCK ),timeLastUpdate ( curTime ),
 	vServePoint( _vServePoint + _pTransport->GetGroupShift() ), bUpdatedActionsBegin( false ),
@@ -367,7 +367,7 @@ CTransportServeState::CTransportServeState( class CAITransportUnit *_pTransport,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportServeState::Segment()
 {
 	switch (eState)
@@ -535,7 +535,7 @@ void CTransportServeState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportServeState::CreateSquad()
 {
 	if ( !pTransport || !pTransport->IsRefValid() || !pTransport->IsAlive() )
@@ -559,7 +559,7 @@ void CTransportServeState::CreateSquad()
 		//pTransport->Lock( pLoaderSquad );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAICommand *pCommand )
 {
 	// если грузчики еще не в транспорте, то послать их догонять.
@@ -590,16 +590,16 @@ ETryStateInterruptResult CTransportServeState::TryInterruptState( class CAIComma
 		return TSIR_YES_IMMIDIATELY;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportBuildState												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportBuildState::CTransportBuildState ( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint )
 : CStatusUpdatesHelper( EUS_UNDEFINED, pTransport ), eState( ETBS_ESTIMATE ), pUnit( pTransport ), vStartPoint( vDestPoint + pTransport->GetGroupShift() )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildState::Segment()
 {
 	switch( eState )
@@ -754,7 +754,7 @@ void CTransportBuildState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildState::SetEndPoint( const CVec2& _vEndPoint )
 {
 	NI_ASSERT( eState == ETBS_WAIT_FOR_ENDPOINT, "wrong states sequence" );
@@ -766,7 +766,7 @@ void CTransportBuildState::SetEndPoint( const CVec2& _vEndPoint )
 	vEndPoint = _vEndPoint + pUnit->GetGroupShift();
 	eState = ETBS_END_POINT_READY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( IsValidObj( pUnit ) )
@@ -796,16 +796,16 @@ ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAIComma
 		return TSIR_YES_IMMIDIATELY;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportBuildLongObjectState							*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportBuildLongObjectState::CTransportBuildLongObjectState ( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint, class CLongObjectCreation *_pCreation )
 : pCreation( _pCreation ), CTransportBuildState( pTransport, vDestPoint ) 
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildLongObjectState::SetEndPoint( const CVec2& _vEndPoint )
 {
 	CTransportBuildState::SetEndPoint( _vEndPoint );
@@ -813,7 +813,7 @@ void CTransportBuildLongObjectState::SetEndPoint( const CVec2& _vEndPoint )
 	//
 	PreCreate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckThePoint( CVec2 *vPoint, const CVec2 &vStart, const CVec2 &vEnd, float fMinDist )
 {
 	vPoint->x = Clamp( vPoint->x, 128.0f, float( ( GetAIMap()->GetSizeX() - 4 ) * SConsts::TILE_SIZE) );
@@ -821,7 +821,7 @@ bool CheckThePoint( CVec2 *vPoint, const CVec2 &vStart, const CVec2 &vEnd, float
 	
 	return GetDistanceToSegment( vStart, vEnd, *vPoint ) > fMinDist;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 {
 	const float fCurDist = GetDistanceToSegment( vStartPoint, vEndPoint, pUnit->GetCenterPlain() );
@@ -873,7 +873,7 @@ void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 		// уже на месте.
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildLongObjectState::HaveToSendEngeneersNow() 
 {
 	const float fDist = GetDistanceToSegment( vStartPoint, vEndPoint, pUnit->GetCenterPlain() );
@@ -882,59 +882,59 @@ bool CTransportBuildLongObjectState::HaveToSendEngeneersNow()
 
 	return fDist > fRadius && fDist <= fMaxRadius;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildLongObjectState::IsEnoughResources() const
 {
 	return pUnit->GetResursUnitsLeft() > 0.0f; //pUnit->GetResursUnitsLeft() >= pCreation->GetPrice();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildLongObjectState::MustSayNegative() const
 {
 	return pCreation->GetCurIndex() != pCreation->GetMaxIndex();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildLongObjectState::IsWorkDone() const
 {
 	return pCreation->GetCurIndex() == pCreation->GetMaxIndex() || !pCreation->CanBuildNext();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildLongObjectState::SendEngineers()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BUILD_LONGOBJECT, pCreation->GetUniqueId()), pEngineers, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SET_HOME_TRANSPORT, pUnit->GetUniqueId() ), pEngineers, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportBuildFenceState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportBuildFenceState::Instance( class CAITransportUnit *pTransport, const class CVec2 &vStartPoint )
 {
 	return new CTransportBuildFenceState( pTransport, vStartPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportBuildFenceState::CTransportBuildFenceState( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 	: CTransportBuildLongObjectState( pTransport, vStartPoint, NLongObjectCreation::Create<CComplexObstacleCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
 {
 	SetStatus( EUS_BUILD_OBSTACLES );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildFenceState::PreCreate()
 {
 	NLongObjectCreation::PreCreate<CComplexObstacleCreation>( vEndPoint, &pCreation, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportBuildEntrenchmentState						*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportBuildEntrenchmentState::CTransportBuildEntrenchmentState( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 : CTransportBuildLongObjectState( pTransport, vStartPoint, NLongObjectCreation::Create<CEntrenchmentCreation>( vStartPoint, pTransport->GetPlayer(), true ) )
 {
 	SetStatus( EUS_DIG_TRENCHES );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportBuildEntrenchmentState::Instance( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 {
 	return new CTransportBuildEntrenchmentState( pTransport, vStartPoint );
@@ -943,11 +943,11 @@ void CTransportBuildEntrenchmentState::PreCreate()
 {
 	NLongObjectCreation::PreCreate<CEntrenchmentCreation>( vEndPoint, &pCreation, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportClearMineState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportClearMineState::CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint )
 	: CTransportBuildState( pTransport, vDestPoint ), timeNextCheck( curTime ), bWorkDone( false )
 {  
@@ -956,14 +956,14 @@ CTransportClearMineState::CTransportClearMineState( class CAITransportUnit *pTra
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>(pTransport->GetStats());
 	timeCheckPeriod = 100;//SConsts::MINE_VIS_RADIUS / pStats->fSpeed / 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportClearMineState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
 	if ( pPath )
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportClearMineState::HaveToSendEngeneersNow() 
 {
 	if ( curTime >= timeNextCheck )
@@ -978,17 +978,17 @@ bool CTransportClearMineState::HaveToSendEngeneersNow()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportClearMineState::IsEnoughResources() const
 {
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportClearMineState::IsWorkDone() const
 {
 	return bWorkDone;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportClearMineState::SendEngineers()
 {
 	bWorkDone = true;
@@ -1009,21 +1009,21 @@ void CTransportClearMineState::SendEngineers()
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CLEARMINE, vStartPoint ), pEngineers, bToQueue );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId() ), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportClearMineState::IsEndPointNeeded() const
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportClearMineState::Instance( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 {
 	return new CTransportClearMineState( pTransport, vStartPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportPlaceMineState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportPlaceMineState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
@@ -1031,7 +1031,7 @@ void CTransportPlaceMineState::SendTransportToBuildPoint()
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 	bTransportSent = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceMineState::HaveToSendEngeneersNow() 
 {
 //	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
@@ -1046,17 +1046,17 @@ bool CTransportPlaceMineState::HaveToSendEngeneersNow()
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceMineState::IsEnoughResources() const
 {
 	return pUnit->GetResursUnitsLeft() >= SConsts::MINE_RU_PRICE[eCurrType];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceMineState::IsWorkDone() const
 {
 	return bWorkDone;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportPlaceMineState::SendEngineers()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_PLACEMINE, vCorner + CVec2( nSqI * SAIConsts::TILE_SIZE, nSqJ * SAIConsts::TILE_SIZE ), float(eCurrType) ), pEngineers, false );
@@ -1065,7 +1065,7 @@ void CTransportPlaceMineState::SendEngineers()
 	eCurrType = MT_INFANTRY_AND_TECHNICS;
 	bWorkDone = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceMineState::IsEndPointNeeded() const
 {
 	return false;
@@ -1077,26 +1077,26 @@ CTransportPlaceMineState::CTransportPlaceMineState( class CAITransportUnit *pTra
 	vCorner.Set( vDestPoint.x - fShift, vDestPoint.y - fShift );
 	SetStatus( EUS_SET_MINE_FIELD );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportPlaceMineState::Instance( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 {
 	return new CTransportPlaceMineState( pTransport, vStartPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportPlaceAntitankState								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportPlaceAntitankState::Instance( class CAITransportUnit *pTransport, const class CVec2 & vStartPoint )
 {
 	return new CTransportPlaceAntitankState( pTransport, vStartPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportPlaceAntitankState::CTransportPlaceAntitankState( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint )
 	: CTransportBuildState( pTransport, vDestPoint ), bWorkFinished ( false ), bSent( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportPlaceAntitankState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
@@ -1104,7 +1104,7 @@ void CTransportPlaceAntitankState::SendTransportToBuildPoint()
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 	bSent = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceAntitankState::HaveToSendEngeneersNow() 
 {
 //	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
@@ -1118,17 +1118,17 @@ bool CTransportPlaceAntitankState::HaveToSendEngeneersNow()
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceAntitankState::IsEnoughResources() const
 {
 	return pUnit->GetResursUnitsLeft() >= SConsts::ANTITANK_RU_PRICE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceAntitankState::IsWorkDone() const
 {
 	return bWorkFinished;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportPlaceAntitankState::SendEngineers()
 {
 	bWorkFinished = true;
@@ -1136,21 +1136,21 @@ void CTransportPlaceAntitankState::SendEngineers()
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SET_HOME_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportPlaceAntitankState::IsEndPointNeeded() const
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportRepairBridgeState									*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportRepairBridgeState::Instance( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge )
 {
 	return new CTransportRepairBridgeState( pTransport, pFullBridge );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportRepairBridgeState::CTransportRepairBridgeState( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge )
 : CTransportBuildState( pTransport, VNULL2 ), pBridgeToRepair( pFullBridge ), bSentToBuildPoint( false )
 {
@@ -1159,7 +1159,7 @@ CTransportRepairBridgeState::CTransportRepairBridgeState( class CAITransportUnit
 	SetStartPoint( CBridgeCreation::SortBridgeSpans( &spans, pTransport ) );
 	SetStatus( EUS_REPAIR_OBJECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairBridgeState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
@@ -1167,50 +1167,50 @@ void CTransportRepairBridgeState::SendTransportToBuildPoint()
 	if ( pPath )
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBridgeState::HaveToSendEngeneersNow() 
 {
 	return bSentToBuildPoint && pUnit->IsIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBridgeState::IsEnoughResources() const
 {
 	return 1.0f < pUnit->GetResursUnitsLeft();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBridgeState::IsWorkDone() const
 {
 	return pBridgeToRepair->GetFullBridge()->GetHPPercent() == 1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairBridgeState::SendEngineers()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_REPAIR_BRIDGE, pBridgeToRepair->GetUniqueId() ), pEngineers, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SET_HOME_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBridgeState::IsEndPointNeeded() const 
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportRepairBridgeState									*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportBuildBridgeState::Instance( class CAITransportUnit *pTransport, class CFullBridge *pFullBridge )
 {
 	return new CTransportBuildBridgeState( pTransport, pFullBridge );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportBuildBridgeState::CTransportBuildBridgeState( class CAITransportUnit *_pTransport, class CFullBridge *_pFullBridge )
 : CTransportBuildState( _pTransport, VNULL2 ), pFullBridge( _pFullBridge ), pCreation( new CBridgeCreation(_pFullBridge, _pTransport, true ) ),
 	bTransportSent( false )
 {
 	SetStartPoint( pCreation->GetStartPoint() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildBridgeState::SendTransportToBuildPoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vStartPoint, VNULL2, pUnit, true, GetAIMap() );
@@ -1219,22 +1219,22 @@ void CTransportBuildBridgeState::SendTransportToBuildPoint()
 	if ( pPath )
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildBridgeState::HaveToSendEngeneersNow() 
 {
 	return bTransportSent && pUnit->IsIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildBridgeState::IsEnoughResources() const
 {
 	return pUnit->GetResursUnitsLeft() > 0.0f;//return pCreation->GetPrice() <= pUnit->GetResursUnitsLeft();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildBridgeState::IsWorkDone() const
 {
 	return pCreation->GetCurIndex() >= pCreation->GetMaxIndex();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportBuildBridgeState::SendEngineers()
 {
 	bool bToQueue = false;
@@ -1249,27 +1249,27 @@ void CTransportBuildBridgeState::SendEngineers()
 	
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportBuildBridgeState::IsEndPointNeeded() const 
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportRepairBuildingState								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportRepairBuildingState::Instance( class CAITransportUnit *pTransport, class CBuilding *pStaticObject )
 {
 	return new CTransportRepairBuildingState( pTransport, pStaticObject );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportRepairBuildingState::CTransportRepairBuildingState( class CAITransportUnit *pTransport, class CBuilding *pStaticObject )
 : CTransportBuildState( pTransport, CVec2(pStaticObject->GetCenter().x,pStaticObject->GetCenter().y) ), pBuilding( pStaticObject ), bSentToBuildPoint( false )
 {
 	SetStatus( EUS_REPAIR_OBJECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairBuildingState::SendTransportToBuildPoint()
 {
 	int nEntrance = CFormationRepairBuildingState::SendToNearestEntrance( pUnit, pBuilding );
@@ -1284,7 +1284,7 @@ void CTransportRepairBuildingState::SendTransportToBuildPoint()
 		TryInterruptState( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBuildingState::HaveToSendEngeneersNow() 
 {
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
@@ -1292,26 +1292,26 @@ bool CTransportRepairBuildingState::HaveToSendEngeneersNow()
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBuildingState::IsEnoughResources() const
 {
 	return pBuilding->GetStats()->fRepairCost * SConsts::REPAIR_COST_ADJUST <= pUnit->GetResursUnitsLeft();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBuildingState::IsWorkDone() const
 {
 	return pBuilding->GetHitPoints() == pBuilding->GetStats()->fMaxHP;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportRepairBuildingState::SendEngineers()
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_REPAIR_BUILDING, pBuilding->GetUniqueId() ), pEngineers, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SET_HOME_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportRepairBuildingState::IsEndPointNeeded() const 
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

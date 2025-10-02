@@ -9,7 +9,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT nLastCommandID )
 {
 	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
@@ -34,7 +34,7 @@ void CCommandHandlerContainer::Register( UINT nType, UINT nFirstCommandID, UINT 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandHandlerContainer::UnRegister( UINT nType )
 {
 	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
@@ -52,7 +52,7 @@ void CCommandHandlerContainer::UnRegister( UINT nType )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandHandlerContainer::Set( UINT nType, ICommandHandler *pCommandHandler )
 { 
 	if ( pCommandHandler == 0 )
@@ -65,7 +65,7 @@ void CCommandHandlerContainer::Set( UINT nType, ICommandHandler *pCommandHandler
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandHandlerContainer::Remove( UINT nType, ICommandHandler *pCommandHandler )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
@@ -78,7 +78,7 @@ void CCommandHandlerContainer::Remove( UINT nType, ICommandHandler *pCommandHand
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandHandlerContainer::Remove( UINT nType )
 { 
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
@@ -88,7 +88,7 @@ void CCommandHandlerContainer::Remove( UINT nType )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICommandHandler* CCommandHandlerContainer::Get( UINT nType )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
@@ -99,7 +99,7 @@ ICommandHandler* CCommandHandlerContainer::Get( UINT nType )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, DWORD dwData )
 {
 //	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
@@ -114,7 +114,7 @@ bool CCommandHandlerContainer::HandleCommand( UINT nType, UINT nCommandID, DWORD
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandHandlerContainer::UpdateCommand( UINT nType, UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	ICommandHandler *pCommandHandler = Get( nType );
@@ -125,7 +125,7 @@ bool CCommandHandlerContainer::UpdateCommand( UINT nType, UINT nCommandID, bool 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
@@ -136,7 +136,7 @@ bool CCommandHandlerContainer::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandHandlerContainer::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
@@ -146,6 +146,6 @@ bool CCommandHandlerContainer::UpdateCommand( UINT nCommandID, bool *pbEnable, b
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -2,7 +2,7 @@
 #define __ACTION_NOTIFY__
 
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** notify structures
@@ -10,7 +10,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EActionNotify
 {
 	// ( EActionNotify & 1 ) == 1 => идут в UpdateActions
@@ -206,7 +206,7 @@ enum EActionNotify
 
 	ACTION_NOTIFY_NONE												= 0xffffffff,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsDyingAction( const EActionNotify eAction )
 {
 	return
@@ -216,7 +216,7 @@ inline bool IsDyingAction( const EActionNotify eAction )
 		eAction == ACTION_NOTIFY_DIE_BUILDING ||
 		eAction == ACTION_NOTIFY_DIE_TRANSPORT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // check, do we need animation + action or animation only (for the actions, which have animation)
 inline bool DoWeNeedAction( const int nAction )
 {
@@ -249,5 +249,5 @@ inline bool DoWeNeedAction( const int nAction )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

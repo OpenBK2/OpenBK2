@@ -5,7 +5,7 @@
 namespace NNet
 {
 typedef unsigned int APPLICATION_ID;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SNetDriverConsts
 {
 	// время, после которого drop клиента
@@ -16,7 +16,7 @@ struct SNetDriverConsts
 	SNetDriverConsts() : fTimeout( 60 ), fServerListTimeout( 20 ) {}
 	SNetDriverConsts( const int _nTimeOut ) : fTimeout( _nTimeOut ), fServerListTimeout( 20 ) { }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // abstraction from SOCKET
 interface ILinksManager : public CObjectBase
 {
@@ -26,7 +26,7 @@ interface ILinksManager : public CObjectBase
 	virtual bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const = 0;
 	virtual bool GetSelfAddress( class  CNodeAddressSet *pRes ) const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IDriver : public CObjectBase
 {
 	enum EState
@@ -138,12 +138,12 @@ interface IDriver : public CObjectBase
 	// for debug
 	virtual const char* GetAddressByClientID( const int nClientID ) const { return "Unknown"; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NET_EXPORT IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );
 
 NET_EXPORT ILinksManager* CreateClientLinksManager();
 NET_EXPORT ILinksManager* CreateServerLinksManager( const int nPort );
 
 NET_EXPORT void GetNOPStream( CMemoryStream *pNOP );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

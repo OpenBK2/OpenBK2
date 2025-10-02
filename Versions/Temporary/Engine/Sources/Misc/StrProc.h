@@ -1,10 +1,10 @@
 #ifndef __STRPROC_H__
 #define __STRPROC_H__
 #include "Misc_export.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NStr
 {
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 // слить последовательность строк в одну строку, элементы последовательности
 // должны уметь приводиться к string
 template< class It >
@@ -26,8 +26,8 @@ string Join( It first, It last, const string &szSeparator = " " )
 	else
 		return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // разделить строку на массив строк по заданному разделителю
 MISC_EXPORT void SplitString( const string &szString, vector<string> *pVector, const char cSeparator );
 MISC_EXPORT void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar_t cSeparator );
@@ -60,13 +60,13 @@ inline void TrimInside( string &szString ) { TrimInside(szString, " \t\n\r"); }
 
 template<class T>
 void FastSearch( const char *pszBegin, const int nSize, const string &szSample, vector<int> *pFoundEntriesPos, T charsComparer );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 int FastSerachFirst( const char *pszBegin, const string &szSample, T charsComparer );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // привести к верхнему или нижнему регистру
 // MSVCMustDie_* are required to keep compiler happy when default calling conversion is __fastcall
 inline int MSVCMustDie_tolower( int a ) { return tolower(a); } 
@@ -89,10 +89,10 @@ inline void ToUpper( string *pRes, const string &szString )
 	pRes->resize( szString.size() );
 	transform( szString.begin(), szString.end(), pRes->begin(), MSVCMustDie_toupper ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // to upper
 __forceinline char ASCII_toupper( const char chr ) { return chr >= 'a' && chr <= 'z' ? chr - 'a' + 'A' : chr; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // упрощённая и ускоренная версия tolower - работает только на первой половине кодовой таблицы!
 __forceinline char ASCII_tolower( const char chr ) { return chr - ( ('A' - 'a') & ( (('A' - chr - 1) & (chr - 'Z' - 1)) >> 7 ) ); }
 inline void ToLowerASCII( string *pRes )
@@ -107,7 +107,7 @@ inline void ToLowerASCII( string *pRes, const string &szString )
 	for ( int i = 0; i < nSize; ++i )
 		(*pRes)[i] = ASCII_tolower( szString[i] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // convert 'string', which represents integer value in any radix (oct, dec, hex) to 'int'
 MISC_EXPORT int ToInt( const char *pszString );
 inline int ToInt( const string &szString ) { return ToInt( szString.c_str() ); }
@@ -118,7 +118,7 @@ MISC_EXPORT float ToFloat( const char *pszString );
 inline float ToFloat( const string &szString ) { return ToFloat( szString.c_str() ); }
 double ToDouble( const char *pszString );
 inline double ToDouble( const string &szString ) { return ToDouble( szString.c_str() ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // является ли строка представлением числа
 inline bool IsBinDigit( const char cChar ) { return ( (cChar == '0') && (cChar == '1') ); }
 inline bool IsOctDigit( const char cChar ) { return ( (cChar >= '0') && (cChar <= '7') ); }
@@ -128,7 +128,7 @@ inline bool IsSign( const char cChar ) { return ( (cChar == '-') || (cChar == '+
 MISC_EXPORT bool IsDecNumber( const string &szString );
 bool IsOctNumber( const string &szString );
 MISC_EXPORT bool IsHexNumber( const string &szString );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // перевод string => bin и обратно
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
 MISC_EXPORT void* StringToBin( const char *pszData, void *pBuffer, int *pnSize );
@@ -143,26 +143,26 @@ __forceinline unsigned char HexSymbolToHalfByte( const char chr )
 	else
 		return chr - '0';
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // перевод UNICODE => UTF-8 и обратно
 MISC_EXPORT void UnicodeToUTF8( string *pRes, const wstring &szString );
 MISC_EXPORT void UTF8ToUnicode( wstring *pRes, const string &szString );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // перевод MBCS => Unicode и обратно
 MISC_EXPORT void SetCodePage( const int nCodePage );
 MISC_EXPORT void ToMBCS( string *pRes, const wstring &szSrc );
 inline string ToMBCS( const wstring &szSrc ) { string szDst; ToMBCS( &szDst, szSrc ); return szDst; }
 MISC_EXPORT void ToUnicode( wstring *pRes, const string &szSrc );
 inline wstring ToUnicode( const string &szSrc ) { wstring szDst; ToUnicode( &szDst, szSrc ); return szDst; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // перевод MBCS => UTF-8 и обратно
 MISC_EXPORT void UTF8ToMBCS( string *pRes, const string &szSrc );
 MISC_EXPORT void MBCSToUTF8( string *pRes, const string &szSrc );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // GUID => string conversion
 MISC_EXPORT void GUID2String( string *pString, const GUID &guid );
 MISC_EXPORT void String2GUID( const string &szString, GUID *pGuid );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar>
 void ReplaceAllChars( basic_string<TChar> *pString, const TChar tFrom, const TChar tTo )
 {
@@ -172,7 +172,7 @@ void ReplaceAllChars( basic_string<TChar> *pString, const TChar tFrom, const TCh
 			*it = tTo;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** string iterator end it's helper classes
@@ -180,7 +180,7 @@ void ReplaceAllChars( basic_string<TChar> *pString, const TChar tFrom, const TCh
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <typename TChar>
 class CCharSeparator
 {
@@ -191,7 +191,7 @@ public:
 	bool operator()( const TChar tSymbol ) const { return tSymbol == tChr; }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar>
 struct SQuoteTest
 {
@@ -209,7 +209,7 @@ struct SQuoteTest
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar>
 struct SBracketsTest
 {
@@ -233,7 +233,7 @@ struct SBracketsTest
 		return TChar( -1 );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar>
 struct SBracketsQuoteTest
 {
@@ -259,7 +259,7 @@ struct SBracketsQuoteTest
 		return TChar( -1 );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar, class TBrackets = SBracketsTest<TChar> >
 class CBracketSeparator
 {
@@ -287,7 +287,7 @@ public:
 		return false;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar, class TStorage = basic_string<TChar>, class TSeparator = CCharSeparator<TChar> >
 class CStringIterator
 {
@@ -337,7 +337,7 @@ public:
 	int GetPrevPos() const { return nPrevPos; }
 	int GetCurrPos() const { return nCurrPos; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImplementation
 {
 	struct SSearchStr
@@ -408,7 +408,7 @@ void FastSearch( const char *pszBegin, const int nSize, const string &szSample, 
 		++i;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 int FastSerachFirst( const char *pszBegin, const string &szSample, T charsComparer )
 {
@@ -441,7 +441,7 @@ int FastSerachFirst( const char *pszBegin, const string &szSample, T charsCompar
 	}
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer )
 {
@@ -457,7 +457,7 @@ int SerachFirst( const char *pszBegin, const string &szSample, T charsComparer )
 	}
 	return -1;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SASCIICharsComparer
 {
 	const bool operator()( const char ch1, const char ch2 ) const
@@ -465,7 +465,7 @@ struct SASCIICharsComparer
 		return NStr::ASCII_tolower( ch1 ) == NStr::ASCII_tolower( ch2 );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }; // end of namespace NStr
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __STRPROC_H__

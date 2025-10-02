@@ -27,7 +27,7 @@
 #include "../DebugTools/DebugInfoManager.h"
 #include "FeedBackSystem.h"
 #include "UnitsIterators2.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //REGISTER_SAVELOAD_CLASS( 0x1108D4D9, CTransportResupplyHumanResourcesState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4DA, CTransportLoadRuState );
 REGISTER_SAVELOAD_CLASS( 0x1108D496, CTransportLandState );
@@ -43,7 +43,7 @@ REGISTER_SAVELOAD_CLASS( 0x1508D4A6, CTransportClearMineState );
 REGISTER_SAVELOAD_CLASS( 0x1508D4A7, CTransportBuildEntrenchmentState );
 REGISTER_SAVELOAD_CLASS( 0x1508D4A8, CTransportBuildFenceState );
 REGISTER_SAVELOAD_CLASS( 0x19178340, CTransportWaitForUnload );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
@@ -52,11 +52,11 @@ extern CGroupLogic theGroupLogic;
 extern CUnits units;
 extern NTimer::STime curTime;
 extern CStaticObjects theStatObjs;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CTransportUnitFactory												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtr<CTransportStatesFactory> CTransportStatesFactory::pFactory = 0;
 
 IStatesFactory* CTransportStatesFactory::Instance()
@@ -66,7 +66,7 @@ IStatesFactory* CTransportStatesFactory::Instance()
 
 	return pFactory;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
@@ -117,7 +117,7 @@ bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_MOVE_BY_FORMATION
 		);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
 {
 	NI_ASSERT( dynamic_cast<CAITransportUnit*>( pObj ) != 0, "Wrong unit type" );
@@ -480,21 +480,21 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
 	return CMechUnitRestState::Instance( checked_cast<CAITransportUnit*>( pUnit ), CVec2( -1, -1 ), 0, 0, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*									 CTransportWaitPassengerState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportWaitPassengerState::Instance( CMilitaryCar *pTransport, CFormation *pFormation )
 {
 	return new CTransportWaitPassengerState( pTransport, pFormation );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTransport, CFormation *pFormation )
 : pTransport( _pTransport )
 {
@@ -503,7 +503,7 @@ CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTran
 
 	formationsToWait.push_back( pFormation );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportWaitPassengerState::Segment()
 {
 	list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
@@ -518,7 +518,7 @@ void CTransportWaitPassengerState::Segment()
 	if ( formationsToWait.empty() )
 		pTransport->SetCommandFinished();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportWaitPassengerState::TryInterruptState( CAICommand *pCommand )
 { 
 	if ( !pCommand )
@@ -529,7 +529,7 @@ ETryStateInterruptResult CTransportWaitPassengerState::TryInterruptState( CAICom
 
 	return TSIR_YES_WAIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportWaitPassengerState::AddFormationToWait( CFormation *pFormation  )
 {
 	list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
@@ -539,17 +539,17 @@ void CTransportWaitPassengerState::AddFormationToWait( CFormation *pFormation  )
 	if ( iter == formationsToWait.end() )
 		formationsToWait.push_back( pFormation );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CTransportWaitPassengerState::GetPurposePoint() const
 {
 	return pTransport->GetCenterPlain();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportLandState													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CTransportLandState::CTransportLandState( CMilitaryCar *_pTransport, const enum EActionLeaveParam param, const CVec2 &_vLandPoint, CFormation *_pUnload )
 : CStatusUpdatesHelper( EUS_UNLOAD, _pTransport ), pTransport( _pTransport ), vLandPoint( _vLandPoint ), state( ELS_STARTING ), pUnload( _pUnload )
 {
@@ -567,7 +567,7 @@ CTransportLandState::CTransportLandState( CMilitaryCar *_pTransport, const enum 
 	if ( !pTransport->CanMove() )
 		state = ELS_LANDING;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportLandState::LandPassenger( CSoldier *pLandUnit, const CVec3 &vPos )
 {
 	pLandUnit->Stop();
@@ -576,7 +576,7 @@ void CTransportLandState::LandPassenger( CSoldier *pLandUnit, const CVec3 &vPos 
 	pTransport->DelPassenger( pLandUnit );
 	pLandUnit->GetState()->TryInterruptState( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportLandState::Segment()
 {
 	switch ( state )
@@ -705,7 +705,7 @@ void CTransportLandState::Segment()
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportLandState::FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
@@ -745,7 +745,7 @@ bool CTransportLandState::FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropP
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportLandState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( !pCommand || state != ELS_LANDING )
@@ -756,21 +756,21 @@ ETryStateInterruptResult CTransportLandState::TryInterruptState( class CAIComman
 	else
 		return TSIR_YES_WAIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CTransportLandState::GetPurposePoint() const
 {
 	return vLandPoint;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportHookArtilleryState								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportHookArtilleryState::Instance( CAITransportUnit *pTransport, CArtillery *pArtillery, const CVec2 &vHookPoint )
 {
 	return new CTransportHookArtilleryState( pTransport, pArtillery, vHookPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUnit *_pTransport, class CArtillery * _pArtillery, const CVec2 &vHookPoint )
 : CStatusUpdatesHelper( EUS_HOOK_ARTILLERY, _pTransport ), pArtillery( _pArtillery ), pTransport( _pTransport ), eState( TTGS_ESTIMATING ), 
 	timeLast( 0 ), wDesiredTransportDir( 0 ), bInterrupted( false ), vArtilleryPoint( _pArtillery ? _pArtillery->GetCenterPlain() : vHookPoint )
@@ -809,14 +809,14 @@ CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUn
 		TryInterruptState( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportHookArtilleryState::CanInterrupt()
 {
 	return eState == TTGS_ESTIMATING || 
 				eState == TTGS_APPROACHING ||
 				eState == TTGS_APPROACH_BY_MOVE_BACK;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportHookArtilleryState::InterruptBecauseOfPath()
 {
 	pTransport->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
@@ -828,7 +828,7 @@ void CTransportHookArtilleryState::InterruptBecauseOfPath()
 			pArtillery->SetBeingHooked( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportHookArtilleryState::Segment()
 {
 	if ( !IsValidObj( pArtillery ) || ( pArtillery->IsBeingHooked() && pArtillery->GetHookingTransport() != pTransport ))
@@ -1089,7 +1089,7 @@ void CTransportHookArtilleryState::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportHookArtilleryState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( !pCommand )
@@ -1127,21 +1127,21 @@ ETryStateInterruptResult CTransportHookArtilleryState::TryInterruptState( class 
 	
 //	return TSIR_YES_WAIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CTransportHookArtilleryState::GetPurposePoint() const
 {
 	return pTransport->GetCenterPlain();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTransportUnhookArtilleryState							*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportUnhookArtilleryState::Instance( CAITransportUnit *pTransport, const CVec2 &vDestPoint, const bool _bNow )
 {
 	return new CTransportUnhookArtilleryState( pTransport, vDestPoint, _bNow );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportUnhookArtilleryState::CTransportUnhookArtilleryState ( CAITransportUnit *_pTransport, const CVec2 &_vDestPoint, const bool _bNow )
 : CStatusUpdatesHelper( EUS_DEPLOY_ARTILLERY, _pTransport ), pTransport( _pTransport ), eState( TUAS_START_APPROACH ),	vDestPoint( _vDestPoint ), bInterrupted( false ), nAttempt( 0 ), bNow( _bNow )
 {
@@ -1156,7 +1156,7 @@ CTransportUnhookArtilleryState::CTransportUnhookArtilleryState ( CAITransportUni
 		bNow = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit * pUnit ) const
 {
 	pTransport->UnlockTiles();
@@ -1173,7 +1173,7 @@ bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit * pUnit )
 	//return theStaticMap.CanUnitGoToPoint( pUnit->GetBoundTileRadius(), pUnit->GetCenter(), )
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportUnhookArtilleryState::Segment()
 {
 	CArtillery *pArt = pTransport->GetTowedArtillery();
@@ -1345,36 +1345,36 @@ void CTransportUnhookArtilleryState::Segment()
 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportUnhookArtilleryState::TryInterruptState( class CAICommand *pCommand )
 {
 	bInterrupted = true;
 	pTransport->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CMoveToPointNotPresize											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CMoveToPointNotPresize::Instance( class CAIUnit *_pTransport, const CVec2 &_vGeneralCell, const float _fRadius )
 {
 	return new CMoveToPointNotPresize( _pTransport, _vGeneralCell, _fRadius );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMoveToPointNotPresize::CMoveToPointNotPresize( class CAIUnit *_pTransport, const CVec2 &vGeneralCell, const float _fRadius )
 : vPurposePoint( vGeneralCell ), fRadius( _fRadius ), pTransport( _pTransport )
 {
 	SendToPurposePoint();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoveToPointNotPresize::SendToPurposePoint()
 {
 	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vPurposePoint, pTransport->GetGroupShift(), pTransport, true, GetAIMap() );
 	if ( pPath )
 		pTransport->SendAlongPath( pPath, pTransport->GetGroupShift(), false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoveToPointNotPresize::Segment()
 {
 	if ( fabs2( pTransport->GetCenterPlain() - vPurposePoint ) < sqr( fRadius ) )
@@ -1392,17 +1392,17 @@ void CMoveToPointNotPresize::Segment()
 		SendToPurposePoint();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CMoveToPointNotPresize::TryInterruptState( class CAICommand *pCommand )
 {
 	pTransport->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CTransportWaitForUnload											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTransportWaitForUnload::Instance( class CAIUnit *_pTransport, const CVec2 &vTarget )
 {
 	NI_VERIFY( dynamic_cast<CMilitaryCar*>( _pTransport ) != 0, "Wrong unit type", return 0 );
@@ -1410,7 +1410,7 @@ IUnitState* CTransportWaitForUnload::Instance( class CAIUnit *_pTransport, const
 
 	return new CTransportWaitForUnload( pTransport, vTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTransportWaitForUnload::CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget ) :
 pTransport( _pTransport ), vPurposePoint( vTarget )
 {
@@ -1445,7 +1445,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vPurposePoint ), pPass, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransportWaitForUnload::Segment()
 {
 	bool bAllLeft = true;
@@ -1476,10 +1476,10 @@ void CTransportWaitForUnload::Segment()
 		pTransport->SetCommandFinished();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTransportWaitForUnload::TryInterruptState( class CAICommand *pCommand )
 {
 	pTransport->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

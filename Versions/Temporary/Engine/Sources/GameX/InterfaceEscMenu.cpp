@@ -7,9 +7,9 @@
 #include "ScenarioTracker.h"
 #include "MultiplayerCommandManager.h"
 #include "SaveLoadHelper.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceEscMenu::CReactions
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::CReactions::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "react_on_save" )
@@ -39,9 +39,9 @@ bool CInterfaceEscMenu::CReactions::Execute( const string &szSender, const strin
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceEscMenu
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceEscMenu::CInterfaceEscMenu() : 
 	CInterfaceScreenBase( "MissionEscMenu", "esc_menu" ), bClosed( false )
 {
@@ -56,11 +56,11 @@ CInterfaceEscMenu::CInterfaceEscMenu() :
 	AddObserver( "multiplayer_end_mission", &CInterfaceEscMenu::MsgMultiplayerEndMission );
 	AddObserver( "menu_help_button", &CInterfaceEscMenu::MsgHelpButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceEscMenu::~CInterfaceEscMenu()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceEscMenu::CReactions::Check( const string &szCheckName ) const
 {
 	if ( szCheckName == "IsMultiplayer" )
@@ -69,7 +69,7 @@ int CInterfaceEscMenu::CReactions::Check( const string &szCheckName ) const
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::Init()
 {
 	//Make screenshot before anything else
@@ -164,7 +164,7 @@ bool CInterfaceEscMenu::Init()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( bFocus );
@@ -175,7 +175,7 @@ void CInterfaceEscMenu::OnGetFocus( bool bFocus )
 			pLoadBtn->Enable( !NSaveLoad::IsSaveListEmpty() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgMultiplayerEndMission( const SGameMessage &msg )
 {
 	IWindow * pMEnd = GetChildChecked<IWindow>( pScreen, "MultiplayerEndMissionMenu", true );
@@ -185,12 +185,12 @@ void CInterfaceEscMenu::MsgMultiplayerEndMission( const SGameMessage &msg )
 	if ( pMEsc )
 		pMEsc->ShowWindow( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgHelpButton( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_HELP_SCREEN, "Mission" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgTryExitMainMenu( const SGameMessage &msg )
 {
 	eMode = EMODE_EXIT_MAIN_MENU;
@@ -210,7 +210,7 @@ void CInterfaceEscMenu::MsgTryExitMainMenu( const SGameMessage &msg )
 
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", wszMsg ).c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgTryExitWindows( const SGameMessage &msg )
 {
 	if ( eMode == EMODE_EXIT_WINDOWS )
@@ -222,12 +222,12 @@ void CInterfaceEscMenu::MsgTryExitWindows( const SGameMessage &msg )
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
 			InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgGoMainMenu( const SGameMessage &msg )
 {
 	GoMainMenu();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::GoMainMenu()
 {
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
@@ -237,7 +237,7 @@ void CInterfaceEscMenu::GoMainMenu()
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::GoChapterMap()
 {
 	Singleton<IScenarioTracker>()->MissionCancel();
@@ -247,12 +247,12 @@ void CInterfaceEscMenu::GoChapterMap()
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgOptionsMenu( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_OPTIONS_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::OnSave( const string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_SUPPRESS_ENABLE_FOCUS, "" );
@@ -260,7 +260,7 @@ void CInterfaceEscMenu::OnSave( const string &szSender )
 	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "save" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::OnLoad( const string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_SUPPRESS_ENABLE_FOCUS, "" );
@@ -268,7 +268,7 @@ void CInterfaceEscMenu::OnLoad( const string &szSender )
 	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "load" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnRestartMission( const string &szSender )
 {
 	eMode = EMODE_RESTART_MISSION;
@@ -279,7 +279,7 @@ bool CInterfaceEscMenu::OnRestartMission( const string &szSender )
 			
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnEndMissionSubMenu( const string &szSender )
 {
 	if ( pEscMenu )
@@ -308,14 +308,14 @@ bool CInterfaceEscMenu::OnEndMissionSubMenu( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnEndMissionReturnToGame( const string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnMenuBack( const string &szSender )
 {
 	if ( pEscMenu )
@@ -325,7 +325,7 @@ bool CInterfaceEscMenu::OnMenuBack( const string &szSender )
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnMPMenuBack( const string &szSender )
 {
 	if ( pMPEscMenu )
@@ -335,7 +335,7 @@ bool CInterfaceEscMenu::OnMPMenuBack( const string &szSender )
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::OnFinishReplay()
 {
 	eMode = EMODE_FINISH_REPLAY;
@@ -346,7 +346,7 @@ bool CInterfaceEscMenu::OnFinishReplay()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgOk( const SGameMessage &msg )
 {
 	if ( eMode == EMODE_EXIT_MAIN_MENU )
@@ -384,13 +384,13 @@ void CInterfaceEscMenu::MsgOk( const SGameMessage &msg )
 		NMainLoop::Command( ML_COMMAND_REPLAY_SAVE_LOAD, "load" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgCancel( const SGameMessage &msg )
 {
 	if ( eMode == EMODE_EXIT_WINDOWS )
 		eMode = EMODE_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::MsgWinned( const SGameMessage &msg )
 {
 	if ( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
@@ -407,7 +407,7 @@ void CInterfaceEscMenu::MsgWinned( const SGameMessage &msg )
 		NMainLoop::Command( ML_COMMAND_MP_STATISTICS, "" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceEscMenu::DoRestartMission()
 {
 	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
@@ -422,12 +422,12 @@ void CInterfaceEscMenu::DoRestartMission()
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::ProcessEvent( const SGameMessage &msg )
 {
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceEscMenu::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
@@ -435,22 +435,22 @@ bool CInterfaceEscMenu::StepLocal( bool bAppActive )
 
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICEscMenu
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICEscMenu::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICEscMenu::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICEscMenu::Configure( const char *pszConfig )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x170B6B80, CInterfaceEscMenu )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_ESC_MENU, CICEscMenu )
 REGISTER_SAVELOAD_CLASS_NM( 0x170B6B81, CReactions, CInterfaceEscMenu );

@@ -4,10 +4,10 @@
 
 #include "GRenderCore.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGenericMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS( CGenericMaterial );
@@ -134,7 +134,7 @@ public:
 	virtual IMaterial* GetWindAffected();
 	virtual IMaterial* GetNoReceiveShadows();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CWaterMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CWaterMaterial);
@@ -166,7 +166,7 @@ public:
 	virtual bool IsSelfIllum() const { return false; }
 	virtual void Precache();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DMOTOR_EXPORT CAnimWaterMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CAnimWaterMaterial);
@@ -199,7 +199,7 @@ public:
 	virtual void Precache();
 	virtual bool IsProjectOnTerrain() const { return bProjectOnTerrain; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSurfMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CSurfMaterial);
@@ -228,7 +228,7 @@ public:
 	virtual bool IsSelfIllum() const { return false; }
 	virtual void Precache();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CReflectWaterMaterial : public IMaterial
 {
 	enum ERenderOps
@@ -271,7 +271,7 @@ public:
 
 		virtual bool IsUsingWaterReflection() const { return true; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTracksMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CTracksMaterial);
@@ -297,7 +297,7 @@ public:
 	virtual bool IsSelfIllum() const { return false; }
 	virtual void Precache();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTerrainMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CTerrainMaterial);
@@ -364,10 +364,10 @@ public:
 		virtual bool IsSelfIllum() const { return false; }
 		virtual void Precache();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 class CSimpleSkyMaterial : public IMaterial
 {
 	OBJECT_BASIC_METHODS(CSimpleSkyMaterial);
@@ -397,5 +397,5 @@ public:
 	virtual bool DoesIgnoreZ() const { return true; }
 	virtual void Precache();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

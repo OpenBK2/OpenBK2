@@ -2,12 +2,12 @@
 #include "GDecal.h"
 #include "GSceneUtils.h"
 #include "GSceneInternal.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDecal
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial ) : pOwner(_pOwner), pTarget(_pTarget), pMaterial(_pMaterial)
 {
 	// create target geometry
@@ -42,13 +42,13 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 	}
 	pOwner->Register( this, pTarget );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecal::~CDecal()
 {
 	if ( IsValid(pOwner) )
 		pOwner->Unregister( this, pTarget );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void WalkVector( vector<T> *pRes )
 {
@@ -65,7 +65,7 @@ static void WalkVector( vector<T> *pRes )
 	}
 	pRes->resize( nRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CDecal::OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &tp )
 {
 	CDecalTarget::CSrcPosHash::iterator i = pTarget->srcPositions.find( tp );
@@ -82,14 +82,14 @@ bool CDecal::OnCreate( IDecalQuery *pScene, ISomePart *pNew, const SSrcPosInfo &
 	decals.push_back( pRes );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecal::Walk()
 {
 	WalkVector( &decals );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDecalsManager
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecalsManager::OnCreate( ISomePart *pNew )
 {
 	const SFullGroupInfo &fg = pNew->GetFullGroupInfo();
@@ -108,7 +108,7 @@ void CDecalsManager::OnCreate( ISomePart *pNew )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecalTarget* CDecalsManager::CreateDecalTarget( const vector<CObjectBase*> &_targets, const SDecalMappingInfo &_info )
 {
 	CDecalTarget *pRes = new CDecalTarget( _info );
@@ -118,7 +118,7 @@ CDecalTarget* CDecalsManager::CreateDecalTarget( const vector<CObjectBase*> &_ta
 	pScene->GetPartsList( _info, targets, &pRes->parts );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecal* CDecalsManager::CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial )
 {
 	if ( !IsValid(pTarget) )
@@ -128,7 +128,7 @@ CDecal* CDecalsManager::CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial
 	}
 	return new CDecal( this, pTarget, pMaterial );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 {
 	ASSERT( IsValid( pTarget ) );
@@ -149,7 +149,7 @@ void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 			decals.push_back( pDecal );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecalsManager::Unregister( CDecal *pDecal, CDecalTarget *pTarget )
 {
 	ASSERT( IsValid( pTarget ) );
@@ -172,7 +172,7 @@ void CDecalsManager::Unregister( CDecal *pDecal, CDecalTarget *pTarget )
 			d.resize( nRes );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecalsManager::Walk()
 {
 	for ( CPerUserHash::iterator i = decalsPerUser.begin(); i != decalsPerUser.end(); ++i )
@@ -187,7 +187,7 @@ void CDecalsManager::Walk()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x003c2140, CDecal )

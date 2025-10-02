@@ -1,18 +1,18 @@
 #pragma once
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "ActionNotify.h"
 #include "Actions.h"
 #include "CameraRunTypes.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SVisObj;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     UpdatableClient                             *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IUpdatableClient
 {
 	virtual void ProcessUpdate( const struct SAIPointLightUpdate *pUpdate ) = 0;
@@ -45,17 +45,17 @@ interface IUpdatableClient
 	virtual void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) = 0;
 	virtual void ProcessUpdate( const struct SChatClear *pUpdate ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_TO_UPDATES																					\
 virtual void ProcessClient( IUpdatableClient *pClient ) const				\
 {																																		\
 	pClient->ProcessUpdate( this );																		\
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                   Updates                                       *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basic class
 struct SAIBasicUpdate : public CObjectBase
 {
@@ -74,7 +74,7 @@ public:
 		//		DebugTrace( "Update not found for type %s", typeid(*this).name() );
 	}
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIActionUpdate : public SAIBasicUpdate
 {
 private:
@@ -89,14 +89,14 @@ public:
 	SAIActionUpdate( const int _nObjUniqueID, const EActionNotify eUpdateType, const int _nParam, const NTimer::STime nUpdateTime )
 		: SAIBasicUpdate( eUpdateType, nUpdateTime ), nObjUniqueID( _nObjUniqueID ), nParam( _nParam ) { }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIPlacementUpdateBase : public SAIBasicUpdate
 {
 	ZDATA_(SAIBasicUpdate)
 	SAINotifyPlacement info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIPlacementUpdate : public SAIPlacementUpdateBase 
 {
 private:
@@ -105,7 +105,7 @@ private:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIPlacementUpdateBase *)this); return 0; }
 public:
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIChangeVisibilityUpdate : public SAIPlacementUpdateBase
 {
 private:
@@ -115,7 +115,7 @@ public:
 	bool bVisible;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIPlacementUpdateBase*)this); f.Add(2,&bVisible); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIRPGUpdate : public SAIBasicUpdate
 {
 private:
@@ -125,7 +125,7 @@ public:
 		SAINotifyRPGStats info;	
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SParentOfAtomObjectUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SParentOfAtomObjectUpdate )
@@ -139,7 +139,7 @@ public:
 	SParentOfAtomObjectUpdate( int _nAtomObjectID, int _nParentID )
 		: nAtomObjectID( _nAtomObjectID ), nParentID( _nParentID ) { eUpdateType = ACTION_NOTIFY_PARENT_OF_ATOM_OBJ; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIDamageUpdate : public SAIBasicUpdate
 {
 private:
@@ -156,7 +156,7 @@ public:
 	SAIDamageUpdate( const int _nObjUniqueID, const int _nProjectileUniqueID, const float _fDamage, const CVec3 &vExplosionPos )
 		: SAIBasicUpdate( ACTION_NOTIFY_DAMAGE, 0 ), nObjUniqueID( _nObjUniqueID ), nProjectileUniqueID( _nProjectileUniqueID ), fDamage( _fDamage ) {}
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIMechShotUpdate : public SAIBasicUpdate
 {
 private:
@@ -166,7 +166,7 @@ public:
 		SAINotifyMechShot info;		
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIInfantryShotUpdate : public SAIBasicUpdate
 {
 private:
@@ -176,7 +176,7 @@ public:
 		SAINotifyInfantryShot info;		
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIHitUpdate : public SAIBasicUpdate
 {
 private:
@@ -186,7 +186,7 @@ public:
 		SAINotifyHitInfo info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAITurretUpdate : public SAIBasicUpdate
 {
 private:
@@ -196,7 +196,7 @@ public:
 		SAINotifyTurretTurn info;			
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIEntranceUpdate : public SAIBasicUpdate
 {
 private:
@@ -206,7 +206,7 @@ public:
 		SAINotifyEntranceState info;				
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIDiplomacyUpdate : public SAIBasicUpdate
 {
 private:
@@ -216,7 +216,7 @@ public:
 		SAINotifyDiplomacy info;					
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIKeyBuildingUpdate : public SAIBasicUpdate
 {
 private:
@@ -226,7 +226,7 @@ public:
 		SAINotifyKeyBuilding info;					
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIKeyBuildingCaptureUpdate : public SAIBasicUpdate
 {
 private:
@@ -239,7 +239,7 @@ public:
 	float fProgress;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&nObjUniqueID); f.Add(3,&nOldSide); f.Add(4,&nNewSide); f.Add(5,&fProgress); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIShootAreaUpdate : public SAIBasicUpdate
 {
 private:
@@ -250,7 +250,7 @@ public:
 		int nObjID;				
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nObjID); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINewUnitUpdate : public SAIBasicUpdate
 {
 private:
@@ -260,7 +260,7 @@ public:
 		SNewUnitInfo info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIDeadUnitUpdate : public SAIBasicUpdate
 {
 private:
@@ -276,7 +276,7 @@ public:
 		bool bVisibleWhenDie;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&dieAnimation); f.Add(3,&dieTime); f.Add(4,&dieAction); f.Add(5,&nFatality); f.Add(6,&nDeadObj); f.Add(7,&placement); f.Add(8,&bVisibleWhenDie); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIDissapearObjUpdate : public SAIBasicUpdate
 {
 private:
@@ -289,7 +289,7 @@ public:
 
 	SAIDissapearObjUpdate() : nDissapearObjID( -1 ), bShowEffects( true ) { }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAITrenchUpdate : public SAIBasicUpdate
 {
 	OBJECT_BASIC_METHODS( SAITrenchUpdate )
@@ -302,7 +302,7 @@ public:
 public:
 	SAITrenchUpdate(): bLast( false ) { }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIFormationUpdate : public SAIBasicUpdate
 {
 	OBJECT_BASIC_METHODS( SAIFormationUpdate )
@@ -313,7 +313,7 @@ public:
 public:
 	SAIFormationUpdate() { }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAICircleUpdate : public SAIBasicUpdate
 {
 	OBJECT_BASIC_METHODS( SAICircleUpdate )
@@ -323,7 +323,7 @@ public:
 		int			nParam;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nParam); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIChangeDBIDUpdate : public SAIBasicUpdate
 {
 private:
@@ -334,7 +334,7 @@ public:
 	int nObjUniqueID;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nObjUniqueID); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SParadropStartFinishUpdate : public SAIBasicUpdate
 {
 private:
@@ -349,7 +349,7 @@ public:
 	CDBPtr<NDb::SVisObj> pParachuteVisObj;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&bStart); f.Add(5,&nObjUniqueID); f.Add(6,&pNewSoldierVisObj); f.Add(7,&pParachuteVisObj); return 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAITreeBrokenUpdate : public SAIBasicUpdate
 {
 private:
@@ -361,7 +361,7 @@ public:
 	int nObjUniqueID;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&vDir); f.Add(3,&fTg); f.Add(4,&nObjUniqueID); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIModifyEntranceStateUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIModifyEntranceStateUpdate )
@@ -376,7 +376,7 @@ public:
 	SAIModifyEntranceStateUpdate( const int _nObjUniqueID, const bool _bOpen ) :
 		nObjUniqueID( _nObjUniqueID ), bOpen( _bOpen ) {}
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIPointLightUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIPointLightUpdate )
@@ -393,7 +393,7 @@ public:
 
 		REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIHeadLightUpdate : public SAIBasicUpdate
 {
 	OBJECT_BASIC_METHODS( SAIHeadLightUpdate )
@@ -410,7 +410,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIToggleDayNightWindowsUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIToggleDayNightWindowsUpdate )
@@ -426,7 +426,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIBreakWindowUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIBreakWindowUpdate )
@@ -442,7 +442,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAINewProjectileUpdate : public SAIBasicUpdate
 {
 	OBJECT_BASIC_METHODS( SAINewProjectileUpdate )
@@ -453,7 +453,7 @@ public:
 public:
 	REGISTER_TO_UPDATES
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SWeaponRPGStats;
@@ -478,7 +478,7 @@ public:
 
 //	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIDeadProjectileUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIDeadProjectileUpdate )
@@ -493,7 +493,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SExplodeProjectileUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SExplodeProjectileUpdate )
@@ -511,7 +511,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SScriptCameraRunUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SScriptCameraRunUpdate )
@@ -537,7 +537,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SScriptCameraResetUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SScriptCameraResetUpdate )
@@ -550,7 +550,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SScriptCameraStartMovieUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SScriptCameraStartMovieUpdate )
@@ -565,7 +565,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SScriptCameraStopMovieUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SScriptCameraStopMovieUpdate )
@@ -574,7 +574,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWeatherChangedUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SWeatherChangedUpdate )
@@ -588,14 +588,14 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPlaneReturnsUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SPlaneReturnsUpdate )
 public:
 	SPlaneReturnsUpdate() {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIObjectsUnderConstructionUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SAIObjectsUnderConstructionUpdate );
@@ -634,7 +634,7 @@ public:
 	SAIObjectsUnderConstructionUpdate() : bCanBuild( true ) {  }
 	SAIObjectsUnderConstructionUpdate( const bool _bSet ) : bSet( _bSet ), bCanBuild( true ) {  }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SClientUpdateButtonsUpdate );
@@ -643,7 +643,7 @@ struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
 public:
 	REGISTER_TO_UPDATES	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SClientUpdateSingleUnitUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SClientUpdateSingleUnitUpdate );
@@ -656,12 +656,12 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SComplexEffect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPlayEffectUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SPlayEffectUpdate );
@@ -673,7 +673,7 @@ public:
 	SPlayEffectUpdate( const NDb::SComplexEffect *_pEffect, const CVec3 &_vPos ) : SAIBasicUpdate( ACTION_NOTIFY_PLAY_EFFECT, 0 ), pEffect( _pEffect ), vPos( _vPos ) { }
 	SPlayEffectUpdate() { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLaserMarkUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SLaserMarkUpdate );
@@ -687,7 +687,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SChatMessageUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SChatMessageUpdate );
@@ -703,7 +703,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWinLoseUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SWinLoseUpdate );
@@ -716,7 +716,7 @@ public:
 
 	REGISTER_TO_UPDATES
 }; 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMoneyChangedUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMoneyChangedUpdate );
@@ -727,7 +727,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SStartStopSequenceUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SStartStopSequenceUpdate );
@@ -740,9 +740,9 @@ public:
 
 	REGISTER_TO_UPDATES
 }; 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // "MS" means Music System
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMSPlayVoiceUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMSPlayVoiceUpdate );
@@ -755,7 +755,7 @@ public:
 
 //	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMSChangePlaylistUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMSChangePlaylistUpdate );
@@ -768,7 +768,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMSSetVolumeUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMSSetVolumeUpdate );
@@ -782,7 +782,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMSPauseMusicUpdate : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMSPauseMusicUpdate );
@@ -796,7 +796,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SObjectiveChanged : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SObjectiveChanged );
@@ -811,7 +811,7 @@ public:
 	REGISTER_TO_UPDATES
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEnableAirStrike : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SEnableAirStrike );
@@ -824,7 +824,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMemCameraPos : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SMemCameraPos )
@@ -838,7 +838,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSetCameraToMemPos : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SSetCameraToMemPos )
@@ -852,7 +852,7 @@ public:
 
 	REGISTER_TO_UPDATES
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SChatClear : public SAIBasicUpdate
 {
 	OBJECT_NOCOPY_METHODS( SChatClear )
@@ -863,4 +863,4 @@ public:
 	SChatClear() {}
 	REGISTER_TO_UPDATES
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

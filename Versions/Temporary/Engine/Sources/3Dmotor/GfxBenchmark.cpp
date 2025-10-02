@@ -92,7 +92,7 @@ struct STestData
 		FillTex( &pDepth, 1024, 1 );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom, CTriList *pTris )
 {
 	rc.AddPrimitive( pGeom, pTris );
@@ -113,7 +113,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 	sort( times.begin(), times.end() );
 	return times[ times.size() / 2 ];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SPerformanceInfo perf;
 //extern NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 void PerformBenchmark()
@@ -194,7 +194,7 @@ void PerformBenchmark()
 	nUseAnisotropy = nOldAniso;
 	ForceTextureFilterSetup();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SPerformanceInfo &GetPerformanceInfo()
 {
 	return perf;

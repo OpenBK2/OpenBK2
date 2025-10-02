@@ -10,7 +10,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CImportFromGameDialog::vID[] = 
 {
 	IDC_IFG_FOLDER_BROWSE_LABEL,	//0
@@ -23,7 +23,7 @@ const int CImportFromGameDialog::vID[] =
 	IDCANCEL,											//7
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImportFromGameDialog::CImportFromGameDialog( CWnd* pParent )
 	: CResizeDialog( CImportFromGameDialog::IDD, pParent )
 {
@@ -39,7 +39,7 @@ CImportFromGameDialog::CImportFromGameDialog( CWnd* pParent )
 	SetControlStyle( IDCANCEL, ANCHORE_BOTTOM | ANCHORE_HOR_CENTER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::GetRegistryKey( string *pszRegistryKey )
 {
 	if ( pszRegistryKey )
@@ -54,7 +54,7 @@ void CImportFromGameDialog::GetRegistryKey( string *pszRegistryKey )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -62,7 +62,7 @@ void CImportFromGameDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_IFG_FILE_BROWSE_EDIT, m_FileEdit);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CImportFromGameDialog, CResizeDialog)
 	ON_BN_CLICKED(IDC_IFG_FILE_BROWSE_BUTTON, OnFileBrowseButton)
 	ON_BN_CLICKED(IDC_IFG_FOLDER_BROWSE_BUTTON, OnFolderBrowseButton)
@@ -70,7 +70,7 @@ BEGIN_MESSAGE_MAP(CImportFromGameDialog, CResizeDialog)
 	ON_EN_CHANGE(IDC_IFG_FOLDER_BROWSE_EDIT, OnChangeFolderBrowseEdit)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CImportFromGameDialog::OnInitDialog() 
 {
 	CResizeDialog::OnInitDialog();
@@ -89,7 +89,7 @@ BOOL CImportFromGameDialog::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::GetGamePath( string *pszGamePath )
 {
 	NI_ASSERT( pszGamePath != 0, StrFmt( _T( "CImportFromGameDialog::GetGamePath() wrong parameter: pszGamePath %x" ), pszGamePath ) );
@@ -99,7 +99,7 @@ void CImportFromGameDialog::GetGamePath( string *pszGamePath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::GetFilePath( string *pszFilePath )
 {
 	NI_ASSERT( pszFilePath != 0, StrFmt( _T( "CImportFromGameDialog::GetFilePath() wrong parameter: pszFilePath %x" ), pszFilePath ) );
@@ -109,7 +109,7 @@ void CImportFromGameDialog::GetFilePath( string *pszFilePath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::OnFolderBrowseButton() 
 {
 	CString strDialogTitle;
@@ -130,7 +130,7 @@ void CImportFromGameDialog::OnFolderBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::OnFileBrowseButton() 
 {
 	CString strDialogTitle;
@@ -161,7 +161,7 @@ void CImportFromGameDialog::OnFileBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::OnChangeFolderBrowseEdit() 
 {
 	CString strFolderName;
@@ -170,7 +170,7 @@ void CImportFromGameDialog::OnChangeFolderBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::OnChangeFileBrowseEdit() 
 {
 	CString strFileName;
@@ -179,7 +179,7 @@ void CImportFromGameDialog::OnChangeFileBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void	CImportFromGameDialog::UpdateControls()
 {
 	if ( CWnd *pWnd = GetDlgItem( IDOK ) )
@@ -188,7 +188,7 @@ void	CImportFromGameDialog::UpdateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromGameDialog::OnOK() 
 {
 	if ( resizeDialogOptions.szParameters[0][resizeDialogOptions.szParameters[0].size() - 1] != '\\' )
@@ -199,7 +199,7 @@ void CImportFromGameDialog::OnOK()
 	CResizeDialog::OnOK();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

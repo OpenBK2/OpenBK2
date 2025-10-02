@@ -4,7 +4,7 @@
 #include "LineMesh.h"
 #include "SceneInternal.h"
 #include "VisObjDesc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 NAIVisInfo::CDebugSegment* CScene::CreateSegment( const CSegment &aiSegment, const int nThickness, 
 																									const NAIVisInfo::EColor eColor )
@@ -15,7 +15,7 @@ NAIVisInfo::CDebugSegment* CScene::CreateSegment( const CSegment &aiSegment, con
 
 	return pSegment;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NAIVisInfo::CDebugCircle* CScene::CreateCircle( const CCircle &aiCircle, 
 																								const NAIVisInfo::EColor eColor )
 {
@@ -25,7 +25,7 @@ NAIVisInfo::CDebugCircle* CScene::CreateCircle( const CCircle &aiCircle,
 
 	return pCircle;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NAIVisInfo::CDebugMarker* CScene::CreateMarker( const list<CVec2> &tiles, 
 																								const NAIVisInfo::EColor eColor )
 {
@@ -35,14 +35,14 @@ NAIVisInfo::CDebugMarker* CScene::CreateMarker( const list<CVec2> &tiles,
 
 	return pMarker;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetMarkerPosition( CObjectBase *pMarker, const list<CVec2> &tiles )
 {
 	NI_ASSERT( dynamic_cast<NAIVisInfo::CDebugMarker*>( pMarker ) != 0, "Wrong object passed" );
 	dynamic_cast<NAIVisInfo::CDebugMarker*>( pMarker )->SetPosition( tiles );
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter )
 {
 	CVec2 vCenterVis = vCenter;
@@ -59,7 +59,7 @@ void CScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fM
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor )
 {
 	CVec2 vCenterVis = vCenter;
@@ -75,12 +75,12 @@ void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	data[eScene]->markers[ESMT_KEY_AREA][0].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ClearKeyPointAreas()
 {
 	ClearMarkers( ESMT_KEY_AREA, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, const CVec3 &vColor )
 {
 	CVec2 vStartVis = vStart;
@@ -97,7 +97,7 @@ void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, con
 	transform.backward = transform.forward;
 	data[eScene]->markers[ESMT_LINE][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ClearMarkers( ESceneMarkerType eType, int nID )
 {
 	if ( nID == -1 )
@@ -105,7 +105,7 @@ void CScene::ClearMarkers( ESceneMarkerType eType, int nID )
 	else
 		data[eScene]->markers[eType].erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CScene::CreateCircle( CFuncBase<SFBTransform> *pTransform, float fRadius, const CVec3 &vColor, float fWidth )
 {
 	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CShootAreaMesh( pTransform, 0, 0, AI2Vis(0.0f), AI2Vis(fRadius), data[eScene]->pTerraManager, fWidth );
@@ -116,7 +116,7 @@ CObjectBase* CScene::CreateCircle( CFuncBase<SFBTransform> *pTransform, float fR
 	meshInfo.parts[0].pMaterial = data[eScene]->GetGScene()->CreateMaterial( CVec4( vColor, 0.5f ), false );
 	return data[eScene]->GetGScene()->CreateMesh( meshInfo, pTransform, 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidth )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -138,4 +138,4 @@ void CScene::SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidt
 	else
 		pVO->pCircle = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

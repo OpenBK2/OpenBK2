@@ -2,7 +2,7 @@
 #include "SmokeTrailEffect.h"
 #include "../3Dmotor/GAnimation.hpp"
 #include "MapObj.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos, float _fInterval, const NDb::SComplexEffect *_pEffect,
 									                    const CVec3 &_vPos, const CQuat &_qRot, NTimer::STime currTime, bool bVisible )
 {
@@ -14,7 +14,7 @@ CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos, float _fInterv
 	//
 	CreateEffect( _vPos, _qRot, currTime, bVisible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeTrailEffect::CreateEffect( const CVec3 &vPos, const CQuat &qRot, NTimer::STime time, bool bVisible )
 {
 	if ( !bVisible )
@@ -23,7 +23,7 @@ void CSmokeTrailEffect::CreateEffect( const CVec3 &vPos, const CQuat &qRot, NTim
 	Multiply( &mResultPos, SHMatrix(vPos, qRot), mLocalPos );
 	PlayComplexEffect( OBJECT_ID_FORGET, pEffect, time, mResultPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, NTimer::STime currTime, bool bVisible )
 {
 	static const float fInterval2 = fabs2( fInterval );
@@ -60,7 +60,7 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 	//
 	fTimeLastUpdate = fTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator )
 {
 	SHMatrix mBoneLocalPos;
@@ -85,5 +85,5 @@ void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const strin
 
 	Multiply( pmRelativePos, mBoneLocalPos, mMulti );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x101BCCC0, CSmokeTrailEffect )

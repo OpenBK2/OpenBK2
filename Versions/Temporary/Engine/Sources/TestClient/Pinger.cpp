@@ -7,12 +7,12 @@
 #include "../Server_Client_Common/LoginPackets.h"
 
 const int MAX_ATTEMPTS = 3;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPinger::CPinger()
 {
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPinger::CPinger( const int &nPeriod, const string &_szName, const string &_szPassword, const string &_szIP,
 									const int &_nPort, const int &_nNetVersion )
 	: nConnectPeriod( nPeriod ), szName( _szName ), szPassword( _szPassword ),
@@ -21,7 +21,7 @@ CPinger::CPinger( const int &nPeriod, const string &_szName, const string &_szPa
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
 	nLastConnectTime = GetLongTickCount();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPinger::Segment()
 {
 	if ( pServerClient ) 
@@ -42,7 +42,7 @@ bool CPinger::Segment()
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPinger::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 {
 	if ( pPacket->eConnectionState != CConnectServerPacket::ECS_SUCCESS )
@@ -66,4 +66,4 @@ bool CPinger::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 	pServerClient = 0;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

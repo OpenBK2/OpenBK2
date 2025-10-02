@@ -12,7 +12,7 @@
 #include "../MapEditorLib/DefaultShortcutBar.h"
 #include "MiniMapWindow.h"
 #include "MoviesEditorWindow.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #define TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT 11
 #define TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT 2
@@ -22,7 +22,7 @@ EXTERNVAR const UINT TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEME
 
 using namespace NMapInfoEditor;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CVSOState;
@@ -143,4 +143,4 @@ public:
 	bool GenerateMinimapImage( const string &szFileName );
 	//
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

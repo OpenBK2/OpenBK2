@@ -3,16 +3,16 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int GetBits( const float *f ) { return *(const int*)f; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGradientMatrix
 {
 	float _11, _12, _13;
 	float _21, _22, _23;
 	float _d1, _d2, _d3;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcGradient( const SGradientMatrix &m, CVec4 *pRes, float f1, float f2, float f3 )
 {
 	pRes->x = m._11 * f1 + m._12 * f2 + m._13 * f3;
@@ -20,7 +20,7 @@ inline void CalcGradient( const SGradientMatrix &m, CVec4 *pRes, float f1, float
 	pRes->z = 0;
 	pRes->w = m._d1 * f1 + m._d2 * f2 + m._d3 * f3;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void PrepareGradientMatrix( SGradientMatrix *pRes, const CVec3 &vA, const CVec3 &vB, const CVec3 &vC )
 {
 	float f1 = vB.x * vC.y - vC.x * vB.y;
@@ -39,7 +39,7 @@ inline void PrepareGradientMatrix( SGradientMatrix *pRes, const CVec3 &vA, const
 	pRes->_d2 = f2 * fD1;
 	pRes->_d3 = f3 * fD1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SProjectedPoint
 {
 	CVec3 res, src;
@@ -58,7 +58,7 @@ struct SProjectedPoint
 		Project();
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // all points assumed to be projected & scaled to fit viewport
 // rasterizer perform perspective division only
 // rasterizers tries to conform DirectX rasterizing standard - points are checked by its centers
@@ -291,7 +291,7 @@ public:
 		RasterTriangle( v1, v2, v3 );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // special mapping to conform DirectX mapping standard
 struct STextureMapping
 {
@@ -303,7 +303,7 @@ struct STextureMapping
 		ptDV.x = srcV.x; ptDV.y = srcV.y; ptDV.w = srcV.w + ( srcV.x + srcV.y ) * 0.5f;// - 0.5f;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T, class TElement>
 class CArrayRasterizer: public CRasterizer<T>
 {
@@ -335,5 +335,5 @@ protected:
 		(*pnFX) = Min( *pnFX, region.x2 );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

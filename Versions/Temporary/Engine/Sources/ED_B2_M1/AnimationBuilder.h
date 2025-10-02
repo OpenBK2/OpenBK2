@@ -4,7 +4,7 @@
 
 #include "..\mapeditorlib\interface_commandhandler.h"
 #include "..\MapEditorLib\BuildDataBuilder.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGrannyBoneAttributes; 
 class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback, public ICommandHandler
 {
@@ -25,5 +25,5 @@ protected:
 	// methods
 	DWORD GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__ANIMATION_BUILDER__)

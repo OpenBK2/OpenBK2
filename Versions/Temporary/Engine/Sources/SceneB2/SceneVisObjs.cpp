@@ -8,7 +8,7 @@
 #include "VisObjDesc.h"
 #include "TerrainManager.h"
 #include "SceneInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CVec3 &vHalfSize, const CQuat &rot )
 {
 	SHMatrix matrix;
@@ -43,7 +43,7 @@ float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CV
 	const float fMaxY = Max( fabs(vMin.y), fabs(vMax.y) ) * 2.0f;
 	return Min( vElementSize.x / fMaxX, vElementSize.y / fMaxY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeScreenTransform( SHMatrix *pMatrix, const CVec2 &vScreenPos, const CVec2 &_vElementSize, 
 												 const CVec3 &vModelCenter, const CVec3 &vModelHalfSize )
 {
@@ -66,7 +66,7 @@ void MakeScreenTransform( SHMatrix *pMatrix, const CVec2 &vScreenPos, const CVec
 	mStack.Push( CVec3(-vModelCenter.x, -vModelCenter.y, 0) );
 	*pMatrix = mStack.Get();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjReflectionInfo::Recalc()
 {
 	if ( !( pGeometry->HasZeroValue() ) )
@@ -103,7 +103,7 @@ void CVisObjReflectionInfo::Recalc()
 		bWasUpdate = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pModel,
 																			const SHMatrix &matr )
 {
@@ -135,7 +135,7 @@ void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMesh
 		data[eScene]->visObjReflections.back().pHolder = data[eScene]->GetGScene()->CreateMesh( meshInfo, placement, 0, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::CheckObjExist( int nObjectID ) const
 {
 	//проверка на повторное создание объектов только для FastDebug
@@ -148,7 +148,7 @@ bool CScene::CheckObjExist( int nObjectID ) const
 	return data[eScene]->visObjects.find(nObjectID) != data[eScene]->visObjects.end();
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize )
 {
 	SSceneData::CScreensData &screensData = data[eScene]->screensData;
@@ -201,7 +201,7 @@ void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *p
 	}
 	return;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveInterfaceObject( IWindow *pScreen, const int nID )
 {
 	SSceneData::CScreensData &screensData = data[eScene]->screensData;
@@ -209,7 +209,7 @@ void CScene::RemoveInterfaceObject( IWindow *pScreen, const int nID )
 	if ( it != screensData.end() )
 		it->interfaceVisObjects.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale, 
 											 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
 {
@@ -224,7 +224,7 @@ int CScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &_v
 	else
 		return AddStaticObject( nID, pModel, _vPos, qRot, vScale, pMeshInfo, bHasReflection );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, 
 														const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
 {
@@ -272,7 +272,7 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVe
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale, 
 															 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
 {
@@ -348,7 +348,7 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // AddObject versions with precomputed transform
 int CScene::AddObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace, 
 											 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection )
@@ -363,7 +363,7 @@ int CScene::AddObject( const int nID, const NDb::SModel *pModel, const SHMatrix 
 	else
 		return AddStaticObject( nID, pModel, mPlace, pMeshInfo, bHasReflection );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace, 
 														NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
 {
@@ -404,7 +404,7 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const SHM
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace, 
 															 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
 {
@@ -471,12 +471,12 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const S
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveObject( const int nID )
 {
 	data[eScene]->visObjects.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::MoveObject( const int nID, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale )
 {
 	//	NI_ASSERT( visObjects.find(nID) != visObjects.end(), StrFmt("Can't find object 0x%.8x to move", nID) );
@@ -491,7 +491,7 @@ bool CScene::MoveObject( const int nID, const CVec3 &_vPos, const CQuat &qRot, c
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::MoveObject( const int nID, const SHMatrix &mPlace )
 {
 	//	NI_ASSERT( visObjects.find(nID) != visObjects.end(), StrFmt("Can't find object 0x%.8x to move", nID) );
@@ -505,7 +505,7 @@ bool CScene::MoveObject( const int nID, const SHMatrix &mPlace )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ChangeModel( const int nObjectID, const NDb::SModel *pModel )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nObjectID );
@@ -528,7 +528,7 @@ bool CScene::ChangeModel( const int nObjectID, const NDb::SModel *pModel )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveObjectPickability( const int nID )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -540,7 +540,7 @@ void CScene::RemoveObjectPickability( const int nID )
 		pVOD->srcBind.Update();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ShowObject( const int nID, const bool bShow )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -558,7 +558,7 @@ void CScene::ShowObject( const int nID, const bool bShow )
 		UnselectObject( nID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NAnimation::ISkeletonAnimator *CScene::GetAnimator( const int nID, bool bRefreshAnimator )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -575,6 +575,6 @@ NAnimation::ISkeletonAnimator *CScene::GetInterfaceObjAnimator( IWindow *pScreen
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x13129440, CVisObjReflectionInfo );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

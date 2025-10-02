@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 #include "GUnpackDXT.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
 struct SDDSHeader
 {
 	DWORD dwWidth, dwHeight;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** DXT subformats decoding
@@ -16,7 +16,7 @@ struct SDDSHeader
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDXTColBlock
 {
 	WORD col0;
@@ -52,7 +52,7 @@ struct SColor565
 	unsigned nGreen : 6;		// byte order of output to 32 bit
 	unsigned nRed	: 5;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor8888 *col_1, 
 																 SColor8888 *col_2, SColor8888 *col_3, WORD &wrd )
 {
@@ -148,7 +148,7 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 
 	}
 }			//  Get color block colors (...)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void DecodeColorBlock( DWORD *pImPos, SDXTColBlock *pColorBlock, int width,
 								              DWORD *col_0, DWORD *col_1, DWORD *col_2, DWORD *col_3 )
 {
@@ -201,7 +201,7 @@ inline void DecodeColorBlock( DWORD *pImPos, SDXTColBlock *pColorBlock, int widt
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaBlock, int width, DWORD alphazero )
 {
 	// alphazero is a bit mask that when & with the image color
@@ -250,7 +250,7 @@ inline void  DecodeAlphaExplicit( DWORD *pImPos, SDXTAlphaBlockExplicit *pAlphaB
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pAlphaBlock,
 									int width, DWORD alphazero)
 {
@@ -369,7 +369,7 @@ inline void DecodeAlpha3BitLinear( DWORD * pImPos, SDXTAlphaBlock3BitLinear * pA
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DecompressDXT1( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	// This was hacked up pretty quick & slopily
@@ -412,7 +412,7 @@ void DecompressDXT1( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	const int xblocks = hdr.dwWidth / 4;
@@ -478,14 +478,14 @@ void DecompressDXT3( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DecompressDXT2( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	// Can do color & alpha same as dxt3, but color is pre-multiplied 
 	//   so the result will be wrong unless corrected. 
 	DecompressDXT3( pRes, hdr, pCompBytes );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DecompressDXT5( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	const int xblocks = hdr.dwWidth / 4;
@@ -551,15 +551,15 @@ void DecompressDXT5( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DecompressDXT4( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	// Can do color & alpha same as dxt5, but color is pre-multiplied 
 	//   so the result will be wrong unless corrected. 
 	DecompressDXT5( pRes, hdr, pCompBytes );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<DWORD> *pRes )
 {
 	SDDSHeader hdr;

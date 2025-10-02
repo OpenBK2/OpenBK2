@@ -4,16 +4,16 @@
 #include "CommonPathFinder.h"
 
 #include "../Common_RTS_AI/AIMap.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int DIRECTION_OFFSET = 32;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3008CB00, CCommonStaticPath );
 BASIC_REGISTER_CLASS( IStaticPath );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CCommonStaticPath													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIMap *_pAIMap )
 : nLen( pStaticPathFinder->GetPathLength() ),
 	startTile( pStaticPathFinder->GetStartTile() ), finishTile( pStaticPathFinder->GetFinishTile() ),
@@ -27,7 +27,7 @@ CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIM
 	if ( nLen > 0 )
 		pStaticPathFinder->GetTiles( &(path[0]), nLen );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticPath::MoveStartTileTo( const int nStart )
 {
 	const int nDelta = Min( nLen, nStart );
@@ -36,20 +36,20 @@ void CCommonStaticPath::MoveStartTileTo( const int nStart )
 	startTile = path[nDelta];
 	path.erase( path.begin(), path.begin() + nDelta );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticPath::MoveFinishTileTo( const int nFinish )
 {
 	nLen = Clamp( nFinish, 1, nLen );
 	finishTile = path[nLen - 1];
 	finishPoint = pAIMap->GetPointByTile( finishTile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticPath::MoveFinishPointBy( const CVec2 &vMove ) 
 { 
 	if ( pAIMap->GetTile( finishPoint + vMove ) == finishTile )
 		finishPoint += vMove;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommonStaticPath::MergePath( IStaticPath *pAppendant, const int _nStartTile )
 {
 	if ( !pAppendant || pAppendant->GetLength() <= _nStartTile )
@@ -66,7 +66,7 @@ bool CCommonStaticPath::MergePath( IStaticPath *pAppendant, const int _nStartTil
 	finishPoint = pAIMap->GetPointByTile( finishTile );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCommonStaticPath::MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const
 {
 	vector<SVector> tiles;
@@ -75,4 +75,4 @@ int CCommonStaticPath::MarkStaticPath( const int nID, const NDebugInfo::EColor c
 
 	return DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

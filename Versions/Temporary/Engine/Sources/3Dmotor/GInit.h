@@ -5,7 +5,7 @@
 namespace NGScene
 {
 struct SUserRTInfo;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _3DMOTOR_EXPORT bool SetModeFromConfig( bool bReinit, const SUserRTInfo &rtInfo );
 //bool CanRenderShadows();
 //bool CanCacheLighting();

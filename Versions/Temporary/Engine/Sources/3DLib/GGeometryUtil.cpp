@@ -8,9 +8,9 @@ namespace NGfx
 }*/
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTriVertexCacheOptimizer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::CountVertices( const vector<STriangle> &tris )
 {
 	int nMax = 0;
@@ -18,7 +18,7 @@ void CTriVertexCacheOptimizer::CountVertices( const vector<STriangle> &tris )
 		nMax = Max( nMax, Max( (int)tris[k].i1, Max( (int)tris[k].i2, (int)tris[k].i3 ) ) );
 	nVertices = nMax + 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::Init( const vector<STriangle> &tris )
 {
 	tpvIndex.resize( nVertices + 1 );
@@ -57,7 +57,7 @@ void CTriVertexCacheOptimizer::Init( const vector<STriangle> &tris )
 	outQueue.resize( ( tris.size() + 100 ) * 3 );
 	outPrevPos.resize( ( tris.size() + 100 ) * 3 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTriVertexCacheOptimizer::SearchBest( const vector<STriangle> &tris )
 {
 	++nTryCount;
@@ -95,7 +95,7 @@ int CTriVertexCacheOptimizer::SearchBest( const vector<STriangle> &tris )
 	ASSERT( bs.nBestIdx != -1 );
 	return bs.nBestIdx;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::MeasureEfficiency( const vector<STriangle> &tris )
 {
 	SVxCache<10> cache;
@@ -118,7 +118,7 @@ void CTriVertexCacheOptimizer::MeasureEfficiency( const vector<STriangle> &tris 
 	sprintf( szBuf, "vertices per triangle = %g\n", 3 * nMisses / (float)(nTotal) );
 	OutputDebugString( szBuf );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTriVertexCacheOptimizer::OutputVertex( int n )
 {
 	--freeLinks[n];
@@ -138,7 +138,7 @@ bool CTriVertexCacheOptimizer::OutputVertex( int n )
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::ReverseVertex()
 {
 	int n = outQueue[ nOutQueueSize - 1 ];
@@ -153,7 +153,7 @@ void CTriVertexCacheOptimizer::ReverseVertex()
 	--nOutQueueSize;
 	--nOutPrevPosSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTriVertexCacheOptimizer::CountNotCachedFL( const vector<STriangle> &tris, int nVertex )
 {
 	/*#ifdef _DEBUG
@@ -181,7 +181,7 @@ int CTriVertexCacheOptimizer::CountNotCachedFL( const vector<STriangle> &tris, i
 		ReverseVertex();
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::OptimizeVertexOrder( vector<STriangle> &tris, int *pnResVerts, vector<WORD> *pVertexReorder )
 {
 	vector<WORD> &position = *pVertexReorder;
@@ -207,7 +207,7 @@ void CTriVertexCacheOptimizer::OptimizeVertexOrder( vector<STriangle> &tris, int
 	}
 	ASSERT( nPos <= position.size() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTriVertexCacheOptimizer::Optimize( vector<STriangle> *pTris, vector<WORD> *pVertexReorder, int *pnResVerts, int _nVCacheSize )
 {
 	nVCacheSize = _nVCacheSize;
@@ -280,5 +280,5 @@ void CTriVertexCacheOptimizer::Optimize( vector<STriangle> *pTris, vector<WORD> 
 		OptimizeVertexOrder( *pTris, pnResVerts, pVertexReorder );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

@@ -2,11 +2,11 @@
 
 #include "GenTerrain.h"
 #include "../B2_M1_Terrain/TracksManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_VERTICES_NUM_ALLOC 8
 #define DEF_TRIANGLES_NUM_ALLOC 6
 #define DEF_TRACK_HEIGHT 0.1f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetIntersectX( const float x, const CVec2 &p1, const CVec2 &p2, CVec2 *pRes )
 {
 	pRes->x = x;
@@ -19,7 +19,7 @@ inline float GetIntersectX( const float x, const CVec2 &p1, const CVec2 &p2, CVe
 	pRes->y = p1.y + ( p2.y - p1.y ) * t;
 	return t;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetIntersectY( const float y, const CVec2 &p1, const CVec2 &p2, CVec2 *pRes )
 {
 	pRes->y = y;
@@ -32,7 +32,7 @@ inline float GetIntersectY( const float y, const CVec2 &p1, const CVec2 &p2, CVe
 	pRes->x = p1.x + ( p2.x - p1.x ) * t;
 	return t;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTrackMidHeight( const float x, const float y, const float fMidX, const float fMidY,
 																					 const int nTileX, const int nTileY )
 {
@@ -80,7 +80,7 @@ float CTerraGen::GetTrackMidHeight( const float x, const float y, const float fM
 	}
 	return ( fHeight1 + (fHeight2 - fHeight1) * fDx ) * ( 1.0f - fDy ) + ( fHeight3 + (fHeight4 - fHeight3) * fDx ) * fDy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 													const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
 													const CVec2 &vNorm, const float _fWidth, const float fAplha, CTracksManager *pTracksManager )
@@ -277,4 +277,4 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 
 	pTracksManager->AddTrack( nID, fFadingSpeed, data, vBBMin, vBBMax );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

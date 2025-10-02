@@ -14,7 +14,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::CreateRecentListName( string *pszName, const SObjectSet &rObjectSet, bool bMainObject )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -42,7 +42,7 @@ void CStringManager::CreateRecentListName( string *pszName, const SObjectSet &rO
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::CreateObjectSet( SObjectSet *pObjectSet, const string &rszName, bool bMainObject )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -69,7 +69,7 @@ void CStringManager::CreateObjectSet( SObjectSet *pObjectSet, const string &rszN
 	InsertHashSetElement( &( pObjectSet->objectNameSet ), CDBID( szObjectName ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::AddToRecentList( const string &rszName, bool bMainObject )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -93,7 +93,7 @@ void CStringManager::AddToRecentList( const string &rszName, bool bMainObject )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::RemoveFromRecentList( const string &rszName, bool bMainObject )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -133,7 +133,7 @@ void CStringManager::RemoveFromRecentList( const string &rszName, bool bMainObje
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStringManager::GetStringValueFromString( const string &rszString, const string &rszLabel, const int nPos, const string &rszDividers, const string &rszDefaultValue, string *pszString )
 {
 	NI_ASSERT( pszString != 0, "CStringManager::GetStringValueFromString(): pszString == 0" );
@@ -166,7 +166,7 @@ bool CStringManager::GetStringValueFromString( const string &rszString, const st
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStringManager::GetIntValueFromString( const string &rszString, const string &rszLabel, const int nPos, const string &rszDividers, int nDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
@@ -202,7 +202,7 @@ int CStringManager::GetIntValueFromString( const string &rszString, const string
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CStringManager::GetFloatValueFromString( const string &rszString, const string &rszLabel, const int nPos, const string &rszDividers, float fDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
@@ -238,7 +238,7 @@ float CStringManager::GetFloatValueFromString( const string &rszString, const st
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStringManager::GetBoolValueFromString( const string &rszString, const string &rszLabel, const int nPos, const string &rszDividers, bool bDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
@@ -266,7 +266,7 @@ bool CStringManager::GetBoolValueFromString( const string &rszString, const stri
 	return ( szString == "true" );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStringManager::NormalizeValue( int nValue, int nStep )
 {
 	if ( ( nValue % nStep ) != 0 )
@@ -285,7 +285,7 @@ int CStringManager::NormalizeValue( int nValue, int nStep )
 	return nValue;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStringManager::GetPowerPrecision( int nPrercision )
 {
 	int nPowerPrecision = 1;
@@ -296,7 +296,7 @@ int CStringManager::GetPowerPrecision( int nPrercision )
 	return nPowerPrecision;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::GetTypeAndNameFromRefValue( string *pszTypeName, string *pszName, const string &rszRefValue, char cSeparator, const string &rszDefaultTypeName )
 {
 	//NI_ASSERT( pszTypeName != 0, "CStringManager::GetTypeAndNameFromRefValue(): pszTypeName == 0" );
@@ -327,7 +327,7 @@ void CStringManager::GetTypeAndNameFromRefValue( string *pszTypeName, string *ps
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::GetRefValueFromTypeAndName( string *pszRefValue, const string &rszTypeName, const string &rszName, char cSeparator )
 {
 	NI_ASSERT( pszRefValue != 0, "CStringManager::GetRefValueFromTypeAndName(): pszRefValue == 0" );
@@ -335,7 +335,7 @@ void CStringManager::GetRefValueFromTypeAndName( string *pszRefValue, const stri
 	( *pszRefValue ) = rszTypeName + cSeparator + rszName;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::CutFileName( string *pszFileName )
 {
 	NI_ASSERT( pszFileName != 0, "CStringManager::CutFileName(): pszFileName == 0" );
@@ -353,7 +353,7 @@ void CStringManager::CutFileName( string *pszFileName )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStringManager::CutFileExtention( string *pszFileName )
 {
 	if ( pszFileName )
@@ -373,7 +373,7 @@ bool CStringManager::CutFileExtention( string *pszFileName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStringManager::CutFileExtention( string *pszFileName, const string &rszFileExtention )
 {
 	if ( pszFileName )
@@ -401,7 +401,7 @@ bool CStringManager::CutFileExtention( string *pszFileName, const string &rszFil
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::ExtendFileExtention( string *pszFileName, const string &rszFileExtention )
 {
 	if ( pszFileName )
@@ -419,7 +419,7 @@ void CStringManager::ExtendFileExtention( string *pszFileName, const string &rsz
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::ExtendFileExtention( CString *pstrFileName, const CString &rstrFileExtention )
 {
 	if ( pstrFileName )
@@ -431,7 +431,7 @@ void CStringManager::ExtendFileExtention( CString *pstrFileName, const CString &
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::SplitFileName( string *pszFilePath, string *pszFileName, string *pszFileExtention, const string &rszFullFileName )
 {
 	string szFullFileName = rszFullFileName;
@@ -470,7 +470,7 @@ void CStringManager::SplitFileName( string *pszFilePath, string *pszFileName, st
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStringManager::RemoveDoubleSlashes( string *pszFilePath )
 {
   if ( pszFilePath && !pszFilePath->empty() )
@@ -496,7 +496,7 @@ void CStringManager::RemoveDoubleSlashes( string *pszFilePath )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CStringManager::GetFloatStringWithPrecision( const float fValue, const int nPrecision )
 {
 	if ( nPrecision > 0 ) 
@@ -510,7 +510,7 @@ string CStringManager::GetFloatStringWithPrecision( const float fValue, const in
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStringManager::Compare( const string &rszLeft, const string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString )
 {
 	string szLeft = rszLeft;
@@ -534,6 +534,6 @@ int CStringManager::Compare( const string &rszLeft, const string &rszRight, bool
 		return szLeft.compare( szRight );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

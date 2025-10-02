@@ -15,7 +15,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
@@ -104,7 +104,7 @@ void CObjectBaseController::SUndoData::FillLists( const string &szStartNodeName,
 	//DebugTrace( "FillLists() %s: %g", szStartNodeName.c_str(), NHPTimer::GetTimePassed( &time ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const
 {
 	bool bResult = true;
@@ -226,7 +226,7 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const
 {
 	bool bResult = true;
@@ -297,7 +297,7 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectBaseController::Trace() const
 {
 	for ( CUndoDataList::const_iterator posUndoData = undoDataList.begin(); posUndoData != undoDataList.end(); ++posUndoData )
@@ -323,7 +323,7 @@ void CObjectBaseController::Trace() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::IsAbsolute() const
 {
 	if ( !undoDataList.empty() )
@@ -343,7 +343,7 @@ bool CObjectBaseController::IsAbsolute() const
 }
 
 //CRAP{ PLAIN_TEXT
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectBaseController::GetDescription( CString *pstrDescription ) const
 {
 	if ( pstrDescription )
@@ -399,7 +399,7 @@ void CObjectBaseController::GetDescription( CString *pstrDescription ) const
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::UndoWithoutUpdateViews()
 {
 	bool bResult = true;
@@ -427,7 +427,7 @@ bool CObjectBaseController::UndoWithoutUpdateViews()
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::RedoWithoutUpdateViews()
 {
 	bool bResult = true;
@@ -454,7 +454,7 @@ bool CObjectBaseController::RedoWithoutUpdateViews()
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::AddInsertOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
@@ -490,7 +490,7 @@ bool CObjectBaseController::AddInsertOperation( const string &rszArrayName, cons
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::AddRemoveOperation( const string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
@@ -550,7 +550,7 @@ bool CObjectBaseController::AddRemoveOperation( const string &rszArrayName, cons
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::AddChangeOperation( const string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
@@ -580,7 +580,7 @@ bool CObjectBaseController::AddChangeOperation( const string &rszPropertyName, c
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseController::AddExpandOperation( const string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -590,6 +590,6 @@ bool CObjectBaseController::AddExpandOperation( const string &rszPropertyName, b
 	//
 	return posNewUndoData->Redo( pObjectManipulator, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

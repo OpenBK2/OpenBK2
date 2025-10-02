@@ -3,12 +3,12 @@
 #include "DBScene.h"
 #include "GRenderModes.h"
 #include "HeightFog.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_INV_255 = 1.0f / 255;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightFogHolder : public CPtrFuncBase<CObjectInfo>
 {
 	OBJECT_BASIC_METHODS( CHeightFogHolder )
@@ -29,14 +29,14 @@ public:
 	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom, const NDb::SHeightFog *_pHeightFog, CFuncBase<SFBTransform> *_pPlace ) :
 			pGeom(_pGeom), pHeightFog(_pHeightFog), pPlace(_pPlace) { Identity( &(place.forward) ); Identity( &(place.backward) ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetHeightFogCol( CVec3 *pCol, const CVec3 &vPos, const CVec3 &vFogCol, float fMinHeight, float fHeightCoeff )
 {
 	const float t = Clamp( ( vPos.z - fMinHeight ) * fHeightCoeff, 0.0f, 1.0f );
 	const float it = 1.0f - t;
 	pCol->Set( vFogCol.x * it + t, vFogCol.y * it + t, vFogCol.z * it + t );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightFogHolder::Recalc()
 {
 	CObjectInfo *pMesh = pGeom->GetValue();
@@ -80,7 +80,7 @@ void CHeightFogHolder::Recalc()
 		pValue->SetAttribute( GATTR_VERTEX_COLOR, attrs );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
 																								  const SFBTransform &place )
 {
@@ -88,7 +88,7 @@ CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGe
 		return new CHeightFogHolder( pGeom, pHeightFog, place );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
 																								  CFuncBase<SFBTransform> *pPlace )
 {
@@ -96,8 +96,8 @@ CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGe
 		return new CHeightFogHolder( pGeom, pHeightFog, pPlace );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace NGScene
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x1318BB41, CHeightFogHolder )

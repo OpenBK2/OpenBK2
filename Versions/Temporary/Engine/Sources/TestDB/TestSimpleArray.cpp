@@ -2,14 +2,14 @@
 #include "TestType.h"
 #include "MeasureTimer.h"
 #include "../libdb/ObjMan.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NTest
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TODO{
 // * add test to remove at position '-1'
 // TODO}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSimpleArrayTestData
 {
 	const string szFieldName;
@@ -58,7 +58,7 @@ static const SSimpleArrayTestData testdata[] =
 	{ "Weapons", { CDBID("weapons/ussr/heavy/a20.xdb"), CDBID("weapons/ussr/light/ppsh.xdb"), CDBID("weapons/ussr/heavy/a20.xdb"), CDBID("weapons/ussr/light/ppsh.xdb"), CDBID("weapons/ussr/heavy/a20.xdb") } },
 	{ "", { 0, 0, 0, 0, 0 } }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckMetaGetForArray( NDb::IObjMan *pBind, const string &szFieldName, const int nPos, const CVariant &var )
 {
 	CVariant value;
@@ -67,7 +67,7 @@ bool CheckMetaGetForArray( NDb::IObjMan *pBind, const string &szFieldName, const
 	NI_VERIFY( var == value, StrFmt("Values mismatch for %d element!", nPos), return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldName, const int nPos, const CVariant &var )
 {
 	CVariant value;
@@ -76,7 +76,7 @@ bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldN
 	NI_VERIFY( CheckMetaGetForArray( pBind, szFieldName, nPos, var ) != false, "Failed to check Meta Get for array", return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestSimpleArrayInsertRemove( NDb::IObjMan *pBind, const SSimpleArrayTestData *pData )
 {
 	const string szTestName = StrFmt( "Simple array \"%s\"", pData->szFieldName.c_str() );
@@ -129,5 +129,5 @@ bool TestSimpleArrayInsertRemove( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit
 		NI_VERIFY( TestSimpleArrayInsertRemove( pBind, pData ) != false, "Insert/remove failed!", return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

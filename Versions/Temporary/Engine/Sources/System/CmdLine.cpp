@@ -2,10 +2,10 @@
 
 #include "CmdLine.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCmdLine
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Report( const char *pszFormat, ... )
 {
 	static const int BUF_SIZE = 4096;
@@ -18,7 +18,7 @@ static void Report( const char *pszFormat, ... )
 	printf( charBuff );
 	OutputDebugString( charBuff );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string GetErrorDesc( CCmdLine::EProcessResult eResult )
 {
 	switch ( eResult )
@@ -34,7 +34,7 @@ static string GetErrorDesc( CCmdLine::EProcessResult eResult )
 	}
 	return "Unknown error";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** observers
@@ -42,13 +42,13 @@ static string GetErrorDesc( CCmdLine::EProcessResult eResult )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface CCmdLine::IObserver: public CObjectBase
 {
 	virtual bool IsNeedValue() const = 0;
 	virtual CCmdLine::EProcessResult AcceptValue( const string &value ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 class CCmdLine::CObserver : public CCmdLine::IObserver
 {
@@ -78,7 +78,7 @@ public:
 		return CCmdLine::PROC_RESULT_OK;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** processing functions
@@ -86,7 +86,7 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CCmdLine::SObserver *CCmdLine::Find( const char *pszName ) const
 {
 	for ( CObserversList::const_iterator it = observers.begin(); it != observers.end(); ++it )
@@ -96,7 +96,7 @@ const CCmdLine::SObserver *CCmdLine::Find( const char *pszName ) const
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CCmdLine::GetHelp( const char *pszName ) const
 {
 	if ( const SObserver *pObserver = Find( pszName ) )
@@ -104,7 +104,7 @@ string CCmdLine::GetHelp( const char *pszName ) const
 	else
 		return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCmdLine::AddOptionInternal( const char *pszOptionName, IObserver *_pObserver, const char *pszDescription )
 {
 	CPtr<IObserver> pObserver = _pObserver;
@@ -117,7 +117,7 @@ bool CCmdLine::AddOptionInternal( const char *pszOptionName, IObserver *_pObserv
 	pos->pObserver = pObserver;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCmdLine::IObserver *CCmdLine::MakeIntObserver( int *pRes ) const { return new CObserver<int>( pRes ); }
 CCmdLine::IObserver *CCmdLine::MakeFloatObserver( float *pRes ) const { return new CObserver<float>( pRes ); }
 CCmdLine::IObserver *CCmdLine::MakeStringObserver( string *pRes ) const { return new CObserver<string>( pRes ); }
@@ -126,7 +126,7 @@ CCmdLine::IObserver *CCmdLine::MakeIntObserver( int *pRes, const int &setval ) c
 CCmdLine::IObserver *CCmdLine::MakeFloatObserver( float *pRes, const float &setval ) const { return new CObserver<float>( pRes, setval ); }
 CCmdLine::IObserver *CCmdLine::MakeStringObserver( string *pRes, const string &setval ) const { return new CObserver<string>( pRes, setval ); }
 CCmdLine::IObserver *CCmdLine::MakeWStringObserver( wstring *pRes, const wstring &setval ) const { return new CObserver<wstring>( pRes, setval ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCmdLine::PrintUsage( const char *pszAdd ) const
 {
 	string szMessage = szHeader + "\n";
@@ -139,13 +139,13 @@ int CCmdLine::PrintUsage( const char *pszAdd ) const
 	Report( szMessage.c_str() );
 	return 0xDEAD;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCmdLine::PrintHeader() const
 {
 	Report( (szHeader + "\n").c_str() );
 	return 0xDEAD;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCmdLine::EProcessResult CCmdLine::Process( const char *pszCommandLine ) const
 {
 	vector<string> strings;
@@ -163,7 +163,7 @@ CCmdLine::EProcessResult CCmdLine::Process( const char *pszCommandLine ) const
 	}
 	return Process( strings );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCmdLine::EProcessResult CCmdLine::Process( int argc, char *argv[] ) const
 {
 	vector<string> strings;
@@ -227,9 +227,9 @@ CCmdLine::EProcessResult CCmdLine::Process( const vector<string> &args ) const
 	}
 	return PROC_RESULT_OK;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( NCmdLine::CCmdLine::IObserver );
 /*
 using namespace NCmdLine;

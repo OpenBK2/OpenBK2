@@ -1,8 +1,8 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <winbase.h>
 #include <time.h>
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWin32Time
 {
 	union
@@ -30,7 +30,7 @@ struct SWin32Time
 	WORD GetTime() const { return wTime; }
 	operator DWORD() const { return dwFulltime; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // transforms DOS date/time format (time_t) to the Win32 date/time format (SWin32Time)
 inline DWORD DOSToWin32DateTime( time_t dostime )
 {
@@ -47,7 +47,7 @@ inline DWORD DOSToWin32DateTime( time_t dostime )
 
 	return filetime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // transforms Win32 date/time format (SWin32Time) to the DOS date/time format (time_t)
 inline time_t Win32ToDOSDateTime( const DWORD _w32time )
 {
@@ -82,7 +82,7 @@ inline time_t Win32ToDOSDateTime( const DWORD _w32time )
 	time_t result = mktime( &tmTime );
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // transforms FILETIME to Win32 date/time (SWin32Time)
 inline DWORD FILETIMEToWin32DateTime( const FILETIME &filetime )
 {
@@ -92,7 +92,7 @@ inline DWORD FILETIMEToWin32DateTime( const FILETIME &filetime )
 	FileTimeToDosDateTime( &localfiletime, &win32time.wDate, &win32time.wTime );
 	return win32time;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // transforms FILETIME to TM time 
 inline void FILETIMEToTMTime( const FILETIME &filetime, tm *pTMTime )
 {
@@ -127,7 +127,7 @@ inline void FILETIMEToTMTime( const FILETIME &filetime, tm *pTMTime )
 	pTMTime->tm_min  = int( w32time.minutes );
 	pTMTime->tm_sec  = int( w32time.seconds ) * 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // transforms Win32 date/time (SWin32Time) to FILETIME
 inline FILETIME Win32DateTimeToFILETIME( const DWORD win32time )
 {
@@ -137,4 +137,4 @@ inline FILETIME Win32DateTimeToFILETIME( const DWORD win32time )
 	LocalFileTimeToFileTime( &localft, &filetime );
 	return filetime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

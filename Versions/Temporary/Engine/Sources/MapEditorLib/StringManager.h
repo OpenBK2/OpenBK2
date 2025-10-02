@@ -2,7 +2,7 @@
 #define __COMMON_TOOLS__STRING_MANAGER__
 #pragma once
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CStringManager
 {
 public:
@@ -28,5 +28,5 @@ public:
 	static void RemoveDoubleSlashes( string *pszFilePath );
 	static int Compare( const string &rszLeft, const string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // #if !defined(__COMMON_TOOLS__STRING_MANAGER__)

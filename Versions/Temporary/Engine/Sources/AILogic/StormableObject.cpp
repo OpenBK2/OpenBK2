@@ -6,15 +6,15 @@
 #include "Randomize.h"
 #include "Soldier.h"
 #include "Cheats.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern NTimer::STime curTime;
 extern SCheats theCheats;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*													CStormableObject												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::AddInsider( CSoldier *pUnit )
 {
 	const int nPlayer = pUnit->GetPlayer();
@@ -60,7 +60,7 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 {
 	const int nParty = pUnit->GetParty();
@@ -96,7 +96,7 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStormableObject::FindInAttackers( CSoldier *pUnit ) const
 {
 	const int nParty = pUnit->GetParty();
@@ -109,7 +109,7 @@ bool CStormableObject::FindInAttackers( CSoldier *pUnit ) const
 
 	return i != attackers.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::DelInsider( CSoldier *pUnit )
 {
 	if ( FindInAttackers( pUnit ) )
@@ -117,14 +117,14 @@ void CStormableObject::DelInsider( CSoldier *pUnit )
 	else
 		DelSoldier( pUnit, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::InsiderDamaged( CSoldier *pUnit )
 {
 	// caueoiee iauaeoa
 	if ( !FindInAttackers( pUnit ) )
 		SoldierDamaged( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CStormableObject::GetDamage( CBasicGun *pGun, CSoldier *pTarget ) const
 {
 	float fDamage = 0;
@@ -156,7 +156,7 @@ const float CStormableObject::GetDamage( CBasicGun *pGun, CSoldier *pTarget ) co
 
 	return fDamage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::Combat( CSoldier *pAttacker, CSoldier *pDefender )
 {
 	const float fDamageFromAttacker = GetDamage( pAttacker->GetGun( 0 ), pDefender );
@@ -165,7 +165,7 @@ void CStormableObject::Combat( CSoldier *pAttacker, CSoldier *pDefender )
 	pDefender->TakeDamage( fDamageFromAttacker, &pAttacker->GetGun( 0 )->GetShell(), pAttacker->GetPlayer(), pAttacker );
 	pAttacker->TakeDamage( fDamageFromDefender, &pDefender->GetGun( 0 )->GetShell(), pDefender->GetPlayer(), pDefender );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStormableObject::MakeDefenders( const int nParty )
 {
 	while ( attackers.begin( nParty ) != attackers.end() )
@@ -176,7 +176,7 @@ void CStormableObject::MakeDefenders( const int nParty )
 		AddSoldier( pSoldier );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStormableObject::Segment()
 {
 	// iao aoaeo?ueo
@@ -245,7 +245,7 @@ bool CStormableObject::Segment()
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CStormableObject::GetNFriendlyAttackers( const int nPlayer ) const
 {
 	return nAttackers[ theDipl.GetNParty( nPlayer ) ];
@@ -257,7 +257,7 @@ const int CStormableObject::GetNFriendlyAttackers( const int nPlayer ) const
 
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStormableObject::IsAnyInsiderVisible() const
 {
 	if ( IsAnyAttackers() )
@@ -275,5 +275,5 @@ const bool CStormableObject::IsAnyInsiderVisible() const
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "..\MapEditorLib\Interface_Exporter.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExporterContainer : public IExporterContainer
 {
 	OBJECT_NOCOPY_METHODS( CExporterContainer );
@@ -63,6 +63,6 @@ public:
 	EXPORT_RESULT GetExportResult( const string &rszObjectRefName );
 	EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__EXPORTER__CONTAINER__)
 

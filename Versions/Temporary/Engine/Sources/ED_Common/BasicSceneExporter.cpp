@@ -16,7 +16,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasicSceneExporter::Validate( IManipulator *pManipulator )
 {
 	bool bStructureValid = true;
@@ -32,7 +32,7 @@ bool CBasicSceneExporter::Validate( IManipulator *pManipulator )
 	return bStructureValid;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasicSceneExporter::ExportFromMaya( const string &szTypeName, 
 																				  const string &szObjName, 
 																				  const string &szDstPath, 
@@ -55,7 +55,7 @@ bool CBasicSceneExporter::ExportFromMaya( const string &szTypeName,
 	return ExecuteMayaScript( szScript );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator* pManipulator,
                                                  const string &rszObjectTypeName,
                                                  const string &rszObjectName,
@@ -135,7 +135,7 @@ EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator* pManipulator,
 
 	return ER_BREAK;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 																								const string &rszObjectTypeName,
 																								const string &rszObjectName,
@@ -189,6 +189,6 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

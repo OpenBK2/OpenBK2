@@ -20,21 +20,21 @@
 //#include "..\Scene\Statistics.h"
 #include "PlayerREinforcement.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CPlayerReinforcementArray theReinfArray;
 extern NAI::CTimeCounter timeCounter;
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CGeneral );
 REGISTER_SAVELOAD_CLASS( 0x1508D4B3, CGeneral );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CGeneral															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::EnumWorkers( const enum EForceType eType, IWorkerEnumerator *pEnumerator )
 {
 	//search trough reserve to give it to the task
@@ -69,7 +69,7 @@ void CGeneral::EnumWorkers( const enum EForceType eType, IWorkerEnumerator *pEnu
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::CancelRequest( int nRequestID, enum EForceType eType ) 
 {  
 	switch( eType )
@@ -92,7 +92,7 @@ void CGeneral::CancelRequest( int nRequestID, enum EForceType eType )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) 
 { 
 	switch( eType )
@@ -114,7 +114,7 @@ int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 {
 	if ( !pWorker || !pWorker->IsRefValid() || !pWorker->IsAlive() ) 
@@ -202,7 +202,7 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::EraseLastSeen()
 {
 	int nStep = 10; // optimisation parameter;
@@ -226,7 +226,7 @@ void CGeneral::EraseLastSeen()
 		erased.pop_front();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::Segment()
 {
 	if ( curTime > timeNextUpdate )
@@ -257,7 +257,7 @@ void CGeneral::Segment()
 		//Singleton<IStatistics>()->UpdateEntry( "General: antiartillery circles", "" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::GiveCommandToBombardment()
 {
 	if ( 2 == cBombardmentType ) return;
@@ -350,7 +350,7 @@ void CGeneral::GiveCommandToBombardment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::GiveResistances( IEnemyEnumerator *pEnumerator )
 {
 	if ( bSendReserves )
@@ -360,7 +360,7 @@ void CGeneral::GiveResistances( IEnemyEnumerator *pEnumerator )
 			iter.Iterate();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float Func( const float fX, const float fBound )
 {
 	//	return ( 1 - exp( -fX * 0.3 ) ) * fBound;
@@ -384,7 +384,7 @@ const float Func( const float fX, const float fBound )
 
 	return func;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::Bombardment()
 {
 	const float fComparativeWeight = 
@@ -495,19 +495,19 @@ void CGeneral::Bombardment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::ArtilleryBombardment()
 {
 	cBombardmentType = 0;
 	Bombardment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::AviationBombardment()
 {
 	cBombardmentType = 1;
 	Bombardment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::BombardmentSegment()
 {
 	// allow tank swarm if weight is sufficient
@@ -553,12 +553,12 @@ void CGeneral::BombardmentSegment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneral::IsMobileReinforcement( int nGroupID ) const
 {
 	return mobileReinforcementGroupIDs.find( nGroupID ) != mobileReinforcementGroupIDs.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::GiveNewUnits( const list<CCommonUnit*> &pUnits, bool bFromReinforcement )
 {
 	typedef hash_map<int, bool> Formations;
@@ -595,7 +595,7 @@ void CGeneral::GiveNewUnits( const list<CCommonUnit*> &pUnits, bool bFromReinfor
 	for ( Tasks::iterator it = tasks.begin(); it != tasks.end(); ++it )
 		(*it)->AskForWorker( this, 0, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::Init()
 {
 	bSendReserves = false;
@@ -611,7 +611,7 @@ void CGeneral::Init()
 
 	InitRearManager();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 {
 	// создать список мобильных отрядов
@@ -661,13 +661,13 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 		pTask->SetEnemyConatiner( this );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::SetAAVisible( class CAIUnit *pUnit, const bool bVisible )
 {
 	pAirForce->SetAAVisible( pUnit, bVisible );
 	enemys[pUnit->GetUniqueId()] = CUnitTimeSeen( pUnit, bVisible ? -1 : curTime );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::SetUnitVisible( class CAIUnit *pUnit, const bool bVisible )
 {
 	const SUnitBaseRPGStats * pStats = pUnit->GetStats();
@@ -695,23 +695,23 @@ void CGeneral::SetUnitVisible( class CAIUnit *pUnit, const bool bVisible )
 		pIntendant->SetArtilleryVisible( pUnit, bVisible );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::RemoveResistance( const CVec2 &vCenter )
 {
 	resContainer.RemoveExcluded( vCenter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::AddResistance( const CVec2 &vCenter, const float fRadius )
 {
 	resContainer.AddExcluded( vCenter, fRadius );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::GiveEnemies( IEnemyEnumerator *pEnumerator )
 {
 	for ( CEnemyVisibility::iterator it = enemys.begin();
 				it != enemys.end() && pEnumerator->EnumEnemy( it->second.first ); ++it );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 	const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
 	const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt )
@@ -719,7 +719,7 @@ void CGeneral::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 	resContainer.UpdateEnemyUnitInfo(
 		pInfo, lastVisibleTimeDelta, vLastVisiblePos,	lastAntiArtTimeDelta, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UnitDied( class CCommonUnit * pUnit )
 {
 	pIntendant->UnitDead( pUnit );
@@ -736,7 +736,7 @@ void CGeneral::UnitDied( class CCommonUnit * pUnit )
 		BalanceUpdate( BA_REMOVE_OWN, pUnit );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UnitDied( CAIUnitInfoForGeneral *pInfo )
 {
 	UnitDied( pInfo->GetOwner() );
@@ -754,7 +754,7 @@ void CGeneral::UnitDied( CAIUnitInfoForGeneral *pInfo )
 			Give( pTruck );			
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNewPos )
 {
 	if ( pUnit->IsFormation() || !checked_cast<CAIUnit*>( pUnit )->GetStats()->IsAviation() )
@@ -762,12 +762,12 @@ void CGeneral::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNew
 		pIntendant->UnitChangedPosition( pUnit, vNewPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UnitAskedForResupply( class CCommonUnit * pUnit, const EResupplyType eType, const bool bSet )
 {
 	pIntendant->UnitAskedForResupply( pUnit, eType, bSet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 {
 	BalanceUpdate( BA_REMOVE_OWN, pUnit );
@@ -801,14 +801,14 @@ void CGeneral::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneral::SetCellInUse( const int nResistanceCellNumber, bool bInUse )
 {
 	resContainer.SetCellInUse( nResistanceCellNumber, bInUse );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneral::IsInResistanceCircle( const CVec2 &vPoint ) const
 {
 	return resContainer.IsInResistanceCircle( vPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

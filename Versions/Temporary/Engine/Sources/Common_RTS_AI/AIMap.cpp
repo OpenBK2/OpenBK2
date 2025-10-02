@@ -5,63 +5,63 @@
 #include "Terrain.h"
 #include "../Misc/Bresenham.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CAIMap::GetCenterOfTile( const float x, const float y ) const
 {
 	const SVector tile( GetTile( x, y ) );
 	return CVec2( tile.x * nTileSize + nTileSize/2, tile.y * nTileSize + nTileSize/2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CAIMap::GetCenterOfTile( const CVec2 &point ) const
 {
 	return GetCenterOfTile( point.x, point.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsTileInside( const int x, const int y ) const
 {
 	return x >= 0 && y >= 0 && x < nSizeX && y < nSizeY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsTileInside( const SVector &tile ) const
 {
 	return IsTileInside( tile.x, tile.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsPointInside( const float x, const float y ) const
 {
 	return x >= 0 && y >= 0 && x < GetSizeX() * nTileSize && y < GetSizeY() * nTileSize;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsPointInside( const CVec2 &point ) const
 {
 	return IsPointInside( point.x, point.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SVector CAIMap::GetTile( const float x, const float y ) const
 {
 	return SVector( x/nTileSize, y/nTileSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SVector CAIMap::GetTile( const CVec2 &point ) const
 {
 	return GetTile( point.x, point.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CAIMap::GetPointByTile( const int x, const int y ) const
 {
 	return CVec2( x * nTileSize + nTileSize/2, y * nTileSize + nTileSize/2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CAIMap::GetPointByTile( const SVector &tile ) const
 {
 	return GetPointByTile( tile.x, tile.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CAIMap::GetPointByTile( const SObjTileInfo &tileInfo ) const
 {
 	return GetPointByTile( tileInfo.tile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIMap::CAIMap( const int _nSizeX, const int _nSizeY, const int _nTileSize, 
 								const int _nMaxUnitTileRadius, const int _nMaxMapSize )
 :	nSizeX( _nSizeX ), nSizeY( _nSizeY ), nTileSize( _nTileSize ),
@@ -70,15 +70,15 @@ CAIMap::CAIMap( const int _nSizeX, const int _nSizeY, const int _nTileSize,
 	pHeights = new CStaticMapHeights( nSizeX, nSizeY, nTileSize );
 	pTerrain = new CTerrain( this, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsRectInside( const SRect &rect ) const
 {
 	return IsPointInside( rect.v1 ) && IsPointInside( rect.v2 ) &&
 				 IsPointInside( rect.v3 ) && IsPointInside( rect.v4 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector< vector<SVector> > circleTiles;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::AddTile( const SVector &tile, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	if ( !mask.GetData( tile.x + nMaxRadius, tile.y + nMaxRadius ) )
@@ -87,7 +87,7 @@ void CAIMap::AddTile( const SVector &tile, vector<SVector> &tiles, CArray2D1Bit 
 		mask.SetData( tile.x + nMaxRadius, tile.y + nMaxRadius );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::Add8TilesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	AddTile( SVector( vOffset.x,     vOffset.y     ), tiles, mask, nMaxRadius );
@@ -100,7 +100,7 @@ void CAIMap::Add8TilesEven( const SVector vOffset, vector<SVector> &tiles, CArra
 	AddTile( SVector( vOffset.y,     1 - vOffset.x ), tiles, mask, nMaxRadius );
 	AddTile( SVector( 1 - vOffset.y, 1 - vOffset.x ), tiles, mask, nMaxRadius );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::AddLinesEven( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	CBres bres;
@@ -115,7 +115,7 @@ void CAIMap::AddLinesEven( const SVector vOffset, vector<SVector> &tiles, CArray
 	}
 	while ( curOffset != vOffset );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::Add8TilesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	AddTile( SVector( vOffset.x,  vOffset.y  ), tiles, mask, nMaxRadius );
@@ -128,7 +128,7 @@ void CAIMap::Add8TilesOdd( const SVector vOffset, vector<SVector> &tiles, CArray
 	AddTile( SVector( vOffset.y,  -vOffset.x ), tiles, mask, nMaxRadius );
 	AddTile( SVector( -vOffset.y, -vOffset.x ), tiles, mask, nMaxRadius );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::AddLinesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	CBres bres;
@@ -143,14 +143,14 @@ void CAIMap::AddLinesOdd( const SVector vOffset, vector<SVector> &tiles, CArray2
 	}
 	while ( curOffset != vOffset );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SVector CAIMap::GetOffset( const WORD wAngle, const int nDiameter )
 {
 	const float fRadius = nDiameter/2;
 	const CVec2 vAngel = fRadius * GetVectorByDirection( wAngle );
 	return SVector( vAngel.x, vAngel.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::RecreateCircles()
 {
 	const int nMaxRadius = GetMaxUnitTileRadius() + 1;
@@ -198,7 +198,7 @@ void CAIMap::RecreateCircles()
 		circleTiles.push_back( tiles );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
 {
 	const int nDiameter = 2.0f*fRadius/GetTileSize();
@@ -208,27 +208,27 @@ vector<SVector>& CAIMap::GetTilesForCircle( const float fRadius )
 	else
 		return circleTiles[nDiameter];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsRectOnLockedTiles( const SRect &rect, const EAIClasses aiClass )
 {
 	return ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, (list<SVector>*)0, aiClass, SGenericNumber<0>() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsCircleOnLockedTiles( const CCircle &circle, const EAIClasses aiClass )
 {
 	return ProcessCircleTiles( circle.center, circle.r, (list<SVector>*)0, aiClass, SGenericNumber<0>() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsLocked( const int x, const int y, const EAIClasses aiClass ) const
 {
 	return pTerrain->IsLocked( x, y, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIMap::IsLocked( const SVector &tile, const EAIClasses aiClass ) const
 {
 	return IsLocked( tile.x, tile.y, aiClass );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
@@ -237,11 +237,11 @@ void CAIMap::OnSerialize( IBinSaver &saver )
 		pTerrain = new CTerrain( this, true );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIMap::Clear()
 {
 	pHeights->Clear();
 	pTerrain->Clear();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x30159B00, CAIMap );

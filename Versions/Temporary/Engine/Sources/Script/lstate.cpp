@@ -77,7 +77,7 @@ static void f_luaopen (lua_State *L, void *ud)
 	LUA_ASSERT(lua_gettop(L) == 0, "wrong API stack");
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 lua_State *lua_open (int stacksize, const char* instanceName)
 {
 	lua_State *L = new lua_State;
@@ -112,11 +112,11 @@ void lua_close (lua_State *L)
 	delete L;
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 CLuaThread::CLuaThread() : L(0), errorHookRef(LUA_REFNIL)
 {
 }
-//////////////////////////////////////////////////////////////////////////
+
 CLuaThread::CLuaThread( lua_State *_L, const char *_name )
 	: top(0), Cbase(0), thisThreadIsSleeping(0), bErrorInThread(false),
 	  L(_L), errorHookRef(LUA_REFNIL)
@@ -127,31 +127,31 @@ CLuaThread::CLuaThread( lua_State *_L, const char *_name )
 		name = _name;
 	}
 }
-//////////////////////////////////////////////////////////////////////////
+
 CLuaThread::~CLuaThread()
 {
 	clearErrorHook();
 }
-//////////////////////////////////////////////////////////////////////////
+
 void CLuaThread::setErrorHook()
 {
 	clearErrorHook();
 	errorHookRef = lua_ref(L, 1);
 }
-//////////////////////////////////////////////////////////////////////////
+
 void CLuaThread::clearErrorHook()
 {
 	lua_unref(L, errorHookRef);
 	errorHookRef = LUA_REFNIL;
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 void lua_setThread( lua_State *L, CLuaThread *pThread )
 {
 	ASSERT( IsValid( pThread ) );
 	L->pCT = pThread;
 }
-//////////////////////////////////////////////////////////////////////////
+
 CLuaThread* lua_newThread( lua_State *L, const char* name )
 {
 	CLuaThread* pThr = new CLuaThread( L, name );
@@ -159,9 +159,9 @@ CLuaThread* lua_newThread( lua_State *L, const char* name )
 	return pThr;
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 //				Serialize
-//////////////////////////////////////////////////////////////////////////
+
 template<class T>
 int CVectorList<T>::operator&( IBinSaver &f )
 {
@@ -177,7 +177,7 @@ int CVectorList<T>::operator&( IBinSaver &f )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 lua_State::~lua_State()
 {
 	for ( CThreads::iterator i = threads.begin(); i != threads.end(); ++i )
@@ -189,7 +189,7 @@ lua_State::~lua_State()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
+
 int lua_State::operator&( IBinSaver &f )
 {
 	lua_StartSerialize( this );

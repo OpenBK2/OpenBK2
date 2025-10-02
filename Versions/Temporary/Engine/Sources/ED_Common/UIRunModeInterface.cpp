@@ -15,13 +15,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUIRunModeInterface::CUIRunModeInterface( const string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
 {
 	LoadWindow( rszTypeName, rDBID, rTemplateWindowDBID, rTemplateScreenDBID );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUIRunModeInterface::~CUIRunModeInterface()
 {
 	if ( pScreen ) 
@@ -31,7 +31,7 @@ CUIRunModeInterface::~CUIRunModeInterface()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUIRunModeInterface::Step( bool bAppActive )
 {
 	CRunModeInterfaceBase::Step( bAppActive );
@@ -41,7 +41,7 @@ void CUIRunModeInterface::Step( bool bAppActive )
 			pScreen->Segment( 10 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUIRunModeInterface::ProcessEvent( const struct SGameMessage &msg )
 {
 	if ( !CRunModeInterfaceBase::ProcessEvent( msg ) )
@@ -52,7 +52,7 @@ bool CUIRunModeInterface::ProcessEvent( const struct SGameMessage &msg )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUIRunModeInterface::LoadWindow( const string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
 {
 	const NDb::SUIGameConsts *pUI = 0;//pGameRoot->pConsts->pUI;
@@ -109,4 +109,4 @@ void CUIRunModeInterface::LoadWindow( const string &rszTypeName, const CDBID &rD
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

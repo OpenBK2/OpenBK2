@@ -11,7 +11,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMayaWeaponMnemonics::CMayaWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" )
 {
 	Insert( NDb::SWeaponRPGStats::WEAPON_PISTOL, "PISTOL" );
@@ -29,7 +29,7 @@ CMayaWeaponMnemonics::CMayaWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SW
 	Insert( NDb::SWeaponRPGStats::WEAPON_PANZERFAUST, "PANZERFAUST" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_LUFTFAUST, "LUFTFAUST" );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWeaponMnemonics::CWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" )
 {
 	Insert( NDb::SWeaponRPGStats::WEAPON_PISTOL, "WEAPON_PISTOL" );
@@ -47,9 +47,9 @@ CWeaponMnemonics::CWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPG
 	Insert( NDb::SWeaponRPGStats::WEAPON_PANZERFAUST, "WEAPON_PANZERFAUST" );
 	Insert( NDb::SWeaponRPGStats::WEAPON_LUFTFAUST, "WEAPON_LUFTFAUST" );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 CWeaponMnemonics typeWeaponMnemonics;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

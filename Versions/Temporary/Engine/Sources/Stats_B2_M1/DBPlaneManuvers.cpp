@@ -5,11 +5,11 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbplanemanuvers.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::ESpeedRelation eValue )
 {
 	switch ( eValue )
@@ -28,7 +28,7 @@ string EnumToString( NDb::ESpeedRelation eValue )
 		return "ESR_NEAR_STALL";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const string &szValue )
 {
 	if ( szValue == "ESR_NEAR_STALL" )
@@ -43,7 +43,7 @@ NDb::ESpeedRelation NDb::StringToEnum_NDb_ESpeedRelation( const string &szValue 
 		return NDb::_ESR_COUNT;
 	return NDb::ESR_NEAR_STALL;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EPlanesAttitude eValue )
 {
 	switch ( eValue )
@@ -56,7 +56,7 @@ string EnumToString( NDb::EPlanesAttitude eValue )
 		return "EPA_ATTACK";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const string &szValue )
 {
 	if ( szValue == "EPA_ATTACK" )
@@ -65,7 +65,7 @@ NDb::EPlanesAttitude NDb::StringToEnum_NDb_EPlanesAttitude( const string &szValu
 		return NDb::EPA_RETREAT;
 	return NDb::EPA_ATTACK;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EManuverDestination eValue )
 {
 	switch ( eValue )
@@ -78,7 +78,7 @@ string EnumToString( NDb::EManuverDestination eValue )
 		return "EMD_PREDICTED_POINT";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const string &szValue )
 {
 	if ( szValue == "EMD_PREDICTED_POINT" )
@@ -87,7 +87,7 @@ NDb::EManuverDestination NDb::StringToEnum_NDb_EManuverDestination( const string
 		return NDb::EMD_MANUVER_DEPENDENT;
 	return NDb::EMD_PREDICTED_POINT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EManuverID eValue )
 {
 	switch ( eValue )
@@ -100,7 +100,7 @@ string EnumToString( NDb::EManuverID eValue )
 		return "DB_EMID_GENERIC";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EManuverID NDb::StringToEnum_NDb_EManuverID( const string &szValue )
 {
 	if ( szValue == "DB_EMID_GENERIC" )
@@ -110,7 +110,7 @@ NDb::EManuverID NDb::StringToEnum_NDb_EManuverID( const string &szValue )
 	return NDb::DB_EMID_GENERIC;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SDirectionRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DirectionRange", typeID, sizeof(*this) );
@@ -120,7 +120,7 @@ void SDirectionRange::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDirectionRange::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -129,7 +129,7 @@ int SDirectionRange::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDirectionRange::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -137,7 +137,7 @@ int SDirectionRange::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SDirectionRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -152,9 +152,9 @@ DWORD SDirectionRange::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SSpeedRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SpeedRange", typeID, sizeof(*this) );
@@ -164,7 +164,7 @@ void SSpeedRange::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSpeedRange::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -173,7 +173,7 @@ int SSpeedRange::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSpeedRange::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -181,7 +181,7 @@ int SSpeedRange::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSpeedRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -196,9 +196,9 @@ DWORD SSpeedRange::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SDistanceRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DistanceRange", typeID, sizeof(*this) );
@@ -208,7 +208,7 @@ void SDistanceRange::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDistanceRange::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -217,7 +217,7 @@ int SDistanceRange::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDistanceRange::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -225,7 +225,7 @@ int SDistanceRange::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SDistanceRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -240,9 +240,9 @@ DWORD SDistanceRange::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHeightRange::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "HeightRange", typeID, sizeof(*this) );
@@ -252,7 +252,7 @@ void SHeightRange::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHeightRange::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -261,7 +261,7 @@ int SHeightRange::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHeightRange::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -269,7 +269,7 @@ int SHeightRange::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHeightRange::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -284,9 +284,9 @@ DWORD SHeightRange::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SManuverConditions::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "EnemyDirection", (BYTE*)&pEnemyDirection - pThis, sizeof(pEnemyDirection), NTypeDef::TYPE_TYPE_REF );
@@ -298,7 +298,7 @@ void SManuverConditions::ReportMetaInfo( const string &szAddName, BYTE *pThis ) 
 	NMetaInfo::ReportMetaInfo( szAddName + "SelfSpeed", (BYTE*)&pSelfSpeed - pThis, sizeof(pSelfSpeed), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "EnemySpeed", (BYTE*)&pEnemySpeed - pThis, sizeof(pEnemySpeed), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SManuverConditions::operator&( IXmlSaver &saver )
 {
 	saver.Add( "EnemyDirection", &pEnemyDirection );
@@ -312,7 +312,7 @@ int SManuverConditions::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SManuverConditions::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pEnemyDirection );
@@ -326,7 +326,7 @@ int SManuverConditions::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SManuverConditions::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -341,9 +341,9 @@ DWORD SManuverConditions::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SManuverDescriptor::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ManuverDescriptor", typeID, sizeof(*this) );
@@ -355,7 +355,7 @@ void SManuverDescriptor::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Attitude", (BYTE*)&eAttitude - pThis, sizeof(eAttitude), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SManuverDescriptor::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -366,7 +366,7 @@ int SManuverDescriptor::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SManuverDescriptor::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &conditions );
@@ -376,7 +376,7 @@ int SManuverDescriptor::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SManuverDescriptor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -391,7 +391,7 @@ DWORD SManuverDescriptor::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1108EB80, SDirectionRange ) 

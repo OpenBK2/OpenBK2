@@ -3,7 +3,7 @@
 #include "HashMapConvertor.h"
 namespace NHashMapConvertor
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertNumber( hash_map<string,int> *pHashMap, const string &szName, int *pValue, const bool bRead )
 {
 	if ( bRead )
@@ -19,7 +19,7 @@ void ConvertNumber( hash_map<string,int> *pHashMap, const string &szName, int *p
 		(*pHashMap)[szName] = *pValue;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vector<int> *pVector, const bool bRead )
 {
 	if ( bRead )
@@ -52,5 +52,5 @@ void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vect
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

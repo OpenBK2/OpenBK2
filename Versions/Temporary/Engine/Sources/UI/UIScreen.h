@@ -12,12 +12,12 @@
 #include "..\System\FreeIDs.h"
 
 class CButtonGroup;
-//////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 	class I2DGameView;
 }
-//////////////////////////////////////////////////////////////////////
+
 struct STabPairCompare
 {
 	bool operator()( const pair<CObj<CWindow>, int> &p1, const pair<CObj<CWindow>, int> &p2 ) const
@@ -25,9 +25,9 @@ struct STabPairCompare
 		return p1.second > p2.second;
 	}
 };
-//////////////////////////////////////////////////////////////////////
+
 typedef list<CStates> CStateSequiences;
-//////////////////////////////////////////////////////////////////////
+
 class CWindowScreen : public CWindow, public IScreen
 {
 	OBJECT_NOCOPY_METHODS(CWindowScreen);
@@ -183,5 +183,5 @@ public:
 	virtual const wstring &GetTextEntry( const string &szName ) const;
 	void RegisterTabOrder( IWindow * pWindow, int nTabOrder );
 };
-//////////////////////////////////////////////////////////////////////
+
 #endif // !defined(AFX_UISCREEN_H__B9599715_34A7_477E_9D09_8DE9B2953C08__INCLUDED_)

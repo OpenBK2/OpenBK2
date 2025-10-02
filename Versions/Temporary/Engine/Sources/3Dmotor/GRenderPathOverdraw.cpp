@@ -3,7 +3,7 @@
 #include "GRenderExecute.h"
 #include "GfxUtils.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC, 
@@ -21,7 +21,7 @@ void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	}
 	Execute( pRender, pRC, *pTS, lightOps, scene, SLightInfo() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ColorOverdraw( NGfx::CRenderContext *pRC )
 {
 	const int N_COLORS = 20;

@@ -5,7 +5,7 @@
 #include "MapObjectState.h"
 #include "..\B2_M1_Terrain\DBTerrainSpot.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSpotState : public CMapObjectState
 {
 	friend class CMultiInputState;
@@ -43,6 +43,6 @@ protected:
 	bool InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__SPOT_STATE__)
 

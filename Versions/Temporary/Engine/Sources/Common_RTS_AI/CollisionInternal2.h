@@ -3,9 +3,9 @@
 #include "BasePathUnit.h"
 #include "Collision.h"
 #include "..\Misc\nqueue.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IPath;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBasePathUnitHolder : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CBasePathUnitHolder )
@@ -20,7 +20,7 @@ public:
 	const int GetUniqueID() const { return pUnit ? pUnit->GetUniqueID() : -1; }
 	int operator&( IBinSaver &f ) { SerializeBasePathUnit( f, 1, &pUnit ); return 0; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCollisionsCollector : public ICollisionsCollector
 {
 	struct SPusherInfo
@@ -65,7 +65,7 @@ public:
 
 	friend struct SSortCollisions;
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCollisionBase : public ICollision
 {
 	CBasePathUnit *pUnit;
@@ -95,7 +95,7 @@ public:
 
 	void FindCandidates( ICollisionsCollector *pCollisionCollector );
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // no collision
 class CFreeCollision : public CCollisionBase
 {
@@ -105,7 +105,7 @@ public:
 	const bool IsSolved() const;
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_FREE; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // pUnit waits when pPushUnit pass away
 class CWaitingCollision : public CCollisionBase
 {
@@ -121,7 +121,7 @@ public:
 	const bool IsSolved() const { return bIsSolved; }
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_WAIT; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // pUnit gives place for pPushUnit (pPushUnit waits for pUnit !!!)
 class CGivingPlaceCollision : public CCollisionBase
 {
@@ -132,7 +132,7 @@ public:
 	const bool IsSolved() const;
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_GIVE_PLACE; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // pUnit blocks tiles under itself and waits when pPushUnit gives
 class CStopCollision : public CCollisionBase
 {
@@ -147,4 +147,4 @@ public:
 	const bool IsSolved() const { return timeLeft == 0; }
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_STOP; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

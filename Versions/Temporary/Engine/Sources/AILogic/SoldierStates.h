@@ -1,10 +1,10 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "StatesFactory.h"
 #include "CommonStates.h"
 #include "..\Stats_B2_M1\ActionNotify.h"
 #include "StatusUpdatesHelper.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuilding;
 class CEntrenchment;
 class CMineStaticObject;
@@ -16,7 +16,7 @@ namespace NDb
 	struct SInfantryRPGStats;
 	enum EMineType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CSoldierStatesFactory );
@@ -36,7 +36,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierRestState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierRestState );	
@@ -70,7 +70,7 @@ public:
 	// в 1 - некоторое малое время, чтобы произошло обновление, не 0 - т.к. это говорит о первом запуске сегмента
 	void SetNullLastMoveTime() { nextMove = 1; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackState );
@@ -136,7 +136,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const { return GetTarget(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 {
 	OBJECT_BASIC_METHODS( CSoldierMoveToState );
@@ -166,7 +166,7 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CSoldierTurnToPointState );
@@ -193,7 +193,7 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_TURN_TO_POINT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierMoveByDirState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierMoveByDirState );
@@ -218,7 +218,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierEnterState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEnterState );
@@ -249,7 +249,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierEnterEntrenchmentState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEnterEntrenchmentState );
@@ -278,7 +278,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierAttackCommonStatObjState : public CCommonAttackCommonStatObjState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackCommonStatObjState );
@@ -303,7 +303,7 @@ public:
 	virtual void Segment();
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_OBJECT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierParadeState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierParadeState );
@@ -325,7 +325,7 @@ public:
 
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierPlaceMineNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierPlaceMineNowState );
@@ -348,7 +348,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierClearMineRadiusState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierClearMineRadiusState );
@@ -377,7 +377,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return clearCenter; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierAttackUnitInBuildingState : public CCommonAttackUnitInBuildingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackUnitInBuildingState );
@@ -402,7 +402,7 @@ public:
 	virtual bool IsAttackingState() const { return true; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierEnterTransportNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEnterTransportNowState );
@@ -431,7 +431,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //state of soldiers that are dropped from carrier
 class CSoldierParaDroppingState : public IUnitState
 {
@@ -469,7 +469,7 @@ public:
 		virtual EUnitStateNames GetName() { return EUSN_PARTROOP; }
 	bool IsLanded() const { return eState == ESPDS_WATING_FOR_ALL; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CSoldierUseSpyglassState );
@@ -493,7 +493,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // юнит должен атаковать взвод. по 1 солдату.
 class CSoldierAttackFormationState: public IUnitAttackingState
 {
@@ -519,7 +519,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierIdleState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierIdleState );
@@ -538,12 +538,12 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // для атаки самолетов. в этом стейте юнит следит не приближаются ли
 // к нему наземные цели. если какая-то цель наземная появилась в радиусе видимости,
 // то происходит переключение на нее.
 #include "PredictedAntiAviationFire.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierAttackAviationState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackAviationState );
@@ -567,7 +567,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierFireMoraleShellState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierFireMoraleShellState );
@@ -589,7 +589,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierUseState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierUseState );
@@ -612,7 +612,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_USE; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierEntrenchSelfState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEntrenchSelfState )
@@ -632,7 +632,7 @@ public:
 	const CVec2 GetPurposePoint() const;
 	EUnitStateNames GetName() { return EUSN_ENTRENCH_SELF; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierLeaveSelfEntrenchState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierLeaveSelfEntrenchState )
@@ -648,4 +648,4 @@ public:
 	const CVec2 GetPurposePoint() const;
 	EUnitStateNames GetName() { return EUSN_LEAVE_SELF_ENTRENCH; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

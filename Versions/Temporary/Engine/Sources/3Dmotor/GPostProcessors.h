@@ -6,9 +6,9 @@
 
 #include "3Dmotor_export.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "GScene.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 struct SVec4Hash
@@ -22,7 +22,7 @@ struct SPostProcessData
 	CColorHash occluded;
 };
 void RenderPostProcess( NGfx::CRenderContext *pRC, const SPostProcessData &data );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPostColorer : public IPostProcess
 {
 	OBJECT_NOCOPY_METHODS( CPostColorer );
@@ -33,7 +33,7 @@ public:
 	CPostColorer( CFuncBase<CVec4> *_p = 0 ) : pColor(_p) {}
 	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DMOTOR_EXPORT COccludedColorer : public IPostProcess
 {
 	OBJECT_NOCOPY_METHODS( COccludedColorer );
@@ -44,6 +44,6 @@ public:
 	COccludedColorer( CFuncBase<CVec4> *_p = 0 ) : pColor(_p) {}
 	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

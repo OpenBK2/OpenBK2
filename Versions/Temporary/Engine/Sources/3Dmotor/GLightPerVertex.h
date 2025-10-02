@@ -9,9 +9,9 @@ struct SGeomVecT2C1;
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SPerVertexLightState
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPerVertexLightState
 {
 	struct SPointLightInfo
@@ -54,7 +54,7 @@ struct SPerVertexLightState
 	void ResetDynamicLights() { dynamicPointLights.resize(0); }
 	float GetWarFogBlend() const;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCacheLightingInfo
 {
 	// can not be changed on the fly
@@ -73,7 +73,7 @@ struct SCacheLightingInfo
 	SCacheLightingInfo() : bReplaceWithDirectional( false ), bDoNotCacheLighting(false), bSkipLighting(false), bSelfIllum(false), bMultiplyOnTransparency(true), bSkipStaticPointLights(false), bTranslucent(false), vTranslucentColor(0,0,0) { Clear(); }
 	void Clear() { nDirectionalLightID = 0; pointLightIDs.clear(); nWarFogNewID = 0; nWarFogOldID = 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUVInfo;
 void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
 	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
@@ -84,5 +84,5 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor, 
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
 void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, vector<float> *pRes );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

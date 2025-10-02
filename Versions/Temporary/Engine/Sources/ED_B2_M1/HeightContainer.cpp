@@ -10,11 +10,11 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHeightContainer::STACK_SIZE = sizeof( DWORD ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STraceImageFunctor
 {
 	DWORD dwColor;
@@ -29,7 +29,7 @@ struct STraceImageFunctor
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::MarkTraceImageTile( CArray2D<DWORD> *pImage, int x, int y, DWORD dwColor )
 {
 	const CTRect<int> indices( x * TRACE_IMAGE_TILE_SIZE - 2,
@@ -48,7 +48,7 @@ void CHeightContainer::MarkTraceImageTile( CArray2D<DWORD> *pImage, int x, int y
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::MarkTraceImageGrid( CArray2D<DWORD> *pImage, DWORD dwColor )
 {
 	for ( int x = 0; x < planeSize.x; ++x )
@@ -67,11 +67,11 @@ void CHeightContainer::MarkTraceImageGrid( CArray2D<DWORD> *pImage, DWORD dwColo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CHeightContainer::CHeightContainer( const float _fTileSize )
 	: fTileSize ( _fTileSize ), planeSize( 0, 0 ), nStackCount( 0 ), bTraceToImage( false ) {}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::AddStack()
 {
 	++nStackCount;
@@ -89,12 +89,12 @@ void CHeightContainer::AddStack()
 	filledBitsList.push_back( 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::EraseStack()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHeightContainer::AddPlane( int nPolygonID )
 {
 	hash_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
@@ -118,7 +118,7 @@ int CHeightContainer::AddPlane( int nPolygonID )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::ErasePlane( int nPolygonID )
 {
 	hash_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
@@ -137,7 +137,7 @@ void CHeightContainer::ErasePlane( int nPolygonID )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::ClearPlane( int nPlaneIndex )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
@@ -152,7 +152,7 @@ void CHeightContainer::ClearPlane( int nPlaneIndex )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал изменяющий pLockArray на заданное значение
 struct SModifyBitFunctional
 {
@@ -170,7 +170,7 @@ struct SModifyBitFunctional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::FillPlane( int nPlaneIndex, const vector<CVec2> &rBlackPolygon, const vector<CVec2> &rRedPolygon )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
@@ -179,7 +179,7 @@ void CHeightContainer::FillPlane( int nPlaneIndex, const vector<CVec2> &rBlackPo
 	ApplyPointsInPolygon<SModifyBitFunctional, vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) ) );  
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::GetBits( vector<DWORD> *pBitsList, const int x, const int y )
 {
 	pBitsList->resize( nStackCount );
@@ -189,7 +189,7 @@ void CHeightContainer::GetBits( vector<DWORD> *pBitsList, const int x, const int
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::AddBitsToString( string *pszMessage, const DWORD dwBits ) const
 {
 	for ( int nBit = 0; nBit < STACK_SIZE; ++nBit )
@@ -198,7 +198,7 @@ void CHeightContainer::AddBitsToString( string *pszMessage, const DWORD dwBits )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::Clear()
 {
 	planeSize.x = 0;
@@ -214,7 +214,7 @@ void CHeightContainer::Clear()
 	bTraceToImage = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::SetSize( const int x, const int y, bool _bTraceToImage )
 {
 	Clear();
@@ -225,7 +225,7 @@ void CHeightContainer::SetSize( const int x, const int y, bool _bTraceToImage )
 	bTraceToImage = _bTraceToImage;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::Mark( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
@@ -244,7 +244,7 @@ void CHeightContainer::Mark( const int x, const int y )
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightContainer::Compare( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
@@ -260,7 +260,7 @@ bool CHeightContainer::Compare( const int x, const int y )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::InsertPolygon( const vector<CVec2> &rBlackPolygon, const vector<CVec2> &rRedPolygon, int nPolygonID )
 {
 	if ( ( planeSize.x == 0 ) || ( planeSize.y == 0 ) )
@@ -330,7 +330,7 @@ void CHeightContainer::InsertPolygon( const vector<CVec2> &rBlackPolygon, const 
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::ErasePolygon( int nPolygonID )
 {
 	if ( nStackCount == 0 )
@@ -344,7 +344,7 @@ void CHeightContainer::ErasePolygon( int nPolygonID )
 	ErasePlane( nPolygonID );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 {
 	if ( nStackCount == 0 )
@@ -380,7 +380,7 @@ bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::InsertVSO( const NDb::SVSOInstance &rVSO )
 {
 	if ( const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *( rVSO.pDescriptor ) ) ) )
@@ -393,7 +393,7 @@ void CHeightContainer::InsertVSO( const NDb::SVSOInstance &rVSO )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightContainer::Trace()
 {
 	DebugTrace( "CHeightContainer, begin" );
@@ -466,6 +466,6 @@ void CHeightContainer::Trace()
 	/**/
 	DebugTrace( "CHeightContainer, end" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

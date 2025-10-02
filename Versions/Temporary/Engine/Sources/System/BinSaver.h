@@ -19,25 +19,25 @@
 	} init##name##N;
 #define START_REGISTER(a) void StartRegisterHook##a() {} static struct a##Init { a##Init () {
 #define FINISH_REGISTER } } init;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ZDATA_(a)
 #define ZDATA
 #define ZPARENT(a)
 #define ZEND
 #define ZSKIP
 #define ZONSERIALIZE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define CHECK_VALID_SERIALIZED_POINTERS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T> class CArray2D;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ESaverMode
 {
 	SAVER_MODE_READ		= 1,
 	SAVER_MODE_WRITE	= 2,
 	SAVER_MODE_WRITE_COMPRESSED = 3,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** binary saver
@@ -45,7 +45,7 @@ enum ESaverMode
 // **
 // **
 // ************************************************************************************************************************ //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IBinSaver : public CObjectBase
 {
 public:
@@ -375,7 +375,7 @@ private:
 		ASSERT( 0 && "List iterator can't be serialized" );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 inline char operator&( T &c, IBinSaver &ss ) { return 0; }
 // realisation of forward declared serialisation operator
@@ -385,7 +385,7 @@ int CPtrBase<TUserObj,TRef>::operator&( IBinSaver &f )
 	f.DoPtr( this );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // specify object that can be referenced but should not be stored to save
 // nID is used to restore pointers on such objects after load
 struct SBinSaverExternalObject
@@ -396,13 +396,13 @@ struct SBinSaverExternalObject
 	SBinSaverExternalObject() {}
 	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID(_nID), pObj(_pObj) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // objects checker in debug mode
 interface IDebugSaveCheckObj : public CObjectBase
 {
 	virtual bool CheckObj( CObjectBase *pObj ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileStream;
 SYSTEM_EXPORT IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext );
 SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &objToCheck );

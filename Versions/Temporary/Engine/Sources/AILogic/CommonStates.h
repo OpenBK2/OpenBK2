@@ -2,7 +2,7 @@
 #define __COMMON_STATES_H__
 
 #pragma ONCE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "UnitStates.h"
 #include "Behaviour.h"
 #include "FreeFireManager.h"
@@ -10,11 +10,11 @@
 #include "DamageToEnemyUpdater.h"
 
 #include "StatusUpdatesHelper.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit;
 class CSoldier;
 class CStaticObject;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CMechAttackUnitState );
@@ -100,7 +100,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_UNIT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonAttackUnitInBuildingState : public IUnitAttackingState, public CFreeFireManager
 {
 	enum EAttackUnitInBuildingStates { EAUBS_START, EAUBS_MOVING_SECTOR, EAUBS_MOVING_UNIT };
@@ -146,7 +146,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	CAIUnit* GetTargetUnit() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonAttackCommonStatObjState : public IUnitAttackingState, public CFreeFireManager
 {
 	//
@@ -187,7 +187,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonRestState : public IUnitState, public CStandartBehaviour
 {
 	enum { TIME_OF_CHECK = 2000 };
@@ -223,7 +223,7 @@ public:
 	// в 1 - некоторое малое время, чтобы произошло обновление, не 0 - т.к. это говорит о первом запуске сегмента
 	void SetNullLastMoveTime() { nextMove = 1; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMechUnitRestState : public CCommonRestState
 {
 	OBJECT_BASIC_METHODS( CMechUnitRestState );
@@ -247,7 +247,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_REST; }
 	virtual bool IsAttackingState() const { return false; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonAmbushState : public IUnitState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CCommonAmbushState );
@@ -287,7 +287,7 @@ public:
 
 	CAIUnit* GetTarget() const { return pTarget; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFollowState : public IUnitState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CFollowState );
@@ -311,7 +311,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CCommonSwarmState );
@@ -346,7 +346,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return point; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonMoveToGridState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CCommonMoveToGridState );
@@ -379,7 +379,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return vPoint; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMoveByFormationState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CMoveByFormationState );
@@ -407,7 +407,7 @@ public:
 	void FinishState();
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPatrolWaypoints
 {
 	typedef vector<CVec2> CPatrolPoints;
@@ -422,7 +422,7 @@ struct SPatrolWaypoints
 
 	int operator&( IBinSaver &saver ) { saver.Add( 1, &points ); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCommonPatrolState - never gets created
 class CCommonPatrolState : public IUnitState
 {
@@ -442,5 +442,5 @@ public:
 
 	int operator&( IBinSaver &saver ) { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif __COMMON_STATES_H__

@@ -10,10 +10,10 @@ static const NTimer::STime feedBackDefaultTime = 20000;
 static int nFeedBackRadius = 2000;
 
 CFeedBackSystem theFeedBackSystem;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NTimer::STime GetFeedBackTime( const EFeedBack eFeedBack )
 {
 	TFeedBackTimes::const_iterator pos = feedBackTimes.find( eFeedBack );
@@ -22,24 +22,24 @@ static NTimer::STime GetFeedBackTime( const EFeedBack eFeedBack )
 	else
 		return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFeedBackSystem::CFeedBackSystem()
 {
 	feedBackTimes[EFB_HOWITZER_GUN_FIRED] = 300000;
 	feedBackTimes[EFB_AAGUN_FIRED] = 300000;
 	feedBackTimes[EFB_UNDER_ATTACK] = 60000;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::AddFeedbackAndForget( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, int nParam )
 {
 	AddFeedBackInternal( nID, vCenter, eFeedBack, true, nParam );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::AddFeedback( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, int nParam )
 {
 	AddFeedBackInternal( nID, vCenter, eFeedBack, false, nParam );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::AddFeedBackInternal( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, bool bForget, int nParam )
 {
 	// check if feedback is already exists, then add current to that feedback
@@ -61,13 +61,13 @@ void CFeedBackSystem::AddFeedBackInternal( int nID, const CVec2 &vCenter, EFeedB
 	cells.push_back( cell );
 }
 /*
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::MoveFeedback( int nID, const CVec2 &vCenter, EFeedBack eFeedBack  )
 {
 	RemoveFeedback( nID, eFeedBack );
 	AddFeedback( nID, vCenter, eFeedBack );
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEqualTo
 {
 	int nID;
@@ -77,7 +77,7 @@ struct SEqualTo
 		return nID == _nTry.first;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
 {
 	bool bEmpty = feedbacks[eFeedBack].empty(); // and also create object
@@ -109,13 +109,13 @@ void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::RemovedAllFeedbacks( int nID )
 {
 	for ( CFeedbacks::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
 		RemoveFeedback( nID, it->first );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFeedBackSystem::Segment()
 {
 	for ( CFeedbacks::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
@@ -169,4 +169,4 @@ void CFeedBackSystem::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

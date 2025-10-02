@@ -2,14 +2,14 @@
 #define __COMMON_CONTROLS__RESIZE_DIALOG__
 #pragma once
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DECLARE_RESIZE_DLG_WND_COMMON_METHODS( className )														\
 protected:																																						\
 	void	GetXMLFilePath( string *pszXMLFilePath ) { (*pszXMLFilePath) = #className; }	\
 	int GetMinimumXDimension() { return 100; }																					\
 	int GetMinimumYDimension() { return 130; }																					\
 	bool IsDrawGripper() { return false; }																							\
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CResizeDialog : public CDialog
 {
 	struct SControlStyle
@@ -108,5 +108,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 #define RESIZE_DIALOG_OPTIONS_FILE_NAME "Editor\\ResizeDialogStyles\\"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__RESIZE_DIALOG__)

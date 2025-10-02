@@ -1,13 +1,13 @@
 #ifndef _interfaceBase_h_included_
 #define _interfaceBase_h_included_
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "UI_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "commandparam.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EKeyboardFlags
 {
 	EKF_NONE		= 0,
@@ -15,12 +15,12 @@ enum EKeyboardFlags
 	EKF_ALT			= 2,
 	EKF_CTRL		= 4,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef DWORD STime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXTERNVAR bool s_bUICommonShowWarnings;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace NGScene
 {
 	class I2DGameView;
@@ -40,7 +40,7 @@ namespace NDb
 	struct STexture;
 	struct SBackground;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EWindowPlacementFlags
 {
 	EWPF_POS_X					= 1,
@@ -50,7 +50,7 @@ enum EWindowPlacementFlags
 	
 	EWPF_ALL						= 0xffff,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IVirtualScreenController : public CObjectBase
 {
 	virtual void SetResolution( int nSizeX, int nSizeY ) = 0;
@@ -61,7 +61,7 @@ interface IVirtualScreenController : public CObjectBase
 	virtual void VirtualToScreen( class CRectLayout *pRects ) = 0;
 	virtual void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IUIInitialization : public CObjectBase
 {
 	enum { tidTypeID = 0x1109BC00 };
@@ -81,7 +81,7 @@ interface IUIInitialization : public CObjectBase
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
 UI_EXPORT IUIInitialization* CreateUIInitialization();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // UI operates in fixed resolution. to draw on screen it cals these functions.
 UI_EXPORT CRectLayout &VirtualToScreen( class CRectLayout *pRects );
 UI_EXPORT CVec2 &VirtualToScreen( CVec2 *src );
@@ -97,14 +97,14 @@ int ScreenToVirtualY( float fY );
 UI_EXPORT void ScreenToVirtual( const CVec2 &vPos, CVec2 *pScreenPos );
 UI_EXPORT void ScreenToVirtual( const CTPoint<int> &vPos, CTPoint<int> *pScreenPos );
 UI_EXPORT CVec2 ScreenToVirtual( const CVec2 &vPos );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // window notify about being clicked
 interface IClickNotify : virtual public CObjectBase
 {
 	virtual void Clicked( interface IWindow *pWho, int nButton ) {};
 	virtual void DoubleClicked( interface IWindow *pWho, int nButton ) {};
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWindowAnimationContext : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SWindowAnimationContext );
@@ -117,7 +117,7 @@ public:
 		saver.Add( 1, &szAnimatedWindow );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // window may have context. when window executes command sequence, it passes its context.
 // if message reaction or command doesn't have enough parameters it asks context about it.
 struct SWindowContext : public CObjectBase
@@ -142,7 +142,7 @@ public:
 	CParam<int> nBackParam;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vOffset); f.Add(3,&fMoveTime); f.Add(4,&szElementToMove); f.Add(5,&pSoundToPlay); f.Add(6,&szReactionForward); f.Add(7,&szReactionBack); f.Add(8,&szMessageID); f.Add(9,&szParam); f.Add(10,&nForwardParam); f.Add(11,&nBackParam); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWindowContextCommon : public SWindowContext
 {
 	OBJECT_BASIC_METHODS( SWindowContextCommon );
@@ -167,7 +167,7 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // generic window functionality
 interface IWindow : virtual public CObjectBase
 {
@@ -253,7 +253,7 @@ interface IWindow : virtual public CObjectBase
 	virtual void SetFadeValue( float fValue ) = 0;
 	virtual void SetBackground( interface IWindowPart *_pBackground ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // console
 interface IConsole : virtual public IWindow
 {
@@ -267,12 +267,12 @@ interface IConsoleOutput : virtual public IWindow
 	virtual void ToEnd() = 0;
 	virtual void ClearContent() = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IStatsSystemWindow : virtual public IWindow
 {
 	virtual void UpdateEntry( const wstring &szEntry, const wstring &szValue, const DWORD dwColor ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IButtonNotify : virtual public CObjectBase
 {
 	virtual void Released( class CWindow *pWho ) = 0;
@@ -281,14 +281,14 @@ interface IButtonNotify : virtual public CObjectBase
 	virtual void Leaved( class CWindow *pWho ) = 0;
 	virtual void StateChanged( class CWindow *pWho ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IDataViewer : virtual public CObjectBase
 {
 	// Creates an interior for the "window" by the user data
 	// Pass pData == 0 for make interior for empty context
 	virtual void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // specific to button functionality
 interface IButton : virtual public IWindow
 {
@@ -326,14 +326,14 @@ interface ITextView : virtual public IWindow
 	virtual void SetIDForMLHandler( int nID ) = 0;
 	virtual int GetIDForMLHandler() const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ISlider's owner extend this interface to be notified about slider events
 interface ISliderNotify : virtual public CObjectBase
 {
 	// fPosition 0..1
 	virtual void SliderPosition( const float fPosition, class CWindow *pWho ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface ISlider : virtual public IWindow
 {
 	//return true if lever is visible
@@ -352,7 +352,7 @@ interface ISlider : virtual public IWindow
 	virtual void SetSpecialPosition( int nPosition ) = 0;
 	virtual int GetCurrentSpecialPosition() const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // screen may implement reactions and checks to enable it's functionality
 interface IProgrammedReactionsAndChecks : virtual public CObjectBase
 {
@@ -366,7 +366,7 @@ interface IProgrammedReactionsAndChecks : virtual public CObjectBase
 	virtual bool Execute( const string &szSender, const string &szReaction, WORD wKeyboardFlags ) { return false; }
 	virtual int Check( const string &szCheckName, WORD wKeyboardFlags ) const { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // specific screen funcitonality
 interface IScreen : virtual public IWindow
 {
@@ -416,7 +416,7 @@ interface IScreen : virtual public IWindow
 
 	virtual const wstring &GetTextEntry( const string &szName ) const = 0; // Get "misc texts" entry by name
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // may contain any number of windows. scrolls them if needed
 interface IScrollableContainer : virtual public IWindow
 {
@@ -435,13 +435,13 @@ interface IScrollableContainer : virtual public IWindow
 	// CRAP - should use after ANY container's changes
 	virtual void SetDiscreteScroll( int nVisibleSlots ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface I1LvlTreeControl : virtual public IWindow
 {
 	virtual IWindow* AddItem() = 0;
 	virtual IWindow* AddSubItem( IWindow *pItem ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // displays position.
 // position range is [0.0f ... 1.0f]
 interface IProgressBar : virtual public IWindow
@@ -451,7 +451,7 @@ interface IProgressBar : virtual public IWindow
 	virtual void ShowFirstElement( bool bShow ) = 0;
 	virtual void SetForward( const NDb::SBackground *pForward ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // displays positions for some units.
 // position range is [0.0f ... 1.0f]
 // can display solid bar or dotted bar
@@ -469,7 +469,7 @@ interface ITooltip : virtual public IWindow
 	virtual void InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const wstring &szText, 
 		IScreen *pScreen, const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface ITabControl : virtual public IWindow
 {
 	virtual int GetNTabs() const = 0;
@@ -479,7 +479,7 @@ interface ITabControl : virtual public IWindow
 	virtual void AddTab( const wstring &szButtonName ) = 0;
 	virtual void AddElement( const int nTab, IWindow *pWnd ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // effect on interface
 interface IUIEffector : public CObjectBase
 {
@@ -496,7 +496,7 @@ interface IUIEffector : public CObjectBase
 	// reversed effect ( that effect + effect->Reverse() = NULL );
 	virtual void Reverse() = 0;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 // window part, such as background, foreground.
 interface IWindowPart : public CObjectBase
 {
@@ -511,7 +511,7 @@ interface IWindowPart : public CObjectBase
 	
 	virtual void SetFadeValue( float fValue ) = 0;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 interface IListControlItem : virtual public IWindow
 {
 	virtual IWindow * GetSubItem( const int nSubItem ) = 0;
@@ -519,7 +519,7 @@ interface IListControlItem : virtual public IWindow
 	virtual CObjectBase* GetUserData() const = 0;
 	virtual void SetUserData( CObjectBase *pData ) = 0;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 // sorter for list control. user may define own one
 interface IWindowSorter : public CObjectBase
 {
@@ -529,7 +529,7 @@ interface IWindowSorter : public CObjectBase
 	// 
 	virtual bool IsAscending() const = 0;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 interface IListControl : virtual public IWindow
 {
 	virtual IListControlItem* AddItem() = 0; // CRAP - obsolete
@@ -549,7 +549,7 @@ interface IListControl : virtual public IWindow
 	
 	virtual void Update() = 0;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 interface IDebugSingleton : public CObjectBase
 {
 	enum { tidTypeID = 0x11095440 };
@@ -564,7 +564,7 @@ interface IDebugSingleton : public CObjectBase
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
 UI_EXPORT IDebugSingleton *CreateDebugSingleton();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IPlayer : virtual public IWindow
 {
 	virtual void SetSequence( const string &szFileName ) = 0;
@@ -582,7 +582,7 @@ interface IPlayer : virtual public IWindow
 
 	virtual void PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip = 0 ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IComboBox : virtual public IWindow
 {
 	// Creates item by user data
@@ -599,10 +599,10 @@ interface IComboBox : virtual public IWindow
 	virtual void SetViewer( IDataViewer *pViewer ) = 0;
 	virtual void SetLine( CObjectBase *pData ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // возвращает указатель только при наличии дочернего окна соответствующего типа, 
 // иначе возвращает 0 и выдает предупреждение
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // выдает предупреждение при отсутствии окна нужного типа
 template<class TCheck>
 inline TCheck* GetChildChecked( IWindow *pParent, const string &szName, const bool bRecursive )
@@ -614,5 +614,5 @@ inline TCheck* GetChildChecked( IWindow *pParent, const string &szName, const bo
 	NI_ASSERT( !s_bUICommonShowWarnings || pCheck, StrFmt( "Window not found: \"%s\"", szName.c_str() ) );
 	return pCheck;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //_interfaceBase_h_included_

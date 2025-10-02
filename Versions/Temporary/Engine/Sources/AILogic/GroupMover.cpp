@@ -17,12 +17,12 @@
 #include "../System/RandomGen.h"
 
 extern NTimer::STime curTime;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float DIST_THRESHOLD = 256.0f;
 static const float FORCE_COEFF    = 0.25f;
 static const int BALANCE_STEP_COUNT = 4;
 static const NTimer::STime PATH_LIFE_TIME = 500;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SForce
 {
 	int nUnitID;
@@ -32,35 +32,35 @@ struct SForce
 	SForce() : nUnitID( -1 ), vForce( VNULL2 ), vPosition( VNULL2 ) {}
 	SForce( const int _nUnitID, const CVec2 &_vPosition ) : nUnitID( _nUnitID ), vForce( VNULL2 ), vPosition( _vPosition ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUnitHash
 {
 	int operator()( CCommonUnit *pUnit ) const { return pUnit->GetUniqueID(); }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const bool CanBeOneGroup( const CCommonUnit *pUnit1, const CCommonUnit *pUnit2 )
 {
 	return fabs2( pUnit1->GetCenterPlain() - pUnit2->GetCenterPlain() ) < sqr( SConsts::GROUP_DISTANCE );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath *CreatePathToPoint( CCommonUnit *pUnit, const CVec2 &vPosition )
 {
 	pUnit->SetGroupShift( VNULL2 );
 	return pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), vPosition, 0 );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMover::SSubGroup::Add( CCommonUnit *pUnit )
 {
 	units[pUnit->GetUniqueID()] = pUnit;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMover::SSubGroup::Delete( const int nUnitID )
 {
 	TSubGroupUnits::iterator pos = units.find( nUnitID );
 	if ( pos != units.end() )
 		units.erase( pos );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 {
 	// special cases for empty and one-unit groups
@@ -138,7 +138,7 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 		it->second.vPosition = forces[nCount].vPosition;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint )
 {
 	TSubGroupUnits::const_iterator pos = units.find( pUnit->GetUniqueID() );
@@ -147,7 +147,7 @@ IStaticPath* CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const
 	else
 		return paths[pUnit->GetAIPassabilityClass()].CreateStaticPath( pUnit, pos->second.vPosition );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CGroupMover::SSubGroup::SSubGroupPathInfo::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint )
 {
 	if ( IsValid( pStaticPath ) && pUnit->GetBoundTileRadius() <= nBoundTileRadius && curTime - timeCalced < PATH_LIFE_TIME &&
@@ -166,13 +166,13 @@ IStaticPath* CGroupMover::SSubGroup::SSubGroupPathInfo::CreateStaticPath( CCommo
 	}
 	return pStaticPath;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMover::AddUnit( CCommonUnit *pUnit )
 {
 	NI_ASSERT( bNeedCalcPositions, "Cannot add unit. Positions already builded." );
 	group[pUnit->GetUniqueID()] = pUnit;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMover::DeleteUnit( const int nUnitID )
 {
 	TGroup::iterator posGroup = group.find( nUnitID );
@@ -185,7 +185,7 @@ void CGroupMover::DeleteUnit( const int nUnitID )
 
 	group.erase( posGroup );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGroupMover::CalcPositions()
 {
 	if ( !bNeedCalcPositions )
@@ -257,7 +257,7 @@ const bool CGroupMover::CalcPositions()
 	bNeedCalcPositions = false;
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 {
 	if ( !CalcPositions() )
@@ -271,7 +271,7 @@ IStaticPath* CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 	else
 		return CreatePathToPoint( pUnit, vPosition );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 {
 	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_SWARM_TO || 
@@ -282,5 +282,5 @@ CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 		return new CGroupMover( command.vPos );
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x31227B40, CGroupMover );

@@ -1,5 +1,5 @@
 #pragma once
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CWarFogVisibility
 class CWarFogVisibility : public CObjectBase
 {
@@ -14,7 +14,7 @@ public:
 
 	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisForPlane
 class CVisForPlane : public CWarFogVisibility
 {
@@ -25,7 +25,7 @@ public:
 
 	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const { return IsTileInside( vTile ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisForGroundUnitBasis
 class CVisForGroundUnitBasis : public CWarFogVisibility
 {
@@ -36,7 +36,7 @@ public:
 
 	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const { return visibleInfo.GetData( nSpiralIndex ) > 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisForGroundUnit
 class CVisForGroundUnit : public CVisForGroundUnitBasis
 {
@@ -45,7 +45,7 @@ public:
 	CVisForGroundUnit() : CVisForGroundUnitBasis() {}
 	CVisForGroundUnit( CGlobalWarFog *pWarFog, const SVector &vTile ) : CVisForGroundUnitBasis( pWarFog, vTile ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisForGroundUnitWithSector
 class CVisForGroundUnitWithSector : public CVisForGroundUnitBasis
 {
@@ -62,7 +62,7 @@ public:
 		return false;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWarFogVisibility* CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFogUnitInfo &unitInfo )
 {
 	if ( unitInfo.bPlane )
@@ -72,5 +72,5 @@ CWarFogVisibility* CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFog
 	else
 		return new CVisForGroundUnitWithSector( pWarFog, unitInfo.vPos, unitInfo.sector );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

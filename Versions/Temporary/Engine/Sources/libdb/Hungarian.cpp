@@ -3,10 +3,10 @@
 #include "Hungarian.h"
 #include "Type.h"
 #include "TypeDef.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NHungarian
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string GetTypePrefix( const NDb::NTypeDef::ETypeType eType, NDb::NTypeDef::SAttributes *pTypeAttributes )
 {
 	if ( pTypeAttributes )
@@ -39,7 +39,7 @@ const string GetTypePrefix( const NDb::NTypeDef::ETypeType eType, NDb::NTypeDef:
 		return "";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ConvertToShortName( string *pszShortFieldName, const string &szFullFieldName, NDb::NTypeDef::ETypeType eType, NDb::NTypeDef::SAttributes *pTypeAttributes )
 {
 	const string szPrefix = GetTypePrefix( eType, pTypeAttributes );
@@ -75,7 +75,7 @@ bool ConvertToShortName( string *pszShortFieldName, const string &szFullFieldNam
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool FindRenameInAttributes( string *pszResult, NDb::NTypeDef::SAttributes *pAttributes )
 {
 	if ( pAttributes )
@@ -94,7 +94,7 @@ static bool FindRenameInAttributes( string *pszResult, NDb::NTypeDef::SAttribute
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType, const NDb::NTypeDef::STypeStructBase::SField *pField )
 {
 	NDb::NTypeDef::STypeDef *pType = pRawType;
@@ -135,7 +135,7 @@ const string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType, const NDb::NT
 
 	return pType->GetTypeName();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field )
 {
 	if ( field.pAttributes && field.pAttributes->attributes.find( "no_prefix" ) != field.pAttributes->attributes.end() )
@@ -155,6 +155,6 @@ const string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &field 
 		return szPrefix + szResult;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

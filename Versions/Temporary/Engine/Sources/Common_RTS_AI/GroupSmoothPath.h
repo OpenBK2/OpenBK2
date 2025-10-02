@@ -2,10 +2,10 @@
 
 #include "Common_RTS_AI_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "BasePathUnit.h"
 #include "StandartSmoothPath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGeometryCellInfo
 {
 	CVec2 vCellPosition;
@@ -14,7 +14,7 @@ struct SGeometryCellInfo
 	SGeometryCellInfo() : vCellPosition( VNULL2 ), nPriority( -1 ) {}
 	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority ) : vCellPosition( _vCellPosition ), nPriority( _nPriority ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! гладкий путь для группы (формации), позиции не привязаны (!!!) к юнитам, позиции привязаны к некоему приоритету (индексу),
 //! который определяет класс юнита (т.е. офицеры могут стоять на таких-то позяциях, а солдаты на таких)
 class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
@@ -155,4 +155,4 @@ public:
 	//! получить проекцию позиции юнита на путь (ушел вперед/назад)
 	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const { return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

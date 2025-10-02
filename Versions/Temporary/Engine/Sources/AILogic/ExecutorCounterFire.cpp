@@ -9,14 +9,14 @@
 #include "UnitStates.h"
 #include "Guns.h"
 #include "../Stats_B2_M1/StatusUpdates.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 extern CGroupLogic theGroupLogic;
 extern CAntiArtilleryManager theAAManager;
 
 #define RETARGET_DELTA	10.0f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorCounterFire::CExecutorCounterFire( CArtillery *_pUnit ) :
 pUnit( _pUnit ), CExecutor( TID_COUNTER_FIRE, 1000/SConsts::AI_SEGMENT_DURATION ), fSearchRadius( 0.0f ), 
 bBonusApplied( false ), vSearchCenter( VNULL2 ), vLastCirclePos( VNULL2 ), timeLastHeard( curTime )
@@ -26,7 +26,7 @@ bBonusApplied( false ), vSearchCenter( VNULL2 ), vLastCirclePos( VNULL2 ), timeL
 	stateBeforeDisable.eState = EASS_DISABLE;
 	stateBeforeDisable.bAutocast = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorCounterFire::UpdateState( )
 {
 	if ( !pUpdate )
@@ -49,7 +49,7 @@ void CExecutorCounterFire::UpdateState( )
 	else
 		updater.AddUpdate( CreateStatusUpdate( EUS_COUNTER_FIRE, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, pUnit, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorCounterFire::ApplyBonus( const bool bForward )
 {
 	if ( !IsValid( pUnit ) )
@@ -63,7 +63,7 @@ void CExecutorCounterFire::ApplyBonus( const bool bForward )
 		bBonusApplied = bForward;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorCounterFire::Segment()
 {
 	if ( !IsExecutorValid() || !IsValid( pUnit ) )
@@ -188,7 +188,7 @@ int CExecutorCounterFire::Segment()
 
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
@@ -255,7 +255,7 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorCounterFire::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par;
@@ -276,7 +276,7 @@ void CExecutorCounterFire::RegisterOnEvents( IExecutorContainer *pContainer )
 	par.eEventID = EID_ABILITY_DISABLE;
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1912D300, CExecutorCounterFire )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

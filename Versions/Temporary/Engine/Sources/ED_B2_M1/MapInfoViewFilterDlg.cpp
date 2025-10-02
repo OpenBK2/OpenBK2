@@ -10,13 +10,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //	CMapInfoViewFilterDlg
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP( CMapInfoViewFilterDlg, CDialog )
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON_DEFAULT, OnBnClickedButtonDefault)
@@ -32,7 +32,7 @@ BEGIN_MESSAGE_MAP( CMapInfoViewFilterDlg, CDialog )
 	ON_BN_CLICKED(IDC_CHECK_OVERDRAWF, OnBnClickedCheckOverdrawF)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_OBJ_TYPES, OnLvnItemchangedListObjTypes)
 END_MESSAGE_MAP()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoViewFilterDlg::CMapInfoViewFilterDlg( CMapInfoEditorSettings *_pMapEditorSettings )
 	: CDialog( IDD_DLG_MAPINFO_VIEW_FILTER, ::AfxGetMainWnd() ),
 	pMapEditorSettings( _pMapEditorSettings )
@@ -40,7 +40,7 @@ CMapInfoViewFilterDlg::CMapInfoViewFilterDlg( CMapInfoEditorSettings *_pMapEdito
 	defMapEditorSettings = (*pMapEditorSettings);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::DoDataExchange( CDataExchange *pDX )
 {
 	CDialog::DoDataExchange( pDX );
@@ -56,7 +56,7 @@ void CMapInfoViewFilterDlg::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_CHECK_OVERDRAWF, chkOverdraw );
 	DDX_Control( pDX, IDC_COMBO_GRID_SIZE, comboGridSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 INT_PTR CMapInfoViewFilterDlg::DoModal()
 {
 	AfxSetResourceHandle( theEDB2M1Instance );
@@ -64,7 +64,7 @@ INT_PTR CMapInfoViewFilterDlg::DoModal()
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 	return res;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMapInfoViewFilterDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
@@ -83,25 +83,25 @@ BOOL CMapInfoViewFilterDlg::OnInitDialog()
 	//
 	return TRUE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::OnOK()
 {
 	GetDialogData();
 	CDialog::OnOK();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::OnCancel()
 {
 	(*pMapEditorSettings) = defMapEditorSettings;
 	Apply();
 	CDialog::OnCancel();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoViewFilterDlg::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoViewFilterDlg::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoViewFilterDlg::UpdateCommand(), pbEnable == 0" );
@@ -109,12 +109,12 @@ bool CMapInfoViewFilterDlg::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 	//
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::OnDestroy()
 {
 	CDialog::OnDestroy();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::SetDialogData()
 {
 	if ( !pMapEditorSettings )
@@ -142,7 +142,7 @@ void CMapInfoViewFilterDlg::SetDialogData()
 	//
 	bIsDataSetting = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::GetDialogData()
 {
 	if ( bIsDataSetting )
@@ -176,7 +176,7 @@ void CMapInfoViewFilterDlg::GetDialogData()
 	//
 	Apply();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::OnBnClickedButtonDefault()
 {
 	if ( !pMapEditorSettings )
@@ -186,7 +186,7 @@ void CMapInfoViewFilterDlg::OnBnClickedButtonDefault()
 	SetDialogData();
 	GetDialogData();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::OnLvnItemchangedListObjTypes(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -194,11 +194,11 @@ void CMapInfoViewFilterDlg::OnLvnItemchangedListObjTypes(NMHDR *pNMHDR, LRESULT 
 
 	GetDialogData();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoViewFilterDlg::Apply()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, 
 																												ID_VIEW_APPLY_MI_FILTER, 
 																												0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

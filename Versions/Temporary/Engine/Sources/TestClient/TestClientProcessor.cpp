@@ -10,7 +10,7 @@
 #include "../Server_Client_Common/LadderLobbyPackets.h"
 #include "../Server_Client_Common/LoginPackets.h"
 #include "../Server_Client_Common/ChatPackets.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult );
@@ -61,13 +61,13 @@ CTestClientProcessor::CTestClientProcessor( const string &szCfgFile )
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "Games heartbeat period is %d\n", dwHeartBeatPeriod ) );
 	nMyID = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTestClientProcessor::SetServerClient( CServerClient *_pServerClient )
 {
 	pServerClient = _pServerClient;
 	nGameID = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -136,7 +136,7 @@ bool CTestClientProcessor::ProcessConnectServerResult( CConnectServerPacket *pPa
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatPacket( CChatPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -157,7 +157,7 @@ bool CTestClientProcessor::ProcessChatPacket( CChatPacket *pPacket )
 	return true;
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatChannelClientsListPacket( CChatChannelClientsListPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -169,7 +169,7 @@ bool CTestClientProcessor::ProcessChatChannelClientsListPacket( CChatChannelClie
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatClientListChangeNotifyPacket( CChatClientListChangeNotifyPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -183,7 +183,7 @@ bool CTestClientProcessor::ProcessChatClientListChangeNotifyPacket( CChatClientL
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatChannelsListPacket( CChatChannelsListPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -195,7 +195,7 @@ bool CTestClientProcessor::ProcessChatChannelsListPacket( CChatChannelsListPacke
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -228,7 +228,7 @@ bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPac
 	return true;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -242,7 +242,7 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 			StrFmt( "User %s is not in chat.\n", pPacket->szNick ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessChatFriendNotifyPacket( CChatFriendNotifyPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -262,7 +262,7 @@ bool CTestClientProcessor::ProcessChatFriendNotifyPacket( CChatFriendNotifyPacke
 		pPacket->szNick.c_str(), szStatus.c_str() ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessMyIDPacket( CMyIDPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -271,14 +271,14 @@ bool CTestClientProcessor::ProcessMyIDPacket( CMyIDPacket *pPacket )
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "my id is %d\n", nMyID ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessWelcomePacket( CSystemBroadcastPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", NStr::ToMBCS( pPacket->wszText ) ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessRemoveClient( CNetRemoveClient *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -289,7 +289,7 @@ bool CTestClientProcessor::ProcessRemoveClient( CNetRemoveClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessEnteredLobby( CEnteredLobby *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -298,7 +298,7 @@ bool CTestClientProcessor::ProcessEnteredLobby( CEnteredLobby *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGetLobbyClientsPacket( CGetLobbyClientsPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;	
@@ -311,7 +311,7 @@ bool CTestClientProcessor::ProcessGetLobbyClientsPacket( CGetLobbyClientsPacket 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;	
@@ -382,7 +382,7 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -398,7 +398,7 @@ bool CTestClientProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessKillGame( CKillGamePacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -420,7 +420,7 @@ bool CTestClientProcessor::ProcessKillGame( CKillGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessUpdateGameInfo( CUpdateGameInfo *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -438,7 +438,7 @@ bool CTestClientProcessor::ProcessUpdateGameInfo( CUpdateGameInfo *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGetLobbyGamesPacket( CGetLobbyGamesPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -447,7 +447,7 @@ bool CTestClientProcessor::ProcessGetLobbyGamesPacket( CGetLobbyGamesPacket *pPa
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;	
@@ -497,7 +497,7 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -515,7 +515,7 @@ bool CTestClientProcessor::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -544,7 +544,7 @@ bool CTestClientProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGameClientRemoved( CGameClientRemoved *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -553,7 +553,7 @@ bool CTestClientProcessor::ProcessGameClientRemoved( CGameClientRemoved *pPacket
 	gameClients.erase( pPacket->nClientID );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessNewGameClient( CNewGameClient *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -563,7 +563,7 @@ bool CTestClientProcessor::ProcessNewGameClient( CNewGameClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGameKilled( CGameKilled *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -574,7 +574,7 @@ bool CTestClientProcessor::ProcessGameKilled( CGameKilled *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -590,7 +590,7 @@ bool CTestClientProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGameTestBroadcastMsg( CGameTestBroadcastMsg *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -599,7 +599,7 @@ bool CTestClientProcessor::ProcessGameTestBroadcastMsg( CGameTestBroadcastMsg *p
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGameTestDirectMsg( CGameTestDirectMsg *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -608,7 +608,7 @@ bool CTestClientProcessor::ProcessGameTestDirectMsg( CGameTestDirectMsg *pPacket
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -617,7 +617,7 @@ bool CTestClientProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -626,7 +626,7 @@ bool CTestClientProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket
 	gameClients.erase( pPacket->nKicked );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessGameKickClient( CGameKickClient *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -645,14 +645,14 @@ bool CTestClientProcessor::ProcessGameKickClient( CGameKickClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessTestDirectPacket( CTestDirectPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "direct msg from client %d received\n", pPacket->nClientID ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessSendSpecGameInfo( CTestSpecGameInfo *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -663,7 +663,7 @@ bool CTestClientProcessor::ProcessSendSpecGameInfo( CTestSpecGameInfo *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessReceiveSpecificGameInfo( CSpecificGameInfo *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -680,7 +680,7 @@ bool CTestClientProcessor::ProcessReceiveSpecificGameInfo( CSpecificGameInfo *pP
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -698,10 +698,10 @@ bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 list<int> ladderGameTeam1;
 list<int> ladderGameTeam2;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessLadderInvitePacket( CLadderInvitePacket *pPacket )
 {
 	ladderGameTeam1 = pPacket->team1;
@@ -729,7 +729,7 @@ bool CTestClientProcessor::ProcessLadderInvitePacket( CLadderInvitePacket *pPack
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessLadderStatisticsPacket( CLadderStatisticsPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -756,7 +756,7 @@ bool CTestClientProcessor::ProcessLadderStatisticsPacket( CLadderStatisticsPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessForgottenPasswordAnswerPacket( CForgottenPasswordAnswerPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -777,13 +777,13 @@ bool CTestClientProcessor::ProcessForgottenPasswordAnswerPacket( CForgottenPassw
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::ProcessPingPacket( CPingPacket *pPacket )
 {
 	WriteMSG( "Ping received.\n" );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTestClientProcessor::Segment()
 {
 	if ( nGameID != -1 )
@@ -800,4 +800,4 @@ bool CTestClientProcessor::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

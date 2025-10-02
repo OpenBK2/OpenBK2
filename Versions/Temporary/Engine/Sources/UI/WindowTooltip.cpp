@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 #include "windowtooltip.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11075B8D, CWindowTooltip)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowTooltip::InitByDesc( const struct NDb::SUIDesc* pDesc )
 {
 	pInstance = checked_cast<const NDb::SWindowTooltip*>( pDesc )->Duplicate();
 	pShared = checked_cast_ptr<const NDb::SWindowTooltipShared*>( pInstance->pShared );
 	CWindow::InitByDesc( pDesc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const wstring &_szText, IScreen *_pScreen,
 																	const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler )
 {
@@ -67,7 +67,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 	else
 		NGlobal::RemoveVar( "TOOLTIP_ENABLED" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 {
 	int nX, nY, nSizeX, nSizeY;
@@ -90,4 +90,4 @@ void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 	NGlobal::SetVar( "TOOLTIP_X", nX );
 	NGlobal::SetVar( "TOOLTIP_Y", nY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

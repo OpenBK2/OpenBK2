@@ -4,16 +4,16 @@
 #include "ExecutorContainer.h"
 #include "StaticObjectsIters.h"
 EXTERNVAR CExecutorContainer theExecutorContainer;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NRestoreTranspConsts
 {
 	static const int nObjectsPerCalculation = 5;
 	static const int nCalcPeriod = 1;
 	static const int nCalcPeriodRandom = 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NRestoreTranspConsts;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorRestoreTransparencyQueue::Segment()
 {
 	// ask all object around, fill queue
@@ -62,13 +62,13 @@ int CExecutorRestoreTransparencyQueue::Segment()
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorRestoreTransparencyQueue::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par( EID_ADD_TO_RESTORE_TRANSPARENCY_QUEUE, 0, 0 );
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_event )
 {
 	const CExecutorEventAddToRestoreTransparencyQueue *event = static_cast<const CExecutorEventAddToRestoreTransparencyQueue *>( &_event );
@@ -90,5 +90,5 @@ bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_even
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1111BB40, CExecutorRestoreTransparencyQueue )

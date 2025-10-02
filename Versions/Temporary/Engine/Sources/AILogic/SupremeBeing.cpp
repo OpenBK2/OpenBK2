@@ -5,45 +5,45 @@
 #include "Diplomacy.h"
 #include "AIUnitInfoForGeneral.h"
 #include "Scripts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSupremeBeing theSupremeBeing;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CScripts *pScripts;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CSupremeBeing																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IEnemyContainer * CSupremeBeing::GetEnemyConatiner( int nParty )
 {
 	return generals[nParty];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::SetAAVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
 		generals[nGeneralParty]->SetAAVisible( pUnit, bVisible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::SetUnitVisible( class CAIUnit *pUnit, const int nGeneralParty, const bool bVisible )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
 		generals[nGeneralParty]->SetUnitVisible( pUnit, bVisible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSupremeBeing::MustShootToObstacles( const int nPlayer )
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::Clear()
 {
 	delayedTasks.clear();
 	generals.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::Init( const NDb::SMapInfo* pMapInfo )
 {
 	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
@@ -59,7 +59,7 @@ void CSupremeBeing::Init( const NDb::SMapInfo* pMapInfo )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::GiveNewUnitsToGenerals( const list<CCommonUnit*> &pUnits, bool bFromReinforcement )
 {
 	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
@@ -67,17 +67,17 @@ void CSupremeBeing::GiveNewUnitsToGenerals( const list<CCommonUnit*> &pUnits, bo
 		generals[1]->GiveNewUnits( pUnits, bFromReinforcement );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::AddIronman( const int nScriptGroup )
 {
 	ironmans.insert( nScriptGroup );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSupremeBeing::IsIronman( const int nScriptGroup ) const
 {
 	return ironmans.find( nScriptGroup ) != ironmans.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSupremeBeing::IsMobileReinforcement( int nParty, int nGroup ) const
 {
 	Generals::const_iterator it = generals.find( nParty );
@@ -87,13 +87,13 @@ bool CSupremeBeing::IsMobileReinforcement( int nParty, int nGroup ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::AddReinforcement( class CAIUnit *pUnit )
 {
 	if ( generals.find( pUnit->GetPlayer() ) != generals.end() )
 		generals[pUnit->GetPlayer()]->Give( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::Segment()
 {
 	if ( !NGlobal::GetVar( "temp.nogeneral_sript", 0 ) )
@@ -119,12 +119,12 @@ void CSupremeBeing::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::RegisterDelayedTask( IGeneralDelayedTask *pTask )
 {
 	delayedTasks.push_back( pTask );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 	const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
 	const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt )
@@ -140,7 +140,7 @@ void CSupremeBeing::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 		);
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UnitDied( class CCommonUnit * pUnit )
 {
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
@@ -148,7 +148,7 @@ void CSupremeBeing::UnitDied( class CCommonUnit * pUnit )
 		it->second->UnitDied( pUnit );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UnitDied( CAIUnitInfoForGeneral *pInfo )
 {
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
@@ -156,7 +156,7 @@ void CSupremeBeing::UnitDied( CAIUnitInfoForGeneral *pInfo )
 		it->second->UnitDied( pInfo );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNewPos )
 {
 	if ( AICellsTiles::GetGeneralCell( pUnit->GetCenterPlain() ) != AICellsTiles::GetGeneralCell( vNewPos ) )
@@ -166,7 +166,7 @@ void CSupremeBeing::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 
 			it->second->UnitChangedPosition( pUnit, vNewPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UnitAskedForResupply( class CCommonUnit * pUnit, const EResupplyType eType, const bool bSet )
 {
 	if ( !pScripts || IsIronman( pScripts->GetScriptID( pUnit ) ) ) return;
@@ -185,7 +185,7 @@ void CSupremeBeing::UnitAskedForResupply( class CCommonUnit * pUnit, const EResu
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSupremeBeing::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 {
 //	const int nGeneralParty = 1 - pUnit->GetParty();
@@ -194,11 +194,11 @@ void CSupremeBeing::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
 		it->second->UnitChangedParty( pUnit, nNewParty );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSupremeBeing::IsInResistanceCircle( const CVec2 &vPoint, const int nGeneralParty )
 {
 	if ( generals.find( nGeneralParty ) != generals.end() )
 		return generals[nGeneralParty]->IsInResistanceCircle( vPoint );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "Tools.h"
 
-//////////////////////////////////////////////////////////////////////
+
 namespace NUITools
 {
-//////////////////////////////////////////////////////////////////////
+
 void ApplyWindowAlign( NDb::EPositionAllign eAlign, float fParentPos, float fParentSize,
 								float fChildPos, 
 								float fLowerMargin, float fHigherMargin,
@@ -31,7 +31,7 @@ void ApplyWindowAlign( NDb::EPositionAllign eAlign, float fParentPos, float fPar
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void ApplyTextureAllign( const NDb::EPositionAllign eAllign,
 												 const float fWidth, const float fTextureWidth,
 												 float *pfMap1, float *pfMap2,
@@ -74,7 +74,7 @@ void ApplyTextureAllign( const NDb::EPositionAllign eAllign,
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float> &parentRect, 
 	CTRect<float> *pRect )
 {
@@ -100,5 +100,5 @@ void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float>
 	pRect->x2 = pRect->x1 + nSizeX;
 	pRect->y2 = pRect->y1 + nSizeY;
 }
-//////////////////////////////////////////////////////////////////////
+
 }

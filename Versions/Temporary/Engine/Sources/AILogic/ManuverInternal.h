@@ -1,8 +1,8 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "Manuver.h"
 #include "PlanePathFraction.h"
-/////////////////////////////////////////////////////////////////////////////
+
 // move to separate file
 struct SPlanesConsts
 {
@@ -16,15 +16,15 @@ struct SPlanesConsts
 		return MIN_HEIGHT_TEMP;
 	}
 };
-/////////////////////////////////////////////////////////////////////////////
+
 class CPlanesFormation;
 interface IPathFraction;
-/////////////////////////////////////////////////////////////////////////////
+
 /**
  * в маневре в зависимости от участка траектории задается крен самолета (либо от вертикали, либо от направления
  * к центру кривизны.
  */
-/////////////////////////////////////////////////////////////////////////////
+
 class CManuver : public IManuver 
 {
 
@@ -95,9 +95,9 @@ public:
 	static const CVec3 CalcPredictedPoint( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 	static const CVec3 CalcPredictedSpeed( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 };
-/////////////////////////////////////////////////////////////////////////////
+
 //	CManuverGeneric
-/////////////////////////////////////////////////////////////////////////////
+
 class CManuverGeneric : public CManuver 
 {
 	OBJECT_BASIC_METHODS( CManuverGeneric );
@@ -108,7 +108,7 @@ public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
 	virtual bool Advance( const NTimer::STime timeDiff );
 };
-/////////////////////////////////////////////////////////////////////////////
+
 class CManuverToHorisontal : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverToHorisontal )
@@ -120,7 +120,7 @@ public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
 	virtual bool Advance( const NTimer::STime timeDiff );
 };
-/////////////////////////////////////////////////////////////////////////////
+
 class CManuverPrepareGroundAttack : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverPrepareGroundAttack )
@@ -131,9 +131,9 @@ public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection );
 	virtual bool Advance( const NTimer::STime timeDiff );
 };
-/////////////////////////////////////////////////////////////////////////////
+
 //	CManuverSteepClimb
-/////////////////////////////////////////////////////////////////////////////
+
 // 30-45 degrees gorka
 //
 class CManuverSteepClimb : public CManuver 

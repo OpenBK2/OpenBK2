@@ -2,14 +2,14 @@
 #include "GScene.h"
 #include "GParticleInfo.h"
 #include "4dcalcs.h"
-////
+
 #include "GSprite.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSpriteEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSpriteEffect: public CParticleEffect
 {
 	OBJECT_BASIC_METHODS(CSpriteEffect);
@@ -21,7 +21,7 @@ public:
 	////
 	void AddParticles( IParticleOutput *pRender );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 {
 	const SParticleOrientationInfo &or = pRender->GetOrientationInfo();
@@ -46,15 +46,15 @@ void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 	GetTransparentTexturePlace( &sTexPlace, pTex->GetValue() );
 	pRender->AddParticle( sRes, 0xFFFFFFFF, sTexPlace, or.vDepth * sPos );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSpriteAnimator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSpriteAnimator::CSpriteAnimator( IGScene *_pScene, CFuncBase<CVec3> *_pPosition, CFuncBase<CVec3> *_pDir, CPtrFuncBase<NGfx::CTexture> *_pTexture, CFuncBase<CVec2> *_pSize ):
 	pScene(_pScene), pPosition(_pPosition), pDir(_pDir), pTexture(_pTexture), pSize(_pSize)
 {
 	pCamera = pScene->GetCamera();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSpriteAnimator::Recalc()
 {
 	if ( !IsValid( pValue ) )
@@ -77,9 +77,9 @@ void CSpriteAnimator::Recalc()
 	value.sSize = pSize->GetValue();
 	value.sCamera = SafeUnhomogen( pCamera->GetValue() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0xB4414160, CSpriteEffect )
 REGISTER_SAVELOAD_CLASS( 0xB4414161, CSpriteAnimator )

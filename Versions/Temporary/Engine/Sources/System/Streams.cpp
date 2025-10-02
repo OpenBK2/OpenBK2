@@ -3,7 +3,7 @@
 #include "FileReaders.h"
 #include "VFS.h"
 #include "../System/FilePath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CDataStream
@@ -11,7 +11,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::SetBuffer( unsigned char *_pBuffer, int nBufSize, int nPos, int nSize, int _nFlags )
 {
 	data.pBuffer = _pBuffer;
@@ -20,7 +20,7 @@ void CDataStream::SetBuffer( unsigned char *_pBuffer, int nBufSize, int nPos, in
 	data.pFileEnd = data.pBuffer + nSize;
 	data.nFlags = _nFlags;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CDataStream::FixupBuf( int nOldSize )
 {
 	if ( ( data.nFlags & F_Broken ) || !CanWrite() )
@@ -41,7 +41,7 @@ bool CDataStream::FixupBuf( int nOldSize )
 	AllocBuf( nOldSize, nNewBufSize );
 	return IsOk();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::ReadOverflow( void *pDest, int nSize )
 {
 	if ( data.pCurrent != data.pFileEnd )
@@ -56,7 +56,7 @@ void CDataStream::ReadOverflow( void *pDest, int nSize )
 		memset( pDest, 0, nSize );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::ReadString( string &res, int nMaxSize )
 {
 	int nSize = 0;
@@ -80,7 +80,7 @@ void CDataStream::ReadString( string &res, int nMaxSize )
 	res.assign( (const char*)data.pCurrent, nSize );
 	data.pCurrent += nSize;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::WriteString( const string &res )
 {
 	int nSize = res.size(), nVal;
@@ -96,7 +96,7 @@ void CDataStream::WriteString( const string &res )
 	}
 	Write( res.data(), nSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::ReadTo( CDataStream *pDst, unsigned int nSize )
 {
 	pDst->SetSize( 0 );
@@ -104,14 +104,14 @@ void CDataStream::ReadTo( CDataStream *pDst, unsigned int nSize )
 	Read( pDst->GetBufferForWrite(), nSize );
 	pDst->Seek(0);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::WriteFrom( CDataStream &src )
 {
 	src.Seek(0);
 	int nSize = src.GetSize();
 	Write( src.GetBuffer(), nSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CMemoryStream
@@ -119,7 +119,7 @@ void CDataStream::WriteFrom( CDataStream &src )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::AllocBuf( int nOldFileSize, int nSize )
 {
 	unsigned char *pBuf = new unsigned char[ nSize ];
@@ -133,38 +133,38 @@ void CMemoryStream::AllocBuf( int nOldFileSize, int nSize )
 	else
 		SetBuffer( pBuf, nSize, GetPosition(), GetSize(), GetFlags() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream::~CMemoryStream()
 {
 	delete[] GetBufferPtr();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream::CMemoryStream( const CMemoryStream &src ) : CDataStream( 0 )
 {
 	CopyMemoryStream( src );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream& CMemoryStream::operator=( const CMemoryStream &src )
 {
 	delete[] GetBufferPtr();
 	CopyMemoryStream( src );
 	return *this;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::SetSizeDiscard( int nSize )
 {
 	delete[] GetBufferPtr();
 	unsigned char *pBuf = new unsigned char[ nSize ];
 	SetBuffer( pBuf, nSize, 0, nSize, F_CanRW );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::CopyMemoryStream( const CMemoryStream &src )
 {
 	int nBufSize = src.GetBufferSize();
 	SetBuffer( new unsigned char[ nBufSize ], nBufSize, src.GetPosition(), src.GetSize(), src.GetFlags() );
 	memcpy( GetBufferPtr(), src.GetBufferPtr(), nBufSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CMappedStream
@@ -172,7 +172,7 @@ void CMemoryStream::CopyMemoryStream( const CMemoryStream &src )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMappedStream::AllocBufImpl( int nBufSize, int nPos, int nSize )
 {
 	ASSERT( nPos <= nSize );
@@ -185,33 +185,33 @@ void CMappedStream::AllocBufImpl( int nBufSize, int nPos, int nSize )
 	else
 		SetBuffer( pBuf, nBufSize, nPos, nSize, GetFlags() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMappedStream::ReleaseBuf()
 {
 	UnmapFile( GetBufferPtr() );
 	if ( GetSize() != GetBufferSize() && IsOk() )
 		SetFileSize( GetSize() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMappedStream::AllocBuf( int nOldFileSize, int nSize )
 {
 	ReleaseBuf();
 	AllocBufImpl( nSize, GetPosition(), GetSize() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMappedStream::StartAccess( int _nFlags )
 {
 	SetFlags( _nFlags );
 	int nFileSize = GetFileSize();
 	AllocBufImpl( nFileSize, 0, nFileSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMappedStream::Flush()
 {
 	if ( IsOk() )
 		FlushFile( GetBufferPtr() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CFileStream
@@ -219,7 +219,7 @@ void CMappedStream::Flush()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileStream::CFileStream( NVFS::IVFS *pVFS, const string &szFileName )
 : CDataStream( F_Broken )
 {
@@ -228,7 +228,7 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const string &szFileName )
 	if ( pStream )
 		SyncWith( *pStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const string &szFileName )
 : CDataStream( F_Broken )
 {
@@ -237,7 +237,7 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const string &szFile
 	if ( pStream )
 		SyncWith( *pStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileStream::CFileStream( const string &szFileName, const EWinMode eWinMode )
 : CDataStream( F_Broken )
 {
@@ -259,7 +259,7 @@ CFileStream::CFileStream( const string &szFileName, const EWinMode eWinMode )
 
 	SyncWith( *pStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileStream::~CFileStream()
 {
 	if ( pStream )
@@ -268,7 +268,7 @@ CFileStream::~CFileStream()
 		delete pStream;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileStream::AllocBuf( int nOldFileSize, int nSize )
 {
 	if ( pStream )
@@ -278,7 +278,7 @@ void CFileStream::AllocBuf( int nOldFileSize, int nSize )
 		SyncWith( *pStream );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileStream::Flush()
 {
 	if ( pStream )

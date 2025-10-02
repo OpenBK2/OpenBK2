@@ -1,10 +1,10 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "aiMap.h"
 #include "../Misc/Bresenham.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool operator < ( const SVector &cell1, const SVector &cell2 );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter>
 inline void CAIMap::PushTile( const SVector &vCenter, const SVector &tile, TContainter *tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
@@ -15,7 +15,7 @@ inline void CAIMap::PushTile( const SVector &vCenter, const SVector &tile, TCont
 		mask.SetData( tile.x + nMaxRadius, tile.y + nMaxRadius );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter>
 inline bool CAIMap::Process8Tiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask )
 {
@@ -47,7 +47,7 @@ inline bool CAIMap::Process8Tiles( const SVector &vCenter, const SVector &vOffse
 			IsLocked( vCenter + SVector( -vOffset.y, -vOffset.x ), aiClass );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter>
 inline bool CAIMap::ProcessLineTiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask )
 {
@@ -65,7 +65,7 @@ inline bool CAIMap::ProcessLineTiles( const SVector &vCenter, const SVector &vOf
 	while ( curOffset != vOffset );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter, int N>
 inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
 {
@@ -133,7 +133,7 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float f
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter, int N>
 inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
 {
@@ -172,7 +172,7 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadiu
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TContainter, int N>
 inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
 {
@@ -328,31 +328,31 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByQuadrangle( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles )
 {
 	ProcessQuadrangleTiles( v1, v2, v3, v4, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
 	ProcessCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
 	ProcessLargeCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles )
 {
 	ProcessQuadrangleTiles( rect.v1, rect.v2, rect.v3, rect.v4, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // для GetTilesCoveredByRectSides
 template<typename TContainter>
 class CTilesCollector
@@ -370,7 +370,7 @@ public:
 		return true; 
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByRectSides( const SRect &rect, TContainter *pTiles )
 {
@@ -381,4 +381,4 @@ inline void CAIMap::GetTilesCoveredByRectSides( const SRect &rect, TContainter *
 	MakeLine2( rect.v3.x/GetTileSize(), rect.v3.y/GetTileSize(), rect.v4.x/GetTileSize(), rect.v4.y/GetTileSize(), a );
 	MakeLine2( rect.v4.x/GetTileSize(), rect.v4.y/GetTileSize(), rect.v1.x/GetTileSize(), rect.v1.y/GetTileSize(), a );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

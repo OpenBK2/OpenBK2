@@ -3,10 +3,10 @@
 #include "../Misc/2DArray.h"
 #include "../System/FastMath.h"
 #include "TerrUtils.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3dEx CVec3fEx::GetVec3dEx() const { return CVec3dEx( (double)x, (double)y, (double)z, flag ); }
 CVec3fEx CVec3dEx::GetVec3fEx() const { return CVec3fEx( (float)x, (float)y, (float)z, flag ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb::SVSOPoint> &points, const bool bSetFlag )
 {
 	if ( pIntersection->size() < 2 )
@@ -49,7 +49,7 @@ void AttachIntersection( vector<NDb::SVSOPoint> *pIntersection, const vector<NDb
 	pIntersection->swap( newPoints );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeBorders )
 {
 	int nLeftInters = 0, nRightInters = 0;
@@ -101,7 +101,7 @@ bool IsInside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV, bool bIncludeB
 	}
 	return ( (nLeftInters & 1) && (nRightInters & 1) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // whether "rV" is outside of "rPoly"
 bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 {
@@ -155,7 +155,7 @@ bool IsOutside( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV )
 	}
 	return ( (!(nLeftInters & 1)) || (!(nRightInters & 1)) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
 	for ( int i = 0; i < rPoly.size(); ++i )
@@ -177,7 +177,7 @@ void GetIntersection( vector<CVec3dEx> *pIntersection, const vector<CVec3dEx> &r
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3fEx> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
 {
 	for ( int i = 0; i < rPoly.size(); ++i )
@@ -199,7 +199,7 @@ void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<CVec3
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::SVSOPoint> &rPoly, const CVec3 &rV1, const CVec3 &rV2 )
 {
 	if ( rPoly.size() < 2 )
@@ -230,7 +230,7 @@ void GetIntersection( vector<SIntersectPoint> *pIntersection, const vector<NDb::
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
 {
 	for ( int g = 0; g < 3; ++g )
@@ -259,7 +259,7 @@ void GetBorderIntersection( vector<CVec3> *pBorderIntersection, const CTriangleE
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	whether the "rV1-rV2" segment does intersect the "rPoly"
 bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
@@ -279,7 +279,7 @@ bool IsIntersect( const vector<CVec3dEx> &rPoly, const CVec3dEx &rV1, const CVec
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	whether the "rV1-rV2" segment does intersect the mesh triangle
 bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &rVerts, const CVec3dEx &rV1, const CVec3dEx &rV2 )
 {
@@ -294,7 +294,7 @@ bool IsIntersect( const vector<STriangle> &rTriangles, const vector<CVec3dEx> &r
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<BYTE> flags( 64 );
 static CArray2D<CVec3> normVects( 64, 64 );
 void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePoints )
@@ -366,7 +366,7 @@ void CreateConvexHull( vector<CVec3> *pResPoints, const vector<CVec3> &rSourcePo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	get the result triangles of the intersection
 void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 )
 {
@@ -407,7 +407,7 @@ void GetIntersectionTriangles( vector<CTriangleEx> *pIntersection, const CTriang
 		return;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, bool bIncludeBorders )
 {
 	//	{CRAP !!! create faster method !!! /CRAP}
@@ -422,7 +422,7 @@ bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, boo
 
 	return IsInside( trianglePoly, rPoint, bIncludeBorders );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool AreTrianglesTakenUp( const CTriangleEx rOuterTriangle, const CTriangleEx rInnerTriangle, bool bIncludeBorders )
 {
 	bool bCovers = true;
@@ -433,4 +433,4 @@ bool AreTrianglesTakenUp( const CTriangleEx rOuterTriangle, const CTriangleEx rI
 
 	return bCovers;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

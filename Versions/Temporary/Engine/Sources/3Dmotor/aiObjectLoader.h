@@ -8,25 +8,25 @@
 #include "..\System\GResource.h"
 #include "aiObject.h"
 #include "GSkeleton.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMemObject;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SAIGeometry;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAI
 {
 class CGeometryInfo;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLoadAIGeometryFromA5Exporter : public NGScene::CResourceLoader<int, CGeometryInfo>
 {
 	OBJECT_BASIC_METHODS(CLoadAIGeometryFromA5Exporter);
 protected:
 	virtual void Recalc();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 {
 	typedef CHoldedPtrFuncBase<CGeometryInfo> TParent;
@@ -40,7 +40,7 @@ class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 public:
 	void SetKey( const NDb::SAIGeometry *pGeometry );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*class CBSPTree;
 class CPrecalcFlipper : public CObjectBase
 {
@@ -49,7 +49,7 @@ public:
 	vector<NAI::CPrecalcPieces> treesOpen;
 	vector<NAI::CPrecalcPieces> treesClosed;
 };*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMemGeometryInfo : public CPtrFuncBase<CGeometryInfo>
 {
 	OBJECT_BASIC_METHODS(CMemGeometryInfo);
@@ -61,7 +61,7 @@ protected:
 public:
 	CMemGeometryInfo( CMemObject *p = 0 ): pMemObject(p) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileSkinPoints : public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CFileSkinPoints);
@@ -77,14 +77,14 @@ public:
 	typedef hash_map<int, SBodypart> CBodypartsHash;
 	CBodypartsHash parts;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileSkinPointsLoadFromA5Exporter : public NGScene::CResourceLoader<int, CFileSkinPoints>
 {
 	OBJECT_BASIC_METHODS(CFileSkinPointsLoadFromA5Exporter);
 protected:
 	virtual void Recalc();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 {
 	typedef CHoldedPtrFuncBase<CFileSkinPoints> TParent;
@@ -98,7 +98,7 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 public:
 	void SetKey( const NDb::SAIGeometry *pGeometry );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSkinner: public CPtrFuncBase<CGeometryInfo>
 {
 	OBJECT_BASIC_METHODS(CSkinner);
@@ -118,7 +118,7 @@ public:
 	//void CreatePrecalcInfo() { bDoPrecalc = true; }
 	//void SetPrecalcInfo( const CPrecalcPieces &trees ) { bDoPrecalc = false; setTrees = trees; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // create cube hull
 //void MakeCube( CConvexHull *pRes, const CVec3 &base, const CVec3 &size );
 }

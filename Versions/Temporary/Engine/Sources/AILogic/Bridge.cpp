@@ -15,13 +15,13 @@
 #include "StaticObjectsIters.h"
 #include "..\Common_RTS_AI\StaticMapHeights.h"
 #include "../DebugTools/DebugInfoManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS_NM( 0x1108D4D1, SSpanLock, CFullBridge );
 REGISTER_SAVELOAD_CLASS( 0x1108D4D0, CFullBridge );
 REGISTER_SAVELOAD_CLASS( 0x1108D49F, CBridgeSpan );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBridgeHeightRemover theBridgeHeightsRemover;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CStaticObjects theStatObjs;
 extern CGlobalWarFog theWarFog;
 extern CStaticObjects theStatObjs;
@@ -31,25 +31,25 @@ extern CDiplomacy theDipl;
 extern CStatistics theStatistics;
 extern CScripts *pScripts;
 extern CGraveyard theGraveyard;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CBridgeHeightRemover
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeHeightRemover::Clear()
 {
 	heightsOrder.clear();
 	heightToRemove.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeHeightRemover::RegisterOrder( const int nHeightID )
 {
 	heightsOrder.push_front( nHeightID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeHeightRemover::RemoveHeight( const int nHeightID ) 
 { 
 	heightToRemove[nHeightID] = true; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeHeightRemover::Segment()
 {
 	if ( heightToRemove.empty() )
@@ -67,13 +67,13 @@ void CBridgeHeightRemover::Segment()
 	}
 	heightToRemove.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CBridgeSpan );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CBridgeSpan														*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const WORD _nDir, const int nFrameIndex )
 : CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ), 
 	bNewBuilt( false ), bLocked( false ), bDeletingAround( false ),
@@ -92,7 +92,7 @@ CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, c
 	nTilesMarkerID = NDebugInfo::OBJECT_ID_GENERATE;
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	pPlacement->nObjUniqueID = GetUniqueId();
@@ -102,14 +102,14 @@ void CBridgeSpan::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	pPlacement->fSpeed = 0;
 	pPlacement->dwNormal = GetHeights()->GetNormal( -1, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetTilesForVisibilityInternal( CTilesSet *pTiles ) const
 {
 	SRect rect;
 	GetBoundRect( &rect );
 	GetAIMap()->GetTilesCoveredByRectSides( rect, pTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	if ( pFullBridge == 0 )
@@ -117,14 +117,14 @@ void CBridgeSpan::GetTilesForVisibility( CTilesSet *pTiles ) const
 	else
 		pFullBridge->GetTilesForVisibility( pTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetCoveredTiles( list<SVector> *pTiles ) const
 {
 	SRect rect;
 	GetBoundRect( &rect );
 	GetAIMap()->GetTilesCoveredByRect( rect, pTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBridgeSpan::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return
@@ -133,7 +133,7 @@ bool CBridgeSpan::ShouldSuspendAction( const EActionNotify &eAction ) const
 			eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ && bNewBuilt );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::Build()
 {
 	bNewBuilt = true;
@@ -142,19 +142,19 @@ void CBridgeSpan::Build()
 	//theStatObjs.UpdateAllPartiesStorages( false, true );
 	pFullBridge->SpanBuilt( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::SetHeights()
 {
 	CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > pass;
@@ -202,7 +202,7 @@ void CBridgeSpan::SetHeights()
 	DisplayBridgeTiles();
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FINALRELEASE
 void CBridgeSpan::DisplayBridgeTiles()
 {
@@ -229,7 +229,7 @@ void CBridgeSpan::DisplayBridgeTiles()
 		nTilesMarkerID = DebugInfoManager()->CreateMarker( nTilesMarkerID, tiles, DebugInfoManager()->GetCycleColor() );
 }
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
 {
 	pTiles->clear();
@@ -257,7 +257,7 @@ void CBridgeSpan::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::LockTiles()
 {
 	if ( !oldTilesInfo.empty() )
@@ -281,7 +281,7 @@ void CBridgeSpan::LockTiles()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::RealLockTiles()
 {
 	if ( fHP <= 0 || bLocked )
@@ -319,7 +319,7 @@ void CBridgeSpan::RealLockTiles()
 	CreateLockedTilesInfo( &lockTiles );
 	GetTerrain()->AddStaticObjectTiles( lockTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::UnlockTiles() 
 {
 	if ( fHP < 0 || !bLocked )
@@ -344,7 +344,7 @@ void CBridgeSpan::UnlockTiles()
 	DisplayBridgeTiles();
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::RemoveHeights()
 {
 	if ( -1 != nOldHeightsID )
@@ -353,7 +353,7 @@ void CBridgeSpan::RemoveHeights()
 	}
 	nOldHeightsID = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::SetHitPoints( const float fNewHP )
 {
 	if ( fHP < GetStats()->fMaxHP && fNewHP == GetStats()->fMaxHP )
@@ -368,7 +368,7 @@ void CBridgeSpan::SetHitPoints( const float fNewHP )
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::Die( const float fDamage )
 {
 	if ( bDeletingAround ) 
@@ -436,7 +436,7 @@ void CBridgeSpan::Die( const float fDamage )
 	}
 	bDeletingAround = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	NI_ASSERT( pFullBridge != 0, "Check your map!!! Bridge span without full bridge." );
@@ -458,7 +458,7 @@ void CBridgeSpan::TakeDamage( const float fDamage, const bool bFromExplosion, co
 		pFullBridge->DamageTaken( this, fDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBridgeSpan::IsPointInside( const CVec2 &point ) const
 {
 	SRect boundRect;
@@ -466,32 +466,32 @@ bool CBridgeSpan::IsPointInside( const CVec2 &point ) const
 
 	return boundRect.IsPointInside( point );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::SetFullBrige( CFullBridge *_pFullBridge )
 {
 	pFullBridge = _pFullBridge;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::SetTransparencies()
 {
 	SetTransparenciesInt( pFullBridge ? pFullBridge->GetUniqueId() : GetUniqueId() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeSpan::RemoveTransparencies()
 {
 	RemoveTransparenciesInt( pFullBridge ? pFullBridge->GetUniqueId() : GetUniqueId() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CFullBridge														*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SOnlyDirNeed
 {
 	bool operator()( const int nTest, const int nDesire) const
 	{ return nTest == nDesire; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTilesColl
 {
 public:
@@ -504,7 +504,7 @@ public:
 			pTiles->push_back( SVector( x, y ) );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, const WORD wDir, SOnlyDirNeed need )
 {
 	CTilesColl a( pTiles );
@@ -551,7 +551,7 @@ static void GetTilesUnderRectSide( const SRect &rect, list<SVector> *pTiles, con
 		MakeLine2( rect.v4.x/nTileSize, rect.v4.y/nTileSize, rect.v1.x/nTileSize, rect.v1.y/nTileSize, a );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 : pSpan( pSpan )
 {
@@ -579,7 +579,7 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const WORD wDir )
 		iter->lockInfo = EAC_TERRAIN;
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::SSpanLock::Unlock()
 {
 	// разлокать для всех
@@ -603,13 +603,13 @@ void CFullBridge::SSpanLock::Unlock()
 	tiles.clear();
 	formerTiles.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CFullBridge														*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CFullBridge );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::AddSpan( CBridgeSpan *pSpan )
 {
 	if ( pSpan->GetHitPoints() < 0.0f )
@@ -620,7 +620,7 @@ void CFullBridge::AddSpan( CBridgeSpan *pSpan )
 	}
 	++nSpans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::SpanBuilt( CBridgeSpan * pSpan )
 {
 	for ( list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
@@ -633,18 +633,18 @@ void CFullBridge::SpanBuilt( CBridgeSpan * pSpan )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CFullBridge::GetHPPercent() const
 {
 	NI_ASSERT( !spans.empty(), "no spans" );
 	return (*spans.begin())->GetHitPoints() / (*spans.begin())->GetStats()->fMaxHP;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFullBridge::CanTakeDamage() const
 {
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	if ( !bGivingDamage )
@@ -672,7 +672,7 @@ void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, c
 		theStatistics.ObjectDestroyed( nPlayerOfShoot );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::UnlockAllSpans()
 {
 	for ( LockedSpans::iterator it = lockedSpans.begin(); it != lockedSpans.end(); )
@@ -681,12 +681,12 @@ void CFullBridge::UnlockAllSpans()
 		it = lockedSpans.erase( it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::LockSpan( CBridgeSpan * pSpan, const WORD wDir )
 {
 	lockedSpans.push_back( new SSpanLock( pSpan, wDir ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::UnlockSpan( CBridgeSpan * pSpan )
 {
 	for ( LockedSpans::iterator it = lockedSpans.begin(); it != lockedSpans.end(); )
@@ -700,12 +700,12 @@ void CFullBridge::UnlockSpan( CBridgeSpan * pSpan )
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CFullBridge::GetNSpans() const
 {
 	return nSpans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::EnumSpans( vector< CObj<CBridgeSpan> > *pSpans )
 {
 	for ( list<CBridgeSpan*>::iterator it = spans.begin(); it != spans.end(); ++it )
@@ -713,7 +713,7 @@ void CFullBridge::EnumSpans( vector< CObj<CBridgeSpan> > *pSpans )
 	for ( list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
 		pSpans->push_back( *it );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CFullBridge::IsVisible( const BYTE cParty ) const
 {
 	CTilesSet tiles;
@@ -727,13 +727,13 @@ const bool CFullBridge::IsVisible( const BYTE cParty ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	for ( list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
 		(*it)->GetTilesForVisibilityInternal( pTiles );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullBridge::InitEntireBridge()
 {
 	hash_set<int> ids;
@@ -747,4 +747,4 @@ void CFullBridge::InitEntireBridge()
 			(*it)->RealLockTiles();
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

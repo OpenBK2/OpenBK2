@@ -3,10 +3,10 @@
 #include "DebugTools_export.h"
 
 #include "DebugInfoManager.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDebugInfo
 {
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EDebugInfoUpdate
 {
 	DEBUG_INFO_UNKNOWN,
@@ -18,7 +18,7 @@ enum EDebugInfoUpdate
 	DEBUG_INFO_DELETE,
 	DEBUG_INFO_DELETE_LINE,
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoUpdate : public CObjectBase
 {
   int nID;
@@ -28,7 +28,7 @@ struct SDebugInfoUpdate : public CObjectBase
 	SDebugInfoUpdate() : nID( NDebugInfo::OBJECT_ID_GENERATE ) {}
 	SDebugInfoUpdate( const int _nID ) : nID( _nID ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoObject : public SDebugInfoUpdate
 {
 	EColor color;
@@ -38,7 +38,7 @@ struct SDebugInfoObject : public SDebugInfoUpdate
 	SDebugInfoObject() : SDebugInfoUpdate(), color( WHITE ) {}
 	SDebugInfoObject( const int _nID, const EColor _color ) : SDebugInfoUpdate( _nID ), color( _color ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoMarker : public SDebugInfoObject
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoMarker );
@@ -50,7 +50,7 @@ public:
 	SDebugInfoMarker() : SDebugInfoObject() {}
 	SDebugInfoMarker( const int nID, const vector<SVector> &_tiles, const EColor color ) : SDebugInfoObject( nID, color ), tiles( _tiles ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoCircle : public SDebugInfoObject
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoCircle );
@@ -62,7 +62,7 @@ public:
 	SDebugInfoCircle() : SDebugInfoObject() {}
 	SDebugInfoCircle( const int nID, const CCircle _circle, const EColor color ) : SDebugInfoObject( nID, color ), circle( _circle ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoSegment : public SDebugInfoObject
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoSegment );
@@ -76,7 +76,7 @@ public:
 	SDebugInfoSegment( const int nID, const CSegment &_segment, const int _nThickness, const EColor color ) : SDebugInfoObject( nID, color ),
 		segment( _segment ), nThickness( _nThickness ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoLine : public SDebugInfoUpdate
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoLine );
@@ -92,7 +92,7 @@ public:
 	SDebugInfoLine( const int nID, const NDebugInfo::SArrowHead &_arrowStart, const NDebugInfo::SArrowHead &_arrowEnd, const CVec4 &_vColor, const bool _bDepthCheck ) :
 		SDebugInfoUpdate( nID ), arrowStart( _arrowStart ), arrowEnd( _arrowEnd ), vColor( _vColor ), bDepthCheck( _bDepthCheck ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoRect : public SDebugInfoUpdate
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoRect );
@@ -108,7 +108,7 @@ public:
 	SDebugInfoRect( const int nID, const SRect _rect, const float _fZ, const CVec4 &_vColor, const bool _bDepthCheck ) :
 		SDebugInfoUpdate( nID ), rect( _rect ), fZ( _fZ ), vColor( _vColor ), bDepthCheck( _bDepthCheck ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoDeleteObject : public SDebugInfoUpdate
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoDeleteObject );
@@ -118,7 +118,7 @@ public:
 	SDebugInfoDeleteObject() : SDebugInfoUpdate() {}
 	SDebugInfoDeleteObject( const int nID ) : SDebugInfoUpdate( nID ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDebugInfoDeleteLine : public SDebugInfoUpdate
 {
 	OBJECT_NOCOPY_METHODS( SDebugInfoDeleteLine );
@@ -128,9 +128,9 @@ public:
 	SDebugInfoDeleteLine() : SDebugInfoUpdate() {}
 	SDebugInfoDeleteLine( const int nID ) : SDebugInfoUpdate( nID ) {}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class DEBUGTOOLS_EXPORT CDebugInfoManager : public IDebugInfoManager
 {
 	OBJECT_NOCOPY_METHODS( CDebugInfoManager );
@@ -170,4 +170,4 @@ public:
 	const NDebugInfo::SDebugInfoUpdate *GetUpdate() const;
 	const bool PopUpdate();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

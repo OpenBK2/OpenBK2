@@ -7,7 +7,7 @@
 #include "Components.h"
 #include "../UI/UIVisitor.h"
 #include "../3Dmotor/DBScene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 {
 	IWindow *pWnd = Singleton<IUIInitialization>()->CreateWindowFromDesc( pDesc );
@@ -18,44 +18,44 @@ IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 	pWnd->Init();
 	return pWnd;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample )
 {
 	if ( !pSample )
 		return 0;
 	return AddWindowCopy( pParent, pSample->GetDesc() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTextureRoundSegmentVisitor
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTextureRoundSegmentVisitor::CTextureRoundSegmentVisitor() :
 	fStartAngle( 0 ),
 	fFinishAngle( FP_2PI ),
 	colors( 4, 0xFFFFFFFF )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::SetTexture( const NDb::STexture *_pTexture )
 {
 	pTexture = _pTexture;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::SetColor( DWORD dwColor )
 {
 	fill( colors.begin(), colors.end(), NGfx::SPixel8888( dwColor ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::SetPlacement( const CTRect<float> &_rect )
 {
 	rect = _rect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::SetAngles( float _fStartAngle, float _fFinishAngle )
 {
 	fStartAngle = NormalizeAngleInRadian( _fStartAngle + FP_PI4 ) - FP_PI4;
 	fFinishAngle = NormalizeAngleInRadian( _fFinishAngle + FP_PI4 ) - FP_PI4;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::Visit( interface IUIVisitor *pVisitor )
 {
 	CTRect<float> rectScreen;
@@ -160,7 +160,7 @@ void CTextureRoundSegmentVisitor::Visit( interface IUIVisitor *pVisitor )
 		fMaxAngle += FP_PI2;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextureRoundSegmentVisitor::DrawTriangle( interface IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,	
 	const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 )
 {
@@ -176,7 +176,7 @@ void CTextureRoundSegmentVisitor::DrawTriangle( interface IUIVisitor *pVisitor, 
 	sPos[3] = v3;
 	pVisitor->VisitUIRect( pTexture, 3, sPos, &colors[0], rectTexture );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTextureRoundSegmentVisitor::ClampAngles( float *pStart, float *pFinish, float fMin, float fMax )
 {
 	if ( fMin > fMax )
@@ -199,4 +199,4 @@ bool CTextureRoundSegmentVisitor::ClampAngles( float *pStart, float *pFinish, fl
 	*pFinish = Min( *pFinish, fMax );
 	return *pStart < *pFinish;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 															const float fMin, const float fMax,
 															const int nID,
@@ -44,7 +44,7 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 	AddUnique( &updatedPrecNodes, terrainInfo.precNodes.size() - 1 );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const CVec3 &vNorm2, const float fMin, const float fMax,
 																	 const int nID1, const int nID2, const float fDepth1, const float fDepth2,
 																	 const float fDepthRand1, const float fDepthRand2, const float fRandX1, const float fRandX2,
@@ -88,7 +88,7 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 	AddUnique( &updatedPrecNodes, terrainInfo.precNodes.size() - 1 );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPrecipiceIntersect
 {
 	float fDist;
@@ -99,7 +99,7 @@ struct SPrecipiceIntersect
 	//
 	bool operator < ( const SPrecipiceIntersect &v ) const { return fDist < v.fDist; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void SwapPrecipices( STerrainInfo::SPrecipice &prec1, STerrainInfo::SPrecipice &prec2 )
 {
 	prec1.nodes.swap( prec2.nodes );
@@ -108,7 +108,7 @@ inline void SwapPrecipices( STerrainInfo::SPrecipice &prec1, STerrainInfo::SPrec
 	prec1.maxHeights.swap( prec2.maxHeights );
 	prec1.visibles.swap( prec2.visibles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddToPrecipice( STerrainInfo::SPrecipice &prec, const int nNodeInd, const CVec3 &vNorm,
 														const float fMinHeight, const float fMaxHeight )
 {
@@ -118,7 +118,7 @@ inline void AddToPrecipice( STerrainInfo::SPrecipice &prec, const int nNodeInd, 
 	prec.maxHeights.push_back( fMaxHeight );
 	prec.visibles.push_back( 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddToPrecipice( STerrainInfo::SPrecipice &dstPrec, const STerrainInfo::SPrecipice &srcPrec, const int nInd )
 {
 	dstPrec.nodes.push_back( srcPrec.nodes[nInd] );
@@ -127,7 +127,7 @@ inline void AddToPrecipice( STerrainInfo::SPrecipice &dstPrec, const STerrainInf
 	dstPrec.maxHeights.push_back( srcPrec.maxHeights[nInd] );
 	dstPrec.visibles.push_back( srcPrec.visibles[nInd] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InitPrecipiceFromPrecipice( STerrainInfo::SPrecipice &dstPrec, const STerrainInfo::SPrecipice &srcPrec )
 {
 	dstPrec.vMin = srcPrec.vMin;
@@ -143,7 +143,7 @@ inline void InitPrecipiceFromPrecipice( STerrainInfo::SPrecipice &dstPrec, const
 	dstPrec.visibles.reserve( srcPrec.visibles.size() );
 	dstPrec.visibles.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
 {
 	for ( list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
@@ -154,7 +154,7 @@ STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
 	//NI_ASSERT( false, StrFmt( "Can't find precipice with ID=%d", nID ) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &posArr, const vector<float> &heightsArr,
 																				 const vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale,
 																				 const BYTE bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial,
@@ -426,7 +426,7 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const vector<CVec3> &pos
 	}
 	terrainInfo.precipices.push_back( addPrec );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAllNeededPrecipices()
 {
 	// add intersectors to update queue
@@ -514,7 +514,7 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	}
 	updatedPrecipices.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemapPrecipices()
 {
 	vector<int> precMap( terrainInfo.precNodes.size() );
@@ -545,10 +545,10 @@ void CTerraGen::RemapPrecipices()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddToPrecipiceUpdateQueue( const int nID )
 {
 	AddUnique( &updatedPrecipices, nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

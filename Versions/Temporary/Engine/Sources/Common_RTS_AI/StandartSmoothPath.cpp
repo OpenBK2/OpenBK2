@@ -5,10 +5,10 @@
 
 #include "..\Common_RTS_AI\StaticMapHeights.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( STANDART_SMOOTH_SOLDIER_PATH, CStandartSmoothPath );
 REGISTER_SAVELOAD_CLASS( 0x311133C1, CStandartSmoothPathMemento );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit, CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;
@@ -34,7 +34,7 @@ bool CStandartSmoothPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit,
 		return Init( pUnit, pPath, false, true, pAIMap );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothPathBasis::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _bSmoothTurn, bool bCheckTurn, CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;
@@ -72,7 +72,7 @@ bool CStandartSmoothPathBasis::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartSmoothPathBasis::PeekPathPoint( const int nShift ) const
 {
 	if ( pPath == 0 )
@@ -80,7 +80,7 @@ const CVec2 CStandartSmoothPathBasis::PeekPathPoint( const int nShift ) const
 	else
 		return pPath->PeekPoint( nShift );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, const float _fSpeed )
 {
 	if ( IsFinished() || IsSplinePointsEqual() || bStopped )
@@ -129,7 +129,7 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 
 	return vResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothPathBasis::Segment( const NTimer::STime timeDiff )
 {
 	if ( !IsFinished() )
@@ -141,7 +141,7 @@ void CStandartSmoothPathBasis::Segment( const NTimer::STime timeDiff )
 		GetUnit()->SetCenter( CVec3( vNewCenter, fZ ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint )
 {
 	if ( pAIMap->GetTile( vCenter ) != pAIMap->GetTile( vNewPoint ) )
@@ -196,7 +196,7 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartSmoothPathBasis::IsPathBroken( const int nStartPoint ) const
 {
 	const SVector p0 = nStartPoint < 0 ? pAIMap->GetTile( predPoint ) : pAIMap->GetTile( pPath->PeekPoint( nStartPoint ) );
@@ -211,7 +211,7 @@ const bool CStandartSmoothPathBasis::IsPathBroken( const int nStartPoint ) const
 	else
 		return pAIMap->GetTerrain()->CanUnitGo( pUnit->GetBoundTileRadius(), p0 + v1, pUnit->GetAIPassabilityClass() ) == FREE_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStandartSmoothPathBasis::InitSpline()
 {
 	p0 = p1; p1 = p2; p2 = p3;
@@ -249,21 +249,21 @@ LOG}*/
 
 	return inc;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothPathBasis::Stop()
 {
 	bStopped = true;
 	bFinished = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothPathBasis::FinishPath()
 {
 	CStandartSmoothPathBasis::Stop();
 	pPath = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothPathBasis::OnSerialize( IBinSaver &f )
 {
 	SerializeBasePathUnit( f, 2, &pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

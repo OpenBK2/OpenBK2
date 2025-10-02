@@ -9,7 +9,7 @@
 #include "GameRoomData.h"
 #include "..\Misc\StrProc.h"
 #include "InterfaceMPLobby.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
 {	
 	CDynamicCast<IListControlItem> pItem = pWindow;
@@ -20,7 +20,7 @@ void CClientListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *p
 
 	SetData( pWindow, pData );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClientListViewer::SetData ( CObjectBase *pWindow, const CObjectBase *pData  ) const
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
@@ -43,7 +43,7 @@ void CClientListViewer::SetData ( CObjectBase *pWindow, const CObjectBase *pData
 			pInfo->pStatusIcon->SetState( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
@@ -57,4 +57,4 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 	CDynamicCast<ITextView> pTxt = pItem->GetChild( "ItemComboText", true );		
 	NMPSetData::SetText( pTxt, wszText );			
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

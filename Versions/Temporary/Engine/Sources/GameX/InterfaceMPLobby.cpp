@@ -13,7 +13,7 @@
 #include "MultiplayerCommandManager.h"
 #include "InterfaceState.h"
 #include "InterfaceMisc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMPLobby::CInterfaceMPLobby() : 
 CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
@@ -24,7 +24,7 @@ CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_SHORT_INFO, SMPUIShortInfoMessage, &CInterfaceMPLobby::OnShortInfoMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER, SMPUILadderStatusChangeMessage, &CInterfaceMPLobby::OnLadderMessage );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::Init()
 {
 	if ( CInterfaceScreenBase::	Init() == false ) 
@@ -39,7 +39,7 @@ bool CInterfaceMPLobby::Init()
 	bShowingFriends = false;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLobby::InitControls()
 {
 	pChatInput = GetChildChecked<IEditLine>( pMain, "ChatInput", true );
@@ -77,7 +77,7 @@ void CInterfaceMPLobby::InitControls()
 	}
 	pPostMessage = GetChildChecked<IButton>( pMain, "ButtonPostMessage", true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
@@ -133,18 +133,18 @@ bool CInterfaceMPLobby::Execute( const string &szSender, const string &szReactio
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnLadderGameReaction()
 {
 	NMainLoop::Command( ML_COMMAND_MP_LADDER_GAME, "" ); 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMPLobby::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnBackReaction()
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NO_NET );
@@ -154,7 +154,7 @@ bool CInterfaceMPLobby::OnBackReaction()
 	//Crap
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnCustomGameReaction()
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -162,7 +162,7 @@ bool CInterfaceMPLobby::OnCustomGameReaction()
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NIVAL_NET_CUSTOM_GAME );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnClientMenu( const string &szSender )
 {
 	// Ignore for myself
@@ -245,7 +245,7 @@ bool CInterfaceMPLobby::OnClientMenu( const string &szSender )
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 {
 	if ( pClientInfoWindow )
@@ -302,7 +302,7 @@ bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnShortInfoMessage( struct SMPUIShortInfoMessage *pMsg )
 {
 	IWindow *pInfoArea = GetChildChecked<IWindow>( pClientInfoWindow, "Client_InfoArea", true );
@@ -321,7 +321,7 @@ bool CInterfaceMPLobby::OnShortInfoMessage( struct SMPUIShortInfoMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnClientInfoFriendChange()
 {
 	IButton *pFriendCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Friend", true );
@@ -332,7 +332,7 @@ bool CInterfaceMPLobby::OnClientInfoFriendChange()
 		pIgnoreCheck->SetState( 0 );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnClientInfoIgnoreChange()
 {
 	IButton *pFriendCheck = GetChildChecked<IButton>( pClientInfoWindow, "Client_Friend", true );
@@ -343,7 +343,7 @@ bool CInterfaceMPLobby::OnClientInfoIgnoreChange()
 		pFriendCheck->SetState( 0 );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *pMsg )
 {
 	switch ( pMsg->eState )
@@ -389,7 +389,7 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 {
 	if ( bAppActive )
@@ -409,7 +409,7 @@ bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 
 	return CInterfaceMPScreenBase::StepLocal( bAppActive );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnLadderCancelReaction()
 {
 	pLadderButton->ShowWindow( true );
@@ -422,13 +422,13 @@ bool CInterfaceMPLobby::OnLadderCancelReaction()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnLadderStatsReaction()
 {
 	NMainLoop::Command( ML_COMMAND_MP_LADDER_STATISTICS, NStr::ToMBCS( NGlobal::GetVar( "Multiplayer.PlayerName", L"Player" ).GetString() ).c_str() );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnClientSelected()
 {
 	IListControlItem *pNewSelection = pNicksList->GetSelectedListItem();
@@ -464,7 +464,7 @@ bool CInterfaceMPLobby::OnClientSelected()
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLobby::OnFriendsSwitch( bool bShowFriends )
 {
 	bShowingFriends = bShowFriends;
@@ -474,24 +474,24 @@ bool CInterfaceMPLobby::OnFriendsSwitch( bool bShowFriends )
 	RebuildClientList();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _SINGLE_DEMO
 // CICMPLobby
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLobby::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLobby::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLobby::Configure( const char *pszConfig )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x321AB300, CInterfaceMPLobby );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_GAME_LOBBY, CICMPLobby );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // _SINGLE_DEMO

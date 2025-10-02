@@ -297,7 +297,7 @@ ex:;
 		SSEOneVertex( pSrc, pRes );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // xform by matrix, perform perspective divide and projection
 struct SSSEResultVertex
 {
@@ -359,9 +359,9 @@ lp:
 		jnz lp
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // MMX helpers
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern short nNormalizeTable[16384];
 extern NGfx::SMMXWord mmxWeights[512];
 extern unsigned char nCubicRoot[32768];
@@ -380,21 +380,21 @@ inline void CreateFixups( SMMXFixups *pRes )
 	short nFixShift = (short)0x8080;
 	b.nX = nFixShift; b.nY = nFixShift; b.nZ = nFixShift; b.nW = 0; 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AssignTransposed( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 {
 	pRes->a.nZ = Float2Int( m._33 * 0x800 );  pRes->a.nY = Float2Int( m._22 * 0x800 );  pRes->a.nX = Float2Int( m._11 * 0x800 );  pRes->a.nW = 0;
 	pRes->b.nZ = Float2Int( m._13 * 0x800 );  pRes->b.nY = Float2Int( m._32 * 0x800 );  pRes->b.nX = Float2Int( m._21 * 0x800 );  pRes->b.nW = 0;
 	pRes->c.nZ = Float2Int( m._23 * 0x800 );  pRes->c.nY = Float2Int( m._12 * 0x800 );  pRes->c.nX = Float2Int( m._31 * 0x800 );  pRes->c.nW = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Assign( NGfx::SCompactTransformer *pRes, const SHMatrix &m )
 {
 	pRes->a.nZ = Float2Int( m._33 * 0x800 );  pRes->a.nY = Float2Int( m._22 * 0x800 );  pRes->a.nX = Float2Int( m._11 * 0x800 );  pRes->a.nW = 0;
 	pRes->b.nZ = Float2Int( m._31 * 0x800 );  pRes->b.nY = Float2Int( m._23 * 0x800 );  pRes->b.nX = Float2Int( m._12 * 0x800 );  pRes->b.nW = 0;
 	pRes->c.nZ = Float2Int( m._32 * 0x800 );  pRes->c.nY = Float2Int( m._21 * 0x800 );  pRes->c.nX = Float2Int( m._13 * 0x800 );  pRes->c.nW = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // disable no emms warning, emms is placed after all mmx calcs
 #pragma warning( disable : 4799 )
 static void MMXTransformVector( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
@@ -456,7 +456,7 @@ static void MMXTransformVector( NGfx::SCompactVector *pRes, const NGfx::SCompact
 		mov [esi], ecx
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MMXTransformVector2( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
 	const NGfx::SCompactTransformer *pTrans, char w1,
 	const NGfx::SCompactTransformer *pTrans2, char w2 )
@@ -533,7 +533,7 @@ static void MMXTransformVector2( NGfx::SCompactVector *pRes, const NGfx::SCompac
 		mov [esi], ecx
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MMXTransformVector3( NGfx::SCompactVector *pRes, const NGfx::SCompactVector *pSrc, const SMMXFixups *pFixups,
 	const NGfx::SCompactTransformer *pTrans, char w1,
 	const NGfx::SCompactTransformer *pTrans2, char w2,

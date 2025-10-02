@@ -1,7 +1,7 @@
 #pragma once
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define GETEULERORDER( i, p, r, f ) ( ( ( ( ( ( i << 1 ) + p ) << 1 ) + r ) << 1 ) + f )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EEULERDEFS
 {
 	ED_X = 0,
@@ -17,7 +17,7 @@ enum EEULERDEFS
 	ED_EVEN = 0,
 	ED_ODD = 1,
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EEULERORDER
 {
 	EO_XYZs = GETEULERORDER( ED_X, ED_EVEN, ED_NOREPEAT, ED_STATICFRAME ),
@@ -46,10 +46,10 @@ enum EEULERORDER
 	EO_XYZr = GETEULERORDER( ED_Z, ED_ODD,  ED_NOREPEAT, ED_ROTATEFRAME ),
 	EO_ZYZr = GETEULERORDER( ED_Z, ED_ODD,  ED_REPEAT,   ED_ROTATEFRAME )
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline unsigned int GetSafe( unsigned int uiOrder ) { static unsigned int aiSafe[] = { 0, 1, 2, 0 }; return( aiSafe[ uiOrder & 0x3 ] ); }
 inline unsigned int GetNext( unsigned int uiOrder ) { static unsigned int aiNext[] = { 1, 2, 0, 1 }; return( aiNext[ uiOrder & 0x3 ] ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetOrderData( unsigned int uiOrder, int &i, int &j, int &k, int &h, int &n, int &s, int &f )
 {
 	f = uiOrder & 0x1; uiOrder >>= 1;
@@ -60,7 +60,7 @@ inline void GetOrderData( unsigned int uiOrder, int &i, int &j, int &k, int &h, 
 	k = GetNext( i + 1 - n );
 	h = s ? k : i;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 ToEulerAngles( const SHMatrix &kM, unsigned int uiOrder )
 {
 	int i,j,k,h,n,s,f;
@@ -107,9 +107,9 @@ inline CVec3 ToEulerAngles( const SHMatrix &kM, unsigned int uiOrder )
 	////
 	return kAngles;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 ToEulerAngles( const CQuat &sQuat, unsigned int uiOrder )
 {
 	return ToEulerAngles( SHMatrix( sQuat ), uiOrder );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -13,7 +13,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFolderCallback::UndoChanges()
 {
 	for ( CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
@@ -23,7 +23,7 @@ void CFolderCallback::UndoChanges()
 	ClearUndoData();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFolderCallback::LockObjects( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() && !rObjectSet.objectNameSet.empty() )
@@ -43,7 +43,7 @@ void CFolderCallback::LockObjects( const SObjectSet &rObjectSet )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() && !rObjectSet.objectNameSet.empty() )
@@ -63,7 +63,7 @@ void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::IsObjectLocked( const string &rszTypeName, const CDBID &rDBID ) const
 {
 	if ( !rszTypeName.empty() && !rDBID.IsEmpty() )
@@ -77,7 +77,7 @@ bool CFolderCallback::IsObjectLocked( const string &rszTypeName, const CDBID &rD
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::IsUniqueName( const string &rszTypeName, const string &rszName )
 {
 	if ( rszTypeName.empty() || rszName.empty() )
@@ -87,7 +87,7 @@ bool CFolderCallback::IsUniqueName( const string &rszTypeName, const string &rsz
 	return !NDb::DoesObjectExist( CDBID( rszName ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
 {
 	NI_ASSERT( pszName != 0, "Wrong parameter: pszObjectName == 0" );
@@ -123,7 +123,7 @@ bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
 	return !bExists;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::InsertObject( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
@@ -150,7 +150,7 @@ bool CFolderCallback::InsertObject( const string &rszObjectTypeName, const strin
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
@@ -177,7 +177,7 @@ bool CFolderCallback::CopyObject( const string &rszObjectTypeName, const string 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
@@ -197,7 +197,7 @@ bool CFolderCallback::RenameObject( const string &rszObjectTypeName, const strin
 	return folderController.Redo( true, true, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName, bool bRecursive )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
@@ -252,7 +252,7 @@ bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const strin
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderCallback::SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
@@ -271,6 +271,6 @@ bool CFolderCallback::SetColor( const string &rszObjectTypeName, const string &r
 	//
 	return folderController.Redo( true, true, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

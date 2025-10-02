@@ -8,7 +8,7 @@ namespace NDb
 {
 namespace NBind
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** array element manipulator
@@ -16,7 +16,7 @@ namespace NBind
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CArrayElementManipulator : public IArrayElementManipulator, public ILoadableObjMan
 {
 	OBJECT_NOCOPY_METHODS( CArrayElementManipulator );
@@ -171,7 +171,7 @@ public:
 			return false;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** bind array funcs
@@ -179,20 +179,20 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IObjMan *CBindArray::CreateManipulator( const int nIndex, const string &szAddName, vector<BYTE> *pRawVector, 
 																			  NMetaInfo::SStructMetaInfo *pContained, NTypeDef::STypeArray *pTypeArray,
 																			  IObjMan *pParent )
 {
 	return new CArrayElementManipulator( nIndex, szAddName, pRawVector, pContained, pTypeArray, pParent, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IObjManIterator *CBindArray::CreateIterator( const int nIndex, const string &szAddName, 
 																             NTypeDef::STypeArray *pTypeArray, IObjMan *pParent, bool bShowHidden )
 {
 	return new CArrayIterator( nIndex, szAddName, pTypeArray, pParent, bShowHidden );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
 	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
@@ -214,7 +214,7 @@ bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex,
 	pBindProcessor->pMetaInfo = pContained;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis ) const
 {
 	const int nBinaryShift = field.GetBinaryShift();
@@ -234,7 +234,7 @@ int CBindArray::GetSize( const NMetaInfo::SStructMetaInfo::SField &field, BYTE *
 		return ownValues.size() / field.pContained->nNumOwnValues;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis, bool bSetDefault )
 {
 	if ( nAmount <= 0 )
@@ -299,7 +299,7 @@ bool CBindArray::Insert( const int _nPos, const int nAmount, const NMetaInfo::SS
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::SStructMetaInfo::SField &field, BYTE *pThis )
 {
 	const int nSize = GetSize( field, pThis );
@@ -352,7 +352,7 @@ bool CBindArray::Remove( const int _nPos, const int _nAmount, const NMetaInfo::S
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBindArray::SetValue( const string &szRestName, const int nIndex, const CVariant &value, 
 	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
@@ -362,7 +362,7 @@ bool CBindArray::SetValue( const string &szRestName, const int nIndex, const CVa
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBindArray::GetValue( const string &szRestName, const int nIndex, CVariant *pValue, 
 	vector<BYTE> *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
@@ -372,7 +372,7 @@ bool CBindArray::GetValue( const string &szRestName, const int nIndex, CVariant 
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBindArray::RemoveArrayElementManipulator( IArrayElementManipulator *pArrElMan )
 {
 	for ( CArrayElementsList::iterator it = arrayElementManipulators.begin(); it != arrayElementManipulators.end(); ++it )
@@ -384,7 +384,7 @@ void CBindArray::RemoveArrayElementManipulator( IArrayElementManipulator *pArrEl
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** array iterator
@@ -392,7 +392,7 @@ void CBindArray::RemoveArrayElementManipulator( IArrayElementManipulator *pArrEl
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CArrayIterator::CArrayIterator( const int nIndex, const string &_szAddName, NTypeDef::STypeArray *_pTypeArray, 
 																IObjMan *_pParent, bool _bShowHidden )
 : szAddName( _szAddName ), pTypeArray( _pTypeArray ), pParent( _pParent ), nCurrElementIndex( nIndex ), bArrayElementLocked( true )
@@ -426,7 +426,7 @@ CArrayIterator::CArrayIterator( const int nIndex, const string &_szAddName, NTyp
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CArrayIterator::Next()
 {
 	if ( pTypeArray->field.pType->IsSimpleType() )
@@ -455,7 +455,7 @@ bool CArrayIterator::Next()
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CArrayIterator::IsEnd() const
 {
 	if ( pTypeArray->field.pType->IsSimpleType() )
@@ -472,7 +472,7 @@ bool CArrayIterator::IsEnd() const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CArrayIterator::GetName() const
 {
 	if ( pTypeArray->field.pType->IsSimpleType() || pIterator == 0 )
@@ -482,7 +482,7 @@ string CArrayIterator::GetName() const
 	else
 		return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NTypeDef::STypeStructBase::SField *CArrayIterator::GetDesc() const
 {
 	if ( pTypeArray->field.pType->IsSimpleType() || (pIterator == 0 && !bArrayElementLocked) )
@@ -492,6 +492,6 @@ const NTypeDef::STypeStructBase::SField *CArrayIterator::GetDesc() const
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "..\Stats_B2_M1\RPGStats.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SReinforcementPosition;
@@ -13,7 +13,7 @@ namespace NAI4Globe
 {
 	struct SGlobeObj;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NReinforcement
 {
 struct SReinforcementTypeHash
@@ -30,4 +30,4 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *_pReinf, const NDb::SDeployTemplate *pTemplate,
 	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

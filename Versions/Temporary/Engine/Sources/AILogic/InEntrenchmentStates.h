@@ -90,5 +90,5 @@ public:
 	virtual class CAIUnit* GetTargetUnit() const;
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_IN_ENTRENCH; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __IN_ENTRENCHMENT_STATES_H__

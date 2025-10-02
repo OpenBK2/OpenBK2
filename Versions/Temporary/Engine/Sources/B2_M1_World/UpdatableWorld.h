@@ -6,14 +6,14 @@
 #include "Notifications.h"
 
 #include "../SceneB2/CameraInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAllAnimationsPlayer;
 class CLaserMarkTrace;
 interface ICommonB2M1AI;
 typedef hash_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
 typedef list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
 typedef hash_map<int, CPtr<CMapObj> > CKeyBuildings;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCombatMusic
 {
 	enum ECombatMusicState 
@@ -32,7 +32,7 @@ public:
 	CCombatMusic();
 	void Update( bool bCombat );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IUpdatableClient
 {
 	typedef hash_map<int, ObjectFactoryNewFunc> CNewFuncsMap;
@@ -319,4 +319,4 @@ public:
 	void GetObjects( vector<IB2MapObj*> *pObjects ) const;
 	void GetObjects( vector<CMapObj*> *pObjects ) const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -24,9 +24,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define HEIGHT_MARK ( 1.0f )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CHeightStateV3::BRUSH_MIN_SIZE	= 3;
 const int CHeightStateV3::BRUSH_SIZE_STEP	= 2;
 const float CHeightStateV3::MAX_HEIGHT		= AI_TILE_SIZE * 10.0f;
@@ -38,7 +38,7 @@ const int CHeightStateV3::BRUSH_PARTS			= 32;
 const int CHeightStateV3::HEIGHT_BRUSH_SIZE[5] = { 3, 5, 9, 13, 17 };
 const int	CHeightStateV3::TILE_BRUSH_SIZE[5] = { 2, 4, 8, 12, 16 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightTileStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -47,7 +47,7 @@ void CHeightTileStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightTileStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
@@ -59,9 +59,9 @@ void CHeightTileStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CHeightUpStateV3
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightUpStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -79,7 +79,7 @@ void CHeightUpStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightUpStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -97,7 +97,7 @@ void CHeightUpStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightUpStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -107,7 +107,7 @@ void CHeightUpStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightUpStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
@@ -130,9 +130,9 @@ void CHeightUpStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CHeightDownState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightDownStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -150,7 +150,7 @@ void CHeightDownStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightDownStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -168,7 +168,7 @@ void CHeightDownStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightDownStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -178,7 +178,7 @@ void CHeightDownStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightDownStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
@@ -201,9 +201,9 @@ void CHeightDownStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CHeightRoundState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightRoundStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -222,7 +222,7 @@ void CHeightRoundStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightRoundStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -240,7 +240,7 @@ void CHeightRoundStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightRoundStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -251,7 +251,7 @@ void CHeightRoundStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightRoundStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
@@ -273,9 +273,9 @@ void CHeightRoundStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CHeightPlatoState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightPlatoStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -294,7 +294,7 @@ void CHeightPlatoStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightPlatoStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -312,7 +312,7 @@ void CHeightPlatoStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightPlatoStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -323,7 +323,7 @@ void CHeightPlatoStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightPlatoStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
@@ -345,13 +345,13 @@ void CHeightPlatoStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Версии с проверкой на балланс красного и черного c простым уровнем
 // Simple Plane SP
 // Check Red Black Ballance CRBB
 // Create Height Pattern To Level CHPTL
 // Calculate Average Height CAH
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для заравнивания TerrainHeight
 struct S_SP_CRBB_CHPTL_Functional
 {
@@ -390,7 +390,7 @@ struct S_SP_CRBB_CHPTL_Functional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для вычисления средней высоты TerrainHeight
 struct S_SP_CRBB_CAH_Functional
 {
@@ -422,7 +422,7 @@ struct S_SP_CRBB_CAH_Functional
 	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CalculateMatrix( CArray2D<double> *pMatrix, SDoubleVec3 *pvRightSide, int nXIndex, int nYIndex, ITerraManager *pTerraManager )
 {
 	const double fX = nXIndex * VIS_TILE_SIZE;
@@ -434,12 +434,12 @@ void CalculateMatrix( CArray2D<double> *pMatrix, SDoubleVec3 *pvRightSide, int n
 	( pvRightSide->x ) += fZ * fX; ( pvRightSide->y ) += fZ * fY; ( pvRightSide->z ) += fZ;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Версии без проверки на балланс красного и черного c простым уровнем
 // Simple Plane SP
 // Create Height Pattern To Level CHPTL
 // Calculate Average Height CAH
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для заравнивания TerrainHeight
 struct S_SP_CHPTL_Functional
 {
@@ -474,7 +474,7 @@ struct S_SP_CHPTL_Functional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для вычисления средней высоты TerrainHeight
 struct S_SP_CAH_Functional
 {
@@ -503,13 +503,13 @@ struct S_SP_CAH_Functional
 	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Версии с проверкой на балланс красного и черного c простым уровнем
 // Complex Plane CP
 // Check Red Black Ballance CRBB
 // Create Height Pattern To Level CHPTL
 // Calculate Average Plane CAP
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для заравнивания TerrainHeight
 struct S_CP_CRBB_CHPTL_Functional
 {
@@ -549,7 +549,7 @@ struct S_CP_CRBB_CHPTL_Functional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для вычисления параметров плоскости TerrainHeight
 struct S_CP_CRBB_CAP_Functional
 {
@@ -600,12 +600,12 @@ struct S_CP_CRBB_CAP_Functional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Версии без проверки на балланс красного и черного c простым уровнем
 // Cimple Plane CP
 // Create Height Pattern To Level CHPTL
 // Calculate Average Plane CAP
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для заравнивания TerrainHeight
 struct S_CP_CHPTL_Functional
 {
@@ -641,7 +641,7 @@ struct S_CP_CHPTL_Functional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // паттерн для вычисления параметров плоскости TerrainHeight
 struct S_CP_CAP_Functional
 {
@@ -689,21 +689,21 @@ struct S_CP_CAP_Functional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CHeightStateV3
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CHeightStateV3::SEditParameters* CHeightStateV3::GetEditParameters()
 { 
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epHeightStateV3 ) : 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightStateV3::CanEdit()
 {
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
 { 
 	const int nSizeIndex = Clamp<int>( eBrushSize, 0, 4 );
@@ -721,7 +721,7 @@ int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
 	return TILE_BRUSH_SIZE[nSizeIndex];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHeightStateV3::GetHeightBrushSize( SEditParameters::EBrushSize eBrushSize )
 { 
 	const int nSizeIndex = Clamp<int>( eBrushSize, 0, 4 );
@@ -739,7 +739,7 @@ int CHeightStateV3::GetHeightBrushSize( SEditParameters::EBrushSize eBrushSize )
 	return HEIGHT_BRUSH_SIZE[nSizeIndex];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::UpdatePlatoHeight()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -750,7 +750,7 @@ void CHeightStateV3::UpdatePlatoHeight()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::SetCornerTile( SHeightPattern *pPattern, const CTPoint<int> &rPatternPos )
 {
 	NI_ASSERT( pPattern != 0, ( "Wrong parameter: pPattern == 0" ) );
@@ -772,7 +772,7 @@ void CHeightStateV3::SetCornerTile( SHeightPattern *pPattern, const CTPoint<int>
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::GetEditParameters( UINT nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -811,7 +811,7 @@ void CHeightStateV3::GetEditParameters( UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::SetEditParameters( UINT nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -850,7 +850,7 @@ void CHeightStateV3::SetEditParameters( UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::UpdateCommonPatterns()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -868,7 +868,7 @@ void CHeightStateV3::UpdateCommonPatterns()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditParameters::EBrush eBrush )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -990,7 +990,7 @@ void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::CreatePatternAndModifyGeometry( const SHeightPattern &rPattern )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1017,7 +1017,7 @@ void CHeightStateV3::CreatePatternAndModifyGeometry( const SHeightPattern &rPatt
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1138,7 +1138,7 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::CreateMapInfoController()
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1177,7 +1177,7 @@ void CHeightStateV3::CreateMapInfoController()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::CreateTileBrush( CArray2D<BYTE> *pBrush, int nSize, int nTileIndex, bool bCircle )
 {
 	NI_ASSERT( pBrush != 0, "CreateBrush(): Invalid parameter: pBrush == 0" );
@@ -1201,7 +1201,7 @@ void CHeightStateV3::CreateTileBrush( CArray2D<BYTE> *pBrush, int nSize, int nTi
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::Enter()
 {
 	heightDiffPos = CTPoint<int>( 0, 0 );
@@ -1237,7 +1237,7 @@ void CHeightStateV3::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::Leave()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
@@ -1253,7 +1253,7 @@ void CHeightStateV3::Leave()
 	sceneDrawTool.Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1443,7 +1443,7 @@ void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightStateV3::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -1483,7 +1483,7 @@ bool CHeightStateV3::HandleCommand( UINT nCommandID, DWORD dwData )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightStateV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CHeightStateV3::UpdateCommand(), pbEnable == 0" );
@@ -1512,7 +1512,7 @@ bool CHeightStateV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMouseMove( nFlags, rMousePoint );
@@ -1527,7 +1527,7 @@ void CHeightStateV3::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
@@ -1544,7 +1544,7 @@ void CHeightStateV3::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
@@ -1561,7 +1561,7 @@ void CHeightStateV3::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
@@ -1578,7 +1578,7 @@ void CHeightStateV3::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
@@ -1600,7 +1600,7 @@ void CHeightStateV3::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonUp( nFlags, rMousePoint );
@@ -1622,7 +1622,7 @@ void CHeightStateV3::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonUp( nFlags, rMousePoint );
@@ -1644,7 +1644,7 @@ void CHeightStateV3::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
@@ -1695,7 +1695,7 @@ void CHeightStateV3::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightStateV3::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	pStoreInputState->OnKeyUp( nChar, nRepCnt, nFlags );
@@ -1708,7 +1708,7 @@ void CHeightStateV3::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 {
 	xs.Add( "Brush", &eBrush );
@@ -1726,6 +1726,6 @@ int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 	// vector<string> tileList;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

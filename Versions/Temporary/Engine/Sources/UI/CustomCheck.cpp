@@ -1,6 +1,6 @@
 // CustomCheck.cpp: implementation of the CCustomCheck class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "CustomCheck.h"
@@ -11,17 +11,17 @@ REGISTER_SAVELOAD_CLASS(0x11075CC5, CCheckPreprogrammed)
 REGISTER_SAVELOAD_CLASS(0x15083383, CCheckIsWindowEnabled)
 REGISTER_SAVELOAD_CLASS(0x110B5300, CCheckIsWindowVisible)
 REGISTER_SAVELOAD_CLASS(0x170B6340, CCheckIsTabActive)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CCheckRunScript::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 int CCheckRunScript::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CCheckRunScript::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScript != 0, StrFmt( "CCheckRunScript function = \"%s\" but don't have script loaded", pDesc->szScriptFunction.c_str() ) );
@@ -31,16 +31,16 @@ int CCheckRunScript::Check( interface IScreen *pScreen, interface IScriptWrapper
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CCheckRunScript::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckRunScript*>( _pDesc );
 }
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CCheckPreprogrammed::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 void CCheckPreprogrammed::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckPreprogrammed*>( _pDesc );
@@ -55,11 +55,11 @@ int CCheckPreprogrammed::Check( interface IScreen *pScreen, interface IScriptWra
 	NI_ASSERT( pProg != 0, StrFmt("try to call check \"%s\" without preprogrammed checks provided", pDesc->szCheckName.c_str()) );
 	return ( pProg->NeedFlags() ? pProg->Check( pDesc->szCheckName, wKeyboardFlags ) : pProg->Check( pDesc->szCheckName ) );
 }
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CCheckIsWindowEnabled::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 void CCheckIsWindowEnabled::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckIsWindowEnabled*>( _pDesc );
@@ -87,17 +87,17 @@ int CCheckIsWindowEnabled::Check( interface IScreen *pScreen, interface IScriptW
 	else
 		return 1;
 }
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CCheckIsWindowVisible ::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 int CCheckIsWindowVisible::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CCheckIsWindowVisible::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
@@ -116,23 +116,23 @@ int CCheckIsWindowVisible::Check( interface IScreen *pScreen, interface IScriptW
 	else
 		return 1;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CCheckIsWindowVisible::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckIsWindowVisible*>( _pDesc );
 }
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
+
 // CCheckIsTabActive ::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 int CCheckIsTabActive::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CCheckIsTabActive::Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
@@ -146,9 +146,9 @@ int CCheckIsTabActive::Check( interface IScreen *pScreen, interface IScriptWrapp
 		return 0;
 	return 1;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CCheckIsTabActive::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SCheckIsTabActive*>( _pDesc );
 }
-//////////////////////////////////////////////////////////////////////
+

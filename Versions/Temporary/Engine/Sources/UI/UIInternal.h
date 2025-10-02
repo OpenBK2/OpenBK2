@@ -2,7 +2,7 @@
 #define _IBackground_h_Included_
 
 ////#include "UIMain.h"
-/////////////////////////////////////////////////////////////////////////////
+
 // broadcast message (old fashioned), visits all windows untill some of them processed it
 struct SBUIMessage
 {
@@ -26,5 +26,5 @@ struct SBUIMessage
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////
+
 #endif //_IBackground_h_Included_

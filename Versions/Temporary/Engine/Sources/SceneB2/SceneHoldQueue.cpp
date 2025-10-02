@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "../Misc/Pool.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_HOLD_TIME = 64; // seconds, must be power of 2
 typedef CPool<CObj<CObjectBase>, 64> CScenePool;
 static CScenePool sceneHoldQueue[N_HOLD_TIME];
 static CScenePool serializableSceneHoldQueue[N_HOLD_TIME];
 static NTimer::STime timeLastTime = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetToSceneHoldQueue( CObjectBase *p, bool bSerialize )
 {
 	const int nCurrPos = int( timeLastTime ) & ( N_HOLD_TIME - 1 );
@@ -16,7 +16,7 @@ void SetToSceneHoldQueue( CObjectBase *p, bool bSerialize )
 	else
 		*sceneHoldQueue[nCurrPos].Alloc() = p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ClearSceneHoldQueue()
 {
 	for ( int i = 0; i < N_HOLD_TIME; ++i )
@@ -25,7 +25,7 @@ void ClearSceneHoldQueue()
 		serializableSceneHoldQueue[i].Clear();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StepSceneHoldQueue( const NTimer::STime _timeCurrTime ) 
 {
 	const NTimer::STime timeCurrTime = _timeCurrTime / 1000;
@@ -57,7 +57,7 @@ void StepSceneHoldQueue( const NTimer::STime _timeCurrTime )
 	//
 	timeLastTime = timeCurrTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetSceneHoldedObjects( list<CObjectBase*> *pObjects, bool bSerializeable )
 {
 	if ( bSerializeable )
@@ -77,7 +77,7 @@ void GetSceneHoldedObjects( list<CObjectBase*> *pObjects, bool bSerializeable )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSceneHoldQueueSerializer
 {
 	vector< list< CObj<CObjectBase> > > data;
@@ -113,4 +113,4 @@ void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 		saver.Add( chunkID, &hq );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -4,11 +4,11 @@
 #include "..\3DLib\Transform.h"
 namespace NGfx
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // universal rects buffer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<STriangle> universalRectsBuffer;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RefreshUniversalRectTrisBuffer()
 {
 	if ( !universalRectsBuffer.empty() )
@@ -21,7 +21,7 @@ static void RefreshUniversalRectTrisBuffer()
 		universalRectsBuffer[i*2+1] = STriangle( wStart + 0, wStart + 2, wStart + 3 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<CTexture> pWhiteTexture;
 static CTexture* GetWhiteTexture()
 {
@@ -49,16 +49,16 @@ static CTexture* GetWhiteTexture()
 	}
 	return pWhiteTexture;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeQuadTriList( int nRects, STriangleList *pRes )
 {
 	ASSERT( nRects <= N_MAX_RECTANGLES );
 	RefreshUniversalRectTrisBuffer();
 	*pRes = STriangleList( &universalRectsBuffer[0], Min( nRects, N_MAX_RECTANGLES ) * 2, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // C2DQuadsRenderer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef SGeomVecFull SRectVertex;
 struct SFakeCPPInitOrder
 {
@@ -81,13 +81,13 @@ struct SRealRectInfoLock : public S2DRectInfoLock
 	SRealRectInfoLock(): data(&pGeom, N_RECTS_PER_BUF * 4) { nRects = 0; }
 	T* AddRect() { return &data[ (nRects++) * 4 ];}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 C2DQuadsRenderer::C2DQuadsRenderer( const NGfx::CRenderContext &_rc, const CVec2 &vSize, int _dm )
 : dm(_dm), rc(_rc), pLock(0)
 {
 	SetupRC( vSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::SetTarget( const NGfx::CRenderContext &_rc, const CVec2 &vSize, int _dm )
 {
 	ASSERT( pLock == 0 );
@@ -96,7 +96,7 @@ void C2DQuadsRenderer::SetTarget( const NGfx::CRenderContext &_rc, const CVec2 &
 	rc = _rc;
 	SetupRC( vSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::SetTarget( NGfx::CTexture *pTarget, const CVec2 &vSize, int _dm )
 {
 	ASSERT( pLock == 0 );
@@ -108,7 +108,7 @@ void C2DQuadsRenderer::SetTarget( NGfx::CTexture *pTarget, const CVec2 &vSize, i
 		rc.SetTextureRT( pTarget );
 	SetupRC( vSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::SetTarget( const CVec2 &vSize, int _dm )
 {
 	ASSERT( pLock == 0 );
@@ -118,7 +118,7 @@ void C2DQuadsRenderer::SetTarget( const CVec2 &vSize, int _dm )
 	rc.SetStencil( NGfx::STENCIL_NONE );
 	SetupRC( vSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::SetupRC( const CVec2 &vSize )
 {
 	CTransformStack ts;
@@ -139,7 +139,7 @@ void C2DQuadsRenderer::SetupRC( const CVec2 &vSize )
 		default: ASSERT(0); break;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_UV_PER_TEXEL_STEPS = 8;
 S2DRectInfoLock* C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region )
 {
@@ -171,7 +171,7 @@ S2DRectInfoLock* C2DQuadsRenderer::GetRectInfoLock( CTexture *pContainer, const 
 	}
 	return pLock;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FillVertex( SRectVertex *pRes, float x, float y, float u, float v, DWORD dwColor, float fZ )
 {
 	pRes->pos.x = x;
@@ -185,7 +185,7 @@ static void FillVertex( SRectVertex *pRes, float x, float y, float u, float v, D
 	pRes->texU.dw = dwColor;
 	pRes->texV.dw = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FillVertex( SGeomVecT2C1 *pRes, float x, float y, float u, float v, DWORD dwColor, float fScaleU, float fScaleV, float fZ )
 {
 	pRes->pos.x = x;
@@ -197,7 +197,7 @@ static void FillVertex( SGeomVecT2C1 *pRes, float x, float y, float u, float v, 
 	pRes->tex2.x = 0;
 	pRes->tex2.y = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, float fXAdd, float fYAdd, float fZ, CTexture *pContainer, const STexturePlaceInfo &region )
 {
 	fZ = fZ * 998.0f + 1.0f; // fZ in [0...1]
@@ -218,7 +218,7 @@ void C2DQuadsRenderer::FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pCo
 		FillVertex( pGeom + 3, pPos4[3].x - 0.5f, pPos4[3].y - 0.5f, fXAdd + rSrc.x2, fYAdd + rSrc.y1, pColors4[3].dwColor , fZ );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::AddRect( const CTRect<float> &_rTarget, NGfx::CTexture *pTex, const CTRect<float> &_rSrc, 
 	SPixel8888 color, float fZ )
 {
@@ -282,7 +282,7 @@ void C2DQuadsRenderer::AddRect( const CTRect<float> &_rTarget, NGfx::CTexture *p
 	NGfx::SPixel8888 sColors[4] = { color, color, color, color };
 	FillRect( sPos, sColors, rSrc, fXAdd, fYAdd, fZ, pContainer, region );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::AddRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, NGfx::CTexture *pTex, const CTRect<float> &rSrc, float fZ )
 {
 	float fXAdd = 0, fYAdd = 0;
@@ -311,7 +311,7 @@ void C2DQuadsRenderer::AddRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pCol
 	}
 	FillRect( sPos, pColors4, rSrc, fXAdd, fYAdd, fZ, pContainer, region );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DQuadsRenderer::Flush()
 {
 	if ( !pLock )
@@ -389,8 +389,8 @@ void C2DQuadsRenderer::Flush()
 	pLock = 0;
 	rc.DrawPrimitive( pGeom, triList );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport, const CTRect<float> &rTarget, 
 	NGfx::CTexture *pTex, const CTRect<float> &rSrc, const CVec4 &vColor, I2DEffect *pEffect )
 {
@@ -409,7 +409,7 @@ void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport,
 		r.AddRect( rTarget, pTex, rSrc, color );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddFullTextureRect( C2DQuadsRenderer *pR, NGfx::CTexture *pTex )
 {
 	CDynamicCast<I2DBuffer> p2D( pTex );
@@ -419,14 +419,14 @@ static void AddFullTextureRect( C2DQuadsRenderer *pR, NGfx::CTexture *pTex )
 	r.y1 = 0; r.y2 = nYSize;
 	pR->AddRect( r, pTex, r );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShowTexture( NGfx::CTexture *pTex, float fMag )
 {
 	C2DQuadsRenderer rend;
 	rend.SetTarget( CVec2( 800 / fMag, 600 / fMag ), QRM_NOCOLOR );
 	AddFullTextureRect( &rend, pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShowTexture( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, const CVec2 &vScreenSize )
 {
 	CObj<NGfx::CTexture> pHold(pTex);
@@ -435,9 +435,9 @@ void ShowTexture( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, const CVec2 &
 	rend.SetTarget( *pRC, vScreenSize, QRM_NOCOLOR );
 	AddFullTextureRect( &rend, pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CShowAlphaEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShowAlphaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	pRC->SetPixelShader( psTextureAlpha );
@@ -445,9 +445,9 @@ void CShowAlphaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTe
 	pRC->SetVSConst( 16, CVec4( fScaleU, fScaleV, 0, 0 ) );
 	pRC->SetTexture( 0, pTex, FILTER_LINEAR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CLinearToGammaEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinearToGammaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	pRC->SetPixelShader( psLinearToGamma );
@@ -456,7 +456,7 @@ void CLinearToGammaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture 
 	pRC->SetPSConst( 0, CVec4( 1 / 2.4f, 0, 0, 0 ) );
 	pRC->SetTexture( 0, pTex, FILTER_LINEAR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadow16toAlphaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	pRC->SetPixelShader( psDp3 );
@@ -465,7 +465,7 @@ void CShadow16toAlphaEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTextur
 	pRC->SetPSConst( 0, CVec4( 0, 252.0/256, 1.0/8, 0 ) );
 	pRC->SetTexture( 0, pTex, FILTER_POINT );//FILTER_LINEAR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCopyShadowsAndCloudsEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
     pRC->SetPixelShader( psCloudShadows );

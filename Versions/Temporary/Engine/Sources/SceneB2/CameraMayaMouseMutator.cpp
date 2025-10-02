@@ -2,7 +2,7 @@
 
 #include "CameraMayaMouseMutator.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCamera
 {
 	static float s_fMayaCameraScrollXSensetivity = 1;
@@ -93,7 +93,7 @@ namespace NCamera
 }
 using namespace NCamera;
 REGISTER_SAVELOAD_CLASS( 0x101ACBC1, CCameraMayaMouseMutator )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( MayaCameraMouseMutatorCommands )
 REGISTER_VAR_EX( "maya_camera_scroll_x_sensetivity", NGlobal::VarFloatHandler, &s_fMayaCameraScrollXSensetivity, 1, STORAGE_NONE )
 REGISTER_VAR_EX( "maya_camera_scroll_y_sensetivity", NGlobal::VarFloatHandler, &s_fMayaCameraScrollYSensetivity, 1, STORAGE_NONE )
@@ -102,4 +102,4 @@ REGISTER_VAR_EX( "maya_camera_yaw_sensetivity", NGlobal::VarFloatHandler, &s_fMa
 REGISTER_VAR_EX( "maya_camera_zoom_sensetivity", NGlobal::VarFloatHandler, &s_fMayaCameraZoomSensetivity, 1, STORAGE_NONE )
 REGISTER_VAR_EX( "maya_free_camera", NGlobal::VarBoolHandler, &s_bMayaFreeCamera, false, STORAGE_NONE )
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

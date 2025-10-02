@@ -1,6 +1,6 @@
 #pragma once
 #include <d3d9.h>
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // should be global variable
 struct SVShader
 {
@@ -9,7 +9,7 @@ struct SVShader
 	
 	SVShader( int _nID, DWORD *_pShader11, DWORD *_pShader20 ): nID(_nID), pShader11(_pShader11), pShader20(_pShader20) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // should be global variable
 struct SRenderState
 {
@@ -39,7 +39,7 @@ struct SPShader
 		pShaRS(_pShaRS), pShaTSS(_pShaTSS), 
 		pStateRS(_pStateRS), pStateTSS(_pStateTSS) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SHLSLShader
 {
 	int nVSShaderID, nPSShaderID;
@@ -51,4 +51,4 @@ struct SHLSLShader
 	//	: nID(_nID), pVShader11(_pVShader11), pVShader20(_pVShader20), pPShader11(_pPShader11), pPShader14(_pPShader14),
 	//	pPShader20(_pPShader20), pPShader20a(_pPShader20a) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

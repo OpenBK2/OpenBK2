@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GPixelFormat.h"
 bool bIsSSEPresent = ( GetCPUID() & CPUID_SSE_FEATURE_PRESENT ) != 0;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 short nNormalizeTable[16384];
 NGfx::SMMXWord mmxWeights[512];
 unsigned char nCubicRoot[32768];

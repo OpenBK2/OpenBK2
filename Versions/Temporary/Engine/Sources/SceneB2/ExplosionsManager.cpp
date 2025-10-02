@@ -2,7 +2,7 @@
 
 #include "../3DMotor/GView.h"
 #include "ExplosionsManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExplosionObjInfo::Recalc()
 {
 	if ( pValue == 0 )
@@ -15,7 +15,7 @@ void CExplosionObjInfo::Recalc()
 	pValue->AssignFast( &objData );
 	data.Clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExplosionsManager::AddExplosion( const NMeshData::SMeshData &_data, const NDb::SMaterial *pMaterial )
 {
 	NI_ASSERT( pGScene, "GameView was not attached" );
@@ -33,7 +33,7 @@ int CExplosionsManager::AddExplosion( const NMeshData::SMeshData &_data, const N
 
 	return explObj.nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExplosionsManager::RemoveExplosion( const int nID )
 {
 	for ( list<SExplosionObj>::iterator it = explosions.begin(); it != explosions.end(); )
@@ -44,4 +44,4 @@ void CExplosionsManager::RemoveExplosion( const int nID )
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

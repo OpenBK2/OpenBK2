@@ -4,17 +4,17 @@
 #include "Image.h"
 #include "../Misc/Geom.h"
 #include "../Misc/Bresenham.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD BLACK_COLOR					= MakeARGBColor<DWORD>( 0xFF, 0x00, 0x00, 0x00 );
 const DWORD WHITE_COLOR					= MakeARGBColor<DWORD>( 0xFF, 0xFF, 0xFF, 0xFF );
 const DWORD GRAY_LIGHTER_COLOR	= MakeARGBColor<DWORD>( 0xFF, 0x80, 0x80, 0x80 );
 const DWORD GRAY_DARKER_COLOR		= MakeARGBColor<DWORD>( 0xFF, 0x7F, 0x7F, 0x7F );
 const DWORD BASE_EMBOSS_COLOR		= MakeARGBColor<DWORD>( 0xFF, 0x7F, 0x7F, 0x7F );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetImageParams( DWORD *pdwMinColor, DWORD *pdwMaxColor, DWORD *pdwAverageColor, const CArray2D<DWORD> &rImage )
 {
 	CTPoint<int> size( rImage.GetSizeX(), rImage.GetSizeY() );
@@ -119,7 +119,7 @@ void GetImageParams( DWORD *pdwMinColor, DWORD *pdwMaxColor, DWORD *pdwAverageCo
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Invert( CArray2D<DWORD> *pImage )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -144,7 +144,7 @@ void Invert( CArray2D<DWORD> *pImage )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline DWORD GetGammaCorrection( DWORD dwVal, float fBrightness, float fPower, float fA, float fB )
 {
   const float fVal = float( dwVal ) / 255.0f;
@@ -154,7 +154,7 @@ inline DWORD GetGammaCorrection( DWORD dwVal, float fBrightness, float fPower, f
 	return Clamp<DWORD>( fResult * 255.0f + 0.5f, 0, 0xFF );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GammaCorrection( CArray2D<DWORD> *pImage, float fBrightness, float fContrast, float fGamma )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -211,7 +211,7 @@ void GammaCorrection( CArray2D<DWORD> *pImage, float fBrightness, float fContras
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FullColor( CArray2D<DWORD> *pImage, float fRatio )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -252,7 +252,7 @@ void FullColor( CArray2D<DWORD> *pImage, float fRatio )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ApplyFilter( CArray2D<DWORD> *pImage, const CArray2D<int> &rFilter, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -282,7 +282,7 @@ void ApplyFilter( CArray2D<DWORD> *pImage, const CArray2D<int> &rFilter, DWORD d
 	( *pImage ) = destImage;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MarkEdge( CArray2D<DWORD> *pImage, DWORD dwEdgeColor, bool bOutside, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -308,7 +308,7 @@ void MarkEdge( CArray2D<DWORD> *pImage, DWORD dwEdgeColor, bool bOutside, DWORD 
 	FastAddImageByColor( pImage, edgeImage, dwEdgeColor, true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void EraseEdge( CArray2D<DWORD> *pImage, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -325,7 +325,7 @@ void EraseEdge( CArray2D<DWORD> *pImage, DWORD dwMinAlpha )
 	( *pImage ) = edgeImage;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Emboss( CArray2D<DWORD> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -376,7 +376,7 @@ void Emboss( CArray2D<DWORD> *pImage, const CTPoint<int> &rShiftPoint, const CAr
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Noise( CArray2D<DWORD> *pImage, const CArray2D<DWORD> &rNoise, bool bEqualize, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -427,7 +427,7 @@ void Noise( CArray2D<DWORD> *pImage, const CArray2D<DWORD> &rNoise, bool bEquali
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FastAddImageByAlpha( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -449,7 +449,7 @@ void FastAddImageByAlpha( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FastAddImageByColor( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, DWORD dwColor, bool bInclude )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -481,7 +481,7 @@ void FastAddImageByColor( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetShadow( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, const CTPoint<int> &rShiftPoint, DWORD dwShadowColor, DWORD dwNonShadowColor, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -522,7 +522,7 @@ void GetShadow( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetAlphaEmboss( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, DWORD dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
@@ -587,7 +587,7 @@ void GetAlphaEmboss( CArray2D<DWORD> *pDestImage, const CArray2D<DWORD> &rSource
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DrawLine( CArray2D<DWORD> *pImage, const SVector &vStart, const SVector &vEnd, const SColor &color )
 {
 	const SVector v1( Clamp( vStart.x, 0, pImage->GetSizeX() - 1 ), Clamp( vStart.y, 0, pImage->GetSizeY() - 1 ) );
@@ -602,4 +602,4 @@ void DrawLine( CArray2D<DWORD> *pImage, const SVector &vStart, const SVector &vE
 	}
 }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

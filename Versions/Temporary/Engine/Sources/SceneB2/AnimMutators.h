@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../3DMotor/GAnimation.hpp"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NAnimation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface ITreeFallingMutator : public IAnimMutator
 {
 	enum { typeID = 0x12094B80 };
@@ -11,13 +11,13 @@ interface ITreeFallingMutator : public IAnimMutator
 											const vector<string> &leafNames, int nEffectID, const CVec3 &vPos,
 											float fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface ITreeWindMutator : public IAnimMutator
 {
 	enum { typeID = 0x19132B40 };
 	virtual void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const vector<string> &leafNames ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMechUnitJoggingMutator : public IAnimMutator
 {
 	enum { typeID = 0x15095B00 };
@@ -33,7 +33,7 @@ interface IMechUnitJoggingMutator : public IAnimMutator
 	virtual void Play() = 0;
 	virtual void Stop() = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IWingScaleMutator : public IAnimMutator
 {
 	enum { typeID = 0x3119AB00 };
@@ -41,4 +41,4 @@ interface IWingScaleMutator : public IAnimMutator
 	virtual void SetScale( const float fScale ) = 0;
 	virtual void ShowStatic( const bool bShow ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

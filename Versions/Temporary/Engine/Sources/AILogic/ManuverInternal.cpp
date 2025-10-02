@@ -11,14 +11,14 @@
 #include "..\System\RandomGen.h"
 #include "..\Stats_b2_m1\DBPlaneManuvers.h"
 #include "..\System\Commands.h"
-/////////////////////////////////////////////////////////////////////////////
+
 extern float g = 0.0000983f;
 extern NTimer::STime curTime;
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	SPlanesConsts
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 START_REGISTER(PlaneConsts)
 REGISTER_VAR_EX( "temp.plane_min_height", NGlobal::VarFloatHandler, &SPlanesConsts::MIN_HEIGHT_TEMP, 0.0f, STORAGE_SAVE );
 FINISH_REGISTER
@@ -26,23 +26,23 @@ FINISH_REGISTER
 float SPlanesConsts::MIN_HEIGHT = 300.0f;
 float SPlanesConsts::MIN_HEIGHT_TEMP = 300.0f;
 float SPlanesConsts::MAX_HEIGHT = 1500.0f;
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverBuilder ::
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
+
+
 //	CManuver
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuver::GetManuverParams( struct SPrevPathParams *pParams ) const
 {
 	pParams->fDistToGo = fDistToGo;
 	pParams->fCurTiltSpeed = fCurTiltSpeed;
 	pPath->GetPrevPoints( pParams );
 }	
-/////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CManuver::CalcPredictedPoint( CPlanesFormation *pPos, CPlanesFormation *pEnemy )
 {
 	// distance to enemy
@@ -54,12 +54,12 @@ const CVec3 CManuver::CalcPredictedPoint( CPlanesFormation *pPos, CPlanesFormati
 	//return pEnemy->GetManuver()->GetProspectivePoint( fTime );
 	return pEnemy->GetManuver()->GetProspectivePoint( 1000 );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CManuver::CalcPredictedSpeed( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	return pEnemy->GetManuver()->GetProspectiveSpeed( 1000 );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CManuver::GetProspectiveSpeed( NTimer::STime nTime ) const
 {
 	// assume that speed is constant
@@ -71,7 +71,7 @@ CVec3 CManuver::GetProspectiveSpeed( NTimer::STime nTime ) const
 	else
 		return pPath->GetTangent( fAdd + fProgress );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 {
 	// assume that speed is constant
@@ -83,14 +83,14 @@ CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 	else
 		return pPath->GetPoint( fProgress + fAdd );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::InitCommon( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal )
 {
 	InitInternal( _pPath, _pPlane, fabs( _pPlane->GetSpeedB2() ), _pPlane->GetNormalB2(), _bToHorisontal );
 	CheckToHorisontal();
 	fProgress = 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::InitInternal( interface IPathFraction *_pPath, CPlanesFormation *_pPlane, const float _fSpeed, const CVec3 &_vNormale, const bool _bToHorisontal )
 {
 	bToHorisontal = _bToHorisontal;
@@ -112,18 +112,18 @@ void CManuver::InitInternal( interface IPathFraction *_pPath, CPlanesFormation *
 	CalcNormale( 0 );
 	//NStr:://DebugTrace( NStr::Format( "Initted(%f,%f,%f)\n", vSpeed.x, vSpeed.y,vSpeed.z ) );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::CalcSpeed()
 {
 	vSpeed = pPath->GetTangent();
 	vSpeed *= fSpeed;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::CalcPoint()
 {
 	vCenter = pPath->GetPoint();
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesiredNormale, CVec3 *vNormal, int *pnRotation, float *pfTiltToGo ) const
 {
 	// adjust normal according to speed direction change
@@ -167,7 +167,7 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesire
 		*pfTiltToGo = DirsDifference( wDesiredDir, wCalculatedDir );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::CalcNormale( const NTimer::STime timeDiff )
 {
 	CVec3 vDesiredNormale = pPath->GetNormale();
@@ -199,7 +199,7 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 		Clamp( fCurTiltSpeed, -fMaxTiltSpeed, fMaxTiltSpeed );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 const float CManuver::CalcHeightToEnterHorisontal( const CVec3 &_vSpeed, const CPlanePreferences &pref ) const
 {
 	const float fTurnRadius = pref.GetR( fabs(_vSpeed) );
@@ -207,7 +207,7 @@ const float CManuver::CalcHeightToEnterHorisontal( const CVec3 &_vSpeed, const C
 	const float fSinAHalf = NMath::Sin( 0.5f * fAlpha );
 	return 2.0f * fTurnRadius * sqr( fSinAHalf );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &_vPos, const CPlanePreferences &pref, CVec3 *pvNewPoint ) const
 {
 	const float fCrit = CalcHeightToEnterHorisontal( _vSpeed, pref );
@@ -233,7 +233,7 @@ bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &_vPos,
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 {
 	const float fDist = fSpeed * timeDiff;
@@ -258,7 +258,7 @@ bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 
 	return bPathFinished;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuver::CheckToHorisontal()
 {
 	if ( bToHorisontal ) // already going to horisontal
@@ -281,16 +281,16 @@ void CManuver::CheckToHorisontal()
 		InitCommon( pNewPath, pPlane, true );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CManuver::GetNormale() const 
 { 
 	return vNormal + 2.0f * V3_AXIS_Z * !pPlane->GetPreferencesB2().CanFlip(); 
 }
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverSteepClimb
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuverSteepClimb::Init( const NDb::EManuverDestination dest, CPlanesFormation *_pPlane, CPlanesFormation *pEnemy )
 {
 	NI_ASSERT( EMD_MANUVER_DEPENDENT == dest, "CANNOT DO GORKA ANYWERE OTHER THEN EMD_MANUVER_DEPENDENT" );
@@ -298,7 +298,7 @@ void CManuverSteepClimb::Init( const NDb::EManuverDestination dest, CPlanesForma
 	Init( _pPlane );
 	//CRAP}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuverSteepClimb::Init( CPlanesFormation *pPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -318,18 +318,18 @@ void CManuverSteepClimb::Init( CPlanesFormation *pPos )
 	
 	InitCommon( pNewPath, pPos, false );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuverSteepClimb::Advance( const NTimer::STime timeDiff )
 {
 	// determine if it is circle path fraction or not.
 	const bool bRet = AdvanceCommon( timeDiff );
 	return bRet;
 }
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverToHorisontal
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -357,17 +357,17 @@ void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 		InitCommon( pNewPath, pPos, false );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuverToHorisontal::Advance( const NTimer::STime timeDiff )
 {
 	const bool bRet = AdvanceCommon( timeDiff );
 	return bRet;
 }
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverPrepareGroundAttack::
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuverPrepareGroundAttack::Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -384,17 +384,17 @@ void CManuverPrepareGroundAttack::Init( CPlanesFormation *pPos, const CVec3 &vPo
 	pNewPath->Init( param, vPos, vDesiredDir, fR, fR );
 	InitCommon( pNewPath, pPos, false );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuverPrepareGroundAttack::Advance( const NTimer::STime timeDiff )
 {
 	const bool bRet = AdvanceCommon( timeDiff );
 	return bRet;
 }
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverGeneric::
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuverGeneric::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -403,13 +403,13 @@ void CManuverGeneric::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 	pNewPath->Init( param, vPos, pref.GetR( fabs(pPos->GetSpeedB2()) ) );
 	InitCommon( pNewPath, pPos, false );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuverGeneric::Advance( const NTimer::STime timeDiff )
 {
 	const bool bRet = AdvanceCommon( timeDiff );
 	return bRet;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IManuver );
 REGISTER_SAVELOAD_CLASS( 0x1108EB01, CManuverSteepClimb );
 REGISTER_SAVELOAD_CLASS( 0x1108EB02, CManuverGeneric );

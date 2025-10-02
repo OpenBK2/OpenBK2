@@ -5,36 +5,36 @@
 #include "FrameTransition.h"
 #include "..\System\Commands.h"
 #include "..\Misc\Win32Random.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CRTPtr pScreen1( "FrameTransitionSrc1" );
 static CRTPtr pScreen2( "FrameTransitionSrc2" );
 static unsigned int nStartTime = 0;
 static bool bStartTimeInvalid = true;
 static bool bComplete = true;
 static int nTargetResolution = 512;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int N_EFFECT_DURATION = NDefFTVals::N_DEF_FT_EFFECT_DURATION;
 static bool B_ZOOM = NDefFTVals::B_DEF_FT_ZOOM;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int N_QUADS_GROUP1_NUM = NDefFTVals::N_DEF_FT_QUADS_GROUP1_NUM;
 static float F_QUADS_GROUP1_MIN_Z = NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_Z;
 static float F_QUADS_GROUP1_MAX_Z = NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_Z;
 static float F_QUADS_GROUP1_MIN_ALPHA = NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_ALPHA;
 static float F_QUADS_GROUP1_MAX_ALPHA = NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_ALPHA;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int N_QUADS_GROUP2_NUM = NDefFTVals::N_DEF_FT_QUADS_GROUP2_NUM;
 static float F_QUADS_GROUP2_MIN_Z = NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_Z;
 static float F_QUADS_GROUP2_MAX_Z = NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z;
 static float F_QUADS_GROUP2_MIN_ALPHA = NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_ALPHA;
 static float F_QUADS_GROUP2_MAX_ALPHA = NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_ALPHA;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool B_RANDOM_DIR = NDefFTVals::B_DEF_FT_RANDOM_DIR;
 static CVec2 V_TRANSITION_DIR( NDefFTVals::V_DEF_FT_TRANSITION_DIR );
 static float F_TRANSITION_LENGTH = NDefFTVals::F_DEF_FT_TRANSITION_LENGTH;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTexture *pTex, float fTime, const CVec2 &vScreenRectHalf )
 {
 	const int nAlpha = Clamp( Float2Int( ( F_QUADS_GROUP1_MIN_ALPHA + ( F_QUADS_GROUP1_MAX_ALPHA - F_QUADS_GROUP1_MIN_ALPHA ) * fTime ) * 255 ), 0, 255 );
@@ -67,7 +67,7 @@ static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTe
 			quadsRenderer.AddRect( scrRect, pTex, imgRect, color );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateZoomQuads2( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTexture *pTex, float fTime, const CVec2 &vScreenRect )
 {
 	const int nAlpha = Clamp( Float2Int( ( F_QUADS_GROUP2_MIN_ALPHA + ( F_QUADS_GROUP2_MAX_ALPHA - F_QUADS_GROUP2_MIN_ALPHA ) * fTime ) * 255 ), 0, 255 );
@@ -93,12 +93,12 @@ static void GenerateZoomQuads2( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTe
 		quadsRenderer.AddRect( scrRect, pTex, imgRect, color );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsFrameTransitionComplete()
 {
 	return (bComplete || (NGlobal::GetVar( "gfx_frame_transition", 1 ) == 0));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderFrameTransition()
 {
 	if ( IsFrameTransitionComplete() )
@@ -141,7 +141,7 @@ void RenderFrameTransition()
 		bComplete = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void SetNewParams( const SFrameTransitionInfo &info )
 {
 	N_EFFECT_DURATION = info.nEffectDuration;
@@ -162,7 +162,7 @@ inline void SetNewParams( const SFrameTransitionInfo &info )
 	F_QUADS_GROUP2_MIN_ALPHA = info.fQuadsGroup2MinAlpha;
 	F_QUADS_GROUP2_MAX_ALPHA = info.fQuadsGroup2MaxAlpha;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InitFrameTransitionParams()
 {
 	bStartTimeInvalid = true;
@@ -171,36 +171,36 @@ inline void InitFrameTransitionParams()
 	if ( B_RANDOM_DIR )
 		V_TRANSITION_DIR.Set( cos( fAngle ), sin( fAngle ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRTPtr *GetFrameTransitionCapture2()
 {
 	return &pScreen2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRTPtr *GetFrameTransitionCapture1( const SFrameTransitionInfo &info )
 {
 	SetNewParams( info );
 	InitFrameTransitionParams();
 	return &pScreen1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartFrameTransition()
 {
 	InitFrameTransitionParams();
 	NGfx::CopyScreenToTexture( pScreen1.GetTexture() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartFrameTransition( const SFrameTransitionInfo &info )
 {
 	SetNewParams( info );
 	StartFrameTransition();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture *GetTexture( CRTPtr * pTex)
 {
 	return pTex->GetTexture();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 START_REGISTER(FrameTransition)
 //
@@ -221,6 +221,6 @@ REGISTER_VAR_EX( "ft_quads_group2_min_z", NGlobal::VarFloatHandler, &F_QUADS_GRO
 REGISTER_VAR_EX( "ft_quads_group2_max_z", NGlobal::VarFloatHandler, &F_QUADS_GROUP2_MAX_Z, NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z, STORAGE_NONE );
 //
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

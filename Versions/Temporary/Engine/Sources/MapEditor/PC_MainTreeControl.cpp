@@ -46,7 +46,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort )
 {
 	HTREEITEM hItem0 = reinterpret_cast<HTREEITEM>( lParam0 );
@@ -97,7 +97,7 @@ int CALLBACK PCMainTreeControlCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARA
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPCMainTreeControl::SortItemText( const CString &rstrText0, const CString &rstrText1 )
 {
 	if ( rstrText0[rstrText0.GetLength() - 1] == ARRAY_NODE_END_CHAR )
@@ -133,7 +133,7 @@ int CPCMainTreeControl::SortItemText( const CString &rstrText0, const CString &r
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CPCMainTreeControl, CSortTreeControl)
 	ON_WM_DESTROY()
 	ON_WM_TIMER()
@@ -151,7 +151,7 @@ BEGIN_MESSAGE_MAP(CPCMainTreeControl, CSortTreeControl)
 	ON_NOTIFY_REFLECT( TVN_SELCHANGED, OnSelchangedTree )
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCMainTreeControl::CPCMainTreeControl( bool _bNeedTranslateAccelerators, bool _bModal )
 	: bNeedTranslateAccelerators( _bNeedTranslateAccelerators ),
 		bModal( _bModal ),
@@ -167,12 +167,12 @@ CPCMainTreeControl::CPCMainTreeControl( bool _bNeedTranslateAccelerators, bool _
 {
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCMainTreeControl::~CPCMainTreeControl()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::PickTextColors( LvPaintContext* pPC )
 {
 	if ( pPC )
@@ -222,7 +222,7 @@ void CPCMainTreeControl::PickTextColors( LvPaintContext* pPC )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	if ( !bCreateControls )
@@ -260,7 +260,7 @@ void CPCMainTreeControl::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult )
 	( *pResult ) = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult ) 
 {
 	if ( !bCreateControls )
@@ -281,7 +281,7 @@ void CPCMainTreeControl::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult )
 	( *pResult ) = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnDestroy() 
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_PROPERTY_CONTROL, this );
@@ -293,7 +293,7 @@ void CPCMainTreeControl::OnDestroy()
 	CSortTreeControl::OnDestroy();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnTimer( UINT nIDEvent ) 
 {
   if ( nIDEvent == GetCreateTreeTimerID() )
@@ -303,7 +303,7 @@ void CPCMainTreeControl::OnTimer( UINT nIDEvent )
 	CWnd::OnTimer( nIDEvent );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetCreateTreeTimer()
 {
 	//DebugTrace( "CPCMainTreeControl::SetCreateTreeTimer()" );
@@ -315,7 +315,7 @@ void CPCMainTreeControl::SetCreateTreeTimer()
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::KillCreateTreeTimer()
 {
   if ( nCreateTreeTimer != 0 )
@@ -325,7 +325,7 @@ void CPCMainTreeControl::KillCreateTreeTimer()
   nCreateTreeTimer = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT CPCMainTreeControl::OnMessagePCItemChange( WPARAM wParam, LPARAM lParam )
 {
 	//DebugTrace( "CPCMainTreeControl::OnPCItemChange: wParam: 0x%X(%u), lParam: 0x%X", wParam, wParam, lParam );
@@ -368,7 +368,7 @@ LRESULT CPCMainTreeControl::OnMessagePCItemChange( WPARAM wParam, LPARAM lParam 
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EPCIEType CPCMainTreeControl::GetTreeItemType( HTREEITEM hItem )
 {
 	EPCIEType itemType = PCIE_UNKNOWN;
@@ -381,9 +381,9 @@ EPCIEType CPCMainTreeControl::GetTreeItemType( HTREEITEM hItem )
 	return itemType;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSortTreeControl
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CPCMainTreeControl::GetTreeItem( const string &rszName )
 {
 	HTREEITEM hItem = CSortTreeControl::GetTreeItem( rszName );
@@ -424,7 +424,7 @@ HTREEITEM CPCMainTreeControl::GetTreeItem( const string &rszName )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::GetTreeItemName( HTREEITEM hItem, string *pszName )
 {
 	string szItemText = GetItemText( hItem );
@@ -450,7 +450,7 @@ bool CPCMainTreeControl::GetTreeItemName( HTREEITEM hItem, string *pszName )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::EnableEdit( bool bEnable )
 {
 	CSortTreeControl::EnableEdit( bEnable );
@@ -468,7 +468,7 @@ void CPCMainTreeControl::EnableEdit( bool bEnable )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::GetTreeItemEditorPlace( HTREEITEM hTreeItem, CTRect<int> *pRect )
 {
 	CRect clientRect;
@@ -521,7 +521,7 @@ bool CPCMainTreeControl::GetTreeItemEditorPlace( HTREEITEM hTreeItem, CTRect<int
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, bool _bAsync )
 {
 	KillCreateTreeTimer();
@@ -608,7 +608,7 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnCreateTreeTimer()
 {
 	//DebugTrace( "CPCMainTreeControl::OnCreateTreeTimer()" );
@@ -739,7 +739,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CPCMainTreeControl::AddTreeItem( const string &rszName, EPCIEType nType, const SPropertyDesc *pDesc )
 {
 	//DebugTrace( "AddTreeItem: name:<%s>", rszName.c_str() );
@@ -759,7 +759,7 @@ HTREEITEM CPCMainTreeControl::AddTreeItem( const string &rszName, EPCIEType nTyp
 	return AddTreeItemInternal( TVI_ROOT, rszName, nType, pDesc );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::ItemMustBeExpand( HTREEITEM hItem )
 {
 	switch ( newElementExpandMode )
@@ -781,7 +781,7 @@ bool CPCMainTreeControl::ItemMustBeExpand( HTREEITEM hItem )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const string &rszAdditionalName, EPCIEType nType, const SPropertyDesc *pDesc )
 {
 	HTREEITEM hAddedItem = 0;
@@ -853,7 +853,7 @@ HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const st
 	return hAddedItem;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pDesc )
 {
 	//DebugTrace( "CPCMainTreeControl::SetPCItemView()" );
@@ -886,7 +886,7 @@ void CPCMainTreeControl::SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pD
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::ForceRelativeParam_ReadOnly( HTREEITEM hItem, bool bDefaultValue )
 {
 	bool bReadOnly = bDefaultValue;
@@ -916,7 +916,7 @@ bool CPCMainTreeControl::ForceRelativeParam_ReadOnly( HTREEITEM hItem, bool bDef
 	return bReadOnly;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CPCMainTreeControl::ForceRelativeParam_StringParam( HTREEITEM hItem, const string &rszDefaultValue )
 {
 	string szName;
@@ -937,7 +937,7 @@ string CPCMainTreeControl::ForceRelativeParam_StringParam( HTREEITEM hItem, cons
 	}
 	return rszDefaultValue;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPCMainTreeControl::ForceRelativeParam_IntParam( HTREEITEM hItem, int nDefaultValue )
 {
 	string szName;
@@ -959,7 +959,7 @@ int CPCMainTreeControl::ForceRelativeParam_IntParam( HTREEITEM hItem, int nDefau
 	return nDefaultValue;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IPCItemEditor* CPCMainTreeControl::CreatePCItemEditor( HTREEITEM hItem )
 {
 	const EPCIEType nType = GetTreeItemType( hItem );
@@ -1137,7 +1137,7 @@ IPCItemEditor* CPCMainTreeControl::CreatePCItemEditor( HTREEITEM hItem )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::GetValue( const string &rszName, CVariant *pVariant )
 {
 	if ( pVariant )
@@ -1162,7 +1162,7 @@ bool CPCMainTreeControl::GetValue( const string &rszName, CVariant *pVariant )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::AddChangeOperation( const string &rszName, const CVariant &rValue, CObjectBaseController *pObjectController )
 {
 	if ( const SPropertyDesc* pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( rszName ) ) )
@@ -1180,7 +1180,7 @@ bool CPCMainTreeControl::AddChangeOperation( const string &rszName, const CVaria
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEditor )
 {
 	if ( GetViewManipulator() && pPCItemEditor && pPCItemEditor->IsEditEnabled() )
@@ -1234,7 +1234,7 @@ bool CPCMainTreeControl::UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEdit
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::UpdatePCItemEditorPosition( HTREEITEM hItem )
 {
 	if ( pActiveItemEditor )
@@ -1255,7 +1255,7 @@ void CPCMainTreeControl::UpdatePCItemEditorPosition( HTREEITEM hItem )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::ClosePCItemEditor( bool bAcceptChanges )
 {
 	if ( bAcceptChanges )
@@ -1268,7 +1268,7 @@ void CPCMainTreeControl::ClosePCItemEditor( bool bAcceptChanges )
 	pActiveItemEditor = 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nNewIndex )
 {
 	//DebugTrace( "InsertNode0: 0x%X 0x%X %d", hArrayItem, hItem, nNewIndex );
@@ -1318,7 +1318,7 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nDeleteIndex )
 {
 	//DebugTrace( "DeleteNode0: 0x%X 0x%X %d", hArrayItem, hItem, nDeleteIndex );
@@ -1358,7 +1358,7 @@ bool CPCMainTreeControl::DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::ExpandPCItem()
 {
 	if ( HTREEITEM hItem = GetSelectedItem() )
@@ -1368,7 +1368,7 @@ void CPCMainTreeControl::ExpandPCItem()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::ExpandAllPCItems()
 {
 	ExpandCompletely( TVI_ROOT, true );
@@ -1376,7 +1376,7 @@ void CPCMainTreeControl::ExpandAllPCItems()
 	newElementExpandMode = NEEM_ALWAYS_EXPAND;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::CollapsePCItem()
 {
 	if ( HTREEITEM hItem = GetSelectedItem() )
@@ -1386,7 +1386,7 @@ void CPCMainTreeControl::CollapsePCItem()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::CollapseAllPCItems()
 {
 	if ( HTREEITEM hItem = GetSelectedItem() )
@@ -1406,13 +1406,13 @@ void CPCMainTreeControl::CollapseAllPCItems()
 	newElementExpandMode = MEEM_ALWAYS_COLLAPSE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetOptimalWidth()
 {
 	UpdatePCItemEditorPosition( 0 );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::Refresh()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1427,7 +1427,7 @@ void CPCMainTreeControl::Refresh()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::AddNode()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1449,7 +1449,7 @@ void CPCMainTreeControl::AddNode()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::DeleteAllNodes()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1476,7 +1476,7 @@ void CPCMainTreeControl::DeleteAllNodes()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::InsertNode()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1507,7 +1507,7 @@ void CPCMainTreeControl::InsertNode()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::DeleteNode()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1538,14 +1538,14 @@ void CPCMainTreeControl::DeleteNode()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::ShowHidden()
 {
 	bShowHidden = !bShowHidden;
 	CreateTree( TVI_ROOT, true, true );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::UpdateValue( const string &rszName )
 {
 	if ( !GetViewManipulator() )
@@ -1570,7 +1570,7 @@ bool CPCMainTreeControl::UpdateValue( const string &rszName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::SelectPCItem( const string &rszName )
 {
 	if ( !GetViewManipulator() )
@@ -1589,7 +1589,7 @@ bool CPCMainTreeControl::SelectPCItem( const string &rszName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::GetSelectedPCItemName( string *pszName )
 {
 	if ( !GetViewManipulator() )
@@ -1610,7 +1610,7 @@ bool CPCMainTreeControl::GetSelectedPCItemName( string *pszName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
 {
 	if ( !GetViewManipulator() )
@@ -1659,7 +1659,7 @@ bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar ) 
 {
 	if ( pScrollBar == GetScrollBarCtrl( SB_HORZ ) )
@@ -1676,7 +1676,7 @@ void CPCMainTreeControl::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar ) 
 {
 	if ( pScrollBar == GetScrollBarCtrl( SB_VERT ) )
@@ -1686,7 +1686,7 @@ void CPCMainTreeControl::OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScroll
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CPCMainTreeControl::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt ) 
 {
 	bool bresult = CSortTreeControl::OnMouseWheel( nFlags, zDelta, pt );
@@ -1694,14 +1694,14 @@ BOOL CPCMainTreeControl::OnMouseWheel( UINT nFlags, short zDelta, CPoint pt )
 	return bresult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnSize( UINT nType, int cx, int cy ) 
 {
 	CSortTreeControl::OnSize( nType, cx, cy );
 	UpdatePCItemEditorPosition( 0 );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnLButtonDown( UINT nFlags, CPoint point ) 
 {
 	CSortTreeControl::OnLButtonDown( nFlags, point );
@@ -1738,7 +1738,7 @@ void CPCMainTreeControl::OnLButtonDown( UINT nFlags, CPoint point )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags ) 
 {
 	if ( nChar != VK_ESCAPE )
@@ -1770,7 +1770,7 @@ void CPCMainTreeControl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnContextMenu( CWnd *pwnd, CPoint point )
 {
 	CSortTreeControl::OnContextMenu( pwnd, point );
@@ -1824,7 +1824,7 @@ void CPCMainTreeControl::OnContextMenu( CWnd *pwnd, CPoint point )
 	mainPopupMenu.DestroyMenu();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CWMMnemonicCodes mnemonicCodes;
 LRESULT CPCMainTreeControl::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
 {
@@ -1839,7 +1839,7 @@ LRESULT CPCMainTreeControl::WindowProc( UINT message, WPARAM wParam, LPARAM lPar
 	return CSortTreeControl::WindowProc( message, wParam, lParam );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnSetFocus( CWnd* pOldWnd )
 {
 	CSortTreeControl::OnSetFocus( pOldWnd );
@@ -1848,20 +1848,20 @@ void CPCMainTreeControl::OnSetFocus( CWnd* pOldWnd )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::OnKillFocus( CWnd* pNewWnd )
 {
 	CSortTreeControl::OnKillFocus( pNewWnd );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetMultilineStringEditor( IPCItemEditor* _pMultilineStringEditor )
 {
 	pMultilineStringEditor = _pMultilineStringEditor;
 	UpdateMultilineStringEditor();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::UpdateMultilineStringEditor()
 {
 	if ( pMultilineStringEditor != 0 )
@@ -1896,14 +1896,14 @@ void CPCMainTreeControl::UpdateMultilineStringEditor()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetStatusStringWindow( CWnd* _pwndStatusStringWindow )
 {
 	pwndStatusStringWindow = _pwndStatusStringWindow;
 	UpdateStatusStringWindow();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::UpdateStatusStringWindow()
 {
 	if ( ( pwndStatusStringWindow != 0 ) && ::IsWindow( pwndStatusStringWindow->m_hWnd ) )
@@ -1914,7 +1914,7 @@ void CPCMainTreeControl::UpdateStatusStringWindow()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::CopySelection()
 {
 	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
@@ -1942,7 +1942,7 @@ void CPCMainTreeControl::CopySelection()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::PasteSelection()
 {
 	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
@@ -1968,14 +1968,14 @@ void CPCMainTreeControl::PasteSelection()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SelectAll()
 {
 	NCA::SelectAll( 0, 0, this );
 	RedrawWindow();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	if ( !GetViewManipulator() )
@@ -2094,7 +2094,7 @@ bool CPCMainTreeControl::HandleCommand( UINT nCommandID, DWORD dwData )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCMainTreeControl::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCMainTreeControl::UpdateCommand(), pbEnable == 0" );
@@ -2265,7 +2265,7 @@ bool CPCMainTreeControl::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel )
 {
 	if ( pMultilineStringEditor != 0 )
@@ -2293,7 +2293,7 @@ void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, co
 	CDefaultView::SetViewManipulator( _pViewManipulator, rObjectSet, rszTemporaryLabel );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::Undo( IController* pController )
 {
 	bool bResult = true;
@@ -2409,7 +2409,7 @@ void CPCMainTreeControl::Undo( IController* pController )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCMainTreeControl::Redo( IController* pController )
 {
 	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
@@ -2513,6 +2513,6 @@ void CPCMainTreeControl::Redo( IController* pController )
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

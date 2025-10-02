@@ -2,7 +2,7 @@
 #include "aiInterval.h"
 namespace NAI
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CmpCrosses( const SInterval::SCrossPoint &a, const SInterval::SCrossPoint &b )
 {
 	return a.fT < b.fT;
@@ -48,7 +48,7 @@ void CalcResult(
 }
 static SInterval::SCrossPoint MakeCross( float f ) { return SInterval::SCrossPoint( f, CVec3(0,0,1) ); }
 static float MakeFloat( float f ) { return f; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FillIntersectionResults( vector<SInterval> *pRes,
 	vector<SInterval::SCrossPoint> *pEnter,
 	vector<SInterval::SCrossPoint> *pExit,
@@ -69,7 +69,7 @@ void FillIntersectionResults( vector<SInterval> *pRes,
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
 }	
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FillIntersectionResults( vector<SSimpleInterval> *pRes,
 	vector<float> *pEnter, 
 	vector<float> *pExit,
@@ -86,26 +86,26 @@ void FillIntersectionResults( vector<SSimpleInterval> *pRes,
 		pRes->push_back( SSimpleInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CompareSimpleIntervals( const SSimpleInterval &i1, const SSimpleInterval &i2 )
 {
 	return i1.fEnter < i2.fEnter;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SortSimpleIntervals( vector<SSimpleInterval> *pRes )
 {
 	sort( pRes->begin(), pRes->end(), CompareSimpleIntervals );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CompareIntervals( const SInterval &a, const SInterval &b )
 {
 	return a.enter.fT < b.enter.fT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SortIntervals( vector<SInterval> *pRes )
 {
 	sort( pRes->begin(), pRes->end(), CompareIntervals );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

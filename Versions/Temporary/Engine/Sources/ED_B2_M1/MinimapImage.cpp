@@ -18,15 +18,15 @@
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMinimapImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SLayerType typeLayerType;
 const SScaleType typeScaleType;
 const SRoadType typeRoadType;
 const SLakeType typeLakeType;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSetColorFunctional
 {
 	CArray2D<DWORD> *pDestImage;	
@@ -44,7 +44,7 @@ struct SSetColorFunctional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SBooleanSetColorFunctional
 {
 	CArray2D<DWORD> *pDestImage;	
@@ -63,7 +63,7 @@ struct SBooleanSetColorFunctional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // WBC = with bounds check
 struct SWBCSetColorFunctional
 {
@@ -91,7 +91,7 @@ struct SWBCSetColorFunctional
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMinimapLayer* GetMinimapLayer( ELayerType eLayerType, const NDb::SMinimap *pMinimap )
 {
 	NI_ASSERT( pMinimap != 0, "Wrong parameter: pMinimap == 0" );
@@ -110,7 +110,7 @@ const NDb::SMinimapLayer* GetMinimapLayer( ELayerType eLayerType, const NDb::SMi
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *pTerrainInfo )
 {
 	NI_ASSERT( pNormale != 0, "Wrong parameter: pNormale == 0" );
@@ -144,7 +144,7 @@ void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *
 	Normalize( pNormale );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, float fRatio, NImage::EImageScaleMethod eScaleMethod )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -193,7 +193,7 @@ void RenderLight( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 	NImage::Scale( pImage, shadeImage, eScaleMethod );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderTerrain( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, NImage::EImageScaleMethod eScaleMethod )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -217,7 +217,7 @@ void RenderTerrain( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, cons
 	NImage::Scale( pImage, terrainImage, eScaleMethod );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderFlora( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, int nWoodRadius, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -256,7 +256,7 @@ void RenderFlora( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, int nW
 	NImage::Scale( pImage, floraImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetVSOColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColor, int nBorderColor, int nCenterWidth, int nColor )
 {
 	NI_ASSERT( pdwCenterColor != 0, "Wrong parameter: pdwCenterColor == 0" );
@@ -282,7 +282,7 @@ void GetVSOColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -355,7 +355,7 @@ void RenderRiver( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD 
 	NImage::Scale( pImage, riverImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadType eRoadType, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -449,7 +449,7 @@ void RenderRoad( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, ERoadTy
 	NImage::Scale( pImage, roadImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderObject( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, NDb::EObjGameType eObjGameType, bool bShowAllBuildingsPassability, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -517,7 +517,7 @@ void RenderObject( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, NDb::
 	NImage::Scale( pImage, objectImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderBridge( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -577,7 +577,7 @@ void RenderBridge( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, DWORD
 	NImage::Scale( pImage, objectImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetLakeColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterColor, int nBorderColor, int nGradientWidth, int nColor )
 {
 	NI_ASSERT( pdwCenterColor != 0, "Wrong parameter: pdwCenterColor == 0" );
@@ -598,7 +598,7 @@ void GetLakeColors( DWORD *pdwCenterColor, DWORD *pdwBorderColor, int nCenterCol
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, const CLakeList &rLakeList, const CLakeList &rIslandList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -691,7 +691,7 @@ void RenderOcean( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const 
 	NImage::Scale( pImage, oceanImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, DWORD dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -766,7 +766,7 @@ void RenderLake( CArray2D<DWORD>* pImage, const NDb::SMapInfo *pMapInfo, const S
 	NImage::Scale( pImage, lakeImage, typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Create( const NDb::SMapInfo *pMapInfo,
 						 const STerrainInfo *pTerrainInfo,
 						 const NDb::SMinimap *pMinimap,
@@ -1286,11 +1286,11 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 // rotate image
 CArray2D<DWORD> minimapRotate( minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1, 

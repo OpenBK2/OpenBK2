@@ -2,10 +2,10 @@
 //
 #include "StdAfx.h"
 #include "Cruncher.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CNetCompressor::nLengthBits[34], CNetCompressor::nLengthBitsNum[34];
 int CNetCompressor::nShiftBits[34], CNetCompressor::nShiftBitsNum[34];
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SNetCompressorInit
 {
 	SNetCompressorInit()
@@ -61,7 +61,7 @@ struct SNetCompressorInit
 	}
 };
 static SNetCompressorInit sNetCompressorInit;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetCompressor::CNetCompressor() 
 { 
 	cPrevLetter = 0; nBlockStart = -1; 
@@ -76,7 +76,7 @@ CNetCompressor::CNetCompressor()
 	memset( nLengths, 0, sizeof( nLengths ) );
 	nCSize = 0;*/
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::EmitBlock( int nStart )
 {
 	int nShift = nCurrent - nStart - nBlockLength - 1;
@@ -169,7 +169,7 @@ void CNetCompressor::EmitBlock( int nStart )
 	else if ( nShift < 34+64+256+1024+4096 )
 		{ nLengths[8]++; nCSize += 2 + 12; }*/
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::EmitChar()
 {
 	//cout << "Char = " << cPrevLetter << endl;
@@ -178,7 +178,7 @@ void CNetCompressor::EmitChar()
 	data.Write( &cPrevLetter, 1 );
 	//nBlocks[0]++; nCSize += 1 + 8;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::FinishPack()
 {
 	if ( nBlockStart >= 0 )
@@ -186,7 +186,7 @@ void CNetCompressor::FinishPack()
 	else
 		EmitChar();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::StartPack( unsigned char c )
 {
 	// fill hash table
@@ -198,7 +198,7 @@ void CNetCompressor::StartPack( unsigned char c )
 	cBuffer[ nCurrent + N_COMPRESS_HISTORY ] = c;
 	cPrevLetter = c;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::StorePack( CDataStream &src, CDataStream &appendTo )
 {
 	CBitLocker srcData;
@@ -224,7 +224,7 @@ void CNetCompressor::StorePack( CDataStream &src, CDataStream &appendTo )
 	}
 	data.Free();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 {
 	const void *pData;
@@ -342,7 +342,7 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 	FinishPack();
 	data.Free();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 T __Min( const T &a, const T &b ) { return a < b ? a : b; }
 //

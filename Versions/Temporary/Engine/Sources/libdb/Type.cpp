@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "Type.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const string &szName )
 {
 	if ( szName == "TYPE_TYPE_UNKNOWN" )
@@ -33,7 +33,7 @@ NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const string &szNa
 	NI_ASSERT( false, StrFmt( "unknown enum %s", szName.c_str() ) );
 	return NDb::NTypeDef::TYPE_TYPE_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType )
 {
 	switch ( eType )
@@ -69,4 +69,4 @@ const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType 
 		return "TYPE_TYPE_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

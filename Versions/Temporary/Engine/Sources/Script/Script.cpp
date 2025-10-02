@@ -1,11 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // This source file is part of the Script (Lua Wrapper) source distribution
 // and is Copyright 2000 by Joshua C. Jensen (jjensen@workspacewhiz.com).
 // The latest version may be obtained from http://www.workspacewhiz.com/.
 //
 // The code presented in this file may be freely used and modified for all
 // non-commercial and commercial purposes.
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "StdAfx.h"
 #include "Script.h"
 #ifdef WIN32
@@ -17,12 +17,12 @@
 
 #include "lstate.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NScript
 {
 	CObjectBase* luaGetPtr( const Script::Object &o );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int Script_LOG(lua_State* state)
 {
 	Script script(state);
@@ -68,26 +68,26 @@ int Script::RegisterNewTag( const SRegFunction *pList )
 	return nTag;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // lua_register
 void Script::Register( const char* funcName, lua_CFunction function )
 {
 	lua_register(m_state, funcName, function);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Script::Register( const SRegFunction *pList )
 {
 	for( const SRegFunction *p = pList; p->func && p->name; ++p )
 		Register( p->name, p->func );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Script::RegisterSaveLoad( const SRegFunction *pList )
 {
 	for( const SRegFunction *p = pList; p->func && p->name; ++p )
 		lua_RegisterFunc( p->func, MakeUniqueName(m_state, p->name) );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void luaErrorNEA( Script *pScript, const string &szFuncName )
 {
 	string str = "Not enough arguments when calling function ";
@@ -95,7 +95,7 @@ static void luaErrorNEA( Script *pScript, const string &szFuncName )
 	str += ".\n";
 	pScript->Error( str.c_str() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void luaErrorWToA( Script *pScript, const string &szFuncName, int nArg )
 {
 	string str = "Wrong type of argument ";
@@ -105,7 +105,7 @@ static void luaErrorWToA( Script *pScript, const string &szFuncName, int nArg )
 	str += ".\n";
 	pScript->Error( str.c_str() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void luaWarningNVA( Script *pScript, const string &szFuncName, int nArg )
 {
 	string str = "Script warning: Argument ";
@@ -114,7 +114,7 @@ static void luaWarningNVA( Script *pScript, const string &szFuncName, int nArg )
 	str += szFuncName;
 	csSystem << str << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<SLuaParams> *pParams, bool bLog )
 {
 	pParams->clear();
@@ -235,7 +235,7 @@ bool Script::CheckArgs( const char *szArgList, const string &sFuncName, vector<S
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Script::Script( const char* instanceName, bool initStandardLibrary, lua_CFunction logFunction )
 	: m_ownState(false), nPushCount( 0 ) 
 {
@@ -606,7 +606,7 @@ string Script::GetStateAsText()
 	}
 	return str;
 }
-//////////////////////////////////////////////////////////////////////////
+
 int Script::operator&( IBinSaver &f ) 
 { 
 	if ( f.IsReading() )
@@ -626,4 +626,4 @@ int Script::operator&( IBinSaver &f )
 	}
 	return 0; 
 }
-//////////////////////////////////////////////////////////////////////////
+

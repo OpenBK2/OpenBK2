@@ -8,7 +8,7 @@
 #include "..\zlib\zconf.h"
 #include "EffectorB2Move.h"
 #include "DBUISpecificB2.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *_pContext, const string &szAnimatedWindow ) 
 { 
 	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move*>( _pCmd ) );
@@ -84,7 +84,7 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, interface IScre
 	bFinished = false;
 	fElapsedTime = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEffectorB2Move::CalcSpeedAccel( CVec2 *pSpeed, CVec2 *pAccel, const CVec2 &vMoveOffset, const CVec2 &vAccelCoeff, float fTime ) const
 {
 	if ( fTime < FP_EPSILON )
@@ -104,17 +104,17 @@ void CEffectorB2Move::CalcSpeedAccel( CVec2 *pSpeed, CVec2 *pAccel, const CVec2 
 		pAccel->y = pSpeed->y * (vAccelCoeff.y - 1.0f) / fTime;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEffectorB2Move::Reverse()
 {
 	NI_ASSERT( 0, "Can't reverse EffectorB2Move" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CEffectorB2Move::GetDelta( const CVec2 &vSpeed, const CVec2 &vAccel, float fTime ) const
 {
 	return vSpeed * fTime + vAccel * (fTime * fTime * 0.5f);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CEffectorB2Move::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
 {
 	if ( bFinished )
@@ -253,7 +253,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, interface IScreen *pScre
 	// return consumed time
 	return fEffectTime - fFormerElapsedTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x171B2B80,SWindowContextB2Move)
 REGISTER_SAVELOAD_CLASS(0x171B1C42,CEffectorB2Move)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

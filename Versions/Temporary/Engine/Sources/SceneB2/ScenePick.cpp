@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "VisObjDesc.h"
 #include "SceneInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos )
 {
 	CVec3 vNear, vFar;
@@ -14,7 +14,7 @@ void CScene::PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos )
 	Vis2AI( &vFar );
 	GetIntersectionWithTerrain( pvPos, vNear, vFar );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos )
 {
 	CVec3 vNear, vFar;
@@ -26,7 +26,7 @@ void CScene::PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos )
 	pvPos->z = 0.0f;
 	Vis2AI( pvPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SPickObjInfo> *pPickedObjects, list<int> *pPickedAttached )
 {
 	CVec3 vPos1, vPos2;
@@ -69,12 +69,12 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, list<SP
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetGridPosition( float fPosition, int nGridSize )
 {
 	return min( (int)(fPosition*nGridSize), nGridSize-1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
@@ -142,7 +142,7 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos, const
 	*/
 	return;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
 												 EPickObjects eRadiusCoeff, const EPickObjectsClass ePickObjsClass )
 {
@@ -217,7 +217,7 @@ void CScene::PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, cons
 		}
 	}
 } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
 {
 	if ( fastRender.resGrid.IsEmpty() )
@@ -299,7 +299,7 @@ void CScene::GetObstacleObjects( list<int> *pObstacleObjects, const CVec2 &vScre
 	}
 	return;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
 {
 	hash_set<int> foundObjects;
@@ -386,4 +386,4 @@ void CScene::GetCoveredObjects( list<int> *pCoveredObjects, const SObjectFilter 
 	}
 */
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

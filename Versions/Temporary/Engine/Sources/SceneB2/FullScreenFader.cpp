@@ -6,7 +6,7 @@
 
 #include "FullScreenFader.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFullScreenFader : public IFullScreenFader
 {
 	struct SColorModificatorDescr
@@ -44,7 +44,7 @@ public:
 private:
 	float GetValue( const NTimer::STime & _time );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullScreenFader::Start( float _fDuration, float _fStartValue, float _fEndValue, bool _bFadeInterfaces )
 {
 	startTime = 0;
@@ -54,7 +54,7 @@ void CFullScreenFader::Start( float _fDuration, float _fStartValue, float _fEndV
 
 	bFadeInterfaces = _bFadeInterfaces;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CFullScreenFader::GetValue( const NTimer::STime &currentTime )
 {
 	if  ( fDuration < FP_EPSILON )
@@ -74,7 +74,7 @@ float CFullScreenFader::GetValue( const NTimer::STime &currentTime )
 	}
 	return fFraction * fEndValue + (1.0f - fFraction) * fStartValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces )
 {
 	// ApplyModificators
@@ -119,13 +119,13 @@ void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterf
 		quadRender.AddRect( rectTarget, 0, rectTarget, color );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullScreenFader::AddColorModificator( CFuncBase<CVec3> *pColor, bool bModifyInterfaces )
 {
 	RemoveColorModificator( pColor );
 	colorModificatos.push_back( SColorModificatorDescr( pColor, bModifyInterfaces ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFullScreenFader::RemoveColorModificator( CFuncBase<CVec3> *pColor )
 {
 	for ( list<SColorModificatorDescr>::iterator it = colorModificatos.begin(); it != colorModificatos.end(); ++it )
@@ -137,12 +137,12 @@ void CFullScreenFader::RemoveColorModificator( CFuncBase<CVec3> *pColor )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IFullScreenFader *CreateFullScreenFader()
 {
 	return new CFullScreenFader;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IFullScreenFader );
 REGISTER_SAVELOAD_CLASS( 0x3423B300, CFullScreenFader )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

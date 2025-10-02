@@ -6,14 +6,14 @@
 #include "..\Common_RTS_AI\StaticMapHeights.h"
 #include "..\System\RandomGen.h"
 #include "StaticPathInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x310CBCC2, CInGroupPathMemento );
 REGISTER_SAVELOAD_CLASS( 0x310CBCC3, CInGroupPath )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NTimer::STime PERIOD_OF_PATH_TO_FORMATION_SEARCH = 100;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int MAX_DIST_TO_GO = 8; // пытаться закончить собственный путь если он завел от нормальной точки дальше чем на MAX_DIST_TO_GO тайлов
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInGroupPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit, CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;
@@ -31,7 +31,7 @@ bool CInGroupPathBasis::Init( IMemento *_pMemento, CBasePathUnit *_pUnit, CAIMap
 	}
 	return Init( pUnit, pMemento->GetSmoothGroupPath(), false, true, pAIMap );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInGroupPathBasis::Init( CBasePathUnit *_pUnit, CGroupSmoothPath *_pGroupSmoothPath, const bool bSmoothTurn, const bool bCheckTurn, CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;
@@ -45,18 +45,18 @@ bool CInGroupPathBasis::Init( CBasePathUnit *_pUnit, CGroupSmoothPath *_pGroupSm
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::CantFindPathToFormation()
 {
 	timeToSearchPathToBack = PERIOD_OF_PATH_TO_FORMATION_SEARCH + NRandom::Random( 0, PERIOD_OF_PATH_TO_FORMATION_SEARCH );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::CutDriveToFormationPath( IStaticPath *pPath )
 {
 	if ( pPath->GetLength() >= 4 )
 		pPath->MoveFinishTileTo( pPath->GetLength() / 2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2 &vDesPos, const CVec2 &vFormPos )
 {
 	// помещается в нужную точку
@@ -109,7 +109,7 @@ bool CInGroupPathBasis::CanGoToFormationPos( const CVec2 &newCenter, const CVec2
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 {
 	if ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), newCenter, pUnit->GetAIPassabilityClass(), pAIMap ) == FREE_NONE )
@@ -145,7 +145,7 @@ void CInGroupPathBasis::ValidateCurPath( const CVec2 &newCenter )
 		return;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInGroupPathBasis::DriveToFormation( const CVec2 &newCenter, const bool bAnyPoint )
 {
 	if ( bAnyPoint )
@@ -191,7 +191,7 @@ bool CInGroupPathBasis::DriveToFormation( const CVec2 &newCenter, const bool bAn
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const float fSpeed )
 {
 	CVec2 vCenter = pUnit->GetCenterPlain();
@@ -302,7 +302,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::Segment( const NTimer::STime timeDiff )
 {
 	if ( bGoByOwnPath )
@@ -332,16 +332,16 @@ void CInGroupPathBasis::Segment( const NTimer::STime timeDiff )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::Stop()
 {
 //	pUnit->RestoreSmoothPath();
 //	pUnit->Stop();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInGroupPathBasis::OnSerialize( IBinSaver &f )
 {
 	SerializeBasePathUnit( f, 2, &pUnit );
 	SerializeBasePathUnit( f, 3, &pFormation );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

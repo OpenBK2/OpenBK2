@@ -11,7 +11,7 @@
 
 #include "../System/Commands.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight )
 {
 //	if ( GetTransport() != 0 && bVisible )
@@ -23,7 +23,7 @@ void CMOUnitInfantry::SetVisible( const bool bVisible, const NDb::ESeason eSeaso
 	if ( pSquad )
 		pSquad->UpdateSquadIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc )
 {
 	const NDb::SInfantryRPGStats* pStats = GetStatsLocal();
@@ -37,7 +37,7 @@ void CMOUnitInfantry::InitAttached( const NDb::ESeason eSeason, IChooseAttached 
 		TryToAttach( pAttachedObj, pChooseFunc, eSeason, gun.szAttachedGunLocator, ESSOT_GUNS, j );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitInfantry::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	const bool bResult = CMOUnit::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
@@ -52,7 +52,7 @@ bool CMOUnitInfantry::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdat
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bTestDrawWeapon = true;
 bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
@@ -64,7 +64,7 @@ bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID, const SAINewUnitUp
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::SetupWeapon( NDb::ESeason eSeason )
 {
 	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
@@ -80,7 +80,7 @@ void CMOUnitInfantry::SetupWeapon( NDb::ESeason eSeason )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::ChangeRPGStats( const struct SAIChangeDBIDUpdate &update, const NDb::ESeason eSeason )
 {
 	const NDb::SVisObj *pCurVO = GetStats()->pvisualObject;
@@ -100,7 +100,7 @@ void CMOUnitInfantry::ChangeRPGStats( const struct SAIChangeDBIDUpdate &update, 
 		SetupWeapon( eSeason );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMOUnit::GetStatus( pStatus );
@@ -148,7 +148,7 @@ void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 		weapon.nAmmo = GetWeaponAmmo( weapon.pWeaponID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::SetSquad( interface IMOSquad *_pSquad )
 {
 	if ( pSquad )
@@ -165,7 +165,7 @@ void CMOUnitInfantry::SetSquad( interface IMOSquad *_pSquad )
 			UpdateIcons();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
 {
 	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot*>(&shot) );
@@ -227,7 +227,7 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 	}
 	AddShotTrace( pWeapon, shot, currTime, pScene );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, const struct SAINotifyBaseShot &shot,
 																	  const NTimer::STime &currTime, IScene *pScene )
 {
@@ -250,7 +250,7 @@ void CMOUnitInfantry::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, 
 		pScene->AddShotTrace( vStart, vEnd, currTime, &(pWeapon->shells[infShot.cShell]) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::GetActionsBy( CUserActions *pActions ) const
 {
 	if ( pActions->HasAction( NDb::USER_ACTION_RADIO_CONTROLLED_MODE ) )
@@ -289,7 +289,7 @@ void CMOUnitInfantry::GetActionsBy( CUserActions *pActions ) const
 	if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 		pActions->SetAction( NDb::USER_ACTION_MOVE_HUMAN );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CMOUnit::GetActions( pActions, eActions );
@@ -302,14 +302,14 @@ void CMOUnitInfantry::GetActions( CUserActions *pActions, EActionsType eActions 
 		pActions->SetAction( NDb::USER_ACTION_FIRST_AID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::GetPossibleActions( CUserActions *pActions ) const
 {
 	CMOUnit::GetPossibleActions( pActions );
 	//
 	GetActionsBy( pActions );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
@@ -327,7 +327,7 @@ void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placem
 		pScene->MoveObject( nParachuteID, vParachutePos, qParachuteRot, vParachuteScale );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager  )
 {
 	const bool bIsM1 = NGlobal::GetVar( "m1", 0 ) != 0;
@@ -372,7 +372,7 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 		//
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
@@ -381,7 +381,7 @@ void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, i
 	SetCanSelect( false );
 	SetTransport( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason )
 {
 	/*
@@ -397,7 +397,7 @@ void CMOUnitInfantry::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb:
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
 {
 	const NDb::SWeaponRPGStats *pWeapon = GetStatsLocal()->GetGun( GetID(), pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
@@ -419,7 +419,7 @@ CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
@@ -443,7 +443,7 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	if ( pSquad && IsFirstUnit() )
 		pSquad->FillIconsInfoForFirstUnit( iconInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::Select( bool bSelect )
 {
 	// show unit selections	
@@ -456,7 +456,7 @@ void CMOUnitInfantry::Select( bool bSelect )
 
   UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::SetTransport( IMOContainer *_pTransport )
 {
 	bool bChanged = (pTransport != _pTransport);
@@ -468,12 +468,12 @@ void CMOUnitInfantry::SetTransport( IMOContainer *_pTransport )
 	if ( pSquad )
 		pSquad->UpdateSquadIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess *CMOUnitInfantry::AIUpdateStartFinishParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	return pUpdate->bStart ? StartParadrop( pUpdate, eSeason ) : FinishParadrop( pUpdate, eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	const NDb::SVisObj *pUnitVisObj = pUpdate->pNewSoldierVisObj;
@@ -542,7 +542,7 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	const NDb::SVisObj *pUnitVisObj = pUpdate->pNewSoldierVisObj;
@@ -599,7 +599,7 @@ IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFi
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::HideParachute()
 {
 	if ( nParachuteID )
@@ -608,7 +608,7 @@ void CMOUnitInfantry::HideParachute()
 		nParachuteID = -1;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CMOUnitInfantry::GetFirePoint( const int nPlatform, const int nGun ) const
 {
 	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
@@ -619,19 +619,19 @@ const CVec3 CMOUnitInfantry::GetFirePoint( const int nPlatform, const int nGun )
 	NI_VERIFY( pAnimator->GetBonePosition( pStats->szGunBoneName.c_str(), &mShootPoint ), StrFmt( "Shoot point not found for infantry gun (bone's name \"%s\")", pStats->szGunBoneName.c_str() ), return VNULL3 );
 	return CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitInfantry::IsFirstUnit() const
 {
 	if ( !pSquad )
 		return true;
 	return pSquad->IsFirstUnit( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitInfantry::IsVisible() const
 {
 	return CMOUnit::IsVisible() && pTransport == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitInfantry::SetEntrench( bool bEntrench )
 {
 	bool bChanged = (bEntrenched != bEntrench);
@@ -642,9 +642,9 @@ void CMOUnitInfantry::SetEntrench( bool bEntrench )
 	if ( pSquad )
 		pSquad->UpdateSquadIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( MOUnitInfantry )
 REGISTER_VAR_EX( "test_draw_weapon", NGlobal::VarBoolHandler, &s_bTestDrawWeapon, true, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7486, CMOUnitInfantry );

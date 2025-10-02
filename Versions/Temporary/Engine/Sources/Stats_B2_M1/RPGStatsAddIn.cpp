@@ -10,12 +10,12 @@ PCConstructorInfo & ConstructorInfo()
 	static CConstructorInfo *pInfo = 0;
 	return pInfo;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<int N> struct SUserActionsChecker;
 template<> struct SUserActionsChecker<0> { };
 
 static SUserActionsChecker<int(NDb::USER_ACTION_UNKNOWN)> check_USER_ACTION_UNKNOWN_is_null;
-///////////////////////////////////////////////////////////////////////////////
+
 void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 {
 	user.Clear();
@@ -33,14 +33,14 @@ void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SComplexSoundDesc * ChooseAcknowledgement( const NDb::SAckSetRPGStats *pStats, const NDb::EUnitAckType type )
 {
 	if ( pStats == 0 || type < 0 || type >= pStats->types.size() ) 
 		return 0;
 	return pStats->types[type].pAck;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 {
 	if ( bInEditor )
@@ -87,7 +87,7 @@ void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 	availUserActions.SetAction( USER_ACTION_UNKNOWN );
 	availUserActions.SetAction( USER_ACTION_MOVE_TO_GRID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 {
 	if ( -1 == nCmd ) 
@@ -107,4 +107,4 @@ const CUserActions* NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) co
 { 
 	return bActionsBy ? &(pActions->availUserActions) : &(pActions->availUserExposures); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -9,19 +9,19 @@
 extern CUnitCreation theUnitCreation;
 
 //#include "..\Scene\Statistics.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsCellInExcludingCircle( const CVec2 &vCellCenter, const CCircle &circle )
 {
 	return fabs2( vCellCenter - circle.center ) <= sqr( circle.r + SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE / 3 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 SResistance::GetResistanceCellCenter( const int nCell )
 {
 	const SVector cell( nCell >> 12, nCell & 0xfff );
 	const SVector tile( cell.x * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2, cell.y * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2 );
 	return AICellsTiles::GetPointByTile( tile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats )
 {
 	NI_VERIFY( pStats != 0, "", return 0 );
@@ -33,7 +33,7 @@ const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats )
 	return 
 		fUnitTypeCoeff * ( 1.0f * fPrice + 1.0f * fArmorMember );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float GetCoeffByDeltaTime( const float fDeltaTime, const float fUpperBound, bool bNeedDeinstall, bool bCanMove )
 {
 	float fCoeff = 1.0f - ( fDeltaTime / fUpperBound ) / 3.0f;
@@ -44,7 +44,7 @@ const float GetCoeffByDeltaTime( const float fDeltaTime, const float fUpperBound
 
 	return fCoeff;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime )
 {
 	const float fTimeToForgetUnit = pUnit->GetTimeToForget();
@@ -61,7 +61,7 @@ const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime
 		return fResult;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime, const float fDistToLastVisibleAntiArt )
 {
 	const float fTimeToForget = SGeneralConsts::TIME_TO_FORGET_ANTI_ARTILLERY;
@@ -80,11 +80,11 @@ const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime
 			fWeight * fTimeCoeff;// * fAccuracyCoeff;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CResistancesContainer												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CResistancesContainer::GetResistanceCellNumber( const CVec2 &vPos )
 {
 	const SVector tile = AICellsTiles::GetTile( vPos );
@@ -92,7 +92,7 @@ const int CResistancesContainer::GetResistanceCellNumber( const CVec2 &vPos )
 
 	return ( cell.x << 12 ) | cell.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::UpdateEnemyUnitInfo(
 	CAIUnitInfoForGeneral *pInfo,
 	const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
@@ -178,7 +178,7 @@ void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 			--goodWeight[nCell];
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 {
 	if ( !pInfo->GetOwner()->GetStats()->IsAviation() )
@@ -194,13 +194,13 @@ void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 			--goodWeight[nCell];
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::SetCellInUse( const int nResistanceCellNumber, bool bInUse )
 {
 	if ( cellsWeights.find( nResistanceCellNumber ) != cellsWeights.end() )
 		cellsWeights[nResistanceCellNumber].bInUse = bInUse;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
 {
 	/*
@@ -226,12 +226,12 @@ void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::AddExcluded( const CVec2 &vCenter, const float fRadius )
 {
 	excluded.push_back( CCircle( vCenter, fRadius ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CResistancesContainer::IsCellExcluded( const CVec2 &vCellCenter )
 {
 	for ( list<CCircle>::const_iterator it = excluded.begin(); it != excluded.end(); ++it )
@@ -239,7 +239,7 @@ bool CResistancesContainer::IsCellExcluded( const CVec2 &vCellCenter )
 			return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CResistancesContainer::IsInUse( const int nResistanceCellNumber )
 {
 	CCellsWeights::iterator iter = cellsWeights.find( nResistanceCellNumber );
@@ -251,7 +251,7 @@ bool CResistancesContainer::IsInUse( const int nResistanceCellNumber )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 {
 	list<CCircle>::const_iterator iter = excluded.begin();
@@ -260,17 +260,17 @@ bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 
 	return iter != excluded.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										CResistancesContainer::CIter									*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::CIter::IterateToNotInUse()
 {
 	while ( iter != pContainter->resistances.end() && pContainter->IsInUse( (*iter).GetCellNumber() ) )
 		++iter;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResistancesContainer::CIter::Iterate()
 {
 	if ( iter != pContainter->resistances.end() )
@@ -279,4 +279,4 @@ void CResistancesContainer::CIter::Iterate()
 		IterateToNotInUse();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

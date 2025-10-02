@@ -11,7 +11,7 @@ namespace NGScene
 {
 struct SPerspDirectionalDepthInfo;
 void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &renderInfo, const SPerspDirectionalDepthInfo &dp, NGfx::CTexture *pCloud, const SHMatrix &proj );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCloudMover : public CFuncBase<SHMatrix>
 {
 	OBJECT_NOCOPY_METHODS(CCloudMover);

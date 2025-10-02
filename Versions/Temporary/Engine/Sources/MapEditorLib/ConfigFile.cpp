@@ -11,7 +11,7 @@ static char THIS_FILE[] = __FILE__;
 
 const char SConfigFile::DIVIDERS[] = " \t";
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConfigFile::SConfigEntry::Load( const string &rszLine )
 {
 	szLine = rszLine;
@@ -43,7 +43,7 @@ void SConfigFile::SConfigEntry::Load( const string &rszLine )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SConfigFile::Load( const string &rszFileName )
 {
 	Clear();
@@ -64,7 +64,7 @@ int SConfigFile::Load( const string &rszFileName )
 	return lineList.size();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConfigFile::Save( const string &rszFileName )
 {
   string szBuffer;
@@ -77,7 +77,7 @@ void SConfigFile::Save( const string &rszFileName )
   stream.Write( &( szBuffer[0] ), szBuffer.size() );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SConfigFile::GetParams( CParamsList *pParamsList, const string &rszKeyword, bool bIgnoreCase )
 {
 	string szKeyword = rszKeyword;
@@ -110,14 +110,14 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const string &rszKeyword,
 	return bFound;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConfigFile::AddLine( const string &rszLine )
 {
 	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
 	itConfigEntry->Load( rszLine );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConfigFile::AddKeyword( const string &rszKeyword, const string &rszParams )
 {
 	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
@@ -126,7 +126,7 @@ void SConfigFile::AddKeyword( const string &rszKeyword, const string &rszParams 
 	itConfigEntry->szParams = rszParams;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SConfigFile::RemoveKeyword( const string &rszKeyword, bool bIgnoreCase )
 {
 	string szKeyword = rszKeyword;
@@ -156,6 +156,6 @@ int SConfigFile::RemoveKeyword( const string &rszKeyword, bool bIgnoreCase )
 	return nErasedCount;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

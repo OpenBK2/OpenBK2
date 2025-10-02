@@ -2,14 +2,14 @@
 
 #include "ExecutorSpyMode.h"
 #include "NewUpdater.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorSpyMode::CExecutorSpyMode( CAIUnit *_pUnit	) :
 CExecutorUnitCombatBonus ( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE ), bMasked( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange( const WORD oldModeFlags, const WORD newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & CExecutorUnitCombatBonus::EUM_FIGHTING ) )
@@ -22,7 +22,7 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange(
 	}
 	return EACR_IGNORE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSpyMode::SwitchingOffEnd()
 {
 	CExecutorUnitCombatBonus::SwitchingOffEnd();
@@ -38,7 +38,7 @@ void CExecutorSpyMode::SwitchingOffEnd()
 	GetAIUnit()->SetBehaviourFire( SBehaviour::EFAtWill );
 	GetAIUnit()->RemoveCamouflage( ECRR_USER_COMMAND );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSpyMode::SwitchOnEnd()
 {
 	CExecutorUnitCombatBonus::SwitchOnEnd();
@@ -54,7 +54,7 @@ void CExecutorSpyMode::SwitchOnEnd()
 	GetAIUnit()->SetBehaviourFire( SBehaviour::EFNoFire );
 	GetAIUnit()->SetCamoulfage();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSpyMode::SwitchModel( const NDb::SHPObjectRPGStats *pStats )
 {
 	CPtr<SAIChangeDBIDUpdate> pUpdate = new SAIChangeDBIDUpdate;
@@ -65,7 +65,7 @@ void CExecutorSpyMode::SwitchModel( const NDb::SHPObjectRPGStats *pStats )
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_IDLE, GetAIUnit(), -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorSpyMode::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	vector<EExecutorEventID> unitEvents;
@@ -76,7 +76,7 @@ void CExecutorSpyMode::RegisterOnEvents( IExecutorContainer *pContainer )
 
 	CExecutorUnitCombatBonus::RegisterOnEvents( pContainer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
@@ -107,7 +107,7 @@ bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 
 	return CExecutorUnitCombatBonus::NotifyEvent( event );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorSpyMode::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CExecutorUnitCombatBonus*>( this ) );
@@ -116,6 +116,6 @@ int CExecutorSpyMode::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1916C380, CExecutorSpyMode )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

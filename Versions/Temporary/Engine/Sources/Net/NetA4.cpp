@@ -13,16 +13,16 @@
 #endif
 
 const int PACKET_SIZE = 500;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NNet
 {
 using namespace NWin32Helper;
 static NWin32Helper::CCriticalSection netDriverCriticalSection;
 const float MIN_TIME_BETWEEN_PACKETS_PER_PEER = 0.050f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // interaction with master server is accomplished with different object
 // if so then it should be possible to start
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EPacket
 {
 	NORMAL,
@@ -36,7 +36,7 @@ enum EPacket
 	NOP,
 	KICK,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetNOPStream( CMemoryStream *pNOP )
 {
 	pNOP->Clear();
@@ -44,7 +44,7 @@ void GetNOPStream( CMemoryStream *pNOP )
 	EPacket ePacket = NOP;
 	pNOP->Write( &ePacket, 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_APPLICATIONID = 0x45143100;
 class CSendPacket
 {
@@ -79,9 +79,9 @@ public:
 CMemoryStream CSendPacket::pkt;
 CBitLocker CSendPacket::bits;
 bool CSendPacket::bLastPacket;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // packet to/from stream
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 {
 	if ( buf.GetSize() < 4 )
@@ -95,7 +95,7 @@ static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WritePacket( list<CMemoryStream> *pDst, CMemoryStream &pkt )
 {
 	NI_ASSERT( pkt.GetSize() < N_STREAM_BUFFER - 1000, StrFmt( "Wrong memory stream size (%d)", pkt.GetSize() ) );
@@ -125,7 +125,7 @@ static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 	pDst->SetSizeDiscard( nSize );
 	src.Read( pDst->GetBufferForWrite(), nSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** net driver
@@ -133,7 +133,7 @@ static void ReadPacket( CRingBuffer<N_STREAM_BUFFER> &src, CMemoryStream *pDst )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD WINAPI TheThreadProc( LPVOID lpParameter )
 {
 	CNetDriver *pNet = reinterpret_cast<CNetDriver*>(lpParameter);
@@ -147,48 +147,48 @@ static DWORD WINAPI TheThreadProc( LPVOID lpParameter )
 	pNet->FinishThread();
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IDriver::EState CNetDriver::GetState() const 
 {
 	// Тут не локаем треды, так как большой погоды это не делает, а производительность ест и мешает работать с сетью
 //	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	return state; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StartThread()
 {
 	SetEvent( hThreadReport );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CNetDriver::CanWork()
 {
 	return IsValid(this) && WaitForSingleObject( hStopCommand, 0 ) != WAIT_OBJECT_0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::FinishThread()
 {
 	SetEvent( hThreadReport );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::CreateEvents()
 {
 	hThread = 0;
 	hThreadReport = CreateEvent( 0, true, false, 0 );
 	hStopCommand = CreateEvent( 0, true, false, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetDriver::CNetDriver() : serverInfo( 0 ), login( 0 ), state( INACTIVE )
 {
 	CreateEvents();
 	bIsBroadcast = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetDriver::CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast ) 
 : serverInfo( 0 ), login( 0 ), state( INACTIVE ), consts(_consts), bIsBroadcast(_bIsBroadcast)
 {
 	CreateEvents();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::KillThread()
 {
 	if ( hThread )
@@ -200,7 +200,7 @@ void CNetDriver::KillThread()
 		hThread = 0;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetDriver::~CNetDriver()
 {
 	KillThread();
@@ -235,7 +235,7 @@ CNetDriver::~CNetDriver()
 	CloseHandle( hThreadReport );
 	CloseHandle( hStopCommand );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort, bool bClientOnly, ILinksManager *pLinksManager )
 {
 	NI_ASSERT( pLinksManager != 0, "Can't initialize by 0 linksManager" );
@@ -269,7 +269,7 @@ void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort
 	WaitForSingleObject( hThreadReport, INFINITE );
 	ResetEvent( hThreadReport );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetDriver::SPeer* CNetDriver::GetClientByAddr( const CNodeAddress &addr )
 {
 	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
@@ -279,7 +279,7 @@ CNetDriver::SPeer* CNetDriver::GetClientByAddr( const CNodeAddress &addr )
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetDriver::SPeer* CNetDriver::GetClient( CP2PTracker::UCID nID )
 {
 	CPeerList::iterator i = clients.find( nID );
@@ -287,7 +287,7 @@ CNetDriver::SPeer* CNetDriver::GetClient( CP2PTracker::UCID nID )
 		return &(i->second);
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::AddClient( const SClientAddressInfo &addr, CP2PTracker::UCID clientID )
 {
 	NI_ASSERT( clients.find( clientID ) == clients.end(), "Duplicate peer" );
@@ -300,19 +300,19 @@ void CNetDriver::AddClient( const SClientAddressInfo &addr, CP2PTracker::UCID cl
 	peer.bTryShortcut = !addr.inetAddress.SameIP( test );
 	peer.bTryShortcut |= !addr.localAddress.GetAddress( 1, &test );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::AddNewP2PClient( const SClientAddressInfo &addr, CP2PTracker::UCID clientID )
 {
 	CMemoryStream addrInfo;
 	addrInfo.Write( &addr, sizeof( addr ) );
 	p2p.AddNewClient( clientID, addrInfo, bIsBroadcast );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::RemoveClient( CP2PTracker::UCID nID )
 {
 	clients.erase( nID );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -328,7 +328,7 @@ bool CNetDriver::SendBroadcast( const CMemoryStream &_pkt )
 	p2p.SendBroadcast( pkt );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -347,7 +347,7 @@ bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::Kick( int nClient )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -358,7 +358,7 @@ void CNetDriver::Kick( int nClient )
 	if ( pDst )
 		p2p.KickClient( nClient, bIsBroadcast );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef __TEST_LAGS__
 bool CNetDriver::AnalyzeLags()
 {
@@ -394,7 +394,7 @@ bool CNetDriver::AnalyzeLags()
 	return true;
 }
 #endif // __TEST_LAGS__
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, vector<int> *pReceived, CMemoryStream *pPkt )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -420,7 +420,7 @@ if ( !AnalyzeLags() )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 {
 	// if can accept login requests only
@@ -471,7 +471,7 @@ void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
 {
 	CP2PTracker::UCID clientID = -1;
@@ -497,7 +497,7 @@ void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
 		//if (pCSLog) (*pCSLog) << "normal packet from non client received from " << addr.GetFastName() << endl;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::ProcessIncomingMessages()
 {
 	// process incoming packets
@@ -596,7 +596,7 @@ void CNetDriver::ProcessIncomingMessages()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StepInactive()
 {
 	vector<CNodeAddress> dest;
@@ -611,7 +611,7 @@ void CNetDriver::StepInactive()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StepConnecting()
 {
 	switch ( login.GetState() )
@@ -648,7 +648,7 @@ void CNetDriver::StepConnecting()
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from, 
 		CMemoryStream &data, const vector<CP2PTracker::UCID> &received )
 {
@@ -674,7 +674,7 @@ void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from,
 			res.received.push_back( pTest->clientID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::PollMessages( SPeer *pPeer )
 {
 	// seek for packets through incoming traffic
@@ -688,7 +688,7 @@ void CNetDriver::PollMessages( SPeer *pPeer )
 		p2p.ProcessPacket( pPeer->clientID, pkt, bIsBroadcast );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::ProcessP2PMessages()
 {
 	CP2PTracker::SMessage msg;
@@ -724,7 +724,7 @@ void CNetDriver::ProcessP2PMessages()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StepActive( float fDeltaTime )
 {
 	// rollback outdated packets
@@ -824,12 +824,12 @@ void CNetDriver::StepActive( float fDeltaTime )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CRAP{
 int nTrafficPackets;
 int nTrafficTotalSize;
 // CRAP}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::Step()
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -886,7 +886,7 @@ void CNetDriver::Step()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StartGame()
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -894,7 +894,7 @@ void CNetDriver::StartGame()
 	NI_ASSERT( state == INACTIVE, "Wrong state of the game" );
 	state = ACTIVE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -905,13 +905,13 @@ void CNetDriver::ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd
 	gameHostAddress.Clear();
 	gameHostAddress.SetInetName( addr.GetFastName().c_str(), 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StartGameInfoSend( const CMemoryStream &pkt )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	serverInfo.StartReply( pkt );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StartGameInfoSend( const SGameInfo &_gameInfo )
 {
 	CMemoryStream memStream;
@@ -923,14 +923,14 @@ void CNetDriver::StartGameInfoSend( const SGameInfo &_gameInfo )
 	}
 	StartGameInfoSend( memStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StopGameInfoSend()
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	
 	serverInfo.StopReply();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -962,21 +962,21 @@ bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StartNewPlayerAccept() 
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 
 	bAcceptNewClients = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::StopNewPlayerAccept()
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	
 	bAcceptNewClients = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CNetDriver::GetPing( int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -987,7 +987,7 @@ const float CNetDriver::GetPing( int nClientID )
 	else
 		return iter->second.acks.GetPing();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
@@ -998,7 +998,7 @@ const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 	else
 		return iter->second.acks.GetTimeSinceLastRecv();	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for debug
 const char* CNetDriver::GetAddressByClientID( const int nClientID ) const
 {
@@ -1009,45 +1009,45 @@ const char* CNetDriver::GetAddressByClientID( const int nClientID ) const
 	else
 		return iter->second.currentAddr.GetFastName().c_str();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CNetDriver::GetIP( const int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	CPeerList::iterator iter = clients.find( nClientID );
 	return iter == clients.end() ? 0 : iter->second.currentAddr.GetIP();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CNetDriver::GetPort( const int nClientID )
 {
 	CCriticalSectionLock criticalSectionLock( netDriverCriticalSection );
 	CPeerList::iterator iter = clients.find( nClientID );
 	return iter == clients.end() ? 0 : iter->second.currentAddr.GetPort();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::PauseNet()
 {
 #ifdef __TEST_LAGS__
 	bPaused = true;
 #endif // __TEST_LAGS__
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::UnpauseNet()
 {
 #ifdef __TEST_LAGS__
 	bPaused = false;
 #endif // __TEST_LAGS__
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNetDriver::SetLag( const NTimer::STime period )
 {
 #ifdef __TEST_LAGS__
 	lagPeriod = period;
 #endif // __TEST_LAGS__
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast )
 {	
 	return new NNet::CNetDriver( consts, bIsBroadcast );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

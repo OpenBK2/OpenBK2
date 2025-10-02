@@ -2,14 +2,14 @@
 #include "TestType.h"
 #include "MeasureTimer.h"
 #include "../libdb/ObjMan.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NTest
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TODO{
 // * add test to remove at position '-1'
 // TODO}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // {A3965C8E-B3EA-472f-8289-4117D37BC8AA}
 static const GUID guid0 = { 0xa3965c8e, 0xb3ea, 0x472f, { 0x82, 0x89, 0x41, 0x17, 0xd3, 0x7b, 0xc8, 0xaa } };
 // {D355FB02-F8C8-4b16-A387-73F3FCBE4A5B}
@@ -50,7 +50,7 @@ static const STestDataStruct1 s_ComplexArrayTestData[5] =
 	{ 4, 4.0f, false, guid3, "test string 4", L"test wstring 4", "UNIT_TYPE_AVIA_FIGHTER", flags[3] },
 	{ 5, 5.0f, true , guid4, "test string 5", L"test wstring 5", "UNIT_TYPE_SPG_ASSAULT", flags[4] },
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckMetaSetGet( NDb::IObjMan *pBind, const string &szFieldName, const CVariant &value )
 {
 	CVariant var;
@@ -59,7 +59,7 @@ bool CheckMetaSetGet( NDb::IObjMan *pBind, const string &szFieldName, const CVar
 	NI_VERIFY( var == value, "Values mistmatch after set/get!", return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldName, const int nIndex, const STestDataStruct1 *pData )
 {
 	const string szStructName = StrFmt( "%s.[%d].", szFieldName.c_str(), nIndex );
@@ -73,7 +73,7 @@ bool CheckMetaSetGetForArrayElement( NDb::IObjMan *pBind, const string &szFieldN
 	NI_VERIFY( CheckMetaSetGet(pBind, szStructName + "TypeBinaryFlags", pData->flagsVal) != false, "Failed set/get test for field in array element!", return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestComplexArrayInsertRemove( NDb::IObjMan *pBind, const string &szFieldName )
 {
 	const string szTestName = StrFmt( "Complex array \"%s\"", szFieldName.c_str() );
@@ -120,7 +120,7 @@ bool TestComplexArrayInsertRemove( NDb::IObjMan *pBind, const string &szFieldNam
 	// 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestComplexArray2InsertRemove( NDb::IObjMan *pBind, const string &szFieldName )
 {
 	const string szTestName = StrFmt( "Complex array 2 \"%s\"", szFieldName.c_str() );
@@ -165,6 +165,6 @@ bool TestComplexArray2InsertRemove( NDb::IObjMan *pBind, const string &szFieldNa
 	// 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

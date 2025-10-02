@@ -4,7 +4,7 @@
 #include "../MapEditorLib/ManipulatorManager.h"
 #include "../System/Text.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectDataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "IconTexture", pObjectManipulator, 0, 0, 0 ) )
@@ -16,7 +16,7 @@ bool CMapObjectDataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	string szNameFileName;
@@ -27,4 +27,4 @@ bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const string &rszObj
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

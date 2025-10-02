@@ -4,16 +4,16 @@
 #include "../Misc/Sync.h"
 #include "Scene.h"
 #include "VisObjSelection.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SModel;
 	struct SEffect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct IAIVisitor;
 class CCSTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVisObjDescBase : public IVisObj
 {
 	ZDATA
@@ -50,7 +50,7 @@ public:
 	virtual void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer, 
 														NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, bool bShowBB ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SModelVisObjDesc : public SVisObjDescBase
 {
 	typedef hash_map< int, CObj<interface IAttachedObject> > TAttachOfOneType;
@@ -90,7 +90,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	//
 	void UpdateStuff( class CVisObjIconsManager *pVOIM );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // static object in game
 struct SStaticVisObjDesc : public SModelVisObjDesc
 {
@@ -111,7 +111,7 @@ public:
 	
 	CFuncBase<SBound> *GetBounder() { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // static object in editor (can be moved)
 struct SDynamicVisObjDesc : public SModelVisObjDesc
 {
@@ -127,9 +127,9 @@ public:
 	CCSFBTransform* GetTransform() const { return pTransform; }
 	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // animated object
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 {
 	ZDATA_( SModelVisObjDesc )
@@ -153,7 +153,7 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 										NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, bool bShowBB );
 	virtual CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene, const NDb::SModel *pModel, NGScene::IGameView::SMeshInfo *pMeshInfoPassed ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAnimatedVisObjDesc : public SAnimatedVisObjDescBase 
 {
 	OBJECT_NOCOPY_METHODS( SAnimatedVisObjDesc )
@@ -172,7 +172,7 @@ public:
 	//
 	CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene, const NDb::SModel *pModel, NGScene::IGameView::SMeshInfo *pMeshInfoPassed );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // effect vis obj
 struct SEffectVisObjBase :	public SVisObjDescBase
 {
@@ -181,7 +181,7 @@ struct SEffectVisObjBase :	public SVisObjDescBase
 		NTimer::STime timeStart;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SVisObjDescBase *)this); f.Add(2,&pEffect); f.Add(3,&timeStart); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SStaticEffectVisObj : public SEffectVisObjBase
 {
 	OBJECT_NOCOPY_METHODS( SStaticEffectVisObj )
@@ -197,7 +197,7 @@ public:
 	CCSFBTransform* GetTransform() const { return 0; }
 	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDynamicEffectVisObj : public SEffectVisObjBase
 {
 	OBJECT_NOCOPY_METHODS( SDynamicEffectVisObj )
@@ -213,4 +213,4 @@ public:
 	CCSFBTransform* GetTransform() const { return pTransform; }
 	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -3,11 +3,11 @@
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"
 #include "SoundManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															CTerrainSound*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::AddCycledSound( const NDb::SComplexSoundDesc *pStats )
 {
 	const NDb::SComplexSoundDesc::SSoundStats *pRandomSound = pStats->GetRandomSound();
@@ -22,7 +22,7 @@ void CTerrainSounds::CTerrainSound::AddCycledSound( const NDb::SComplexSoundDesc
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::StartCycledSounds( ISFX *pSFX, bool bNonPeacefulOnly )
 {
 	for ( CCycledSounds::iterator it = cycledSounds.begin(); it != cycledSounds.end(); ++it )
@@ -33,7 +33,7 @@ void CTerrainSounds::CTerrainSound::StartCycledSounds( ISFX *pSFX, bool bNonPeac
 			pSFX->PlaySample( it->pSound, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::Update(	const struct SSoundTerrainInfo& info, 
 																												const CVec3 &vListener, 
 																												const float fViewSize, 
@@ -73,13 +73,13 @@ void CTerrainSounds::CTerrainSound::Update(	const struct SSoundTerrainInfo& info
 		bNeedUpdate = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::SetMustPlay( bool _bMustPlay ) 
 { 
 	bNeedUpdate &= ( bMustPlay == _bMustPlay );
 	bMustPlay = _bMustPlay; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::DoUpdate( ISFX * pSFX )
 {
 	if ( bMustPlay )
@@ -97,7 +97,7 @@ void CTerrainSounds::CTerrainSound::DoUpdate( ISFX * pSFX )
 
 	bNeedUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::SetSound( const NDb::SComplexSoundDesc *pStats, NTimer::STime timeWhenRestart, ISoundScene *pScene )
 {
 	if ( wSound )
@@ -113,7 +113,7 @@ void CTerrainSounds::CTerrainSound::SetSound( const NDb::SComplexSoundDesc *pSta
 		wSound = pScene->AddSound( pStats, vSoundPos, SFX_MIX_IF_TIME_EQUALS, SAM_NEED_ID, 0, 2 );
 	timeRestart = timeWhenRestart;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::CTerrainSound::StopSounds( ISFX * pSFX, bool bOnlyPeaceful )
 {
 	for ( CCycledSounds::iterator it = cycledSounds.begin(); it != cycledSounds.end(); ++it )
@@ -123,18 +123,18 @@ void CTerrainSounds::CTerrainSound::StopSounds( ISFX * pSFX, bool bOnlyPeaceful 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															CTerrainSounds*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::Init( interface ITerrainSounds *_pTerrain )
 {
 	Clear();
 	pTerrain = _pTerrain;
 	pSFX = Singleton<ISFX>();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::Clear()
 {
 	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end();  ++it )
@@ -145,7 +145,7 @@ void CTerrainSounds::Clear()
 	lastUpdateTime = 0;
 	bMuteAll = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::Mute( const bool bMute )
 {
 	bMuteAll = bMute;
@@ -158,7 +158,7 @@ void CTerrainSounds::Mute( const bool bMute )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, interface ISoundScene *pScene )
 {
 	if ( !pTerrain || bMuteAll ) return ;

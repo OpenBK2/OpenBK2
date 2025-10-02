@@ -20,7 +20,7 @@
 #define MITHV3EP_THUMBNAILS						0x00000080
 #define MITHV3EP_ALL									0xFFFFFFFF
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightTileStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -38,7 +38,7 @@ class CHeightTileStateV3 : public CDefaultInputState
 	void OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightUpStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -58,7 +58,7 @@ class CHeightUpStateV3 : public CDefaultInputState
 	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightDownStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -78,7 +78,7 @@ class CHeightDownStateV3 : public CDefaultInputState
 	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightRoundStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -98,7 +98,7 @@ class CHeightRoundStateV3 : public CDefaultInputState
 	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightPlatoStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -118,7 +118,7 @@ class CHeightPlatoStateV3 : public CDefaultInputState
 	void OnMouseMove	( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CHeightStateV3 : public CMultiInputState, public ICommandHandler
 {
 	friend class CMultiInputState;
@@ -296,7 +296,7 @@ public:
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3 );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__HEIGHT_STATE_V3__)
 
 

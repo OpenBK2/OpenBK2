@@ -10,7 +10,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReplaceTextDlg dialog
 
 IMPLEMENT_DYNAMIC(CReplaceTextDlg, CDialog)
@@ -22,11 +22,11 @@ CReplaceTextDlg::CReplaceTextDlg(CWnd* pParent /*=NULL*/)
 	, m_szReplaceWith(_T(""))
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReplaceTextDlg::~CReplaceTextDlg()
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReplaceTextDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
@@ -35,13 +35,13 @@ void CReplaceTextDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_FINDTEXT, m_szFindWhat);
 	DDX_Text(pDX, IDC_REPLACETEXT, m_szReplaceWith);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CReplaceTextDlg, CDialog)
 	ON_BN_CLICKED(ID_FINDNEXT, OnBnClickedFindnext)
 	ON_BN_CLICKED(ID_REPLACE, OnBnClickedReplace)
 	ON_BN_CLICKED(ID_REPLACEALL, OnBnClickedReplaceall)
 END_MESSAGE_MAP()
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReplaceTextDlg message handlers
 
 void CReplaceTextDlg::OnBnClickedFindnext()

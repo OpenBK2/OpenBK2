@@ -11,7 +11,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::UndoWithoutUpdateViews()
 {
 	if ( undoDataList.empty() )
@@ -54,7 +54,7 @@ bool CFolderController::UndoWithoutUpdateViews()
 	return bResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::RedoWithoutUpdateViews()
 {
 	if ( undoDataList.empty() )
@@ -168,7 +168,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddInsertOperation( const string &rszObjectName )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -179,7 +179,7 @@ bool CFolderController::AddInsertOperation( const string &rszObjectName )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddRemoveOperation( const string &rszObjectName )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -190,7 +190,7 @@ bool CFolderController::AddRemoveOperation( const string &rszObjectName )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddCopyOperation( const string &rszDestination, const string &rszSource )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -202,7 +202,7 @@ bool CFolderController::AddCopyOperation( const string &rszDestination, const st
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddRenameOperation( const string &rszDestination, const string &rszSource, bool bNewHTREEITEM )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -215,7 +215,7 @@ bool CFolderController::AddRenameOperation( const string &rszDestination, const 
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddColorOperation( const string &rszObjectName, int nNewColor )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -227,7 +227,7 @@ bool CFolderController::AddColorOperation( const string &rszObjectName, int nNew
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFolderController::AddExpandOperation( const string &rszObjectName, bool bExpand )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -238,6 +238,6 @@ bool CFolderController::AddExpandOperation( const string &rszObjectName, bool bE
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

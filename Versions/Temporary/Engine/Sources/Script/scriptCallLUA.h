@@ -3,7 +3,7 @@
 //
 namespace NScript
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLUACallParam: public CObjectBase
 {
 public:
@@ -25,12 +25,12 @@ public:
 	CLUACallParam( int _nInt ): type( PT_INT ), nInt( _nInt ) {}
 	CLUACallParam( float _fFloat ): type( PT_FLOAT ), fFloat( _fFloat ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void luaCallFunction( const string &szName, char *szParams, ... );
 void luaCallFunction( const string &szName, const vector< CObj<CLUACallParam> > &params );
 void luaMakeCallParamsVector( char *szParams, va_list *pL, vector< CObj<CLUACallParam> > *pParams );
 void luaCreateCPtrVar( const string &szVarName, CObjectBase *pObj );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 //
 #endif __SCRIPTCALLLUA_H_

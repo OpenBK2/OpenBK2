@@ -9,7 +9,7 @@ namespace NGScene
 {
 extern bool bNewShadows;
 extern bool bLowRAM;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCompareOps
 {
 	bool operator()( const CRenderCmdList::SOperation *pA, const CRenderCmdList::SOperation *pB )
@@ -36,7 +36,7 @@ struct SCompareOps
 		return false;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<float> geomDepths;
 struct SDepthCompare
 {
@@ -54,7 +54,7 @@ static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &sc
 	for ( int k = 0; k < nGeometries; ++k )
 		geomDepths[k] = scene.GetStaticInfo( k ).bv.s.ptCenter * wDir;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &fragment, 
 	const CSceneFragments &scene, ETrilistType triListType )
 {
@@ -82,9 +82,9 @@ static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &
 		pRC->AddPrimitive( pGeometryInfo->pVertices->GetValue(), &tris[0] + nBase, Min( 32, int(tris.size() - nBase) ), nFlags );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern bool bNewShadows;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetupNLShadowsProjection( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &depthInfo )
 {
 
@@ -95,7 +95,7 @@ void SetupNLShadowsProjection( NGfx::CRenderContext *pRC, const SPerspDirectiona
 
 	pRC->SetVSConst( 27, bNewShadows ?  depthInfo.nlp.lvShift : depthInfo.nlp.vShift );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartRenderExecute( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo )
 {
 	pRC->Use(); //// CRAP
@@ -107,7 +107,7 @@ void StartRenderExecute( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo 
 		pRC->SetVSConst( 21, lightInfo.vRadius );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static ETrilistType ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmdList::SOperation &op, const SLightInfo &lightInfo )
 {
 	if ( pRC->HasRegisters() )
@@ -381,7 +381,7 @@ static ETrilistType ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmd
 	}
 	return triListType;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ExecOps( NGfx::CRenderContext *pRC, const vector<CRenderCmdList::SOperation> &ops,
 	const CSceneFragments &scene, const SLightInfo &lightInfo )
 {
@@ -428,14 +428,14 @@ static void ExecOps( NGfx::CRenderContext *pRC, const vector<CRenderCmdList::SOp
 	if ( pPrevOp )
 		pRC->Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Execute( IRender *pRender, NGfx::CRenderContext *pRC, const CTransformStack &ts, const CRenderCmdList &cl,
 	const CSceneFragments &scene, const SLightInfo &lightInfo )
 {
 	pRC->SetTransform( ts.Get() );
 	ExecOps( pRC, cl.ops, scene, lightInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 //START_REGISTER(GSceneInternal)
 //	REGISTER_VAR( "gfx_depth_sort", NGlobal::VarBoolHandler, &bUseHWHSR, 1, true )

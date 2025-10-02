@@ -1,7 +1,7 @@
 #pragma once
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Legacy
 template<class TResource>
 bool LoadXMLResource( const string &rszResourceFileName, const string &rszExtention, const string &rszChunkLabel, TResource &rResource )
@@ -12,7 +12,7 @@ bool LoadXMLResource( const string &rszResourceFileName, const string &rszExtent
 }
 
 // New Legacy
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFileStreamHolder
 {
 	CDataStream *pStream;
@@ -24,11 +24,11 @@ struct SFileStreamHolder
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath );
 void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath );
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadXMLResource( const string &rszResourceFileName, const string &rszChunkLabel, TResource &rResource )
 {
@@ -45,7 +45,7 @@ bool LoadXMLResource( const string &rszResourceFileName, const string &rszChunkL
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Legacy
 template<class TResource>
 bool LoadTypedSuperXMLResource( const string &rszResourceFileName, const string &rszExtention, TResource &rResource )
@@ -55,7 +55,7 @@ bool LoadTypedSuperXMLResource( const string &rszResourceFileName, const string 
 	return LoadTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadTypedSuperXMLResource( const string &rszResourceFileName, TResource &rResource )
 {
@@ -72,7 +72,7 @@ bool LoadTypedSuperXMLResource( const string &rszResourceFileName, TResource &rR
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadBINResource( const string &rszResourceFileName, const string &rszExtention, int nChunkNumber, TResource &rResource )
 {
@@ -81,7 +81,7 @@ bool LoadBINResource( const string &rszResourceFileName, const string &rszExtent
 	return LoadBINResource( szResourceFileName, nChunkNumber, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadBINResource( const string &rszResourceFileName, int nChunkNumber, TResource &rResource )
 {
@@ -98,7 +98,7 @@ bool LoadBINResource( const string &rszResourceFileName, int nChunkNumber, TReso
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadTypedSuperBINResource( const string &rszResourceFileName, const string &rszExtention, TResource &rResource )
 {
@@ -107,7 +107,7 @@ bool LoadTypedSuperBINResource( const string &rszResourceFileName, const string 
 	return LoadTypedSuperBINResource( szResourceFileName, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool LoadTypedSuperBINResource( const string &rszResourceFileName, TResource &rResource )
 {
@@ -124,7 +124,7 @@ bool LoadTypedSuperBINResource( const string &rszResourceFileName, TResource &rR
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveXMLResource( const string &rszResourceFileName, const string &rszExtention, const string &rszChunkLabel, TResource &rResource )
 {
@@ -133,7 +133,7 @@ bool SaveXMLResource( const string &rszResourceFileName, const string &rszExtent
 	return SaveXMLResource( szResourceFileName, rszChunkLabel, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveXMLResource( const string &rszResourceFileName, const string &rszChunkLabel, TResource &rResource )
 {
@@ -150,7 +150,7 @@ bool SaveXMLResource( const string &rszResourceFileName, const string &rszChunkL
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveTypedSuperXMLResource( const string &rszResourceFileName, const string &rszExtention, TResource &rResource )
 {
@@ -159,7 +159,7 @@ bool SaveTypedSuperXMLResource( const string &rszResourceFileName, const string 
 	return SaveTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveTypedSuperXMLResource( const string &rszResourceFileName, TResource &rResource )
 {
@@ -176,7 +176,7 @@ bool SaveTypedSuperXMLResource( const string &rszResourceFileName, TResource &rR
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveBINResource( const string &rszResourceFileName, const string &rszExtention, int nChunkNumber, TResource &rResource )
 {
@@ -185,7 +185,7 @@ bool SaveBINResource( const string &rszResourceFileName, const string &rszExtent
 	return SaveBINResource( szResourceFileName, nChunkNumber, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveBINResource( const string &rszResourceFileName, int nChunkNumber, TResource &rResource )
 {
@@ -202,7 +202,7 @@ bool SaveBINResource( const string &rszResourceFileName, int nChunkNumber, TReso
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveTypedSuperBINResource( const string &rszResourceFileName, const string &rszExtention, TResource &rResource )
 {
@@ -211,7 +211,7 @@ bool SaveTypedSuperBINResource( const string &rszResourceFileName, const string 
 	return SaveTypedSuperBINResource( szResourceFileName, rResource );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TResource>
 bool SaveTypedSuperBINResource( const string &rszResourceFileName, TResource &rResource )
 {
@@ -228,10 +228,10 @@ bool SaveTypedSuperBINResource( const string &rszResourceFileName, TResource &rR
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //bool CheckLatestBINResource( const string &rszResourceFileName, const string &rszXMLExtention, const string &rszBINExtention );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // возвращаемое значение:
 // true - путь существует в указанном каталоге
 // false - путь не существует в указанном каталоге
@@ -247,9 +247,9 @@ bool SaveTypedSuperBINResource( const string &rszResourceFileName, TResource &rR
 // если путь был относительным, к нему прибавляется указаанный путь ( при bReturnAbsolutePath == true )
 bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const string &rszPathPrefix, bool *pbAbsolutePath );
 bool IsValidFileName( const string &rszFileName, bool bAbsolutePath ); 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 struct SEnumFilesInDataStorageParameter
 {
 	list<string> fileNameList;
@@ -260,7 +260,7 @@ struct SEnumFilesInDataStorageParameter
 	int nExtentionLength;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<string, hash_map<string, UINT> > CEnumFolderMap;
 struct SEnumFolderStructureParameter
 {
@@ -276,27 +276,27 @@ struct SEnumFolderStructureParameter
 	static void SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const string &rszFolder, const string &rszRelativeFolder );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter = 0 );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ExecuteProcess( const string &rszCommand, const string &rszCmdLine, const string &rszDirectory, bool bWait );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage );
 void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( CString *pstrText, bool *pbUnicode, const vector<BYTE> &rBuffer, int nCodePage, bool bRemove_0D );
 void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D );
 void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D );
 void File2String( wstring *pwszText, const vector<BYTE> &rBuffer, bool bRemove_0D );
 void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( vector<BYTE> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
 void String2File( const CString &rstrText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D );
 void String2File( const string &rszText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D );
 void String2File( vector<BYTE> *pBuffer, const wstring &rwszText, bool bAdd_0D );
 void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_0D );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

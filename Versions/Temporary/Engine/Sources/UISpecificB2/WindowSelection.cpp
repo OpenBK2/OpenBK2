@@ -2,14 +2,14 @@
 #include ".\windowselection.h"
 
 REGISTER_SAVELOAD_CLASS(0x110BD481, CWindowSelection);
-/////////////////////////////////////////////////////////////////////////////
+
 void CWindowSelection::Visit( interface IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 	if ( pSelectorRect != 0 && bSelectorVisible )
 		pSelectorRect->Visit( pVisitor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSelection::MsgStartSelection( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -17,19 +17,19 @@ bool CWindowSelection::MsgStartSelection( const SGameMessage &msg )
 	vSelectionFirstPoint = vPos;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSelection::MsgEndSelection( const SGameMessage &msg )
 {
 	bSelectorVisible = false;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSelection::MsgCancelSelection( const SGameMessage &msg )
 {
 	bSelectorVisible = false;
 	return false;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CWindowSelection::RegisterObservers()
 {
 	AddObserver( "start_selection", &CWindowSelection::MsgStartSelection );
@@ -37,7 +37,7 @@ void CWindowSelection::RegisterObservers()
 	AddObserver( "end_selection", &CWindowSelection::MsgEndSelection );
 	AddObserver( "cancel_selection", &CWindowSelection::MsgCancelSelection );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSelection::MsgUpdateSelection( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -70,7 +70,7 @@ bool CWindowSelection::MsgUpdateSelection( const SGameMessage &msg )
 	bSelectorVisible = true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowSelection::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -80,7 +80,7 @@ int CWindowSelection::operator&( IBinSaver &saver )
 	saver.Add( 5, &pSelectorRect );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSelection::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
 	pInstance = checked_cast<const NDb::SWindowSelection*>( pDesc )->Duplicate();
@@ -90,4 +90,4 @@ void CWindowSelection::InitByDesc( const struct NDb::SUIDesc *pDesc )
 	bSelectorVisible = false;
 	vSelectionFirstPoint = VNULL2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

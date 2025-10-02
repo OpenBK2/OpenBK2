@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "KeySettingsDlg.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMovEditorKeySettingsDlg::CMovEditorKeySettingsDlg( CWnd *pParentWindow, NDb::SScriptMovieKeyPos *_pKey, 
 																										string *_pszName )
 	: CResizeDialog( CMovEditorKeySettingsDlg::IDD, pParentWindow ),
@@ -12,7 +12,7 @@ CMovEditorKeySettingsDlg::CMovEditorKeySettingsDlg( CWnd *pParentWindow, NDb::SS
 	NI_ASSERT( pKey, "Cannot edit NULL key settings!" )
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMovEditorKeySettingsDlg::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -25,7 +25,7 @@ void CMovEditorKeySettingsDlg::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_MOVEDKEY_PARAM_EDIT, wndEditParam );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMovEditorKeySettingsDlg::OnOK()
 {
 	GetDialogData();
@@ -33,7 +33,7 @@ void CMovEditorKeySettingsDlg::OnOK()
 	CResizeDialog::OnOK();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMovEditorKeySettingsDlg::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -42,7 +42,7 @@ BOOL CMovEditorKeySettingsDlg::OnInitDialog()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMovEditorKeySettingsDlg::GetDialogData()
 {
 	pKey->bIsTangentIn = rbnInTangent.GetCheck();
@@ -54,7 +54,7 @@ void CMovEditorKeySettingsDlg::GetDialogData()
 	pKey->szKeyParam = szParamTxt;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMovEditorKeySettingsDlg::SetDialogData()
 {
 	rbnInFlat.SetCheck( !pKey->bIsTangentIn );
@@ -65,4 +65,4 @@ void CMovEditorKeySettingsDlg::SetDialogData()
 	SetDlgItemText( IDC_MOVEDKEY_PARAM_EDIT, pKey->szKeyParam.c_str() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

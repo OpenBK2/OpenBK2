@@ -5,7 +5,7 @@ namespace NDb
 {
 	struct SUIDesc;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // atom message reaction
 interface IMessageReactionB2 : public CObjectBase
 {
@@ -13,7 +13,7 @@ interface IMessageReactionB2 : public CObjectBase
 	virtual int operator&( IBinSaver &ss ) = 0;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // custom check 
 interface IMessageCheck : public CObjectBase
 {
@@ -21,5 +21,5 @@ interface IMessageCheck : public CObjectBase
 	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const = 0;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //_IReaction_h_included_

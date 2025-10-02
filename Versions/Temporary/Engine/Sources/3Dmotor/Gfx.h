@@ -3,16 +3,16 @@
 #include "3Dmotor_export.h"
 
 #include "GPixelFormat.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGfx
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EFS
 {
 	WINDOWED,
 	FULL_SCREEN
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVideoMode
 {
 	int nXSize, nYSize, nBpp, nRefreshRate;
@@ -21,13 +21,13 @@ struct SVideoMode
 	SVideoMode( int _nXSize, int _nYSize, int _nBpp, EFS _fullScreen, int _nRefreshRate = 0 )
 		:nXSize(_nXSize), nYSize(_nYSize), nBpp(_nBpp), nRefreshRate(_nRefreshRate), fullScreen(_fullScreen) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSystemInfo
 {
 	float fLVMTextureMemory, fAGPTextureMemory;
 	int nDesktopResolution;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderTargetDesc
 {
 	int nResolution, nFormatID;
@@ -70,7 +70,7 @@ struct SRenderTargetsInfo
 		nFloatRegisters += a.nFloatRegisters;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // general
 _3DMOTOR_EXPORT bool Init3D( HWND hWnd );
 _3DMOTOR_EXPORT void Done3D();
@@ -94,9 +94,9 @@ bool Is16BitDesktop();
 bool IsDXTSupported();
 bool Is8888FormatSupported();
 const int GetAdapterToUse();
-////
+
 void D3DASSERT( HRESULT hRes, const char *pDescr, ... );
-////
+
 struct SRenderStats
 {
 	int nVertices, nTris, nDIPs;

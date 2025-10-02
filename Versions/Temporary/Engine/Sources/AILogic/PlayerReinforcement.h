@@ -1,9 +1,9 @@
 #pragma once
 
 #include "..\Stats_b2_m1\DBMapInfo.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCommonUnit;
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // holds reinforcement points and avaliable player's reinforcements
 // sends updates to client
 class CPlayerReinforcement
@@ -116,7 +116,7 @@ public:
 	void PlaceInitialUnits();				// Cheating method for placing a reinforcement and not reporting it
 	void GiveReinforcementCalls( int nCalls, bool bResetCounter );		// Adjust calls number (add/subtract) externally
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlayerReinforcementArray : public vector<CPlayerReinforcement>
 {
 public:

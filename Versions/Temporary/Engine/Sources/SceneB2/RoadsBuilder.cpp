@@ -2,14 +2,14 @@
 
 #include "../3DMotor/DBScene.h"
 #include "GenTerrain.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_ROAD_HEIGHT 0.1f
 #define DEF_ROAD_SAMPS_PER_PATCH 4
 #define DEF_ROAD_PATCH_VERTS_RESERVE 256
 #define DEF_ROAD_PATCH_TRGS_RESERVE 256
 //
 #define DEF_ROAD_VERT_EPS 0.001f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AddUniqueRoadVertex( vector<NGScene::SVertex> *pVerts, const CVec3 &vert,
 																const int nTileX, const int nTileY,
 																const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vNorm4,
@@ -34,7 +34,7 @@ inline int AddUniqueRoadVertex( vector<NGScene::SVertex> *pVerts, const CVec3 &v
 	pVerts->push_back( v );
 	return ( pVerts->size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int CTerraGen::CalcTexAndAddRoadVertex(	const CVec3 &vert, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec3 &v4,
 																								const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4,
 																								const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4,
@@ -56,7 +56,7 @@ inline int CTerraGen::CalcTexAndAddRoadVertex(	const CVec3 &vert, const CVec3 &v
 															(vTex4 - vTex3) * vBary.x + (vTex2 - vTex3) * vBary.y + vTex3,
 															(fAlpha4 - fAlpha3) * vBary.x + (fAlpha2 - fAlpha3) * vBary.y + fAlpha3 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
 																		 const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3,
 																		 const float fAlpha1, const float fAlpha2, const float fAlpha3,
@@ -204,7 +204,7 @@ void CTerraGen::ProjectTrgOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVe
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec3 &v4,
 																			const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3, const CVec2 &vTex4,
 																			const float fAlpha1, const float fAlpha2, const float fAlpha3, const float fAlpha4,
@@ -344,7 +344,7 @@ void CTerraGen::ProjectQuadOnTerrain( const CVec3 &v1, const CVec3 &v2, const CV
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ProjectRoadLayer( const NDb::SVSOPoint &point1, const NDb::SVSOPoint &point2,
 																	const float fMinTexX, const float fMaxTexX, const float fPrevDist,
 																	const float fNextTexY, const float fTexY, NMeshData::SMeshData *pCurPatch,
@@ -404,7 +404,7 @@ void CTerraGen::ProjectRoadLayer( const NDb::SVSOPoint &point1, const NDb::SVSOP
 		//	points[g].fOpacity, points[g + 1].fOpacity, curPatch );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void ReservePatchData( NMeshData::SMeshData *pPatch )
 {
 	pPatch->vertices.reserve( 256 );
@@ -412,7 +412,7 @@ inline void ReservePatchData( NMeshData::SMeshData *pPatch )
 	pPatch->triangles.reserve( 256 );
 	pPatch->triangles.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void TryAddRoadGfxToObserver( STerrainGfxInfo *pTerraGfxInfo, const SRoadGFXInfo &gfxInfo, ITerraGfxObserver *pGfxObserver )
 {
 	int nSize = 0;
@@ -427,7 +427,7 @@ inline void TryAddRoadGfxToObserver( STerrainGfxInfo *pTerraGfxInfo, const SRoad
 			pGfxObserver->AddRoad( &(pTerraGfxInfo->roads.back()) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const vector<NDb::SVSOPoint> &points )
 {
 	// check, that such road GFX isn't exists
@@ -528,7 +528,7 @@ void CTerraGen::CreateRoadGfx( const NDb::SVSOInstance *pInstance, const vector<
 	if ( gfxInfo.pDesc->rightBorder.pMaterial )
 		TryAddRoadGfxToObserver( &terrainGfxInfo, rightGfxInfo, pGfxObserver );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 {
 	//check if there already exist such road
@@ -565,7 +565,7 @@ void CTerraGen::AddRoad( const NDb::SVSOInstance *pInstance )
 	if ( pAIObserver )
 		PutRoadToAI( pInstance );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateRoad( const int nVSOID )
 {
 	RemoveRoad( nVSOID );
@@ -579,7 +579,7 @@ void CTerraGen::UpdateRoad( const int nVSOID )
 	}
 	NI_ASSERT( false, "Updated road does not exists" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveRoad( const int nVSOID )
 {
 	for ( list<STerrainInfo::SRoad>::iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
@@ -602,7 +602,7 @@ void CTerraGen::RemoveRoad( const int nVSOID )
 	if ( pGfxObserver )
 		pGfxObserver->RemoveRoad( nVSOID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddAllRoads()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -612,7 +612,7 @@ void CTerraGen::AddAllRoads()
 		AddRoad( &(*it) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveAllRoads()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -626,7 +626,7 @@ void CTerraGen::RemoveAllRoads()
 	terrainGfxInfo.roads.clear();
 	terrainInfo.roads.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVSOInstance* CTerraGen::FindRoad( int nID ) const
 {
 	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
@@ -637,7 +637,7 @@ const NDb::SVSOInstance* CTerraGen::FindRoad( int nID ) const
 	//NI_ASSERT( false, StrFmt( "Couldn't find road's instance: ID=%d", nID ) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*static void ProjectRoad( const vector<NDb::SVSOPoint> &samples, const float fMinTexX, const float fMaxTexX, const float fOrgTexX,
 												 const float fTexXD, const float fTexCoeffX, const CArray2D<STerrainInfo::STile> &tiles )
 {
@@ -751,4 +751,4 @@ const NDb::SVSOInstance* CTerraGen::FindRoad( int nID ) const
 		}
 	}
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

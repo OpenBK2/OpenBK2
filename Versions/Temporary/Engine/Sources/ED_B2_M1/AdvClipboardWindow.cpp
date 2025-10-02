@@ -10,13 +10,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		ADVANCED CLIPBOARD WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CAdvClipboardWindow, CResizeDialog)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BUTTON_COPY, OnBnClickedButtonCopy)
@@ -26,7 +26,7 @@ BEGIN_MESSAGE_MAP(CAdvClipboardWindow, CResizeDialog)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD_CLIP, OnBnClickedButtonLoadClip)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAdvClipboardWindow::CAdvClipboardWindow( CWnd *pParentWindow )
 	:	CResizeDialog( CAdvClipboardWindow::IDD, pParentWindow ),
 	eLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS )
@@ -38,13 +38,13 @@ CAdvClipboardWindow::CAdvClipboardWindow( CWnd *pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ADV_CLIPBOARD_WINDOW, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAdvClipboardWindow::~CAdvClipboardWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ADV_CLIPBOARD_WINDOW );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CAdvClipboardWindow::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -95,21 +95,21 @@ BOOL CAdvClipboardWindow::OnInitDialog()
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
 	DDX_Control( pDX, IDC_LIST_CLIPS, lcPasteSettings );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::NotifyHandler()
 {
 	CWaitCursor wcur;
@@ -119,7 +119,7 @@ void CAdvClipboardWindow::NotifyHandler()
 	);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::GetDialogData( SAdvClipboardWindowData *pData )
 {
 	if ( !pData )
@@ -138,7 +138,7 @@ void CAdvClipboardWindow::GetDialogData( SAdvClipboardWindowData *pData )
 	pData->pasteSettings.bPasteRiversLakesIslands = lcPasteSettings.GetCheck( nItemIdx++ );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::SetDialogData( const SAdvClipboardWindowData *pData )
 {
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
@@ -153,7 +153,7 @@ void CAdvClipboardWindow::SetDialogData( const SAdvClipboardWindowData *pData )
 	lcPasteSettings.SetCheck( nItemIdx++, pData->pasteSettings.bPasteRiversLakesIslands );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID ) 
@@ -177,7 +177,7 @@ bool CAdvClipboardWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAdvClipboardWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAdvClipboardWindow::UpdateCommand(), pbEnable == 0" );
@@ -195,7 +195,7 @@ bool CAdvClipboardWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnBnClickedButtonCopy()
 {
 	SetLastAction( SAdvClipboardWindowData::LA_COPY );
@@ -203,7 +203,7 @@ void CAdvClipboardWindow::OnBnClickedButtonCopy()
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnBnClickedButtonPaste()
 {
 	SetLastAction( SAdvClipboardWindowData::LA_PASTE );
@@ -211,7 +211,7 @@ void CAdvClipboardWindow::OnBnClickedButtonPaste()
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnBnClickedButtonSaveClip()
 {
 	SetLastAction( SAdvClipboardWindowData::LA_SAVE_CLIP );
@@ -219,7 +219,7 @@ void CAdvClipboardWindow::OnBnClickedButtonSaveClip()
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnLvnItemchangedListClips(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -230,7 +230,7 @@ void CAdvClipboardWindow::OnLvnItemchangedListClips(NMHDR *pNMHDR, LRESULT *pRes
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAdvClipboardWindow::OnBnClickedButtonLoadClip()
 {
 	SetLastAction( SAdvClipboardWindowData::LA_LOAD_CLIP );
@@ -238,4 +238,4 @@ void CAdvClipboardWindow::OnBnClickedButtonLoadClip()
 	SetLastAction( SAdvClipboardWindowData::LA_NO_ACTIONS );
 }
 /**/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,6 +1,6 @@
 #pragma once
 #include "..\Misc\2DArray.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma pack ( 1 )
 struct SColor24 
 { 
@@ -9,7 +9,7 @@ struct SColor24
 	BYTE r; 
 };
 #pragma pack()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
 inline unsigned long FP_NORM_TO_BYTE2(float p)                                                 
@@ -23,7 +23,7 @@ inline unsigned long FP_NORM_TO_BYTE3(float p)
   float ftmp = p + 12582912.0f;                                                      
   return ((*(unsigned long *)&ftmp) & 0xFF);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline BYTE GetA( DWORD val ) { return ( (val >> 24) & 0xff ); }
 inline BYTE GetR( DWORD val ) { return ( (val >> 16) & 0xff ); }
 inline BYTE GetG( DWORD val ) { return ( (val >>  8) & 0xff ); }
@@ -31,7 +31,7 @@ inline BYTE GetB( DWORD val ) { return ( (val      ) & 0xff ); }
 inline BYTE MakeGray( BYTE r, BYTE g, BYTE b ) { return FP_NORM_TO_BYTE3( Clamp(0.3f*r + 0.59f*g + 0.11f*b, 0.0f, 255.0f) ); }
 inline BYTE MakeGray( float r, float g, float b ) { return FP_NORM_TO_BYTE2( Clamp(0.3f*r + 0.59f*g + 0.11f*b, 0.0f, 1.0f) ); }
 inline DWORD MakeComponent( float f ) { return DWORD( FP_NORM_TO_BYTE3(Clamp(f*255.0f, 0.0f, 255.0f)) ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** gray convertor
@@ -39,7 +39,7 @@ inline DWORD MakeComponent( float f ) { return DWORD( FP_NORM_TO_BYTE3(Clamp(f*2
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TOutColor>
 class CGrayConvertor
 {
@@ -72,7 +72,7 @@ public:
 	CVec4 operator()( BYTE input ) const { return CVec4( input / 255.0f, input / 255.0f, input / 255.0f, 1.0f ); }
 	bool IsReady() const { return true; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** palette convertor
@@ -80,7 +80,7 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TOutColor>
 class CPaletteConvertor
 {
@@ -216,7 +216,7 @@ public:
 	CVec4 operator()( const BYTE input ) const { return palette[input]; }
 	bool IsReady() const { return !palette.empty(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** raw color convertor
@@ -224,7 +224,7 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TOutColor>
 class CRawColorConvertor
 {
@@ -265,7 +265,7 @@ public:
 	CVec4 operator()( const CVec4 &input ) const { return input; }	
 	bool IsReady() const { return true; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** image conversion function
@@ -273,7 +273,7 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <typename TOutColor, typename TInColor>
 inline void Convert( CArray2D<TOutColor> *pDst, const CArray2D<TInColor> &src )
 {
@@ -285,7 +285,7 @@ inline void Convert( CArray2D<TOutColor> *pDst, const CArray2D<TInColor> &src )
 	for ( ; pInColor != pEnd; ++pInColor, ++pOutColor )
 		*pOutColor = convertor( *pInColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <typename TColor>
 inline void FlipY( CArray2D<TColor> &data, int nBegin, int nEnd )
 {
@@ -305,7 +305,7 @@ inline void FlipY( CArray2D<TColor> &data )
 	FlipY( data, 0, data.GetSizeY() - 1 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <typename TColor>
 inline void FlipX( CArray2D<TColor> &data, int nBegin, int nEnd )
 {
@@ -324,5 +324,5 @@ inline void FlipX( CArray2D<TColor> &data )
 {
 	FlipX( data, 0, data.GetSizeX() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

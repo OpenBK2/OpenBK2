@@ -11,7 +11,7 @@ inline void ZeroSA( TYPE &val )
 {
 	memset( &val, 0, sizeof(val) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSymEngine::CSymEngine()
 {
 	hProcess = GetCurrentProcess();
@@ -19,13 +19,13 @@ CSymEngine::CSymEngine()
 	if ( !SymInitialize( hProcess, 0, TRUE ) )
 		hProcess = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSymEngine::~CSymEngine()
 {
 	if ( hProcess )
 		SymCleanup( hProcess );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void Clear( CSymString *p ) { if ( p ) *p = "?"; }
 bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
 {
@@ -75,7 +75,7 @@ bool CSymEngine::GetSymbol( DWORD dwAddress, CSymString *pszModule, CSymString *
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Assign( ADDRESS64 *pRes, DWORD dwSeg, DWORD64 dwOffset )
 {
 	pRes->Mode = AddrModeFlat;
@@ -106,7 +106,7 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 	}
 	return nEntry;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CollectCallStack( SCallStackEntry *pRes, int nMaxEntries )
 {
 	DWORD dwAddr, dwEbp, dwEsp;
@@ -127,13 +127,13 @@ nxt:
 	ctx.Esp = dwEsp;
 	CollectCallStack( &ep, pRes, nMaxEntries );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSymEngine &GetSymEngine()
 {
 	static CSymEngine se;
 	return se;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SymAccessTest()
 {
 	CSymEngine &se = GetSymEngine();

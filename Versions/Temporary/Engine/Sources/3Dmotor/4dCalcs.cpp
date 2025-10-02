@@ -13,7 +13,7 @@ CVec3 Get3DDir( const CVec4 &_v1, const CVec4 &_v2 )
 		v1.y * v2.w - v2.y * v1.w,  
 		v1.z * v2.w - v2.z * v1.w );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec4 AddHomogen( const CVec4 &_v1, const CVec4 &_v2 )
 {
 	return CVec4( 

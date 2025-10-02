@@ -16,7 +16,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // http://www.acm.org/jgt/papers/MollerTrumbore97/code.html
 //
@@ -65,7 +65,7 @@ int IntersectTriangle(	float *t,
 
    return 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pSurfacePoint1,
 											const vector<STriangleForTrace> &rTrianglesForTrace, 
 											const CVec3 &vRayOrig, const CVec3 vDir )
@@ -156,7 +156,7 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 	//
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints, 
 											const vector<STriangleForTrace> &rTrianglesForTrace,
 											const CVec3 &rvMin, const CVec3 &rvMax,
@@ -245,7 +245,7 @@ void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints,
 	}
 	//
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile )
 {
 	if ( !pSurfacePoints )
@@ -314,7 +314,7 @@ int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pF
 	//
 	return pSurfacePoints->size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGeometryResourceName )
 {
 	if ( !pSurfacePoints )
@@ -347,4 +347,4 @@ bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGe
 
 	return bRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

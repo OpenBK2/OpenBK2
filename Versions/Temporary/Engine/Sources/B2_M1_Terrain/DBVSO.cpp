@@ -5,12 +5,12 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbvso.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void STerrainAIProperties::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Passability", (BYTE*)&fPassability - pThis, sizeof(fPassability), NTypeDef::TYPE_TYPE_FLOAT );
@@ -19,7 +19,7 @@ void STerrainAIProperties::ReportMetaInfo( const string &szAddName, BYTE *pThis 
 	NMetaInfo::ReportMetaInfo( szAddName + "CanEntrench", (BYTE*)&bCanEntrench - pThis, sizeof(bCanEntrench), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "SoilType", (BYTE*)&nSoilType - pThis, sizeof(nSoilType), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerrainAIProperties::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Passability", &fPassability );
@@ -30,7 +30,7 @@ int STerrainAIProperties::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerrainAIProperties::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fPassability );
@@ -41,7 +41,7 @@ int STerrainAIProperties::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD STerrainAIProperties::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -56,15 +56,15 @@ DWORD STerrainAIProperties::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSOLayerBaseDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "CenterOpacity", (BYTE*)&fCenterOpacity - pThis, sizeof(fCenterOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "TilingStep", (BYTE*)&fTilingStep - pThis, sizeof(fTilingStep), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerBaseDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "CenterOpacity", &fCenterOpacity );
@@ -72,7 +72,7 @@ int SVSOLayerBaseDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerBaseDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fCenterOpacity );
@@ -80,7 +80,7 @@ int SVSOLayerBaseDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSOLayerBaseDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -95,9 +95,9 @@ DWORD SVSOLayerBaseDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSOLayerBorderDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
@@ -106,7 +106,7 @@ void SVSOLayerBorderDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis )
 	NMetaInfo::ReportMetaInfo( szAddName + "UseFromPixel", (BYTE*)&nUseFromPixel - pThis, sizeof(nUseFromPixel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (BYTE*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerBorderDesc::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SVSOLayerBaseDesc*)(this) );
@@ -116,7 +116,7 @@ int SVSOLayerBorderDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerBorderDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSOLayerBaseDesc*)this );
@@ -126,7 +126,7 @@ int SVSOLayerBorderDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSOLayerBorderDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -141,9 +141,9 @@ DWORD SVSOLayerBorderDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSOLayerCenterDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	SVSOLayerBaseDesc::ReportMetaInfo( szAddName, pThis );
@@ -155,7 +155,7 @@ void SVSOLayerCenterDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis )
 	NMetaInfo::ReportMetaInfo( szAddName + "UseToPixel", (BYTE*)&nUseToPixel - pThis, sizeof(nUseToPixel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "StreamSpeed", (BYTE*)&fStreamSpeed - pThis, sizeof(fStreamSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerCenterDesc::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SVSOLayerBaseDesc*)(this) );
@@ -168,7 +168,7 @@ int SVSOLayerCenterDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOLayerCenterDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSOLayerBaseDesc*)this );
@@ -181,7 +181,7 @@ int SVSOLayerCenterDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSOLayerCenterDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -196,9 +196,9 @@ DWORD SVSOLayerCenterDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSODesc::ReportMetaInfo() const
 {
 	BYTE *pThis = (BYTE*)this;
@@ -211,7 +211,7 @@ void SVSODesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "AmbientSound", (BYTE*)&pAmbientSound - pThis, sizeof(pAmbientSound), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "CycledSound", (BYTE*)&pCycledSound - pThis, sizeof(pCycledSound), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSODesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &nType );
@@ -225,7 +225,7 @@ int SVSODesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSODesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nType );
@@ -239,7 +239,7 @@ int SVSODesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSODesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -254,9 +254,9 @@ DWORD SVSODesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSOPoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -267,7 +267,7 @@ void SVSOPoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (BYTE*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Reserved", (BYTE*)&fReserved - pThis, sizeof(fReserved), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOPoint::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -280,7 +280,7 @@ int SVSOPoint::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOPoint::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -293,7 +293,7 @@ int SVSOPoint::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSOPoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -308,9 +308,9 @@ DWORD SVSOPoint::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVSOInstance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Descriptor", (BYTE*)&pDescriptor - pThis, sizeof(pDescriptor), NTypeDef::TYPE_TYPE_REF );
@@ -321,7 +321,7 @@ void SVSOInstance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission", (BYTE*)&nCMArrowMission - pThis, sizeof(nCMArrowMission), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "CMArrowMission2", (BYTE*)&nCMArrowMission2 - pThis, sizeof(nCMArrowMission2), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOInstance::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Descriptor", &pDescriptor );
@@ -334,7 +334,7 @@ int SVSOInstance::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVSOInstance::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pDescriptor );
@@ -347,7 +347,7 @@ int SVSOInstance::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVSOInstance::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -362,9 +362,9 @@ DWORD SVSOInstance::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SRoadDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "RoadDesc", typeID, sizeof(*this) );
@@ -377,7 +377,7 @@ void SRoadDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (BYTE*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SRoadDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -389,7 +389,7 @@ int SRoadDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SRoadDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSODesc*)this );
@@ -400,7 +400,7 @@ int SRoadDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SRoadDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -415,9 +415,9 @@ DWORD SRoadDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCragDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "CragDesc", typeID, sizeof(*this) );
@@ -436,7 +436,7 @@ void SCragDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "RidgeTexGeomScale", (BYTE*)&fRidgeTexGeomScale - pThis, sizeof(fRidgeTexGeomScale), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCragDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -454,7 +454,7 @@ int SCragDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCragDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSODesc*)this );
@@ -471,7 +471,7 @@ int SCragDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCragDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -486,9 +486,9 @@ DWORD SCragDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SRiverDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "RiverDesc", typeID, sizeof(*this) );
@@ -511,7 +511,7 @@ void SRiverDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (BYTE*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SRiverDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -533,7 +533,7 @@ int SRiverDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SRiverDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSODesc*)this );
@@ -554,7 +554,7 @@ int SRiverDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SRiverDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -569,9 +569,9 @@ DWORD SRiverDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCoastDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "CoastDesc", typeID, sizeof(*this) );
@@ -582,7 +582,7 @@ void SCoastDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (BYTE*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCoastDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -592,7 +592,7 @@ int SCoastDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCoastDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSODesc*)this );
@@ -601,7 +601,7 @@ int SCoastDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCoastDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -616,9 +616,9 @@ DWORD SCoastDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SLakeDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "LakeDesc", typeID, sizeof(*this) );
@@ -630,7 +630,7 @@ void SLakeDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "MiniMapGradientWidth", (BYTE*)&nMiniMapGradientWidth - pThis, sizeof(nMiniMapGradientWidth), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SLakeDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -641,7 +641,7 @@ int SLakeDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SLakeDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SVSODesc*)this );
@@ -651,7 +651,7 @@ int SLakeDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SLakeDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -666,7 +666,7 @@ DWORD SLakeDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 BASIC_REGISTER_DATABASE_CLASS( SVSODesc )

@@ -14,9 +14,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( InfantryRPGStats, CInfantryExporter )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
 {
 	CVariant var;
@@ -28,7 +28,7 @@ static bool CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
 {
 	bool bResult = true;
@@ -36,12 +36,12 @@ static bool CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &sz
 	bResult = bResult && CopyVector2D( pSrc, pDst, szSrc + ".HalfSize", szDst + ".HalfSize" );
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsStringEmpty( const string &szArg )
 {
 	return szArg.empty() || ( szArg == " " );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInfantryExporter::BuildAnimsMap()
 {
 	if ( !animsMap.empty() )
@@ -90,7 +90,7 @@ void CInfantryExporter::BuildAnimsMap()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInfantryExporter::ProcessAABB( IManipulator *pMan )
 {
 	CPtr<IManipulator> pItVisObj = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
@@ -142,7 +142,7 @@ bool CInfantryExporter::ProcessAABB( IManipulator *pMan )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInfantryExporter::ProcessShootPoint( IManipulator *pMan )
 {
 	CPtr<IManipulator> pGunMan = CManipulatorManager::CreateManipulatorFromReference( "guns.[0].Weapon", pMan, 0, 0, 0 );
@@ -187,7 +187,7 @@ bool CInfantryExporter::ProcessShootPoint( IManipulator *pMan )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CInfantryExporter::ExportObject( IManipulator* pManipulator,
 																							const string &rszObjectTypeName,
 																							const string &rszObjectName,
@@ -210,14 +210,14 @@ EXPORT_RESULT CInfantryExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInfantryExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
 {
 	CBasicExporter::FinishExport( rszObjectTypeName, bForce );
 	animsMap.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMan, const string &szAnimName, int *pnAnimCounter )
 {
 	CVariant var;
@@ -300,7 +300,7 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit )
 {
 	BuildAnimsMap();
@@ -383,7 +383,7 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 	return bAnimationsAssigned;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -487,7 +487,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 	return bAnimationsAssigned;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 																							const string &rszObjectTypeName,
 																							const string &rszObjectName,
@@ -516,4 +516,4 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

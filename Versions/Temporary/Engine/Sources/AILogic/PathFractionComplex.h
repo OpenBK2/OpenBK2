@@ -3,9 +3,9 @@
 #include "PlanePathFraction.h"
 
 typedef pair< const IPathFraction*, float> CCurFraction;
-/////////////////////////////////////////////////////////////////////////////
+
 //	CPathFractionComplexBase
-/////////////////////////////////////////////////////////////////////////////
+
 class CPathFractionComplexBase : public IPathFraction
 {
 protected:
@@ -29,9 +29,9 @@ public:
 	virtual CVec3 GetTangent( const float fDist ) const;
 	virtual CVec3 GetNormale( const float fDist ) const;
 };
-/////////////////////////////////////////////////////////////////////////////
+
 // CPathFractionComplex
-/////////////////////////////////////////////////////////////////////////////
+
 class CPathFractionComplex : public CPathFractionComplexBase
 {
 	OBJECT_BASIC_METHODS( CPathFractionComplex )

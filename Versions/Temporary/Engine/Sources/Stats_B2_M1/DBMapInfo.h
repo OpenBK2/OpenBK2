@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // automatically generated file, don't change manually!
 
 #include "Stats_B2_M1_export.h"
@@ -11,9 +11,9 @@
 #include "season.h"
 #include "prefix_dbmapinfo.h"
 #include "../system/filepath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IXmlSaver;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 
@@ -994,13 +994,13 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	STATS_B2_M1_EXPORT string EnumToString( NDb::EMPGameType eValue );
 	STATS_B2_M1_EXPORT EMPGameType StringToEnum_NDb_EMPGameType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMPGameType>
 {
@@ -1008,13 +1008,13 @@ struct SKnownEnum<NDb::EMPGameType>
 	static string ToString( NDb::EMPGameType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMPGameType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMPGameType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EScriptAreaTypes eValue );
 	EScriptAreaTypes StringToEnum_NDb_EScriptAreaTypes( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EScriptAreaTypes>
 {
@@ -1022,13 +1022,13 @@ struct SKnownEnum<NDb::EScriptAreaTypes>
 	static string ToString( NDb::EScriptAreaTypes eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EScriptAreaTypes ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EScriptAreaTypes( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EParcelType eValue );
 	EParcelType StringToEnum_NDb_EParcelType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EParcelType>
 {
@@ -1036,13 +1036,13 @@ struct SKnownEnum<NDb::EParcelType>
 	static string ToString( NDb::EParcelType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EParcelType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EParcelType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::ESuperWeaponType eValue );
 	ESuperWeaponType StringToEnum_NDb_ESuperWeaponType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::ESuperWeaponType>
 {
@@ -1050,13 +1050,13 @@ struct SKnownEnum<NDb::ESuperWeaponType>
 	static string ToString( NDb::ESuperWeaponType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ESuperWeaponType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESuperWeaponType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EBonusType eValue );
 	EBonusType StringToEnum_NDb_EBonusType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EBonusType>
 {

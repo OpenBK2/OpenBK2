@@ -1,6 +1,6 @@
 // WindowConsole.h: interface for the CWindowConsole class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_WINDOWCONSOLE_H__3222DEC4_B4EB_4831_9CE4_417F561454C6__INCLUDED_)
 #define AFX_WINDOWCONSOLE_H__3222DEC4_B4EB_4831_9CE4_417F561454C6__INCLUDED_
@@ -13,7 +13,7 @@ struct SWindowEditLine;
 class CWindowEditLine;
 
 interface IML;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CWindowConsole : public CWindow, public IConsole
 {
 	OBJECT_BASIC_METHODS(CWindowConsole)
@@ -87,7 +87,7 @@ public:
 
 	//virtual int operator&( IBinSaver &saver );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDebugSingleton : public IDebugSingleton 
 {
 	OBJECT_BASIC_METHODS( CDebugSingleton )

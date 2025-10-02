@@ -320,7 +320,7 @@ static void adjust_varargs (lua_State *L, StkId base, int nfixargs) {
 ** Executes the given Lua function. Parameters are between [base,top).
 ** Returns n such that the the results are between [n,top).
 */
-//////////////////////////////////////////////////////////////////////////
+
 void luaV_beginExecute(lua_State *L, int nClosure, StkId base, int nResults )
 {
 	// general Lua execution header
@@ -341,7 +341,7 @@ void luaV_beginExecute(lua_State *L, int nClosure, StkId base, int nResults )
 	state.nResults = nResults;
 	L->pCT->executedCalls.push_back( state );
 }
-//////////////////////////////////////////////////////////////////////////
+
 void luaV_returnFromExecute( lua_State *L, StkId id )
 {
 	ASSERT( !L->pCT->executedCalls.empty() );
@@ -351,7 +351,7 @@ void luaV_returnFromExecute( lua_State *L, StkId id )
 	L->pCT->executedCalls.pop_back();
 	luaD_endCall( L, func, nResults, id );
 }
-//////////////////////////////////////////////////////////////////////////
+
 struct SLuaEntryCount
 {
 	static int n;
@@ -762,7 +762,7 @@ void luaV_stepExecute( lua_State *L )
 			ASSERT( LObj( L, j )->HasValidType() );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////
+
 /*
 ** Executes the given Lua function. Parameters are between [base,top).
 ** Returns n such that the the results are between [n,top).

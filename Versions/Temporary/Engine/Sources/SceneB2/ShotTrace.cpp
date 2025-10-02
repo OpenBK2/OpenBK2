@@ -4,7 +4,7 @@
 #include "../System/Commands.h"
 #include "../Stats_B2_M1/Vis2AI.h"
 #include "ShotTrace.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NShotTrace
 {
 	//static float s_fShotTraceLength = 200.0f;
@@ -12,7 +12,7 @@ namespace NShotTrace
 	//static float s_fShotTraceThikness = 0.1f;
 	static bool s_bDisableTracers = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShotTraceObj::Recalc()
 {
 	if ( pValue == 0 )
@@ -75,13 +75,13 @@ void CShotTraceObj::Recalc()
 	//
 	pValue->AssignFast( &data );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( ShotTrace )
 	//REGISTER_VAR_EX( "shot_trace_lenght", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceLength, 5.0f, STORAGE_NONE )
 	//REGISTER_VAR_EX( "shot_trace_speed_coeff", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceSpeedCoeff, 1.0f, STORAGE_NONE )
 	//REGISTER_VAR_EX( "shot_trace_thikness", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceThikness, 0.1f, STORAGE_NONE )
 	REGISTER_VAR_EX( "shot_trace_disable", NGlobal::VarBoolHandler, &NShotTrace::s_bDisableTracers, false, STORAGE_NONE )
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1B173C00, CShotTraceObj )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

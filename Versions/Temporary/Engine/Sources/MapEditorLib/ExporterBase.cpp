@@ -15,9 +15,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bReportSafeRefs = true;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::GetStartExportResult( const string &rszObjectTypeName )
 {
 	CResultMap::const_iterator posResult = startExportResultMap.find( rszObjectTypeName );
@@ -31,13 +31,13 @@ EXPORT_RESULT CExporterBase::GetStartExportResult( const string &rszObjectTypeNa
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::SetStartExportResult( const string &rszObjectTypeName, EXPORT_RESULT eResult )
 {
 	startExportResultMap[rszObjectTypeName] = eResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::GetExportObjectResult( const string &rszObjectRefName )
 {
 	CResultMap::const_iterator posResult = exportObjectResultMap.find( rszObjectRefName );
@@ -51,13 +51,13 @@ EXPORT_RESULT CExporterBase::GetExportObjectResult( const string &rszObjectRefNa
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::SetExportObjectResult( const string &rszObjectRefName, EXPORT_RESULT eResult )
 {
 	exportObjectResultMap[rszObjectRefName] = eResult;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Собираем новые типы требующие вызова StartExport и FinishExport
 // Дополнительно запоминаем тип и имя объекта ( может быть не указан в имени свойства )
 bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
@@ -128,7 +128,7 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 	return true;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeNameList, bool bExport, bool bForce )
 {
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
@@ -184,7 +184,7 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 {
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
@@ -249,7 +249,7 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 	// CRAP} PLAIN_TEXT
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 																								const string &rszObjectTypeName,
 																								const string &rszObjectName,
@@ -376,7 +376,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 	return eResult;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 																										const string &rszObjectTypeName,
 																										const string &rszObjectName,
@@ -419,7 +419,7 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterBase::StartExport( const string &rszObjectTypeName, bool bForce )
 {
 	objectTypeNameList.Clear();
@@ -433,7 +433,7 @@ bool CExporterBase::StartExport( const string &rszObjectTypeName, bool bForce )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::FinishExport( const string &rszObjectTypeName, bool bForce )
 {
 	InnerFinishExport( true, bForce );
@@ -446,7 +446,7 @@ void CExporterBase::FinishExport( const string &rszObjectTypeName, bool bForce )
 	//Singleton<IEditorContainer>()->ReloadActiveEditor( true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::ExportObject( IManipulator* pManipulator,
 																					 const string &rszObjectTypeName,
 																					 const string &rszObjectName,
@@ -460,7 +460,7 @@ EXPORT_RESULT CExporterBase::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterBase::StartCheck( const string &rszObjectTypeName, bool bExport )
 {
 	if ( !bExport )
@@ -477,7 +477,7 @@ bool CExporterBase::StartCheck( const string &rszObjectTypeName, bool bExport )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterBase::FinishCheck( const string &rszObjectTypeName, bool bExport )
 {
 	if ( !bExport )
@@ -491,7 +491,7 @@ void CExporterBase::FinishCheck( const string &rszObjectTypeName, bool bExport )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterBase::CheckObject( IManipulator* pManipulator,
 																					const string &rszObjectTypeName,
 																					const string &rszObjectName,
@@ -504,9 +504,9 @@ EXPORT_RESULT CExporterBase::CheckObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(DefaultExporterCommands)
 REGISTER_VAR_EX( "report_safe_refs", NGlobal::VarBoolHandler, &s_bReportSafeRefs, true, STORAGE_NONE );
 FINISH_REGISTER

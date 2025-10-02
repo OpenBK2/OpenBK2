@@ -3,7 +3,7 @@
 #include "Data.h"
 #include "parser.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const char *pszPrefix )
 {
 	f << "static SRenderState rs" << pszPrefix << pszName << "[] = { " << endl;
@@ -15,7 +15,7 @@ static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const c
 		f << "{ " << s.tss[i].sz1.c_str() << ", " << s.tss[i].sz2.c_str() << ", " << s.tss[i].sz3.c_str() << "}, " << endl;
 	f << "{-1,(D3DTEXTURESTAGESTATETYPE)0,0} };" << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WriteShader( ofstream &f, const DWORD *pRes )
 {
 	f << "{ 0x";
@@ -25,7 +25,7 @@ static void WriteShader( ofstream &f, const DWORD *pRes )
 		f << pRes[i] << ", 0x";
 	f << pRes[i] << " };" << dec << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WriteShader( ofstream &f, const string &szName, const vector<DWORD> &shader, string *pszDeclaration )
 {
 	if ( !pszDeclaration->empty() )
@@ -39,7 +39,7 @@ static void WriteShader( ofstream &f, const string &szName, const vector<DWORD> 
 	WriteShader( f, &shader[0] );
 	*pszDeclaration += szName;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool AreFilesDifferent( const string & szFileName0, const string & szFileName1 )
 {
 	// Ripped STL force me to create this shit
@@ -95,7 +95,7 @@ static bool AreFilesDifferent( const string & szFileName0, const string & szFile
 	return bDifferent;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WriteResult( const char *pszOutput )
 {
 	// write .h file

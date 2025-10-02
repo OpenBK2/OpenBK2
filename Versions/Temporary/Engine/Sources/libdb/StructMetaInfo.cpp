@@ -4,13 +4,13 @@
 #include "Variant.h"
 #include "BindArray.h"
 #include "ReportMetaInfo.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMetaInfo
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** data constructions/destruction with meta-info
@@ -18,7 +18,7 @@ namespace NMetaInfo
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConstructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 {
 	switch ( eType )
@@ -62,7 +62,7 @@ void DestructBinary( BYTE *pData, NTypeDef::ETypeType eType, int nSize )
 		memset( pData, 0xdddddddd, nSize );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 {
 	if ( pTypeDef == 0 )
@@ -98,7 +98,7 @@ void SStructMetaInfo::SField::ConstructBinary( BYTE *pThis, NBind::UValue *value
 	if ( !bOnlyOwn && GetBinaryShift() != 0x0000ffff )
 		NMetaInfo::ConstructBinary( pThis + GetBinaryShift(), GetType(), main.size );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::SField::DestructBinary( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn ) const
 {
 	if ( pTypeDef == 0 )
@@ -136,7 +136,7 @@ void SStructMetaInfo::SField::DestructBinary( BYTE *pThis, NBind::UValue *values
 	if ( !bOnlyOwn && GetBinaryShift() != 0x0000ffff )
 		NMetaInfo::DestructBinary( pThis + GetBinaryShift(), GetType(), int(main.size) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::ConstructStruct( BYTE *pThis, NBind::UValue *values, bool bOnlyOwn )
 {
 	if ( fields.empty() )
@@ -165,7 +165,7 @@ void SStructMetaInfo::DestructStruct( BYTE *pThis, NBind::UValue *values, bool b
 			it->second.DestructBinary( pThis, values, bOnlyOwn );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** fields adding
@@ -173,7 +173,7 @@ void SStructMetaInfo::DestructStruct( BYTE *pThis, NBind::UValue *values, bool b
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType )
 {
 	NI_ASSERT( fields.find(szName) == fields.end(), StrFmt("Field \"%s\" already exists!", szName.c_str() ) );
@@ -187,7 +187,7 @@ void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTy
 	field.szFieldName = szName;
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTypeDef::ETypeType eType, 
 							                  int nContainedSize, NTypeDef::ETypeType eContainedType )
 {
@@ -214,7 +214,7 @@ void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTy
 		memset( &pContained->singleField.contained, 0, sizeof(pContained->singleField.contained) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** Deep copying
@@ -222,7 +222,7 @@ void SStructMetaInfo::AddField( const string &szName, int nShift, int nSize, NTy
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::SField::MakeDeepCopy( SStructMetaInfo::SField *pRes ) const
 {
 	pRes->nShift = nShift;
@@ -241,7 +241,7 @@ void SStructMetaInfo::SField::MakeDeepCopy( SStructMetaInfo::SField *pRes ) cons
 	pRes->pfnSetValue = pfnSetValue;
 	pRes->pfnGetValue = pfnGetValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::MakeDeepCopy( SStructMetaInfo *pRes ) const
 {
 	pRes->nStructSize = nStructSize;
@@ -255,7 +255,7 @@ void SStructMetaInfo::MakeDeepCopy( SStructMetaInfo *pRes ) const
 		it->second.MakeDeepCopy( &(pRes->fields[it->first]) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** linking with typedef
@@ -263,7 +263,7 @@ void SStructMetaInfo::MakeDeepCopy( SStructMetaInfo *pRes ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetupSetGetOwnFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeType eType )
 {
 	switch ( eType )
@@ -370,7 +370,7 @@ void SetupSetGetStructFuncs( SStructMetaInfo::SField *pField, NTypeDef::ETypeTyp
 		NI_ASSERT( false, StrFmt("Unknown terminal type %d", eType) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::LinkField( const string &szAddName, const string &szFieldName, NTypeDef::STypeDef *pType )
 {
 	if ( pType->IsSimpleType() )
@@ -469,7 +469,7 @@ void SStructMetaInfo::LinkField( const string &szAddName, const string &szFieldN
 		NI_ASSERT( 0, StrFmt("Unknown or unsupported type \"%s\"!", SKnownEnum<NDb::NTypeDef::ETypeType>::ToString(pType->eType)) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SStructMetaInfo::LinkWithTypeDef( const string &szAddName, NTypeDef::STypeStructBase *pType )
 {
 	if ( pType->pBaseType )
@@ -480,8 +480,8 @@ void SStructMetaInfo::LinkWithTypeDef( const string &szAddName, NTypeDef::STypeS
 	//
 	pStructTypeDef = pType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

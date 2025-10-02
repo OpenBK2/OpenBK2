@@ -3,14 +3,14 @@
 #include "..\3dMotor\G2DView.h"
 #include "..\3dMotor\DBScene.h"
 #include "..\3DMotor\Locale.h"
-////
+
 #include "UIML.h"
 #include "UIMLHandlers.h"
 #include "../System/Commands.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int N_TAB_SIZE = 4;
 static string s_DefaultFontName = "System";
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFontInfo
 {
 	CVec2 scale;
@@ -25,7 +25,7 @@ struct SFontInfo
 		return 0;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFontInfo *pFontInfo )
 {
 	int nx, ny;
@@ -64,9 +64,9 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	pFontInfo->scale.x = fScale;
 	pFontInfo->scale.y = fScale * 4.0f * vScreen.y / vScreen.x / 3.0f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMLStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLStream::GetString( int nStart, int nSize, wstring *pRes )
 {
 	if ( nStart + nSize > wsText.length() )
@@ -77,16 +77,16 @@ void CMLStream::GetString( int nStart, int nSize, wstring *pRes )
 
 	*pRes = wsText.substr( nStart, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLStream::InsertString( const wstring &wsInsertText )
 {
 	wstring wsNewText( wsText.substr( 0, nPos ) + wsInsertText + wsText.substr( nPos ) );
 	wsText = wsNewText;
 	nSize = wsText.size();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMLTextObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMLTextObject: public IMLObject
 {
 	OBJECT_BASIC_METHODS(CMLTextObject)
@@ -124,18 +124,18 @@ public:
 
 	int operator&( IBinSaver &saver );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMLObject* CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize )
 {
 	return new CMLTextObject( pStream, nStart, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMLTextObject::CMLTextObject( CMLStream *_pStream, int _nStart, int _nSize ):
 	pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize ), sPosition( 0.0f, 0.0f )
 {
 	sSize = CTPoint<float>( 20, 20 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTextObject::Generate(  )
 {
 	int nx, ny;
@@ -213,32 +213,32 @@ void CMLTextObject::Generate(  )
 
 	sSize.x = fX;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLTextObject::GetSize() const
 {
 	return sSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SState& CMLTextObject::GetState() const
 {
 	return sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTextObject::SetState( const SState &_sState )
 {
 	sState = _sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLTextObject::GetPosition() const
 {
 	return sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTextObject::SetPosition( const CTPoint<float> &_sPosition )
 {
 	sPosition = _sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	CTPoint<float> sPos = sGlobalPosition + sPosition;
@@ -250,7 +250,7 @@ void CMLTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> 
 		fLastX = *iTemp;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	if ( !sOutline.rects.empty() )
@@ -258,7 +258,7 @@ void CMLTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float
 
 	pView->CreateDynamicRects( pTexture, sNormal, sGlobalPosition + sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMLTextObject::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nStrSize );
@@ -275,9 +275,9 @@ int CMLTextObject::operator&( IBinSaver &saver )
 	saver.Add( 10, &pTexture );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMLImageObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMLImageObject: public IMLObject
 {
 	OBJECT_BASIC_METHODS(CMLImageObject)
@@ -314,17 +314,17 @@ public:
 
 	int operator&( IBinSaver &saver );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMLObject* CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight )
 {
 	return new CMLImageObject( pTexture, eAlign, nBorder, nWidth, nHeight );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMLImageObject::CMLImageObject( NDb::STexture *_pTexture, SState::EHORAlign _eAlign, int _nBorder, int _nWidth, int _nHeight ):
 	pTexture( _pTexture ), eAlign( _eAlign ), nBorder( _nBorder ), nWidth( _nWidth ), nHeight( _nHeight ), sSize( 0, 0 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLImageObject::Generate(  )
 {
 	if ( pTexture )
@@ -347,44 +347,44 @@ void CMLImageObject::Generate(  )
 		sLayout.AddRect( 0, 0, sSize.x, sSize.y, sTexRect );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLImageObject::GetSize() const
 {
 	return sSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SState& CMLImageObject::GetState() const
 {
 	return sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLImageObject::SetState( const SState &_sState )
 {
 	sState = _sState;
 	if ( eAlign != SState::HORALIGN_DEFAULT )
 		sState.eHAlign = eAlign;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLImageObject::GetPosition() const
 {
 	return sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLImageObject::SetPosition( const CTPoint<float> &_sPosition )
 {
 	sPosition = _sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLImageObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	pRender->push_back( CTRect<float>( sGlobalPosition.x, sGlobalPosition.y, sSize.x + sGlobalPosition.x, sSize.y + sGlobalPosition.y ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLImageObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
 {
 	pView->CreateDynamicRects( pTexture, sLayout, sGlobalPosition + sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMLImageObject::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nBorder );
@@ -400,9 +400,9 @@ int CMLImageObject::operator&( IBinSaver &saver )
 	saver.Add( 9, &pTexture );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMLImageObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMLTabObject: public IMLObject
 {
 	OBJECT_BASIC_METHODS(CMLTabObject)
@@ -430,17 +430,17 @@ public:
 
 	int operator&( IBinSaver &saver );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMLObject* CreateIMLTabObject()
 {
 	return new CMLTabObject();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMLTabObject::CMLTabObject():
 	sSize( 0, 0 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTabObject::DynamicGenerate(  const SReflowInfo &sInfo )
 {
 	SFontInfo sFontInfo;
@@ -451,32 +451,32 @@ void CMLTabObject::DynamicGenerate(  const SReflowInfo &sInfo )
 	sSize.x = ( nPart + 1 ) * fSize - sInfo.fLineWidth;
 	sSize.y = sInfo.fLastLineHeight;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLTabObject::GetSize() const
 {
 	return sSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SState& CMLTabObject::GetState() const
 {
 	return sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTabObject::SetState( const SState &_sState )
 {
 	sState = _sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLTabObject::GetPosition() const
 {
 	return sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLTabObject::SetPosition( const CTPoint<float> &_sPosition )
 {
 	sPosition = _sPosition;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMLTabObject::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &sState );
@@ -484,9 +484,9 @@ int CMLTabObject::operator&( IBinSaver &saver )
 	saver.Add( 3, &sPosition );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMLLayout
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMLLayout: public IMLLayout
 {
 	OBJECT_BASIC_METHODS(CMLLayout)
@@ -537,7 +537,7 @@ public:
 
 	int operator&( IBinSaver &saver );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMLLayout::CMLLayout():
 	sSize( 0, 0 )
 {
@@ -546,40 +546,40 @@ CMLLayout::CMLLayout():
 	sState.eHAlign = SState::HORALIGN_LEFT;
 	sState.eVAlign = SState::VERTALIGN_MIDDLE;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::AddObject( IMLObject *pObject )
 {
 	itemsList.push_back( SCmdPair( CMD_NULL, pObject ) );
 	pObject->SetState( sState );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::AddCommand( ECommand eCommand, IMLObject *pObject )
 {
 	itemsList.push_back( SCmdPair( eCommand, pObject ) );
 	if ( IsValid( pObject ) )
 		pObject->SetState( sState );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<float>& CMLLayout::GetSize() const
 {
 	return sSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SState& CMLLayout::GetState()
 {
 	return sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::SetState( const SState &_sState )
 {
 	sState = _sState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::PushState()
 {
 	states.push_back( sState );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::PopState()
 {
 	if ( states.empty() )
@@ -591,7 +591,7 @@ void CMLLayout::PopState()
 	sState = states.back();
 	states.pop_back();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::Generate(  float fWidth )
 {
 	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
@@ -664,7 +664,7 @@ void CMLLayout::Generate(  float fWidth )
 	sSize.x = sInfo.fMaxX;
 	sSize.y = sInfo.fY;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
@@ -675,7 +675,7 @@ void CMLLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPo
 			pObject->Render( pRender, sPosition, sWindow );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	for( list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
@@ -686,7 +686,7 @@ void CMLLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &s
 			pObject->Render( pView, sPosition, sWindow );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock )
 {
 	AssembleLine( pInfo, bEndBlock );
@@ -710,7 +710,7 @@ void CMLLayout::CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock )
 	if ( pInfo->fY > pInfo->sRight.fHeight )
 		pInfo->sRight.fValue = fWidth;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::EstimateLine( SReflowInfo *pInfo, float fWidth )
 {
 	pInfo->line.clear();
@@ -732,7 +732,7 @@ void CMLLayout::EstimateLine( SReflowInfo *pInfo, float fWidth )
 	if ( pInfo->fY > pInfo->sRight.fHeight )
 		pInfo->sRight.fValue = fWidth;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 {
 	if ( pInfo->line.empty() )
@@ -792,7 +792,7 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 		fX += fSpace;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 {
 	for( list<CPtr<IMLObject> >::iterator iTemp = pInfo->leftWraped.begin(); iTemp != pInfo->leftWraped.end(); iTemp++ )
@@ -819,7 +819,7 @@ void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 	pInfo->leftWraped.clear();
 	pInfo->rightWraped.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMLLayout::operator&( IBinSaver &saver )
 {
 	saver.Add( 5, &sState );
@@ -828,9 +828,9 @@ int CMLLayout::operator&( IBinSaver &saver )
 	saver.Add( 8, &states );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CML
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CML: public IML
 {
 	OBJECT_BASIC_METHODS(CML)
@@ -861,7 +861,7 @@ public:
 
 	int operator&( IBinSaver &saver );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CML::CML()
 : sSize( 0, 0 ), nIDForHandler( -1 )
 {
@@ -891,32 +891,32 @@ CML::CML()
 	tagsMap[L"push"] = new CStateStack( true );
 	tagsMap[L"pop"] = new CStateStack( false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::SetText( const wstring &_wsText, int nFlags )
 {
 	wsText = _wsText;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::SetHandler( const wstring &wsTAG, IMLHandler *pHandler )
 {
 	tagsMap[wsTAG] = pHandler;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::SetIDForHandler( int nID )
 {
 	nIDForHandler = nID;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CML::GetIDForHandler() const
 {
 	return nIDForHandler;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::SetFade( float fFade )
 {
 	sFadeValue->fFadeValue = fFade;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<int>& CML::GetSize()
 {
 	const CTPoint<float> &sFPSize = pLayout->GetSize();
@@ -924,7 +924,7 @@ const CTPoint<int>& CML::GetSize()
 	sSize.y = Float2Int( sFPSize.y + 0.5f );
 	return sSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::Generate( int nWidth )
 {
 	enum ECharType
@@ -1021,17 +1021,17 @@ void CML::Generate( int nWidth )
 	pLayout->AddCommand( CMD_BREAKLINE );
 	pLayout->Generate( nWidth );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::Render( list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	pLayout->Render( pRender, sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CML::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	pLayout->Render( pView, sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CML::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &sSize );
@@ -1042,26 +1042,26 @@ int CML::operator&( IBinSaver &saver )
 	saver.Add( 6, &nIDForHandler );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CreateML
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IML* CreateML()
 {
 	return new CML;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MLText)
 
 REGISTER_VAR_EX( "ml_text_default_font_name", NGlobal::VarStrHandler, &s_DefaultFontName, "System", STORAGE_NONE );
 
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IML )
 REGISTER_SAVELOAD_CLASS( 0xB0829160, CMLTextObject )
 REGISTER_SAVELOAD_CLASS( 0xB0829161, CMLImageObject )
 REGISTER_SAVELOAD_CLASS( 0xB0829162, CMLLayout )
 REGISTER_SAVELOAD_CLASS( 0xB0829163, CML )
-////
+
 REGISTER_SAVELOAD_CLASS( 0xB1003230, CLEFTHandler )
 REGISTER_SAVELOAD_CLASS( 0xB1003231, CRIGHTHandler )
 REGISTER_SAVELOAD_CLASS( 0xB1003232, CCENTERHandler )

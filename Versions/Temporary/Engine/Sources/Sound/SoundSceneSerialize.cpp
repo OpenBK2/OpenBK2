@@ -3,7 +3,7 @@
 #include "SoundSceneInternal.h"
 #include "SubstSound.h"
 #include "SoundCell.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSoundScene2D::operator&( IBinSaver &saver  )
 {
 	if ( saver.IsReading() )
@@ -41,14 +41,14 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 	saver.Add( 28, &vFormerCameraDir );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapSounds::CMapSoundCell::SMapSounds::operator&( IBinSaver &saver  )
 {
 	saver.Add( 2, &instanceIDs ); // это не сериализовать
 	saver.Add( 3, &nCount );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapSounds::operator&( IBinSaver &saver  )
 {
 	saver.Add( 4, &soundIDs );
@@ -59,7 +59,7 @@ int CMapSounds::operator&( IBinSaver &saver  )
 	saver.Add( 18, &registeredSounds );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapSounds::CMapSoundCell::operator&( IBinSaver &saver )
 {
 	
@@ -71,7 +71,7 @@ int CMapSounds::CMapSoundCell::operator&( IBinSaver &saver )
 	return 0;
 
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSubstSound::operator&( IBinSaver &saver  )
 {
 	saver.Add( 2, &pSFX );
@@ -79,7 +79,7 @@ int CSubstSound::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSound::operator&( IBinSaver &saver  )
 {
 	saver.Add( 2, &wID );														// 
@@ -104,7 +104,7 @@ int CSound::operator&( IBinSaver &saver  )
 	saver.Add( 19, &timeLastPosUpdate );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSoundCell::operator&( IBinSaver &saver  )
 {
 	saver.Add( 2, &nRadius );
@@ -112,7 +112,7 @@ int CSoundCell::operator&( IBinSaver &saver  )
 	saver.Add( 5, &timeLastCombatHear );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrainSounds::operator&( IBinSaver &saver  )
 {
 	saver.Add( 1, &terrainSounds );
@@ -123,7 +123,7 @@ int CTerrainSounds::operator&( IBinSaver &saver  )
 	saver.Add( 7, &pSFX );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
 {
 			
@@ -139,7 +139,7 @@ int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
 
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver  )
 {
 			
@@ -148,7 +148,7 @@ int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver  )
 
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCellsConglomerateContainer::operator&( IBinSaver &saver  )
 {
 	saver.Add( 1, &conglomeratesHeight );

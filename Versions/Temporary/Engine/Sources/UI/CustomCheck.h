@@ -1,6 +1,6 @@
 // CustomCheck.h: interface for the CCustomCheck class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_CUSTOMCHECK_H__4B1CA8EE_B9DF_40E8_A49E_866FE4D81D91__INCLUDED_)
 #define AFX_CUSTOMCHECK_H__4B1CA8EE_B9DF_40E8_A49E_866FE4D81D91__INCLUDED_
@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "IMessageReaction.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckRunScript : public IMessageCheck
 {
 	OBJECT_BASIC_METHODS(CCheckRunScript)
@@ -21,7 +21,7 @@ public:
 	virtual int Check( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckPreprogrammed : public IMessageCheck
 {
 	OBJECT_BASIC_METHODS(CCheckPreprogrammed)
@@ -32,7 +32,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckIsWindowEnabled : public IMessageCheck
 {
 	OBJECT_BASIC_METHODS(CCheckIsWindowEnabled)
@@ -43,7 +43,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckIsWindowVisible : public IMessageCheck
 {
 	OBJECT_BASIC_METHODS(CCheckIsWindowVisible)
@@ -54,7 +54,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckIsTabActive : public IMessageCheck
 {
 	OBJECT_BASIC_METHODS(CCheckIsTabActive)
@@ -65,5 +65,5 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(AFX_CUSTOMCHECK_H__4B1CA8EE_B9DF_40E8_A49E_866FE4D81D91__INCLUDED_)

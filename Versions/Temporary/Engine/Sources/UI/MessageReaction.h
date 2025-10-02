@@ -1,6 +1,6 @@
 // Reaction.h: interface for the CReaction class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_)
 #define AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_
@@ -10,7 +10,7 @@
 typedef vector< CPtr<IMessageReactionB2> > CMessageSequence;
 typedef vector< CDBPtr<NDb::SUIDesc> > CMessageSequienceDesc;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // 1 check (branches) and sequience of atim reactions for each branch
 class CMessageReactionB2 : public IMessageReactionB2
 {
@@ -32,9 +32,9 @@ public:
 	void AddCommonBefore( IMessageReactionB2 *pReaction ) { commonBefore.push_back( pReaction ); }
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Atom EMART_SET_GLOBAL_VAR
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSetGlobalVar : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSetGlobalVar );
@@ -44,9 +44,9 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Atom EMART_REMOVE_GLOBAL_VAR
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARRemoveGlobalVar : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARRemoveGlobalVar );
@@ -56,7 +56,7 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags  ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSendUIMessage : public IMessageReactionB2 
 {
 	OBJECT_BASIC_METHODS( CARSendUIMessage );
@@ -66,7 +66,7 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSendGameMessage : public IMessageReactionB2 
 {
 	OBJECT_BASIC_METHODS( CARSendGameMessage );
@@ -76,7 +76,7 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSiwtchTab : public IMessageReactionB2 
 {
 	OBJECT_BASIC_METHODS( CARSiwtchTab );
@@ -88,5 +88,5 @@ public:
 };
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(AFX_REACTION_H__C9D8977B_A116_4A9B_93A3_8EBE426CA74D__INCLUDED_)

@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma pack( 4 )
 // complete necessary one letter description
 struct STFCharacter
@@ -14,7 +14,7 @@ struct STFCharacter
   int nWidth;                         // lone character's width (B + (C > 0 ? C : 0))
 };
 #pragma pack()
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFontFormatInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CFontFormatInfo );
@@ -62,5 +62,5 @@ public:
 	int operator&( CStructureSaver &f );
 	friend class CFontGen;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __FONTFORMAT_H__

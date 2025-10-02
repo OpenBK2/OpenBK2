@@ -3,7 +3,7 @@
 #include "Bound.h"
 #include "Transform.h"
 #include "PolyUtils.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMemBuilderVertex
 {
 	CVec3 point;
@@ -13,7 +13,7 @@ struct SMemBuilderVertex
 		return point == a.point && fabs2( normal - a.normal ) < 1e-6;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMemBuilderVertexHash
 {
 	int operator()( const SMemBuilderVertex &v ) const
@@ -22,7 +22,7 @@ struct SMemBuilderVertexHash
 		return *(int*)&f;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMemObjectBuilder
 {
 	typedef hash_map<SMemBuilderVertex, int, SMemBuilderVertexHash> CPointsHash;
@@ -33,7 +33,7 @@ public:
 	WORD GetPointIndex( const CVec3 &point, const CVec3 &normal );
 	void AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 WORD CMemObjectBuilder::GetPointIndex( const CVec3 &point, const CVec3 &normal )
 {
 	int nCounter = 0;
@@ -51,7 +51,7 @@ WORD CMemObjectBuilder::GetPointIndex( const CVec3 &point, const CVec3 &normal )
 	}
 	return i->second;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObjectBuilder::AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs )
 {
 	if ( nSubs == 0 )
@@ -76,9 +76,9 @@ void CMemObjectBuilder::AddSphereTriangle( const CVec3 &a, const CVec3 &b, const
 		Normalize( &ca );// COMPILER - compiler generate wrong code without this line
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMemObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSided )
 {
 	vector<CVec3> points;
@@ -116,14 +116,14 @@ void CMemObject::CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSide
 	//
 	Create( points, tris );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*static void TypeVector( const CVec3 &a )
 {
 	char szBuf[128];
 	sprintf( szBuf, "x = %f  y = %f  z = %f\n", a.x, a.y, a.z );
 	OutputDebugString( szBuf );
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs )
 {
 	Clear();
@@ -143,13 +143,13 @@ void CMemObject::CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs )
 	for ( int i = 0; i < resPoints.size(); ++i )
 		resPoints[i] = resPoints[i] * fRadius + ptCenter;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreatePolyline( const vector<CVec3> &points )
 {
 	resPoints = points;
 	bPolyLine = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMOTessPoint
 {
 	int nIndex;
@@ -159,7 +159,7 @@ struct SMOTessPoint
 	SMOTessPoint( float _fNormal, const CVec2 &_vPoint, int _nIndex ): fNormal(_fNormal), vPoint(_vPoint), nIndex(_nIndex) {}
 };
 typedef CVec2 TTriangle[3];
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 {
 	if ( points.size() < 3 )
@@ -264,7 +264,7 @@ void CMemObject::CreatePolygone( const vector<CVec2> &points, float fZ )
 	////
 	Create( vert, tris );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float fRadius, int nSubs, bool bClose )
 {
 	CMemObjectBuilder b( this );
@@ -318,7 +318,7 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, float fBase )
 {
 	CMemObjectBuilder b( this );
@@ -368,7 +368,7 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 	w3 = b.GetPointIndex( ptMiddle + ptH, ptN );
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::Clear()
 {
 	resPoints.clear();
@@ -376,7 +376,7 @@ void CMemObject::Clear()
 	resTris.clear();
 	bPolyLine = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::Create( const vector<CVec3> &points, const vector<STriangle> &tris )
 {
 	Clear();
@@ -394,15 +394,15 @@ void CMemObject::Create( const vector<CVec3> &points, const vector<STriangle> &t
 			) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CalcBound( SSphere *pRes ) const
 {
 	::CalcBound( pRes, resPoints, SGetSelf<CVec3>() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemObject::CalcBound( SBound *pRes ) const
 {
 	::CalcBound( pRes, resPoints, SGetSelf<CVec3>() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x2012CD00, CMemObject )

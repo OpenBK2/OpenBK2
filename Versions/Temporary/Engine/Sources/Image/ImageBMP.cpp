@@ -2,7 +2,7 @@
 #include "ImageBMP.h"
 #include "ImageInternal.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EBitmapCompression
 {
  BC_RGB       = 0,
@@ -10,7 +10,7 @@ enum EBitmapCompression
  BC_RLE4      = 2,
  BC_BITFIELDS = 3
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline long GetShort( int nOffset, BYTE *pBuff )
 {
 	return *reinterpret_cast<short*>( pBuff + nOffset );
@@ -27,7 +27,7 @@ inline long GetDWord( int nOffset, BYTE *pBuff )
 {
 	return *reinterpret_cast<DWORD*>( pBuff + nOffset );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NImage::RecognizeFormatBMP( CDataStream *pStream )
 {
 	char signature[2];
@@ -38,7 +38,7 @@ bool NImage::RecognizeFormatBMP( CDataStream *pStream )
 	pStream->Seek( pStream->GetPosition() - 2 );
 	return (signature[0] == 'B') && (signature[1] == 'M');
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 {
 	int i;
@@ -232,4 +232,4 @@ bool NImage::LoadImageBMP( CArray2D<DWORD> *pRes, CDataStream *pStream )
 	memcpy( &(*pRes)[0][0], &image[0], sizeof(image[0]) * dwWidth * dwHeight );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

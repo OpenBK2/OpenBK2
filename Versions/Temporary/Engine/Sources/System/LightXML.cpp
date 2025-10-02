@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
 #include "LightXML.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NLXML
 {
 
 static const char *szEndOfLine = "\x0D\n";
 static const char *szTab = "\t";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** attribute
@@ -15,7 +15,7 @@ static const char *szTab = "\t";
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLAttribute::Parse( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
@@ -70,7 +70,7 @@ const char* CXMLAttribute::Parse( const char *pszBegin, const char *pszEnd )
 	}
 	return p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLAttribute::Store( NLXML_STREAM &stream ) const
 {
 	if ( szValue.find('\"') != string::npos )
@@ -88,7 +88,7 @@ void CXMLAttribute::Store( NLXML_STREAM &stream ) const
 		stream << "\"";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML node general functions
@@ -96,16 +96,16 @@ void CXMLAttribute::Store( NLXML_STREAM &stream ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLNode::CXMLNode( const EType _eType )
 : eType( _eType ), dwHashCode( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLNode::~CXMLNode()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML multi-node
@@ -113,10 +113,10 @@ CXMLNode::~CXMLNode()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char* pszXMLHeader = "<?xml";
 static const char* pszCommentHeader = "<!--";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsHeader( const char *pszBegin, const char *pszEnd )
 {
 	// min node <?xml?>
@@ -127,13 +127,13 @@ bool IsComment( const char *pszBegin, const char *pszEnd )
 	// min node <!---->
 	return (pszEnd - pszBegin >= 7) && ( *((DWORD*)pszBegin) == *((DWORD*)pszCommentHeader) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLMultiNode::~CXMLMultiNode() 
 {  
 	for ( CNodesList::iterator it = children.begin(); it != children.end(); ++it )
 		delete *it;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLNode* CXMLMultiNode::Identify( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
@@ -157,7 +157,7 @@ CXMLNode* CXMLMultiNode::Identify( const char *pszBegin, const char *pszEnd )
 		pNode = new CXMLUnknown();
 	return pNode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLMultiNode::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	for ( CNodesList::const_iterator it = children.begin(); it != children.end(); ++it )
@@ -167,7 +167,7 @@ void CXMLMultiNode::Store( NLXML_STREAM &stream, const string &szIndention ) con
 		stream << szEndOfLine;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLNode* CXMLMultiNode::FindChild( const string &_szValue ) const
 {
 	const DWORD dwChildHashCode = hash<string>()( _szValue );
@@ -196,7 +196,7 @@ CXMLNode* CXMLMultiNode::FindChild( const string &_szValue ) const
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML element
@@ -204,7 +204,7 @@ CXMLNode* CXMLMultiNode::FindChild( const string &_szValue ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLElement::CXMLElement()
 : CXMLMultiNode( CXMLNode::ELEMENT )
 {
@@ -212,7 +212,7 @@ CXMLElement::CXMLElement()
 CXMLElement::~CXMLElement()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLElement::SetAttributeLocal( const string &szName, const string &szValue )
 {
 	CAttributesMap::iterator pos = attrmap.find( szName );
@@ -224,7 +224,7 @@ void CXMLElement::SetAttributeLocal( const string &szName, const string &szValue
 		attrmap[szName] = &( attributes.back() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLElement::SetAttribute( const CXMLAttribute &attr )
 {
 	SetAttributeLocal( attr.GetName(), attr.GetValue() );
@@ -233,13 +233,13 @@ void CXMLElement::SetAttribute( const string &szName, const CToStringConvertor &
 {
 	SetAttributeLocal( szName, value );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CXMLAttribute* CXMLElement::GetAttribute( const string &szName ) const
 {
 	CAttributesMap::const_iterator pos = attrmap.find( szName );
 	return pos != attrmap.end() ? pos->second : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLElement::RemoveAttribute( const string &szName )
 {
 	CAttributesMap::iterator pos = attrmap.find( szName );	
@@ -256,7 +256,7 @@ void CXMLElement::RemoveAttribute( const string &szName )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLElement::ReadValue( const char *pszBegin, const char *pszEnd )
 {
 	// Read in text and elements in any order.
@@ -297,7 +297,7 @@ const char* CXMLElement::ReadValue( const char *pszBegin, const char *pszEnd )
 
 	return p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 {
 	ResetOptimalPos();
@@ -357,7 +357,7 @@ const char* CXMLElement::Parse( const char *pszBegin, const char *pszEnd )
 	}
 	return p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLElement::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	stream << "<" << szValue;
@@ -399,7 +399,7 @@ void CXMLElement::Store( NLXML_STREAM &stream, const string &szIndention ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLText::CXMLText()
 : CXMLNode( CXMLNode::TEXT )
 {
@@ -407,7 +407,7 @@ CXMLText::CXMLText()
 CXMLText::~CXMLText()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLText::Parse( const char *pszBegin, const char *pszEnd )
 {
 	szValue.clear();
@@ -416,12 +416,12 @@ const char* CXMLText::Parse( const char *pszBegin, const char *pszEnd )
 	//
 	return p != 0 ? p - 1 : 0; // don't truncate the '<'
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLText::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	stream.WriteChecked( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML Comment
@@ -429,7 +429,7 @@ void CXMLText::Store( NLXML_STREAM &stream, const string &szIndention ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLComment::CXMLComment()
 : CXMLNode( CXMLNode::COMMENT )
 {
@@ -437,7 +437,7 @@ CXMLComment::CXMLComment()
 CXMLComment::~CXMLComment()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLComment::Parse( const char *pszBegin, const char *pszEnd )
 {
 	szValue.clear();
@@ -454,14 +454,14 @@ const char* CXMLComment::Parse( const char *pszBegin, const char *pszEnd )
 	p = ReadText( &szValue, p, pszEnd, szCommentEndTag, false );
 	return p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLComment::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	stream << "<!--";
 	stream.WriteChecked( szValue );
 	stream << "-->";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** declaration
@@ -469,7 +469,7 @@ void CXMLComment::Store( NLXML_STREAM &stream, const string &szIndention ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLDeclaration::CXMLDeclaration()
 : CXMLNode( CXMLNode::DECLARATION ), szVersion( "1.0" ), szEncoding( "UTF-8" )
 {
@@ -477,7 +477,7 @@ CXMLDeclaration::CXMLDeclaration()
 CXMLDeclaration::~CXMLDeclaration()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
@@ -533,7 +533,7 @@ const char* CXMLDeclaration::Parse( const char *pszBegin, const char *pszEnd )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLDeclaration::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	stream << "<?xml ";
@@ -559,7 +559,7 @@ void CXMLDeclaration::Store( NLXML_STREAM &stream, const string &szIndention ) c
 	//
 	stream << "?>";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML Unknown
@@ -567,7 +567,7 @@ void CXMLDeclaration::Store( NLXML_STREAM &stream, const string &szIndention ) c
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLUnknown::CXMLUnknown()
 : CXMLNode( CXMLNode::UNKNOWN )
 {
@@ -575,7 +575,7 @@ CXMLUnknown::CXMLUnknown()
 CXMLUnknown::~CXMLUnknown()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLUnknown::Parse( const char *pszBegin, const char *pszEnd )
 {
 	const char *p = SkipWhiteSpace( pszBegin );
@@ -597,12 +597,12 @@ const char* CXMLUnknown::Parse( const char *pszBegin, const char *pszEnd )
 	//
 	return *p == '>' ? p + 1 : p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLUnknown::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	stream << "<" << szValue << ">";		// Don't use entities hear! It is unknown.
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML Document
@@ -610,7 +610,7 @@ void CXMLUnknown::Store( NLXML_STREAM &stream, const string &szIndention ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLDocument::CXMLDocument()
 : CXMLMultiNode( CXMLNode::DOCUMENT )
 {
@@ -618,7 +618,7 @@ CXMLDocument::CXMLDocument()
 CXMLDocument::~CXMLDocument()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
 {
 	ResetOptimalPos();
@@ -645,7 +645,7 @@ const char* CXMLDocument::Parse( const char *pszBegin, const char *pszEnd )
 	// All is well.
 	return p;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLDocument::Store( NLXML_STREAM &stream, const string &szIndention ) const
 {
 	for ( CXMLMultiNode::const_iterator it = begin(); it != end(); ++it )
@@ -658,7 +658,7 @@ void CXMLDocument::Store( NLXML_STREAM &stream, const string &szIndention ) cons
 			return;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CXMLElement *CXMLDocument::GetRootElement()
 {
 	const int nNumChildren = CountChildren();
@@ -674,5 +674,5 @@ CXMLElement *CXMLDocument::GetRootElement()
 	//
 	return pRootNode != 0 ? static_cast<CXMLElement *>( pRootNode ) : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

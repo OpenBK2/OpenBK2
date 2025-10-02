@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <dinput.h>
 #include "..\Misc\StrProc.h"
 //#include "..\System\Streams.h"
@@ -7,10 +7,10 @@
 #include "..\Input\Bind.h"
 #include "..\Input\BindInternal.h"
 using namespace NStr;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NInput
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Global vars
 typedef hash_map<int, SActionInfo> TActionsMap;
 typedef hash_map<string, SCommand> TCommandsMap;
@@ -35,21 +35,21 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &cComm
 static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB );
 static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMapping );
 static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Public
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const vector<string>& GetSections()
 {
 	return sections;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetSection( const string &_szSection, bool bUpdate )
 {
 	vector<string> temp( 1 );
 	temp[0] = _szSection;
 	SetSection( temp, bUpdate );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetSection( const vector<string> &_sections, bool bUpdate )
 {
 	if ( sections == _sections )
@@ -59,7 +59,7 @@ void SetSection( const vector<string> &_sections, bool bUpdate )
 	if ( bUpdate )
 		UpdateBinds();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsSectionInSet( const string &szSection )
 {
 	if ( szSection.empty() )
@@ -67,7 +67,7 @@ static bool IsSectionInSet( const string &szSection )
 
 	return find( sections.begin(), sections.end(), szSection ) != sections.end();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Bind( EMappingType eType, const string &sCmd, const string &szSection, const vector<string> &szControlsSet )
 {
 	SMapping sMapping;
@@ -117,7 +117,7 @@ void Bind( EMappingType eType, const string &sCmd, const string &szSection, cons
 
 	sCommand.mappingsList.push_back( sMapping );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Unbind( const string &szCmd )
 {
 	TCommandsMap &sCommandsMap = GetCommands();
@@ -141,7 +141,7 @@ void Unbind( const string &szCmd )
 			iMapping++;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UnbindAll()
 {
 	TCommandsMap &sCommandsMap = GetCommands();
@@ -149,7 +149,7 @@ void UnbindAll()
 	for ( TCommandsMap::iterator iTemp = sCommandsMap.begin(); iTemp != sCommandsMap.end(); iTemp++ )
 		Unbind( iTemp->first );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetBind( const string &szCmd, list<SBind> *pRes )
 {
 	TActionsMap &sActions = GetActions();
@@ -174,7 +174,7 @@ void GetBind( const string &szCmd, list<SBind> *pRes )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UpdateBinds()
 {
 	TCommandsMap &sCommandsMap = GetCommands();
@@ -228,7 +228,7 @@ void UpdateBinds()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float GetControlCoeff( const string &szControl )
 {
 	TActionsMap &sActions = GetActions();
@@ -243,7 +243,7 @@ float GetControlCoeff( const string &szControl )
 
 	return iTemp->second.fCoeff;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetControlCoeff( const string &szControl, float fCoeff )
 {
 	TActionsMap &sActions = GetActions();
@@ -258,7 +258,7 @@ void SetControlCoeff( const string &szControl, float fCoeff )
 
 	sInfo.fCoeff = fCoeff;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetEvent( SGameMessage *pSGameMessage )
 {
 	NInput::SMessage msg;
@@ -278,7 +278,7 @@ bool GetEvent( SGameMessage *pSGameMessage )
 	events.pop_front();
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeEvent( SGameMessage *pMsg,  const string &szGameMessage, int _nParam1, int _nParam2, EControlType ct )
 {
 	*pMsg = SGameMessage();
@@ -298,28 +298,28 @@ void MakeEvent( SGameMessage *pMsg,  const string &szGameMessage, int _nParam1, 
 	pMsg->nParam1 = _nParam1;
 	pMsg->nParam2 = _nParam2;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PostEvent( const string &szEvent, int _nParam1, int _nParam2 )
 {
 	SGameMessage sEvent;
 	MakeEvent( &sEvent, szEvent, _nParam1, _nParam2, CT_UNKNOWN );
 	events.push_back( sEvent );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PostWinEvent( const string &szEvent, int _nParam1, int _nParam2 )
 {
 	SGameMessage sEvent;
 	MakeEvent( &sEvent, szEvent, _nParam1, _nParam2, CT_WINDOWS );
 	events.push_back( sEvent );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PurgeEvents()
 {
 	PumpMessages( true );
 	SGameMessage gameMessage;
 	while ( GetEvent( &gameMessage ) ) {}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PurgeUIEvents()
 {
 	PumpMessages( true );
@@ -341,7 +341,7 @@ void PurgeUIEvents()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float GetCommandCoeff( const string &szControl )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
@@ -350,7 +350,7 @@ float GetCommandCoeff( const string &szControl )
 
 	return 1.0f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetCommandCoeff( const string &szControl, float fCoeff )
 {
 	TCommandsMap::iterator iTemp = GetCommands().find( szControl );
@@ -359,9 +359,9 @@ void SetCommandCoeff( const string &szControl, float fCoeff )
 
 	iTemp->second.fCoeff = fCoeff;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CBind
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBind::CBind( const string &sCmd ): fDelta( 0 )
 {
 
@@ -372,24 +372,24 @@ CBind::CBind( const string &sCmd ): fDelta( 0 )
 	TCommandsMap &sCommands = GetCommands();
 	pBindCommand = &sCommands[sCmd];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBind::IsActive() const
 {
 	return pBindCommand->bActive;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CBind::GetDelta()
 {
 	float fRes = fDelta;
 	fDelta = 0;
 	return fRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CBind::GetSpeed() const
 {
 	return pBindCommand->fSpeed;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBind::ProcessEvent( const SGameMessage &eEvent )
 {
 	if ( eEvent.mMessage.cType == CT_TIME )
@@ -406,11 +406,11 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 	
 	return ProcessCommandMessage( eEvent.mMessage, *pBindCommand );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 // Internal functions
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Update all commands
 static void Update( DWORD dwTime )
 {
@@ -437,7 +437,7 @@ static void Update( DWORD dwTime )
 		sCommand.dwTime = dwTime;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsBindActive( const SMapping &sMapping )
 {
 	TActionsMap &sActions = GetActions();
@@ -484,7 +484,7 @@ static bool IsBindActive( const SMapping &sMapping )
 
 	return bSetActive;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Handle message and generate prediction
 static void ProcessMessage( const NInput::SMessage &mMsg )
 {
@@ -536,7 +536,7 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 	
 	events.push_back( gameMessage );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Handle messages for command
 static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sCommand )
 {
@@ -591,7 +591,7 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 	
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Crossover detection
 static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 {
@@ -611,7 +611,7 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMapping )
 {
 	for ( list<SMapping>::const_iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
@@ -634,7 +634,7 @@ static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMappi
 
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 {
 	vector<int> blockingGroupSet;
@@ -662,9 +662,9 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 	if ( !blockingGroupSet.empty() )
 		pSubSet->blockingGroupsSet.push_back( blockingGroupSet );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }; // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandBindInner( const string &szID, const vector<wstring> &_paramsSet )
 {
 	vector<wstring> paramsSet( _paramsSet );
@@ -724,7 +724,7 @@ static void CommandBindInner( const string &szID, const vector<wstring> &_params
 	else
 		NInput::Bind( eType, szCommand, "", controlsSet );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandBind( const string &szID, const vector<wstring> &_paramsSet, void *pContext )
 {
 	vector<wstring> paramsSet( _paramsSet );
@@ -757,7 +757,7 @@ static void CommandBind( const string &szID, const vector<wstring> &_paramsSet, 
 	}
 	CommandBindInner( szID, paramsSet );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandUnbind( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
@@ -768,12 +768,12 @@ static void CommandUnbind( const string &szID, const vector<wstring> &paramsSet,
 
 	NInput::Unbind( NStr::ToMBCS( paramsSet.front() ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandUnbindAll( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	NInput::UnbindAll();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandBindSection( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	string szSection;
@@ -783,7 +783,7 @@ static void CommandBindSection( const string &szID, const vector<wstring> &param
 
 	NInput::SetSection( szSection, false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandBindConfigure( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 2 )
@@ -794,12 +794,12 @@ static void CommandBindConfigure( const string &szID, const vector<wstring> &par
 
 	NInput::SetControlCoeff( NStr::ToMBCS( paramsSet[0] ), _wtof( paramsSet[1].c_str() ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandBindUpdate( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	NInput::UpdateBinds();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandShowBind( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 1 )
@@ -819,7 +819,7 @@ static void CommandShowBind( const string &szID, const vector<wstring> &paramsSe
 		csSystem << endl;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(InputBind)
 	REGISTER_CMD( "bind", CommandBind )
 	REGISTER_CMD( "unbind", CommandUnbind )

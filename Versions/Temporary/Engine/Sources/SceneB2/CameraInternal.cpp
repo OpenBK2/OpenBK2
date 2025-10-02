@@ -11,10 +11,10 @@
 #include "CameraScriptMutators.h"
 #include "../Main/GameTimer.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( ICamera );
 REGISTER_SAVELOAD_CLASS( 0x1006D300, CCamera )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float s_fQuakeMinRadius = 8.0f * VIS_TILE_SIZE;
 static float s_fQuakeMaxRadius = 200.0f * VIS_TILE_SIZE;
 static float s_fQuakeAttenuation = 5.0f;
@@ -23,7 +23,7 @@ static float s_fQuakeDuration = 1000.0f;
 static float s_fQuakePowerCoeff = 1.0f;
 static float s_fValidateTime = 3000.0f;
 static float s_fValidateDifference = 0.0001f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCamera::CCamera()
 	: bMayaHandleType( false ),
 	bIsMovieFinished( false ),
@@ -47,7 +47,7 @@ CCamera::CCamera()
 	AddObserver( "camera_control_on", &CCamera::MsgMouseRotation, true );
 	AddObserver( "camera_control_off", &CCamera::MsgMouseRotation, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetHandleType(	bool _bMayaHandleType )
 {
 	bMayaHandleType = _bMayaHandleType;
@@ -60,12 +60,12 @@ void CCamera::SetHandleType(	bool _bMayaHandleType )
 		pMouseMutator = new NCamera::CCameraGameMouseMutator();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetupDefaultMouseMutator()
 {
 	SetHandleType( NGlobal::GetVar("camera_mode").GetString() == L"camera_mode_maya" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::MsgMouseRotation( const SGameMessage &msg, bool bBegin )
 {
 	if ( bBegin )
@@ -81,7 +81,7 @@ void CCamera::MsgMouseRotation( const SGameMessage &msg, bool bBegin )
 		Cursor()->SetBounds( 0, 0, vSize.x, vSize.y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::ResetToDefault()
 {
 	if ( pMouseMutator )
@@ -92,7 +92,7 @@ void CCamera::ResetToDefault()
 	}
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits )
 {
 	if ( pMouseMutator )
@@ -100,31 +100,31 @@ void CCamera::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::
 
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::GetLimits( const NCamera::ELimitsType eLimitsType, NCamera::SCameraLimits *pLimits ) const
 {
 	if ( pMouseMutator )
 		pMouseMutator->GetLimits( eLimitsType, pLimits );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetAnchorLimits( const CTRect<float> &vLimits )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetAnchorLimits( vLimits );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SwitchAutoPositioning( const bool bAllowAutoPositioning )
 { 
 	if ( pMouseMutator )
 		pMouseMutator->SwitchAutoPositioning( bAllowAutoPositioning );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SwitchManualScrolling( const string &szLocker, const bool bManualOn )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SwitchManualScrolling( szLocker, bManualOn );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CCamera::GetListener() const
 {
 	if ( IsScriptHolderActive() )
@@ -134,7 +134,7 @@ const CVec3 CCamera::GetListener() const
 
 	return VNULL3;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetPerspectiveTransform( float _fWidth, float _fHeight, float _fNear, float _fFar )
 {
 	fScreenWidth = _fWidth;
@@ -144,7 +144,7 @@ void CCamera::SetPerspectiveTransform( float _fWidth, float _fHeight, float _fNe
 	bPerspectiveTransform = true;
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CCamera::GetYaw() const
 {
 	if ( IsScriptHolderActive() )
@@ -154,7 +154,7 @@ float CCamera::GetYaw() const
 	else
 		return DEF_YAW;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CCamera::GetPitch() const
 {
 	if ( IsScriptHolderActive() )
@@ -164,7 +164,7 @@ float CCamera::GetPitch() const
 	else
 		return DEF_PITCH;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CCamera::GetFOV() const
 {
 	if ( IsScriptHolderActive() )
@@ -174,28 +174,28 @@ float CCamera::GetFOV() const
 	else
 		return DEF_FOV;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetYaw( float _fYaw )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetYaw( _fYaw );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetPitch( float _fPitch )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetPitch( _fPitch );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetFOV( float _fFOV )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetFOV( _fFOV );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetOrthographicTransform( float _fWidth, float _fHeight, float _fNear, float _fFar )
 {
 	bPerspectiveTransform = false;
@@ -205,7 +205,7 @@ void CCamera::SetOrthographicTransform( float _fWidth, float _fHeight, float _fN
 	fFarClipPlane = _fFar;
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScreenPos ) const
 {
 	MakeProjectiveRay( pvDir, pvOrig, transformStack, CVec2(fScreenWidth, fScreenHeight), vScreenPos );
@@ -216,7 +216,7 @@ void CCamera::GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScree
 	}
 	Normalize( pvDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::GetProjectiveRayPoints( CVec3 *pvNear, CVec3 *pvFar, const CVec2 &vScreenPos ) const
 {
 	CVec3 vOrig, vDir;
@@ -232,7 +232,7 @@ void CCamera::GetProjectiveRayPoints( CVec3 *pvNear, CVec3 *pvFar, const CVec2 &
 		*pvFar = vOrig + vDir * fFarClipPlane;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::Update()
 {
 	NCamera::CCameraPlacement placement;
@@ -309,28 +309,28 @@ void CCamera::Update()
 	bWasUpdated = bWasUpdatedExternally || pMouseMutator->WasUpdated();
 	bWasUpdatedExternally = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetAnchor( const CVec3 &_vAnchor )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetAnchor( _vAnchor );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetPlacement( const float _fDist, const float _fPitch, const float _fYaw )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetPlacement( _fDist, ToRadian(270.0f - _fPitch), ToRadian(_fYaw) );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetDistance( const float _fDist )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetDistance( _fDist );
 	bWasUpdatedExternally = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CCamera::GetDistance() const
 {
 	if ( IsScriptHolderActive() )
@@ -340,7 +340,7 @@ float CCamera::GetDistance() const
 	else
 		return 1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw )
 {
 	if ( IsScriptHolderActive() )
@@ -356,7 +356,7 @@ void CCamera::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw )
 		(*pfYaw) = ToDegree( *pfYaw );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float *pfRoll, float *pfFOV ) const
 {
 	if ( IsScriptHolderActive() )
@@ -382,7 +382,7 @@ void CCamera::GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float 
 		(*pfFOV) = pPlacement->fFOV;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV )
 {
 	if ( pMouseMutator )
@@ -400,7 +400,7 @@ void CCamera::SetCameraState( const CVec3 &vPos, const float fYaw, const float f
 		bWasUpdatedExternally = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CCamera::GetAnchor() const
 {
 	if ( IsScriptHolderActive() )
@@ -410,7 +410,7 @@ const CVec3 CCamera::GetAnchor() const
 	else
 		return VNULL3;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CCamera::GetPos() const
 {
 	if ( IsScriptHolderActive() )
@@ -421,31 +421,31 @@ const CVec3 CCamera::GetPos() const
 		return VNULL3;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::ResetScrolling()
 {
 	if ( pMouseMutator )
 		pMouseMutator->ResetScrolling();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetScrollSpeedX( const float _fSpeed )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetScrollSpeedX( _fSpeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetScrollSpeedY( const float _fSpeed )	
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetScrollSpeedY( _fSpeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::SetYawSpeed( const float fSpeed )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetYawSpeed( fSpeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCamera::ProcessEvent( const SGameMessage &msg )
 {
 	if ( !CGMORegContainer::ProcessEvent(msg, this) )
@@ -461,7 +461,7 @@ bool CCamera::ProcessEvent( const SGameMessage &msg )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 {
 	if ( fPower <= 0 ) 
@@ -477,12 +477,12 @@ void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 		earthquakes.push_back( NCamera::SEarthQuake(fPower*fCoeff*s_fQuakePowerCoeff, s_fQuakeAttenuation, s_fQuakeDuration) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::ClearEarthquakes()
 {
 	earthquakes.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::ConformMouseMutator2ScriptMutator()
 {
 	NI_VERIFY( pScriptMutatorsHolder, "Trying to conform to zero mutator holder", return )
@@ -506,7 +506,7 @@ void CCamera::ConformMouseMutator2ScriptMutator()
 	pMouseMutator->SetAnchor( vAnchor );
 	//pMouseMutator->SetWasUpdated( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) const
 {
 	NCamera::SCameraLimits distLimits, pitchLimits, yawLimits;
@@ -544,7 +544,7 @@ bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) c
 	(*pPlacement) = validPlacement;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/)
 {
 	if ( !pScriptMutatorsHolder )
@@ -622,7 +622,7 @@ void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/)
 
 	return;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCamera::operator&( IBinSaver &saver )
 {
 	saver.Add( 7, &matView );
@@ -649,7 +649,7 @@ int CCamera::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -657,12 +657,12 @@ int CCamera::operator&( IBinSaver &saver )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICamera* CreateCamera()
 {
 	return new CCamera();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // set_camera_pitch_limits min max ave asp msp
 static void SetCameraLimits( NCamera::ELimitsType eType, const vector<wstring> &szParams )
 {
@@ -681,27 +681,27 @@ static void SetCameraLimits( NCamera::ELimitsType eType, const vector<wstring> &
 	//
 	Camera()->SetLimits( eType, limits );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdSetCameraPitchLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_PITCH, paramsSet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdSetCameraYawLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_YAW, paramsSet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdSetCameraDistanceLimits( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_DISTANCE, paramsSet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdResetCameraToDefault( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	Camera()->ResetToDefault();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( CameraCommands )
 
 REGISTER_CMD( "camera_pitch_limits", CmdSetCameraPitchLimits )
@@ -719,4 +719,4 @@ REGISTER_VAR_EX( "camera_validate_time", NGlobal::VarFloatHandler, &s_fValidateT
 REGISTER_VAR_EX( "camera_validate_diff", NGlobal::VarFloatHandler, &s_fValidateDifference, 0.0001f, STORAGE_NONE );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

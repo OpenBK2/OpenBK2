@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "..\System\DG.h"
 #include "..\System\Time.hpp"
 #include "..\Misc\Pool.h"
@@ -11,12 +11,12 @@
 #include "GShadowMap.h"
 #include "GMaterial.hpp"
 #include "..\3dlib\Bound.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 MulPerComp4( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x*4, a.y*b.y*4, a.z*b.z*4); }
 inline CVec3 MulPerComp2( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x*2, a.y*b.y*2, a.z*b.z*2); }
 inline CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3(a.x*b.x, a.y*b.y, a.z*b.z); }
 inline CVec4 MulPerComp( const CVec4 &a, const CVec4 &b ) { return CVec4(a.x*b.x, a.y*b.y, a.z*b.z, a.w*b.w); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransformStack;
 namespace NGfx
 {
@@ -26,14 +26,14 @@ namespace NGfx
 	class CCubeTexture;
 	struct SEffect;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 class IPart;
 class CSceneFragments;
 class IMaterial;
 class CTransparentRenderer;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //const TPartFlags PF_ALL_PARTS = 0xffffffff;
 const int N_BLOCKS_IN_PART_FLAGS = 8;//16;
 const int PF_MAX_PARTS_PER_COMBINER = N_BLOCKS_IN_PART_FLAGS * 32;
@@ -81,14 +81,14 @@ public:
 	CPartFlags& operator|=( const CPartFlags &a ) { CalcOr(a); return *this; }
 	CPartFlags& operator&=( const CPartFlags &a ) { CalcAnd(a); return *this; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool operator==( const CPartFlags &a, const CPartFlags &b ) { return memcmp( &a, &b, sizeof(CPartFlags) ) == 0; }
 inline bool operator!=( const CPartFlags &a, const CPartFlags &b ) { return memcmp( &a, &b, sizeof(CPartFlags) ) != 0; }
 inline CPartFlags operator~( const CPartFlags &f ) { CPartFlags res( f ); res.Invert(); return res; }
 inline CPartFlags operator&( const CPartFlags &a, const CPartFlags &b ) { CPartFlags r(a); r &= b; return r; }
 inline CPartFlags operator|( const CPartFlags &a, const CPartFlags &b ) { CPartFlags r(a); r |= b; return r; }
 inline CPartFlags TakeAllParts() { CPartFlags r; r.TakeAll(); return r; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderGeometryInfo;
 struct SRenderPartSet
 {
@@ -107,7 +107,7 @@ struct SRenderPartSet
 	//SRenderPartSet( CObjectBase *_pNode ): pNode(_pNode) {}
 	IPart* GetPart( int nIndex ) const { return (*pParts)[ nIndex ]; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGroupSelect;
 struct SPerVertexLightState;
 class IRender
@@ -128,7 +128,7 @@ public:
 	virtual void RenderPostProcess( CTransformStack *pTS, NGfx::CRenderContext *pRC ) = 0;
 	virtual CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // node that can render something somewhere
 enum ETrilistType
 {
@@ -164,7 +164,7 @@ struct SRenderGeometryInfo
 		return 0;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! intermediate per fragment operations representation
 enum EStencilBlendingOp
 {
@@ -204,20 +204,20 @@ enum EStencilBlendingOp
 
 	SHADOW_CULL_CCW = 2048,
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDirectionalDepthInfo
 {
 	CVec4 vDepth;
 	CVec4 vVecU, vVecV;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPerspDirectionalDepthInfo
 {
 	CVec4 vDepth;
 	SNLProjectionInfo nlp;
 	SPerspDirectionalDepthInfo() : vDepth(0,0,0,1) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSkyDepth3Info
 {
 	const SDirectionalDepthInfo *channels[3];
@@ -225,21 +225,21 @@ struct SSkyDepth3Info
 	int nResolution;
 	NGfx::CTexture *pAdd, *pDepth;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFillDiffuseBumpSpecInfo
 {
 	NGfx::CTexture *pDiffuse, *pBump, *pSpecular;
 	CVec4 vSpecularColor, vDiffuseColor;
 	float fAlphaTest;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPPSpecularInfo
 {
 	NGfx::CTexture *pBump, *pSpecular;
 	CVec3 vSpecularColor;
 	float fBumpMult;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFastGf3RenderInfo
 {
 	NGfx::CTexture *pTexture, *pDepth, *pTexture2, *pSpecular, *pLM;
@@ -250,14 +250,14 @@ struct SFastGf3RenderInfo
 	bool bPreferPerVertexTransp, bTranslucent;
 	STime tTime;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPntLightShadowedInfo
 {
 	NGfx::CTexture *pAdd;
 	NGfx::CCubeTexture *pDepth;
 	float fResolution;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ERenderOperation
 {
 	RO_NOP,
@@ -289,13 +289,13 @@ enum ERenderOperation
 	// user specific
 	RO_USER = 100
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderStaticInfo
 {
 	CPtr<CObjectBase> pHandle;
 	SBound bv;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef unsigned char TPartPriority;
 struct SPerPartVariables
 {
@@ -309,7 +309,7 @@ struct SPerPartVariables
 	int GetSortValue() const { return (*(int*)&fFade) ^ nPriority ^ ((int)pLM.GetPtr()); }
 	bool operator == ( const SPerPartVariables &a ) const { return fFade == a.fFade && nPriority == a.nPriority && pLM == a.pLM; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderFragmentInfo
 {
 	struct SElement
@@ -343,7 +343,7 @@ struct SRenderFragmentHash
 		return p[0] + p[1] + p[2] + p[3];
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EFragmentsSplit
 {
 	FST_ACCEPT,
@@ -394,7 +394,7 @@ public:
 	friend class CSelectFragments;
 	friend class CSelectGeometries;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSelectGeometries
 {
 	CSceneFragments *pScene;
@@ -426,7 +426,7 @@ public:
 	}
 	~CSelectGeometries() { pScene->filterGeometry = holdFlags; pScene->selectedParts = holdParts; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSelectFragments
 {
 	CSceneFragments *pScene;
@@ -447,7 +447,7 @@ public:
 	}
 	~CSelectFragments() { pScene->filterFragment = holdFilter; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SBoundIntersectFilter
 {
 	SBound bv;
@@ -485,7 +485,7 @@ struct SIgnoredSphereFilter
 	SIgnoredSphereFilter( CFullIgnorePartsHash *_pIgnoreList, const SSphere &_sph ) : pIgnoreList(_pIgnoreList), sph(_sph) {}
 	EFragmentsSplit operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CRenderCmdList
 {
 public:
@@ -550,7 +550,7 @@ public:
 	CRenderCmdList() {}
 	bool IsEmpty() const { return ops.empty(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class COpGenContext
 {
 	vector<CRenderCmdList::SOperation> *pRes;
@@ -576,14 +576,14 @@ public:
 	}
 	const SRenderFragmentInfo *GetCurFragment() const { return pCurFragment; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade, 
 	SPerspDirectionalDepthInfo *pDepthInfo, unsigned char op,
 	CRenderCmdList::UParameter _p1 = CRenderCmdList::UParameter(),
 	CRenderCmdList::UParameter _p2 = CRenderCmdList::UParameter(),
 	CRenderCmdList::UParameter _p3 = CRenderCmdList::UParameter(),
 	int nStencilOp = 0 );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderPathContext
 {
 	SPerspDirectionalDepthInfo depthInfo;
@@ -596,9 +596,9 @@ struct SRenderPathContext
 	SRenderPathContext( bool _bTnL, NGfx::CTexture *_pDepthTex, NGfx::CTexture *_pCurrentWaterReflectionTexture ) : bTnL(_bTnL), 
 		pCurrentDepthTexture(_pDepthTex), pCurrentWaterReflectionTexture(_pCurrentWaterReflectionTexture) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLightInfo;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IMaterial: public CObjectBase
 {
 public:
@@ -629,7 +629,7 @@ public:
 	virtual EDynamicType GetDynamicType(){ return DT_DONT_CARE; };
 	
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SParticleLMRenderTargetInfo
 {
 	SHMatrix rootTransform;
@@ -638,6 +638,6 @@ struct SParticleLMRenderTargetInfo
 
 	SParticleLMRenderTargetInfo() : vParticleLMSize(0,0), vKernelSize(0,0) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

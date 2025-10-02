@@ -8,7 +8,7 @@
 #include "Terrain.h"
 
 #include "../Misc/Bresenham.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //максимальное количество точек, на которое будет смотреться вперед (в функции PeekPoint)
 static const int MAX_LOOK_FORWARD_POINTS = 7;
 //максимальная длина короткого пути в тайлах
@@ -19,27 +19,27 @@ static const int SMALL_PATH_TILES_COUNT = MAX_PATH_TILES_COUNT/4;
 static const int STATIC_PATH_SHIFT = 10;
 // p.s. максимальное количество тайлов, которое можно записать - MAX_PATH_TILES_COUNT - ( 2 x MAX_LOOK_FORWARD_POINTS )
 static vector<SVector> pathBuffer( MAX_PATH_TILES_COUNT );
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define INVALID_TILE SVector( -1, -1 )
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const bool IsValidTile( const SVector &vTile )
 {
 	return vTile.x >= 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // возвращает true, если vPoint ближе к vEndPoint1, чем к vEndPoint2
 inline const bool CompareDistance( const SVector &vEndPoint1, const SVector &vEndPoint2, const SVector &vPoint )
 {
 	return mDistance( vEndPoint1, vPoint ) < mDistance( vEndPoint2, vPoint );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStandartPath2::CStandartPath2() : pPathFinder( 0 ), pAIMap( 0 ), nBoundTileRadius( -1 ), aiClass( EAC_NONE ), pStaticPath( 0 ),
   nCurStaticPathTile( -1 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), vShift( VNULL2 ), nCurInsTile( 0 ), nCurPathTile( 0 ),
 	nLastPathTile( -1 ), vShiftTile( 0, 0 ), vFinishTile( 0, 0 ), nUnitID( -1 )
 {
 	pathTiles.resize( MAX_PATH_TILES_COUNT, SVector( 0, 0 ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStandartPath2::CStandartPath2( const CBasePathUnit *pUnit, IStaticPath *_pStaticPath, const CVec2 &_vStartPoint, const CVec2 &_vFinishPoint, CAIMap *_pAIMap )
 : pPathFinder( pUnit->GetPathFinder() ), pAIMap( _pAIMap ), nBoundTileRadius( pUnit->GetBoundTileRadius() ), aiClass( pUnit->GetAIPassabilityClass() ),
 	nCurInsTile( 0 ), vFinishTile( 0, 0 ), nUnitID( pUnit->GetUniqueID() )
@@ -48,7 +48,7 @@ CStandartPath2::CStandartPath2( const CBasePathUnit *pUnit, IStaticPath *_pStati
 	pathTiles.resize( MAX_PATH_TILES_COUNT );
 	InitByStaticPath( dynamic_cast<CCommonStaticPath *>( _pStaticPath ), _vStartPoint, _vFinishPoint, false );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::InitByStaticPath( CCommonStaticPath *_pStaticPath, const CVec2 &_vStartPoint, const CVec2 &_vFinishPoint, const bool bResetShift )
 {
 	pStaticPath = _pStaticPath;
@@ -67,23 +67,23 @@ void CStandartPath2::InitByStaticPath( CCommonStaticPath *_pStaticPath, const CV
 	else
 		CalculatePath( true, INVALID_TILE );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartPath2::CanUnitGo( const SVector &vTile ) const
 {
 	STerrainModeSetter oldMode( ELM_STATIC, pAIMap->GetTerrain() );
 	return pAIMap->GetTerrain()->CanUnitGo( nBoundTileRadius, vTile, aiClass ) != FREE_NONE;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SVector CStandartPath2::GetTile( const CVec2 &vPoint ) const
 {
 	return pAIMap->GetTile( vPoint );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartPath2::GetPoint( const SVector &vTile ) const
 {
 	return pAIMap->GetPointByTile( vTile );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // вернет тайл в отрицательной области (INVALID_TILE) если точка не найдена, результат можно проверить функцией IsValidTile
 const SVector CStandartPath2::GetTileWithShift( const SVector &vTile ) const
 {
@@ -106,7 +106,7 @@ const SVector CStandartPath2::GetTileWithShift( const SVector &vTile ) const
 
 	return vResult;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::CopyPath( const int nLength )
 {
 	if ( nLength < 0 )
@@ -120,7 +120,7 @@ void CStandartPath2::CopyPath( const int nLength )
 	// чтоб можно было спрашивать
 	pathTiles[nLastPathTile] = pathBuffer[nLength-1];
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLastKnownGoodTile )
 {
 	// нечего считать, пора заканчивать
@@ -227,7 +227,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 {
 	if ( IsFinished() )
@@ -246,7 +246,7 @@ const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 	const int nTile = ( nCurPathTile + nShift )%MAX_PATH_TILES_COUNT;
 	return GetPoint( pathTiles[nTile] );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::Shift( const int _nShift )
 {
 	if ( IsFinished() )
@@ -267,7 +267,7 @@ void CStandartPath2::Shift( const int _nShift )
 		CalculatePath( true, INVALID_TILE );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::InsertTiles( const list<SVector> &tiles )
 {
 	insTiles.clear();
@@ -275,12 +275,12 @@ void CStandartPath2::InsertTiles( const list<SVector> &tiles )
 		insTiles.push_back( *it );
 	nCurInsTile = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartPath2::CanGoBackward( const CBasePathUnit *pUnit ) const
 { 
 	return pUnit->CanGoBackward() && pStaticPath->GetLength() * float( pAIMap->GetTileSize() ) <= pUnit->GetUnitProfile().GetHalfLength() * 5.0f;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile )
 {
 	//DebugTrace( "(%d) CStandartPath2::RecoverPath( %2.3f x %2.3f, %s, %d x %d )", nUnitID, vPoint.x, vPoint.y, bIsPointAtWater ? "true" : "false", vLastKnownGoodTile.x, vLastKnownGoodTile.y );
@@ -304,7 +304,7 @@ void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWate
 	}
 	InitByStaticPath( dynamic_cast_ptr<CCommonStaticPath*>( pNewStaticPath ), vPoint, pNewStaticPath->GetFinishPoint(), true );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile )
 {
 	vStartPoint = vPoint;
@@ -315,7 +315,7 @@ void CStandartPath2::RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater
 	if ( !CalculatePath( false, vLastKnownGoodTile ) )
 		nLastPathTile = 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) const
 {
 	vector<SVector> tiles;
@@ -339,6 +339,6 @@ void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) c
 	}
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3121AC40, CStandartPath2 );
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

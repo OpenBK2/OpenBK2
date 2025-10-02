@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
 {
 	if ( pStreamHolder )
@@ -28,7 +28,7 @@ void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPa
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
 {
 	if ( pStreamHolder )
@@ -44,7 +44,7 @@ void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszText
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const string &rszPathPrefix, bool *pbAbsolutePath )
 {
 	bool bResult = true;
@@ -147,7 +147,7 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 	return bResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsValidFileName( const string &rszFileName, bool bAbsolutePath )
 {
 	if ( rszFileName.find_first_of( "*?<>|" ) != string::npos )
@@ -178,7 +178,7 @@ bool IsValidFileName( const string &rszFileName, bool bAbsolutePath )
 }
 
 /**
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckLatestBINResource( const string &rszResourceFileName, const string &rszXMLExtention, const string &rszBINExtention )
 {
 	try
@@ -200,19 +200,19 @@ bool CheckLatestBINResource( const string &rszResourceFileName, const string &rs
 }
 /**/
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SEnumFolderStructureParameter::IsFolderRelative( const string &rszFolder, const string &rszRelativeFolder )
 {
 	return IsFolderRelative( enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SEnumFolderStructureParameter::SetRelativeFolder( const string &rszFolder, const string &rszRelativeFolder )
 {
 	SetRelativeFolder( &enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnumFolderMap, const string &rszFolder, const string &rszRelativeFolder )
 {
 	CEnumFolderMap::const_iterator folderIterator = rEnumFolderMap.find( rszFolder );
@@ -223,7 +223,7 @@ bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnu
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const string &rszFolder, const string &rszRelativeFolder )
 {
 	NI_ASSERT( pEnumFolderMap != 0, StrFmt( "Wrong parameter: %x\n", pEnumFolderMap ) );
@@ -233,7 +233,7 @@ void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFold
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter )
 {
 	if ( pParameters || pEnumFolderStructureParameter )
@@ -320,7 +320,7 @@ void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParamete
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ExecuteProcess( const string &rszCommand, const string &rszCmdLine, const string &rszDirectory, bool bWait )
 {
 	char pszCommandLine[2048];
@@ -343,7 +343,7 @@ bool ExecuteProcess( const string &rszCommand, const string &rszCmdLine, const s
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage )
 {
 	if ( pstrText )
@@ -362,7 +362,7 @@ void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
 {
 	if ( pwszText )
@@ -380,7 +380,7 @@ void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( CString *pstrText, bool *pbUnicode, const vector<BYTE> &rBuffer, int nCodePage, bool bRemove_0D )
 {
 	if ( pstrText )
@@ -461,7 +461,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const vector<BYTE> &rBuffe
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D )
 {
 	if ( pstrText != 0 )
@@ -483,7 +483,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath,
 	}	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D )
 {
 	if ( pszText != 0 )
@@ -494,7 +494,7 @@ void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, i
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( wstring *pwszText, const vector<BYTE> &rBuffer, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
@@ -534,7 +534,7 @@ void File2String( wstring *pwszText, const vector<BYTE> &rBuffer, bool bRemove_0
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
@@ -556,7 +556,7 @@ void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D 
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( vector<BYTE> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
@@ -650,7 +650,7 @@ void String2File( vector<BYTE> *pBuffer, const CString &rstrText, bool bUnicode,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( const CString &rstrText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
@@ -666,14 +666,14 @@ void String2File( const CString &rstrText, bool bUnicode, const string &rszTextP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( const string &rszText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D )
 {
 	CString strText( rszText.c_str() );
 	String2File( strText, bUnicode, rszTextPath, nCodePage, bAdd_0D );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( vector<BYTE> *pBuffer, const wstring &rwszText, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
@@ -719,7 +719,7 @@ void String2File( vector<BYTE> *pBuffer, const wstring &rwszText, bool bAdd_0D )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
@@ -735,6 +735,6 @@ void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

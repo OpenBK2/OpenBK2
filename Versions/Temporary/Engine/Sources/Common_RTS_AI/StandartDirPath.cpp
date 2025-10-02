@@ -3,38 +3,38 @@
 #include "StandartDirPath.h"
 
 #include "../Misc/Bresenham.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x31114C82, CStandartDirPath );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStandartDirPath::CStandartDirPath( const CVec2 &_startPoint, const CVec2 &_dir, const CVec2 &_finishPoint, const int _nTileSize )
 : dir( _dir ), startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ), nTileSize( _nTileSize )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStandartDirPath::CStandartDirPath( const CVec2 &_startPoint, const CVec2 &_finishPoint, const int _nTileSize )
 : startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ), nTileSize( _nTileSize )
 {
 	dir = Norm( finishPoint - startPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartDirPath::IsFinished() const
 {
 	return mDistance( curPoint, finishPoint ) < 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartDirPath::RecoverPath( const CVec2 &point, const bool bIsPointAtWater, const SVector &lastKnownGoodTile )
 {
 	curPoint = point;
 	dir = Norm( finishPoint - curPoint );
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartDirPath::RecalcPath( const CVec2 &point, const bool bIsPointAtWater, const SVector &lastKnownGoodTile )
 {
 	startPoint = point;
 	dir = finishPoint - point;
 	Normalize( &dir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartDirPath::PeekPoint( const int nShift ) const
 {
 	if ( !IsFinished() )
@@ -56,7 +56,7 @@ const CVec2 CStandartDirPath::PeekPoint( const int nShift ) const
 	else 
 		return finishPoint;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartDirPath::Shift( const int nShift )
 {
 	if ( !IsFinished() )
@@ -73,7 +73,7 @@ void CStandartDirPath::Shift( const int nShift )
 			curPoint = finishPoint;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartDirPath::MarkPath( const int nID, const NDebugInfo::EColor color ) const
 {
 	vector<SVector> tiles;
@@ -89,4 +89,4 @@ void CStandartDirPath::MarkPath( const int nID, const NDebugInfo::EColor color )
 	}
 	DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

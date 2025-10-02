@@ -4,7 +4,7 @@
 
 #include "PC_StringNewBrowseEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCTextFileEditor : public CPCStringNewBrowseEditor
 {
 	OBJECT_NOCOPY_METHODS( CPCTextFileEditor );
@@ -40,5 +40,5 @@ public:
 	static bool GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc );
 	static bool GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_TEXT_FILE__)

@@ -7,14 +7,14 @@
 #include "DBScene.h"
 #include "2DScene.h"
 #include "G2DView.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // share objects
 CBasicShare<SIntResKey, CFileFont> shareFonts(106);
 extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
-//////////////////////////////////////////////////////////////////////////
+
 class C2DGameView: public I2DGameView
 {
 	OBJECT_BASIC_METHODS(C2DGameView);
@@ -43,9 +43,9 @@ public:
 	void Flush();
 	void SetWindowSize( const CVec2 &_vSize );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // C2DGameView
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 C2DGameView::C2DGameView()
 {
 	pScene = Make2DScene();
@@ -53,12 +53,12 @@ C2DGameView::C2DGameView()
 	pLocale = GetTextLocaleInfo();//new CTextLocaleInfo;
 	pLocale->Setup( NGfx::GetScreenRect() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* C2DGameView::CreateTexture( const NGScene::STextureKey &key )
 {
 	return shareTextures.Get( key );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	if ( !pTexture )//CObjectBase *pRes = pScene->Create
@@ -66,7 +66,7 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, const CRect
 	else
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), sLayout, sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, 
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 {
@@ -75,46 +75,46 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	else
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), pPos4, pColors4, rectTexture );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	pScene->CreateDynamicRects( pTexture, sLayout, sPosition, sWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow )
 {
 	pScene->CreateDynamicClearRects( sLayout, sPosition, sClipWindow );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::SetWindowSize( const CVec2 &_vSize )
 {
 	vWindowSize = _vSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::StartNewFrame( NGfx::CTexture *pTarget )
 {
 	pLocale->Setup( NGfx::GetScreenRect() );
 	pScene->StartNewFrame( pTarget, NGfx::GetScreenRect(), AM2D_NORMAL );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::StartNewFrame( EAlphaMode2D _AlphaMode2D )
 {
 	pLocale->Setup( NGfx::GetScreenRect() );
 	pScene->StartNewFrame( 0, NGfx::GetScreenRect(), _AlphaMode2D );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DGameView::Flush()
 {
 	pScene->Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Create 2D View
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 I2DGameView* CreateNew2DView()
 {
 	return new C2DGameView;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 BASIC_REGISTER_CLASS( I2DGameView );

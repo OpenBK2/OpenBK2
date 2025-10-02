@@ -16,7 +16,7 @@ class CQuadTreeElement;
 namespace NGScene
 {
 const int N_LM_TEXTURE_SIZE = 1024;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightmapTextureCache;
 class CSingleTexAlloc
 {
@@ -26,7 +26,7 @@ public:
 	CSingleTexAlloc( int _nSize );
 	bool AllocRegion( const CTPoint<int> &size, CTPoint<int> *pPos );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLMAlloc
 {
 	struct STex
@@ -43,7 +43,7 @@ public:
 	int GetTexturesNum() const { return textures.size(); }
 	const CArray2D<NGfx::SPixel8888> &GetTexture( int k ) const { return textures[k].data; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_NOCOPY_METHODS( CLightmapTexture );
@@ -58,7 +58,7 @@ public:
 	//CLightmapTexture( const CArray2D<NGfx::SPixel8888> &_tex ) : tex(_tex) {}
 	//void SetData( const CArray2D<NGfx::SPixel8888> &_data ) { tex = _data; Updated(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CObjectInfo;
 class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 {

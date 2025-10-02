@@ -9,11 +9,11 @@
 #include "../Common_RTS_AI/CommonPathFinder.h"
 #include "../Common_RTS_AI/StaticPathInternal.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x31130B40, CGroupMoveExecutor );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // коэфициент для получения расстояния между юнитами в группе
 static float AABB_HALF_SIZE_X_MULTIPLIER = 7.0f;
 static float AABB_HALF_SIZE_Y_MULTIPLIER = 3.5f;
@@ -31,12 +31,12 @@ static int COLUMN_SIZE = 5;
 static int SEGMENT_PERIOD_CHECK = 20;
 // количество тайлов для определения направления пути
 static int TILES_FOR_PATH_DIRECTION = 48;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetUnitPosition( const CCommonUnit *pUnit, const CVec2 &vStartPoint, const CVec2 &vDirection )
 {
 	return ( pUnit->GetCenterPlain() - vStartPoint ) * vDirection;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUnitsSortByDirection
 {
 	CVec2 vStartPoint, vDirection;
@@ -52,7 +52,7 @@ struct SUnitsSortByDirection
 				return fValue1 > fValue2;
 		}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUnitsSortByPriority
 {
 	CVec2 vStartPoint, vDirection;
@@ -77,7 +77,7 @@ struct SUnitsSortByPriority
 				return nValue1 > nValue2;
 		}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DebugTraceMarkStaticPath( const IStaticPath *_pPath )
 {
 	const CCommonStaticPath *pPath = dynamic_cast<const CCommonStaticPath *>(_pPath);
@@ -91,7 +91,7 @@ void DebugTraceMarkStaticPath( const IStaticPath *_pPath )
 		DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_FORGET, tiles, NDebugInfo::RED );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::DeleteDeadUnits()
 {
 	CUnitsList::iterator it = units.begin();
@@ -103,7 +103,7 @@ void CGroupMoveExecutor::DeleteDeadUnits()
 			it = units.erase( it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupMoveExecutor::SendUnit( CCommonUnit *pUnit )
 {
 	if ( pUnit->GetState()->GetName() == EUSN_MOVE_BY_FORMATION )
@@ -115,7 +115,7 @@ bool CGroupMoveExecutor::SendUnit( CCommonUnit *pUnit )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupMoveExecutor::SendUnitToPosition( CCommonUnit *pUnit, const CVec2 &vDestination )
 {
 	if ( pUnit->GetState()->GetName() == EUSN_MOVE_BY_FORMATION )
@@ -127,7 +127,7 @@ bool CGroupMoveExecutor::SendUnitToPosition( CCommonUnit *pUnit, const CVec2 &vD
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::FinishState( const int nUnitID )
 {
 	CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( nUnitID );
@@ -138,7 +138,7 @@ void CGroupMoveExecutor::FinishState( const int nUnitID )
 		return pState->FinishState();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGroupMoveExecutor::Init( const vector<CCommonUnit*> &_units, const struct SAIUnitCmd &cmd )
 {
 	vFinishPoint = cmd.vPos;
@@ -235,7 +235,7 @@ const bool CGroupMoveExecutor::Init( const vector<CCommonUnit*> &_units, const s
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 {
 	// подсчет количества юнитов в каждой приоритеной группе, предварительное формирование точек назначения
@@ -299,7 +299,7 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 	}
 	// все, структура CPriorityGroupMap заполнена
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGroupMoveExecutor::CheckPositions() const
 {
 	// красивое распихивание юнитов по целевым точкам. во время движение может меняться
@@ -322,7 +322,7 @@ const bool CGroupMoveExecutor::CheckPositions() const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::RecalcDestination()
 {
 	// красивое распихивание юнитов по целевым точкам. во время движение может меняться
@@ -362,7 +362,7 @@ void CGroupMoveExecutor::RecalcDestination()
 		itStart = itEnd;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::MoveToDestination()
 {
 	eExecutorState = ES_MOVE_TO_DESTINATION;
@@ -385,7 +385,7 @@ void CGroupMoveExecutor::MoveToDestination()
 		SendUnit( it->pUnit );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 {
 	DeleteDeadUnits();
@@ -460,7 +460,7 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::PeriodicalCheckForMove()
 {
 	DeleteDeadUnits();
@@ -470,7 +470,7 @@ void CGroupMoveExecutor::PeriodicalCheckForMove()
 			it->pUnit->SetSpeed( ADJUST_SET, fMaxGroupSpeed );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::DeleteUnitFromList( const int nUnitID )
 {
 	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
@@ -488,7 +488,7 @@ void CGroupMoveExecutor::DeleteUnitFromList( const int nUnitID )
 	}
 //	DebugTrace( "unit %d: no found", nUnitID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 {
 	sort( units.begin(), units.end(), SUnitsSortByPriority( vGroupCenter, vStartPathDirection ) );
@@ -562,7 +562,7 @@ bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGroupMoveExecutor::Segment()
 {
 	if ( units.empty() )
@@ -583,7 +583,7 @@ int CGroupMoveExecutor::Segment()
 
 	return SEGMENT_PERIOD_CHECK;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupMoveExecutor::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par1( EID_START_IDLE, GetInstanceID(), 0 );
@@ -592,7 +592,7 @@ void CGroupMoveExecutor::RegisterOnEvents( IExecutorContainer *pContainer )
 	SExecutorEventParam par2( EID_TERMINATE_STATE, GetInstanceID(), 0 );
 	pContainer->RegisterOnEvent( this, par2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 {
 	const CGroupMoveExecutorEvent *event = static_cast<const CGroupMoveExecutorEvent *>( &_event );
@@ -620,7 +620,7 @@ bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 
 	return ( units.empty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( GroupMoveExecutorVars )
 REGISTER_VAR_EX( "aabb_half_size_x_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_X_MULTIPLIER, 7.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "aabb_half_size_y_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_Y_MULTIPLIER, 3.5f, STORAGE_NONE );
@@ -632,4 +632,4 @@ REGISTER_VAR_EX( "column_size", NGlobal::VarIntHandler, &COLUMN_SIZE, 5, STORAGE
 REGISTER_VAR_EX( "segment_period_check", NGlobal::VarIntHandler, &SEGMENT_PERIOD_CHECK, 20, STORAGE_NONE );
 REGISTER_VAR_EX( "tiles_for_path_direction", NGlobal::VarIntHandler, &TILES_FOR_PATH_DIRECTION, 48, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

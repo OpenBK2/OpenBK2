@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIAcknowledgment
 {
 	int nAck;
@@ -10,7 +10,7 @@ struct SAIAcknowledgment
 	SAIAcknowledgment( const int _nAck, const int _nObjUniqueID, const int _nSet )
 		: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), nSet( _nSet ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // для посылки клиенту изменения состояния Bored у юнита
 struct SAIBoredAcknowledgement
 {
@@ -22,4 +22,4 @@ struct SAIBoredAcknowledgement
 	SAIBoredAcknowledgement( int _nAck, const int _nObjUniqueID, bool _bPresent )
 		: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), bPresent( _bPresent ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

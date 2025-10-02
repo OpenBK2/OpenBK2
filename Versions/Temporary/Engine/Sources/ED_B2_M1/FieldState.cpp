@@ -23,9 +23,9 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CFieldState::FIELD_TYPE_NAME[] = "Field";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::UpdateEditParameters( UINT nFlags )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -63,7 +63,7 @@ void CFieldState::UpdateEditParameters( UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::Enter()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -74,7 +74,7 @@ void CFieldState::Enter()
 	CPolygonState::Enter();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::Leave()
 {
 	CPolygonState::Leave();
@@ -86,13 +86,13 @@ void CFieldState::Leave()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::CanEdit()
 {
 	return ( ( pMapInfoEditor->pMapInfo != 0 ) && ( pMapInfoEditor->GetViewManipulator() != 0 ) && GetEditParameters() != 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::GetBounds( int *pnMinCount, int *pnMaxCount )
 {
 	NI_ASSERT( pnMinCount != 0, "CFieldState::GetBounds(): Invalid parameter: pnMinCount == 0" );
@@ -101,7 +101,7 @@ void CFieldState::GetBounds( int *pnMinCount, int *pnMaxCount )
 	( *pnMaxCount ) = INVALID_NODE_ID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPolygonState::EMoveType CFieldState::GetMoveType()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -113,7 +113,7 @@ CPolygonState::EMoveType CFieldState::GetMoveType()
 		return CPolygonState::MT_SINGLE;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::PrepareControlPoints( CControlPointList *pControlPointList )
 {
 	// подготовить полигон согласно установленным параметрам
@@ -136,7 +136,7 @@ bool CFieldState::PrepareControlPoints( CControlPointList *pControlPointList )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 {
 	if ( eEpdateType == UT_FINISH )
@@ -265,7 +265,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
@@ -307,7 +307,7 @@ bool CFieldState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFieldState::UpdateCommand(), pbEnable == 0" );
@@ -331,7 +331,7 @@ bool CFieldState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck 
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTileSetWeightVectorList, const NDb::SField &rField )
 {
 	NI_ASSERT( pTileSetWeightVectorList != 0, "CreateTileSetWeightVectorList(), invalid parameter: pTileSetWeightVectorList == 0" );
@@ -352,7 +352,7 @@ void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTile
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *pObjectSetWeightVectorList, const NDb::SField &rField )
 {
 	NI_ASSERT( pObjectSetWeightVectorList != 0, "CreateObjectSetWeightVectorList(), invalid parameter: pObjectSetWeightVectorList == 0" );
@@ -373,7 +373,7 @@ void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *p
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //сервисная функция, определяет точки вхождения в полигон для слоя сетки
 //возвращает количество элементов в pXPosList
 //лист предствавляет из себя набор пар, - начало и конец отрезков входящих в полигон
@@ -479,7 +479,7 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 	return pXPosList->size();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 															 CTPoint<int> *pStartTile,
 															 const NDb::SField &rField,
@@ -595,7 +595,7 @@ bool CFieldState::FillTileSet( CArray2D<BYTE> *pTile2DArray,
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAddFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -613,7 +613,7 @@ struct SAddFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSubstractFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -631,7 +631,7 @@ struct SSubstractFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 																			const NDb::SField &rField,
 																			const CFieldPolygon &rPolygon,
@@ -802,7 +802,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class Type, class PointType>
 struct ModifyTilesFunctional
 {
@@ -822,7 +822,7 @@ struct ModifyTilesFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class Type, class PointType>
 struct CheckTilesFunctional
 {
@@ -846,7 +846,7 @@ struct CheckTilesFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 template<class TYPE>
 bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границы применимости функционалов
@@ -915,7 +915,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 }
 /**/
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 																 CObjectBaseController *pObjectController,
 																 const NDb::SField &rField,
@@ -1074,13 +1074,13 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFieldState::SEditParameters* CFieldState::GetEditParameters()
 { 
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epFieldState ) : 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 {
 	xs.Add( "MoveType", &eMoveType );
@@ -1099,6 +1099,6 @@ int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 	// bool bUpdateMap;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

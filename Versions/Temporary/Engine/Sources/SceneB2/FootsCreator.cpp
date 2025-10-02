@@ -2,13 +2,13 @@
 
 #include "../3DMotor/DBScene.h"
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_FOOT_WIDTH_BASE 1.5f
 #define DEF_FOOT_WIDTH 0.3f
 #define DEF_FOOT_PARAGRAPH 2
 #define DEF_FOOT_PARAGRAPH_INV ( 1.0f / ( DEF_FOOT_PARAGRAPH - 1 ) )
 #define DEF_FOOT_PATCH_SIZE 64
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 {
 	if ( !foot.pFootMaterial )
@@ -101,13 +101,13 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 	if ( pGfxObserver )
 		pGfxObserver->AddFoot( &(terrainGfxInfo.foots.back()) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void CTerraGen::AddAllFoots()
 //{
 //	for ( list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); ++it )
 //		AddFoot( *it );
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddAllNeededFoots()
 {
 	for ( vector<int>::const_iterator it = needAddFoots.begin(); it != needAddFoots.end(); ++it )
@@ -120,7 +120,7 @@ void CTerraGen::AddAllNeededFoots()
 	}
 	needAddFoots.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveFoot( const int nVSOID )
 {
 	//RemovePeakInfo( nVSOID );
@@ -133,7 +133,7 @@ void CTerraGen::RemoveFoot( const int nVSOID )
 		pGfxObserver->RemoveFoot( nVSOID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveFootInfo( const int nVSOID )
 {
 	for ( list<STerrainInfo::SFoot>::iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); )
@@ -144,7 +144,7 @@ void CTerraGen::RemoveFootInfo( const int nVSOID )
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveFootGfxInfo( const int nVSOID )
 {
 	for ( list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); )
@@ -155,4 +155,4 @@ void CTerraGen::RemoveFootGfxInfo( const int nVSOID )
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

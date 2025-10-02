@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NBinResources
 {
 	SYSTEM_EXPORT bool IsEmptyGUID( const GUID &uid );
@@ -10,4 +10,4 @@ namespace NBinResources
 	string GetBinaryFileName( const string &rszDirPrefix, const int nRecordID, const GUID &uid );
 	string GetExistentBinaryFileName( const string &rszDirPrefix, const int nRecordID, const GUID &uid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

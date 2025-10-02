@@ -5,7 +5,7 @@
 #include "../Net/NetDriver.h"
 #include "../Net/NetAddress.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IServerClient;
 class CLANTester;
 namespace NDb
@@ -15,10 +15,10 @@ namespace NDb
 }
 class CMPTransceiver;
 class CCommandsHistory;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // General handler for messages and packets
 // Particular types (LAN, NivalNet) inherit from it
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface CMPManagerMode : public CMPUIMessageProcessor, public CPacketProcessorBase, public CObjectBase
 {
 public:
@@ -207,7 +207,7 @@ public:
 	//void CMPManagerMode::UpdateInfoForReplay( SMultiplayerReplayInfo *pReplayInfo );
 	virtual void SetLanTester( class CLANTester *_pLANTester ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSlotNumberPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CSlotNumberPacket );
@@ -221,7 +221,7 @@ public:
 	CSlotNumberPacket( const int nClientID, const int _nSlot, const unsigned long _ulCheckSum )
 		: CNetPacket( nClientID ), nSlot( _nSlot ), ulCheckSum( _ulCheckSum ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CB2GameLostPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CB2GameLostPacket );

@@ -5,7 +5,7 @@
 #ifdef LOG
 #include <iostream>
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NNet
 {
 const int CS_PACKET_ID_RANGE = 0x10000;
@@ -14,9 +14,9 @@ const float TIME_TO_UPDATE_PING = 4;
 const float F_INITIAL_RTT = 3;
 const float MIN_WINDOWS_SIZE = 2.0f;
 const float MAX_WINDOWS_SIZE = 10.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAckTracker
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAckTracker::CAckTracker()
 {
 	DWORD dwTick = GetTickCount();
@@ -48,14 +48,14 @@ CAckTracker::CAckTracker()
 	fLastPingUpdateTime = fCurrentTime;
 	//bHasNewPacketToAck = true; // так делать нельзя: не все пакеты содержат данные!
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CAckTracker::SetRate( int nBytesPerSec )
 {
 	nBytesPerSec = Max( nBytesPerSec, 500 );
 	nBytesPerSec = Min( nBytesPerSec, 50000 );
 	fUpdateTimeDelay = 250.0f / nBytesPerSec;
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAckTracker::CanSend()
 {
 	if ( nFlyPackets < fWindow )
@@ -71,12 +71,12 @@ bool CAckTracker::CanSend()
 	}
 	return false;*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAckTracker::NeedSend() const
 {
 	return fTimeSinceLastSend > 1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAckTracker::RegisterRTT( float _fRTT )
 {
 	//ASSERT( fRTT >= 0 );
@@ -98,7 +98,7 @@ void CAckTracker::RegisterRTT( float _fRTT )
 		nPingPacketsReceived = 2;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAckTracker::Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT )
 {
 	pRolled->resize( 0 );
@@ -150,7 +150,7 @@ void CAckTracker::Step( vector<PACKET_ID> *pRolled, vector<PACKET_ID> *pErased, 
 	}
 	//
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // receive single ack, search for this packet and ack it
 void CAckTracker::ReceiveAck( vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 {
@@ -193,7 +193,7 @@ void CAckTracker::ReceiveAck( vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 			++i;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // pair to SendPktAcks()
 void CAckTracker::ReceivePktAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
@@ -234,7 +234,7 @@ void CAckTracker::ReceivePktAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
 			ReceiveAck( pAcked, nLast );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // check if nPkt can be acked and is not too obsolete
 // add it to received list and update pktlastreceived value if needed
 bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
@@ -260,7 +260,7 @@ bool CAckTracker::CheckRecvPacketNumber( UPDATE_ID nPkt )
 	receivedPkts.push_back( nPkt );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAckTracker::ReadAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
 	PACKET_ID nReceived;
@@ -291,7 +291,7 @@ bool CAckTracker::ReadAcks( vector<PACKET_ID> *pAcked, CBitStream &bits )
 	//bHasNewPacketToAck = true;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // use receivedPkts
 void CAckTracker::SendPktAcks( CBitStream *pBits )
 {
@@ -316,7 +316,7 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 			receivedPkts.erase( receivedPkts.begin() + i );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 {
 	++nFlyPackets;
@@ -341,7 +341,7 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	// CRAP - fix rate tracking info
 	return nPktCurrent;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAckTracker::PacketLost( PACKET_ID pktID )
 {
 	bool bFound = false;
@@ -364,5 +364,5 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 	}
 	ASSERT( bFound );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

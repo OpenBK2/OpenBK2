@@ -10,7 +10,7 @@ namespace NGfx
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ESceneRenderMode
 {
 	SRM_SHOWOVERDRAW,
@@ -38,7 +38,7 @@ enum ERenderPath
 //inline bool IsUingRegisters( ERenderPath rp ) { return rp >= RP_GF2; }
 //inline bool IsUsingCacheLighting( ERenderPath rp ) { return rp >= RP_UPDATE_CL; }
 inline bool IsUsingShadows( ERenderPath rp ) { return rp == RP_GF3_FAST; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EHSRMode
 {
 	HSR_NONE,
@@ -81,7 +81,7 @@ enum ELightmapQuality
 	LM_QUALITY_DRAFT,
 	LM_QUALITY_RADIOSITY,
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EShadowsQuality
 {
 	SQ_SIMPLE,
@@ -89,7 +89,7 @@ enum EShadowsQuality
 	SQ_PRE_BEST,
 	SQ_BEST
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRTClearParams
 {
 	enum EClearType
@@ -103,7 +103,7 @@ struct SRTClearParams
 	
 	SRTClearParams() : ct(CT_FULL), vColor(0,0,0,1) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline SBound MakeLargeHintBound() { SBound b; b.SphereInit( CVec3(0,0,0), 1e6 ); return b; }
 }
 #endif

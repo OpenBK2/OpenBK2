@@ -4,7 +4,7 @@
 #include "MechUnitJoggingMutator.h"
 #include "../Main/GameTimer.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bJogTweakMode = false;
 static float s_fJogPeriod1 = FP_2PI;
 static float s_fJogPhaze1 = 0;
@@ -31,7 +31,7 @@ float CMechUnitJoggingMutator::SJoggingParams2::GetValue( const NTimer::STime nD
 		return fAmp1 * NMath::Cos( fAngle1 ) + fAmp2 * NMath::Cos( fAngle2 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitJoggingMutator::Setup( const int _nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY )
 {
 	joggingX.fAmp1		= _joggingX.fAmp1;
@@ -53,13 +53,13 @@ void CMechUnitJoggingMutator::Setup( const int _nBasisBoneIndex, const SJoggingP
 
 	nBasisBoneIndex = _nBasisBoneIndex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitJoggingMutator::NeedUpdate()
 {
 	IGameTimer *pTimer = GameTimer();
 	return !bStopped && pTimer->GetPauseType() == -1 && pTimer->GetSegmentTime() > nStartTime ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {
 	const NTimer::STime nDeltaTime = bStopped ? nStopTime - nStartTime : GameTimer()->GetSegmentTime() - nStartTime;
@@ -85,7 +85,7 @@ void CMechUnitJoggingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 	pRootTransform->Flags |= GrannyHasPosition;
 	pRootTransform->Flags |= GrannyHasOrientation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitJoggingMutator::Play()
 {
 	if ( bStopped )
@@ -94,7 +94,7 @@ void CMechUnitJoggingMutator::Play()
 		bStopped = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitJoggingMutator::Stop()
 {
 	if ( !bStopped )
@@ -103,7 +103,7 @@ void CMechUnitJoggingMutator::Stop()
 		bStopped = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMechUnitJoggingMutator::operator&( IBinSaver &saver )
 {	
 	saver.Add( 1, &joggingX );
@@ -115,7 +115,7 @@ int CMechUnitJoggingMutator::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( MechUnitJoggingMutator )
 
 REGISTER_VAR_EX( "jog_tweak_mode", NGlobal::VarBoolHandler, &s_bJogTweakMode, false, STORAGE_NONE );
@@ -128,6 +128,6 @@ REGISTER_VAR_EX( "jog_amp2", NGlobal::VarFloatHandler, &s_fJogAmp2, 1, STORAGE_N
 
 FINISH_REGISTER
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x15095B00, CMechUnitJoggingMutator )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

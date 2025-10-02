@@ -1,21 +1,21 @@
 #ifndef __FMTTEXTURE_H__
 #define __FMTTEXTURE_H__
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // This header defines constants and structures that are useful when parsing 
 // DDS files.  DDS files were originally designed to use several structures
 // and constants that are native to DirectDraw and are defined in ddraw.h,
 // such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar 
 // (compatible) constants and structures so that one can use DDS files 
 // without needing to include ddraw.h.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef MAKEFOURCC
 #define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
 		((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |   \
 		((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
 #endif // MAKEFOURCC
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** pixel format
@@ -23,7 +23,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDDSPixelFormat
 {
   DWORD dwSize;													// size of this structure
@@ -36,7 +36,7 @@ struct SDDSPixelFormat
   DWORD dwABitMask;											// A bit mask  (for ARGB formats)
 };
 inline const bool operator==( const SDDSPixelFormat &pf1, const SDDSPixelFormat &pf2 ) { return memcmp( &pf1, &pf2, sizeof(pf1) ) == 0; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** pixel format flags and pre-crafted pixel formats
@@ -44,11 +44,11 @@ inline const bool operator==( const SDDSPixelFormat &pf1, const SDDSPixelFormat 
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD DDS_FOURCC	= 0x00000004;		// DDPF_FOURCC
 const DWORD DDS_RGB			= 0x00000040;		// DDPF_RGB
 const DWORD DDS_ARGB		= 0x00000041;		// DDPF_RGB | DDPF_ALPHAPIXELS
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // DXT# formats
 const SDDSPixelFormat DDSPF_DXT1 = { sizeof(SDDSPixelFormat), DDS_FOURCC, MAKEFOURCC('D','X','T','1'), 0, 0, 0, 0, 0 };
 const SDDSPixelFormat DDSPF_DXT2 = { sizeof(SDDSPixelFormat), DDS_FOURCC, MAKEFOURCC('D','X','T','2'), 0, 0, 0, 0, 0 };
@@ -61,7 +61,7 @@ const SDDSPixelFormat DDSPF_A1R5G5B5 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 1
 const SDDSPixelFormat DDSPF_A4R4G4B4 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 16, 0x0000f000, 0x000000f0, 0x0000000f, 0x0000f000 };
 const SDDSPixelFormat DDSPF_R5G6B5   = { sizeof(SDDSPixelFormat), DDS_RGB , 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000 };
 const SDDSPixelFormat DDSPF_R8G8B8   = { sizeof(SDDSPixelFormat), DDS_RGB , 0, 24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** DDS format flags
@@ -69,7 +69,7 @@ const SDDSPixelFormat DDSPF_R8G8B8   = { sizeof(SDDSPixelFormat), DDS_RGB , 0, 2
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // additional flags
 // header flags
 const DWORD DDS_HEADER_FLAGS_TEXTURE    = 0x00001007;	// DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT 
@@ -94,7 +94,7 @@ const DWORD DDS_CUBEMAP_ALLFACES				= DDS_CUBEMAP_POSITIVEX | DDS_CUBEMAP_NEGATI
 																					DDS_CUBEMAP_POSITIVEZ | DDS_CUBEMAP_NEGATIVEZ;
 // volume flags...
 const DWORD DDS_FLAGS_VOLUME						= 0x00200000;	// DDSCAPS2_VOLUME
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** DDS header and DDS file header
@@ -102,7 +102,7 @@ const DWORD DDS_FLAGS_VOLUME						= 0x00200000;	// DDSCAPS2_VOLUME
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDDSHeader
 {
 	DWORD dwSize;													// size of the structure
@@ -128,5 +128,5 @@ struct SDDSFileHeader
 	//
 	SDDSFileHeader() { dwSignature = SDDSFileHeader::SIGNATURE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __FMTTEXTURE_H__

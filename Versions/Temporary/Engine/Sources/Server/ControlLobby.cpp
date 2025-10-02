@@ -10,7 +10,7 @@
 #include "../System/XmlSaver.h"
 
 #include "Statistics.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const string &_szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
@@ -30,7 +30,7 @@ CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const string &_s
 	ReloadConfig();
 	NStatistics::SetGlobalCounter( "TotalLogins", NStatistics::CreateEventsCounter() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
@@ -39,7 +39,7 @@ void CControlLobby::ReloadConfig()
 	NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
 	pSaver->Add( "CheckCDKeyIsValid", &bCheckCDKeyIsValid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessNewClient( CNetNewClient *pPacket )
 {
 	connecting.insert( pPacket->nClientID );
@@ -58,7 +58,7 @@ bool CControlLobby::ProcessNewClient( CNetNewClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacket )
 {
 	if ( connecting.find( pPacket->nClientID ) == connecting.end() )
@@ -224,7 +224,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessRemoveClient( CNetRemoveClient *pNetRemoveClient )
 {
 	string szNick;
@@ -241,7 +241,7 @@ bool CControlLobby::ProcessRemoveClient( CNetRemoveClient *pNetRemoveClient )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pPacket )
 {
 	SCommonClientInfo clientInfo;
@@ -253,7 +253,7 @@ bool CControlLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pP
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessNewConnectingClient( CNewGameConnectingClient *pPacket )
 {
 	const int nClientID = pPacket->nClientID;
@@ -266,7 +266,7 @@ bool CControlLobby::ProcessNewConnectingClient( CNewGameConnectingClient *pPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 {
 	swap( pPacket->nClient, pPacket->nClientID );
@@ -274,7 +274,7 @@ bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessThroughServerGamePacket( CThroughServerGamePacket *pPacket )
 {
 	swap( pPacket->nClient, pPacket->nClientID );
@@ -282,14 +282,14 @@ bool CControlLobby::ProcessThroughServerGamePacket( CThroughServerGamePacket *pP
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessPingPacket( CPingPacket *pPacket )
 {
 	PushPacket( pPacket );
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pPacket )
 {
 	if ( ! pClients->IsNickRegistered( pPacket->szNick ) )
@@ -317,4 +317,4 @@ bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pP
   PushPacket( pAnswerPacket );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

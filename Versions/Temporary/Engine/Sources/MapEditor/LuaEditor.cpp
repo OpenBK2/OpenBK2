@@ -14,7 +14,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
+
 // CLuaEditor
 
 CLuaEditor::CLuaEditor()
@@ -47,7 +47,7 @@ void CLuaEditor::InitScintilla()
 //	Sci(SCI_ASSIGNCMDKEY, MAKEWORD( 'F', SCMOD_CTRL ), int message)
 }
 
-/////////////////////////////////////////////////////////////////////////////
+
 // CLuaEditor message handlers
 
 BOOL CLuaEditor::Create(CWnd *pParentWnd, UINT nCtrlId)
@@ -336,7 +336,7 @@ void CLuaEditor::SetKeywordColor( int nKeywordSet, DWORD dwColor )
 	NI_ASSERT( (nKeywordSet > 0) && (nKeywordSet < KEYWORDSET_MAX), "CLuaEditor: KeywordSet counter beyond the bounds " );
 	Sci( SCI_STYLESETFORE, SCE_LUA_WORD2 - 1 + nKeywordSet, dwColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLuaEditor::SetLuaLexer()
 {
 	//const char font[] = "Verdana";
@@ -534,13 +534,13 @@ void CLuaEditor::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFindNext::FindNext( const string &szText, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
 		pEditor->FindNext( szText, bWholeWord, bMatchCase );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFindNext::Replace( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
@@ -549,13 +549,13 @@ void CFindNext::Replace( const string &szText, const string &szReplaceWith, bool
 		pEditor->FindNext( szText, bWholeWord, bMatchCase );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFindNext::ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
 		pEditor->ReplaceAll( szText, szWith, bWholeWord, bMatchCase );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLuaEditor::Find()
 {
 	if ( !::IsWindow( findDlg.m_hWnd ) )
@@ -566,7 +566,7 @@ void CLuaEditor::Find()
 	findDlg.SetHandler( new CFindNext( this ) );
 	findDlg.ShowWindow( SW_SHOW );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLuaEditor::FindNext( const string &szText, bool bWholeWord, bool bMatchCase )
 {
 	CString sz = szText.c_str();
@@ -594,7 +594,7 @@ void CLuaEditor::FindNext( const string &szText, bool bWholeWord, bool bMatchCas
 	if ( nPos >= 0 )
 		Sci( SCI_SETSEL, nPos, nPos + sz.GetLength() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLuaEditor::Replace()
 {
 	if ( !::IsWindow( replaceDlg.m_hWnd ) )
@@ -605,7 +605,7 @@ void CLuaEditor::Replace()
 	replaceDlg.SetHandler( new CFindNext( this ) );
 	replaceDlg.ShowWindow( SW_SHOW );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLuaEditor::Replace( const string &szReplaceWith )
 {
 	CharacterRange cr = GetSelection();
@@ -615,7 +615,7 @@ bool CLuaEditor::Replace( const string &szReplaceWith )
 	Sci( SCI_REPLACESEL, 0, (int)szReplaceWith.c_str() );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLuaEditor::ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase )
 {
 	CString sz = szText.c_str();
@@ -646,5 +646,5 @@ void CLuaEditor::ReplaceAll( const string &szText, const string &szWith, bool bW
 		Sci( SCI_SETSEARCHFLAGS, nFlags );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

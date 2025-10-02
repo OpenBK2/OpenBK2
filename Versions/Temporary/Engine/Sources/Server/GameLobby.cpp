@@ -9,7 +9,7 @@
 #include "../Misc/Time64.h"
 #include "Statistics.h"
 #include "../System/XmlSaver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGameLobby::CGameLobby( CClients *_pClients, const string &_szCfgFile )
 : pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
 {
@@ -43,7 +43,7 @@ CGameLobby::CGameLobby( CClients *_pClients, const string &_szCfgFile )
 	NStatistics::SetGlobalCounter( "TotalGamesCreated", NStatistics::CreateEventsCounter() );
 	NStatistics::SetGlobalCounter( "ThroughServerConnections", NStatistics::CreateEventsCounter() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
@@ -53,7 +53,7 @@ void CGameLobby::ReloadConfig()
 	pSaver->Add( "GameTimeout", &dwGameTimeOut );
 	pSaver->Add( "GameLoadingTimeout", &dwGameLoadingTimeOut );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::SetClientLobbyID( const int nClientID, const BYTE cLobbyID )
 {
 	SCommonClientInfo clientInfo;
@@ -64,7 +64,7 @@ void CGameLobby::SetClientLobbyID( const int nClientID, const BYTE cLobbyID )
 		clientsVersions.Change( nClientID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::SetClientGameID( const int nClientID, const int nGameID )
 {
 	SCommonClientInfo clientInfo;
@@ -75,14 +75,14 @@ void CGameLobby::SetClientGameID( const int nClientID, const int nGameID )
 		clientsVersions.Change( nClientID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::ClientEntered( const int nID )
 {
 	lobbyClients.insert( nID );
 	clientsVersions.Add( nID );
 	SetClientLobbyID( nID, GetLobbyID() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::ClientLeaved( const int nID )
 {
 	if ( lobbyClients.find( nID ) != lobbyClients.end() )
@@ -107,7 +107,7 @@ void CGameLobby::ClientLeaved( const int nID )
 		SetClientLobbyID( nID, ERID_NO_LOBBY );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::GameInfoChanged( const int nID )
 {
 	if ( lobbyGames.find( nID ) != lobbyGames.end() )
@@ -122,7 +122,7 @@ void CGameLobby::GameInfoChanged( const int nID )
 			lobbyGames[nID].gameInfo.nPlayers = lobbyGames[nID].clients.size();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pPacket )
 {
 	if ( lobbyClients.find( pPacket->nClientID ) != lobbyClients.end() )
@@ -133,7 +133,7 @@ bool CGameLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pPack
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *pPacket )
 {
 	if ( GetLobbyID() != pPacket->nLobbyID )
@@ -158,7 +158,7 @@ bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *p
 	WriteMSG( "%s", szList.c_str() );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessGameHeartBeatPacket( CGameHeartBeatPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -174,7 +174,7 @@ bool CGameLobby::ProcessGameHeartBeatPacket( CGameHeartBeatPacket *pPacket )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessGameStartLoadingPacket( CGameStartLoadingPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -188,7 +188,7 @@ bool CGameLobby::ProcessGameStartLoadingPacket( CGameStartLoadingPacket *pPacket
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -233,7 +233,7 @@ bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::InformThroughServerClients( const int nLeftGameClient )
 {
 	if ( throughServerClients.find( nLeftGameClient ) != throughServerClients.end() )
@@ -244,7 +244,7 @@ void CGameLobby::InformThroughServerClients( const int nLeftGameClient )
 		throughServerClients.erase( nLeftGameClient );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -267,7 +267,7 @@ bool CGameLobby::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) || !IsLobbyClient( pPacket->nClient2Connect ) )
@@ -288,7 +288,7 @@ bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessKickClient( CGameKickClient *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -318,7 +318,7 @@ bool CGameLobby::ProcessKickClient( CGameKickClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 {
 	if ( IsLobbyClient( pPacket->nClientID ) )
@@ -335,7 +335,7 @@ bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 	//
 	return false; // Оставляем пакет для других лобби
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessLeaveLobby( CLeaveLobbyPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -345,13 +345,13 @@ bool CGameLobby::ProcessLeaveLobby( CLeaveLobbyPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::RemoveLobbyClient( const int nClientID )
 {
 	ClientLeaved( nClientID );
 	ClientLeaveLobby( nClientID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessRemoveClient( CNetRemoveClient *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -361,7 +361,7 @@ bool CGameLobby::ProcessRemoveClient( CNetRemoveClient *pPacket )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessCreateGame( CCreateGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -383,7 +383,7 @@ bool CGameLobby::ProcessCreateGame( CCreateGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGameLobby::CreateGame( const int nMaxPlayers )
 {
 	const int nGameID = ++nGamesCounter;
@@ -402,7 +402,7 @@ int CGameLobby::CreateGame( const int nMaxPlayers )
 
 	return nGameID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameLobby::EraseGameClients( const int nGameID )
 {
 	for ( hash_set<int>::iterator iter = lobbyGames[nGameID].clients.begin(); iter != lobbyGames[nGameID].clients.end(); ++iter )
@@ -412,7 +412,7 @@ void CGameLobby::EraseGameClients( const int nGameID )
 		SetClientGameID( *iter, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::KillGame( const int nGameID )
 {
 	if ( lobbyGames.find( nGameID ) != lobbyGames.end() )
@@ -426,7 +426,7 @@ bool CGameLobby::KillGame( const int nGameID )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessKillGame( CKillGamePacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -435,7 +435,7 @@ bool CGameLobby::ProcessKillGame( CKillGamePacket *pPacket )
 	const int nGameID = pPacket->nGameID;
 	return KillGame( nGameID );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -449,7 +449,7 @@ bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessGetLobbyClients( CGetLobbyClientsPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -458,7 +458,7 @@ bool CGameLobby::ProcessGetLobbyClients( CGetLobbyClientsPacket *pPacket )
 	GetLobbyClients( pPacket );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessUpdateGame( CUpdateGameInfo *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -475,7 +475,7 @@ bool CGameLobby::ProcessUpdateGame( CUpdateGameInfo *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGameLobby::GetGameInfo( const int nGameID, SGameInfo *pInfo ) const
 {
 	hash_map<int, SLobbyGameInfo>::const_iterator iter = lobbyGames.find( nGameID );
@@ -488,7 +488,7 @@ const bool CGameLobby::GetGameInfo( const int nGameID, SGameInfo *pInfo ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -522,7 +522,7 @@ bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::Segment()
 {
 	const UINT64 nTime = GetLongTickCount();
@@ -554,7 +554,7 @@ bool CGameLobby::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::GetGameClients( const int nGame, hash_set<int> *pClients )
 {
 	hash_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.find( nGame );
@@ -566,7 +566,7 @@ bool CGameLobby::GetGameClients( const int nGame, hash_set<int> *pClients )
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -598,7 +598,7 @@ bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket 
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 {
 	if ( pPacket->nLobbyID != GetLobbyID() )
@@ -651,8 +651,8 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 BASIC_REGISTER_CLASS( CGameLobby );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -15,11 +15,11 @@ int NUMBER_OF_RACES_IN_LADDER = 4;
 int MAX_NUMBER_OF_REINFORCEMENTS = 30;
 
 const float QUERIES_CALC_INTERVAL = 2.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CClients );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define CHECK_TABLE_STRUCTURE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MYSQL_QUERY( a1, a2, a3 ) \
 	{	/*DebugTrace( "MySQL: %s", a2 );*/ \
 	++nQueries;RecalcDBOverload();\
@@ -31,11 +31,11 @@ BASIC_REGISTER_CLASS( CClients );
 	} \
 	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );\
 	}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MYSQL_CHECK_RESULT \
 	if ( !pResult ) { DebugTrace( "MySQL: Invalid SQL Query !" ); } \
 	NI_ASSERT( pResult, StrFmt( "Invalid SQL Query : %s", szQuery.c_str()) );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::RecalcDBOverload()
 {
 	const float fTimeInterval = float( GetLongTickCount() - dwQueriesCountTime ) / 1000.0f;
@@ -49,7 +49,7 @@ void CClients::RecalcDBOverload()
 	else
 		fQueriesPerSecond = float( nQueries + fPrevQueriesPerSecond * QUERIES_CALC_INTERVAL ) / ( fTimeInterval + QUERIES_CALC_INTERVAL );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsCriticalBusy() const
 {
 	if ( fQueriesPerSecond > 30.0f )
@@ -57,7 +57,7 @@ bool CClients::IsCriticalBusy() const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CClients::CClients( MYSQL *_pDB )
 {
 	pMySQL = _pDB;
@@ -86,7 +86,7 @@ CClients::CClients( MYSQL *_pDB )
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CClients::GetDBUserIDbyNick( const string &_szNick )
 {
 	hash_map<string, int>::const_iterator it = DBUserIDByNick.find( _szNick );
@@ -112,7 +112,7 @@ int CClients::GetDBUserIDbyNick( const string &_szNick )
 		return -1;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::LoadIgnoreFriendList()
 {
 	{
@@ -147,7 +147,7 @@ void CClients::LoadIgnoreFriendList()
 		WriteMSG( "Server-side friends list loaded.\n" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::AddIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
@@ -170,7 +170,7 @@ void CClients::AddIgnoreFriendPair( const int nRecipient, const string &szSender
 		AddIgnoreFriendPairToDB( nRecipientDBUserID, nSenderDBUserID, eList );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::DeleteIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
@@ -192,7 +192,7 @@ void CClients::DeleteIgnoreFriendPair( const int nRecipient, const string &szSen
 		DeleteIgnoreFriendPairFromDB( nRecipientDBUserID, nSenderDBUserID, eList );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
 {
 	string szQuery;
@@ -208,7 +208,7 @@ void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int 
 	}
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
 {
 	string szQuery;
@@ -224,7 +224,7 @@ void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const
 	}
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
@@ -260,7 +260,7 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender,
 	else
     return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 list<string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nClient ) )
@@ -294,7 +294,7 @@ list<string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList
 	else
 		return list<string>();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsCorrectCDKey( const string &szCDKey )
 {
 	const string szQuery = "SELECT cdkey FROM validCDKeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
@@ -305,7 +305,7 @@ bool CClients::IsCorrectCDKey( const string &szCDKey )
 	mysql_free_result( pResult );
 	return bIsValid;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsBadNick( const string &szNick )
 {
 	if ( szNick.empty() )
@@ -315,7 +315,7 @@ bool CClients::IsBadNick( const string &szNick )
 
 	return	false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsBannedNick( const string &szNick )
 {
 	bool ans = false;
@@ -334,7 +334,7 @@ bool CClients::IsBannedNick( const string &szNick )
 	mysql_free_result( pResult );
 	return ans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsBannedCDKey( const string &szCDKey )
 {
 	bool ans = false;
@@ -353,7 +353,7 @@ bool CClients::IsBannedCDKey( const string &szCDKey )
 	mysql_free_result( pResult );
 	return ans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CClients::GetCDKey( const string &szNick )
 {
 	if ( szNick.empty() )
@@ -372,7 +372,7 @@ const string CClients::GetCDKey( const string &szNick )
 	mysql_free_result( pResult );
 	return ans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CClients::GetPassword( const string &szNick )
 {
 	if ( szNick.empty() )
@@ -392,7 +392,7 @@ const string CClients::GetPassword( const string &szNick )
 	mysql_free_result( pResult );
 	return ans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CClients::GetEmail( const string &szNick )
 {
 	if ( szNick.empty() )
@@ -412,7 +412,7 @@ const string CClients::GetEmail( const string &szNick )
 	mysql_free_result( pResult );
 	return ans;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsNickRegistered( const string &szNick )
 {
 	if ( szNick.empty() )
@@ -429,13 +429,13 @@ bool CClients::IsNickRegistered( const string &szNick )
 	mysql_free_result( pResult );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::Register( const string &_szNick, const string &_szPassword, const string &_szCDKey )
 {
 	DebugTrace( "Registration without email address!!" );
 	Register( _szNick, _szPassword, _szCDKey, "nobody@nowhere.org" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::Register( const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail )
 {
 	if ( _szNick.empty() )
@@ -490,7 +490,7 @@ void CClients::Register( const string &_szNick, const string &_szPassword, const
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SLadderDBInfo* CClients::GetLadderInfoFromDB( const string &szNick )
 {
 	hash_map<string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
@@ -512,7 +512,7 @@ SLadderDBInfo* CClients::GetLadderInfoFromDB( const string &szNick )
 		return it->second;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::PutLadderInfoToDB( const string &szNick )
 {
 	hash_map< string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
@@ -525,14 +525,14 @@ void CClients::PutLadderInfoToDB( const string &szNick )
 		nMaxXP = Max( nMaxXP, pInfo->nXP );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::LockLadderInfo( const string &szNick )
 {
 	if ( ladderInfoCache.find( szNick ) == ladderInfoCache.end() )
 		return;
 	++ladderInfoCacheLockCounter[szNick];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::UnlockLadderInfo( const string &szNick )
 {
 	hash_map<string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
@@ -549,7 +549,7 @@ void CClients::UnlockLadderInfo( const string &szNick )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pHashMap, const bool bReadFromHashMap ) const
 {
 #define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(pInfo->var), bReadFromHashMap )
@@ -581,7 +581,7 @@ void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pH
 #undef CONVERT_NUMBER
 #undef CONVERT_VECTOR
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string &szNick )
 {
 	pInfo->clear();
@@ -603,7 +603,7 @@ void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string
 	}
 	mysql_free_result( pResult );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string,int> &ladderInfo )
 {
 	const int nClientDBID = GetDBUserIDbyNick( szNick );
@@ -648,7 +648,7 @@ void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string
 	szQuery += " WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 hash_set<string> CClients::GetTableColumns( const string &szTableName )
 {
 	const string szQuery = "SHOW COLUMNS FROM " + szTableName;
@@ -664,7 +664,7 @@ hash_set<string> CClients::GetTableColumns( const string &szTableName )
 	mysql_free_result( pResult );
 	return columns;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsOnLine( const string &szNick ) const
 {
 	string szNickLowerCase;
@@ -672,12 +672,12 @@ bool CClients::IsOnLine( const string &szNick ) const
 
 	return onLineNicks.find( szNickLowerCase ) != onLineNicks.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsOnLine( const int nClientID ) const
 {
 	return onLine.find( nClientID ) != onLine.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::SetOnLine( const string &szNick, const int nClientID )
 {
 	string szNickLowerCase;
@@ -698,7 +698,7 @@ void CClients::SetOnLine( const string &szNick, const int nClientID )
 	GetNetLogger()->Log( szNick, "online" );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::SetOffLine( const int nClientID )
 {
 	onLine.erase( nClientID );
@@ -721,7 +721,7 @@ void CClients::SetOffLine( const int nClientID )
 	GetNetLogger()->CloseLogFile( szNick );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CClients::GetNick( const int nClientID, string *pszNick ) const
 {
 	hash_map<int, string>::const_iterator iter = nickByID.find( nClientID );
@@ -733,7 +733,7 @@ const bool CClients::GetNick( const int nClientID, string *pszNick ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CClients::GetClientID( const string &szNick, int *pnClientID ) const
 {
 	hash_map<string, int>::const_iterator iter = idByNick.find( szNick );
@@ -745,7 +745,7 @@ const bool CClients::GetClientID( const string &szNick, int *pnClientID ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CClients::GetCommonClientInfo( const int nClientID, SCommonClientInfo *pCommonClientInfo ) const
 {
 	hash_map<int, SCommonClientInfo>::const_iterator iter = onLine.find( nClientID );
@@ -757,14 +757,14 @@ const bool CClients::GetCommonClientInfo( const int nClientID, SCommonClientInfo
 		return true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::SetCommonClientInfo( const int nClientID, const SCommonClientInfo &commonClientInfo )
 {
 	hash_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
 	if ( iter != onLine.end() )
 		iter->second = commonClientInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::SetGameConnectInfo( const int nClientID, const int nConnection, 
 																	 const string &szIP, const int nGameConnectPort )
 {
@@ -777,7 +777,7 @@ void CClients::SetGameConnectInfo( const int nClientID, const int nConnection,
 		conn.connections[nConnection].nPort = nGameConnectPort;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::GetGameConnectInfo( const int nClientID, const int nConnection, SGameConnection::SAddressInfo *pAddressInfo ) const
 {
 	hash_map<int, SGameConnection>::const_iterator iter = gameConnections.find( nClientID );
@@ -792,7 +792,7 @@ bool CClients::GetGameConnectInfo( const int nClientID, const int nConnection, S
 	*pAddressInfo = addr_iter->second;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::Log( const int nClientID, const string &szMsg ) const
 {
 #if !defined( _FINALRELEASE ) && !defined( _BETARELEASE )
@@ -802,7 +802,7 @@ void CClients::Log( const int nClientID, const string &szMsg ) const
 		GetNetLogger()->Log( iter->second, szMsg );
 #endif // _FINALRELEASE
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CClients::IsCDKeyOnline( const string &szCDKey )
 {
 	if ( szCDKey == "" )
@@ -827,7 +827,7 @@ bool CClients::IsCDKeyOnline( const string &szCDKey )
 	mysql_free_result( pResult );
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CClients::EscapeString( const string &szString ) const
 {
 	char *pBuffer = new char[ szString.length() * 2 + 2 ];
@@ -836,7 +836,7 @@ string CClients::EscapeString( const string &szString ) const
 	delete []pBuffer;
 	return szOut;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CClients::DBLogServerStatistics( const vector<string> &names, const vector<float> &values )
 {
 	NI_VERIFY( names.size() == values.size(), "Invalid data in CClients::DBLogServerStatistics", return );
@@ -877,6 +877,6 @@ void CClients::DBLogServerStatistics( const vector<string> &names, const vector<
 	szQuery += " )";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #undef MYSQL_QUERY
 #undef MYSQL_CHECK_RESULT

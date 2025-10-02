@@ -2,19 +2,19 @@
 #include "FileReaders.h"
 #include "..\Misc\Win32Helper.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMMFile::GetFileSize()
 {
 	return ::GetFileSize( hFile, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMMFile::SetFileSize( int nSize )
 {
 	ASSERT( hMapping == 0 );
 	SetFilePointer( hFile, nSize, 0, FILE_BEGIN );
 	SetEndOfFile( hFile );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMMFile::MapFile( int nSize, bool bCanWrite )
 {
 	DWORD dwFFlags = 0;
@@ -24,7 +24,7 @@ void CMMFile::MapFile( int nSize, bool bCanWrite )
 		dwFFlags = PAGE_READONLY;
 	hMapping = CreateFileMapping( hFile, 0, dwFFlags|SEC_COMMIT, 0, nSize, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMMFile::UnmapFile()
 {
 	if ( hMapping != 0 )
@@ -33,7 +33,7 @@ void CMMFile::UnmapFile()
 		hMapping = 0;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : hFile(INVALID_HANDLE_VALUE), hMapping(0)
 {
 	if ( access == STREAM_ACCESS_READ_WRITE )
@@ -50,16 +50,16 @@ CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : hFile(INVALID_HA
 	else
 		hFile = ::CreateFile( pszName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMMFile::~CMMFile()
 {
 	ASSERT( hMapping == 0 );
 	if ( hFile != INVALID_HANDLE_VALUE )
 		CloseHandle( hFile );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMemoryMappedFileFragment
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int GetAllocGranularity()
 {
 	static int nAllocGranularity;
@@ -73,7 +73,7 @@ static int GetAllocGranularity()
 	}
 	return nAllocGranularity;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void *CMemoryMappedFileFragment::MapFile( int nSize )
 {
 	if ( nSize == 0 )
@@ -101,7 +101,7 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 		return pszBuf;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryMappedFileFragment::UnmapFile( void *p )
 {
 	if ( p == 0 )
@@ -120,7 +120,7 @@ void CMemoryMappedFileFragment::UnmapFile( void *p )
 		delete[] (char*)p;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryMappedFileFragment::FlushFile( void *p )
 {
 	HANDLE hMapping = pFile->GetMapping();

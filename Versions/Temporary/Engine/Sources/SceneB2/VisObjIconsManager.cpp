@@ -4,10 +4,10 @@
 #include "../3DLib/Transform.h"
 #include "Camera.h"
 #include "VisObjIconsManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#include <VTuneAPI.h>
 //#pragma comment (lib, "vtuneapi.lib")
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int DEF_HPBAR_PARTS_NUM = 3;
 const int DEF_ICONS_GAP_X = 2;
 const int DEF_ICONS_ABOVE_Y = 2;
@@ -19,7 +19,7 @@ const int DEF_ICON_GROUP_GAP_Y = 0;
 const int DEF_ICON_LEVELUP_GAP_Y = -20;
 const int DEF_ICON_DAMAGED_BUILDING_GAP_Y = 2;
 const int MAX_SMALL_HITBARS = 6;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 {
 	pTexture = pIconsSet->pTexture;
@@ -81,7 +81,7 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 
 	bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &icon, const SHMatrix &matr, const CVec2 &vViewportSize )
 {
 	CVec4 vSrcPos;
@@ -104,7 +104,7 @@ inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &ico
 		icon.nScrOffsetY = Float2Int( ( 1.0f - fOffsetY ) * vViewportSize.y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjIcon &icon )
 {
 	if ( icon.nColor > 0 )
@@ -239,7 +239,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<CVisObjIconsManager::SObjIcon> regenIcons( 256 );
 void CVisObjIconsManager::RegenerateAllIconsRects()
 {
@@ -262,7 +262,7 @@ void CVisObjIconsManager::RegenerateAllIconsRects()
 		RegenerateIconRects( *itIcon );
 	} while ( itIcon != regenIcons.begin() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::UpdateAllIcons()
 {
 	if ( !p2DView )
@@ -277,7 +277,7 @@ void CVisObjIconsManager::UpdateAllIcons()
 
 	bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CVisObjIconsManager::UpdateIcon( SObjIcon &icon )
 {
 	const bool bWasInside = icon.fDepth >= 0.0f;
@@ -291,7 +291,7 @@ inline void CVisObjIconsManager::UpdateIcon( SObjIcon &icon )
 		bNeedUpdate = true;
 		//RegenerateAllIconsRects();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec3 &vPos )
 {
 	CObjIconsHash::iterator itFind = objIcons.find( iconInfo.nID );
@@ -355,7 +355,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 
 	UpdateIcon( icon );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::UpdateIcon( const int nID, const CVec3 &vPos )
 {
 	CObjIconsHash::iterator itIcon = objIcons.find( nID );
@@ -366,7 +366,7 @@ void CVisObjIconsManager::UpdateIcon( const int nID, const CVec3 &vPos )
 		UpdateIcon( icon );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::RemoveIcon( const int nID )
 {
 	CObjIconsHash::iterator itIcon = objIcons.find( nID );
@@ -376,7 +376,7 @@ void CVisObjIconsManager::RemoveIcon( const int nID )
 		bNeedUpdate = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisObjIconsManager::DrawIcons()
 {
 	//VTResume();
@@ -397,6 +397,6 @@ void CVisObjIconsManager::DrawIcons()
 	}
 	//VTPause();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x17146CC0, CVisObjIconsManager );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,7 +1,7 @@
 #if !defined(__ED_B2_M1__COMMAND_HANDLER_DEFINES__)
 #define __ED_B2_M1__COMMAND_HANDLER_DEFINES__
 //
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define CHID_MODEL_EDITOR											0x141A64C0
 #define CHID_MODEL_STATE											0x141A64C1
 #define CHID_MODEL_WINDOW											0x141AA300
@@ -90,5 +90,5 @@
 //
 #define CHID_MOVIES_EDITOR_WINDOW							0x1B215400
 #define CHID_MOVIES_EDITOR_STATE							0x1B215401
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__ED_B2_M1__COMMAND_HANDLER_DEFINES__)

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "..\misc\2darray.h"
 #include "..\zlib\zconf.h"
 #include "..\stats_b2_m1\dbmapinfo.h"
@@ -12,28 +12,28 @@
 #include "../AILogic/DBAIConsts.h"
 #include "../Stats_B2_M1/RPGStats.h"
 #include "../AILogic/B2AI.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp
 const int NEUTRAL_COLOR_INDEX	= 3;
 const int MP_COLOR_INDEX_BASE	= 4;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IScenarioTracker * CreateScenarioTrackerMultiplayer()
 {
 	return new NScenarioTracker::CScenarioTrackerMultiplayer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NScenarioTracker
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // CScenarioTrackerMultiplayer
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer() :
 	nLocalPlayer( -1 ), eType( EGT_MULTI_FLAG_CONTROL )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const
 {
 	if ( players.size() <= nPlayer )
@@ -44,7 +44,7 @@ const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetReinforcement( int n
 		return pos->second;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetReinforcementCallsLeft( int nPlayer )
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), "Index out of range", return 0 );
@@ -53,7 +53,7 @@ int CScenarioTrackerMultiplayer::GetReinforcementCallsLeft( int nPlayer )
 	else
 		return IAIScenarioTracker::INFINITE_CALLS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
@@ -67,7 +67,7 @@ void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, i
 	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
 		players[nPlayer].nReinforcementCallsLeft = Max( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
@@ -76,7 +76,7 @@ void CScenarioTrackerMultiplayer::RegisterReinforcementCall( int nPlayer, NDb::E
 	DecreaseReinforcementCallsLeft( nPlayer, 0 );
 	reinfCallsByType[nPlayer][eType] += 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, vector<int> *pCallsByType )
 {
 	vector<int> &reinfUses = *pCallsByType;
@@ -90,7 +90,7 @@ void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, vector
 		reinfUses[i] = reinfCallsByType[nPlayer][i];
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission, const int _nTechLevel ) 
 {
 	const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts();
@@ -195,7 +195,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 	}
 	timeMissionStart = Singleton<IGameTimer>()->GetSegmentTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::MissionCancel()
 {
 	UpdateStatistics();
@@ -204,7 +204,7 @@ void CScenarioTrackerMultiplayer::MissionCancel()
 	pMission = 0;
 	bMissionWon = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::MissionWin()
 {
 	UpdateStatistics();
@@ -214,7 +214,7 @@ void CScenarioTrackerMultiplayer::MissionWin()
 	pMission = 0;
 	bMissionWon = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::UpdateStatistics()
 {
 	for( int i = 0; i < players.size(); ++i )
@@ -223,17 +223,17 @@ void CScenarioTrackerMultiplayer::UpdateStatistics()
 			CalculateScore( i );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScenarioTrackerMultiplayer::IsMissionActive() const
 {
 	return pMission != 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMapInfo * CScenarioTrackerMultiplayer::GetCurrentMission() const
 {
 	return pMission;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::ClearMissionScriptVars()
 {
 	const string szPrefix = "temp.";
@@ -248,32 +248,32 @@ void CScenarioTrackerMultiplayer::ClearMissionScriptVars()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetNPlayers() const
 {
 	if ( GetCurrentMission() )
 		return GetCurrentMission()->players.size() - 1;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetPlayerSide( int nPlayer ) const
 {
 	if ( players.size() > nPlayer )
 		return players[nPlayer].nDiplomacySide;
 	return 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EMissionObjectiveState CScenarioTrackerMultiplayer::GetObjectiveState( const int nID ) const 
 { 
 	return EMOS_MIN; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::AddPlayer( const int nPlayer )
 {
 	if ( nPlayer >= 0 && nPlayer < players.size() )
 		players[nPlayer].bPresent = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::RemovePlayer( const int nPlayer )
 {
 	if ( nPlayer >= 0 && nPlayer < players.size() )
@@ -282,7 +282,7 @@ void CScenarioTrackerMultiplayer::RemovePlayer( const int nPlayer )
 		players[nPlayer].bPresent = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScenarioTrackerMultiplayer::IsPlayerPresent( const int nPlayer ) const
 {
 	if ( nPlayer >= 0 && nPlayer < players.size() )
@@ -290,7 +290,7 @@ bool CScenarioTrackerMultiplayer::IsPlayerPresent( const int nPlayer ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLinkID, const int nNewOwnerPlayer )
 {
 	if ( !pMission || !IsPlayerPresent( nNewOwnerPlayer ) )
@@ -311,7 +311,7 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 
 	pos->second = nNewOwnerPlayer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CScenarioTrackerMultiplayer::GetKeyBuildingOwner( const int nBuildingLinkID )
 {
 	hash_map<int,int>::const_iterator pos = flags.find( nBuildingLinkID );
@@ -320,7 +320,7 @@ const int CScenarioTrackerMultiplayer::GetKeyBuildingOwner( const int nBuildingL
 	else
 		return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const pair<int,int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 {
 	int nOwned0 = 0;
@@ -335,7 +335,7 @@ const pair<int,int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 	}
 	return pair<int,int>( nOwned0, nOwned1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define FULL_RECYCLE_TIME 215.0f
 #define MIN_RECYCLE_TIME 95.0f
 const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
@@ -388,7 +388,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 
 	return fCoeff;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetStatistics( int nPlayer, EStatisticsKind eKind ) const
 {
 	if ( nPlayer < statistic.size() && eKind < statistic[nPlayer].size() )
@@ -400,7 +400,7 @@ int CScenarioTrackerMultiplayer::GetStatistics( int nPlayer, EStatisticsKind eKi
 	NI_ASSERT( 0, "no statistics" );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue )
 {
 	NI_ASSERT( nValue >= 0, "Wrong statistics value" );
@@ -413,9 +413,9 @@ void CScenarioTrackerMultiplayer::SetStatistics( int nPlayer, EStatisticsKind eK
 
 	statistic[nPlayer][eKind] = nValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtr<IScenarioTracker::SLeaderInfo> pInfo;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const IScenarioTracker::SLeaderInfo* CScenarioTrackerMultiplayer::GetLeaderInfo( const NDb::EReinforcementType eReinf ) const
 {
 	pInfo = new IScenarioTracker::SLeaderInfo();
@@ -433,7 +433,7 @@ const IScenarioTracker::SLeaderInfo* CScenarioTrackerMultiplayer::GetLeaderInfo(
 	pInfo->wszName = L"Mr.Noname";
 	return pInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const
 {
 	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE )			// CRAP for designers' bastard baby - the recycle tooltip
@@ -454,7 +454,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinfo
 
 	return 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP )
 {
 	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE )			// CRAP for designers' bastard baby - the recycle tooltip
@@ -464,7 +464,7 @@ void CScenarioTrackerMultiplayer::SetReinforcementXP( int nPlayer, NDb::EReinfor
 
 	players[nPlayer].experience[eType] = fXP;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const
 {
 	if ( NGlobal::GetVar( "multiplayer_unit_experience", 0 ) == 0 )
@@ -486,7 +486,7 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforcementType eType, int nLevel ) const
 {
 	if ( !pMPConsts )
@@ -509,7 +509,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforceme
 
 	return 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScenarioTrackerMultiplayer::AddReinfExp( float *pExp, const int nPlayer, NDb::EReinforcementType eReinfType )
 {
 	bool bResult = false;
@@ -533,7 +533,7 @@ bool CScenarioTrackerMultiplayer::AddReinfExp( float *pExp, const int nPlayer, N
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 {
 	if ( !pAIConsts )
@@ -591,7 +591,7 @@ bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetUnitKills( const int nPlayer ) const
 {
 	float fSum = 0;
@@ -601,17 +601,17 @@ int CScenarioTrackerMultiplayer::GetUnitKills( const int nPlayer ) const
 
 	return fSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetUnitKills( const int nPlayer, const int nKilledPlayer ) const
 {
 	return kills[nPlayer][nKilledPlayer];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetUnitPriceKills( const int nPlayer, const int nKilledPlayer ) const
 {
 	return priceKills[nPlayer][nKilledPlayer];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetSegmentTime();
@@ -716,24 +716,24 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScenarioTrackerMultiplayer::GetScoreWithUpdate( int nPlayer )
 {
 	CalculateScore( nPlayer );
 
 	return GetStatistics( nPlayer, ESK_SCORE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetMultiplayerInfo( const SMultiplayerInfo &info )
 {
 	multiplayerInfo = info;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IScenarioTracker::SMultiplayerInfo* CScenarioTrackerMultiplayer::GetMultiplayerInfo()
 {
 	return &multiplayerInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int nNewSide )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
@@ -747,7 +747,7 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 
 	UpdateReinforcements( nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( const int nPlayer )
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, players.size() ), return 0 );
@@ -771,7 +771,7 @@ const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( con
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nNewTeam )
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), StrFmt( "PRG: Player No %d not in bounds (max %d)", nPlayer, players.size() ), return );
@@ -780,7 +780,7 @@ void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nN
 	else
 		players[nPlayer].nDiplomacySide = nNewTeam;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
@@ -820,7 +820,7 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetStartUnits( int nPlayer ) const
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 || nTechLevel < 0 )
@@ -830,7 +830,7 @@ const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetStartUnits( int nPla
 
 	return curTechLevel.pStartingUnits;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, int nCalls )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
@@ -839,7 +839,7 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 	players[nPlayer].nReinforcementCallsLeft += nCalls;
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, StrFmt( "Player %d reinf qty increase", nPlayer ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColor( int nPlayer ) const
 {
 	if ( nPlayer < 0 || nPlayer >= players.size() )
@@ -847,7 +847,7 @@ const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColo
 	
 	return players[nPlayer].playerColor;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScenarioTrackerMultiplayer::SetPlayerColour( const int nPlayer, const int nNewColour )
 {
 	if ( !IsMissionActive() || nPlayer < 0 || nPlayer >= players.size() || nNewColour < 0 || nNewColour >= pMPConsts->playerColorInfos.size() )
@@ -857,7 +857,7 @@ void CScenarioTrackerMultiplayer::SetPlayerColour( const int nPlayer, const int 
 	players[nPlayer].playerColor.pUnitFullInfo = pMPConsts->playerColorInfos[nNewColour].pUnitFullInfo;
 	players[nPlayer].playerColor.nColorIndex = MP_COLOR_INDEX_BASE + nNewColour;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagObject( const int nPlayer )
 {
 	int nSide = GetPlayerSide( nPlayer );
@@ -870,8 +870,8 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS_NM( 0x1117BB00, CScenarioTrackerMultiplayer, NScenarioTracker );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

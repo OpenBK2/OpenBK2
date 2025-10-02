@@ -4,10 +4,10 @@
 #include "GScene.h"
 #include "RandomGen.h"
 #include "4dcalcs.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPointGlowEffect : public CParticleEffect
 {
 	OBJECT_BASIC_METHODS(CPointGlowEffect);
@@ -19,7 +19,7 @@ public:
 
 	void AddParticles( IParticleOutput *pRender );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_NEAR_CLIP = 1;//0.2f;
 void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 {
@@ -45,16 +45,16 @@ void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 	GetTransparentTexturePlace( &tPlace, pTex->GetValue() );
 	pRender->AddParticle( vRes, 0xffffff | (nAlpha<<24), tPlace, F_PARTICLE_OVER );//or.vDepth * or.vBasic[3] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPointGlowAnimator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPointGlowAnimator::CPointGlowAnimator( IGScene *_pScene, CFuncBase<STime> *_pTime, CFuncBase<CVec3> *_pPlace, 
 	CPtrFuncBase<NGfx::CTexture> *_pTexture, float _fLightSize, float _fOnTime, float _fOffTime )
 	: pScene(_pScene), pTime(_pTime), pPlacement(_pPlace), pTexture(_pTexture), fLightSize(_fLightSize),
 	expFader(_fOnTime,_fOffTime, 0), pCamera( pScene->GetCamera() ), nLastMaskAny(0), tNextCheck(0), bIsVisible(false)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointGlowAnimator::CalcSize()
 {
 	bool bShortInterval = pCamera.Refresh();
@@ -93,7 +93,7 @@ void CPointGlowAnimator::CalcSize()
 	value.fSize = fLightSize * expFader.GetSize();
 	value.nAlpha = Float2Int( expFader.GetSize() * 255 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointGlowAnimator::Recalc()
 {
 	if ( !IsValid( pValue ) )
@@ -108,7 +108,7 @@ void CPointGlowAnimator::Recalc()
 	value.vPos = pPlacement->GetValue();
 	value.pParent = this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x114a2180, CPointGlowEffect )

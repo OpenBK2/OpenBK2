@@ -177,20 +177,20 @@ void  lua_concat (lua_State *L, int n);
 
 int   lua_parsebuffer (lua_State *L, const char *buff, size_t size, const char *name);
 
-//////////////////////////////////////////////////////////////////////////
+
 // Multithread execution
 void lua_executeThreads( lua_State *L );
 void lua_startThread( lua_State *L, int nArgs );
-//////////////////////////////////////////////////////////////////////////
+
 // Basic multithread LuaC-functions
 int LuaCFuncStartThread( lua_State *L );
 int LuaCFuncSleep( lua_State *L );
 int LuaCFuncSetThreadErrorHook( lua_State *L );
 
-//////////////////////////////////////////////////////////////////////////
+
 void lua_register( lua_State *L, const char *name, lua_CFunction f );
 
-//////////////////////////////////////////////////////////////////////////
+
 // additional registration needed to serialize C functions
 void lua_RegisterFunc ( lua_CFunction func, const string& id );
 
@@ -214,7 +214,7 @@ void lua_RegisterFunc ( lua_CFunction func, const string& id );
 
 #define lua_getregistry(L)	lua_getref(L, LUA_REFREGISTRY)
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLUAError
 {
 	struct SLUAStackTrace
@@ -227,12 +227,12 @@ struct SLUAError
 	string szError;
 	vector< SLUAStackTrace > stack;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NScript
 {
 	extern SLUAError luaLastError;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif
 /******************************************************************************
 * Copyright (C) 1994-2000 TeCGraf, PUC-Rio.  All rights reserved.

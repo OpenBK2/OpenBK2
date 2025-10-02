@@ -5,9 +5,9 @@
 #include "..\3dMotor\DBScene.h"
 #include "..\3DMotor\RectLayout.h"
 #include "UIComponents.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11075B41, CBackgroundSimpleTexture )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats ) 
@@ -62,7 +62,7 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 	else
 		pVisitor->VisitUIRect( pTexture, 3, rects );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CBackground::InitByDesc( _pDesc );
@@ -76,12 +76,12 @@ void CBackgroundSimpleTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 #endif
 	pIcon = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleTexture::SetPos( const CVec2 &vPos, const CVec2 &vSize )
 {
 	CBackground::SetPos( vPos, vSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 {
 	if ( pTexture != 0 )
@@ -95,7 +95,7 @@ void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 {	
 	if( !pTexture )
@@ -107,7 +107,7 @@ void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 		pIcon->SetTexture( pTexture );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CBackgroundSimpleTexture::operator&( interface IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CBackground*>( this ) );
@@ -116,4 +116,4 @@ int CBackgroundSimpleTexture::operator&( interface IBinSaver &saver )
 	saver.Add( 6, &pIcon );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

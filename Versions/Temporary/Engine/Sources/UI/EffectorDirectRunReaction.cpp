@@ -2,12 +2,12 @@
 #include "EffectorDirectRunReaction.h"
 
 REGISTER_SAVELOAD_CLASS(0x210C5AC0,CEffectorDirectRunReaction)
-/////////////////////////////////////////////////////////////////////////////
+
 bool CEffectorDirectRunReaction::IsFinished() const 
 { 
 	return bFinished; 
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow ) 
 { 
 	szAnimatedWindow = _szAnimatedWindow;
@@ -17,7 +17,7 @@ void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, inte
 	bFinished = false;
 	bForward = true;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 const int CEffectorDirectRunReaction::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
 { 
 	// to do RUN COMMAND cmd.szParam
@@ -43,10 +43,10 @@ const int CEffectorDirectRunReaction::Segment( const int timeDiff, interface ISc
 	bFinished = true;
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CEffectorDirectRunReaction::Reverse()
 {
 	bForward = !bForward;
 	bFinished = false;
 }
-/////////////////////////////////////////////////////////////////////////////
+

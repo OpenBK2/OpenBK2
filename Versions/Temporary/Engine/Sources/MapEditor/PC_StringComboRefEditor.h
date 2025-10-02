@@ -3,7 +3,7 @@
 #pragma once
 
 #include "PC_StringComboEditor.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CPCStringComboRefEditorCompareItem
 {
 	bool operator()( const string &rszText0, const string &rszText1 )
@@ -12,7 +12,7 @@ struct CPCStringComboRefEditorCompareItem
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCStringComboRefEditor : public CPCStringComboEditor
 {
 	OBJECT_NOCOPY_METHODS( CPCStringComboRefEditor );
@@ -24,5 +24,5 @@ public:
 	void SetValue( const CVariant &rValue );
 	void GetValue( CVariant *pValue );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_COMBO_REF__)

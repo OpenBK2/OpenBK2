@@ -7,7 +7,7 @@
 #include "..\Misc\HashFuncs.h"
 
 #define VIEW_COLLECTION_ID ("_VIEW_COLLECTION_ID_")
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Те, кто создает Undo Operation могут самостоятельно выполнить их снова
 // Если такой цели нет, то команда должна сама о себе позаботится
 // Controller, View
@@ -35,16 +35,16 @@ interface IView
 	virtual void RemoveViewManipulator() = 0;
 	virtual void GetObjectSet( SObjectSet *pObjectDet ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CRAP{ HASH_SET
 typedef hash_map<IView*, DWORD, SDefaultPtrHash> CViewSet;
 // CRAP} HASH_SET
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Хранилище View
 // rszObjectTypeName - тип View
 // nOnbjectID - номер редактируемого объекта
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IViewContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A380 };
@@ -58,6 +58,6 @@ interface IViewContainer : public CObjectBase
 	// Если в качестве pViewSet указан 0 то просто возвращает наличие обработчиков
 	virtual bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__VIEW__)
 

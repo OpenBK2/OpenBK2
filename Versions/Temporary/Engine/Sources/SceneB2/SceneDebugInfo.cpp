@@ -4,9 +4,9 @@
 #include "../Misc/HashFuncs.h"
 #include "SceneInternal.h"
 #include "DBSceneConsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static hash_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash> colorsMap;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMaterial *Color2Color( const NDebugInfo::EColor color )
 {
 	hash_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash >::const_iterator pos = colorsMap.find( color );
@@ -15,7 +15,7 @@ const NDb::SMaterial *Color2Color( const NDebugInfo::EColor color )
 	else
 		return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::InitDebugMaterials( const NDb::SSceneConsts *pSceneConsts )
 {
 	colorsMap.clear();
@@ -25,12 +25,12 @@ void CScene::InitDebugMaterials( const NDb::SSceneConsts *pSceneConsts )
 	colorsMap[NDebugInfo::BLACK] = pSceneConsts->debugMaterials.pBlackMaterial;
 	colorsMap[NDebugInfo::WHITE] = pSceneConsts->debugMaterials.pWhiteMaterial;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddDebugInfoObject( const int nID, NAIVisInfo::CDebugObject *pObject )
 {
 	debugInfoObjects[nID] = pObject;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateMarker( const NDebugInfo::SDebugInfoMarker *pMarker )
 {
 	NAIVisInfo::CDebugMarkers *pMarkers = new NAIVisInfo::CDebugMarkers();
@@ -39,7 +39,7 @@ void CScene::CreateMarker( const NDebugInfo::SDebugInfoMarker *pMarker )
 
 	AddDebugInfoObject( pMarker->nID, pMarkers );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateCircle( const NDebugInfo::SDebugInfoCircle *pCircle )
 {
 	NAIVisInfo::CDebugCircle *pCircleObj = new NAIVisInfo::CDebugCircle();
@@ -48,7 +48,7 @@ void CScene::CreateCircle( const NDebugInfo::SDebugInfoCircle *pCircle )
 
 	return AddDebugInfoObject( pCircle->nID, pCircleObj );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateSegment( const NDebugInfo::SDebugInfoSegment *pSegment )
 {
 	NAIVisInfo::CDebugSegment *pSegmentObj = new NAIVisInfo::CDebugSegment();
@@ -57,7 +57,7 @@ void CScene::CreateSegment( const NDebugInfo::SDebugInfoSegment *pSegment )
 
 	return AddDebugInfoObject( pSegment->nID, pSegmentObj );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateLine( const NDebugInfo::SDebugInfoLine *pLine )
 {
 	vector<CVec3> points;
@@ -113,7 +113,7 @@ void CScene::CreateLine( const NDebugInfo::SDebugInfoLine *pLine )
 	}
 	AddIndexedPolyline( pLine->nID, points, indices, pLine->vColor, pLine->bDepthCheck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateRect( const NDebugInfo::SDebugInfoRect *pRect )
 {
 	vector<CVec3> points;
@@ -132,7 +132,7 @@ void CScene::CreateRect( const NDebugInfo::SDebugInfoRect *pRect )
 	indices.push_back( 0 );
 	AddIndexedPolyline( pRect->nID, points, indices, pRect->vColor, pRect->bDepthCheck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ProcessDebugInfoUpdates()
 {
 	CDebugInfoManager *pDebugInfoManager = static_cast<CDebugInfoManager *>( DebugInfoManager() );
@@ -171,4 +171,4 @@ void CScene::ProcessDebugInfoUpdates()
 		}
 	} while( pDebugInfoManager->PopUpdate() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

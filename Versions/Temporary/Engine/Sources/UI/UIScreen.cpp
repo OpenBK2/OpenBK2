@@ -1,6 +1,6 @@
 // UIScreen.cpp: implementation of the CWindowScreen class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "UIScreen.h"
@@ -10,15 +10,15 @@
 #include "..\3Dmotor\G2DView.h"
 #include "../System/Text.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075B80,CWindowScreen)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CWindowScreen
-//////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
+
+
 NGScene::I2DGameView *CWindowScreen::p2DGameView = 0;
-/////////////////////////////////////////////////////////////////////
+
 void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator *ss, CStateSequiences *src, CStateSequiences *dst, CWindowScreen *pS )
 {
 	(*ss)->Segment( 1, pS ); // advance a little (to run all imidiate reactions)
@@ -30,7 +30,7 @@ void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator *ss, CStateSequien
 			(*dst).splice( (*dst).end(), (*src), (*ss)++ );
 	}
 }
-/////////////////////////////////////////////////////////////////////
+
 CWindowScreen::CWindowScreen()
 : nMouseButtonState( 0 ),
 	bindShift( "shift_key" ),
@@ -47,7 +47,7 @@ CWindowScreen::CWindowScreen()
 	priorityEvents.AddObserver( "win_mouse_move", &CWindowScreen::MsgOnMouseMove );
 	AddObserver( "win_key", &CWindowScreen::OnKey );
 }
-/////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::UpdateResolution()
 {
 	const CVec2 vpSize = p2DGameView->GetViewportSize();
@@ -56,7 +56,7 @@ void CWindowScreen::UpdateResolution()
 	if ( GetInstance() )
 		Reposition();
 }
-/////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindowScreen *pDesc( checked_cast<const NDb::SWindowScreen*>( _pDesc ) );
@@ -74,7 +74,7 @@ void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		commandSequiences[it->szName] = it->sequence;
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::ProcessEvent( const struct SGameMessage &msg )
 {
 	bindShift.ProcessEvent( msg );
@@ -85,12 +85,12 @@ bool CWindowScreen::ProcessEvent( const struct SGameMessage &msg )
 	
 	return CWindow::ProcessEvent( msg );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::ProcessUIMessage( const struct SBUIMessage &msg )
 {
 	CWindow::ProcessMessage( msg );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	nMouseButtonState |= nButton;
@@ -98,7 +98,7 @@ bool CWindowScreen::OnButtonDown( const CVec2 &vPos, const int nButton )
 	ScreenToVirtual( vPos, &vPosOnScreen );
 	return CWindow::OnButtonDown( vPosOnScreen, nButton );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	nMouseButtonState &= ~nButton;
@@ -106,14 +106,14 @@ bool CWindowScreen::OnButtonUp( const CVec2 &vPos, const int nButton )
 	ScreenToVirtual( vPos, &vPosOnScreen );
 	return CWindow::OnButtonUp( vPosOnScreen, nButton );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::OnButtonDblClk( const CVec2 &vPos, const int nButton )
 {
 	CVec2 vPosOnScreen;
 	ScreenToVirtual( vPos, &vPosOnScreen );
 	return CWindow::OnButtonDblClk( vPosOnScreen, nButton );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::OnMouseMove( const CVec2 &vPos, const int nMouseState )
 {
 	CVec2 vPosOnScreen;
@@ -122,7 +122,7 @@ bool CWindowScreen::OnMouseMove( const CVec2 &vPos, const int nMouseState )
 	tooltips.OnMouseMove( vPos, nMouseState, this );
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::OnKey( const SGameMessage &msg )
 {
 	if ( msg.nParam1 == VK_TAB )
@@ -134,25 +134,25 @@ bool CWindowScreen::OnKey( const SGameMessage &msg )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::Enable( const bool bEnable )
 {
 	nMouseButtonState = 0;
 	CWindow::Enable( bEnable );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::Reposition( IWindow *pWindow )
 {
 	RepositionChildren( pWindow );
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow *CWindowScreen::Pick( const CVec2 &vPos, const bool bRecursive )
 {
 	CVec2 vPosOnScreen;
 	ScreenToVirtual( vPos, &vPosOnScreen );
 	return PickInternal( vPosOnScreen, bRecursive );
 }
-//////////////////////////////////////////////////////////////////////
+
 CButtonGroup * CWindowScreen::CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent )
 {
 	SButtonGroupID id( nID, pParent );
@@ -160,23 +160,23 @@ CButtonGroup * CWindowScreen::CreateButtonGroup( const int nID, IWindow *pButton
 		buttonGroups[id] = new CButtonGroup();
 	return buttonGroups[id];
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetScreenSize( const CTRect<float> &rcScreen )
 {
 	CWindow::Reposition( rcScreen );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView )
 {
 	p2DGameView = _p2DGameView;
 	UpdateResolution();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::Set2DGView( NGScene::I2DGameView *_p2DGameView )
 {
 	p2DGameView = _p2DGameView;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactionsAndChecks *_pReactionsAndChecks )
 {
 	CUIFactory::SetScreenDuringLoad( this );
@@ -200,12 +200,12 @@ void CWindowScreen::Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactions
 	SetTooltipContext( 0 );
 	CUIFactory::SetScreenDuringLoad( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetReactionsAndChecks( IProgrammedReactionsAndChecks *_pReactionsAndChecks )
 {
 	pReactionsAndChecks = _pReactionsAndChecks;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::OnGetFocus( const bool bFocus )
 {
 	SetFocus( bFocus );
@@ -215,7 +215,7 @@ void CWindowScreen::OnGetFocus( const bool bFocus )
 	else
 		tooltips.HideTooltip();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::InitSingletonWindows()
 {
 	// add console as one of children
@@ -245,7 +245,7 @@ void CWindowScreen::InitSingletonWindows()
 		pStatSystem->Init();
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
 {
 	// откатим незаконченную прямую последовательность
@@ -273,7 +273,7 @@ void CWindowScreen::UndoStateCommandSequence( const string &szCmdSeq )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RegisterEffect( const string &szEffect, const vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable )
 {
 	commandSequiences[szEffect].commands = cmds;
@@ -283,12 +283,12 @@ void CWindowScreen::RegisterEffect( const string &szEffect, const NDb::SUIStateS
 {
 	commandSequiences[szEffect] = cmds;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RegisterReaction( const string &szReactionKey, interface IMessageReactionB2 *pReaction )
 {
 	messageReactions.Register( szReactionKey, pReaction );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::Segment( const int timeDiff )
 {
 	ProcessStateSequiences( timeDiff );
@@ -305,7 +305,7 @@ void CWindowScreen::Segment( const int timeDiff )
 	if ( bIsScreenFocused )
 		tooltips.Segment( timeDiff, this );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 {
 	list<CWindowAnimationID> resumed;
@@ -360,7 +360,7 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 		++ss;
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RegisterToSegment( interface IWindow *pWnd, const bool bRegister )
 {
 	if ( bRegister )
@@ -368,12 +368,12 @@ void CWindowScreen::RegisterToSegment( interface IWindow *pWnd, const bool bRegi
 	else
 		segmentObjs.remove( pWnd );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::IsRegisteredToSegment( interface IWindow *pWnd ) const
 {
 	return segmentObjs.find( pWnd ) != segmentObjs.end(); 
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 {
 	if ( 0 == nAnimationID ) return;
@@ -405,7 +405,7 @@ void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 	}
 	NI_ASSERT( false, "trying to reverse nonregistered animation" );
 }
-//////////////////////////////////////////////////////////////////////
+
 WORD CWindowScreen::GetKeyboardFlags() const
 {
 	WORD wRes = (WORD)EKF_NONE;
@@ -417,7 +417,7 @@ WORD CWindowScreen::GetKeyboardFlags() const
 		wRes |= (WORD)EKF_CTRL;
 	return wRes;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow )
 {
 	if ( seq.commands.empty() ) return 0;
@@ -428,7 +428,7 @@ int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &se
 	StartEffectAndDeleteIfNeeded( &ss, &stateSequiences, &finishedAnimations, this );
 	return nID;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RunStateCommandSequience( const string &szCmdSeq, IWindow *_pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait )
 {
 	if ( CDynamicCast<CWindow> pSequenceParent = _pSequenceParent )
@@ -451,7 +451,7 @@ void CWindowScreen::RunStateCommandSequience( const string &szCmdSeq, IWindow *_
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward )
 {
 	if ( szCmdSeq.empty() ) 
@@ -520,7 +520,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const string &szCmdSeq, C
 		NI_ASSERT( bFound, StrFmt( "sequience \"%s\" not found in reversable list", szCmdSeq.c_str() ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetWindowText( const string &szWindowName, const wstring &szText )
 {
 	CWindow *pChild = GetDeepChild( szWindowName );
@@ -533,27 +533,27 @@ void CWindowScreen::SetWindowText( const string &szWindowName, const wstring &sz
 			pText->SetText( szText );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::RunReaction( const string &szSender, const string &szReactionName )
 {
 	return messageReactions.Execute( szSender, szReactionName, this, pReactionsAndChecks, GetKeyboardFlags() );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::RunReaction( const string &szSender, const NDb::SUIDesc *pReaction )
 {
 	return messageReactions.Execute( szSender, pReaction, this, pReactionsAndChecks, GetKeyboardFlags() );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetTooltipContext( const int nContext )
 {
 	tooltips.SetTooltipContext( nContext, this );
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow *CWindowScreen::CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner )
 {
 	return tooltips.CreateTooltipWindow( wszTooltipText, pTooltipOwner, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::InitScreen()
 {
 	for ( CButtonGroups::iterator it = buttonGroups.begin(); it != buttonGroups.end(); ++it )
@@ -562,14 +562,14 @@ void CWindowScreen::InitScreen()
 		dynamic_cast_ptr<CWindow*>(it->first.pParent)->RepositionChildren();
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView )
 {
 	p2DGameView = _p2DGameView;
 	pInterface3DView = _pInterface3DView;
 	UpdateResolution();
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindowScreen::operator&( interface IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -588,7 +588,7 @@ int CWindowScreen::operator&( interface IBinSaver &saver )
 	saver.Add( 18, &tabOrder );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::AfterLoad()
 {
 	nMouseButtonState = 0;
@@ -597,14 +597,14 @@ void CWindowScreen::AfterLoad()
 	InitScreen();
 	CWindow::AfterLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow* CWindowScreen::AddElement( const struct NDb::SUIDesc *pDesc )
 {
 	//CRAP{ FIND OUT WHO USE THIS
 	return CUIFactory::MakeWindow( pDesc );
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowScreen::GetTextEntry( const string &szName ) const
 {
 	static wstring empty;
@@ -618,7 +618,7 @@ const wstring& CWindowScreen::GetTextEntry( const string &szName ) const
 	}
 	return empty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowScreen::ActivateNextInTabOrder()
 {
 	CWindow* pFocused = FindFocusedWindow();
@@ -648,10 +648,10 @@ bool CWindowScreen::ActivateNextInTabOrder()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScreen::RegisterTabOrder( IWindow * pWindow, int nTabOrder )
 {
 	if ( nTabOrder != -1 )
 		tabOrder.Push( pair<CObj<CWindow>, int>(dynamic_cast<CWindow*>(pWindow), nTabOrder) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

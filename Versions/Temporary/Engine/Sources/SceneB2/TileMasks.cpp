@@ -6,18 +6,18 @@
 #include "../System/Commands.h"
 #include "../System/VFSOperations.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#include <VTuneAPI.h>
 //#pragma comment (lib, "vtuneapi.lib")
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_TILES_BLUR_FILTER_HX 2
 #define DEF_TILES_BLUR_FILTER_HY 2
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CArray2D<BYTE> tileTerraMapDiffs;
 static int nDiffTileX1 = -1, nDiffTileY1 = -1, nDiffTileX2 = -1, nDiffTileY2 = -1;
 static int s_nTerrainBlurRaduis = 1;
 static int s_nTerrainBlurThreshHold = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void BlurTileMask( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMask, const int nX1, const int nY1,
 													const int nX2, const int nY2, const SInt2Type<0> &sep )
 {
@@ -40,7 +40,7 @@ static void BlurTileMask( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMas
 
 	(*pDstMask)[nLastRow][nLastColumn] = srcMask[nLastRow][nLastColumn];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void BlurSingleElement( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMask, const CArray2D<int> &filter,
 															 const int nFilterHalfSize, const int nStartFilterX, const int nStartFilterY,
 															 const int nEndFilterX, const int nEndFilterY, const int x, const int y )
@@ -61,7 +61,7 @@ static void BlurSingleElement( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &s
 	}
 	(*pDstMask)[y][x] = nVal / nCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void BlurLastColumn( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMask, const CArray2D<int> &filter,
 														const int nFilterHalfSize, const int nStartFilterX, const int nEndFilterX,
 														const int x, const int nY1, const int nY2 )
@@ -74,7 +74,7 @@ static void BlurLastColumn( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcM
 		BlurSingleElement( pDstMask, srcMask, filter, nFilterHalfSize, nStartFilterX, nStartFilterY, nEndFilterX, nEndFilterY, x, g );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void BlurTileMask( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMask, const int nX1, const int nY1,
 													const int nX2, const int nY2, const SInt2Type<1> &sep )
 {
@@ -184,7 +184,7 @@ static void BlurTileMask( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMas
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void CTerraGen::ConvertZoneMaskToTileMap()
 //{
 //	tileTerraMap.SetSizes( pDesc->nNumPatchesX * DEF_PATCH_SIZE + 1, pDesc->nNumPatchesY * DEF_PATCH_SIZE + 1 );
@@ -248,7 +248,7 @@ static void BlurTileMask( CArray2D<BYTE> *pDstMask, const CArray2D<BYTE> &srcMas
 //		tileTerraMap[nSizeY][nSizeX] = tileTerraMap[nSizeY - 1][nSizeX - 1];
 //	}
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, const int nY2, const bool bNeedGeomUpdate )
 {
 	static CArray2D<BYTE> tempTileMask;
@@ -333,7 +333,7 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 		UpdateGfxInfo( nPatchX1, nPatchY1, nPatchX2 + 1, nPatchY2 + 1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<BYTE> &mask,
 																		const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
@@ -435,7 +435,7 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 
 	//VTPause();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<BYTE> *pDiffs )
 {
 	if ( nDiffTileX1 != -1 )
@@ -532,7 +532,7 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 	*pOffsX = *pOffsY = 0;
 	nDiffTileX1 = nDiffTileY1 = nDiffTileX2 = nDiffTileY2 = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::FinalizeTexModifying()
 {
 	for ( int g = 0; g < texModCheck.GetSizeY(); ++g )
@@ -547,7 +547,7 @@ void CTerraGen::FinalizeTexModifying()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	const int nTileX1 = max( min(nX1, nX2), 0 );
@@ -570,10 +570,10 @@ void CTerraGen::GetAreaTileTypes( CArray2D<BYTE> *pAreaTypes, const int nX1, con
 		pAreaTypes->SetSizes( 0, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( TerrainBluring )
 	REGISTER_VAR_EX( "terrain_blur_radius", NGlobal::VarIntHandler, &s_nTerrainBlurRaduis, 1, STORAGE_USER );
 	REGISTER_VAR_EX( "terrain_blur_treshhold", NGlobal::VarIntHandler, &s_nTerrainBlurThreshHold, 0, STORAGE_USER );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

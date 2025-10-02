@@ -1,19 +1,19 @@
 // WindowMSButton.cpp: implementation of the CWindowMSButton class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "WindowMSButton.h"
 #include "ButtonGroup.h"
 #include "ForegroundTextString.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075B87,CWindowMSButton)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CWindowMSButton
-//////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
+
+
 void CButtonSubStateVisual::Init( const NDb::SButtonVisualSubState &substate )
 {
 	if ( substate.pBackground )
@@ -24,7 +24,7 @@ void CButtonSubStateVisual::Init( const NDb::SButtonVisualSubState &substate )
 		pTextString = (CForegroundTextString*)( CUIFactory::MakeWindowPart( substate.pTextString ) );
 	pTextFormat = substate.pTextFormat;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CButtonSubStateVisual::SetupTextString( const NDb::SForegroundTextString *_pTextString )
 {
 	if ( !pTextString && _pTextString )
@@ -32,7 +32,7 @@ void CButtonSubStateVisual::SetupTextString( const NDb::SForegroundTextString *_
 		pTextString = (CForegroundTextString*)( CUIFactory::MakeWindowPart( _pTextString ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindowMSButton *pDesc( checked_cast<const NDb::SWindowMSButton*>( _pDesc ) );
@@ -77,7 +77,7 @@ void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		AddChild( wins[i], true );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowMSButton::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -103,14 +103,14 @@ int CWindowMSButton::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::AfterLoad()
 {
 //	SetState( pInstance->nState );
 	SwitchSubState( states[pInstance->nState].eSubState );
 	CWindow::AfterLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowMSButton::GetDBFormatText() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
@@ -121,7 +121,7 @@ const wstring& CWindowMSButton::GetDBFormatText() const
 	
 	return CWindow::GetDBFormatText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowMSButton::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->, Text) )
@@ -129,7 +129,7 @@ const wstring& CWindowMSButton::GetDBInstanceText() const
 
 	return CWindow::GetDBInstanceText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SWindowPlacement* CWindowMSButton::GetDBTextPlacement() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
@@ -138,7 +138,7 @@ const NDb::SWindowPlacement* CWindowMSButton::GetDBTextPlacement() const
 	}
 	return CWindow::GetDBTextPlacement();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnEnter( const int nButton )
 {
 	if ( bPressed[nButton] )
@@ -165,7 +165,7 @@ void CWindowMSButton::OnEnter( const int nButton )
 	}
 	bMouseEntered = true;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnLeave( const int nButton )
 {
 	if ( bMouseEntered )
@@ -181,7 +181,7 @@ void CWindowMSButton::OnLeave( const int nButton )
 			pButtonNotify->Leaved( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnPush( const int nButton )
 {
 	if ( !bPressed[nButton] )
@@ -261,7 +261,7 @@ void CWindowMSButton::OnPush( const int nButton )
 			pButtonNotify->Pushed( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 {
 	if ( bPressed[nButton] )
@@ -322,18 +322,18 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 			pButtonNotify->Released( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnRightClick()
 {
 	
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::BackAnimation()
 {
 	GetScreen()->RunAnimationSequienceBack( nAnimationID );
 	nAnimationID = 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetNextState()
 {
 	if ( !pButtonGroup || pButtonGroup->TrySwitchState( this ) )
@@ -346,11 +346,11 @@ void CWindowMSButton::SetNextState()
 			pButtonNotify->StateChanged( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::NotifyStateSequenceFinished()
 {
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::OnActivatePushedState( const SGameMessage &msg )
 {
 	if ( msg.nParam1 )
@@ -358,7 +358,7 @@ void CWindowMSButton::OnActivatePushedState( const SGameMessage &msg )
 	else
 		SwitchSubState( NDb::BST_NORMAL );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::Init()
 {
 	CWindow::Init();
@@ -373,18 +373,18 @@ void CWindowMSButton::Init()
 		SetButtonGroup( pInstance->nButtonGroupID );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 CButtonGroup* CWindowMSButton::GetButtonGroup()
 {
 	return pButtonGroup;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetButtonGroup( const int nGroup )
 {
 	pButtonGroup = GetScreen()->CreateButtonGroup( pInstance->nButtonGroupID, this, GetParent() );
 	pButtonGroup->Add( this );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButton::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	if ( CWindow::OnButtonDown( vPos, nButton ) )
@@ -396,7 +396,7 @@ bool CWindowMSButton::OnButtonDown( const CVec2 &vPos, const int nButton )
 	OnPush( nButton );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButton::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( CWindow::OnButtonUp( vPos, nButton ) )
@@ -422,7 +422,7 @@ bool CWindowMSButton::OnButtonUp( const CVec2 &vPos, const int nButton )
 	}
 	return bInside;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButton::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 {
 	if ( !CWindow::OnButtonDblClk( _vPos, nButton ) )
@@ -436,7 +436,7 @@ bool CWindowMSButton::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButton::OnMouseMove( const CVec2 &vPos, const int nButton )
 {
 	if ( IsEnabled() )
@@ -454,7 +454,7 @@ bool CWindowMSButton::OnMouseMove( const CVec2 &vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::Enable( const bool bEnable )
 {
 	if ( bEnable )
@@ -466,7 +466,7 @@ void CWindowMSButton::Enable( const bool bEnable )
 		SwitchSubState( NDb::BST_DISABLED );
 	CWindow::Enable( bEnable );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetStateWithVisual( const int nState )
 {
 	BackAnimation();
@@ -482,13 +482,13 @@ void CWindowMSButton::SetStateWithVisual( const int nState )
 	else // change substate ( static appearance )
 		SwitchSubState( NDb::BST_NORMAL );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetState( const int nState )
 {
 	pInstance->nState = nState % states.size();
 	SwitchSubState( NDb::BST_NORMAL );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetTextString( const wstring &wszText )
 {
 	wszCustomText = wszText;
@@ -508,19 +508,19 @@ void CWindowMSButton::SetTextString( const wstring &wszText )
 	}*/
 	CWindow::SetTextString( wszText );
 }
-//////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetOutline( const CDBID &outlineType )
 {
 	CWindow::SetOutline( outlineType );	
 	SwitchSubStatePrivate();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SwitchSubState( const NDb::EButtonSubstateType _eSubState )
 {
 	eOrigSubState = _eSubState;
 	SwitchSubStatePrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SwitchSubStatePrivate()
 {
 	NDb::EButtonSubstateType eSubState = bEffect ? eEffectSubState : eOrigSubState;
@@ -536,14 +536,14 @@ void CWindowMSButton::SwitchSubStatePrivate()
 	
 	states[pInstance->nState].eSubState = eSubState;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetEffectSubState( const NDb::EButtonSubstateType _eSubState, bool _bEffect )
 {
 	eEffectSubState = _eSubState;
 	bEffect = _bEffect;
 	SwitchSubStatePrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowMSButton::GetState( const string &szName )
 {
 	int nCount = pInstance->buttonStates.size();
@@ -554,7 +554,7 @@ int CWindowMSButton::GetState( const string &szName )
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::SetTexture( const struct NDb::STexture *pDesc )
 {
 	for ( int i = 0; i < states.size(); ++i )
@@ -575,7 +575,7 @@ void CWindowMSButton::SetTexture( const struct NDb::STexture *pDesc )
 			states[i].rightButtonDown.pBackground->SetTexture( pDesc );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 {
 	wstring wszText;
@@ -617,14 +617,14 @@ void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 
 	CWindow::SetTextString( wszText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::Reposition( const CTRect<float> &parentRect )
 {
 	CWindow::Reposition( parentRect );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMSButton::Visit( interface IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 }
-//////////////////////////////////////////////////////////////////////////
+

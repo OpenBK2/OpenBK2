@@ -7,14 +7,14 @@
 #include "GAnimUtils.h"
 #include "DBScene.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAnimation
 {
 CBasicShare<CDBPtr<NDb::SAnimBase>, CGrannyAnimationLoader, SDBPtrHash> shareAnimations(104);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SSimpleBoneMutator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSimpleBoneMutator::AddBoneTimePose( const STime &tEnd, 
 		const CQuat &finalRot, const CVec3 &finalPos )
 {
@@ -25,13 +25,13 @@ void SSimpleBoneMutator::AddBoneTimePose( const STime &tEnd,
 	positions.push_back( pos );
 	Enable( true );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSimpleBoneMutator::Clear()
 {
 	positions.clear();
 	Enable( false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSimpleBoneMutator::GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos )
 {
 	ASSERT( IsEnabled() );
@@ -61,15 +61,15 @@ void SSimpleBoneMutator::GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos )
 	*qRot = positions[ nMaxIndex ].rot;
 	*vPos = positions[ nMaxIndex ].pos;	
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STime SSimpleBoneMutator::GetEnd() const
 {
 	return positions.back().tEnd;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSkeletonAnimator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSkeletonAnimator::CSkeletonAnimator() : bJustLoaded(false)
 {
 	// global movement
@@ -94,7 +94,7 @@ CSkeletonAnimator::CSkeletonAnimator() : bJustLoaded(false)
 	bBoneMutatorsEnabled = false;
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSkeletonAnimator::CSkeletonAnimator( const SGrannySkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
 {
 	// global movement
@@ -115,7 +115,7 @@ CSkeletonAnimator::CSkeletonAnimator( const SGrannySkeletonHandle &_skeletonH, C
 	Identity( &id );
 	SetGlobalPositionInternal( id );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime )
 {
 	pTime = _pTime;
@@ -164,7 +164,7 @@ void CSkeletonAnimator::Create( const SGrannySkeletonHandle &_skeletonH, CFuncBa
 	bGlobalPoseValid = false;
 	bSmthChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::ClearAnimVector()
 {
 	for ( int i = 0; i < animHolders.size(); ++i )
@@ -182,7 +182,7 @@ void CSkeletonAnimator::ClearAnimVector()
 	nAnimWithMovement = -1;
 	fGlobalMovementSpeed = 0.f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSkeletonAnimator::~CSkeletonAnimator()
 {
 	CheckJustLoaded();
@@ -197,7 +197,7 @@ CSkeletonAnimator::~CSkeletonAnimator()
 	if ( pGlobalPose )
 		GrannyFreeWorldPose( pGlobalPose );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // internal method to set position (without marking internal state as changed)
 void CSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &mGlobal ) 
 { 
@@ -206,26 +206,26 @@ void CSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &mGlobal )
 	value.poseGlobal[2] = mGlobal._31; value.poseGlobal[6] = mGlobal._32; value.poseGlobal[10] = mGlobal._33; value.poseGlobal[14] = mGlobal._34;
 	value.poseGlobal[3] = mGlobal._41; value.poseGlobal[7] = mGlobal._42; value.poseGlobal[11] = mGlobal._43; value.poseGlobal[15] = mGlobal._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetGlobalPosition( const SHMatrix &mGlobal ) 
 { 
 	SetGlobalPositionInternal( mGlobal );
 	bSmthChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetGlobalTransform( CFuncBase<SFBTransform> *pTransform )
 {
 	pGlobalTransform = pTransform;
 	bSmthChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetSpecialMutator( IAnimMutator *pMutator )
 {
 	pSpecMutator = pMutator;
 	bSmthChanged = true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::RecalcScalarChannels()
 {
 	//1)
@@ -286,7 +286,7 @@ void CSkeletonAnimator::RecalcScalarChannels()
 	//	divide summated value by summated weight
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::NeedUpdate()
 {
 	CheckJustLoaded();
@@ -309,7 +309,7 @@ bool CSkeletonAnimator::NeedUpdate()
 		return bNewGP || DoesWantToUpdate( pTime->GetValue() );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::Recalc()
 {
 	CheckJustLoaded();
@@ -377,7 +377,7 @@ void CSkeletonAnimator::Recalc()
 	else
 		pSpecMutator = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::ApplyGlobalMovementCorrection()
 {
 	SAnimationHolder &h = animHolders[ nAnimWithMovement ]; 
@@ -395,7 +395,7 @@ void CSkeletonAnimator::ApplyGlobalMovementCorrection()
 	value.poseGlobal[13] += hipMoveCorrection.y;
 	value.poseGlobal[14] += hipMoveCorrection.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::AddScalarTracks( SAnimationHolder *pH, granny_track_group *pTrackGroup )
 {
 	for ( int i = 0; i < pTrackGroup->VectorTrackCount; ++i )
@@ -410,7 +410,7 @@ void CSkeletonAnimator::AddScalarTracks( SAnimationHolder *pH, granny_track_grou
 		pH->scalarTracks.push_back( STrackChannelBinding(&scalarTrack, nChannelIndex) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::AddAnnotationTrack( SAnimationHolder *pH, granny_track_group *pTrackGroup )
 {
 	// FIXME: отбирать трэк по имени
@@ -420,7 +420,7 @@ void CSkeletonAnimator::AddAnnotationTrack( SAnimationHolder *pH, granny_track_g
 		pH->pAnnotationTrack = &textTrack;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::AddAnimationInternal( CSkeletonAnimator::SAnimationHolder *pH )
 {
 	SAnimationHolder &newHolder = *pH;
@@ -511,7 +511,7 @@ bool CSkeletonAnimator::AddAnimationInternal( CSkeletonAnimator::SAnimationHolde
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSkeletonAnimator::SAnimID CSkeletonAnimator::AddAnimation(
 		STime tStartTime, const SAnimHandle &h, 
 		bool bLoop, float fSpeed, float fWeight, STime tEndTime )
@@ -536,7 +536,7 @@ CSkeletonAnimator::SAnimID CSkeletonAnimator::AddAnimation(
 	else
 		return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed )
 {
 	NI_ASSERT( (animID >= 0 && animID < animHolders.size()), StrFmt("Invalid anim index \"%d\"", animID) );
@@ -550,12 +550,12 @@ void CSkeletonAnimator::SetGlobMoveAnimation( const SAnimID animID, const float 
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetGlobalAnimTransit( const STime tDuration )
 {
 	fTransitHalfDuration = tDuration * 0.001f / 2;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::FadeIn( const STime &tDuration, SAnimID id )
 {
 	Touch();
@@ -570,7 +570,7 @@ void CSkeletonAnimator::FadeIn( const STime &tDuration, SAnimID id )
 	h.tFadeDuration = tDuration;
 	GrannyEaseControlIn( h.pControl, tDuration / 1000.0f, false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::FadeOut( const STime &tDuration, SAnimID id )
 {
 	Touch();
@@ -585,14 +585,14 @@ void CSkeletonAnimator::FadeOut( const STime &tDuration, SAnimID id )
 	h.tFadeDuration = tDuration;
 	GrannyEaseControlOut( animHolders[id].pControl, tDuration / 1000.0f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::FadeOutAllAnimations( const STime &tDuration )
 {
 	Touch();
 	for ( int id = 0; id < animHolders.size(); ++id )
 		FadeOut( tDuration, id );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CSkeletonAnimator::SetSpeedFactor( const STime &tCurrent, float fSpeed, SAnimID animID )
 {
 	Touch();
@@ -607,7 +607,7 @@ void CSkeletonAnimator::FadeOutAllAnimations( const STime &tDuration )
 	h.fSpeed = fSpeed;
 	GrannySetControlSpeed( h.pControl, h.fSpeed );
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed )
 {
 	Touch();
@@ -615,7 +615,7 @@ void CSkeletonAnimator::SetSpeedFactorForAllAnimations( const STime &tCurrent, f
 		SetSpeedFactor( id, fSpeed );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CSkeletonAnimator::GetDuration( const SAnimID animID )
 {
 	if ( animID < 0 || animID >= animHolders.size() )
@@ -628,7 +628,7 @@ float CSkeletonAnimator::GetDuration( const SAnimID animID )
 	return GrannyGetControlDuration( h.pControl );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CSkeletonAnimator::GetMarkTimes( vector<float> *pResult, const SAnimID animID, const string &szMarkName )
 {
 	ASSERT( pResult );
@@ -658,7 +658,7 @@ unsigned int CSkeletonAnimator::GetMarkTimes( vector<float> *pResult, const SAni
 	return pResult->size();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CSkeletonAnimator::EnumMarks( vector<string> *pResult, const SAnimID animID )
 {
 	ASSERT( pResult );
@@ -689,7 +689,7 @@ unsigned int CSkeletonAnimator::EnumMarks( vector<string> *pResult, const SAnimI
 	return pResult->size();
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetSpeedFactor( const SAnimID animID, float fSpeed )
 {
 	if ( animID < 0 || animID >= animHolders.size() )
@@ -701,7 +701,7 @@ void CSkeletonAnimator::SetSpeedFactor( const SAnimID animID, float fSpeed )
 	h.fSpeed = fSpeed;
 	GrannySetControlSpeed( h.pControl, fSpeed );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetLocalTime( const SAnimID animID, const STime tTime )
 {
 	if ( animID < 0 || animID >= animHolders.size() )
@@ -714,7 +714,7 @@ void CSkeletonAnimator::SetLocalTime( const SAnimID animID, const STime tTime )
 	float fTime = tTime * 0.001f * fSpeed;
 	GrannySetControlRawLocalClock( h.pControl, fTime );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetEndTime( const SAnimID animID, const STime tEndTime )
 {
 	if ( animID < 0 || animID >= animHolders.size() )
@@ -729,7 +729,7 @@ void CSkeletonAnimator::SetEndTime( const SAnimID animID, const STime tEndTime )
 	else
 		GrannyFreeControlOnceUnused( h.pControl );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetLoopCount( const SAnimID animID, const int nLoopCount )
 {
 	if ( animID < 0 || animID >= animHolders.size() )
@@ -741,7 +741,7 @@ void CSkeletonAnimator::SetLoopCount( const SAnimID animID, const int nLoopCount
 	h.nLoopCount = nLoopCount;
 	GrannySetControlLoopCount( h.pControl, nLoopCount );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSkeletonAnimator::GetBoneIndex( const char *pszName )
 {
 	CheckJustLoaded();
@@ -751,7 +751,7 @@ int CSkeletonAnimator::GetBoneIndex( const char *pszName )
 	else
 		return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::GetBoneNames( vector<string> *pBoneNames )
 {
 	if ( pSkeleton )
@@ -761,7 +761,7 @@ void CSkeletonAnimator::GetBoneNames( vector<string> *pBoneNames )
 			pBoneNames->push_back( pSkeleton->Bones[i].Name );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tStart, 
 	const vector<SDesiredBoneMove> &boneMutation )
 {
@@ -771,7 +771,7 @@ void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tS
 		return;
 	SetBoneMutator( nBoneIndex, tStart, boneMutation );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStart, 
 																			 const vector<SDesiredBoneMove> &boneMutation )
 {
@@ -799,7 +799,7 @@ void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStar
 		boneMutators[ nBoneIndex ].AddBoneTimePose( tEnd, boneMutation[ i ].finalRot, boneMutation[ i ].finalPos );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::RefreshWorldPose()
 {
 	if ( bGlobalPoseValid )
@@ -809,7 +809,7 @@ void CSkeletonAnimator::RefreshWorldPose()
 		pGlobalPose = GrannyNewWorldPose( nBones );
 	GrannyBuildWorldPose( pSkeleton, 0, nBones, value.pPose, value.poseGlobal, pGlobalPose );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, SHMatrix *pRes )
 {
 	CheckJustLoaded();
@@ -825,7 +825,7 @@ bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, SHMatrix *pRes )
 	pRes->_41 = pMatrix[3]; pRes->_42 = pMatrix[7]; pRes->_43 = pMatrix[11]; pRes->_44 = pMatrix[15]; 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, CVec3 *pResTranslation )
 {
 	CheckJustLoaded();
@@ -840,7 +840,7 @@ bool CSkeletonAnimator::GetBonePosition( int nBoneIndex, CVec3 *pResTranslation 
 	pResTranslation->z = pMatrix[14]; 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::GetLocalBonePosition( const char *pszBoneName, SHMatrix *pLocalPos )
 {
 	CheckJustLoaded();
@@ -862,26 +862,26 @@ bool CSkeletonAnimator::GetLocalBonePosition( const char *pszBoneName, SHMatrix 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::GetBonePosition( const char *pszBoneName, CVec3 *pResTranslation )
 {
 	CheckJustLoaded();
 	int nBoneIndex = GetBoneIndex( pszBoneName );
 	return GetBonePosition( nBoneIndex, pResTranslation );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::GetBonePosition( const char *pszBoneName, SHMatrix *pRes )
 {
 	CheckJustLoaded();
 	int nBoneIndex = GetBoneIndex( pszBoneName );
 	return GetBonePosition( nBoneIndex, pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSkeletonAnimator::GetChannelCount()
 {
 	return scalarChannels.size();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSkeletonAnimator::GetChannelIndex( const string &szName )
 {
 	CheckJustLoaded();
@@ -904,7 +904,7 @@ int CSkeletonAnimator::GetChannelIndex( const string &szName )
 	return nChannelIndex;
 ;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CSkeletonAnimator::GetChannelValue( int nChannelIndex )
 {
 	CheckJustLoaded();
@@ -915,7 +915,7 @@ float CSkeletonAnimator::GetChannelValue( int nChannelIndex )
 
 	return 0.f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::RecoverAnimHolder( SAnimID animID )
 {
 	SAnimationHolder &h = animHolders[ animID ];
@@ -925,7 +925,7 @@ void CSkeletonAnimator::RecoverAnimHolder( SAnimID animID )
 	else if ( h.bFadeOut ) 
 		FadeOut( h.tFadeDuration, animID );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFuncBase<SFBTransform>* CSkeletonAnimator::CreateTransform( const string &szBoneName )
 {
 	CheckJustLoaded();
@@ -934,20 +934,20 @@ CFuncBase<SFBTransform>* CSkeletonAnimator::CreateTransform( const string &szBon
 		return 0;
 	return CreateTransform( nBoneIndex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFuncBase<SFBTransform>* CSkeletonAnimator::CreateTransform( int nBoneIndex )
 {
 	CheckJustLoaded();
 	return new CAddBoneFilter( this, skeletonH, nBoneIndex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::ClearAllAnimations()
 {
 	Touch();
 	ClearAnimVector();
 	FreezeAllMutators();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSkeletonAnimator::operator&( CStructureSaver &f )
 {
 	if ( f.IsReading() )
@@ -970,7 +970,7 @@ int CSkeletonAnimator::operator&( CStructureSaver &f )
 		bJustLoaded = true;
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::CheckJustLoaded()
 {
 	if ( bJustLoaded )
@@ -981,7 +981,7 @@ void CSkeletonAnimator::CheckJustLoaded()
 		bJustLoaded = false;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkeletonAnimator::FreezeAllMutators()
 {
 	if ( !bBoneMutatorsEnabled )
@@ -994,7 +994,7 @@ void CSkeletonAnimator::FreezeAllMutators()
 			SetBoneMutator( i, tStart, vector<SDesiredBoneMove>() );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkeletonAnimator::DoesWantToUpdate( const STime &t ) const
 {
 	for ( int i = 0; i < animHolders.size(); ++i )
@@ -1020,8 +1020,8 @@ bool CSkeletonAnimator::DoesWantToUpdate( const STime &t ) const
 	}
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 ISkeletonAnimator *CreateSkeletonAnimator(
 	const SGrannySkeletonHandle &modelH, CFuncBase<STime> *_pTime )
 {
@@ -1034,7 +1034,7 @@ ISkeletonAnimator *CreateSkeletonAnimator(
 	return pAnimator;
 //	return new CSkeletonAnimator( modelH, _pTime );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
 using namespace NAnimation;
 BASIC_REGISTER_CLASS( IAnimMutator )

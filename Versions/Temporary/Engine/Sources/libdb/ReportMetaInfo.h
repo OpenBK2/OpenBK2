@@ -3,18 +3,18 @@
 #include "libdb_export.h"
 
 #include "Type.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NFile
 {
 	class CFilePath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 namespace NMetaInfo
 {
 struct SStructMetaInfo;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LIBDB_EXPORT void StartMetaInfoReport( const string &szTypeName, const int nTypeID, const int nStructSize );
 LIBDB_EXPORT void FinishMetaInfoReport();
 void AddOnStack( SStructMetaInfo *pInfo );
@@ -22,10 +22,10 @@ LIBDB_EXPORT void ReportMetaInfo( const string &szName, int nPtrShift, int nSize
 LIBDB_EXPORT void ReportMetaInfo( const string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType,
 	                   int nContainedSize, NTypeDef::ETypeType eContainedType );
 void DropMetaInfo();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<string, CObj<SStructMetaInfo> > CMetaInfoMap;
 bool CreateFullMetaInfoCopy( CMetaInfoMap *pRes );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** simple types recognizing
@@ -33,7 +33,7 @@ bool CreateFullMetaInfoCopy( CMetaInfoMap *pRes );
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline NTypeDef::ETypeType GetSimpleTypeDef( int * ) { return NTypeDef::TYPE_TYPE_INT; }
 inline NTypeDef::ETypeType GetSimpleTypeDef( float * ) { return NTypeDef::TYPE_TYPE_FLOAT; }
 inline NTypeDef::ETypeType GetSimpleTypeDef( bool * ) { return NTypeDef::TYPE_TYPE_BOOL; }
@@ -54,7 +54,7 @@ inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * )
 	SInt2Type<N_KNOWN_ENUM> separator;
 	return GetSimpleTypeDefEnumOrBinary( &separator ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** structs report + pre-defined struct (Vec2-4, Quat)
@@ -62,14 +62,14 @@ inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 	inline void ReportStructMetaInfo( const string &_szName, const TYPE *pField, BYTE *pThis )
 {
 	const string szName = _szName.empty() ? _szName : _szName + ".";
 	pField->ReportMetaInfo( szName, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 	inline void ReportStructMetaInfo<CVec2>( const string &_szName, const CVec2 *pField, BYTE *pThis )
 {
@@ -99,7 +99,7 @@ template <>
 {
 	ReportStructMetaInfo( szName, &(pField->GetInternalVector()), pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** template structs (general pair, CTPoint<float>, CTRect<float>)
@@ -107,7 +107,7 @@ template <>
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 inline void ReportFirstParamPairElement( const string &_szName, const TYPE *pField, BYTE *pThis )
 {
@@ -149,7 +149,7 @@ inline void ReportStructMetaInfo<float, CTRect>( const string &_szName, const CT
 	NMetaInfo::ReportMetaInfo( szName + "x2", (BYTE*)&pField->x2 - pThis, sizeof(pField->x2), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szName + "y2", (BYTE*)&pField->y2 - pThis, sizeof(pField->y2), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CArray2D - just make it empty - can't process for now
@@ -157,7 +157,7 @@ inline void ReportStructMetaInfo<float, CTRect>( const string &_szName, const CT
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //template <>
 //inline void ReportStructMetaInfo<int, CArray2D>( const string &_szName, const CArray2D<int> *pField, BYTE *pThis )
 //{	
@@ -166,7 +166,7 @@ inline void ReportStructMetaInfo<float, CTRect>( const string &_szName, const CT
 //inline void ReportStructMetaInfo<BYTE, CArray2D>( const string &_szName, const CArray2D<BYTE> *pField, BYTE *pThis )
 //{
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** array of complex structs report
@@ -174,7 +174,7 @@ inline void ReportStructMetaInfo<float, CTRect>( const string &_szName, const CT
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 	inline void ReportStructArrayMetaInfo( const string &szName, const vector<TYPE> *pField, BYTE *pThis )
 {
@@ -184,20 +184,20 @@ template <class TYPE>
 	ReportStructMetaInfo( "", &temp, (BYTE*)&temp );
 	FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TYPE>
 	inline void ReportSimpleArrayMetaInfo( const string &szName, const vector<TYPE> *pField, BYTE *pThis )
 {
 	NMetaInfo::ReportMetaInfo( szName, (BYTE*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY, 
 		sizeof(TYPE), GetSimpleTypeDef( (TYPE*)0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct LIBDB_EXPORT STerminalClassReporter
 {
 	IXmlSaver &saver;
 	STerminalClassReporter( CResource *pRes, IXmlSaver &_saver );
 	~STerminalClassReporter();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }

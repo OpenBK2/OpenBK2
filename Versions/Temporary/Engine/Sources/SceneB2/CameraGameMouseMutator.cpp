@@ -3,7 +3,7 @@
 #include "CameraGameMouseMutator.h"
 #include "../System/Commands.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCamera
 {
 	static bool s_bGameCameraMousePitchInvert = false;
@@ -170,7 +170,7 @@ namespace NCamera
 }
 using namespace NCamera;
 REGISTER_SAVELOAD_CLASS( 0x101ACBC0, CCameraGameMouseMutator )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( GameCameraMouseMutatorCommands )
 REGISTER_VAR_EX( "game_camera_mouse_pitch_invert", NGlobal::VarBoolHandler, &s_bGameCameraMousePitchInvert, false, STORAGE_USER );
 REGISTER_VAR_EX( "game_camera_mouse_zoom_invert", NGlobal::VarBoolHandler, &s_bGameCameraMouseZoomInvert, false, STORAGE_USER );
@@ -191,4 +191,4 @@ REGISTER_VAR_EX( "game_camera_mouse_zoom_sensetivity", NGlobal::VarFloatHandler,
 REGISTER_VAR_EX( "game_camera_keyboard_zoom_sensetivity", NGlobal::VarFloatHandler, &s_fGameCameraKeyboardZoomSensetivity, 1, STORAGE_NONE );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,16 +1,16 @@
 #include "StdAfx.h"
 #include <stdio.h>
 #include "Streams.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CBitStream::nBitsMask[32] = {
 	0x01,       0x03,       0x07,       0x0F,        0x1F,       0x3F,       0x7F,       0xFF,
 	0x01FF,     0x03FF,     0x07FF,     0x0FFF,      0x1FFF,     0x3FFF,     0x7FFF,     0xFFFF,
 	0x01FFFF,   0x03FFFF,   0x07FFFF,   0x0FFFFF,    0x1FFFFF,   0x3FFFFF,   0x7FFFFF,   0xFFFFFF,
 	0x01FFFFFF, 0x03FFFFFF, 0x07FFFFFF, 0x0FFFFFFF,  0x1FFFFFFF, 0x3FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF,
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDataStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::ReadOverflow( void *pDest, unsigned int nSize )
 {
 	//SetFailed();
@@ -23,7 +23,7 @@ void CDataStream::ReadOverflow( void *pDest, unsigned int nSize )
 	pCurrent = pFileEnd;
 	throw SFileIOError( "read overflow" );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::ReadString( string &res, int nMaxSize )
 {
 	int nSize = 0;
@@ -41,7 +41,7 @@ void CDataStream::ReadString( string &res, int nMaxSize )
 	res.assign( (const char*)pData, nSize );
 	Free( pData + nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDataStream::WriteString( const string &res )
 {
 	int nSize = res.size(), nVal;
@@ -57,9 +57,9 @@ void CDataStream::WriteString( const string &res )
 	}
 	Write( res.data(), nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CBitLocker realization
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBitLocker::LockRead( CDataStream &data, unsigned int nSize )
 {
 	ASSERT(!pData);
@@ -67,7 +67,7 @@ void CBitLocker::LockRead( CDataStream &data, unsigned int nSize )
 	pBuffer = data.ReserveR( nSize );
 	Init( pBuffer, read, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBitLocker::LockWrite( CDataStream &data, unsigned int nSize )
 {
 	ASSERT(!pData);
@@ -75,7 +75,7 @@ void CBitLocker::LockWrite( CDataStream &data, unsigned int nSize )
 	pBuffer = data.ReserveW( nSize );
 	Init( pBuffer, write, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CBitLocker::ReserveRead( unsigned int nSize )
 {
 	ASSERT(pData);
@@ -90,7 +90,7 @@ void CBitLocker::LockWrite( CDataStream &data, unsigned int nSize )
 	pBitPtr += nFixup;
 	pBuffer = pNewBuf;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBitLocker::ReserveWrite( unsigned int nSize )
 {
 	ASSERT(pData);
@@ -105,34 +105,34 @@ void CBitLocker::ReserveWrite( unsigned int nSize )
 	pBitPtr += nFixup;
 	pBuffer = pNewBuf;
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFixedMemStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFixedMemStream::AllocForDirectReadAccess( unsigned int nSize )
 {
 	// this amount can not be guaranteed to be read
 	ASSERT(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFixedMemStream::AllocForDirectWriteAccess( unsigned int nSize )
 {
 	ASSERT(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFixedMemStream::DirectRead( void *pDest, unsigned int nSize )
 {
 	// this should never happen
 	ASSERT(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFixedMemStream::DirectWrite( const void *pSrc, unsigned int nSize )
 {
 	// write is forbidden
 	ASSERT(0); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMemoryStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned char *CMemoryStream::AllocBuffer( int nSize )
 {
 	unsigned char *pRes;
@@ -151,7 +151,7 @@ unsigned char *CMemoryStream::AllocBuffer( int nSize )
 		pRes = new unsigned char[ nSize ];
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::FreeBuffer()
 {
 	int nSize = pReservedEnd - pBuffer;
@@ -163,7 +163,7 @@ void CMemoryStream::FreeBuffer()
 	else
 		delete[] pBuffer;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::RealFixupBufferSize( int nNewSize )
 {
 	unsigned char *pNewBuf = AllocBuffer( nNewSize );
@@ -174,36 +174,36 @@ void CMemoryStream::RealFixupBufferSize( int nNewSize )
 	pReservedEnd = pNewBuf + nNewSize;
 	pBuffer = pNewBuf;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::FixupBufferSize( int nNewSize )
 {
 	RealFixupBufferSize( nNewSize * 2 + 64 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::AllocForDirectReadAccess( unsigned int nSize )
 {
 	RealFixupBufferSize( GetPosition() + nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // должна сохранять текущее содержимое буфера в памяти
 void CMemoryStream::AllocForDirectWriteAccess( unsigned int nSize )
 {
 	RealFixupBufferSize( GetPosition() + nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // c) чтение/запись не укладывающиеся в текущий буфер
 void CMemoryStream::DirectRead( void *pDest, unsigned int nSize )
 {
 	// should never happen
 	ASSERT(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::DirectWrite( const void *pSrc, unsigned int nSize )
 {
 	FixupBufferSize( GetPosition() + nSize );
 	RWrite( pSrc, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream::CMemoryStream() 
 { 
 	nFlags = F_CanRead | F_CanWrite; 
@@ -213,12 +213,12 @@ CMemoryStream::CMemoryStream()
 	pFileEnd = pBuffer;
 	pCurrent = pBuffer;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream::~CMemoryStream()
 {
 	FreeBuffer();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::SetSizeDiscard( int nSize )
 {
 	int nBufSize = nSize + 64;
@@ -228,7 +228,7 @@ void CMemoryStream::SetSizeDiscard( int nSize )
 	pFileEnd = pBuffer + nSize;
 	pCurrent = pBuffer;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMemoryStream::CopyMemoryStream( const CMemoryStream &src )
 {
 	int nBufSize = src.pReservedEnd - src.pBuffer;
@@ -239,21 +239,21 @@ void CMemoryStream::CopyMemoryStream( const CMemoryStream &src )
 	pCurrent = pBuffer + ( src.pCurrent - src.pBuffer );
 	nFlags = src.nFlags;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream::CMemoryStream( const CMemoryStream &src )
 {
 	CopyMemoryStream( src );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMemoryStream& CMemoryStream::operator=( const CMemoryStream &src )
 {
 	FreeBuffer();
 	CopyMemoryStream( src );
 	return *this;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CBufferedStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::FlushBuffer()
 {
 	if ( IsWasted() )
@@ -268,7 +268,7 @@ void CBufferedStream::FlushBuffer()
 		FixupSize();
 	} 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::SetNewBufferSize( unsigned int nSize )
 {
 	int nNewSize = nSize + 1024;
@@ -286,7 +286,7 @@ void CBufferedStream::SetNewBufferSize( unsigned int nSize )
 	pBuffer = pNewBuf;
 	pReservedEnd = pNewBuf + nNewSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::StartAccess( unsigned int nFileSize, unsigned int nSize )
 {
 	ClearWasted();
@@ -297,13 +297,13 @@ void CBufferedStream::StartAccess( unsigned int nFileSize, unsigned int nSize )
 	nBufferStart = 0;
 	LoadBufferForced( 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::FinishAccess()
 {
 	FlushBuffer();
 	if ( pBuffer ) delete[] pBuffer; pBuffer = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 T __Min( const T &a, const T &b ) { return a < b ? a : b; }
 //
@@ -317,7 +317,7 @@ void CBufferedStream::LoadBufferForced( int nPos )
 	pFileEnd += nBufferStart - nPos;
 	nBufferStart = nPos;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // shift buffer start to pCurrent
 void CBufferedStream::ShiftBuffer()
 {
@@ -326,7 +326,7 @@ void CBufferedStream::ShiftBuffer()
 		return;
 	LoadBufferForced( nPos ); // also shifts pCurrent to pBuffer
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // a) недостаток размера буфера для операция прямого доступа
 void CBufferedStream::AllocForDirectReadAccess( unsigned int nSize )
 {
@@ -338,17 +338,17 @@ void CBufferedStream::AllocForDirectReadAccess( unsigned int nSize )
 	else
 		ShiftBuffer();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::AllocForDirectWriteAccess( unsigned int nSize )
 {
 	SetNewBufferSize( nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::NotifyFinishDirectAccess()
 {
 	ShiftBuffer();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::Seek( unsigned int nPos )
 {
 	FixupSize();
@@ -362,7 +362,7 @@ void CBufferedStream::Seek( unsigned int nPos )
 	pCurrent = pNewCurrent;
 	ShiftBuffer();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::DirectRead( void *pDest, unsigned int nSize )
 {
 	if ( nSize > pReservedEnd - pBuffer )
@@ -378,7 +378,7 @@ void CBufferedStream::DirectRead( void *pDest, unsigned int nSize )
 	ShiftBuffer();
 	Read( pDest, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBufferedStream::DirectWrite( const void *pSrc, unsigned int nSize )
 {
 	if ( nSize > pReservedEnd - pBuffer )
@@ -395,9 +395,9 @@ void CBufferedStream::DirectWrite( const void *pSrc, unsigned int nSize )
 	ShiftBuffer();
 	Write( pSrc, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFileStream
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CFileStream::DoRead( unsigned int nPos, void *pDest, unsigned int nSize )
 {
 	ASSERT( pFile );
@@ -407,7 +407,7 @@ unsigned int CFileStream::DoRead( unsigned int nPos, void *pDest, unsigned int n
 		return 0;
 	return fread( pDest, 1, nSize, pFile );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned int CFileStream::DoWrite( unsigned int nPos, const void *pSrc, unsigned int nSize )
 {
 	ASSERT( pFile );
@@ -417,13 +417,13 @@ unsigned int CFileStream::DoWrite( unsigned int nPos, const void *pSrc, unsigned
 		return 0;
 	return fwrite( pSrc, 1, nSize, pFile );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileStream::CloseFile()
 {
 	FinishAccess();
 	if ( pFile ) fclose( pFile ); pFile = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileStream::Open( const char *pszFName, const char *pszMode, int _nFlags )
 {
 	CloseFile();
@@ -439,4 +439,4 @@ void CFileStream::Open( const char *pszFName, const char *pszMode, int _nFlags )
 	else
 		throw SFileIOError( string("error opening file ") + pszFName );//SetFailed();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

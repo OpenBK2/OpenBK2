@@ -1,6 +1,6 @@
 #pragma ONCE
 
-/////////////////////////////////////////////////////////////////////////////
+
 // run message reaction
 class CEffectorDirectRunReaction : public IUIEffector
 {
@@ -20,4 +20,4 @@ public:
 	virtual void Visit( interface IUIVisitor *pVisitor ) { }
 	virtual void Reverse();
 };
-/////////////////////////////////////////////////////////////////////////////
+

@@ -1,6 +1,6 @@
 // Window.cpp: implementation of the CWindow class.// Window.cpp: implementation of the CWindow class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "BackgroundSimpleTexture.h"
@@ -16,13 +16,13 @@
 #include "../System/Text.h"
 #include "../3DMotor/DBScene.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CHECK_DUPLICATE_CHILDREN;
 UI_EXPORT int CHECK_UI_TEXTURES_INSTANT_LOAD;
 bool s_bUICommonShowWarnings;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS(CWindow);
-//////////////////////////////////////////////////////////////////////
+
 void CUIMORegConttainer::AddRawObserver( const string &szMsgName, IGMObserver *pObserver )
 {
 	CUIFactory::RegisterMessage( szMsgName );
@@ -30,24 +30,24 @@ void CUIMORegConttainer::AddRawObserver( const string &szMsgName, IGMObserver *p
 }
 
 // SWindowCompare
-//////////////////////////////////////////////////////////////////////
+
 bool SWindowCompare::operator()( const CObj<CWindow> &o1, const CObj<CWindow> &o2 ) const
 { 
 	return o1->GetPriority() < o2->GetPriority(); 
 }
-//////////////////////////////////////////////////////////////////////
+
 int SAnimationIDHash::operator()( const CWindowAnimationID &p ) const
 {
 	SDefaultPtrHash h;
 	return p.first + h( p.second );
 }
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// CWindow
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////
+
+// CWindow
+
+
+
+
 CWindow::CWindow() : pClickNotify( 0 ), 
 	vScreenPos( VNULL2 ), bIsModal ( false ), bFocused( false ),
 	bDelayChildRemove( false ),
@@ -57,7 +57,7 @@ CWindow::CWindow() : pClickNotify( 0 ),
 {
 	delayedReposition.second = false;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindow::operator&( IBinSaver &saver )
 {
 //	saver.Add( 1, &pTextString );
@@ -85,13 +85,13 @@ int CWindow::operator&( IBinSaver &saver )
 	saver.Add( 28, &wszCustomTooltip );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::AfterLoad()
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
 		drawOrder[i]->AfterLoad();
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindow::RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const string &szCommanEffect, 
 																			 const bool bWaitOnGraphics, const bool bForward )
 {
@@ -108,7 +108,7 @@ int CWindow::RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const st
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindow::GetOptimalWidth() const
 {
 /*	if ( !pTextString ) 
@@ -119,7 +119,7 @@ int CWindow::GetOptimalWidth() const
 		return 0;
 	return pPlacedText->GetOptimalWidth();
 }
-//////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetOutline( const CDBID &_outlineType )
 {
 	CTRect<int> rc = GetPlacement();
@@ -127,7 +127,7 @@ void CWindow::SetOutline( const CDBID &_outlineType )
 	SetPlacement( rc.left-vAdd.x/4, rc.top-vAdd.y/4, rc.Width() + vAdd.x/2, rc.Height() + vAdd.y/2, EWPF_ALL );
 	nOutlineType = _outlineType;	
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTextString( const wstring &szText )
 {
 /*	NI_ASSERT( pTextString != 0, "attempt to set text to window that doesn't allow it" );
@@ -139,7 +139,7 @@ void CWindow::SetTextString( const wstring &szText )
 		pPlacedText->SetText( szText );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 const wchar_t * CWindow::GetTextString() const 
 { 
 //	NI_ASSERT( pTextString, "text string not found" );
@@ -150,7 +150,7 @@ const wchar_t * CWindow::GetTextString() const
 		return L"";
 	return pPlacedText->GetText().c_str();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::GameMessageSink( const struct SGameMessage &msg, int nMessageType )
 {
 	NI_ASSERT( nMessageType < pWindowStats->gameMessageReactions.size(), "registed on unknown message and recieved it" );
@@ -165,7 +165,7 @@ void CWindow::GameMessageSink( const struct SGameMessage &msg, int nMessageType 
 													pWindowStats->gameMessageReactions[nMessageType].bWaitVisual,
 													pWindowStats->gameMessageReactions[nMessageType].bForward );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::RegisterObservers()
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
@@ -175,21 +175,21 @@ void CWindow::RegisterObservers()
 	for ( int i = 0; i < pWindowStats->gameMessageReactions.size(); ++i )
 		AddObserver( pWindowStats->gameMessageReactions[i].szGameMessage, &CWindow::GameMessageSink, i );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::SetBackground( IWindowPart *_pBackground )
 {	
 	pBackground = _pBackground; 
 	if ( pBackground )
 		pBackground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::SetForeground( IWindowPart *_pForeground )
 {
 	pForeground = _pForeground;
 	if ( pForeground )
 		pForeground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindow::GetDBFormatText() const
 {
 	static wstring szEmpty;
@@ -202,7 +202,7 @@ const wstring& CWindow::GetDBFormatText() const
 
 	return szEmpty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindow::GetDBInstanceText() const
 {
 	static wstring szEmpty;
@@ -215,12 +215,12 @@ const wstring& CWindow::GetDBInstanceText() const
 		
 	return szEmpty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CWindow::GetDBText() const
 {
 	return GetDBFormatText() + GetDBInstanceText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SWindowPlacement* CWindow::GetDBTextPlacement() const
 {
 	if ( const NDb::SForegroundTextString *pForeground = GetInstance()->pTextString )	
@@ -230,13 +230,13 @@ const NDb::SWindowPlacement* CWindow::GetDBTextPlacement() const
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTextPlacement( const struct NDb::SWindowPlacement &placement )
 {
 	if ( pPlacedText )
 		pPlacedText->SetPlacement( placement );
 }
-//////////////////////////////////////////////////////////////////////
+
 interface IScreen* CWindow::GetScreen()
 {
 	if ( GetParent() == 0 )
@@ -249,7 +249,7 @@ interface IScreen* CWindow::GetScreen()
 	else 
 		return GetParent()->GetScreen();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetFocus( const bool bFocus )
 {
 	if ( bFocus && !IsFocused() )
@@ -265,7 +265,7 @@ void CWindow::SetFocus( const bool bFocus )
 
 	bFocused = bFocus;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindow* CWindow::FindFocusedWindow()
 {
 	// если не находимся в ветке с фокусированным окном, ищем его по пути к корню
@@ -289,14 +289,14 @@ CWindow* CWindow::FindFocusedWindow()
 	
 	return pWnd->bFocused ? pWnd : 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::RemoveAnyFocus()
 {
 	CWindow *pWnd = FindFocusedWindow();
 	if ( pWnd )
 		pWnd->SetFocus( false );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::CheckRemoveFocus( CWindow *pClickedWnd )
 {
 	if ( !pClickedWnd )
@@ -321,21 +321,21 @@ void CWindow::CheckRemoveFocus( CWindow *pClickedWnd )
 
 	pFocused->SetFocus( false );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::ProcessFocused( CWindow *pChild )
 {
 	pFocusedChild = pChild;
 	if ( GetParent() )
 		GetParent()->ProcessFocused( this );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::ProcessUnfocused( CWindow *pChild )
 {
 	pFocusedChild = 0;
 	if ( GetParent() )
 		GetParent()->ProcessUnfocused( this );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindow* CWindow::GetRoot()
 {
 	CWindow *pWnd = this;
@@ -345,7 +345,7 @@ CWindow* CWindow::GetRoot()
 	}
 	return pWnd;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::OnChangeVisibility( bool bShow )
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
@@ -354,7 +354,7 @@ void CWindow::OnChangeVisibility( bool bShow )
 		pWnd->OnChangeVisibility( bShow );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::ShowWindow( const bool bShow )
 {
 	bool bVisible = IsVisible();
@@ -373,7 +373,7 @@ void CWindow::ShowWindow( const bool bShow )
 		OnChangeVisibility( bShow );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindow::IsVisible() const 
 { 
 	if ( GetInstance()->bVisible )
@@ -386,27 +386,27 @@ bool CWindow::IsVisible() const
 	else
 		return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindow::GetPriority() const 
 { 
 	return GetInstance()->nPriority; 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetPriority( int n )
 {
 	GetInstance()->nPriority = n;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string& CWindow::GetName() const 
 { 
 	return GetInstance()->szName; 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetName( const string &_szName )
 {
 	GetInstance()->szName = _szName;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pWindowStats = checked_cast<const NDb::SWindow*>( _pDesc );
@@ -438,7 +438,7 @@ void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		GetInstance()->placement.horAllign.Merge( pShared->placement.horAllign.Get() );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::Init()
 {
 //	if ( pTextString )
@@ -456,7 +456,7 @@ void CWindow::Init()
 	if ( !pWindowStats->bEnabled )
 		Enable( false );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::Reposition( const CTRect<float> &parentRect )
 {
 	if ( !IsVisible() )
@@ -496,7 +496,7 @@ void CWindow::Reposition( const CTRect<float> &parentRect )
 	
 	RepositionChildren();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::RepositionChildren( IWindow *_pWindow )
 {
 	CWindow * pWindow = dynamic_cast<CWindow*>( _pWindow );
@@ -513,7 +513,7 @@ void CWindow::RepositionChildren( IWindow *_pWindow )
 			drawOrder[i]->Reposition( rCurrent );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const
 {
 	if ( pX )
@@ -525,7 +525,7 @@ void CWindow::GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const
 	if ( pSizeY )
 		*pSizeY = GetInstance()->placement.size.Get().y;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTRect<int> CWindow::GetPlacement() const
 {
 	int x = GetInstance()->placement.position.Get().x;
@@ -534,7 +534,7 @@ CTRect<int> CWindow::GetPlacement() const
 	int h = GetInstance()->placement.size.Get().y;
 	return CTRect<int>( x, y, x+w, y+h );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::FillWindowRect( CTRect<float> *pRect ) const
 {
 	pRect->top = vScreenPos.y;
@@ -542,18 +542,18 @@ void CWindow::FillWindowRect( CTRect<float> *pRect ) const
 	pRect->right = GetInstance()->placement.size.Get().x + vScreenPos.x;
 	pRect->bottom = GetInstance()->placement.size.Get().y + vScreenPos.y;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTRect<float> CWindow::GetWindowRect() const
 {
 	const NDb::SWindow* pInstance = GetInstance();
 	return CTRect<float>( vScreenPos.x, vScreenPos.y, pInstance->placement.size.Get().x + vScreenPos.x, pInstance->placement.size.Get().y + vScreenPos.y );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetPlacement( const CTRect<int> &rc, const DWORD flags )
 {
 	SetPlacement( rc.x1, rc.y1, rc.Width(), rc.Height(), flags );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags ) 
 {
 	if ( flags & EWPF_POS_X )
@@ -583,7 +583,7 @@ void CWindow::SetPlacement( const float x, const float y, const float sizeX, con
 	RepositionChildren();
 }
 
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::AddChild( IWindow *pWnd, bool bDoReposition )
 {
 	if ( !pWnd )
@@ -602,7 +602,7 @@ void CWindow::AddChild( IWindow *pWnd, bool bDoReposition )
 	if ( bDoReposition )
 		RepositionChildren( pWnd );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::RemoveChild( IWindow *_pChild )
 {
 	CWindow *pChild = dynamic_cast<CWindow*>(_pChild);
@@ -618,13 +618,13 @@ void CWindow::RemoveChild( IWindow *_pChild )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::RemoveChild( const string &szChildName )
 {
 	CWindow *pChild = dynamic_cast<CWindow*>(GetChild( szChildName, false ));
 	RemoveChild( pChild );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::Close()
 {
 	if ( GetParent() )
@@ -632,7 +632,7 @@ void CWindow::Close()
 	else
 		ASSERT( 0 );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindow::CheckNamedChildrenCount( const string &szName, bool bRecursive )
 {
 	int nCount = 0;
@@ -646,12 +646,12 @@ int CWindow::CheckNamedChildrenCount( const string &szName, bool bRecursive )
 	//NI_ASSERT( nCount <= 1, StrFmt( "duplicate children name: %s", szName.c_str() ) );
 	return nCount;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindow::GetNumChildren()
 {
 	return drawOrder.Size();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow *CWindow::GetChild( int nIndex )
 {
 	if( nIndex<0 || nIndex > drawOrder.Size()-1 )
@@ -661,7 +661,7 @@ IWindow *CWindow::GetChild( int nIndex )
 	}
 	return drawOrder[nIndex];
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow* CWindow::GetChild( const string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() ) 
@@ -696,7 +696,7 @@ IWindow* CWindow::GetChild( const string &_szName, const bool bRecursive )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow* CWindow::GetVisibleChild( const string &_szName, const bool bRecursive )
 {
 	if ( _szName.empty() ) 
@@ -718,7 +718,7 @@ IWindow* CWindow::GetVisibleChild( const string &_szName, const bool bRecursive 
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow* CWindow::GetChild( const int _nTypeID, const int _nID, const bool bRecursive )
 {
 	for ( int i = 0; i < drawOrder.Size(); ++i )
@@ -738,7 +738,7 @@ IWindow* CWindow::GetChild( const int _nTypeID, const int _nID, const bool bRecu
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 CWindow* CWindow::GetDeepChild( const string &_szName )
 {
 	CWindow *pRet = dynamic_cast<CWindow*>(GetChild( _szName, false ));
@@ -752,14 +752,14 @@ CWindow* CWindow::GetDeepChild( const string &_szName )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::SetParent( CWindow *_pParent )
 {
 	if ( pParent && pParent->IsRefValid() )
 		pParent->RemoveChild( this );
 	pParent = _pParent;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	if ( !IsEnabled() )
@@ -785,7 +785,7 @@ bool CWindow::OnButtonDown( const CVec2 &vPos, const int nButton )
 	
 	return pressed[nButton] != 0;//bHandledByChild;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	if ( !IsEnabled() )
@@ -805,7 +805,7 @@ bool CWindow::OnButtonUp( const CVec2 &vPos, const int nButton )
 		pressed[nButton] = 0;
 	return bWasPressed;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::Enable( const bool bEnable )
 { 
 	for ( int nButton = 0; nButton < pressed.size(); ++nButton )
@@ -816,7 +816,7 @@ void CWindow::Enable( const bool bEnable )
 	pressed.clear();
 	GetInstance()->bEnabled = bEnable; 
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 {
 	if ( !IsEnabled() )
@@ -832,7 +832,7 @@ bool CWindow::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::OnMouseMove( const CVec2 &_vPos,  const int nMouseState )
 {
 	if ( MSTATE_FREE == nMouseState )		// no button pressed
@@ -874,19 +874,19 @@ bool CWindow::OnMouseMove( const CVec2 &_vPos,  const int nMouseState )
 	return false;
 }
 /*
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::OnChar( const wchar_t chr )
 {
 	if ( pFocused )
 		pFocused->OnChar( chr );
 }
 */
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::IsPickable() const 
 {
 	return IsVisible() && !IsTransparent();
 }
-//////////////////////////////////////////////////////////////////////
+
 CWindow* CWindow::PickInternal( const CVec2 &vPos, const bool bRecursive )
 {
 	if ( !IsPickable() )
@@ -910,14 +910,14 @@ CWindow* CWindow::PickInternal( const CVec2 &vPos, const bool bRecursive )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow *CWindow::Pick( const CVec2 &vPos, const bool bRecursive )
 {
 	CVec2 vPosOnScreen;
 	ScreenToVirtual( vPos, &vPosOnScreen );
 	return PickInternal( vPosOnScreen, bRecursive );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow *CWindow::DemandTooltip()
 {
 	if ( pCustomTooltip )
@@ -943,7 +943,7 @@ IWindow *CWindow::DemandTooltip()
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindow::GetDBTooltipStr() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(GetInstance()->,Tooltip) )
@@ -952,30 +952,30 @@ const wstring& CWindow::GetDBTooltipStr() const
 	static wstring wszEmpty;
 	return wszEmpty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTooltip( const wstring &wszTooltip )
 {
 	pCustomTooltip = 0;
 	// can't create tooltip window now because pScreen might be zero, create tooltip later
 	wszCustomTooltip = wszTooltip;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTooltip( IWindow *pTooltipWindow )
 {
 	wszCustomTooltip = L"";
 	pCustomTooltip = pTooltipWindow;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTooltipIDForMLHandler( int nID )
 {
 	nIDForMLHandler = nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindow::GetTooltipIDForMLHandler() const
 {
 	return nIDForMLHandler;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::Visit( interface IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
@@ -1018,7 +1018,7 @@ void CWindow::Visit( interface IUIVisitor *pVisitor )
 		pForeground->Visit( pVisitor );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::IsInside( const CVec2 &vPos ) const
 {
 	return (vPos.x >= vScreenPos.x && 
@@ -1027,7 +1027,7 @@ bool CWindow::IsInside( const CVec2 &vPos ) const
 					vPos.y < vScreenPos.y + GetInstance()->placement.size.Get().y &&
 					IsActiveArea( vPos ));
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::IsActiveArea( const CVec2 &vPos ) const
 {
 	const NDb::SWindowShared *pShared = GetSharedDesc();
@@ -1038,7 +1038,7 @@ bool CWindow::IsActiveArea( const CVec2 &vPos ) const
 		return CP_OUTSIDE != ClassifyPolygon( pShared->activeArea, vPos - vScreenPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::DelayedChildRemove()
 {
 	for ( int i = 0; i < removedChildren.size(); ++i )
@@ -1046,7 +1046,7 @@ void CWindow::DelayedChildRemove()
 	removedChildren.clear();
 	bDelayChildRemove = false;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::ProcessEvent( const struct SGameMessage &msg )
 {
 	//DEBUG{
@@ -1104,7 +1104,7 @@ bool CWindow::ProcessEvent( const struct SGameMessage &msg )
 	
 	return bIsModal && msg.mMessage.cType !=  NInput::CT_UNKNOWN;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindow::IsPointInsideOfChildren( const CVec2 &vPoint )
 {
 	for ( int i = drawOrder.Size() - 1; i >= 0; --i )
@@ -1116,7 +1116,7 @@ bool CWindow::IsPointInsideOfChildren( const CVec2 &vPoint )
 	}
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindow::ProcessMessage( const struct SBUIMessage &msg )
 {
 	HM_TYPE::iterator it = handleMap.find( msg.szMessageID );
@@ -1137,7 +1137,7 @@ bool CWindow::ProcessMessage( const struct SBUIMessage &msg )
 	return bRes;	
 }
 
-//////////////////////////////////////////////////////////////////////
+
 void CWindow::InitStatic()
 {
 	//REGISTER_MESSAGE_HANDLER(CWindow,ShowWindow,UI_SHOW_WINDOW)
@@ -1145,26 +1145,26 @@ void CWindow::InitStatic()
 	handleMap["UI_SET_FOCUS"] = CUIMessageHandler( CWindow::SetFocus );
 	handleMap["UI_ENABLE_WINDOW"] = CUIMessageHandler( CWindow::Enable );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::CopyBackground( const IWindow *pSrcWnd )
 {
 	SetBackground( (dynamic_cast<const CWindow *>(pSrcWnd))->pBackground );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetTexture( const struct NDb::STexture *_pDesc )
 {
 	NI_ASSERT( pBackground != 0, StrFmt( "Window \"%s\" has no background. Cannot change texture.", GetInstance()->szName ) );
 	if ( pBackground != 0 )
 		pBackground->SetTexture( _pDesc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SWindowContext *CWindow::GetContext()
 {
 	if ( !pContext )
 		pContext = new SWindowContextCommon();
 	return pContext;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnLMouseDown( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1173,14 +1173,14 @@ bool CWindow::MsgOnLMouseDown( const struct SGameMessage &msg )
 		return false;
 	return OnButtonDown( vPos, MSTATE_BUTTON1 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnLMouseUp( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	return OnButtonUp( vPos, MSTATE_BUTTON1 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnLMouseDblClick( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1189,7 +1189,7 @@ bool CWindow::MsgOnLMouseDblClick( const struct SGameMessage &msg )
 		return false;
 	return OnButtonDblClk( vPos, MSTATE_BUTTON1 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnRMouseDown( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1198,14 +1198,14 @@ bool CWindow::MsgOnRMouseDown( const struct SGameMessage &msg )
 		return false;
 	return OnButtonDown( vPos, MSTATE_BUTTON2 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnRMouseUp( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	return OnButtonUp( vPos, MSTATE_BUTTON2 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnRMouseDblClick( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1215,7 +1215,7 @@ bool CWindow::MsgOnRMouseDblClick( const struct SGameMessage &msg )
 	OnButtonDblClk( vPos, MSTATE_BUTTON2 );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindow::MsgOnMouseMove( const struct SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1224,17 +1224,17 @@ bool CWindow::MsgOnMouseMove( const struct SGameMessage &msg )
 		return false;
 	return OnMouseMove( vPos, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetFadeValue( float fValue )
 {
 	fFadeValue = Clamp( fValue, 0.0f, 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::SetInternalFadeValue( float fValue )
 {
 	fInternalFadeValue = fValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow::VisitText( interface IUIVisitor *pVisitor )
 {
 	if ( pPlacedText )
@@ -1244,7 +1244,7 @@ void CWindow::VisitText( interface IUIVisitor *pVisitor )
 		pPlacedText->Visit( pVisitor );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UI_EXPORT void CheckInstantLoadTexture( const NDb::STexture *pTexture )
 {
 	if ( pTexture )
@@ -1253,7 +1253,7 @@ UI_EXPORT void CheckInstantLoadTexture( const NDb::STexture *pTexture )
 			StrFmt( "UI should use instant load of textures, dbid = \"%s\"", pTexture->GetDBID().ToString().c_str() ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(UI_Window)
 
 REGISTER_VAR_EX( "check_duplicate_children", NGlobal::VarIntHandler, &CHECK_DUPLICATE_CHILDREN, 0, STORAGE_NONE );
@@ -1261,4 +1261,4 @@ REGISTER_VAR_EX( "check_ui_textures_instant_load", NGlobal::VarIntHandler, &CHEC
 REGISTER_VAR_EX( "ui_common_show_warnings", NGlobal::VarBoolHandler, &s_bUICommonShowWarnings, false, STORAGE_NONE );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

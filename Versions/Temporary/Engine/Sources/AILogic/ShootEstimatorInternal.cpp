@@ -20,23 +20,23 @@ REGISTER_SAVELOAD_CLASS( 0x1108D4E0, CSoldierShootEstimator );
 REGISTER_SAVELOAD_CLASS( 0x1108D4E1, CPlaneDeffensiveFireShootEstimator );
 REGISTER_SAVELOAD_CLASS( 0x1108D4E2, CPlaneShturmovikShootEstimator );
 REGISTER_SAVELOAD_CLASS( 0x11144380, CShootEstimatorSupportAAGun );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern CUnits units;
 extern CScanLimiter theScanLimiter;
 
 extern NAI::CTimeCounter timeCounter;
 extern CSupremeBeing theSupremeBeing;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											 CTankShootEstimator												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CTankShootEstimator );
 BASIC_REGISTER_CLASS( IShootEstimator );
 //BASIC_REGISTER_CLASS( CPlaneDeffensiveFireShootEstimator );
 //BASIC_REGISTER_CLASS( CPlaneShturmovikShootEstimator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F( const float fHPPercent, const float fT0, const float fT1, const float fT2, const float fPrice )
 {
 	static const float F_LIMIT_TIME = 1000.0f;	
@@ -54,7 +54,7 @@ const float F( const float fHPPercent, const float fT0, const float fT1, const f
 		fAlphaKill * fT1 +
 		fPrice * fAlphaPrice;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner ) 
 : pOwner( _pOwner ), fBestRating( -1.0f ), bDamageToCurTargetUpdated( false ), nBestGun( -1 )
 {
@@ -79,7 +79,7 @@ CTankShootEstimator::CTankShootEstimator( CAIUnit *_pOwner )
 	
 	pMosinStats = theUnitCreation.GetMosinStats();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwner, CBasicGun *pGun )
 {
 	const WORD wUnitDir = pOwner->GetDirection();		
@@ -125,7 +125,7 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTankShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
 {
 	pCurTarget = pCurEnemy;
@@ -138,7 +138,7 @@ void CTankShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, 
 	if ( IsValidObj( pCurTarget ) )
 		AddUnit( pCurTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CTankShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const
 {
 	float fTimeToGo = 0;
@@ -157,7 +157,7 @@ const float CTankShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, con
 	return
 		F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pStats->fPrice );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CTankShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	float fTimeToGo = 0;
@@ -193,7 +193,7 @@ const float CTankShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) c
 	return
 		F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pEnemy->GetStats()->fPrice );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUnit *pEnemy )
 {
 	float fBestTime = 0;
@@ -345,7 +345,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 {
 	theScanLimiter.TargetScanning( pOwner->GetStats()->etype );
@@ -411,26 +411,26 @@ void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit* CTankShootEstimator::GetBestUnit() const
 {
 	return pBestUnit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CTankShootEstimator::GetBestGun() const
 {
 	return pBestGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CTankShootEstimator::GetNumberOfBestGun() const
 {
 	return nBestGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											 CSoldierShootEstimator											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CSoldierShootEstimator::N_GOOD_NUMBER_ATTACKING_GRENADES = 6;
 
 CSoldierShootEstimator::CSoldierShootEstimator( CAIUnit *_pOwner ) 
@@ -441,7 +441,7 @@ CSoldierShootEstimator::CSoldierShootEstimator( CAIUnit *_pOwner )
 { 
 	pMosinStats = theUnitCreation.GetMosinStats();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
 {
 	pCurTarget = pCurEnemy;
@@ -456,7 +456,7 @@ void CSoldierShootEstimator::Reset( CAIUnit *pCurEnemy, const bool bDamageUpdate
 	if ( IsValidObj( pCurTarget ) )
 		AddUnit( pCurTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CSoldierShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	float fTimeToGo = fabs( pOwner->GetCenter() - pEnemy->GetCenter() ) / pOwner->GetStats()->fSpeed;
@@ -485,7 +485,7 @@ const float CSoldierShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun 
 	return
 		F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pEnemy->GetStats()->fPrice );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CSoldierShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const
 {
 	float fTimeToGo = 0;
@@ -504,7 +504,7 @@ const float CSoldierShootEstimator::GetRating( const SUnitBaseRPGStats *pStats, 
 	return
 		F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pStats->fPrice );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUnit *pEnemy )
 {
 	float fBestTime = 0;
@@ -610,17 +610,17 @@ void CSoldierShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAI
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierShootEstimator::SetGrenadeAutocast( bool bOn )
 {
 	bUseGrenadeAutocast = bOn;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierShootEstimator::SetGrenadeFixed( bool bOn )
 {
 	bUseGrenadeFixed = bOn;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierShootEstimator::AddUnit( CAIUnit *pEnemy )
 {
 	theScanLimiter.TargetScanning( pOwner->GetStats()->etype );	
@@ -711,26 +711,26 @@ void CSoldierShootEstimator::AddUnit( CAIUnit *pEnemy )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit* CSoldierShootEstimator::GetBestUnit() const
 {
 	return pBestUnit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CSoldierShootEstimator::GetBestGun() const
 {
 	return pBestGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CSoldierShootEstimator::GetNumberOfBestGun() const
 {
 	return nBestGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CPlaneDeffensiveFireShootEstimator								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CPlaneDeffensiveFireShootEstimator::CalcTimeToOpenFire( class CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	if ( pGun->IsInShootCone( pEnemy->GetCenterPlain() ) )
@@ -742,7 +742,7 @@ const float CPlaneDeffensiveFireShootEstimator::CalcTimeToOpenFire( class CAIUni
 		return 100000;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CPlaneDeffensiveFireShootEstimator::CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	const float fTimeToGo = CalcTimeToOpenFire( pEnemy, pGun );
@@ -770,18 +770,18 @@ const float CPlaneDeffensiveFireShootEstimator::CalcRating( CAIUnit *pEnemy, CBa
 	return
 		F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pEnemy->GetStats()->fPrice );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneDeffensiveFireShootEstimator::SetGun( CBasicGun *_pGun )
 {
 	pGun = _pGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneDeffensiveFireShootEstimator::CPlaneDeffensiveFireShootEstimator( class CAIUnit *pOwner )
 : pOwner( pOwner ), fBestRating( -1.0f ), bDamageToCurTargetUpdated( false )
 {
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneDeffensiveFireShootEstimator::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden )
 {
 	pCurTarget = pCurEnemy;
@@ -791,7 +791,7 @@ void CPlaneDeffensiveFireShootEstimator::Reset( class CAIUnit *pCurEnemy, const 
 	if ( IsValidObj( pCurTarget ) )
 		AddUnit( pCurTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
 {
 	// enemy plane must be in celling of deffensive fire
@@ -820,33 +820,33 @@ void CPlaneDeffensiveFireShootEstimator::AddUnit( class CAIUnit *pEnemy )
 		fBestRating = fTempRating;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit* CPlaneDeffensiveFireShootEstimator::GetBestUnit() const
 {
 	return pCurTarget;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CPlaneDeffensiveFireShootEstimator::GetBestGun() const
 {
 	NI_ASSERT( false, "wrong call");
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CPlaneDeffensiveFireShootEstimator::GetNumberOfBestGun() const
 {
 	NI_ASSERT( false, "wrong call");
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CPlaneShturmovikShootEstimator							*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneShturmovikShootEstimator::CPlaneShturmovikShootEstimator( class CAIUnit *pOwner )
 : pOwner( pOwner ), vCenter( VNULL2 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikShootEstimator::Reset( class CAIUnit *_pCurEnemy, const bool bDamageUpdated, const DWORD dwForbidden )
 {
 	bestAviation.Reset();
@@ -859,7 +859,7 @@ void CPlaneShturmovikShootEstimator::Reset( class CAIUnit *_pCurEnemy, const boo
 	}
 	buildings.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 {
 	if ( !pTry || !pTry->IsRefValid() || !pTry->IsAlive() ) return;
@@ -922,7 +922,7 @@ void CPlaneShturmovikShootEstimator::AddUnit( CAIUnit *pTry )
 	else
 		CollectTarget( &bestForGuns, pTry, dwPossibleGuns );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit* CPlaneShturmovikShootEstimator::GetBestUnit() const
 {
 	if ( bestForGuns.pTarget )
@@ -932,7 +932,7 @@ class CAIUnit* CPlaneShturmovikShootEstimator::GetBestUnit() const
 	else
 		return bestAviation.pTarget;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 {
 	float fRating = 0;
@@ -978,14 +978,14 @@ void CPlaneShturmovikShootEstimator::CalcBestBuilding()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CPlaneShturmovikShootEstimator::CalcTimeToOpenFire( CAIUnit *pEnemy ) const
 {
 	const WORD wDir = pOwner->GetDirection();
 	const WORD wDirToEnemy = GetDirectionByVector( pEnemy->GetCenterPlain() - pOwner->GetCenterPlain() );
 	return float( DirsDifference( wDir, wDirToEnemy ) ) / 65535.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CPlaneShturmovikShootEstimator::CalcRating( CAIUnit *pEnemy, const DWORD dwPossibleGuns ) const
 {
 	const float fEnemyKillUsSpeed = pEnemy->GetKillSpeed( pOwner );
@@ -997,7 +997,7 @@ const float CPlaneShturmovikShootEstimator::CalcRating( CAIUnit *pEnemy, const D
 
 	return fKillEnemy == 0 ? 0 : ( fEnemyKillUsSpeed * 100000 + ( 5 * fKillEnemy - fKillEnemyByOthers + fPrice ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimator::STargetInfo * pInfo, class CAIUnit *pTarget, const DWORD dwPossibleGuns )
 {
 	const float fRating = CalcRating( pTarget, dwPossibleGuns );
@@ -1008,11 +1008,11 @@ void CPlaneShturmovikShootEstimator::CollectTarget( CPlaneShturmovikShootEstimat
 		pInfo->fRating = fRating;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											 CShootEstimatorForObstacles*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CShootEstimatorForObstacles::AddObstacle( interface IObstacle *pObstacle )
 {
 	// уничтожать только вражеские препятствия
@@ -1044,21 +1044,21 @@ bool CShootEstimatorForObstacles::AddObstacle( interface IObstacle *pObstacle )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IObstacle * CShootEstimatorForObstacles::GetBest() const
 {
 	return pBest;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											 CShootEstimatorForObstacles*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CShootEstimatorSupportAAGun::CShootEstimatorSupportAAGun ( class CAIUnit *_pOwner )
 : pOwner( _pOwner ), fBestRating( 0.f ), dwForbidden( 0 ), bDamageToCurTargetUpdated ( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootEstimatorSupportAAGun::Reset( class CAIUnit *pCurEnemy, const bool bDamageUpdated, const DWORD _dwForbidden )
 {
 	pBestTarget = pCurEnemy;
@@ -1069,7 +1069,7 @@ void CShootEstimatorSupportAAGun::Reset( class CAIUnit *pCurEnemy, const bool bD
 	if ( IsValidObj( pBestTarget ) )
 		AddUnit( pBestTarget );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
 {
 	const int nGuns = pOwner->GetNGuns();
@@ -1092,7 +1092,7 @@ void CShootEstimatorSupportAAGun::AddUnit( class CAIUnit *pEnemy )
 		fBestRating = fTempRating;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CShootEstimatorSupportAAGun::CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	const float fTimeToGo = fabs( pEnemy->GetCenterPlain() - pOwner->GetGunCenter( pGun->GetCommonGunNumber(), pGun->GetPlatform() ) ) / pEnemy->GetSpeed();

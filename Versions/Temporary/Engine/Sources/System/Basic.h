@@ -4,7 +4,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // single thread version
 // базовые классы для системы подсчета ссылок на объекты с целью упрощения memory management
 //
@@ -17,14 +17,14 @@
 // - при использовании указателей на forward declared classes
 // Нельзя переопределять operator new, так как удалятся объекты будут с помощью стандартного 
 // operator`a delete (из-за delete this)
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma warning(disable:4250)
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define TRACK_OBJECTS_STATISTICS
 // Если включить этот макрос и вызвать PrintObjectsStatistics(), то в Output будет выведена
 // статистика для всех типов объектов, производных от CObjectBase, существующих в текущий момент.
 // Функция PrintObjectsStatistics() вызывается по нажатию клавиш Ctrl+Shift+M
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CObjectBase;
 #ifdef TRACK_OBJECTS_STATISTICS
 	void RegisterInObjectsSet( CObjectBase * );
@@ -33,7 +33,7 @@ class CObjectBase;
 #else
 	inline void PrintObjectsStatistics() {}
 #endif
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class SYSTEM_EXPORT CObjectBase
 {
 private:
@@ -119,11 +119,11 @@ public:
 	friend struct CObjectBase::SRefO;
 	friend struct CObjectBase::SRefM;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // macro that helps to make CFundament derivative to be serializable
 // and makes sure that class will not be copied or destroyed via obj references
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // macro that helps to create neccessary members for proper operation of refcount system
 // if class needs special destructor, use CFundament
 #define OBJECT_BASIC_METHODS(classname)                                              \
@@ -146,14 +146,14 @@ protected:                                                                      
 #define BASIC_REGISTER_CLASS(classname) \
 template<> __declspec(dllexport) CObjectBase* CastToObjectBaseImpl<classname >( classname *p, void* ) { return p; }  \
 template<> __declspec(dllexport) classname* CastToUserObjectImpl<classname >( CObjectBase *p, classname*, void* ) { return dynamic_cast<classname*>( p ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, void* );
 template<class TUserObj> CObjectBase* CastToObjectBaseImpl( TUserObj *p, CObjectBase* ) { return p; }
 template<class TUserObj> TUserObj* CastToUserObjectImpl( CObjectBase *p, TUserObj*, void * );
 template<class TUserObj> TUserObj* CastToUserObjectImpl( CObjectBase *p, TUserObj*, CObjectBase* ) { return dynamic_cast<TUserObj*>( p ); }
 template<class TUserObj> inline CObjectBase* CastToObjectBase( TUserObj *p ) { return CastToObjectBaseImpl( p, p ); }
 template<class TUserObj> inline TUserObj* CastToUserObject( CObjectBase *p, TUserObj *pu ) { return CastToUserObjectImpl( p, pu, pu ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TObject - base object for reference counting, TUserObj - user object name
 // TRef - struct with AddRef/DecRef/Release methods for refcounting to use
 template< class TUserObj, class TRef>
@@ -187,10 +187,10 @@ public:
 	CObjectBase* GetBarePtr() const { return CastToObjectBase(ptr); }
 	int operator&( IBinSaver &f );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T> inline bool IsValid( T *p ) { return p != 0 && !CastToObjectBase(p)->IsRefInvalid(); }
 template<class T, class TRef> inline bool IsValid( const CPtrBase< T, TRef > &p ) { return p.GetPtr() && !p.GetBarePtr()->IsRefInvalid(); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define BASIC_PTR_DECLARE( TPtrName, TRef )                                          \
 template<class T>                                                                    \
 class TPtrName: public CPtrBase< T, TRef >                                           \
@@ -218,7 +218,7 @@ BASIC_PTR_DECLARE( CMObj, CObjectBase::SRefM );
 template<class T> inline bool IsValid( CObj<T> *p ) { return p->YouHaveMadeMistake(); }
 template<class T> inline bool IsValid( CPtr<T> *p ) { return p->YouHaveMadeMistake(); }
 template<class T> inline bool IsValid( CMObj<T> *p ) { return p->YouHaveMadeMistake(); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // functor for STL tests
 struct SPtrTest
 {
@@ -227,13 +227,13 @@ struct SPtrTest
 	template <class T,class T1> 
 		bool operator()( const CPtrBase<T,T1> &a ) const { return a == pTest; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPtrHash
 {
 	template <class T,class T1> 
 		int operator()( const CPtrBase<T,T1> &a ) const { return (int)a.GetBarePtr(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // walks container of pointers and erases references on invalid entries
 template<class TContainer>
 inline bool EraseInvalidRefs( TContainer *pData )
@@ -251,7 +251,7 @@ inline bool EraseInvalidRefs( TContainer *pData )
 	}
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class for convinient handling of framework`s contexts
 class CFWContext
 {
@@ -261,7 +261,7 @@ public:
 		CFWContext( T **pF, T *pData ): pFrameworkPtr((void**)pF) { *pF = pData; }
 	~CFWContext() { *pFrameworkPtr = 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // assumes base class is CObjectBase
 template<class T>
 class CDynamicCast
@@ -280,5 +280,5 @@ public:
 };
 template <class T>
 inline bool IsValid( const CDynamicCast<T> &p ) { return IsValid( p.GetPtr() ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

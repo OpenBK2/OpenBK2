@@ -22,7 +22,7 @@ namespace NReinforcement
 		const vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
 		list< pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::AllignSizes( string *szTitle, string *szSide0, string *szSide1, int nAdd )
 {
 	const int nMaxSize = Max( szTitle->size(), Max( szSide0->size(), szSide1->size() ) ) + nAdd;
@@ -30,7 +30,7 @@ void CBalanceTest::AllignSizes( string *szTitle, string *szSide0, string *szSide
 	szSide0->resize( nMaxSize, ' ' );
 	szSide1->resize( nMaxSize, ' ' );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::PrintBalanceTestData()
 {
 	string szResultFile = "balance_test.txt";
@@ -161,7 +161,7 @@ void CBalanceTest::PrintBalanceTestData()
 
 	fclose( pFile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::UnitDead( CAIUnit *pUnit )
 {
 	const int nPlayer = pUnit->GetPlayer();
@@ -178,7 +178,7 @@ void CBalanceTest::UnitDead( CAIUnit *pUnit )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::CollectBalanceTestData( int nIteration )
 {
 	for ( int nPlayer = 0; nPlayer < 2; ++nPlayer )
@@ -217,7 +217,7 @@ void CBalanceTest::CollectBalanceTestData( int nIteration )
 		NGlobal::SetVar( StrFmt( "balance_test_iter_%i_player_%i_full_health", nIteration, nPlayer ), nFullHealth );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 {
 	bTest = NGlobal::GetVar( "balance_test", 0 );
@@ -307,7 +307,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 		NGlobal::SetVar( StrFmt( "balance_test_iter_%i_player_%i_total", nIteration, nPlayer ), nTotal );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBalanceTest::SegmentBalanceTest()
 {
 	if ( !bTest ) 
@@ -356,7 +356,7 @@ void CBalanceTest::SegmentBalanceTest()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUnitStatsModifier * CBalanceTest::GetModifier( int nPlayer ) const
 {
 	if ( !bTest )

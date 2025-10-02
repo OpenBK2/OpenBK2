@@ -1,6 +1,6 @@
 // WindowEditLine.cpp: implementation of the CWindowEditLine class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "..\3dmotor\rectlayout.h"
@@ -11,13 +11,13 @@
 #include "UIML.h"
 #include "UIScreen.h"
 
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075B83,CWindowEditLine)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CWindowEditLine
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CWindowEditLine::CWindowEditLine() : timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ), 
 nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
 nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
@@ -33,18 +33,18 @@ nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
 	AddObserver( "win_char", &CWindowEditLine::OnChar );
 	AddObserver( "win_key", &CWindowEditLine::OnKey );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::RegisterObservers()
 {
 	CWindow::RegisterObservers();
 	UpdateFocus();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::UpdateFocus()
 {
 	SetFocus( IsFocused() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnMouseMove( const CVec2 &_vPos, const int nButton )
 {
 	if ( CWindow::OnMouseMove( _vPos, nButton ) )
@@ -68,7 +68,7 @@ bool CWindowEditLine::OnMouseMove( const CVec2 &_vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnButtonUp( const CVec2 &_vPos, const int nButton )
 {
 	if ( nButton & MSTATE_BUTTON1 )
@@ -77,7 +77,7 @@ bool CWindowEditLine::OnButtonUp( const CVec2 &_vPos, const int nButton )
 	}
 	return CWindow::OnButtonUp( _vPos, nButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnButtonDown( const CVec2 &_vPos, const int nButton )
 {
 	if ( CWindow::OnButtonDown( _vPos, nButton ) )
@@ -103,7 +103,7 @@ bool CWindowEditLine::OnButtonDown( const CVec2 &_vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::SetFocus( const bool bFocus )
 {
 	bool bNotify = false;
@@ -137,7 +137,7 @@ void CWindowEditLine::SetFocus( const bool bFocus )
 		GetScreen()->RegisterToSegment( this, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowEditLine::GetSelection( const int _nX )
 {
 	CTRect<float> editRect;
@@ -172,7 +172,7 @@ int CWindowEditLine::GetSelection( const int _nX )
 	NI_ASSERT( i >= 0 && i <= wszFullText.size(), "Error in CWindowEditLine::GetSelection()" );
 	return i;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::SetCursor( const int nPos )
 {
 	if ( nPos < 0 )
@@ -183,7 +183,7 @@ void CWindowEditLine::SetCursor( const int nPos )
 	else
 		nCursorPos = nPos; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::DeleteSelection()
 {
 	if ( nEndSel == nBeginSel )
@@ -202,7 +202,7 @@ bool CWindowEditLine::DeleteSelection()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 {
 	static const wstring szInValidSymbols = L"<>";
@@ -272,7 +272,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnReturn()
 {
 	if ( !IsFocused() )
@@ -280,7 +280,7 @@ bool CWindowEditLine::OnReturn()
 
 	return RunAnimationAndCommands( pInstance->sequienceOnReturn, pInstance->szOnReturn, false, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -331,7 +331,7 @@ void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 		CloseClipboard();
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnCopy( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -339,7 +339,7 @@ void CWindowEditLine::OnCopy( const struct SGameMessage &msg )
 
 	CopySelectionToClipboard();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnCut( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -350,7 +350,7 @@ void CWindowEditLine::OnCut( const struct SGameMessage &msg )
 	DeleteSelection();
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnSelectAll( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -359,7 +359,7 @@ void CWindowEditLine::OnSelectAll( const struct SGameMessage &msg )
 	nBeginSel = 0;
 	nEndSel = wszFullText.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::CopySelectionToClipboard()
 {
 	if ( pInstance->bPassword || !OpenClipboard( 0 ) ) 
@@ -396,7 +396,7 @@ void CWindowEditLine::CopySelectionToClipboard()
 	SetClipboardData( CF_TEXT, hglbCopy ); 
 	CloseClipboard(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnTab( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -421,7 +421,7 @@ void CWindowEditLine::OnTab( const struct SGameMessage &msg )
 		EnsureCursorVisible();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnBack( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -435,7 +435,7 @@ void CWindowEditLine::OnBack( const struct SGameMessage &msg )
 	CheckTextInsideEditLine();
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnDelete( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -448,7 +448,7 @@ void CWindowEditLine::OnDelete( const struct SGameMessage &msg )
 	CheckTextInsideEditLine();
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnLeft( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -461,7 +461,7 @@ void CWindowEditLine::OnLeft( const struct SGameMessage &msg )
 	nCursorPos--;
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnCtrlLeft( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -485,7 +485,7 @@ void CWindowEditLine::OnCtrlLeft( const struct SGameMessage &msg )
 	}
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnRight( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -498,7 +498,7 @@ void CWindowEditLine::OnRight( const struct SGameMessage &msg )
 	nCursorPos++;
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnCtrlRight( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -519,7 +519,7 @@ void CWindowEditLine::OnCtrlRight( const struct SGameMessage &msg )
 		nCursorPos++;
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnHome( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -530,7 +530,7 @@ void CWindowEditLine::OnHome( const struct SGameMessage &msg )
 	nCursorPos = 0;
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::OnEnd( const struct SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -541,7 +541,7 @@ void CWindowEditLine::OnEnd( const struct SGameMessage &msg )
 	nCursorPos = wszFullText.size() - nBeginText;
 	EnsureCursorVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnEscape()
 {
 	if ( !IsFocused() )
@@ -550,7 +550,7 @@ bool CWindowEditLine::OnEscape()
 	nBeginSel = nEndSel = -1;
 	return RunAnimationAndCommands( pInstance->sequienceOnEscape, pInstance->szOnEscape, false, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnChar( const SGameMessage &msg )
 {
 	if ( !IsFocused() || bMouseButton1Down )
@@ -568,7 +568,7 @@ bool CWindowEditLine::OnChar( const SGameMessage &msg )
 	NotifyTextChanged();
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::OnKey( const SGameMessage &msg )
 {
 	if ( !IsFocused() )
@@ -588,7 +588,7 @@ bool CWindowEditLine::OnKey( const SGameMessage &msg )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::AddChar( const wchar_t chr )
 {
 	const wstring wszOldText = wszFullText;
@@ -609,7 +609,7 @@ bool CWindowEditLine::AddChar( const wchar_t chr )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::Init()
 {
 	CWindow::Init();
@@ -625,12 +625,12 @@ void CWindowEditLine::Init()
 	else
 		checked_cast<CWindowScreen*>(GetScreen())->RegisterTabOrder( this, pInstance->nTabOrder );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::InitLocal()
 {
 	CreateText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::CreateText()
 {
 	if ( !pGfxText )
@@ -643,7 +643,7 @@ void CWindowEditLine::CreateText()
 		pGfxText->Generate( VirtualToScreenX( rc.GetSizeX() ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowEditLine::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -664,13 +664,13 @@ int CWindowEditLine::operator&( IBinSaver &saver )
 		bMouseButton1Down = false;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::AfterLoad()
 {
 	InitLocal();
 	CWindow::AfterLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindowEditLine *pDesc( checked_cast<const NDb::SWindowEditLine*>( _pDesc ) );
@@ -679,7 +679,7 @@ void CWindowEditLine::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowEditLineShared *>( pDesc->pShared );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::Reposition( const CTRect<float> &rcParent )
 {
 	CWindow::Reposition( rcParent );
@@ -689,7 +689,7 @@ void CWindowEditLine::Reposition( const CTRect<float> &rcParent )
 	EnsureCursorVisible();
 	pGfxText->Generate( VirtualToScreenX( nW ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowEditLine::GetTextWidth( const int nFirstChars )
 {
 	if ( nFirstChars < 0 )
@@ -708,7 +708,7 @@ int CWindowEditLine::GetTextWidth( const int nFirstChars )
 	else
 		return it->x1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::Visit( interface IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
@@ -768,7 +768,7 @@ void CWindowEditLine::Visit( interface IUIVisitor *pVisitor )
 		pVisitor->VisitUIRect( 0, 0, rectLayout );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::Segment( const int timeDiff )
 {
 	timeSegment += timeDiff;
@@ -778,7 +778,7 @@ void CWindowEditLine::Segment( const int timeDiff )
 		bShowCursor = !bShowCursor;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::NotifyTextChanged()
 {
 	if ( !IsFocused() )
@@ -794,7 +794,7 @@ void CWindowEditLine::NotifyTextChanged()
 	GetParent()->ProcessMessage( msg );
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::SetText( const wchar_t *pszText )
 {
 	wszFullText = pszText;
@@ -805,7 +805,7 @@ void CWindowEditLine::SetText( const wchar_t *pszText )
 		EnsureCursorVisible();
 	m_nBeginDragSel = nBeginSel = nEndSel = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::EnsureCursorVisible()
 {
 	bShowCursor = true;
@@ -867,7 +867,7 @@ void CWindowEditLine::EnsureCursorVisible()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::SetTextToGfx( const wstring &szText )
 {
 	CTRect<float> wndRect;
@@ -897,7 +897,7 @@ void CWindowEditLine::SetTextToGfx( const wstring &szText )
 	}
 	//DEBUG}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::CheckTextInsideEditLine()
 {
 	CTRect<float> wndRect;
@@ -918,13 +918,13 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 		nTextWidth += it->Width();
 	return GetTextWidth( -1 ) < wndRect.Width() - 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::SetSelection( const int nBegin, const int nEnd )
 {
 	nBeginSel = nBegin; 
 	nEndSel = nEnd;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowEditLine::FillWindowRectEditLine( CTRect<float> *pRect )
 {
 	FillWindowRect( pRect );
@@ -932,7 +932,7 @@ void CWindowEditLine::FillWindowRectEditLine( CTRect<float> *pRect )
 	pRect->right -= pShared->nRightSpace;
 	pRect->top += pShared->nYOffset;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowEditLine::ProcessEvent( const struct SGameMessage &msg )
 {
 	NInput::CBind bindEnter("enter_pressed");

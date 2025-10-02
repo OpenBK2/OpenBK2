@@ -11,10 +11,10 @@
 #include "../SceneB2/FullScreenFader.h"
 #include "../System/VFSOperations.h"
 #include "../System/XmlSaver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SProlog
 {
 	float fFadeIn;
@@ -27,9 +27,9 @@ struct SProlog
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } //namespace unnamed
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** play movie interface command
@@ -37,14 +37,14 @@ struct SProlog
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CICPlayMovie::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &szSequenceName );
 	saver.Add( 2, &szNextCommand );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICPlayMovie::Configure( const char *pszConfig )
 {
 	if ( !pszConfig ) 
@@ -62,7 +62,7 @@ void CICPlayMovie::Configure( const char *pszConfig )
 		NStr::TrimBoth( szNextCommand, "\t\n\r \"" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICPlayMovie::PostCreate( IInterface *pInterface ) 
 { 
 	string szMovie = szSequenceName;
@@ -72,7 +72,7 @@ void CICPlayMovie::PostCreate( IInterface *pInterface )
 	pInterface->SetNextInterface( szNextCommand );
 	NMainLoop::PushInterface( pInterface ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** play movie interface
@@ -80,7 +80,7 @@ void CICPlayMovie::PostCreate( IInterface *pInterface )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayMovieInterface::CPlayMovieInterface()
 : CInterfaceScreenBase( "InterMission", "play_movies" ),
 	bProlog( false ),
@@ -91,11 +91,11 @@ CPlayMovieInterface::CPlayMovieInterface()
 	AddObserver( "movie_skip_sequence", &CPlayMovieInterface::MsgSkipSequence );
 	AddObserver( "movie_skip_movie", &CPlayMovieInterface::MsgSkipMovie );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayMovieInterface::~CPlayMovieInterface()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayMovieInterface::LoadMovieSequence( const string &_szFileName )
 {
 	szFileName = _szFileName;
@@ -148,12 +148,12 @@ void CPlayMovieInterface::LoadMovieSequence( const string &_szFileName )
 			NGlobal::SetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayMovieInterface::SetNextInterface( const string &_szNextCommand )
 {
 	szNextCommand = _szNextCommand;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayMovieInterface::Init()
 {
 	CInterfaceScreenBase::Init();
@@ -161,7 +161,7 @@ bool CPlayMovieInterface::Init()
 	Singleton<IMusicSystem>()->Init( 0, 0 );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayMovieInterface::MsgSkipSequence( const SGameMessage &msg )
 {
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
@@ -184,7 +184,7 @@ void CPlayMovieInterface::MsgSkipMovie( const SGameMessage &msg )
 	if ( pPlayerControl )
 		pPlayerControl->SkipMovie();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayMovieInterface::StepLocal( bool bAppActive )
 {
 	const bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
@@ -234,7 +234,7 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 		StartNextInterface();								// exit this screen...
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayMovieInterface::StartNextInterface()
 {
 	if ( !szNextCommand.empty() )
@@ -246,7 +246,7 @@ void CPlayMovieInterface::StartNextInterface()
 	else
 		NMainLoop::Command( CreateICExitGame() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayMovieInterface::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( bFocus );
@@ -254,7 +254,7 @@ void CPlayMovieInterface::OnGetFocus( bool bFocus )
 	if ( !bFocus )
 		PauseIntermission( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlayMovieSequence( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
@@ -267,10 +267,10 @@ void PlayMovieSequence( const string &szID, const vector<wstring> &paramsSet, vo
 		szSeqName += ";" + NStr::ToMBCS( paramsSet[1] );
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szSeqName.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(PlayMovieCommands)
 REGISTER_CMD( "movie_sequence", PlayMovieSequence );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1005C440, CPlayMovieInterface );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_PLAY_MOVIE, CICPlayMovie );

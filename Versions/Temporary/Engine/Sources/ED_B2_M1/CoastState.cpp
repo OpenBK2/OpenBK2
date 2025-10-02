@@ -19,7 +19,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCoastState::GetWaterPos( const NDb::SMapInfo *pMapInfo, const vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos )
 {
 	if ( pMapInfo && pWaterPos )
@@ -39,13 +39,13 @@ void CCoastState::GetWaterPos( const NDb::SMapInfo *pMapInfo, const vector<NDb::
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::CanEdit()
 {
 	return ( ( GetMapInfoEditor()->pMapInfo != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && ( GetParentState()->GetEditParameters() != 0 ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType )
 
 {
@@ -64,7 +64,7 @@ bool CCoastState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSel
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCoastState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 {
 	NHPTimer::STime time = 0;
@@ -87,7 +87,7 @@ void CCoastState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 	DebugTrace( "CCoastState::PickVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::CanInsertVSO()
 {
 	if ( CanEdit() )
@@ -101,7 +101,7 @@ bool CCoastState::CanInsertVSO()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SVSOInstance* CCoastState::GetVSO( int nVSOID, int *pnVSOIndex )
 {
 	if ( CanEdit() )
@@ -114,7 +114,7 @@ NDb::SVSOInstance* CCoastState::GetVSO( int nVSOID, int *pnVSOIndex )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags )
 {
 	if ( CanEdit() )
@@ -173,7 +173,7 @@ void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCoastState::InsertVSO( const vector<CVec3> &rControlPointList )
 {
 	int nNewVSOID = 0;
@@ -243,7 +243,7 @@ int CCoastState::InsertVSO( const vector<CVec3> &rControlPointList )
 	return INVALID_NODE_ID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCoastState::RemoveVSO( int nVSOID )
 {
 	if ( CanEdit() )
@@ -287,7 +287,7 @@ void CCoastState::RemoveVSO( int nVSOID )
 	EditorScene()->GetTerraManager()->GetAIObserver()->FinalizeUpdates();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectController, const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
@@ -360,7 +360,7 @@ bool CCoastState::InsertVSOToBase( class CObjectBaseController *pObjectControlle
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::RemoveVSOFromBase( class CObjectBaseController *pObjectController )
 {
 	if ( CanEdit() )
@@ -390,7 +390,7 @@ bool CCoastState::RemoveVSOFromBase( class CObjectBaseController *pObjectControl
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCoastState::UpdateVSOInBase( CObjectBaseController *pObjectController, const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
@@ -405,8 +405,8 @@ bool CCoastState::UpdateVSOInBase( CObjectBaseController *pObjectController, con
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 

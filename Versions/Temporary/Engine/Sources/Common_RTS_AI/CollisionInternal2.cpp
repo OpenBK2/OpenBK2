@@ -9,19 +9,19 @@
 #include "../DebugTools/DebugInfoManager.h"
 #include "../Misc/Geom.h"
 #include "../System/RandomGen.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float SPEED_TIME = 2;
 static const float MIN_SPEED_LENGTH = 1.5f;
 static const float FULL_SPEED_TIME = 5;
 static const float MIN_FULL_SPEED_LENGTH = 3.5f;
 static const float PASS_ONE_ANOTHER_BOUND = 1.7f;
 static const float PASS_ONE_ANOTHER_COEFF = 0.25f;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // find intersection of two segments, return -1 x -1 if segments not intersected
 static const float FAR_INTERSECTION_DIST = 400.0f;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string szTempString;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string &GetCollideTypeName( const NCollision::ECollideType eType )
 {
 	if ( eType & NCollision::ECT_FIRST )
@@ -41,7 +41,7 @@ const string &GetCollideTypeName( const NCollision::ECollideType eType )
 
   return szTempString;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EIntersectionType
 {
 	EIT_PARALLEL,
@@ -52,7 +52,7 @@ enum EIntersectionType
 	EIT_INTERSECTED_FAR,
 	EIT_INTERSECTED_PARALLEL, // returns center of segment vPoint1 - vPoint2
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const EIntersectionType FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1, const CVec2 &vDir1, const CVec2 &vPoint2, const CVec2 &vDir2 )
 {
 	const float dx = vPoint1.x - vPoint2.x;
@@ -85,7 +85,7 @@ const EIntersectionType FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1,
 	else
 		return EIT_INTERSECTED;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // vDir1 must be normalized, vDir2 can be unnormalized !!!
 inline float GetAngleCos( const CVec2 &vDir1, const CVec2 &vDir2 )
 {
@@ -94,14 +94,14 @@ inline float GetAngleCos( const CVec2 &vDir1, const CVec2 &vDir2 )
 		return 0.0f;
 	return vDir1*vDir2Norm;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const CVec2 GetAABBHalfSize( const CBasePathUnit *pUnit )
 {
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
 	const float fWidthCoeff = profile.IsCircle() ? 0.5 : 1.0f;
 	return CVec2( fWidthCoeff * profile.GetHalfWidth(), profile.GetHalfLength() );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // fAhead - multiplied
 inline const SRect GetUnitRect( const CBasePathUnit *pUnit, const float fAhead )
 {
@@ -110,7 +110,7 @@ inline const SRect GetUnitRect( const CBasePathUnit *pUnit, const float fAhead )
 	unitRect.InitRect( pUnit->GetCenterPlain(), pUnit->GetDirectionVector(), vAABBHalfSize.y * fAhead, vAABBHalfSize.y, vAABBHalfSize.x * 0.8f );
 	return unitRect;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // fAhead - added
 inline const SRect GetSpeedRect( const CBasePathUnit *pUnit, const float fAhead )
 {	
@@ -119,7 +119,7 @@ inline const SRect GetSpeedRect( const CBasePathUnit *pUnit, const float fAhead 
 	unitRect.InitRect( pUnit->GetCenterPlain(), pUnit->GetMoveDirection(), vAABBHalfSize.y + fAhead, 0.0f, vAABBHalfSize.x * 0.8f );
 	return unitRect;
 } 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCheckRect : public SIterateUnitsCallback
 {
 	SRect unitRect;
@@ -134,7 +134,7 @@ struct SCheckRect : public SIterateUnitsCallback
 		return !unitRect.IsIntersected( candRect );
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CheckRect( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const CVec2 &vFinishPoint )
 {
 	const CVec2 vAABBHalfSize( GetAABBHalfSize( pUnit ) );
@@ -146,7 +146,7 @@ const bool CheckRect( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const CVec2 
 	unitRect.InitRect( pUnit->GetCenterPlain(), vDirection, vAABBHalfSize.y + fDistance, vAABBHalfSize.y, vAABBHalfSize.x );
 	return pUnit->IterateUnits( pUnit->GetCenterPlain(), fDistance, true, SCheckRect( unitRect, pPusher->GetUniqueID() ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const SRect &unitRect, const CBasePathUnit *pCand, const SRect &candRect, float *pfDistance )
 {
 	const float fUnitSpeed = ( pCand->IsInfantry() ) ? pUnit->GetMaxPossibleSpeed() : pUnit->GetSpeed();
@@ -219,7 +219,7 @@ const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const
 		return  NCollision::ECT_NONE;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFindCandidates : public SIterateUnitsCallback
 {
 	CBasePathUnit *pUnit;
@@ -260,9 +260,9 @@ struct SFindCandidates : public SIterateUnitsCallback
 		return true;
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCollisionBase                                                       
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCollisionBase::Init( CBasePathUnit *_pUnit, CBasePathUnit *_pPushUnit, const int _nPriority )
 {
 	pUnit = _pUnit;
@@ -270,12 +270,12 @@ void CCollisionBase::Init( CBasePathUnit *_pUnit, CBasePathUnit *_pPushUnit, con
 	nPriority = _nPriority;
 	GetUnit()->SetCollision( this, GetPath() );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCollisionBase::CanFindCandidates() const
 {
 	return !pUnit->IsInfantry() && pUnit->GetCollidingType( 0 ) != ECT_NONE && !pUnit->IsLockingTiles();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCollisionBase::FindCandidates( ICollisionsCollector *pCollisionsCollector )
 {
 	if ( CanFindCandidates() )
@@ -284,22 +284,22 @@ void CCollisionBase::FindCandidates( ICollisionsCollector *pCollisionsCollector 
 		pUnit->IterateUnits( pUnit->GetCenterPlain(), 3.5f * rect.lengthAhead, false, SFindCandidates( pUnit, pCollisionsCollector ) );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCollisionBase::OnSerialize( IBinSaver &f )
 {
 	SerializeBasePathUnit( f, 2, &pUnit );
 	SerializeBasePathUnit( f, 3, &pPushUnit );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFreeCollision
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CFreeCollision::IsSolved() const
 {
 	return GetUnit()->IsPathFinished() && !GetUnit()->IsTurning();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGivingPlace
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivingPlaceCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const CVec2 &vFinishPoint, const int nTileSize )
 {
 	CPtr<CStandartDirPath> pPath = new CStandartDirPath( pUnit->GetCenterPlain(), vFinishPoint, nTileSize );
@@ -307,14 +307,14 @@ void CGivingPlaceCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
 	//DebugInfoManager()->DrawLine( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), vFinishPoint, true, 100.0f, CVec4( 255, 255, 255, 255 ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGivingPlaceCollision::IsSolved() const
 {
 	return GetUnit()->IsPathFinished() || GetPushUnit()->IsLockingTiles();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CWaitingCollision
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaitingCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const float fDistance )
 {
 	bIsSolved = false;
@@ -323,7 +323,7 @@ void CWaitingCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, co
 	pUnit->UpdateCollisionStayTime( pPushUnit->GetStayTime() );
 	timeToWait = NRandom::Random( 2000, 5000 );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 {
 	if ( timeDiff > timeToWait )
@@ -334,23 +334,23 @@ void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 	const SRect pusherRect(GetUnitRect( GetPushUnit(), 1.0f ) );
 	bIsSolved = !unitSpeedRect.IsIntersected( pusherRect ) || timeToWait == 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStopCollision
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStopCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority )
 {
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
 	timeLeft = NRandom::Random( 1000, 3000 );
 	pUnit->ForceLockTiles();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStopCollision::Segment( const NTimer::STime timeDiff )
 {
 	timeLeft = timeDiff > timeLeft ? 0 : timeLeft - timeDiff;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SSortCollisions                                                  
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSortCollisions
 {
 	CPtr<CCollisionsCollector> pCollector;
@@ -373,7 +373,7 @@ struct SSortCollisions
 			return pos1 == pCollector->collisions.end();
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pusher1, const SPusherInfo &pusher2 ) const
 {
 	if ( ( pusher1.eCollideType & NCollision::ECT_TYPE_MASK ) == ( pusher2.eCollideType & NCollision::ECT_TYPE_MASK ) )
@@ -384,9 +384,9 @@ const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pu
 	}
 	return (int)pusher1.eCollideType < (int)pusher2.eCollideType;
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCollsionsCollector                                                  
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCollisionsCollector::AddCollision( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const float fDistance, const NCollision::ECollideType eCollideType )
 {
 	TCollisions::iterator pos = collisions.find( pUnit->GetUniqueID() );
@@ -395,7 +395,7 @@ void CCollisionsCollector::AddCollision( CBasePathUnit *pUnit, CBasePathUnit *pP
 	else
 		pos->second.AddPusher( pPusher, fDistance, (NCollision::ECollideType)( eCollideType & NCollision::ECT_TYPE_MASK ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePathUnit *pUnit2, const int nTileSize ) const
 {
 	if ( pUnit1->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE || pUnit2->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE )
@@ -445,7 +445,7 @@ const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePat
 
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCollisionsCollector::NotifyAboutClosestThreat( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const float fDistance ) const
 {
 	if ( pPusher->GetCollision()->GetPushUnit() != pUnit && !pUnit->IsInfantry() )
@@ -456,7 +456,7 @@ const bool CCollisionsCollector::NotifyAboutClosestThreat( CBasePathUnit *pUnit,
 	}
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, CBasePathUnit *pPusher, CAIMap *pAIMap ) const
 {
 	if ( !pInfantry->IsInfantry() )
@@ -490,7 +490,7 @@ const bool CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, C
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCollisionsCollector::HandOutCollisions( CAIMap *pAIMap )
 {
 	vector<int> sorted;
@@ -539,14 +539,14 @@ void CCollisionsCollector::HandOutCollisions( CAIMap *pAIMap )
 	NI_ASSERT( collisions.empty(), "WARNING: Collisions not empty !!!" );
 	collisions.clear();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Creators                                                             
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICollisionsCollector *CreateCollisionsCollector()
 {
 	return new CCollisionsCollector();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const NCollision::ECollisionName eName )
 {
 	CPtr<ICollision> pCollision = MakeObject<ICollision>( (int)eName );
@@ -557,11 +557,11 @@ ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, con
 	}
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( ICollisionsCollector );
 REGISTER_SAVELOAD_CLASS( 0x31223C00, CBasePathUnitHolder );
 REGISTER_SAVELOAD_CLASS( 0x31223C02, CCollisionsCollector );
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // save/load for collisions
 using namespace NCollision;
 REGISTER_SAVELOAD_CLASS( ECN_FREE, CFreeCollision );

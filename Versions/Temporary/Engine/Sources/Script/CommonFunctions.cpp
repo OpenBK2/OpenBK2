@@ -2,7 +2,7 @@
 //
 #include "scriptPtr.h"
 #include "scriptCommon.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REG_FUNCTION( Name ) { #Name, lua##Name }
 //
 namespace NScript
@@ -14,7 +14,7 @@ static int Error_out( lua_State* state )
 	csSystem << CC_RED << "Script error: " << CC_GREY << obj.GetString() << endl;
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SRegFunction pCommonRegList[] =
 {
 	// Common functions

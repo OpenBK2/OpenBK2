@@ -8,10 +8,10 @@
 #include "ScenarioTracker.h"
 #include "../B2_M1_World/MissionObjectiveStates.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_OBJECTIVES_ROW_COUNT = 8;
 const int MISSION_BRIEFING_ID = 1000000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMissionObjectives::CReactions::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "select_objective" )
@@ -23,14 +23,14 @@ bool CInterfaceMissionObjectives::CReactions::Execute( const string &szSender, c
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMissionObjectives::CReactions::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMissionObjectives
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMissionObjectives::CInterfaceMissionObjectives() :
 	CInterfaceScreenBase( "MissionObjectives", "mission_objectives" ),
 	bIsModal( true ),
@@ -40,12 +40,12 @@ CInterfaceMissionObjectives::CInterfaceMissionObjectives() :
 	AddObserver( "set_modality", &CInterfaceMissionObjectives::MsgSetModality );
 	AddObserver( "mission_objectives_changed", &CInterfaceMissionObjectives::MsgMissionObjectivesChanged );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMissionObjectives::~CInterfaceMissionObjectives()
 {
 	pReactions = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMissionObjectives::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false ) 
@@ -125,7 +125,7 @@ bool CInterfaceMissionObjectives::Init()
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::MsgBack( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "minimap_hide_objectives" );
@@ -133,12 +133,12 @@ void CInterfaceMissionObjectives::MsgBack( const SGameMessage &msg )
 	if ( bCameraBack )
 		NInput::PostEvent( "notifications_camera_back", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::MsgSetModality( const SGameMessage &msg )
 {
 	bIsModal = (msg.nParam1 != 0);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::MsgMissionObjectivesChanged( const SGameMessage &msg )
 {
 	UpdateKnownObjectives();
@@ -154,7 +154,7 @@ void CInterfaceMissionObjectives::MsgMissionObjectivesChanged( const SGameMessag
 	}
 	UpdateObjectives( nNewSelectionIndex );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::MakeObjectives()
 {
 	objectives.resize( N_OBJECTIVES_ROW_COUNT );
@@ -200,7 +200,7 @@ void CInterfaceMissionObjectives::MakeObjectives()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::UpdateKnownObjectives()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -258,7 +258,7 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 	if ( pObjectivesPanel )
 		pObjectivesPanel->SetPlacement( 0, 0, 0, fListInitialHeight - fDeltaHeight, EWPF_SIZE_Y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 {
 	int nSelected = _nSelected;
@@ -353,7 +353,7 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 	NInput::PostEvent( "minimap_show_objectives", nPrevSelectionID, 0 );
 	NInput::PostEvent( "set_modality", 1, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMissionObjectives::GetButtonIndex( enum EMissionObjectiveState eState )
 {
 	switch ( eState )
@@ -367,7 +367,7 @@ int CInterfaceMissionObjectives::GetButtonIndex( enum EMissionObjectiveState eSt
 	};
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMissionObjectives::StepLocal( bool bAppActive )
 {
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
@@ -375,12 +375,12 @@ bool CInterfaceMissionObjectives::StepLocal( bool bAppActive )
 
 	return CInterfaceScreenBase::StepLocal( bAppActive);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMissionObjectives::IsModal()
 {
 	return bIsModal;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMissionObjectives::SetStartID( int nID )
 {
 	if ( nID >= 0 )
@@ -397,7 +397,7 @@ void CInterfaceMissionObjectives::SetStartID( int nID )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMissionObjectives::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CInterfaceScreenBase *)this );
@@ -428,19 +428,19 @@ int CInterfaceMissionObjectives::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICMissionObjectives
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMissionObjectives::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMissionObjectives::PostCreate( IInterface *pInterface )
 {
 	pInterface->SetStartID( nID );
 	NMainLoop::PushInterface( pInterface );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMissionObjectives::Configure( const char *pszConfig )
 {
 	if ( pszConfig[0] == 0 )
@@ -448,8 +448,8 @@ void CICMissionObjectives::Configure( const char *pszConfig )
 	else
 		nID = NStr::ToInt( pszConfig );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x170CEC41, CInterfaceMissionObjectives );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION_OBJECTIVES, CICMissionObjectives );
 REGISTER_SAVELOAD_CLASS_NM( 0x170CEC42, CReactions, CInterfaceMissionObjectives );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

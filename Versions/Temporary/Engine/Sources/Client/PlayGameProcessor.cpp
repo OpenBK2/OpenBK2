@@ -8,10 +8,10 @@
 #include "../Server_Client_Common/GamePackets.h"
 #include "../Server_Client_Common/Net.h"
 #include "../Server_Client_Common/NetLogger.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const DWORD dwWaitingPacketTimeout = 300000;
 const int CONNECTION_TIMEOUT = 20;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayGameProcessor::CPlayGameProcessor( CNet *_pNet, const char* pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
 : pNet( _pNet ), nNetGameVersion( _nNetGameVersion), szServerIP( pszServerIP ), nServerPort( _nServerPort ), nTimeOut( _nTimeOut )
 {
@@ -31,7 +31,7 @@ CPlayGameProcessor::CPlayGameProcessor( CNet *_pNet, const char* pszServerIP, co
 
 	NEffortsFactory::SetServerInfo( szServerIP, nServerPort, nNetGameVersion );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::StartServerConnect()
 {
 	pAcceptGamersNet = new CNet( nNetGameVersion, nServerPort, 60 );
@@ -46,7 +46,7 @@ void CPlayGameProcessor::StartServerConnect()
 		pAcceptGamersNet->ConnectGame( serverAddress, pwd );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 {
 	Clear();
@@ -55,7 +55,7 @@ bool CPlayGameProcessor::ProcessCreateGame( CCreateGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 {
 	Clear();
@@ -65,7 +65,7 @@ bool CPlayGameProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 {
 /*	if ( pPacket->clients.empty() )
@@ -86,7 +86,7 @@ bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 {
 	PushPacket( pPacket );
@@ -94,7 +94,7 @@ bool CPlayGameProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPacket )
 {
 	CPtr<CConnectionEffort> pEffort =
@@ -103,14 +103,14 @@ bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPack
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessMyIDPacket( CMyIDPacket *pPacket )
 {
 	nMyServerID = pPacket->nMyID;
 	PushPacket( pPacket );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::ProcessConnectServerProcessor()
 {
 	if ( pConnectServerProcessor )
@@ -124,7 +124,7 @@ void CPlayGameProcessor::ProcessConnectServerProcessor()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 {
 	if ( pAcceptGamersNet )
@@ -171,7 +171,7 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 			PushPacket( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::ProcessEfforts()
 {
 	list< CPtr<CConnectionEffort> > success, failed;
@@ -206,7 +206,7 @@ void CPlayGameProcessor::ProcessEfforts()
 		CreateConnectionEffort( pNextEffort );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::Segment()
 {
 	ProcessConnectServerProcessor();
@@ -238,7 +238,7 @@ bool CPlayGameProcessor::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
 {
 	if ( pEffort != 0 )
@@ -268,7 +268,7 @@ bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::ProcessConnectServerPacket( CConnectServerPacket *pPacket )
 {
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_SUCCESS )
@@ -285,7 +285,7 @@ void CPlayGameProcessor::ProcessConnectServerPacket( CConnectServerPacket *pPack
 		pConnectServerProcessor = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessGameConnectingClientAccepted( CGameConnectingClientAccepted *pPacket )
 {
 	pNet->SendPacket( pConnectGamePacket );
@@ -299,7 +299,7 @@ bool CPlayGameProcessor::ProcessGameConnectingClientAccepted( CGameConnectingCli
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 {
 	PushPacket( pPacket );
@@ -308,7 +308,7 @@ bool CPlayGameProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::SendGamePacket( CNetPacket *pPacket, bool bBroadcast )
 {
 	CPtr<CNetPacket> pRemPacket = pPacket;
@@ -325,7 +325,7 @@ void CPlayGameProcessor::SendGamePacket( CNetPacket *pPacket, bool bBroadcast )
 			iter->second->SendGamePacket( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::Clear()
 {
 	pAcceptGamersNet = 0;
@@ -335,13 +335,13 @@ void CPlayGameProcessor::Clear()
 	pConnectServerProcessor = 0;
 	waitingPackets.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessLeaveGame( CLeaveGamePacket *pPacket )
 {
 	Clear();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessPacket( CNetPacket *pPacket )
 {
 	bool bProcessed = false;
@@ -362,7 +362,7 @@ bool CPlayGameProcessor::ProcessPacket( CNetPacket *pPacket )
 
 	return bProcessed ? true : CPacketProcessor::ProcessPacket( pPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessKickClient( CGameKickClient *pPacket )
 {
 	if ( nOurGameID == pPacket->nGameID )
@@ -370,7 +370,7 @@ bool CPlayGameProcessor::ProcessKickClient( CGameKickClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 {
 	if ( nOurGameID == pPacket->nGame )
@@ -381,7 +381,7 @@ bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 {
 	nOurGameID = pPacket->nGameID;
@@ -389,7 +389,7 @@ bool CPlayGameProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 {
 	TConnections::iterator iter = connections.find( pPacket->nDeadClient );
@@ -402,19 +402,19 @@ bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::TogglePauseAcceptGamersNet( bool bPause )
 {
 	if ( pAcceptGamersNet )
 		pAcceptGamersNet->DebugTogglePause( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayGameProcessor::TogglePauseConnectGamer( const int nGamer, bool bPause )
 {
 	TConnections::iterator iter = connections.find( nGamer );
 	if ( iter != connections.end() )
 		iter->second->TogglePauseNet( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CPlayGameProcessor )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

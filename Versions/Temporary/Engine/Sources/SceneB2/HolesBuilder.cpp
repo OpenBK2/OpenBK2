@@ -3,10 +3,10 @@
 #include "../Misc/Win32Helper.h"
 #include "../System/Commands.h"
 #include "GenTerrain.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool g_bDontUpdateRoads = false;
 static bool s_bMakeHolesForEntrenchment = true;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::MakeHoleOnTile( const vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten )
 {
 	vector<CVec3dEx> newVerts( 512 );
@@ -104,7 +104,7 @@ void CTerraGen::MakeHoleOnTile( const vector<CVec3dEx> &samples, const int nTile
 	fill( terrainInfo.tiles[nTileY][nTileX].addHeights.begin(), terrainInfo.tiles[nTileY][nTileX].addHeights.end(), 0.0f );
 	terrainInfo.tiles[nTileY][nTileX].triangles = tileTriangles;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::MakeHole( const vector<CVec3fEx> &samples, const int nTileX1, const int nTileY1,
 													const int nTileX2, const int nTileY2, const bool bLeftHeighten /*= true*/ )
 {
@@ -149,7 +149,7 @@ void CTerraGen::MakeHole( const vector<CVec3fEx> &samples, const int nTileX1, co
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _fWidth, const bool bWriteHistory/* = true*/ )
 {
 	if ( !s_bMakeHolesForEntrenchment || _ctrlPoints.empty() )
@@ -204,8 +204,8 @@ void CTerraGen::AddEntrenchment( const vector<CVec2> &_ctrlPoints, const float _
 	UpdateAllOnTerrainObjectsInArea( vMinTile, vMaxTile );
 	g_bDontUpdateRoads = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GView)
 REGISTER_VAR_EX( "misc_holes_for_entrenchment", NGlobal::VarBoolHandler, &s_bMakeHolesForEntrenchment, true, STORAGE_USER )
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

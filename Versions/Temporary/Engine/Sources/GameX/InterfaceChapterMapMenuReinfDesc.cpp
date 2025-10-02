@@ -12,12 +12,12 @@
 #include "ScenarioTracker.h"
 #include "InterfaceEncyclopedia.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceChapterMapMenu -- ReinfDesc window
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REINF_DESC_ITEM_HOR_OFFSET 2
 #define REINF_DESC_ITEM_VER_OFFSET 2
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf )
 {
 	if ( !pReinf )
@@ -76,7 +76,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 	ReinfDescFillUnits( pReinf, reinfDescUnits );
 	ReinfDescSelectUnit( reinfDescUnits, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf, const NDb::SReinforcement *pReinfUpg )
 {
 	if ( !pReinfUpg )
@@ -146,7 +146,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf,
 	ReinfDescSelectUnit( reinfDescUnits, -1 );
 	ReinfDescSelectUnit( reinfDescUnits2, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SMechUnitRPGStats *pMech, const NDb::SSquadRPGStats *pSquad )
 {
 	pReinfDesc->ShowWindow( true );
@@ -182,7 +182,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SMechUnitRPGStats *pMec
 
 	ReinfDescMakeUnitInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnReinfDescItem( const string &szSender )
 {
 	for ( int i = 0; i < reinfDescUnits.size(); ++i )
@@ -221,7 +221,7 @@ void CInterfaceChapterMapMenu::OnReinfDescItem( const string &szSender )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnReinfDescOK()
 {
 	pReinfDesc->ShowWindow( false );
@@ -229,7 +229,7 @@ void CInterfaceChapterMapMenu::OnReinfDescOK()
 	bInitialDialogVisible = false;
 	ProceedInitialDialogs();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pReinf, CReinfButtonList &units )
 {
 	// Clear entries
@@ -310,7 +310,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 			pUnitQty->SetText( L"" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescSelectUnit( CReinfButtonList &units, int nIndex )
 {
 	if ( nIndex < 0 || nIndex > units.size() )
@@ -344,7 +344,7 @@ void CInterfaceChapterMapMenu::ReinfDescSelectUnit( CReinfButtonList &units, int
 
 	ReinfDescMakeUnitInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 {
 	ITextView *pUnitName = GetChildChecked<ITextView>( GetCurrentReinfDescPopup(), "UnitParamsName", true );
@@ -433,7 +433,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	pUnitDamage->SetText( pUnitDamage->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nDamage ) ) );
 	pUnitPiercing->SetText( pUnitPiercing->GetDBText() + NStr::ToUnicode( StrFmt( "%d", nPiercing ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
 {
 	if ( reinfDescSingleItem.pMechUnit )
@@ -447,7 +447,7 @@ void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
 		NStr::ToUnicode( StrFmt( "No Encyclopedia for infantry" ) ) ).c_str() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow *CInterfaceChapterMapMenu::GetCurrentReinfDescPopup()
 {
 	switch ( eReinfDescState ) 
@@ -464,7 +464,7 @@ IWindow *CInterfaceChapterMapMenu::GetCurrentReinfDescPopup()
 		return 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescScrollRight()
 {
 	if ( nSelectedReinf == reinfDescReinfs.size() )
@@ -480,7 +480,7 @@ void CInterfaceChapterMapMenu::ReinfDescScrollRight()
 	reinfDescReinfs[nSelectedReinf].pButton->SetState( 0 );
 	++nSelectedReinf;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescScrollLeft()
 {
 	if ( nSelectedReinf == 0 )
@@ -496,7 +496,7 @@ void CInterfaceChapterMapMenu::ReinfDescScrollLeft()
 	reinfDescReinfs[nSelectedReinf].pButton->SetState( 0 );
 	--nSelectedReinf;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 {
 	if ( nStep == 0 )						// Finished scroll
@@ -539,7 +539,7 @@ void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ReinfDescSelectReinf( int nIndex )
 {
 	if ( nIndex < 0 || nIndex >= reinfDescReinfs.size() || nIndex == nSelectedReinf )
@@ -570,7 +570,7 @@ void CInterfaceChapterMapMenu::ReinfDescSelectReinf( int nIndex )
 	else
 		pButtonScrollRight->Enable( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnMouseOverReinf( const string &szSender, bool bEnter )
 {
 	const int nLocalPlayer = 0;
@@ -619,4 +619,4 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const string &szSender, bool bE
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

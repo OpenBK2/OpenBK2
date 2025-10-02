@@ -12,9 +12,9 @@
 #include "GetConsts.h"
 #include "InterfaceState.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMPManagerMode - UI->MP message handlers
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 {
 	// Store info
@@ -45,7 +45,7 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	TryToCreateGame();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 {
 	bool bFound = false;
@@ -91,7 +91,7 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnStartGameMessage( SMPUIMessage *pMsg )
 {
 	// This happens only on the host side, so send StartGame packets to all
@@ -100,7 +100,7 @@ bool CMPManagerMode::OnStartGameMessage( SMPUIMessage *pMsg )
 	StartGame();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnUpdateGameListMessage( SMPUIGameListMessage *pMsg )
 {
 	if ( gamesUpdate.bUpdating != pMsg->bSendUpdates )
@@ -124,7 +124,7 @@ bool CMPManagerMode::OnUpdateGameListMessage( SMPUIGameListMessage *pMsg )
 	gamesUpdate.bUpdating = pMsg->bSendUpdates;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 {
 	NI_VERIFY( pMsg->nSlot >= 0 && pMsg->nSlot < slots.size(), "PRG: Player slot index out of bounds", return true );
@@ -156,7 +156,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 {
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
@@ -177,7 +177,7 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 {
 	if ( IsGameRunning() )
@@ -187,13 +187,13 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 {
 	OnLeaveGame();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 {
 	if ( !IsGameRunning() )
@@ -222,7 +222,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 	ShowWaitWindow( !bPausedNow );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 {
 	wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
@@ -239,4 +239,4 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	InterfaceState()->AddMPChatMessage( NStr::ToUnicode( szMPName ) + L": " + wszFilteredText );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

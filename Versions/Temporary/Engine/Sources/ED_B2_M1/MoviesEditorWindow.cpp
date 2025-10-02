@@ -9,9 +9,9 @@
 #include "ED_B2_M1Dll.h"
 
 #include "MoviesEditorWindow.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MOVED_DEF_SCALING (2.0f)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float GetSliderPercent( const CSliderCtrl &slider )
 {
 	int nMin, nMax;
@@ -20,13 +20,13 @@ static float GetSliderPercent( const CSliderCtrl &slider )
 	return (float)(slider.GetPos()) / (nMax - nMin);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		MOVIES EDITOR WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP( CMoviesEditorWindow, CResizeDialog )
 	ON_WM_TIMER()
 	ON_WM_HSCROLL()
@@ -52,7 +52,7 @@ BEGIN_MESSAGE_MAP( CMoviesEditorWindow, CResizeDialog )
 	ON_BN_CLICKED(IDC_DMOVED_CHECK_RESIZE_WND, OnBnClickedDmovedResize)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMoviesEditorWindow::CMoviesEditorWindow( CWnd *pParentWindow )
 	:	CResizeDialog( CMoviesEditorWindow::IDD, pParentWindow ),
 	bIsDataSetting( false ),
@@ -85,13 +85,13 @@ CMoviesEditorWindow::CMoviesEditorWindow( CWnd *pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MOVIES_EDITOR_WINDOW, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMoviesEditorWindow::~CMoviesEditorWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MOVIES_EDITOR_WINDOW );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::DoDataExchange( CDataExchange* pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -114,7 +114,7 @@ void CMoviesEditorWindow::DoDataExchange( CDataExchange* pDX )
 	DDX_Control( pDX, IDC_MOVED_SPEED_COMBO, wndSpeedCombo );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMoviesEditorWindow::Create( CWnd *pParentWindow )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MOVIES_EDITOR_WINDOW, this );
@@ -123,7 +123,7 @@ bool CMoviesEditorWindow::Create( CWnd *pParentWindow )
 	return CResizeDialog::Create( IDD, pParentWindow );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::Destroy()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MOVIES_EDITOR_WINDOW );
@@ -132,7 +132,7 @@ void CMoviesEditorWindow::Destroy()
 	CResizeDialog::DestroyWindow();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMoviesEditorWindow::OnInitDialog()
 {
 	if ( !CResizeDialog::OnInitDialog() )
@@ -178,7 +178,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch ( nCommandID )
@@ -246,7 +246,7 @@ bool CMoviesEditorWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMoviesEditorWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMoviesEditorWindow::UpdateCommand(), pbEnable == 0" );
@@ -288,7 +288,7 @@ bool CMoviesEditorWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::NotifyHandler()
 {
 	if ( !bIsDataSetting )
@@ -298,7 +298,7 @@ void CMoviesEditorWindow::NotifyHandler()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // useful NotifyHandler wrapper
 void CMoviesEditorWindow::NotifyHandler( SScriptMovieEditorData::EMoviesEditorLastAction eAction )
 {
@@ -307,7 +307,7 @@ void CMoviesEditorWindow::NotifyHandler( SScriptMovieEditorData::EMoviesEditorLa
 	SetLastAction( SScriptMovieEditorData::ME_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::GetTimeSliderRect( CRect* pRect ) const
 {
 	NI_VERIFY( pRect, "Return pointer pRect == 0!", return );
@@ -321,7 +321,7 @@ void CMoviesEditorWindow::GetTimeSliderRect( CRect* pRect ) const
 	pRect->SetRectEmpty();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	SetCapture();
@@ -377,7 +377,7 @@ void CMoviesEditorWindow::OnLButtonDown( UINT nFlags, CPoint point )
 	lastPoint = point;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnLButtonUp( UINT nFlags, CPoint point )
 {
 	ReleaseCapture();
@@ -417,7 +417,7 @@ void CMoviesEditorWindow::OnLButtonUp( UINT nFlags, CPoint point )
 	lastPoint = point;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnMouseMove( UINT nFlags, CPoint point )
 {
 	CResizeDialog::OnMouseMove( nFlags, point );
@@ -462,7 +462,7 @@ void CMoviesEditorWindow::OnMouseMove( UINT nFlags, CPoint point )
 	lastPoint = point;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnMButtonDown( UINT nFlags, CPoint point )
 {
 	SetCapture();
@@ -487,7 +487,7 @@ void CMoviesEditorWindow::OnMButtonDown( UINT nFlags, CPoint point )
 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnMButtonUp( UINT nFlags, CPoint point )
 {
 	ReleaseCapture();
@@ -501,7 +501,7 @@ void CMoviesEditorWindow::OnMButtonUp( UINT nFlags, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMoviesEditorWindow::OnMouseWheel( UINT nFlags, short zDelta, CPoint point )
 {
 	// special move cursor
@@ -521,7 +521,7 @@ BOOL CMoviesEditorWindow::OnMouseWheel( UINT nFlags, short zDelta, CPoint point 
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnTimer( UINT nIDEvent )
 {
 	if ( nIDEvent == GetMovieTimerID() )
@@ -530,7 +530,7 @@ void CMoviesEditorWindow::OnTimer( UINT nIDEvent )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedJumpFirstKey()
 {
 	wndTimeSliderControl.ResetSelection();
@@ -540,7 +540,7 @@ void CMoviesEditorWindow::OnBnClickedJumpFirstKey()
 	//DebugTrace( "MoviesEditor: jump first key\n" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedJumpLastKey()
 {
 	wndTimeSliderControl.ResetSelection();
@@ -550,7 +550,7 @@ void CMoviesEditorWindow::OnBnClickedJumpLastKey()
 	//DebugTrace( "MoviesEditor: jump last key\n" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedStepPrevKey()
 {
 	wndTimeSliderControl.ResetSelection();
@@ -560,7 +560,7 @@ void CMoviesEditorWindow::OnBnClickedStepPrevKey()
 	//DebugTrace( "MoviesEditor: step previous key\n" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedStepNextKey()
 {
 	wndTimeSliderControl.ResetSelection();
@@ -570,19 +570,19 @@ void CMoviesEditorWindow::OnBnClickedStepNextKey()
 	//DebugTrace( "MoviesEditor: step next key\n" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedAddSeq()
 {
 	NotifyHandler( SScriptMovieEditorData::ME_ADD_SEQ );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedDelSeq()
 {
 	NotifyHandler( SScriptMovieEditorData::ME_DEL_SEQ );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedStopMovie()
 {
 	NotifyHandler( SScriptMovieEditorData::ME_STOP );
@@ -594,7 +594,7 @@ void CMoviesEditorWindow::OnBnClickedStopMovie()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedPlayPauseMovie()
 {
 	if ( nMovieMode & MOVIE_IS_PLAYING )
@@ -610,7 +610,7 @@ void CMoviesEditorWindow::OnBnClickedPlayPauseMovie()
 	nMovieMode ^= MOVIE_IS_PLAYING;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedSettings()
 {
 	if ( (dialogData.nActiveMovie >= 0) && (dialogData.nActiveMovie < dialogData.scriptMoviesData.scriptMovieSequences.size()) )
@@ -626,14 +626,14 @@ void CMoviesEditorWindow::OnBnClickedSettings()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnBnClickedDmovedResize()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_RESIZE_TO_GAME, buttons[SB_RESIZE_WND].GetCheck() );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnCbnSelchangeComboMovie()
 {
 	CComboBox *pWndMovieCombo = static_cast<CComboBox*>( GetDlgItem(IDC_DMOVED_MOV_SELECT_COMBO) );
@@ -645,13 +645,13 @@ void CMoviesEditorWindow::OnCbnSelchangeComboMovie()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnCbnSelChangeTimerSpeed()
 {
 	NotifyHandler( SScriptMovieEditorData::ME_CHANGE_SPEED );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::GetDialogData( SScriptMovieEditorData *pDialogData )
 {
 	pDialogData->Clear();
@@ -677,7 +677,7 @@ void CMoviesEditorWindow::GetDialogData( SScriptMovieEditorData *pDialogData )
 	pDialogData->fNewLength = fNewLength;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::SetDialogData( const SScriptMovieEditorData &rDialogData )
 {
 	bIsDataSetting = true;
@@ -741,7 +741,7 @@ void CMoviesEditorWindow::SetDialogData( const SScriptMovieEditorData &rDialogDa
 	RedrawWindow();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::UpdateDialogData()
 {
 	if ( nMovieMode & MOVIE_IS_PLAYING )
@@ -757,7 +757,7 @@ void CMoviesEditorWindow::UpdateDialogData()
 	SetDlgItemText( IDC_DMOVED_TIME_EDIT, StrFmt("%g", fCurrTime) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::KillMovieTimer()
 {
 	if ( nMovieTimerID != 0 )
@@ -766,20 +766,20 @@ void CMoviesEditorWindow::KillMovieTimer()
 	nMovieTimerID = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::SetMovieTimer()
 {
 	KillMovieTimer();
 	nMovieTimerID = SetTimer( GetMovieTimerID(), GetMovieTimerInterval(), 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::ResetDialog()
 {
 	buttons[SB_PLAY].SetBitmap( bitmaps[SB_PLAY] );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrollBar )
 {
 	wndTimeSliderControl.SetStartTime( (wndTimeSliderControl.GetLength() * wndTimeSliderControl.GetScale()) * GetSliderPercent(wndSliderTime) );
@@ -789,7 +789,7 @@ void CMoviesEditorWindow::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrol
 	NotifyHandler( SScriptMovieEditorData::ME_CHANGE_TIME );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMoviesEditorWindow::OnContextMenu( CWnd *pWnd, CPoint point )
 {
 	CResizeDialog::OnContextMenu( pWnd, point );
@@ -815,4 +815,4 @@ void CMoviesEditorWindow::OnContextMenu( CWnd *pWnd, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,5 +1,5 @@
 #pragma once
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAddPointFunctional
 {
 	vector<SSpiralPoint> *pPoints;
@@ -21,7 +21,7 @@ public:
 	CAddPointFunctional( vector<SSpiralPoint> *_pPoints, CArray2D1Bit *_pMask, int _nRadius ) : pPoints( _pPoints ), pMask( _pMask ), nRadius( _nRadius ) { nOffset = ( pMask->GetSizeX()-1 ) / 2; }
 	void operator()( int x, int y ) { SetPoint( x, y ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAddPoint8Functional : public CAddPointFunctional
 {
 public:
@@ -39,7 +39,7 @@ public:
 		SetPoint( -y, -x );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSpiralPointSort
 {
 	bool operator()( const SSpiralPoint &pPoint1, const SSpiralPoint &pPoint2 ) const 
@@ -55,7 +55,7 @@ struct SSpiralPointSort
 			return ( pPoint1.nRadius < pPoint2.nRadius );
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GenerateSpiral( vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, vector<int> &lengths, const int nMaxRadius )
 {
 	spiral.clear();
@@ -123,4 +123,4 @@ void GenerateSpiral( vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoords, 
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

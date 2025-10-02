@@ -20,16 +20,16 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
 //
 #define ADD_PATH "bin\\effects\\"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CParticleExporter::CParticleExporter() : bNeedExport( false )
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CParticleExporter::StartExport( const string &rszObjectTypeName, bool bForce )
 {
 	CStoreObjectExporter::StartExport( rszObjectTypeName, bForce );
@@ -40,7 +40,7 @@ bool CParticleExporter::StartExport( const string &rszObjectTypeName, bool bForc
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 																							 const string &rszObjectTypeName,
 																							 const string &rszObjectName,
@@ -99,7 +99,7 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	CStoreObjectExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType  );
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CParticleExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
 {
 	MEFinishScript( &szScriptText, true );
@@ -131,7 +131,7 @@ void CParticleExporter::FinishExport( const string &rszObjectTypeName, bool bFor
 	exportedFilesMap.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CParticleExporter::ImportInfoToDBAfterRefs( const string &szObjName, 
 																								 const string &szDstFileName,
 																								 IManipulator *pManipulator )
@@ -166,6 +166,6 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const string &szObjName,
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 #include "TracksManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_MAX_TRACK_BUFFERS 128
 #define DEF_MAX_TRACKS_IN_BUFFER 32
 #define DEF_MAX_VERTS_PER_TRACK 8
 #define DEF_MAX_TRGS_PER_TRACK 6
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DEFINE_DG_CONSTANT_NODE( CCSBound, SBound );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline DWORD PackAndDupBYTE2DWORD( const BYTE elem )
 {
   return ( (DWORD)elem << 24 ) + ( (DWORD)elem << 16 ) + ( (DWORD)elem << 8 ) + elem;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTrackObjInfo::CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrackManager, const int _nID )
 : pTimer( _pTimer ), pTrackManager( _pTrackManager ), nID( _nID )
 {
@@ -35,7 +35,7 @@ CTrackObjInfo::CTrackObjInfo( CFuncBase<STime> *_pTimer, CTracksManager *_pTrack
   bNeedUpdate = false;
   bFirstUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrackObjInfo::InitData()
 {
   data.verts.reserve( DEF_MAX_TRACKS_IN_BUFFER * DEF_MAX_VERTS_PER_TRACK );
@@ -43,7 +43,7 @@ void CTrackObjInfo::InitData()
 	data.geometry.resize( DEF_MAX_TRACKS_IN_BUFFER * DEF_MAX_TRGS_PER_TRACK );
 	data.geometry.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrackObjInfo::Recalc()
 {
   if ( pValue == 0 )
@@ -107,7 +107,7 @@ void CTrackObjInfo::Recalc()
     }
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrackObjInfo::UpdateNode( const NMeshData::SMeshData &meshData )
 {
   NI_ASSERT( meshData.vertices.size() <= DEF_MAX_VERTS_PER_TRACK, "Too many vertices in source geometry" );
@@ -131,7 +131,7 @@ void CTrackObjInfo::UpdateNode( const NMeshData::SMeshData &meshData )
   }
   bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTracksManager::CTracksManager( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene ) : pTimer( _pTimer ), pGScene( _pGScene )
 {
   tracks.resize( DEF_MAX_TRACK_BUFFERS );
@@ -155,7 +155,7 @@ CTracksManager::CTracksManager( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
   delQueue.resize( 0 );
   tracksMap.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksManager::AddTrack( const int nID, const float fFadingSpeed, const NMeshData::SMeshData &data,
                               const CVec3 &vMin, const CVec3 &vMax )
 {
@@ -200,7 +200,7 @@ void CTracksManager::AddTrack( const int nID, const float fFadingSpeed, const NM
     trackObj.trackHolder.pPatch->UpdateNode( data );
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksManager::FreeTrackBuffer( const int nFreeID )
 {
   freeTracks.push_back( nFreeID );
@@ -214,7 +214,7 @@ void CTracksManager::FreeTrackBuffer( const int nFreeID )
     }
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksManager::ProcessDelQueue()
 {
   for ( vector<int>::const_iterator it = delQueue.begin(); it != delQueue.end(); ++it )
@@ -223,7 +223,7 @@ void CTracksManager::ProcessDelQueue()
   }
   delQueue.resize( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_pGScene )
 {
   pGScene = _pGScene;
@@ -238,6 +238,6 @@ void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
       pGScene->MakeMeshInfo( tracks[*it].trackHolder.pPatch, pTracksMaterial ), 0, tracks[*it].pBound, NGScene::MakeLargeHintBound(), room );
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x130AB3C0, CTracksManager );
 REGISTER_SAVELOAD_CLASS( 0x110B8C00, CTrackObjInfo );

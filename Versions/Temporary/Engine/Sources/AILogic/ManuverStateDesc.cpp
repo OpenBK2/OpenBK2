@@ -4,11 +4,11 @@
 #include "PlanePreferences.h"
 #include "ManuverInternal.h"
 #include "..\Stats_B2_M1\DBPlaneManuvers.h"
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverStateDesc
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CManuverStateDesc::Init( const enum EPlanesAttitude _att, interface IPlane *pPos, interface IPlane *pEnemy )
 {
 	att = _att;
@@ -37,7 +37,7 @@ void CManuverStateDesc::Init( const enum EPlanesAttitude _att, interface IPlane 
 	selfSpeed = ( fabs( vSpeed1 ) - pref1.GetStallSpeed() ) / pref1.GetMaxSpeed();
 	enemySpeed = ( fabs( vSpeed2 ) - pref2.GetStallSpeed() ) / pref2.GetMaxSpeed();
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CManuverStateDesc::CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const
 {
 	return 

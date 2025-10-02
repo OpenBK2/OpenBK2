@@ -4,7 +4,7 @@
 #include "../System/FastMath.h"
 #include "../Misc/Win32Random.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,
 																 const vector<string> &leafNames, int _nEffectID, const CVec3 &vPos,
 																 float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart )
@@ -36,7 +36,7 @@ void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir
 	fCycles = fFallCycles;
 	fAnimLength = nFallDuration;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTreeFallingMutator::GetCoeffForTime( int nTime )
 {
 	if ( bFinished )
@@ -52,7 +52,7 @@ float CTreeFallingMutator::GetCoeffForTime( int nTime )
 	float fResult = abs( NMath::Cos( nTime * fTimeCoeff ) );
 	return 1.0 - fResult * fCoeff;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeFallingMutator::TransformRootBone( granny_transform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
@@ -71,7 +71,7 @@ void CTreeFallingMutator::TransformRootBone( granny_transform *pTransform, const
 	pTransform->Flags |= GrannyHasPosition;
 	pTransform->Flags |= GrannyHasOrientation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeFallingMutator::TransformLeafBone( granny_transform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
@@ -83,7 +83,7 @@ void CTreeFallingMutator::TransformLeafBone( granny_transform *pTransform, const
 	pTransform->Orientation[3] = vBoneOrientation.w;
 	pTransform->Flags |= GrannyHasOrientation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeFallingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {	
 	float fCoeff = GetCoeffForTime( pTimer->GetGameTime() - nStartTime );
@@ -112,7 +112,7 @@ void CTreeFallingMutator::MutateSkeletonPose( granny_local_pose *pPose )
 		Scene()->MoveObject( nEffectID, vTransformedEffect, QNULL );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTreeFallingMutator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nRootBoneIdx );
@@ -131,6 +131,6 @@ int CTreeFallingMutator::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x12094B80, CTreeFallingMutator )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

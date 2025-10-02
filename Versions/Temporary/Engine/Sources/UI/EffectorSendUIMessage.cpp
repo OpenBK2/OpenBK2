@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "uiinternal.h"
 #include ".\effectorsenduimessage.h"
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 //CEffectorSendUIMessage
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075C06, CEffectorSendUIMessage );
-//////////////////////////////////////////////////////////////////////
+
 int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pElement );
@@ -19,7 +19,7 @@ int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 	saver.Add( 9, &bFinished );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &_szAnimatedWindow )
 {
 	const NDb::SUISSendUIMessage *pCmd( checked_cast<const NDb::SUISSendUIMessage*>( _pCmd ) );
@@ -50,7 +50,7 @@ void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, interfac
 	bForward = true;
 	bFinished = false;
 }
-//////////////////////////////////////////////////////////////////////
+
 const int CEffectorSendUIMessage::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
 {
 	bool bResult = false;
@@ -69,7 +69,7 @@ const int CEffectorSendUIMessage::Segment( const int timeDiff, interface IScreen
 	bFinished = true;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CEffectorSendUIMessage::Reverse() 
 {  
 	bForward = !bForward;

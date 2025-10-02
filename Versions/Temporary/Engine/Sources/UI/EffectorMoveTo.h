@@ -1,11 +1,11 @@
 // EffectorMoveTo.h: interface for the CEffectorMoveTo class.
 //
-//////////////////////////////////////////////////////////////////////
+
 #if !defined(AFX_EFFECTORMOVETO_H__61F18B52_A5E3_4375_B24C_A297C73DFF29__INCLUDED_)
 #define AFX_EFFECTORMOVETO_H__61F18B52_A5E3_4375_B24C_A297C73DFF29__INCLUDED_
 
 #pragma once
-/////////////////////////////////////////////////////////////////////////////
+
 class CEffectorMoveTo : public IUIEffector
 {
 	OBJECT_BASIC_METHODS(CEffectorMoveTo)

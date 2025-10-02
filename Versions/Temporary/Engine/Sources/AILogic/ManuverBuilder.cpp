@@ -7,12 +7,12 @@
 #include "DBAIConsts.h"
 
 CManuverBuilder theManuverBuilder;
-/////////////////////////////////////////////////////////////////////////////
+
 CManuvers CManuverBuilder::manuvers;
 vector<int> CManuverBuilder::suitableIndeces;
 CManuverStateDesc CManuverBuilder::state;
 
-/////////////////////////////////////////////////////////////////////////////
+
 interface IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation * pPos, const CVec3 &vEnemy, int nAttacker )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
@@ -40,13 +40,13 @@ interface IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class C
 	pManuver->Init( pPos, vAttackPos, vDirection );
 	return pManuver;
 }
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CManuverBuilder
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //#define STRING_ENUM_ADD(TypeConverter,eEnum) TypeConverter[#eEnum] = eEnum;
-/////////////////////////////////////////////////////////////////////////////
+
 void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 {
 	pConsts = _pConsts;
@@ -56,7 +56,7 @@ void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 	for ( int i = 0; i < pConsts->planeManuvers.size(); ++i )
 		manuvers[pConsts->planeManuvers[i]->eAttitude].push_back( i );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &current, const CPlanePreferences &pref ) const
 {
 	CManuvers::const_iterator manuverPos = manuvers.find( current.GetAtt() );
@@ -84,7 +84,7 @@ const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &curr
 
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 interface IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	if ( EPA_RETREAT == att )
@@ -106,7 +106,7 @@ interface IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAt
 		return CreatePointManuver( pPos, vAimPoint, true );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CManuverBuilder::CalcAttackerPoint( class CPlanesFormation *pAttacker, class CPlanesFormation *pEnemy )
 {
 	const CVec3 vPoint( CManuver::CalcPredictedPoint( pAttacker, pEnemy ) );
@@ -121,12 +121,12 @@ CVec3 CManuverBuilder::CalcAttackerPoint( class CPlanesFormation *pAttacker, cla
 	vOffset2 = vSpeed2 ^ vOffset2;
 	return CVec3( vOffset2.x + vPoint.x, vOffset2.y + vPoint.y, vOffset.z + vPoint.z );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CalcOffsetByIndex( int nIndex )
 {
 	return CVec3( -200 - 50 * nIndex, nIndex * 50 * ( nIndex % 3 - 1 ), nIndex * 50 * ( ( (nIndex + 1 ) % 3 - 1 ) ) );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, class CPlanesFormation *pEnemy )
 {
 	CAviaAttacks::iterator it = attacks.find( pEnemy->GetFormationID() );
@@ -150,7 +150,7 @@ int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, clas
 	attacks[pEnemy->GetFormationID()].push_back( pair<int,CVec3>( pAttacker->GetFormationID(), CalcOffsetByIndex( attacks[pEnemy->GetFormationID()].size() ) ) );
 	return nIndex;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 interface IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal )
 {
 	const float fDist = fabs( pPos->GetPosB2() - vPoint );
@@ -170,14 +170,14 @@ interface IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation
 		return pManuver;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 EPlanesAttitude CManuverBuilder::GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const
 { 
 	if ( pPlane->IsBeingAttackedB2()  )
 		return EPA_RETREAT;
 	return EPA_ATTACK;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID )
 {
 	//return CreateDefaultManuver( att, pPos, pEnemy );
@@ -205,7 +205,7 @@ interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPo
 
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 interface IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	EPlanesAttitude att = GetAttitude( pPos, pEnemy );

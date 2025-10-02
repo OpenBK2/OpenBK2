@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "Transform.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SFBTransform MakeTransform( const CVec3 &ptPos )
 {
 	CFBMatrixStack<4> mStack;
@@ -8,7 +8,7 @@ SFBTransform MakeTransform( const CVec3 &ptPos )
 	mStack.Push( ptPos );
 	return mStack.Get();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SFBTransform MakeTransform( const CVec3 &ptPos, int nRotation )
 {
 	CQuat quat( ToRadian( (float)nRotation ), CVec3( 0, 0, 1 ) );
@@ -20,7 +20,7 @@ SFBTransform MakeTransform( const CVec3 &ptPos, int nRotation )
 	mStack.Push33( rotMatrix );
 	return mStack.Get();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SFBTransform MakeTransform( const CVec3 &ptPos, const CVec3 &ptScale )
 {
 	CFBMatrixStack<4> mStack;
@@ -29,7 +29,7 @@ SFBTransform MakeTransform( const CVec3 &ptPos, const CVec3 &ptScale )
 	mStack.Push( ptPos );
 	return mStack.Get();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, float fAngle )
 {
   CFBMatrixStack<4> m;
@@ -42,7 +42,7 @@ void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, float
 	//SHMatrix mTest = t.forward * t.backward;
 	*pRes = m.Get();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, const CQuat &rot )
 {
   CFBMatrixStack<4> m;
@@ -51,7 +51,7 @@ void MakeMatrix( SFBTransform *pRes, const CVec3 &size, const CVec3 &move, const
 	m.PushScale( size.x, size.y, size.z );
 	*pRes = m.Get();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMatrix( SHMatrix *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos )
 {
 	SHMatrix &res = *pRes;
@@ -66,20 +66,20 @@ void MakeMatrix( SHMatrix *pRes, float fpTangazh, float fpRiskanie, float fKren,
 	res._24 = pos.y;
 	res._34 = pos.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMatrix( SFBTransform *pRes, float fpTangazh, float fpRiskanie, float fKren, const CVec3 &pos )
 {
 	MakeMatrix( &pRes->forward, fpTangazh, fpRiskanie, fKren, pos );
 	InvertMatrix( &pRes->backward, pRes->forward );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeMatrix( SHMatrix *pRes, const CVec3 &ptPos, const CVec3 &ptDir )
 {
 	float fpTang = atan2( ptDir.z, sqrt( sqr( ptDir.x ) + sqr( ptDir.y ) ) );
 	float fpRisk = atan2( ptDir.y, ptDir.x ) - FP_PI2;
 	MakeMatrix( pRes, fpTang, fpRisk, 0, ptPos );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m )
 {
 	bool bRes = true;
@@ -137,7 +137,7 @@ bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m )
 	
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void TransformYupToZup( SHMatrix *pMatrix )
 {
 	SHMatrix basisZup(
@@ -155,7 +155,7 @@ void TransformYupToZup( SHMatrix *pMatrix )
 	(*pMatrix) = temp * inverseBasisZup;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const SHMatrix &camera, const CVec2 &screenRect, const CVec2 &cursorPos, float fFovX )
 {
 	float fDepth = screenRect.x * 0.5f / tan( ToRadian(fFovX) * 0.5f );
@@ -167,7 +167,7 @@ void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const SHMatrix &camera, const
 	camera.RotateVector( pRes, direction );
 	*pOrig = camera.GetTranslation();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const CTransformStack &ts, const CVec2 &vScreenRect, const CVec2 &cursorPos )
 {
 	SHMatrix sCamera = ts.Get().backward * ts.GetProjection().forward;
@@ -179,7 +179,7 @@ void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const CTransformStack &ts, co
 	sCamera.RotateVector( pRes, CVec3( vResScreen.x * fW1, vResScreen.y * fW1, vResScreen.z * fW1 ) );
 	*pOrig = sCamera.GetTranslation();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 &screenRect, float fFovX, CVec2 *pRes )
 {
 	SHMatrix cam1;
@@ -204,7 +204,7 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 
 		return false;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestRayInFrustrum( const CVec3 &ptPos, const CTransformStack &ts, const CVec2 &screenRect, CVec2 *pRes, float *pZ, float *pfMinDistance, float *pfMaxDistance )
 {
 	CVec4 vRes;
@@ -233,7 +233,7 @@ bool TestRayInFrustrum( const CVec3 &ptPos, const CTransformStack &ts, const CVe
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // take bounding box and calc enclosing sphere, this function does not place limitations
 // on fwd structure besides fwd should not include projection
 float CalcRadius2( const SBound &b, const SHMatrix &fwd )
@@ -249,7 +249,7 @@ float CalcRadius2( const SBound &b, const SHMatrix &fwd )
 	ptRes += fwd.z3 * (b.ptHalfBox.z * fSign);
 	return fabs2( ptRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd )
 {
 	CVec3 ptCenter;
@@ -257,9 +257,9 @@ void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd )
 	float fR = sqrt( CalcRadius2( src, fwd ) );
 	pRes->SphereInit( ptCenter, fR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTransformStack
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::SetCamera( const SHMatrix& pos )
 {
 	SetToFirst();
@@ -273,7 +273,7 @@ void CTransformStack::SetCamera( const SHMatrix& pos )
 	res.HomogeneousInverse( pos );
 	Push43( res );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ScaleClipVertex( CVec4 *pRes, const CVec4 &vClip, const SHMatrix &m )
 {
 	CVec4 leng;
@@ -281,7 +281,7 @@ static void ScaleClipVertex( CVec4 *pRes, const CVec4 &vClip, const SHMatrix &m 
 	leng.w = 0;
 	*pRes = vClip * ( 1 / fabs( leng ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::PrepareClipPlanes()
 {
 	SHMatrix m;
@@ -295,14 +295,14 @@ void CTransformStack::PrepareClipPlanes()
 	nClipPlanes = 6;
 	nClipFlags[0] = ( 1 << nClipPlanes ) - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::AddClipPlane( const CVec4 &v )
 {
 	ASSERT( nClipPlanes < ARRAY_SIZE(viewFrustrum) );
 	viewFrustrum[ nClipPlanes++ ] = v;
 	nClipFlags[0] = ( 1 << nClipPlanes ) - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, float fZMax, const CVec2 &vShift )
 {
 	float h, w, Q;
@@ -328,7 +328,7 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 
 	PrepareClipPlanes();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::MakeProjective( const CVec2 &screenRect, float fFovX, float fZMin, float fZMax, const CVec2 &vShift ) 
 { 
 	if ( screenRect.y == 0 || screenRect.x == 0 )
@@ -336,7 +336,7 @@ void CTransformStack::MakeProjective( const CVec2 &screenRect, float fFovX, floa
 	else
 		MakeProjective( screenRect.y / screenRect.x, fFovX, fZMin, fZMax, vShift ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::MakeParallel( float fWidth, float fHeight, float fZMin, float fZMax )
 {
 	SHMatrix ret;
@@ -350,7 +350,7 @@ void CTransformStack::MakeParallel( float fWidth, float fHeight, float fZMin, fl
 
 	PrepareClipPlanes();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::MakeDirect( const CVec2 &screenRect )
 {
 	float fWidth = screenRect.x;
@@ -372,16 +372,16 @@ void CTransformStack::MakeDirect( const CVec2 &screenRect )
 
 	PrepareClipPlanes();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::Make( const SHMatrix &projection )
 {
 	Init( projection );
 	PrepareClipPlanes();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float Dot( const CVec4 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
 inline float Dot( const CVec3 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + b.w; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // more precise approach to this is would be to find extremum of (center.x + R * sin(alpha)) / (center.w + R * cos(alpha))
 // this problem reduces to extremum of (a + sin(alpha)) / (b + cos(alpha)), its approximate solution is CalcLeftRight
 static void CalcLeftRight( float *pf1, float *pf2, float a, float b )
@@ -398,7 +398,7 @@ static void CalcLeftRight( float *pf1, float *pf2, float a, float b )
 		*pf2 = f2 / ( b - 1 );
 	ASSERT( *pf2 > *pf1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float CalcScale( const CVec4 &vTrans )
 {
 	return sqrt( sqr(vTrans.x) + sqr(vTrans.y) + sqr(vTrans.z) );
@@ -448,7 +448,7 @@ bool CTransformStack::GetCoverRect( CTRect<float> *pRes, const CVec3 &_ptCenter,
 	pRes->y2 *= fSY / fSW;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransformStack::PushClipHint( const SSphere &s )
 {
 	CVec4 ptCenter;
@@ -469,7 +469,7 @@ bool CTransformStack::PushClipHint( const SSphere &s )
 	ASSERT( nClipFlagsPtr < ARRAY_SIZE(nClipFlags) );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransformStack::PushClipHint( const SBound &bv )
 {
 	float fRadius = bv.s.fRadius;
@@ -501,13 +501,13 @@ bool CTransformStack::PushClipHint( const SBound &bv )
 	--nClipFlagsPtr;
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTransformStack::PopClipHint()
 {
 	ASSERT( nClipFlagsPtr > 0 );
 	--nClipFlagsPtr;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransformStack::IsIn( const SSphere &s )
 {
 	TFlags nFlags = nClipFlags[ nClipFlagsPtr ], nTest = 1;
@@ -525,7 +525,7 @@ bool CTransformStack::IsIn( const SSphere &s )
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // return true - exact result is known, result is stored to *pRes, returns false when in doubt
 bool CTransformStack::CheckSphere( const CVec4 &ptCenter, float fRadius, bool *pRes )
 {
@@ -553,7 +553,7 @@ bool CTransformStack::CheckSphere( const CVec4 &ptCenter, float fRadius, bool *p
 	}
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 ptPolygon[128];
 static int nUnusedVertex;
 struct SClipPolygon
@@ -613,7 +613,7 @@ static int nPolygonIndices[6][4] =
 	{2,3,7,6},
 	{3,0,4,7},
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // could have been much more efficient - look box/box intersection info
 bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter, 
 	const CVec3 &ptXAxis, const CVec3 &ptYAxis, const CVec3 &ptZAxis )
@@ -672,7 +672,7 @@ NextPolygon: ;
 		return true; // lies inside
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransformStack::IsIn( const SBound &s )
 {
 	if ( IsFullGet() )
@@ -688,7 +688,7 @@ bool CTransformStack::IsIn( const SBound &s )
 		CVec3( 0, s.ptHalfBox.y, 0 ), 
 		CVec3( 0, 0, s.ptHalfBox.z ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis, 
 	const CVec3 &_ptYAxis, const CVec3 &_ptZAxis )
 {
@@ -705,8 +705,8 @@ bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis,
 		_ptYAxis, 
 		_ptZAxis );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &vOrigin, const CVec2 &vSize )
 {
 	const SFBTransform &projection = ts.GetProjection();
@@ -716,4 +716,4 @@ void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &
 	pRes->Make( m );
 	pRes->Push43( projection.backward * ts.Get().forward );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

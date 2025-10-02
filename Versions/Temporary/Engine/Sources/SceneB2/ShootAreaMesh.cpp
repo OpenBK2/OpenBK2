@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "ShootAreaMesh.h"
 #include "../System/FastMath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AppendToVector( vector<NGScene::SVertex> &dst, const vector<NGScene::SVertex> &src )
 {
 	int nStart = dst.size();
@@ -11,7 +11,7 @@ void AppendToVector( vector<NGScene::SVertex> &dst, const vector<NGScene::SVerte
 	for ( int i = 0; i < src.size(); ++i )
 		dst[nStart + i] = src[i];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AppendToVector( vector<STriangle> &dst, const vector<STriangle> &src, int nOffset )
 {
 	int nStart = dst.size();
@@ -24,7 +24,7 @@ void AppendToVector( vector<STriangle> &dst, const vector<STriangle> &src, int n
 		dst[nStart + i].i3 += nOffset;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRadianHeightFunctor : public SLinearHeightFunctor
 {
 	float GetHeight( float x )
@@ -38,7 +38,7 @@ struct SRadianHeightFunctor : public SLinearHeightFunctor
 		return 1.0f - 2.0f * sqr( 1 - t );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCircleHeightFunctor : public SLinearHeightFunctor
 {
 	float GetHeight( float x )
@@ -52,7 +52,7 @@ struct SCircleHeightFunctor : public SLinearHeightFunctor
 		return 1.0f - 2.0f * sqr( 1 - t );
 	}	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::FillGrid( vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func )
 {
 	grid.resize( nNumPoints );
@@ -60,14 +60,14 @@ void CShootAreaMesh::FillGrid( vector<float> &grid, int nNumPoints, SLinearHeigh
 	for ( int i = 0; i < nNumPoints; ++i )
 		grid[i] = func.GetGrid( i * fStep );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::LinearTransform( vector<float> &output, const vector<float> &input, float fMin, float fMax )
 {
 	output.resize( input.size() );
 	for ( int i = 0; i < input.size(); ++i )
 		output[i] = fMin + input[i] * ( fMax - fMin );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::Recalc()
 {
 	if ( pValue == 0 )
@@ -98,19 +98,19 @@ void CShootAreaMesh::Recalc()
 	objData.geometry.swap( allTris );
 	pValue->AssignFast( &objData );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CShootAreaMesh::GetCenter()
 {
 	pTransform.Refresh();
 	CVec3 vCenter = pTransform->GetValue().forward.GetTranslation();
 	return CVec2( vCenter.x, vCenter.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) : 
 	pTransform( _pTransform ), fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) : 
 	fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
 {
@@ -119,7 +119,7 @@ CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float 
 	transform.backward.Set( -CVec3( vCenter.x, vCenter.y, 0 ), QNULL );
 	pTransform = new CCSFBTransform( transform );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::BuildCircle( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadius )
 {	
 	const float fSRadius = fRadius - fWidth;
@@ -156,7 +156,7 @@ void CShootAreaMesh::BuildCircle( vector<NGScene::SVertex> &verts, vector<STrian
 		tri2.i3 = i * 2;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::BuildLine( vector<NGScene::SVertex> &verts, vector<STriangle> &tris, float fRadiant )
 {
 	const int nSegments = int( ( fMaxRadius - fMinRadius ) / 4.0f );
@@ -195,7 +195,7 @@ void CShootAreaMesh::BuildLine( vector<NGScene::SVertex> &verts, vector<STriangl
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 {
 	vertex.tex.Set( 0, 0 );
@@ -203,7 +203,7 @@ void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 	CalcCompactVector( &(vertex.texU), CVec3(0, 0, 0) );
 	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShootAreaMesh::BuildSector( vector<NGScene::SVertex> &verts, vector<STriangle> &tris )
 {
 	const float fHeightCoeff = 10.0f;
@@ -261,6 +261,6 @@ void CShootAreaMesh::BuildSector( vector<NGScene::SVertex> &verts, vector<STrian
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x101554C0, CShootAreaMesh )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

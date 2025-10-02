@@ -37,16 +37,16 @@ struct SNLProjectionInfo
 		{
 		}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SShadowMatrixAlign
 {
 	float fRotation;
 
 	SShadowMatrixAlign() : fRotation(0) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // fMinimalElement - value influencing non linearity of projection in meters, the more this value the more linear projection is
 void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, float fMinimalSize, const CTransformStack &ts, 
 	const CVec3 &ptDir, float fMaxHeight, const SBound &sceneBound, float fSceneHeight, SShadowMatrixAlign *pAlign );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

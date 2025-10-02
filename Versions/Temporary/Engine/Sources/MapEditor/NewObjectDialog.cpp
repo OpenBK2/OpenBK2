@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNewObjectDialog::CNewObjectDialog( CWnd* pParent )
 	: CResizeDialog( CNewObjectDialog::IDD, pParent ),
 		bCreateControls( false ),
@@ -31,7 +31,7 @@ CNewObjectDialog::CNewObjectDialog( CWnd* pParent )
 	SetControlStyle( IDCANCEL, ANCHORE_RIGHT_BOTTOM );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::DoDataExchange( CDataExchange* pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -40,7 +40,7 @@ void CNewObjectDialog::DoDataExchange( CDataExchange* pDX )
 	DDX_Control( pDX, IDC_NO_TYPE_COMBO, wndObjectTypeComboBox );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CNewObjectDialog, CResizeDialog)
 	ON_EN_CHANGE(IDC_NO_NAME_EDIT, OnNameEditChange)
 	ON_CBN_SELCHANGE(IDC_NO_TYPE_COMBO, OnSelchangeObjectTypeComboBox)
@@ -48,7 +48,7 @@ BEGIN_MESSAGE_MAP(CNewObjectDialog, CResizeDialog)
 	ON_BN_CLICKED( IDC_NO_ADD_TYPE_CHECKBOX, OnAddTypeCheckBox )
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::UpdateOKButton()
 {
 	bCreateControls = true;
@@ -82,7 +82,7 @@ void CNewObjectDialog::UpdateOKButton()
 	bCreateControls = false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::UpdateTitle()
 {
 	bCreateControls = true;
@@ -95,7 +95,7 @@ void CNewObjectDialog::UpdateTitle()
 	bCreateControls = false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::CreateTypeList()
 {
 	bCreateControls = true;
@@ -124,7 +124,7 @@ void CNewObjectDialog::CreateTypeList()
 	bCreateControls = false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CNewObjectDialog::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -145,7 +145,7 @@ BOOL CNewObjectDialog::OnInitDialog()
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::SetBuildDataParams( const vector<string> &rObjectTypeNameList, int _nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams )
 {
 	objectTypeNameList = rObjectTypeNameList;
@@ -167,7 +167,7 @@ void CNewObjectDialog::SetBuildDataParams( const vector<string> &rObjectTypeName
 	bEnableType = ( szObjectNameExtentionToCompare == ".xdb" );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::UpdateTypePostfix()
 {
 	szObjectTypeNamePostrfix = string( "_" ) + pBuildDataParams->szObjectTypeName;
@@ -196,7 +196,7 @@ void CNewObjectDialog::UpdateTypePostfix()
 	bCreateControls = false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::OnNameEditChange()
 {
 	if ( !bCreateControls )
@@ -210,7 +210,7 @@ void CNewObjectDialog::OnNameEditChange()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::OnSelchangeObjectTypeComboBox()
 {
 	if ( !bCreateControls )
@@ -238,7 +238,7 @@ void CNewObjectDialog::OnSelchangeObjectTypeComboBox()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::OnExportCheckBox()
 {
 	if ( !bCreateControls )
@@ -251,7 +251,7 @@ void CNewObjectDialog::OnExportCheckBox()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNewObjectDialog::OnAddTypeCheckBox()
 {
 	if ( !bCreateControls )
@@ -262,6 +262,6 @@ void CNewObjectDialog::OnAddTypeCheckBox()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

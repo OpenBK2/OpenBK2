@@ -1,7 +1,7 @@
 #pragma once
 #include "..\mapeditorlib\interface_commandhandler.h"
 #include "..\MapEditorLib\BuildDataBuilder.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAcksBuilder : public CDefaultBuilderBase, public IBuildDataCallback, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CAcksBuilder );
@@ -18,4 +18,4 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
 	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

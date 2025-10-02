@@ -8,14 +8,14 @@
 #include "TimeCounter.h"
 #include "StaticObjectsIters.h"
 #include "Cheats.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern CStaticObjects theStatObjs;
 extern CEventUpdater updater;
 extern SCheats theCheats;
 extern NAI::CTimeCounter timeCounter;
 int ConvertToNAngle( const WORD _wAngle );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float fHP, const WORD wDir, const int nDiplomacy, const int nFrameIndex )
 : pStats( _pStats ), CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE ), eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
 {
@@ -25,7 +25,7 @@ CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float 
 	bSuspendAppear = !theDipl.IsNetGame() && theDipl.GetDiplStatus( nCreator, theDipl.GetMyNumber() ) == EDI_ENEMY;
 	rightTile = leftTile = AICellsTiles::GetTile( center.x, center.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFence::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return
@@ -33,7 +33,7 @@ bool CFence::ShouldSuspendAction( const EActionNotify &eAction ) const
 		eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
 		eAction == ACTION_NOTIFY_NEW_ST_OBJ && bSuspendAppear );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::InitDirectionInfo()
 {
 	const int nDir = ConvertToNAngle( GetDir() );
@@ -61,7 +61,7 @@ void CFence::InitDirectionInfo()
 	}
 	leftTile = vOtherEndTile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::AnalyzeConnection( CFence *pFence )
 {
 	// такого нет
@@ -77,7 +77,7 @@ void CFence::AnalyzeConnection( CFence *pFence )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::Init()
 {
 	timeCounter.Count( 0, true );
@@ -100,7 +100,7 @@ void CFence::Init()
 
 	timeCounter.Count( 0, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::Delete()
 {
 	bSuspendAppear = true;
@@ -123,35 +123,35 @@ void CFence::Delete()
 	for ( list< CPtr<CFence> >::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
 		(*it)->DamagePartially( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::Die( const float fDamage )
 {
 	Delete();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetVisibility( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
 	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 {
 	CCommonStaticObject::GetNewUnitInfo( pNewUnitInfo );
 	pNewUnitInfo->fHitPoints = eLifeType == NDb::SFenceRPGStats::ETOL_DESTROYED ? 0.0f : GetHitPoints();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFence::GetHeight() const
 {
 	return pStats->fFenceHeight;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFence::DamagePartially( CFence *pFence )
 {
 	bSuspendAppear = true;
@@ -198,10 +198,10 @@ void CFence::DamagePartially( CFence *pFence )
 	LockTiles();
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFence::CanUnitGoThrough( const EAIClasses &eClass ) const
 {
 	return ( pStats->nAIPassabilityClass & eClass ) == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4E4, CFence );

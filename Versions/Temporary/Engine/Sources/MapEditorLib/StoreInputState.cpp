@@ -7,7 +7,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -20,7 +20,7 @@ void CStoreInputState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStoreInputState::OnMouseWheel( UINT nFlags, short zDelta, CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -35,7 +35,7 @@ bool CStoreInputState::OnMouseWheel( UINT nFlags, short zDelta, CTPoint<int> &rM
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -48,7 +48,7 @@ void CStoreInputState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -61,7 +61,7 @@ void CStoreInputState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -74,7 +74,7 @@ void CStoreInputState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -87,7 +87,7 @@ void CStoreInputState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -100,7 +100,7 @@ void CStoreInputState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -113,7 +113,7 @@ void CStoreInputState::OnRButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -126,7 +126,7 @@ void CStoreInputState::OnMButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -139,7 +139,7 @@ void CStoreInputState::OnMButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -152,7 +152,7 @@ void CStoreInputState::OnMButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -166,7 +166,7 @@ void CStoreInputState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -180,7 +180,7 @@ void CStoreInputState::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -194,7 +194,7 @@ void CStoreInputState::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -208,7 +208,7 @@ void CStoreInputState::OnSysKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -222,7 +222,7 @@ void CStoreInputState::OnSysKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -236,7 +236,7 @@ void CStoreInputState::OnSysChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStoreInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -247,6 +247,6 @@ void CStoreInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

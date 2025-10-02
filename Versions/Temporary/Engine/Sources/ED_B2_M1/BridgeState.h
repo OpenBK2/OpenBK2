@@ -9,7 +9,7 @@
 #include "BridgeInfoData.h"
 #include "MapObjectState.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBridgeState : public CMapObjectState
 {
 	friend class CMultiInputState;
@@ -56,6 +56,6 @@ protected:
 	bool InsertObjectRButtonUp( UINT nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectKeyDown( UINT nChar, UINT nFlags, const CVec3 &rTerrainPos );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__BRIDGE_STATE__)
 

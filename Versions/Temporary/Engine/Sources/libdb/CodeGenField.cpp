@@ -5,10 +5,10 @@
 #include "Hungarian.h"
 #include "StrStream.h"
 #include "../Parser/LangNodesDefinitions.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCodeGen
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFieldDefinition::CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2TypeDefs &nodes2TypeDefs )
 {
 	CNodes2TypeDefs::const_iterator iterNodes = nodes2TypeDefs.find( pVarNode );
@@ -18,7 +18,7 @@ CFieldDefinition::CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2Typ
 
 	NHungarian::ConvertToShortName( &szFieldName, pVarNode->GetName(), pType->eType, pType->GetAttributes() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
 {
 	NI_VERIFY( pParentType != 0, "Wrong field definition", return );
@@ -74,8 +74,8 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, 
 	const string szFieldNameInCode = NHungarian::GetFieldNameInCode( field );
 	pCode->h << " " << szFieldNameInCode << ";" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D03, CFieldDefinition );

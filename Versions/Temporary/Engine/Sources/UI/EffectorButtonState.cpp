@@ -3,7 +3,7 @@
 #include "WindowMSButton.h"
 
 REGISTER_SAVELOAD_CLASS(0x170AE341,CEffectorButtonState)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CEffectorButtonState::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &bFinished );
@@ -15,12 +15,12 @@ int CEffectorButtonState::operator&( IBinSaver &saver )
 	saver.Add( 8, &bStarted );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEffectorButtonState::IsFinished() const 
 { 
 	return bFinished; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) 
 { 
 	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate*>( _pCmd ) );
@@ -44,7 +44,7 @@ void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, interface 
 	bFinished = !pWindow->IsEnabled();
 	bForward = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CEffectorButtonState::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward ) 
 {
 	if ( !bStarted )
@@ -69,10 +69,10 @@ const int CEffectorButtonState::Segment( const int timeDiff, interface IScreen *
 
 	return nConsumedTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEffectorButtonState::Reverse()
 {
 	bForward = !bForward;
 	bFinished = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

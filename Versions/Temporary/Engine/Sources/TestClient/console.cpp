@@ -6,7 +6,7 @@
 
 #include "..\Scintilla\SciLexer.h"
 #include "..\Misc\StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -14,7 +14,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 const int MAX_CONSOLE_SIZE = 10000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EStyles
 {
 	ES_DEFAULT = 32,
@@ -25,14 +25,14 @@ enum EStyles
 	ES_END_OF_NOT_CLOSED_STR = 12,
 	ES_ERROR = 21
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CConsole, CWnd)
 	//{{AFX_MSG_MAP(CConsole)
 	ON_WM_MOUSEMOVE()
 	ON_WM_KEYDOWN()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConsole::CConsole( CCommandsBase *_pCommands, const string &szWindowName )
 : CWnd(), nConsoleSequenceID(0)
 {
@@ -51,7 +51,7 @@ CConsole::CConsole( CCommandsBase *_pCommands, const string &szWindowName )
 	pCommands->GetStringCommands( &cmds );
 	SetAutoComplete( cmds );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::InitScintilla()
 {
 	m_fnScintilla = (int (*)(void *,int,int,int))SendMessage(SCI_GETDIRECTFUNCTION,0,0);
@@ -60,7 +60,7 @@ void CConsole::InitScintilla()
 	Sci(SCI_SETMARGINWIDTHN, 1, 0);
 	//	Sci(SCI_ASSIGNCMDKEY, MAKEWORD( 'F', SCMOD_CTRL ), int message)
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CConsole::Sci(int nCmd, int wParam, int lParam)
 {
 	ASSERT(m_fnScintilla);
@@ -68,12 +68,12 @@ int CConsole::Sci(int nCmd, int wParam, int lParam)
 
 	return m_fnScintilla(m_ptrScintilla, nCmd, wParam, lParam);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::ClearAll()
 {
 	Sci(SCI_CLEARALL);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::SetAutoComplete( const vector<string> &vszKeywords )
 {
 	vszScriptKeywords = vszKeywords;
@@ -90,7 +90,7 @@ void CConsole::SetAutoComplete( const vector<string> &vszKeywords )
 	if ( !szAutoComplete.empty() )
 		Sci(SCI_SETKEYWORDS, 0, (LPARAM)(&(szAutoComplete[0])) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::SetStyles()
 {
 	//const char font[] = "Verdana";
@@ -130,7 +130,7 @@ void CConsole::SetStyles()
 	Sci(SCI_STYLESETBACK, ES_END_OF_NOT_CLOSED_STR, 0xE0C0E0);
 	Sci(SCI_STYLESETEOLFILLED, ES_END_OF_NOT_CLOSED_STR, 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::OnMouseMove(UINT nFlags, CPoint point) 
 {
 	// TODO: Add your message handler code here and/or call default
@@ -167,7 +167,7 @@ void CConsole::OnMouseMove(UINT nFlags, CPoint point)
 
 	CWnd::OnMouseMove(nFlags, point);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::AutoComplete()
 {
 	if ( !Sci( SCI_AUTOCACTIVE ) )
@@ -200,7 +200,7 @@ void CConsole::AutoComplete()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::AddText( const string &szText )
 {
 	int nTextEnd = Sci( SCI_GETLENGTH );
@@ -214,7 +214,7 @@ void CConsole::AddText( const string &szText )
 	nTextEnd = Sci( SCI_GETLENGTH );
 	Sci( SCI_GOTOPOS, nTextEnd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	const int nLineNum = Sci( SCI_LINEFROMPOSITION, Sci(SCI_GETCURRENTPOS) );
@@ -239,7 +239,7 @@ void CConsole::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if ( isalpha( nChar ) )
 		AutoComplete();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsole::Segment()
 {
 	IConsoleBuffer *pBuf = Singleton<IConsoleBuffer>();
@@ -250,4 +250,4 @@ void CConsole::Segment()
 			AddText( NStr::ToMBCS( l.szText ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

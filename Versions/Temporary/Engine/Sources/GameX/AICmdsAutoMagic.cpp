@@ -3,11 +3,11 @@
 #include "AICmdsAutoMagic.h"
 #include "CommonCommands.h"
 #include "AILogicCommandInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CAICmdsAutomagic													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAICmdsAutomagic::CAICmdsAutomagic()
 {
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CRegisterGroupCommand ) ) );
@@ -23,23 +23,23 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 	for ( int i = 0; i < byte2msg.size(); ++i )
 		msg2byte[byte2msg[i]] = i;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAICmdsAutomagic::GetCommandID( CObjectBase *p )
 {
 	int nTypeID = NObjectFactory::GetObjectTypeID( typeid( *p ) );
 	NI_ASSERT( msg2byte.find( nTypeID ) != msg2byte.end(), StrFmt( "AI command %s not found", typeid(*p).name() ) );
 	return msg2byte[ nTypeID ];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase *CAICmdsAutomagic::MakeCommand( int nID )
 {
 	NI_ASSERT( nID >= 0 && nID < msg2byte.size(), StrFmt( "Net message with byte code %d not found", nID ) );
 	return NObjectFactory::MakeObject( byte2msg[ nID ] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAICmdsAutoMagic *CreateAICmdsAutoMagic()
 {
 	return new CAICmdsAutomagic();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300A7AC1, CAICmdsAutomagic )

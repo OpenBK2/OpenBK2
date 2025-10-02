@@ -5,12 +5,12 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbwater.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAnimatedTexture::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
@@ -18,7 +18,7 @@ void SAnimatedTexture::ReportMetaInfo( const string &szAddName, BYTE *pThis ) co
 	NMetaInfo::ReportMetaInfo( szAddName + "NumFramesY", (BYTE*)&nNumFramesY - pThis, sizeof(nNumFramesY), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UseFrames", (BYTE*)&nUseFrames - pThis, sizeof(nUseFrames), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAnimatedTexture::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Material", &pMaterial );
@@ -28,7 +28,7 @@ int SAnimatedTexture::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAnimatedTexture::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pMaterial );
@@ -38,7 +38,7 @@ int SAnimatedTexture::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAnimatedTexture::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -53,9 +53,9 @@ DWORD SAnimatedTexture::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SWaterSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "WaterSet", typeID, sizeof(*this) );
@@ -66,7 +66,7 @@ void SWaterSet::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Surf", (BYTE*)&pSurf - pThis, sizeof(pSurf), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWaterSet::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -76,7 +76,7 @@ int SWaterSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWaterSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &water );
@@ -85,8 +85,8 @@ int SWaterSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SWater::EWaterType eValue )
 {
 	switch ( eValue )
@@ -105,7 +105,7 @@ string EnumToString( NDb::SWater::EWaterType eValue )
 		return "WT_OCEAN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const string &szValue )
 {
 	if ( szValue == "WT_OCEAN" )
@@ -121,7 +121,7 @@ NDb::SWater::EWaterType NDb::StringToEnum_NDb_SWater_EWaterType( const string &s
 	return NDb::SWater::WT_OCEAN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SWater::SWaterWaveType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Amplitude", (BYTE*)&fAmplitude - pThis, sizeof(fAmplitude), NTypeDef::TYPE_TYPE_FLOAT );
@@ -131,7 +131,7 @@ void SWater::SWaterWaveType::ReportMetaInfo( const string &szAddName, BYTE *pThi
 	NMetaInfo::ReportMetaInfo( szAddName + "DeepWaveNumber", (BYTE*)&fDeepWaveNumber - pThis, sizeof(fDeepWaveNumber), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "PhaseOffset", (BYTE*)&fPhaseOffset - pThis, sizeof(fPhaseOffset), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWater::SWaterWaveType::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Amplitude", &fAmplitude );
@@ -143,7 +143,7 @@ int SWater::SWaterWaveType::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWater::SWaterWaveType::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fAmplitude );
@@ -155,7 +155,7 @@ int SWater::SWaterWaveType::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SWater::SWaterWaveType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -170,9 +170,9 @@ DWORD SWater::SWaterWaveType::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SWater::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Water", typeID, sizeof(*this) );
@@ -193,7 +193,7 @@ void SWater::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "WaterType", (BYTE*)&eWaterType - pThis, sizeof(eWaterType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWater::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -213,7 +213,7 @@ int SWater::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWater::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &waves );
@@ -232,7 +232,7 @@ int SWater::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x10084340, SWaterSet ) 

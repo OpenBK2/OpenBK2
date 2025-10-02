@@ -6,7 +6,7 @@
 #include "..\MapEditorLib\Interface_CommandHandler.h"
 
 #define UNDO_BUFFER_SIZE 25
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CControllerContainer : public IControllerContainer, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CControllerContainer );
@@ -35,6 +35,6 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__CONTROLLER__CONTAINER__)
 

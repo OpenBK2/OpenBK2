@@ -11,14 +11,14 @@
 #include "../System/FileUtils.h"
 #include "../System/VFSOperations.h"
 #include "Tools_Resources.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,
 																							  CArray2D<DWORD> *pNormalImage, 
 																								const string &szFileName,
@@ -57,7 +57,7 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<DWORD> *pSmallImage,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 																							 class CBitmap *pSmallBitmap,
 																							 const string &rszObjectTypeName,
@@ -94,7 +94,7 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasicDataExtractor::SaveImagesToCache( CArray2D<DWORD> &rImageSmall,
 																						 CArray2D<DWORD> &rImageNormal,
 																						 const string &rszObjectTypeName,
@@ -115,7 +115,7 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<DWORD> &rImageSmall,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	int nPos = rszObjectName.rfind( PATH_SEPARATOR_CHAR );
@@ -127,7 +127,7 @@ bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectT
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UINT CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 																				 class CBitmap *pSmallBitmap,
 																				 CString *pstrLabel,
@@ -162,4 +162,4 @@ UINT CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 	}
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

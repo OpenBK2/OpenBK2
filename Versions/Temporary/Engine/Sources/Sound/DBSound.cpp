@@ -5,11 +5,11 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbsound.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::ESoundType eValue )
 {
 	switch ( eValue )
@@ -24,7 +24,7 @@ string EnumToString( NDb::ESoundType eValue )
 		return "NORMAL";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const string &szValue )
 {
 	if ( szValue == "NORMAL" )
@@ -36,7 +36,7 @@ NDb::ESoundType NDb::StringToEnum_NDb_ESoundType( const string &szValue )
 	return NDb::NORMAL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "PathName", (BYTE*)&pPathName - pThis, sizeof(pPathName), NTypeDef::TYPE_TYPE_REF );
@@ -45,7 +45,7 @@ void SComplexSoundDesc::SSoundStats::ReportMetaInfo( const string &szAddName, BY
 	NMetaInfo::ReportMetaInfo( szAddName + "Probability", (BYTE*)&fProbability - pThis, sizeof(fProbability), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "soundType", (BYTE*)&esoundType - pThis, sizeof(esoundType), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSoundDesc::SSoundStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "PathName", &pPathName );
@@ -56,7 +56,7 @@ int SComplexSoundDesc::SSoundStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSoundDesc::SSoundStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pPathName );
@@ -67,7 +67,7 @@ int SComplexSoundDesc::SSoundStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SComplexSoundDesc::SSoundStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -82,9 +82,9 @@ DWORD SComplexSoundDesc::SSoundStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SComplexSoundDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ComplexSoundDesc", typeID, sizeof(*this) );
@@ -94,7 +94,7 @@ void SComplexSoundDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Looped", (BYTE*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSoundDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -103,7 +103,7 @@ int SComplexSoundDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSoundDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &sounds );
@@ -111,7 +111,7 @@ int SComplexSoundDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x11069BC3, SComplexSoundDesc ) 

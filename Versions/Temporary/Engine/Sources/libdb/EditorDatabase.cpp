@@ -12,12 +12,12 @@
 #include "../System/xmlreader.h"
 #include "Logger.h"
 #include "DBWatcherClient.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXTERNVAR CLogger theLogger;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEditorDbForceLoadGuard
 {
 	static int s_nForceLoadCounter;
@@ -49,7 +49,7 @@ struct SEditorDbForceLoadGuard
 };
 int SEditorDbForceLoadGuard::s_nForceLoadCounter = 0;
 bool SEditorDbForceLoadGuard::s_bForceLoad = true;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEditorDatabase : public CBasicDatabase
 {
 	OBJECT_NOCOPY_METHODS( CEditorDatabase );
@@ -127,7 +127,7 @@ public:
 	}
 };
 CBasicDatabase *CreateEditorDatabase() { return new CEditorDatabase(); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -135,7 +135,7 @@ CBasicDatabase *CreateEditorDatabase() { return new CEditorDatabase(); }
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator )
 {
 	SetFileSystem( _pVFS, _pFileCreator );
@@ -145,14 +145,14 @@ bool CEditorDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFil
 	LoadIndex(); 
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::RegisterObject( const SFullTypeHeader &hdr )
 {
 	CDBID dbid;
 	NormalizeDBID( &dbid, CDBID(hdr.szFileName) );
 	elementsMap[dbid].typeHeader = *( static_cast<const STypeObjectHeader*>(&hdr) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::SaveChangedIndex()
 {
 	if ( IsIndexChanged() )
@@ -183,7 +183,7 @@ bool CEditorDatabase::SaveChangedIndex()
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::LoadTypesMap()
 {
 	vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
@@ -214,7 +214,7 @@ bool CEditorDatabase::LoadTypesMap()
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CEditorDatabase::SElement *CEditorDatabase::GetElement( const CDBID &_dbid )
 {
 	CDBID dbid;
@@ -223,7 +223,7 @@ const CEditorDatabase::SElement *CEditorDatabase::GetElement( const CDBID &_dbid
 		return 0;
 	return &( elementsMap[dbid] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CEditorDatabase::GetClassTypeID( const string &szClassTypeName )
 {
 	for ( CTypesMap::const_iterator it = typesMap.begin(); it != typesMap.end(); ++it )
@@ -233,7 +233,7 @@ int CEditorDatabase::GetClassTypeID( const string &szClassTypeName )
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NMetaInfo::SStructMetaInfo *CEditorDatabase::GetRawStructMetaInfo( const string &szTypeName )
 {
 	NMetaInfo::CMetaInfoMap::iterator pos = metaInfoMap.find( szTypeName );
@@ -244,7 +244,7 @@ NMetaInfo::SStructMetaInfo *CEditorDatabase::GetRawStructMetaInfo( const string 
 	}
 	return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NMetaInfo::SStructMetaInfo *CEditorDatabase::GetStructMetaInfo( const string &szTypeName )
 {
 	NMetaInfo::SStructMetaInfo *pMetaInfo = GetRawStructMetaInfo( szTypeName );
@@ -260,7 +260,7 @@ NMetaInfo::SStructMetaInfo *CEditorDatabase::GetStructMetaInfo( const string &sz
 	}
 	return pMetaInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::DoesObjectExist( const CDBID &dbid )
 {
 	if ( elementsMap.find( dbid ) != elementsMap.end() )
@@ -268,7 +268,7 @@ bool CEditorDatabase::DoesObjectExist( const CDBID &dbid )
 	else
 		return RegisterResourceFile( GetFileName(dbid) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::IsFileRegistered( const string &szFileName )
 {
 	CDBID dbid, _dbid( szFileName );
@@ -276,7 +276,7 @@ bool CEditorDatabase::IsFileRegistered( const string &szFileName )
 	
 	return elementsMap.find( dbid ) != elementsMap.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::RegisterResourceFile( const string &szFileName )
 {
 	CDBID dbid, _dbid( szFileName );
@@ -291,7 +291,7 @@ bool CEditorDatabase::RegisterResourceFile( const string &szFileName )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 {
 	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), StrFmt("Resource \"%s\" already exist!", dbid.ToString().c_str()), return false );
@@ -304,7 +304,7 @@ bool CEditorDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NBind::CBindStruct *CEditorDatabase::CreateNewBind( const STypeObjectHeader &header )
 {
 	NMetaInfo::SStructMetaInfo *pMetaInfo = GetStructMetaInfo( header.szClassTypeName );
@@ -324,7 +324,7 @@ NBind::CBindStruct *CEditorDatabase::CreateNewBind( const STypeObjectHeader &hea
 	NBind::CBindStruct *pBind = new NBind::CBindStruct( pStruct, pMetaInfo );
 	return pBind;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IObjMan *CEditorDatabase::GetObjManInternal( const CDBID &_dbid )
 {
 	SEditorDbForceLoadGuard forceLoadGuard;
@@ -359,7 +359,7 @@ IObjMan *CEditorDatabase::GetObjManInternal( const CDBID &_dbid )
 		return pBind;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 {
 	NI_VERIFY( pBind->IsLoaded() == false, StrFmt("Trying to load already loaded object \"%s\"", dbid.ToString().c_str()), return true );
@@ -398,7 +398,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IObjMan *CEditorDatabase::CreateNewObject( const string &szClassTypeName )
 {
 	NMetaInfo::SStructMetaInfo *pMetaInfo = GetStructMetaInfo( szClassTypeName );
@@ -414,7 +414,7 @@ IObjMan *CEditorDatabase::CreateNewObject( const string &szClassTypeName )
 	CResourceHelper::CallPostLoad( pBind->GetObject(), true );
 	return pBind;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::AddNewObjectInternal( const CDBID &dbid, IObjMan *pObjMan )
 {
 	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct *>( pObjMan );
@@ -423,7 +423,7 @@ void CEditorDatabase::AddNewObjectInternal( const CDBID &dbid, IObjMan *pObjMan 
 	elementsMap[dbid].typeHeader.szClassTypeName = pBind->GetTypeName();
 	pBind->SetDBID( dbid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::AddNewObject( const string &szFilePath, const CDBID &_dbid, IObjMan *pObjMan )
 {
 	NI_VERIFY( IsDBIDValid(_dbid), "Invalid DBID - can't add new object!", return false );
@@ -439,14 +439,14 @@ bool CEditorDatabase::AddNewObject( const string &szFilePath, const CDBID &_dbid
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::RemoveObjectInternal( const CDBID &_dbid )
 {
 	CDBID dbid;
 	NormalizeDBID( &dbid, _dbid );
 	elementsMap.erase( dbid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::RemoveObject( const CDBID &_dbid )
 {
 	CBasicDatabase::ReportObjectRemoved( _dbid );
@@ -455,7 +455,7 @@ bool CEditorDatabase::RemoveObject( const CDBID &_dbid )
 	SetDataChanged();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew )
 {
 	CDBID dbidOld, dbidNew;
@@ -493,7 +493,7 @@ bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::MarkChanged( const CDBID &dbid )
 {
 	CElementsMap::iterator pos = elementsMap.find( dbid );
@@ -502,7 +502,7 @@ void CEditorDatabase::MarkChanged( const CDBID &dbid )
 	SetDataChanged();
 	CBasicDatabase::ReportObjectChanged( dbid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::SaveChanges()
 {
 	bool bHasFailedElements = false;
@@ -554,7 +554,7 @@ void CEditorDatabase::SaveChanges()
 	//
 	ReportSaveAllChanges();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorDatabase::DropCachedResources()
 {
 	{
@@ -583,7 +583,7 @@ void CEditorDatabase::DropCachedResources()
 	ResetDataChanged();
 	CBasicDatabase::ReportDiscardAllChanges();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -591,7 +591,7 @@ void CEditorDatabase::DropCachedResources()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::GetClassesList( vector<NTypeDef::STypeClass*> *pRes )
 {
 	pRes->resize( 0 );
@@ -603,7 +603,7 @@ bool CEditorDatabase::GetClassesList( vector<NTypeDef::STypeClass*> *pRes )
 	}
 	return !pRes->empty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const int nClassTypeID )
 {
 	// first, find class type name
@@ -623,7 +623,7 @@ bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const int nClassTypeI
 	// get objects list by class type name
 	return GetObjectsList( pRes, szClassTypeName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const string &szClassTypeName )
 {
 	if ( szClassTypeName.empty() )
@@ -645,5 +645,5 @@ bool CEditorDatabase::GetObjectsList( vector<CDBID> *pRes, const string &szClass
 	}
 	return !pRes->empty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

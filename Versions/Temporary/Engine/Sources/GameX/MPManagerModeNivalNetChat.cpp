@@ -5,17 +5,17 @@
 #include "../Client/ServerClient.h"
 #include "..\Misc\StrProc.h"
 #include "InterfaceState.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::RequestChatChannels( DWORD dwVersion )
 {
 	CChatChannelsListRequestPacket *pPacket = new CChatChannelsListRequestPacket( 0, dwVersion );
 	pClient->SendPacket( pPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	Chat-related Messages
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 {
 	wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
@@ -41,21 +41,21 @@ bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnJoinChatChannelMessage( SMPUIJoinChannelMessage *pMsg )
 {
 	CChatChannelPacket *pChannelPkt = new CChatChannelPacket( 0, pMsg->szChannel );
 	pClient->SendPacket( pChannelPkt );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnRequestChatChannelsMessage( SMPUIMessage *pMsg )
 {
 	updateChannels.bUpdating = true;
 	RequestChatChannels( updateChannels.dwVersion );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage( SMPUIChangeFriendIgnoreStatusMessage *pMsg )
 {
 	CChatModifyIgnoreFriendListPacket *pPkt = new CChatModifyIgnoreFriendListPacket( 0, pMsg->szNick, CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE );
@@ -77,11 +77,11 @@ bool CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage( SMPUIChangeFrien
 	pClient->SendPacket( pPkt );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	Chat-related Packets
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatChannelsListPacket( class CChatChannelsListPacket *pPacket )
 {
 	//DebugTrace( "+++ ChatChannelsList" );
@@ -102,7 +102,7 @@ bool CMPManagerModeNivalNet::OnChatChannelsListPacket( class CChatChannelsListPa
 	updateChannels.dwVersion = pPacket->dwVersion;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatChannelClientsPacket( class CChatChannelClientsListPacket *pPacket )
 {
 	//DebugTrace( "+++ ChatClientsList" );
@@ -117,7 +117,7 @@ bool CMPManagerModeNivalNet::OnChatChannelClientsPacket( class CChatChannelClien
 	PushMessage( pMsg );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatChannelClientNotifyPacket( class CChatClientListChangeNotifyPacket *pPacket )
 {
 	//DebugTrace( "+++ ChatClientsListChange" );
@@ -126,7 +126,7 @@ bool CMPManagerModeNivalNet::OnChatChannelClientNotifyPacket( class CChatClientL
 	PushMessage( pMsg );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatIgnoreFriendListPacket( class CChatIgnoreFriendListPacket *pPacket )
 {
 	SMPUIChatChannelNicksMessage *pMsg = new SMPUIChatChannelNicksMessage;
@@ -149,7 +149,7 @@ bool CMPManagerModeNivalNet::OnChatIgnoreFriendListPacket( class CChatIgnoreFrie
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatFriendNotifyPacket( class CChatFriendNotifyPacket *pPacket )
 {
 	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage( pPacket->szNick, EMPS_OFFLINE, true );
@@ -168,10 +168,10 @@ bool CMPManagerModeNivalNet::OnChatFriendNotifyPacket( class CChatFriendNotifyPa
 	PushMessage( pMsg );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnChatAFKResponsePacket( class CChatAFKResponsePacket *pPacket )
 {
 	PushMessage( new SMPUIChatMessage( NStr::ToUnicode( pPacket->szAFKNick ) + L" - " + InterfaceState()->GetTextEntry( "T_CHAT_AFK_RESPONSE" ) ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

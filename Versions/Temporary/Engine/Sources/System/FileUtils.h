@@ -2,10 +2,10 @@
 
 #include "System_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NFile
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class SYSTEM_EXPORT CFileIterator
 {
 	HANDLE hFind;													// find file handle of the last search result
@@ -51,7 +51,7 @@ public:
 	const string& GetBasePath() const { return szPath; }
 	const string& GetBaseMask() const { return szMask; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // enumerate all files by mask.
 // при рекурсивной енумерации сначала входим в директорию, а потом только получаем её имя (при выходе из рекурсии)
 template <class TEnumFunc>
@@ -77,25 +77,25 @@ void EnumerateFiles( const string &szStartDir, const char *pszMask, TEnumFunc ca
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetDirectoryDirs( const char *pszDirName, list<string> *pNames, bool bRecursive = true );
 SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, list<string> *pNames, bool bRecurse = true );
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive );
 SYSTEM_EXPORT void DeleteDirectory( const string &szDir );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT bool DoesFileExist( const string &szFileName );
 bool DoesFolderExist( const string &szFolderName );bool IsValidFileName( const string &szFileName );
 // is valid win32 file name
 SYSTEM_EXPORT bool IsValidDirName( const string &szName );
 // copy file. create dst path before copying
 bool CopyFile( const string &szSrcName, const string &szDstName );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT string GetFullName( const string &szPath );
 SYSTEM_EXPORT void GetFullName( string *pResult, const string &szPath );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetTempPath();
 string GetTempFileName();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetCurrDir();
 string GetNormalizedCurrDir();
 void SetCurrDir( const string &szDir );
@@ -106,7 +106,7 @@ public:
 	CCurrDirHolder() { szDir = GetCurrDir(); }
 	~CCurrDirHolder() { SetCurrDir( szDir ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // return number of bytes, free for the caller on the selected drive
 double GetFreeDiskSpace( const char *pszDrive );
 }

@@ -10,13 +10,13 @@
 #include "../System/Commands.h"
 #include "../System/Text.h"
 #include "../Stats_B2_M1/StatusUpdates.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float SOLID_ICON_ALPHA = 1.0f;
 float FADED_ICON_ALPHA = 0.25f;
 const float MOUSE_PICKED_ALPHA_BONUS = 0.6f;
 const CVec3 HIDE_RADIUS_COLOR = CVec3( 0.0f, 1.0f, 0.0f );
 const float HIDE_RADIUS_WIDTH = 1.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator, bool bLooped, float fSpeed )
 {
 	return pAnimator->AddAnimation( timeStart, NAnimation::SAnimHandle(pAnim, 0), bLooped, fSpeed ) != -1;
@@ -25,9 +25,9 @@ bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAn
 {
 	return AddAnimation( pAnim, timeStart, pAnimator, pAnim->bLooped, 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SObjectStatus
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SObjectStatus::SObjectStatus()
 {
 	armors.resize( EOS_ARMOR_COUNT );
@@ -36,7 +36,7 @@ SObjectStatus::SObjectStatus()
 		armors[i] = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SObjectStatus::Clear()
 {
 	nHP = 0;
@@ -53,7 +53,7 @@ void SObjectStatus::Clear()
 	bIsTransport = false;
 	fFuel = -1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SObjectStatus::AddWeapon( const SWeapon &weapon )
 {
 	vector<SWeapon>::iterator it = find( weapons.begin(), weapons.end(), weapon );
@@ -72,7 +72,7 @@ void SObjectStatus::AddWeapon( const SWeapon &weapon )
 			weapons.push_back( weapon );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapObj::CMapObj() : vScale( 1, 1, 1 ), fHP( 1 ), eDiplomacy( EDI_NEUTRAL ), bLoopedAnimation( false ), 
 	bVisible( false ), bIsSilentlyDead( false ), bHasMoveAnimation( false ), fAnimationSpeed( 1.0f ), 
 	attachedSounds( __EAST_COUNTER__ ), nKeyObjectPlayer( -1 ), nParentID( -1 ), nPlayer( -1 ),
@@ -81,7 +81,7 @@ CMapObj::CMapObj() : vScale( 1, 1, 1 ), fHP( 1 ), eDiplomacy( EDI_NEUTRAL ), bLo
 	for ( int i = 0; i < __EAST_COUNTER__; ++i )
 		attachedSounds[i] = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapObj::~CMapObj()
 {
 	for ( int i = 0; i < attachedSounds.size(); ++i )
@@ -89,7 +89,7 @@ CMapObj::~CMapObj()
 
 	Scene()->RemoveAllAttached( GetID(), ESSOT_LIGHT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
@@ -116,14 +116,14 @@ void CMapObj::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDesc *pSound, bool bLooped )
 {
 	if ( attachedSounds[eType] != 0 )
 		DetachSound( eType );
 	attachedSounds[eType] = SoundScene()->AddSound( pSound, GetCenter(), SFX_MIX_ALWAYS, bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::DetachSound( EAttachedSoundType eType )
 {
 	if ( attachedSounds[eType] != 0 ) 
@@ -132,7 +132,7 @@ void CMapObj::DetachSound( EAttachedSoundType eType )
 		attachedSounds[eType] = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObj::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
@@ -149,12 +149,12 @@ bool CMapObj::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 
 	return bCreated;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AfterLoad()
 {
 	UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, const bool bIsNight, const bool bInEditor )
 {
 	if ( GetStats() )
@@ -175,7 +175,7 @@ void CMapObj::SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, c
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ForceSwitchLightFX( const bool bNewState, const bool bInEditor )
 {
 	Scene()->RemoveAllAttached( GetID(), ESSOT_LIGHT );
@@ -187,7 +187,7 @@ void CMapObj::ForceSwitchLightFX( const bool bNewState, const bool bInEditor )
 			Scene()->AttachLightEffect( GetID(), &(GetStats()->lightEffects[ i ]), currTime, ESAT_NO_REPLACE, bInEditor );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ForceSwitchLightFX( int nEffect, const bool bNewState, const bool bInEditor )
 {
 	if ( bNewState )
@@ -199,13 +199,13 @@ void CMapObj::ForceSwitchLightFX( int nEffect, const bool bNewState, const bool 
 	else
 		Scene()->RemoveAttached( GetID(), ESSOT_LIGHT, nEffect );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::SetDeathState()
 {
 	if ( fHP > 0.0f )
 		fHP = 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj* CMapObj::ChooseVisObjForHP( float fHP )
 {
 	const NDb::SVisObj *pResult = pStats->pvisualObject;
@@ -221,31 +221,31 @@ const NDb::SVisObj* CMapObj::ChooseVisObjForHP( float fHP )
 	}
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	pModel = pNewModel; 
 	Scene()->ChangeModel( nID, pModel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	pModel = pNewModel; 
 	Scene()->ChangeModel( nID, pModel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	pModel = pNewModel; 
 	Scene()->ChangeModel( nID, pModel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	pModel = pNewModel; 
 	Scene()->ChangeModel( nID, pModel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats, IScene * pScene, NDb::ESeason eSeason )
 {
 	NI_ASSERT( fNewHP <= 1.0f, StrFmt( "From AILogic: (CommonUpdateHP) current unit's hp exceed maximum hp (%s)", 
@@ -308,7 +308,7 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 	
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, WORD wDir, NTimer::STime time )
 {
 	if ( pEffect == 0 ) 
@@ -354,14 +354,14 @@ void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, WORD wDir, NTimer
 		PlayComplexEffect( OBJECT_ID_FORGET, pEffect, timeEffect, vPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update )
 {
 	nKeyObjectPlayer = update.nPlayer;
 	
 	UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	nPlayer = info.nPlayer;
@@ -371,7 +371,7 @@ void CMapObj::AINewUnitInfo( const struct SNewUnitInfo &info, interface IScene *
 	if ( info.fHitPoints == 0.0f )
 		fHP = 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( placement.bNewFormat )
@@ -394,7 +394,7 @@ void CMapObj::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pS
 			pSoundScene->SetSoundPos( attachedSounds[i], GetCenter() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SAnimB2* CMapObj::GetAnimation( const int _nAnimation )
 {
 	if ( _nAnimation < 0 )
@@ -431,14 +431,14 @@ const NDb::SAnimB2* CMapObj::GetAnimation( const int _nAnimation )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapObj::AIUpdateDiplomacy( const struct SAINotifyDiplomacy &diplomacy )
 {
 	nPlayer = diplomacy.nPlayer;
 	SetDiplomacy( diplomacy.eDiplomacy );
 	return IsFriend();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer::STime startTime )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nID );
@@ -467,7 +467,7 @@ void CMapObj::AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer:
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nID );
@@ -498,7 +498,7 @@ pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 
 	return pair<int,bool>( -1, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::GetStatus( SObjectStatus *pStatus ) const
 {
 	pStatus->Clear();
@@ -512,7 +512,7 @@ void CMapObj::GetStatus( SObjectStatus *pStatus ) const
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(GetStats()->,LocalizedName) )
 		pStatus->szLocalizedName = GET_TEXT_PRE(GetStats()->,LocalizedName);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::SetVisible( bool _bVisible, const NDb::ESeason _eSeason, const bool _bIsNight )
 { 
 	bool bOldVisible = bVisible;
@@ -523,7 +523,7 @@ void CMapObj::SetVisible( bool _bVisible, const NDb::ESeason _eSeason, const boo
 
 	UpdateVisibility( bVisible != bOldVisible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::UpdateVisibility( bool bForced )
 {
 	Scene()->ShowObject( GetID(), IsVisible() );
@@ -533,7 +533,7 @@ void CMapObj::UpdateVisibility( bool bForced )
 		UpdateIcons();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::ChangeLight( const int nLight, NDb::ESeason eSeason, bool bLight )
 {
 	/*NI_ASSERT( nLight < GetStats()->lights.size(), "Wrong number of light (%d), total number of lights (%d)" );
@@ -557,7 +557,7 @@ void CMapObj::ChangeLight( const int nLight, NDb::ESeason eSeason, bool bLight )
 		}
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::GetEnabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CUserActions actions;
@@ -567,7 +567,7 @@ void CMapObj::GetEnabledActions( CUserActions *pActions, EActionsType eActions )
 	actions &= ~actionsDisabled;
 	*pActions |= actions;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
 	bool bAltMode ) const
 {
@@ -589,7 +589,7 @@ NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUse
 	}
 	return NDb::USER_ACTION_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, bool bAltMode ) const
 {
 	CUserActions actionsWith;
@@ -597,7 +597,7 @@ NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, bool
 
 	return GetBestAutoAction( actionsBy, &actionsWith, bAltMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMapObj::GetBestSelfAction( const CUserActions &actionsBy, bool bAltMode ) const
 {
 	const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
@@ -607,7 +607,7 @@ NDb::EUserAction CMapObj::GetBestSelfAction( const CUserActions &actionsBy, bool
 			return static_cast<NDb::EUserAction>( pClient->actionsPriority.selfActions[i] );
 	return NDb::USER_ACTION_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::SetColorIndex( int _nColorIndex, bool bForceUpdate )
 {
 	nColorIndex = _nColorIndex;
@@ -615,7 +615,7 @@ void CMapObj::SetColorIndex( int _nColorIndex, bool bForceUpdate )
 	if ( bForceUpdate )
 		UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapObj::UpdateIcons()
 {
 	if ( CanShowIcons() )
@@ -627,9 +627,9 @@ void CMapObj::UpdateIcons()
 	else
 		Scene()->RemoveIcon( GetID() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMOSelectable
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	const float fAlpha = ( bHighlighted ? SOLID_ICON_ALPHA : FADED_ICON_ALPHA ) + 
@@ -672,13 +672,13 @@ void CMOSelectable::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_INVISIBLE );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::SetIconsHitbar( bool bHitbar, bool _bHighlighted )
 {
 	bIconHitbar = bHitbar;
 	bHighlighted = _bHighlighted;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::SetIconsGroup( int nGroup, bool _bHighlighted )
 {
   if ( nGroup >= 0 )
@@ -690,19 +690,19 @@ void CMOSelectable::SetIconsGroup( int nGroup, bool _bHighlighted )
 		eIconGroup = NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE;
 	bHighlighted = _bHighlighted;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::DisableIcons( bool bDisable )
 {
 	bDisableIcons = bDisable;
 	if ( !CanShowIcons() )
 	  Scene()->RemoveIcon( GetID() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSelectable::CanShowIcons() const
 {
 	return IsVisible() && !bDisableIcons && NGlobal::GetVar( "MissionIconsMovieMode", 0.0f ) == 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::Select( bool bSelect )
 {
 	bSelected = bSelect;
@@ -711,7 +711,7 @@ void CMOSelectable::Select( bool bSelect )
 		SetSelectionGroup( -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::SetSelectionGroup( int _nSelectionGroup )
 {
 	if ( nSelectionGroup != _nSelectionGroup )
@@ -720,7 +720,7 @@ void CMOSelectable::SetSelectionGroup( int _nSelectionGroup )
 		UpdateIcons();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMOSelectable::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_FOLLOW ) )
@@ -728,12 +728,12 @@ NDb::EUserAction CMOSelectable::GetBestAutoAction( const CUserActions &actionsBy
 
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSelectable::CanSelect() const
 { 
 	return bCanSelect && GetStats()->eSelectionType != NDb::SELECTION_TYPE_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::UpdateVisualStatus( const struct SUnitStatusUpdate &update )
 {
 	if ( (update.eStatus & EUS_STATUS_MASK) == 0 )
@@ -753,22 +753,22 @@ void CMOSelectable::UpdateVisualStatus( const struct SUnitStatusUpdate &update )
 	
 	UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSelectable::HasVisualGroup( enum EUnitStatus eGroup ) const
 {
 	return (dwVisualStatus & (1 << (eGroup >> 16))) != 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::SetVisualGroup( enum EUnitStatus eGroup )
 {
 	dwVisualStatus |= 1 << (eGroup >> 16);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSelectable::ClearVisualGroup( enum EUnitStatus eGroup )
 {
 	dwVisualStatus &= ~(1 << (eGroup >> 16));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMOContainer* CMOSelectable::GetTopContainer() const
 {
 	IMOContainer *pTopContainer = GetContainer();
@@ -781,9 +781,9 @@ IMOContainer* CMOSelectable::GetTopContainer() const
 	}
 	return pTopContainer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // IMOContainer
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IMOContainer::GetPassangers( vector<IB2MapObj*> *pPassangers ) const
 {
 	vector<CMOSelectable*> passangers;
@@ -792,7 +792,7 @@ void IMOContainer::GetPassangers( vector<IB2MapObj*> *pPassangers ) const
 	for ( int i = 0; i < passangers.size(); ++i )
 		(*pPassangers)[i] = passangers[i];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IMOContainer::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	CMOSelectable::FillIconsInfo( iconInfo );
@@ -821,8 +821,8 @@ void IMOContainer::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 		iconInfo.nHPBarAdditionalColorIndex = GetColorIndex();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void PlaceCrater( const NDb::SCraterSet *pCrater, NDb::ESeason eSeason, const CVec2 &vPos )
 {
 	int nSeasonIndex = -1;
@@ -867,7 +867,7 @@ void PlaceCrater( const NDb::SCraterSet *pCrater, NDb::ESeason eSeason, const CV
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaySoundEffect( const int nID, const NDb::SComplexSoundDesc *pEffect, NTimer::STime timeStart, const CVec3 &vPos )
 {
 	if ( pEffect )
@@ -876,7 +876,7 @@ void PlaySoundEffect( const int nID, const NDb::SComplexSoundDesc *pEffect, NTim
 		SoundScene()->AddSound( pEffect, vPos, SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, currTime > timeStart ? currTime - timeStart : 0, 2 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos )
 {
 	PlaySoundEffect( nID, pEffect->pSoundEffect, timeStart, vPos );
@@ -891,7 +891,7 @@ int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, NDb::ESeason eSeason )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -909,7 +909,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot, NDb::ESeason eSeason )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -923,7 +923,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace, NDb::ESeason eSeason )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -940,7 +940,7 @@ int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect 
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -954,7 +954,7 @@ int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer
 		return Scene()->AddEffect( nID, pSceneEffect, Min(timeStart, currTime), mPlace ); 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlayComplexEffect( const int nID, const string &szBoneName, ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
 {
 	const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -972,7 +972,7 @@ void PlayComplexEffect( const int nID, const string &szBoneName, ESceneSubObjTyp
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
 		Scene()->AttachEffect( nID, eType, szBoneName, pSceneEffect, Min(timeStart, currTime), eMode ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISkeletonAnimator *pAnimator )
 {
 	if ( pAnimator == 0 ) 
@@ -989,7 +989,7 @@ bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISk
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetPlacementFromUpdate( CVec3 *pvPos, CQuat *pqRot, const SAINewUnitUpdate *pUpdate )
 {
 	if ( pUpdate )
@@ -1011,7 +1011,7 @@ void GetPlacementFromUpdate( CVec3 *pvPos, CQuat *pqRot, const SAINewUnitUpdate 
 		*pqRot = QNULL;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMapObj::operator&( IBinSaver &saver )
 {
 	saver.Add( 3, &vPos );
@@ -1045,8 +1045,8 @@ int CMapObj::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbility, const SAbilityInfo &abilityInfo )
 {
 	CAbilityInfo::iterator it = pAbilities->find( eAbility );
@@ -1094,14 +1094,14 @@ void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbili
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities )
 {
 	for ( CAbilityInfo::const_iterator it = abilities.begin(); it != abilities.end(); ++it )
 		CombineAbilities( pAbilities, it->first, it->second );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MapObjectCommands)
 REGISTER_VAR_EX( "object_icons_faded_alpha", NGlobal::VarFloatHandler, &FADED_ICON_ALPHA, 0.5f, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -23,7 +23,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string szErr;
 static int ScriptLOG(lua_State* state)
 {
@@ -37,7 +37,7 @@ static int ScriptLOG(lua_State* state)
 			szErr += "\r\n";
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnEnSelchangeEditText(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	SELCHANGE *pSelChange = reinterpret_cast<SELCHANGE *>(pNMHDR);
@@ -49,7 +49,7 @@ void CScriptEditor::OnEnSelchangeEditText(NMHDR *pNMHDR, LRESULT *pResult)
 
 	*pResult = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CScriptEditor dialog
 IMPLEMENT_DYNAMIC(CScriptEditor, CResizeDialog)
 CScriptEditor::CScriptEditor( bool _bInitiallySelected, CWnd* pParent /*=NULL*/)
@@ -288,7 +288,7 @@ void CScriptEditor::OnEnChangeEditText()
 	if ( pWnd && !bFreezeUpdate )
 		pWnd->PostMessage( WM_ME_TEXTCHANGED );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::CheckSyntax()
 {
 	if ( !bCheckSyntax || !::IsWindow( m_hWnd ) )
@@ -307,20 +307,20 @@ void CScriptEditor::CheckSyntax()
 		m_ctrlErrLog.SetWindowText( szErr.c_str() );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnOK()
 {
 	szLastText = GetText();
 	if ( bModal )
 		CResizeDialog::OnOK();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnCancel()
 {
 	if ( bModal )
 		CResizeDialog::OnCancel();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnCnModified(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	SCNotification *pNotify = reinterpret_cast<SCNotification*>(pNMHDR);
@@ -332,7 +332,7 @@ void CScriptEditor::OnCnModified(NMHDR *pNMHDR, LRESULT *pResult)
 */
 	*pResult = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnCnCharAdded(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	SCNotification *pNotify = reinterpret_cast<SCNotification*>(pNMHDR);
@@ -352,7 +352,7 @@ void CScriptEditor::OnCnCharAdded(NMHDR *pNMHDR, LRESULT *pResult)
 
 	*pResult = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptEditor::OnSize(UINT nType, int cx, int cy)
 {
 	CResizeDialog::OnSize(nType, cx, cy);
@@ -371,4 +371,4 @@ void CScriptEditor::OnSize(UINT nType, int cx, int cy)
 	pt = r.BottomRight() - ptOK;
 	m_ctrlOK.SetWindowPos( 0, pt.x, pt.y, 0, 0, SWP_NOOWNERZORDER | SWP_NOSIZE | SWP_NOZORDER );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -1,6 +1,6 @@
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SUnitBaseRPGStats::CountPrimaryGuns( const int nUniqueID, const int nPlatform )
 {
 	nPrimaryGun = -1;
@@ -18,7 +18,7 @@ void SUnitBaseRPGStats::CountPrimaryGuns( const int nUniqueID, const int nPlatfo
 		nAmmos[gun.bIsPrimary ? 0 : 1] += gun.nAmmo;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatform )
 {
 	// count shell etypes
@@ -50,7 +50,7 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 		availUserActions.RemoveAction( USER_ACTION_USE_SHELL_SMOKE );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 {
 	if ( eGameType != SGVOGT_TANK_PIT )
@@ -143,5 +143,5 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

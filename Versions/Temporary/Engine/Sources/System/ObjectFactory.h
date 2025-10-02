@@ -1,7 +1,7 @@
 #pragma once
 #include "..\Misc\HashFuncs.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // factory is using RTTI
 // objects should inherit T and T must have at least 1 virtual function
 template <class T>
@@ -79,7 +79,7 @@ public:
 	template<class TT>
 		int GetTypeID( TT *p = 0 ) { return VFT2TypeID( &typeid(TT) ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 void CClassFactory<T>::RegisterTypeBase( int nTypeID, newFunc func, VFT vft )
 {
@@ -88,4 +88,4 @@ void CClassFactory<T>::RegisterTypeBase( int nTypeID, newFunc func, VFT vft )
 	typeIndex[ vft ] = nTypeID;
 	typeInfo[ nTypeID ] = func;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

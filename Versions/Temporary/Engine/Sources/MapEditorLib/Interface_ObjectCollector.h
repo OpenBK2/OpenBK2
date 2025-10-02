@@ -4,7 +4,7 @@
 
 #include "Interface_Controller.h"
 #include "../System/FilePath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ALL_FILTER_ID 0
 //
 #define NORMAL_IMAGE_SIZE_X 64
@@ -15,13 +15,13 @@
 #define NORMAL_IMAGE_SPACE_X 10
 #define NORMAL_IMAGE_SPACE_Y 35
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define OCDE_NORMAL_BITMAP	0x01
 #define OCDE_SMALL_BITMAP		0x02
 #define OCDE_LABEL					0x04
 #define OCDE_ALL						0xFFFFFFFF
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IObjectCollectorCallback
 {
 	virtual void OnInsertObject( const string &szObjectTypeName, const string &szObjectName ) = 0;
@@ -30,7 +30,7 @@ interface IObjectCollectorCallback
 	virtual void OnClearCollection() = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IObjectDataExtractor : public CObjectBase
 {
 	// возвращает данные объекта, в качестве возвращаемого значение - битовая маска, что заполнено
@@ -42,7 +42,7 @@ interface IObjectDataExtractor : public CObjectBase
 															const string &rszDataExtractorType ) = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IObjectFilter
 {
 	typedef hash_map<NFile::CFilePath, int> CObjectNameCollection;
@@ -52,7 +52,7 @@ interface IObjectFilter
 	virtual bool Match( const string &szObjectTypeName, const string &szObjectName ) const = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IObjectFilterCollector : public CObjectBase
 {
 	enum { tidTypeID = 0x14216B00 };
@@ -72,7 +72,7 @@ interface IObjectFilterCollector : public CObjectBase
 	virtual int ShowFilterCreationDialog( CWnd* pParentWindow, string *pszFilterType, int *pnFilterIndex ) = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Коллекционирование объектов по меткам
 // Создание ImageList на коллекцию
 // Применение фильтров
@@ -107,6 +107,6 @@ interface IObjectCollector : public CObjectBase
 	//
 	virtual void ClearCollection() = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__OBJECT_COLLECTOR__)
 

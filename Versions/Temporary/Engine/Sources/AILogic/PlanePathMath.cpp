@@ -4,10 +4,10 @@
 
 const float nOrientation = -1.0f;
 
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
+
+
 void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 )
 {
 	const CVec2 v( -tang.y, tang.x );
@@ -20,13 +20,13 @@ void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float
 	c2->center = p - v * r;
 	c2->nDir = 1;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 // travel angle from start to finish. returned angle is in range [0, 65535]
 WORD DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir )
 {
 	return DirectedDirsDifference( GetDirectionByVector(vStart), GetDirectionByVector(vFinish), nDir );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 // travel angle from start to finish. returned angle is in range [0, 65535]
 WORD DirectedDirsDifference( const WORD wStart, const WORD wFinish, const int nDir )
 {
@@ -62,7 +62,7 @@ bool GetInternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11,
 }
 
 
-/////////////////////////////////////////////////////////////////////////////
+
 // same as below, exept thar c1 MUST have greater radius than c2
 static void GetExternalTangentPointsFirstGreater( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
@@ -83,7 +83,7 @@ static void GetExternalTangentPointsFirstGreater( const CCircle &c1, const CCirc
 	*v12 += vOffset2;
 	*v22 = c2.center + vOffset2;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 // external tangent line to 2 circles is that line, that both circles are on one size of line.
 // this function returns external tangent points (to both circles).
 // v11 & v21 - 1st tangent line, v21 & v22 - 2nd tangent line

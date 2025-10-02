@@ -11,7 +11,7 @@ namespace NGScene
 static CObj<NGfx::CGeometry> pCloudGrid;
 static NGfx::STriangleList cloudTris;
 static vector<STriangle> cloudTrisBuf;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_GRID_SIZE = 64;
 static void RefreshGeometry()
 {
@@ -46,7 +46,7 @@ static void RefreshGeometry()
 	cloudTris.nTris = cloudTrisBuf.size();
 	cloudTris.pTri = &cloudTrisBuf[0];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &renderInfo, const SPerspDirectionalDepthInfo &depthInfo, NGfx::CTexture *pCloud, const SHMatrix &proj )
 {
 	if ( !IsValid(pCloud) )
@@ -87,9 +87,9 @@ void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &
 
 	rc.DrawPrimitive( pCloudGrid, cloudTris );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCloudMover
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCloudMover::Recalc()
 {
 	STime t = pTime->GetValue();

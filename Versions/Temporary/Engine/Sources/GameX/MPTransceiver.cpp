@@ -26,11 +26,11 @@
 #include "InterfaceMisc.h"
 
 #include "../SceneB2/Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int s_nInterruptTimeout = 5000;		// No segments for this time before timeout is called
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAISegmentFinishedPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CAISegmentFinishedPacket );
@@ -44,7 +44,7 @@ public:
 
 	CAISegmentFinishedPacket() : CNetPacket( 0 ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransciverCommonPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTransciverCommonPacket );
@@ -61,18 +61,18 @@ public:
 	CTransciverCommonPacket() {}
 	CTransciverCommonPacket( EType _eType ) : CNetPacket( 0 ), eType( _eType ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 111, CAISegmentFinishedPacket );
 REGISTER_SAVELOAD_CLASS( 112, CTransciverCommonPacket );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMPTransceiver
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMPTransceiver::CMPTransceiver() : nGameSpeed( 0 )
 {
 	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnTransciverCommonPacket );
 	REGISTER_PACKET_PROCESSOR( &CMPTransceiver::OnAISegmentFinishedPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::StartMission()
 {
 	nLatency = 2;
@@ -87,7 +87,7 @@ void CMPTransceiver::StartMission()
 	NMainLoop::Command( new CICMission( this ) );
 	bWaiting = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::SendCommand( IAILogicCommandB2 *pCommand )
 {
 	if ( !bIsGameRunning || bIsGameEnded )
@@ -96,7 +96,7 @@ void CMPTransceiver::SendCommand( IAILogicCommandB2 *pCommand )
 	aiCommandsToSend.push_back( pCommand );
 	//DebugTrace( "+++ Segment %d(%d) cmd from %d", nSegment, nCommonSegment, nMyLogicID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::PlayerRemoved( int nPlayer )
 {
 	//DebugTrace( "+++ Segment %d, removing player %d", nCommonSegment, nPlayer );
@@ -106,7 +106,7 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	wMask &= ~( 1UL << nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // perform segments for AI
 void CMPTransceiver::DoSegments()
 {
@@ -160,7 +160,7 @@ void CMPTransceiver::DoSegments()
 			AdvanceToNextSegment();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::ExecuteCommands( int nFromSegment )
 {
 	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
@@ -190,17 +190,17 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 		//DebugTrace( "+++ Executed commands from segment %d ***", nFromSegment );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::IsSegmentFinishedByAll( int nSegment )
 {
 	return ( segmFinished[nSegment] & wMask ) == wMask;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::IsSegmentPackFinished()
 {
 	return ( nCommonSegment % nSegmentsPackSize == 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum )
 {
 	if ( segmFinished[nSegment] & ( 1UL << nPlayer ) )
@@ -209,7 +209,7 @@ void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned lon
 	checkSums[nPlayer][nSegment] = ulCheckSum;
 	//DebugTrace( "+++ Player %d segment %d checksum %d", nPlayer, nSegment, ulCheckSum );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::FinalizeSegmentPack()
 {
 	unsigned long ulCheckSum = pCmdsHistory->GetLastChecksum();
@@ -236,7 +236,7 @@ void CMPTransceiver::FinalizeSegmentPack()
 	aiCommandsToSend.clear();
 	pClient->SendGamePacket( pPacket, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::AdvanceToNextSegment()
 {
 	pTimer->NextSegment();
@@ -245,12 +245,12 @@ void CMPTransceiver::AdvanceToNextSegment()
 	nSegment = nCommonSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ Local Player %d move to segment %d (%d)", nMyLogicID, nSegment, nCommonSegment );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMPTransceiver::GetSegmentToExecute( const int nSegment ) const
 {
 	return ( nSegment + nSegmentsPackSize ) % pConsts->nMaxLatency;  
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket )
 {
 	const int nPlayer = GetPlayerByClient( pPacket->nClientID );
@@ -279,7 +279,7 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::OnTransciverCommonPacket( class CTransciverCommonPacket *pPacket )
 {
 	int nPlayer = GetPlayerByClient( pPacket->nClientID );
@@ -293,7 +293,7 @@ bool CMPTransceiver::OnTransciverCommonPacket( class CTransciverCommonPacket *pP
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMPTransceiver::GetPlayerByClient( int nClient ) const
 {
 	for ( int i = 0; i < players.size(); ++i )
@@ -303,27 +303,27 @@ int CMPTransceiver::GetPlayerByClient( int nClient ) const
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::IsPlayerPresent( int nPlayer ) const
 {
 	return wMask & ( 1UL << nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::IsGameRunning() const
 {
 	return bIsGameRunning;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICheckSumLog* CMPTransceiver::GetCheckSumLogger()
 {
 	return pCmdsHistory;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMapInfo* CMPTransceiver::GetMap() const
 {
 	return pMapInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::CheckRunGame()
 {
 	if ( bIsGameRunning )
@@ -361,14 +361,14 @@ void CMPTransceiver::CheckRunGame()
 	pAI->NetGameStarted();
 	Scene()->ResetTimer( GetTickCount() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::EndGame()
 {
 	if ( bIsGameEnded )
 		return;
 	bIsGameEnded = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::LeaveOutOfSync()
 {
 //	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
@@ -376,7 +376,7 @@ void CMPTransceiver::LeaveOutOfSync()
 	Singleton<IScenarioTracker>()->MissionCancel();
 	EndGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CMPTransceiver::IsGamePacket( const CNetPacket *pPacket )
 {
 	const CAISegmentFinishedPacket *pSegmentPacket = dynamic_cast<const CAISegmentFinishedPacket*>( pPacket );
@@ -387,7 +387,7 @@ const bool CMPTransceiver::IsGamePacket( const CNetPacket *pPacket )
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &params, int nMySlot )
 {
 	NI_ASSERT( !params.clients.empty(), "Empty clients list" );
@@ -429,13 +429,13 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	cmds.SetSizes( players.size(), pConsts->nMaxLatency );
 	checkSums.FillZero();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::CommandTimeOut( bool bSet )
 { 
 	bWaiting = bSet; 
 	pTimer->Pause( bSet, PAUSE_TYPE_USER_PAUSE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 {
 	pTimer->Pause( bOn, PAUSE_TYPE_MP_NO_SEGMENT_DATA );
@@ -458,12 +458,12 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 		timeStartWaiting = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPTransceiver::ReportLags( DWORD dwLaggers,	bool bInitial )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPTransceiver::IsAsyncDetected( int nSegment )
 {
 	if ( nCommonSegment <= nLatency )
@@ -506,7 +506,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMPTransceiver::ScheduleGameEnd( const int _nSegment )
 {
 	const int nFinishOnSegment = ( _nSegment > 0 ) ? _nSegment : nCommonSegment;
@@ -514,7 +514,7 @@ int CMPTransceiver::ScheduleGameEnd( const int _nSegment )
 
 	return nFinishOnSegment;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot )
 {
 	CMPTransceiver *pTransceiver = new CMPTransceiver();
@@ -522,9 +522,9 @@ CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameP
 
 	return pTransceiver;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1713C440, CMPTransceiver );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MPTransceiver)
 REGISTER_VAR_EX( "multiplayer_pause_timeout", NGlobal::VarIntHandler, &s_nInterruptTimeout, 5000, STORAGE_NONE );
 FINISH_REGISTER

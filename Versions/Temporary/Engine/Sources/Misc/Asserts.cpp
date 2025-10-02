@@ -5,7 +5,7 @@
 #include "BSUtil.h"
 #include "BSUInit.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TypeDebugTrace( const char *buff, const char *pszWhat, const vector<SCallStackEntry> &entries )
 {
 	OutputDebugString( "*********************************************************************************************************\n" );
@@ -24,7 +24,7 @@ static void TypeDebugTrace( const char *buff, const char *pszWhat, const vector<
 	OutputDebugString( "CallStack entries dump done\n" );
 	OutputDebugString( "*********************************************************************************************************\n" );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Sets the filter function that will be called when there is a fatal crash
 static LPTOP_LEVEL_EXCEPTION_FILTER g_pfnOrigFilt = NULL ;
 static bool bFilterIsSet;
@@ -44,7 +44,7 @@ void ResetCrashHandler()
 	g_pfnOrigFilt = 0;
 	bFilterIsSet = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // convert windows exception code to string
 const char* ExceptionCodeToString( DWORD dwExceptionCode )
 {
@@ -96,7 +96,7 @@ const char* ExceptionCodeToString( DWORD dwExceptionCode )
 		return "Unknown exception.";
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char *GetRegisterString( char *pszBuf, EXCEPTION_POINTERS * pExPtrs )
 {
 	// Check the parameter.
@@ -133,7 +133,7 @@ static const char *GetRegisterString( char *pszBuf, EXCEPTION_POINTERS * pExPtrs
 #endif
 	return pszBuf;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static LONG __stdcall CrashHandlerFilter( EXCEPTION_POINTERS *pExPtrs )
 {
 	char buff[1024];
@@ -170,10 +170,10 @@ static LONG __stdcall CrashHandlerFilter( EXCEPTION_POINTERS *pExPtrs )
 		return EXCEPTION_CONTINUE_SEARCH;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NBSU
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SIgnoresList ignores;
 EBSUReport __stdcall ReportAssert( const char *pszCondition, const char *pszDescription, 
 	const char *pszFileName, int nLineNumber )

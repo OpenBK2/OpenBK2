@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "GScene.h"
 namespace NGfx
 {
@@ -25,12 +25,12 @@ inline int GetFloorBit( int nFloor, bool bShadowCast, bool bParticles, int nLODM
 }
 class IMaterial;
 struct SMaterialCreateInfo;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SColorHash
 {
 	int operator()( const CVec3 &color ) const { int *p = (int*)&color; return p[0]^p[1]^p[2]; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSkyAdapter: public CPtrFuncBase<NGfx::CCubeTexture>
 {
 	OBJECT_BASIC_METHODS( CSkyAdapter );
@@ -43,7 +43,7 @@ public:
 	void SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex );
 	CPtrFuncBase<NGfx::CCubeTexture>* GetSource() const { return pTex; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMaterialShare: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CMaterialShare );
@@ -62,7 +62,7 @@ public:
 	IMaterial* CreateMaterial( const NDb::SMaterial *pMaterial );
 	void FillCreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CColorMaterialShare
 {
 	typedef hash_map<CVec3, CPtr<IMaterial>, SColorHash> CMatHashmap;
@@ -75,12 +75,12 @@ public:
 		return 0;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STransparentHash
 {
 	int operator()( const CVec4 &color ) const { int *p = (int*)&color; return p[0]^p[1]^p[2]^p[3]; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransparentMaterialShare
 {
 	typedef hash_map<CVec4, CPtr<IMaterial>, STransparentHash> CMatHashmap;
@@ -95,7 +95,7 @@ public:
 		return 0;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

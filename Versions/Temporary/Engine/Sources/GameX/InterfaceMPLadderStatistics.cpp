@@ -9,18 +9,18 @@
 #include "GetConsts.h"
 #include "../System/Text.h"
 #include "DBScenario.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMPLadderStatistics
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics() :
 CInterfaceScreenBase( "MPLadderStatistics", "ladder_statistics" )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMPLadderStatistics::~CInterfaceMPLadderStatistics()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLadderStatistics::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false ) 
@@ -43,7 +43,7 @@ bool CInterfaceMPLadderStatistics::Init()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLadderStatistics::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
@@ -60,12 +60,12 @@ bool CInterfaceMPLadderStatistics::Execute( const string &szSender, const string
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMPLadderStatistics::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLadderStatistics::StepLocal( bool bAppActive )
 {
 	// Check MP messages
@@ -95,13 +95,13 @@ bool CInterfaceMPLadderStatistics::StepLocal( bool bAppActive )
 		pPrevMPScreen->Step( bAppActive );
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLadderStatistics::OnBackReaction()
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::RequestInfo( const string &szNick )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILadderInfoRequestMessage( szNick, false ) );
@@ -111,7 +111,7 @@ void CInterfaceMPLadderStatistics::RequestInfo( const string &szNick )
 	// Show "Waiting"
 	pWaiting->ShowWindow( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStatsMessage *pMsg )
 {
 	SLadderStatistics &info = pMsg->info;
@@ -264,7 +264,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 
 	pWaiting->ShowWindow( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &info, const wstring &wszName, int nUseSolo, int nUseTeam )
 {
 	int nWins = 0;
@@ -287,7 +287,7 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 	}
 	Add4Line( L"", L"", L"", L"" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::Add4Line( const wstring &wszItem1, const wstring &wszItem2, const wstring &wszItem3, const wstring &wszItem4 )
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv4Template );
@@ -310,7 +310,7 @@ void CInterfaceMPLadderStatistics::Add4Line( const wstring &wszItem1, const wstr
 	pItem->ShowWindow( true );
 	pAdvList->PushBack( pItem, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::Add2Line( const wstring &wszItem1, const wstring &wszItem2 )
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv2Template );
@@ -327,7 +327,7 @@ void CInterfaceMPLadderStatistics::Add2Line( const wstring &wszItem1, const wstr
 	pItem->ShowWindow( true );
 	pAdvList->PushBack( pItem, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMPLadderStatistics::Add1Line( const wstring &wszItem )
 {
 	ITextView *pItem = dynamic_cast<ITextView*>( AddWindowCopy( pAdvList, pAdv1Template ) );
@@ -337,7 +337,7 @@ void CInterfaceMPLadderStatistics::Add1Line( const wstring &wszItem )
 	pItem->SetText( pItem->GetDBText() + wszItem );
 	pAdvList->PushBack( pItem, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMPLadderStatistics::OnShowMedal( const string &szSender )
 {
 	const NDb::SMedal *pMedal = 0;
@@ -366,13 +366,13 @@ bool CInterfaceMPLadderStatistics::OnShowMedal( const string &szSender )
 	pMedalPopup->ShowWindow( true );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICMPLadderStatistics
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLadderStatistics::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLadderStatistics::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
@@ -380,12 +380,12 @@ void CICMPLadderStatistics::PostCreate( IInterface *pInterface )
 	if ( pLS )
 		pLS->RequestInfo( szNick );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMPLadderStatistics::Configure( const char *pszConfig )
 {
 	szNick = pszConfig;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19263380, CInterfaceMPLadderStatistics );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MP_LADDER_STATISTICS, CICMPLadderStatistics );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

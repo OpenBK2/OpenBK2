@@ -6,14 +6,14 @@
 
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorUnitBase::CExecutorUnitBase( const EExecutorTypeID _eTypeID, const int _nNextTime, const EUnitSpecialAbility _eAbility )
 : timeLastUpdate( curTime ), timeDisableGroup( curTime ), eAbility( _eAbility ), state( EASS_READY_TO_ON ), stateBeforeDisable( EASS_DISABLE ),
 	CExecutor( _eTypeID, _nNextTime ), fSpeedCoeff (1.0f), pAbilityDesc(0), fOldProgress( -1.0f )
 {  
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorUnitBase::Segment()
 {
 	while ( UpdateAbilityState() )
@@ -22,7 +22,7 @@ int CExecutorUnitBase::Segment()
 
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
@@ -50,13 +50,13 @@ void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const 
 		pUpdate = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::SetAutocast( const bool _bAutocast )
 {
 	state.bAutocast = _bAutocast;
 	UpdateProgress( state , 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorUnitBase::UpdateAbilityState()
 {
 	switch( state.eState )
@@ -167,7 +167,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &events, const SExecutorEventParam &_par )
 {
 	SExecutorEventParam par( _par );
@@ -177,14 +177,14 @@ void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const 
 		pContainer->RegisterOnEvent( this, par );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer, const vector<EExecutorEventID> &unitEvents, const int nUnitID )
 {
 	SExecutorEventParam par;
 	par.nUnitID = nUnitID;
 	RegisterOnEvents( pContainer, unitEvents, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::Disable()
 {
 	if ( EASS_DISABLE != state.eState )
@@ -192,7 +192,7 @@ void CExecutorUnitBase::Disable()
 	state.eState = EASS_DISABLE;
 	timeDisableGroup = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 {
 	switch( event.GetParam().eEventID )
@@ -268,7 +268,7 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::ForceRecharge( )
 {
 	state.eState = EASS_OFF;
@@ -276,7 +276,7 @@ void CExecutorUnitBase::ForceRecharge( )
 	timeLastUpdate = curTime;
 	UpdateProgress( state, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::ForceActivate( )
 {
 	if ( state.eState == EASS_DISABLE )
@@ -299,7 +299,7 @@ void CExecutorUnitBase::ForceActivate( )
 	}
 	fOldProgress = -1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorUnitBase::ForceDeactivate( )
 {
 	fOldProgress = -1.0f;

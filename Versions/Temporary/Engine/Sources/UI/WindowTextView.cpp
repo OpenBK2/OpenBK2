@@ -1,23 +1,23 @@
 // WindowTextView.cpp: implementation of the CWindowTextView class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "WindowTextView.h"
 #include "UIVisitor.h"
 #include "../System/Text.h"
 
-////
+
 #include "UIML.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075B8C, CWindowTextView)
 extern CVec2 vScreenRect;
 bool g_bNoInitText = false;
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CWindowTextView
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 void CWindowTextView::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindowTextView *pDesc( checked_cast<const NDb::SWindowTextView*>( _pDesc ) );
@@ -28,7 +28,7 @@ void CWindowTextView::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	wszCustomText = GetDBText();
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowTextView::SetWidth( const int nWidth )
 {
 	float fOldWidth = GetWindowRect().Width();
@@ -37,7 +37,7 @@ void CWindowTextView::SetWidth( const int nWidth )
 		return;
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CTPoint<int> CWindowTextView::GetSize() const
 {
 	CTPoint<int> ptSize(0,0);
@@ -47,7 +47,7 @@ const CTPoint<int> CWindowTextView::GetSize() const
 	//CRAP}
 	return ptSize;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowTextView::SetPlacement( const float x, const float y, const float sizeX, const float sizeY, const DWORD flags )
 {
 	float fOldWidth = GetWindowRect().Width();
@@ -57,7 +57,7 @@ void CWindowTextView::SetPlacement( const float x, const float y, const float si
 	if ( !g_bNoInitText )
 		InitText();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CWindowTextView::Reposition( const CTRect<float> &parentRect )
 {
 	float fOldWidth = GetWindowRect().Width();
@@ -67,7 +67,7 @@ void CWindowTextView::Reposition( const CTRect<float> &parentRect )
 	this->vScreenRect = ::vScreenRect;
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowTextView::InitText()
 {
 	if ( wszCustomText.empty() || GetWindowRect().Width() <= 0 )
@@ -103,7 +103,7 @@ bool CWindowTextView::InitText()
 	}
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////
+
 int CWindowTextView::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -116,7 +116,7 @@ int CWindowTextView::operator&( IBinSaver &saver )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////
+
 void CWindowTextView::Visit( interface IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
@@ -129,7 +129,7 @@ void CWindowTextView::Visit( interface IUIVisitor *pVisitor )
 		pVisitor->VisitUIText( pGfxText, textRC.GetLeftTop(), textRC );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowTextView::GetDBFormatText() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
@@ -140,7 +140,7 @@ const wstring& CWindowTextView::GetDBFormatText() const
 	
 	return CWindow::GetDBFormatText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowTextView::GetDBInstanceText() const
 {
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->,Text) )
@@ -148,17 +148,17 @@ const wstring& CWindowTextView::GetDBInstanceText() const
 
 	return CWindow::GetDBInstanceText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CWindowTextView::GetDBText() const
 {
 	return CWindow::GetDBText();
 }
-//////////////////////////////////////////////////////////////////////
+
 const wstring& CWindowTextView::GetText() const
 {
 	return wszCustomText;
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowTextView::SetText( const wstring &_szText )
 {
 	if ( wszCustomText == _szText )
@@ -167,7 +167,7 @@ bool CWindowTextView::SetText( const wstring &_szText )
 	wszCustomText = _szText;
 	return InitText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowTextView::SetIDForMLHandler( int nID )
 {
 	bool bChanged = (nIDForMLHandler != nID);
@@ -176,4 +176,4 @@ void CWindowTextView::SetIDForMLHandler( int nID )
 	if ( pGfxText )
 		InitText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

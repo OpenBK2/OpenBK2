@@ -19,7 +19,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NExtraDraw
 {
 	void DrawVector( CSceneDrawTool *pSceneDrawTool, UINT uColor, const vector<CVec3> &vPoints )
@@ -64,7 +64,7 @@ namespace NExtraDraw
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -95,7 +95,7 @@ void CVSOSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -120,7 +120,7 @@ void CVSOSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -142,7 +142,7 @@ void CVSOSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -390,7 +390,7 @@ void CVSOEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -477,7 +477,7 @@ void CVSOEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -505,7 +505,7 @@ void CVSOEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -554,7 +554,7 @@ void CVSOEditState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -582,7 +582,7 @@ void CVSOEditState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -626,7 +626,7 @@ void CVSOEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -765,7 +765,7 @@ void CVSOEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOAddState::InsertVSO()
 {
 	NHPTimer::STime totalTime = 0;
@@ -823,7 +823,7 @@ bool CVSOAddState::InsertVSO()
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnSetFocus( CWnd* pNewWnd )
 {
 	if ( pParentState->CanEdit() )
@@ -832,7 +832,7 @@ void CVSOAddState::OnSetFocus( CWnd* pNewWnd )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnKillFocus( CWnd* pOldWnd )
 {
 	if ( pParentState->CanEdit() )
@@ -841,7 +841,7 @@ void CVSOAddState::OnKillFocus( CWnd* pOldWnd )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -856,7 +856,7 @@ void CVSOAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -870,7 +870,7 @@ void CVSOAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -896,7 +896,7 @@ void CVSOAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -910,7 +910,7 @@ void CVSOAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -937,7 +937,7 @@ void CVSOAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::Enter()
 {
 	currentSelection.Invalidate();
@@ -977,7 +977,7 @@ void CVSOState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::Leave()
 {
 	sceneDrawTool.Clear();
@@ -1007,13 +1007,13 @@ void CVSOState::Leave()
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::ClearSelection()
 {
 	Enter();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::RemoveSelectedVSO()
 {
 	if ( CanEdit() )
@@ -1099,19 +1099,19 @@ void CVSOState::RemoveSelectedVSO()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoEditor* CVSOState::GetMapInfoEditor()
 { 
 	return pParentState->pMapInfoEditor;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOState::PickOtherVSO( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 { 
 	return pParentState->PickOtherVSO( nFlags, rMousePoint, rvPos );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
 	if ( CanEdit() )
@@ -1130,7 +1130,7 @@ void CVSOState::EmulateSelectLButtonDown( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 {
 	if ( CanEdit() )
@@ -1172,7 +1172,7 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::Draw( CPaintDC *pPaintDC )
 {
 	if ( CanEdit() )
@@ -1237,14 +1237,14 @@ void CVSOState::Draw( CPaintDC *pPaintDC )
 	//}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::OnSetFocus( class CWnd* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOState::SwitchToAddState()
 {
 	ClearSelection();
@@ -1260,7 +1260,7 @@ void CVSOState::SwitchToAddState()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -1279,7 +1279,7 @@ bool CVSOState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOState::UpdateCommand(), pbEnable == 0" );
@@ -1312,6 +1312,6 @@ bool CVSOState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

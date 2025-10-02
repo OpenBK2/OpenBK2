@@ -18,26 +18,26 @@
 #include "../Stats_B2_M1/DBMapInfo.h"
 #include "../Stats_B2_M1/Vis2AI.h"
 #include "../System/Commands.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int MAX_UPDATE_AT_SEGMENT = 100;
 static const int MAX_AREAS_CALCULATED_AT_SEGMENT = 50;
 static const int MAX_SMOOTH_TILES_AT_SEGMENT = 1000;
 static const int HEIGHT_MULTIPLYER = 100;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CAMOUFLAGE_RADIUS = 8;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern SCheats theCheats;
 extern CGraveyard theGraveyard;
 CGlobalWarFog theWarFog;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for warfog calculation
 static CArray2D1Bit mask;
 static CArray2D1Bit visit;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMaskVisitor
 {
 	int nMaxRadius;
@@ -58,7 +58,7 @@ struct SMaskVisitor
 	}
 	const bool GetReturnValue() const { return true; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGetLastVisitor
 {
 	bool bLastVisit;
@@ -71,20 +71,20 @@ struct SGetLastVisitor
 	}
 	const bool GetReturnValue() const { return bLastVisit; }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo, const int _nParty, const int nSpiralLength ) : SWarFogUnitInfo( unitInfo ),
 	vOldPos( unitInfo.vPos ), nOldRadius( unitInfo.nRadius ), nParty( _nParty ), updateFlag( UPD_CREATE_NEW_UNIT )
 {
 	visValues.SetSize( nSpiralLength );
 	visValues.FillZero();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
 		ReInit();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::ReInit()
 {
 	miniMapWarFog.SetSizes( GetSizeX(), GetSizeY() );
@@ -129,7 +129,7 @@ void CGlobalWarFog::ReInit()
 	cMiniMapWarFogParty = 0xFF;
 	*/
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::Init( const int _nSizeX, const int _nSizeY, const int _nMaxRadius, const float _fUnitHeight )
 {
 	nUnitHeight = _fUnitHeight * HEIGHT_MULTIPLYER;
@@ -152,7 +152,7 @@ void CGlobalWarFog::Init( const int _nSizeX, const int _nSizeY, const int _nMaxR
 
 	ReInit();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::Clear()
 {
 	spiral.clear();
@@ -170,7 +170,7 @@ void CGlobalWarFog::Clear()
 	visit.Clear();
 	units.clear();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::RecalculateArea( const SVector &vTile )
 {
 	if ( !calced.GetData( vTile.x, vTile.y ) || nAreasCalced < MAX_AREAS_CALCULATED_AT_SEGMENT )
@@ -194,7 +194,7 @@ void CGlobalWarFog::RecalculateArea( const SVector &vTile )
 		++nAreasCalced;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::RemoveTileValid( const int x, const int y )
 {
 	if ( !bInitialization )
@@ -209,7 +209,7 @@ void CGlobalWarFog::RemoveTileValid( const int x, const int y )
 		bHasInvalidTile = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::SetTileHeight( const int x, const int y, const float fHeight )
 {
 	NI_VERIFY( IsTileInside( x, y ), StrFmt( "Tile (%d x %d) outside heights map", x, y ), return );
@@ -217,7 +217,7 @@ void CGlobalWarFog::SetTileHeight( const int x, const int y, const float fHeight
 	heights[y][x] = fHeight * HEIGHT_MULTIPLYER;
 	RemoveTileValid( x, y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, const int nParty )
 {
 	NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), StrFmt( "Trying add unit %d with wrong position (%d x %d), size of map: %d x %d", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
@@ -231,7 +231,7 @@ void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, c
 	units[nID].nRadius = Min( units[nID].nRadius, GetMaxRadius() );
 	updateUnitList.Push( nID, UPD_CREATE_NEW_UNIT, 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::DeleteUnit( const int nID )
 {
 	TWarFogUnitsMap::iterator pos = units.find( nID );
@@ -246,7 +246,7 @@ void CGlobalWarFog::DeleteUnit( const int nID )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo )
 {
 	//NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), StrFmt( "Trying update unit %d to wrong position (%d x %d), size of map: %d x %d", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
@@ -282,7 +282,7 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::ChangeParty( const int nID, const SWarFogUnitInfo &unitInfo, const int nNewParty )
 {
 	TWarFogUnitsMap::iterator pos = units.find( nID );
@@ -304,7 +304,7 @@ void CGlobalWarFog::ChangeParty( const int nID, const SWarFogUnitInfo &unitInfo,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::SynchronizeHeights( const SVector &vUpLeftTile, const SVector &vBottomRightTile )
 {
 	const int nX1 = vUpLeftTile.x;
@@ -321,7 +321,7 @@ void CGlobalWarFog::SynchronizeHeights( const SVector &vUpLeftTile, const SVecto
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CArray1Bit &CGlobalWarFog::GetVisibleInfoForTile( const SVector &tile )
 {
 	if ( !IsTileValid( tile ) )
@@ -329,13 +329,13 @@ const CArray1Bit &CGlobalWarFog::GetVisibleInfoForTile( const SVector &tile )
 
 	return areas[tile.y][tile.x];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty )
 {
 	if ( bVisible )
 		updater.TileBecameVisibleFromWarFog( vTile, nParty );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInfo )
 {
 	if ( !unitInfo.bPlane )
@@ -381,7 +381,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 
 	unitInfo.Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unitInfo )
 {
 	TWarFog &thisPartyWarFog = warFog[unitInfo.nParty];
@@ -410,7 +410,7 @@ void CGlobalWarFog::RemoveVisibleTiles( const int nID, SWarForFullUnitInfo &unit
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::Segment()
 {
 	// update invalid tiles
@@ -459,7 +459,7 @@ void CGlobalWarFog::Segment()
 
 	nAreasCalced = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 {
 	if ( theCheats.GetTurnOffWarFog() )
@@ -471,7 +471,7 @@ bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 
 	return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const
 {
 	if ( theCheats.GetTurnOffWarFog() )
@@ -486,7 +486,7 @@ bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool b
 	else
 		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen )
 {
 	if ( bOpen == ( scriptAreas.find( scriptArea.szName ) == scriptAreas.end() ) )
@@ -518,7 +518,7 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::AddStaticObjectTile( const SVector &vTile, const int nObjectID, const float fHeight )
 {
 	const SVector vVisTile( vTile.x/AI_TILES_IN_VIS_TILE, vTile.y/AI_TILES_IN_VIS_TILE );
@@ -528,7 +528,7 @@ void CGlobalWarFog::AddStaticObjectTile( const SVector &vTile, const int nObject
 		staticObjects[vVisTile.y][vVisTile.x] = nObjectID;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::RemoveStaticObjectTile( const SVector &vTile, const int nObjectID )
 {
 	const SVector vVisTile( vTile.x/AI_TILES_IN_VIS_TILE, vTile.y/AI_TILES_IN_VIS_TILE );
@@ -538,7 +538,7 @@ void CGlobalWarFog::RemoveStaticObjectTile( const SVector &vTile, const int nObj
 		staticObjects[vVisTile.y][vVisTile.x] = -1;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const hash_set<int> &oldIDs )
 {
 	for ( int x = 0; x < GetSizeX(); ++x )
@@ -550,7 +550,7 @@ void CGlobalWarFog::ReplaceStaticObjects( const int nNewID, const hash_set<int> 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 {
 	if ( !IsTileInside( tile1 ) || !IsTileInside( tile2 ) )
@@ -579,7 +579,7 @@ bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGlobalWarFog::GetWarForInfo( CArray2D<BYTE> **pWarFogInfo, const int nParty, const bool bFirstTime )
 {
 	*pWarFogInfo = &miniMapWarFog;
@@ -630,7 +630,7 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<BYTE> **pWarFogInfo, const int nPart
 		nMiniMapY = 0;
 	return nMiniMapY == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGlobalWarFog::DumpWarFog()
 {
 	int nMinHeight = heights[0][0];
@@ -655,18 +655,18 @@ void CGlobalWarFog::DumpWarFog()
 	NImage::SaveImageAsTGA( &imageStream, image );
 */
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DumpWarFog( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	theWarFog.DumpWarFog();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( WarFogCheckers )
 
 REGISTER_VAR_EX( "AI.WarFog.CamouflageOpenRadius", NGlobal::VarIntHandler, &CAMOUFLAGE_RADIUS, 8, STORAGE_NONE );
 REGISTER_CMD( "warfog_dump", DumpWarFog );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x31261B40, CGlobalWarFog );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

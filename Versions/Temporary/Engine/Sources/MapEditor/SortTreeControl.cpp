@@ -10,11 +10,11 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CSortTreeControl, SECTreeCtrl)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CSortTreeControl::GetTreeItem( const string &rszName )
 {
 	if ( !rszName.empty() )
@@ -34,7 +34,7 @@ HTREEITEM CSortTreeControl::GetTreeItem( const string &rszName )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::ClearNameCache( const string &rszName )
 {
 	string szName = rszName;
@@ -63,7 +63,7 @@ void CSortTreeControl::ClearNameCache( const string &rszName )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::SetNameCache( const string &rszName, HTREEITEM hItem )
 {
 	if ( !rszName.empty() &&
@@ -82,7 +82,7 @@ void CSortTreeControl::SetNameCache( const string &rszName, HTREEITEM hItem )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::RemoveTreeItemFromMaps( HTREEITEM hItem )
 {
 	string szHashName;
@@ -114,7 +114,7 @@ void CSortTreeControl::RemoveTreeItemFromMaps( HTREEITEM hItem )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::SortTree( HTREEITEM hParentItem, PFNTVCOMPARE pfnCompare, LPARAM lParam )
 {
 	/**
@@ -140,7 +140,7 @@ void CSortTreeControl::SortTree( HTREEITEM hParentItem, PFNTVCOMPARE pfnCompare,
 	SortChildrenCB( &tvs );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nSelectedImage, HTREEITEM hParent , HTREEITEM hInsertAfter )
 {
 	if ( HTREEITEM hItem = InsertItem( lpszItem, nImage, nSelectedImage, hParent, hInsertAfter ) )
@@ -158,7 +158,7 @@ HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nS
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::RenameTreeItem( const string &rszDestination, const string &rszSource )
 {
 	string szDestination = rszDestination;
@@ -183,7 +183,7 @@ bool CSortTreeControl::RenameTreeItem( const string &rszDestination, const strin
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::DeleteAllTreeItems()
 {
 	treeItemMap.clear();
@@ -193,14 +193,14 @@ bool CSortTreeControl::DeleteAllTreeItems()
 	return DeleteAllItems();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::DeleteTreeItem( HTREEITEM hItem )
 {
 	RemoveTreeItemFromMaps( hItem );
 	return DeleteItem( hItem );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::IsTopSelection( HTREEITEM hItem, HTREEITEM hItemToSkip )
 {
 	HTREEITEM hParentItem = GetParentItem( hItem );
@@ -215,7 +215,7 @@ bool CSortTreeControl::IsTopSelection( HTREEITEM hItem, HTREEITEM hItemToSkip )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, string *pszWindowClipboardText )
 {
 	HTREEITEM hChildItem = GetChildItem( hItem );
@@ -260,7 +260,7 @@ void CSortTreeControl::FillWindowsClipboard( HTREEITEM hItem, string *pszWindowC
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::FillClipboard( bool _bClipboardCut )
 {
 	clipboardTreeItemMap.clear();
@@ -300,7 +300,7 @@ void CSortTreeControl::FillClipboard( bool _bClipboardCut )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::IsClipboardItem( HTREEITEM hItem ) const
 {
 	if ( ( hItem == 0 ) || ( hItem == TVI_ROOT ) )
@@ -322,13 +322,13 @@ bool CSortTreeControl::IsClipboardItem( HTREEITEM hItem ) const
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::SetTreeItemColor( HTREEITEM hItem, COLORREF color )
 {
 	treeItemColorMap[hItem] = color;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::GetTreeItemColor( HTREEITEM hItem, COLORREF *pColor )
 {
 	//NI_ASSERT( pColor != 0, "CSortTreeControl::GetTreeItemColor(): pColor == 0" );
@@ -342,7 +342,7 @@ bool CSortTreeControl::GetTreeItemColor( HTREEITEM hItem, COLORREF *pColor )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::RemoveTreeItemColorFromCache( HTREEITEM hItem )
 {
 	CTreeItemColorMap::iterator posTreeItemColor = treeItemColorMap.find( hItem );
@@ -352,13 +352,13 @@ void CSortTreeControl::RemoveTreeItemColorFromCache( HTREEITEM hItem )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::SetTreeItemReadOnly( HTREEITEM hItem, bool bReadOnly )
 {
 	treeItemReadOnlyMap[hItem] = bReadOnly;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSortTreeControl::GetTreeItemReadOnly( HTREEITEM hItem, bool *pbReadOnly )
 {
 	//NI_ASSERT( pbReadOnly != 0, "CSortTreeControl::GetTreeItemReadOnly(): pbReadOnly == 0" );
@@ -372,7 +372,7 @@ bool CSortTreeControl::GetTreeItemReadOnly( HTREEITEM hItem, bool *pbReadOnly )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSortTreeControl::RemoveTreeItemReadOnlyFromCache( HTREEITEM hItem )
 {
 	CTreeItemBoolMap::iterator posTreeItemReadOnly = treeItemReadOnlyMap.find( hItem );
@@ -381,6 +381,6 @@ void CSortTreeControl::RemoveTreeItemReadOnlyFromCache( HTREEITEM hItem )
 		treeItemReadOnlyMap.erase( posTreeItemReadOnly );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

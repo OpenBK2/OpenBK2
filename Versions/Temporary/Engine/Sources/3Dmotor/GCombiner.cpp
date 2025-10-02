@@ -9,40 +9,40 @@
 
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 extern bool bLowRAM;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // IPart
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IPart::IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner )
 	: pObjInfo(pData), pCombiner( _pCombiner ), fAverageTriArea(0)
 {
 	if ( IsValid( pCombiner ) )
 		pCombiner->AddPart( this );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IPart::~IPart()
 {
 	if ( IsValid( pCombiner ) ) 
 		pCombiner->RemovePart( this ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IPart::RefreshObjectInfo() 
 { 
 	pObjInfo.Refresh();
 	while ( !pObjInfo->GetValue() )
 		Sleep(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IPart::ResetCachedTransform()
 {
 	xformedPositions.clear();
 	gfxData.Clear();
 	cacheLighting.Clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IPart::SetCombiner( CPerMaterialCombiner *_pCombiner )
 {
 	if ( pCombiner == _pCombiner )
@@ -53,7 +53,7 @@ void IPart::SetCombiner( CPerMaterialCombiner *_pCombiner )
 	if ( IsValid( pCombiner ) )
 		pCombiner->AddPart( this );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void IPart::SetObjectInfoNode( CPtrFuncBase<CObjectInfo> *p )
 {
 	pObjInfo = p;
@@ -61,9 +61,9 @@ void IPart::SetObjectInfoNode( CPtrFuncBase<CObjectInfo> *p )
 		pCombiner->MarkWasted( this );
 	ResetCachedTransform();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAnimationWatch
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimationWatch::NeedUpdate() 
 {
 	bool bCombiner = pCombiner.Refresh();
@@ -102,20 +102,20 @@ bool CAnimationWatch::NeedUpdate()
 	}
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPerMaterialCombiner
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPerMaterialCombiner::CPerMaterialCombiner( int ) : bHasChanged(false)
 {
 	pAnimation = new CAnimationWatch( this, true );
 	pFullChange = new CAnimationWatch( this, false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPerMaterialCombiner::NeedUpdate()
 {
 	return bHasChanged;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerMaterialCombiner::Recalc()
 {
 	bHasChanged = false;
@@ -130,14 +130,14 @@ void CPerMaterialCombiner::Recalc()
 	for ( int k = 0; k < res.size(); ++k )
 		value[k] = res[ sorted[k] ];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerMaterialCombiner::AddPart( IPart *pPart )
 {
 	ASSERT( value.size() < PF_MAX_PARTS_PER_COMBINER );
 	value.push_back( pPart );
 	bHasChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerMaterialCombiner::RemovePart( IPart *pPart )
 {
 	vector< CPtr<IPart> >::iterator i = find( value.begin(), value.end(), pPart );
@@ -146,12 +146,12 @@ void CPerMaterialCombiner::RemovePart( IPart *pPart )
 	value.erase( i );
 	bHasChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerMaterialCombiner::MarkWasted( IPart *pPart )
 {
 	Updated();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPerMaterialCombiner::operator&( CStructureSaver &f )
 {
 	f.Add( 1, &value );
@@ -160,9 +160,9 @@ int CPerMaterialCombiner::operator&( CStructureSaver &f )
 	f.Add( 5, &bHasChanged );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMMXAnimationMatrices
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMMXAnimationMatrices::Recalc()
 {
 	const vector<SHMatrix> &blends = pAnimation->GetValue();
@@ -170,12 +170,12 @@ void CMMXAnimationMatrices::Recalc()
 	for ( int k = 0; k < value.size(); ++k )
 		Assign( &value[k], blends[k] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFuncBase<vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<vector<SHMatrix> > *pAnim )
 {
 	return new CMMXAnimationMatrices( pAnim );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompactVector &src )
 {
 	//CVec3 vRes;
@@ -189,7 +189,7 @@ static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompa
 	MMXTransformVector( pRes, &transformer, &src );
 	ASSERT( fabs( NGfx::GetVector(test) - NGfx::GetVector(*pRes) ) < 0.02f )*/
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m )
 {
 	int nCount = srcPos.size();
@@ -201,7 +201,7 @@ static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const S
 			m.RotateHVector( pRes++, srcPos[k] );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const SRealVertexWeight *pWeight, const vector<SHMatrix> &blends )
 {
 	int nCount = srcPos.size();
@@ -236,7 +236,7 @@ static void TransformPosition( const vector<CVec3> &srcPos, CVec3 *pRes, const S
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 inline void CalcPerVertexLight( T *pRes, CObjectInfo *p, const vector<CVec3> &srcPos, const SUVInfo *pSrc,
 	const vector<NGfx::SCompactVector> &normals, const SPerVertexLightState &ls, SCacheLightingInfo *pCache,
@@ -244,7 +244,7 @@ inline void CalcPerVertexLight( T *pRes, CObjectInfo *p, const vector<CVec3> &sr
 {
 	CalcPerVertexLight( pRes, srcPos, pSrc, p->GetPositionIndices(), normals, p->GetAttribute( GATTR_VERTEX_COLOR ), ls, pCache, bv );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<NGfx::SCompactVector> xformedNormals;
 template<class TParam>
 struct STGenericTransformer
@@ -326,7 +326,7 @@ struct STGenericTransformer
 		CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGenericPosTransformer
 {
 	typedef CVec3 TRes;
@@ -360,7 +360,7 @@ struct SGenericPosTransformer
 		TransformPosition( srcPos, pRes, pWeight, blends );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 struct SPartTransformer : public T
 {
@@ -405,7 +405,7 @@ struct SPartTransformer : public T
 		return srcVerts.size();
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void FastGeometryTransfer( T *pDst, const T *pSrc, int nSize )
 {
@@ -485,7 +485,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 };
 typedef STGfxCacheTransformer<SGfxVertex> SGfxCacheTransformer;
 typedef STGfxCacheTransformer<STnLVertex> STnlCacheTransformer;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void TransformPart( IPart *p, vector<CVec3> *pRes, vector<STriangle> *pTris )
 {
 	p->RefreshObjectInfo();
@@ -498,9 +498,9 @@ void TransformPart( IPart *p, vector<CVec3> *pRes, vector<STriangle> *pTris )
 	SPartTransformer<SGenericPosTransformer> trans;
 	trans.DoTransform( p, &((*pRes)[0]), *pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVBCombiner
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVBCombiner::XFormPosition()
 {
 	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
@@ -549,7 +549,7 @@ void CVBCombiner::XFormPosition()
 	bNeedRecalc = true;
 	bDroppedXForm = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TTrans>
 void CVBCombiner::SimpleTransform( TTrans *p )
 {
@@ -561,7 +561,7 @@ void CVBCombiner::SimpleTransform( TTrans *p )
 		trans.Transform( p, p->xformedPositions );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // possible optimization: amount of animated geometry could be reduced by separating maximal octree node size
 // for static & dynamic geometry
 void CVBCombiner::DoRecalc()
@@ -605,7 +605,7 @@ void CVBCombiner::DoRecalc()
 		SimpleTransform( &trans );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVBCombiner::NeedUpdate() 
 { 
 	bool bLightState = pLightState.Refresh();
@@ -620,14 +620,14 @@ bool CVBCombiner::NeedUpdate()
 	}
 	return NeedXForm() | bNeedRecalc | bLightState;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVBCombiner::Recalc()
 {
 	DoRecalc();
 	if ( bLowRAM )
 		FreeMemory();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVBCombiner::FreeMemory()
 {
 	if ( bDroppedXForm )
@@ -640,9 +640,9 @@ void CVBCombiner::FreeMemory()
 	}
 	bDroppedXForm = true;				
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CIBCombiner
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CIBCombiner::Recalc()
 {
 	const vector< CPtr<IPart> > &parts = pCombiner->GetValue();
@@ -718,7 +718,7 @@ void CIBCombiner::Recalc()
 	}
 	ASSERT( pFill <= &triBuffer[ triBuffer.size() - 1 ] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 BASIC_REGISTER_CLASS( IPart )

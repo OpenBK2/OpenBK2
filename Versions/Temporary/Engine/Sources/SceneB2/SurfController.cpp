@@ -4,11 +4,11 @@
 #include "Scene.h"
 #include "TerrainInfo.h"
 #include "SurfController.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_SURF_BASE_LENGTH ( DEF_TILE_SIZE )
 #define DEF_SURF_LENGTH ( DEF_TILE_SIZE * 4.0f )
 #define DEF_SURF_HEIGHT 0.2f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_NEW_TIME ( 1.0f / 50.0f )
 #define DEF_FOAM_DY ( 0.08f * DEF_NEW_TIME * 12.0f )
 #define DEF_FOAM_SPEED_QUAD 0.1f
@@ -17,7 +17,7 @@
 #define DEF_FOAM_BACK_DIST 0.5f
 #define DEF_FOAM_BACK_DIST2 ( 1.0f - ( 1.0f - DEF_FOAM_BACK_DIST ) * ( 1.0f - DEF_FOAM_BACK_DIST ))
 #define DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 ( 1.0f / ( 1.0f - DEF_FOAM_BACK_DIST2 ) )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetOuterOpacity( const CVec2 &vMax, NGScene::SVertex *pVertex )
 {
 	if ( (pVertex->pos.x < 0) || (pVertex->pos.y < 0) ||
@@ -27,7 +27,7 @@ static void SetOuterOpacity( const CVec2 &vMax, NGScene::SVertex *pVertex )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisSurfPatch::UpdateGeomData()
 {
 	float fTexCoeff = 1, fTexOffs = 0;
@@ -74,7 +74,7 @@ void CVisSurfPatch::UpdateGeomData()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisSurfPatch::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -91,7 +91,7 @@ void CVisSurfPatch::Recalc()
 	bUpdate = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddPoints( const CVec2 &vWind, const vector<NDb::SVSOPoint> &points, CVisSurfPatch *pCurPatch )
 {
 	NGScene::SVertex vert;
@@ -196,7 +196,7 @@ static void AddPoints( const CVec2 &vWind, const vector<NDb::SVSOPoint> &points,
 		pCurPatch->texYOffsets.push_back( NWin32Random::Random(0.0f, 3.0f) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene )
 {
 	pGScene = _pGScene;
@@ -281,4 +281,4 @@ void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const ve
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

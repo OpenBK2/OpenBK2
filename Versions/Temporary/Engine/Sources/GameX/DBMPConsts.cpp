@@ -5,11 +5,11 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbmpconsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EHistoricalSide eValue )
 {
 	switch ( eValue )
@@ -22,7 +22,7 @@ string EnumToString( NDb::EHistoricalSide eValue )
 		return "HS_ALLIES";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const string &szValue )
 {
 	if ( szValue == "HS_ALLIES" )
@@ -32,13 +32,13 @@ NDb::EHistoricalSide NDb::StringToEnum_NDb_EHistoricalSide( const string &szValu
 	return NDb::HS_ALLIES;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SMultiplayerTechLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "DescriptionFileRef", (BYTE*)&szDescriptionFileRef - pThis, sizeof(szDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerTechLevel::operator&( IXmlSaver &saver )
 {
 	saver.Add( "NameFileRef", &szNameFileRef );
@@ -46,7 +46,7 @@ int SMultiplayerTechLevel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerTechLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szNameFileRef );
@@ -54,7 +54,7 @@ int SMultiplayerTechLevel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMultiplayerTechLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -66,15 +66,15 @@ DWORD SMultiplayerTechLevel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void STechLevelReinfSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (BYTE*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STechLevelReinfSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Reinforcements", &reinforcements );
@@ -82,7 +82,7 @@ int STechLevelReinfSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STechLevelReinfSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &reinforcements );
@@ -90,7 +90,7 @@ int STechLevelReinfSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD STechLevelReinfSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -105,16 +105,16 @@ DWORD STechLevelReinfSet::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SLadderRank::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Level", (BYTE*)&nLevel - pThis, sizeof(nLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SLadderRank::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Level", &nLevel );
@@ -123,7 +123,7 @@ int SLadderRank::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SLadderRank::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nLevel );
@@ -132,7 +132,7 @@ int SLadderRank::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SLadderRank::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -147,9 +147,9 @@ DWORD SLadderRank::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMultiplayerSide::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (BYTE*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
@@ -160,7 +160,7 @@ void SMultiplayerSide::ReportMetaInfo( const string &szAddName, BYTE *pThis ) co
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "LadderRanks", &ladderRanks, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Medals", &medals, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerSide::operator&( IXmlSaver &saver )
 {
 	saver.Add( "NameFileRef", &szNameFileRef );
@@ -173,7 +173,7 @@ int SMultiplayerSide::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerSide::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szNameFileRef );
@@ -186,7 +186,7 @@ int SMultiplayerSide::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMultiplayerSide::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -201,15 +201,15 @@ DWORD SMultiplayerSide::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMultiplayerConsts::SPlayerColor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Color", (BYTE*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "UnitFullInfo", (BYTE*)&pUnitFullInfo - pThis, sizeof(pUnitFullInfo), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerConsts::SPlayerColor::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Color", &nColor );
@@ -217,7 +217,7 @@ int SMultiplayerConsts::SPlayerColor::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerConsts::SPlayerColor::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nColor );
@@ -225,7 +225,7 @@ int SMultiplayerConsts::SPlayerColor::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMultiplayerConsts::SPlayerColor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -240,9 +240,9 @@ DWORD SMultiplayerConsts::SPlayerColor::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMultiplayerConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MultiplayerConsts", typeID, sizeof(*this) );
@@ -259,7 +259,7 @@ void SMultiplayerConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "TimeUserMPLag", (BYTE*)&nTimeUserMPLag - pThis, sizeof(nTimeUserMPLag), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerConsts::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -275,7 +275,7 @@ int SMultiplayerConsts::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMultiplayerConsts::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &techLevels );
@@ -290,7 +290,7 @@ int SMultiplayerConsts::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMultiplayerConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -305,7 +305,7 @@ DWORD SMultiplayerConsts::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x191B2300, SMultiplayerConsts ) 

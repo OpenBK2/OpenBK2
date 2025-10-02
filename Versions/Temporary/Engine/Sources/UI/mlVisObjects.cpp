@@ -8,12 +8,12 @@
 #include "mlMain.h"
 #include "mlReflow.h"
 #include "mlVisObjects.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NML
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int N_TAB_SIZE = 4;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFontInfo
 {
 	CVec2 scale;
@@ -21,7 +21,7 @@ struct SFontInfo
 	CPtr<NGScene::CFontInfo> pFont;
 	int operator&( CStructureSaver &f ) { ASSERT( 0 ); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontInfo *pFontInfo )
 {
 	int nx, ny;
@@ -49,9 +49,9 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 	pFontInfo->scale.x = fScale;
 	pFontInfo->scale.y = fScale * 4.0f * screenSize.y / screenSize.x / 3.0f;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTextObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTextObject: public IVisReflowObject
 {
 	OBJECT_BASIC_METHODS(CTextObject)
@@ -84,13 +84,13 @@ public:
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTextObject::CTextObject( CMLStream *_pStream, int _nStart, int _nSize ):
 	pStream(_pStream), nStrStart(_nStart), nStrSize(_nSize)
 {
 	size = CTPoint<float>( 20, 20 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextObject::Update( IReflowState *pState )
 {
 	int nx, ny;
@@ -147,7 +147,7 @@ void CTextObject::Update( IReflowState *pState )
 
 	size.x = fX;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	CTPoint<float> pos = _position + position;
@@ -157,7 +157,7 @@ void CTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> 
 
 	pView->CreateDynamicRects( pTexture, normalRects, pos, window );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	CTPoint<float> pos = _position + position;
@@ -169,11 +169,11 @@ void CTextObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &_
 		fLastX = *iTemp;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IVisReflowObject* CreateTextObject( CMLStream *pStream, int nStart, int nSize ) { return new CTextObject( pStream, nStart, nSize ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CImageObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CImageObject: public IVisReflowObject
 {
 	OBJECT_BASIC_METHODS(CImageObject)
@@ -202,12 +202,12 @@ public:
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImageObject::CImageObject( NDb::STexture *_pTexture, const CTPoint<int> &_size, int _nBorder ):
 	pTexture(_pTexture), imageSize(_size), nBorder(_nBorder)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImageObject::Update( IReflowState *pState )
 {
 	int nx, ny;
@@ -231,21 +231,21 @@ void CImageObject::Update( IReflowState *pState )
 	texRect.y2 = 0;
 	rects.AddRect(  borderScreenSize.x,  borderScreenSize.y, imageScreenSize.x, imageScreenSize.y, texRect );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImageObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	pView->CreateDynamicRects( pTexture, rects, _position + position, window );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImageObject::Render( list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
 {
 	pRender->push_back( CTRect<float>( _position.x, _position.y, size.x + _position.x, size.y + _position.y ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IVisReflowObject* CreateImageObject( NDb::STexture *pTexture, const CTPoint<int> &size, int nBorder ) { return new CImageObject( pTexture, size, nBorder ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTabObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTabObject: public IVisReflowObject
 {
 	OBJECT_BASIC_METHODS(CTabObject)
@@ -268,12 +268,12 @@ public:
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTabObject::CTabObject():
 	size( 0, 0 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTabObject::Update( IReflowState *pState )
 {
 	const SState &state = pState->GetState();
@@ -286,11 +286,11 @@ void CTabObject::Update( IReflowState *pState )
 //	size.x = ( nPart + 1 ) * fSize - sInfo.fLineWidth;
 //	sSize.y = sInfo.fLastLineHeight;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IVisReflowObject* CreateTabObject() { return new CTabObject(); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSpringObject
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSpringObject: public IVisReflowObject
 {
 	OBJECT_BASIC_METHODS(CSpringObject)
@@ -316,12 +316,12 @@ public:
 	bool IsSpace() const { return true; }
 	const CTPoint<float>& GetSize() const { return size; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSpringObject::CSpringObject( int _nSize ):
 	nSize(_nSize), size( 0, 0 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSpringObject::Update( IReflowState *pState )
 {
 	const SState &state = pState->GetState();
@@ -332,11 +332,11 @@ void CSpringObject::Update( IReflowState *pState )
 	size.x = nSize * fontInfo.pInfo->GetAveCharWidth() * fontInfo.scale.x;
 	size.y = fontInfo.pInfo->GetHeight() * fontInfo.scale.y;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IVisReflowObject* CreateSpringObject( int nSize ) { return new CSpringObject( nSize ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( 0xB5529200, CTextObject )
 REGISTER_SAVELOAD_CLASS( 0xB5529201, CImageObject )

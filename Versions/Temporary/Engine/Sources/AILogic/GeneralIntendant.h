@@ -1,12 +1,12 @@
 #ifndef __GENERALINTENDANT_H__
 #define __GENERALINTENDANT_H__
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma ONCE
 #include "Commander.h"
 #include "General.h"
 #include "EnemyRememberer.h"
 #include "..\Stats_B2_M1\DBMapInfo.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CResupplyCellInfo : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS(CResupplyCellInfo);
@@ -128,7 +128,7 @@ public:
 
 	friend class CWaitForChangePlayer;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 {
 	OBJECT_BASIC_METHODS(CGeneralTaskToResupplyCell);
@@ -167,7 +167,7 @@ public:
 	virtual int NeedNBest( const enum EForceType eType ) const ;
 	virtual float EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const ;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGeneralTaskCheckCellDanger : public IGeneralDelayedTask
 {
 	OBJECT_BASIC_METHODS( CGeneralTaskCheckCellDanger );
@@ -196,7 +196,7 @@ public:
 				pTask->CancelTask( pCommander );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CArtillery;
 class CFormation;
 class CFreeArtilleryHolder : public CAIObjectBase
@@ -240,7 +240,7 @@ public:
 	// set 'catching' flag for current artillery
 	void TryCatch( CFormation *pFormation );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // manipulate with storages and resupply trucks
 class CGeneralIntendant : public CCommander
 {
@@ -302,5 +302,5 @@ public:
 
 	void MarkCellsDangerous( const SVector &vCell );		
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __GENERALINTENDANT_H__

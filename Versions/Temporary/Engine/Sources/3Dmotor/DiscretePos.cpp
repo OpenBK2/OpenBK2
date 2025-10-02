@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "DiscretePos.h"
 #include "..\3DLib\Transform.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<CFBTransform> pIdentity;
 static struct SInitDiscretePos
 {
@@ -13,7 +13,7 @@ static struct SInitDiscretePos
 		pIdentity = new CFBTransform( p );
 	}
 } SInitDiscretePosval;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SDiscretePos::MakeMatrix( SFBTransform *pRes ) const
 {
 	switch( nRotation )
@@ -37,13 +37,13 @@ void SDiscretePos::MakeMatrix( SFBTransform *pRes ) const
 	if ( pTransform )//->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
 		*pRes = pTransform->pos * *pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFBTransform* SDiscretePos::GetTransform() const
 {
 	if ( pTransform )//->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
 		return pTransform;
 	return pIdentity;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x025a1130, CFBTransform );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

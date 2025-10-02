@@ -6,7 +6,7 @@
 #include "../System/XmlSaver.h"
 
 wstring CChatLobby::wszWelcomeText;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CChatLobby::CChatLobby( CClients *_pClients, const string& _szCfgFileName ) 
 	: pClients( _pClients ), szCfgFile( _szCfgFileName )
 {
@@ -16,7 +16,7 @@ CChatLobby::CChatLobby( CClients *_pClients, const string& _szCfgFileName )
 
 	WriteMSG( "Chat subsystem initialized.\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
@@ -27,7 +27,7 @@ void CChatLobby::ReloadConfig()
 	pSaver->Add( "ChatSegmentLength", &nRefreshTime );
 	pSaver->Add( "MaxFriends", &nMaxFriends );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::Initialize()
 {
 	REGISTER_PACKET_PROCESSOR( ProcessChatPacket );
@@ -40,7 +40,7 @@ void CChatLobby::Initialize()
 
 	nLastRefreshTime = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::Segment()
 {
 	UINT64 nTime = GetLongTickCount();
@@ -52,7 +52,7 @@ bool CChatLobby::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::DeleteOfflineClients()
 {
 	list< int > deadClients;
@@ -80,7 +80,7 @@ void CChatLobby::DeleteOfflineClients()
 		clientNicks.erase( nID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::CloseEmptyChannels()
 {
 	list< string > emptyChannels;
@@ -100,7 +100,7 @@ void CChatLobby::CloseEmptyChannels()
 		NotifyChannelClosed( szChannel );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatPacket( CChatPacket *pPacket )
 {
 	string szFromNick;
@@ -133,7 +133,7 @@ bool CChatLobby::ProcessChatPacket( CChatPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatAFKPacket( CChatAFKPacket *pPacket )
 {
 	const int nID = pPacket->nClientID;
@@ -151,7 +151,7 @@ bool CChatLobby::ProcessChatAFKPacket( CChatAFKPacket *pPacket )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 {
 	const int nID = pPacket->nClientID;
@@ -200,7 +200,7 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatChannelsRequestPacket( CChatChannelsListRequestPacket *pPacket )
 {
 	DWORD dwVersion = pPacket->dwVersion;
@@ -210,7 +210,7 @@ bool CChatLobby::ProcessChatChannelsRequestPacket( CChatChannelsListRequestPacke
 		removedChannelsList, channels.NeedFullUpdate( dwVersion ) ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFriendListPacket *pPacket )
 {
 	if ( !pClients->IsOnLine( pPacket->nClientID ) )
@@ -251,13 +251,13 @@ bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFrien
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatGetIgnoreFriendListPacket( CChatGetIgnoreFriendListPacket *pPacket )
 {
 	SendIgnoreFriendList( pPacket->nClientID );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPacket )
 {
 	int nClientID;
@@ -271,7 +271,7 @@ bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPack
 		PushPacket( new CChatChannelByNickPacket( pPacket->nClientID, pPacket->szNick, "" ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::NotifyClientJoinChannel( const int nID, const string &szChannelName ) 
 {
 	const list<int> &clientsList = channelClients[szChannelName];
@@ -302,7 +302,7 @@ void CChatLobby::NotifyClientJoinChannel( const int nID, const string &szChannel
 	PushPacket( new CChatChannelClientsListPacket( nID, listToSend ) );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::NotifyClientLeaveChannel( const int nID, const string &szChannelName ) 
 {
 	string szNick = clientNicks[ nID ];
@@ -323,17 +323,17 @@ void CChatLobby::NotifyClientLeaveChannel( const int nID, const string &szChanne
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::NotifyChannelOpened( const string &szChannelName )
 {
 	channels.Add( szChannelName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::NotifyChannelClosed( const string &szChannelName ) 
 {
 	channels.Remove( szChannelName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::SendChatPacket( const int nClientID, const wstring &wszMessage, const string &szFromNick, const int nFromID, bool bIsBroadcast )
 {
 	if ( !pClients->InIgnoreFriendList( nClientID, szFromNick, IGNORE_LIST ) )
@@ -347,14 +347,14 @@ void CChatLobby::SendChatPacket( const int nClientID, const wstring &wszMessage,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::SendIgnoreFriendList( const int nClientID )
 {
 	const list<string> ignoreList = pClients->GetIgnoreFriendList( nClientID, IGNORE_LIST );
 	const list<string> friendList = pClients->GetIgnoreFriendList( nClientID, FRIEND_LIST );
 	PushPacket( new CChatIgnoreFriendListPacket( nClientID, ignoreList, friendList ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, const bool bNewClient )
 {
 	const string szMyNick = clientNicks[nClientID];
@@ -387,4 +387,4 @@ void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

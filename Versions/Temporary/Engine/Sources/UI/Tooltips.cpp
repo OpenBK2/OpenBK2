@@ -3,12 +3,12 @@
 #include "WindowTooltip.h"
 #include "UIScreen.h"
 #include "DBUIConsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTooltips::CTooltips()
 : vLastMousePos( -1, -1 ), timeMouseFreese( 0 ), nContext( -1 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTooltips::AdjustTooltipPos( const CVec2 &vMousePos )
 {
 	CDynamicCast<CWindowTooltip> pWindowToolTip = pTooltip;
@@ -17,7 +17,7 @@ void CTooltips::AdjustTooltipPos( const CVec2 &vMousePos )
 	else
 		pTooltip->SetPlacement( vMousePos.x, vMousePos.y, 0, 0, EWPF_POS_X | EWPF_POS_Y	);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 {
 	if ( nContext == -1 )
@@ -76,7 +76,7 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow *CTooltips::CreateTooltipWindow( const wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen )
 {
 	if ( nContext == -1 )
@@ -100,7 +100,7 @@ IWindow *CTooltips::CreateTooltipWindow( const wstring &wszTooltipText, IWindow 
 
 	return pTooltip;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTooltips::OnMouseMove( const CVec2 &vPos, const int nButton, class CWindowScreen *pScreen )
 {
 	if ( nContext == -1 )
@@ -111,7 +111,7 @@ void CTooltips::OnMouseMove( const CVec2 &vPos, const int nButton, class CWindow
 
 	vLastMousePos = vPos;	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTooltips::HideTooltip()
 {
 	if ( pTooltip )
@@ -122,7 +122,7 @@ void CTooltips::HideTooltip()
 		timeMouseFreese = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTooltips::SetTooltipContext( const int _nContext, class CWindowScreen *pScreen )
 {
 	if ( !CUIFactory::GetConsts() ) 
@@ -136,4 +136,4 @@ void CTooltips::SetTooltipContext( const int _nContext, class CWindowScreen *pSc
 	
 	NI_ASSERT( CUIFactory::GetConsts()->contexts.size() > nContext, StrFmt( "no such context") );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

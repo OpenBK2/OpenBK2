@@ -18,7 +18,7 @@ CPlayerReinforcementArray theReinfArray;
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayerReinforcement::CPlayerReinforcement() 
 : bReinfButtonEnabled( false ), timeReinfButtonEnable( curTime ), nMapReinforcementBonus( 0 ), fRecycleTimeCoeff( 1.0f ),
 timeToCall( 0 ), fStoredProgress( 0.0f ), timeReinfIncrease( 0 ), superWeaponType( NDb::SUPER_WEAPON_BOMBER ), nSuperWeaponShots( -1 ),
@@ -27,7 +27,7 @@ timeSuperWeaponFire( 0 ), superWeaponState( SWS_WAIT_FOR_CALL )
 {
 	recycleTimes.clear();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer, const NDb::SMapInfo * pMapInfo, const NDb::SAIGameConsts *pConsts )
 {
 	if ( !GetScenarioTracker() )
@@ -125,19 +125,19 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer, const NDb::SMa
 		pTracker->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::ModifyReinforcement( const NDb::SReinforcement *pReinforcement )
 {
 	CInfos::iterator pos = reinforcementInfos.find( pReinforcement->eType );
 	if ( pos != reinforcementInfos.end() )
 		pos->second = pReinforcement;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::AddReinforcement( const NDb::SReinforcement *pReinforcement )
 {
 	reinforcementInfos[pReinforcement->eType] = pReinforcement;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::AddPosition( const NDb::SReinforcementPosition &point, int nID, bool bEnabled )
 {
 	positions[nID].first = point;
@@ -145,7 +145,7 @@ void CPlayerReinforcement::AddPosition( const NDb::SReinforcementPosition &point
 	if ( bEnabled )
 		UpdateAddPosition( nID, point );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::EnablePosition( int nPositionID, bool bEnable )
 {
 	CPositions::iterator posPositions = positions.find( nPositionID );
@@ -158,7 +158,7 @@ void CPlayerReinforcement::EnablePosition( int nPositionID, bool bEnable )
 			UpdateAddPosition( nPositionID, posPositions->second.first );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb::SReinforcementPosition &positionToDeploy, NDb::EReinforcementType eType ) 
 {
 	// first - use default
@@ -193,12 +193,12 @@ const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb:
 	}
 	return pTemplate;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint )
 {
 	commands.push_back( SCallReinforcementCommand(eType, vPoint ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::SendReinforcementToPoint( list< pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam )
 {
 	vector<int> ids;
@@ -234,7 +234,7 @@ void CPlayerReinforcement::SendReinforcementToPoint( list< pair<int, CObjectBase
 	theGroupLogic.UnregisterGroup( nGroup );
 	Singleton<IAILogic>()->SetNeedNewGroupNumber();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, const CVec2 &vPoint, int nScriptID )
 {
 	// find nearest reinforcement point
@@ -273,7 +273,7 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, con
 		SendReinforcementToPoint( objects, eType, vPoint, ( eType == NDb::RT_ELITE_INFANTRY || eType == NDb::RT_PARATROOPS ) && pReinf->HasPlanes(), 0.0f );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::UpdateButtonsAfterCall( const NDb::EReinforcementType eType )
 {
 	GetScenarioTracker()->RegisterReinforcementCall( nPlayer, eType );
@@ -296,7 +296,7 @@ void CPlayerReinforcement::UpdateButtonsAfterCall( const NDb::EReinforcementType
 	}
 	UpdateReinfButtonState( false, timeReinfButtonEnable, 0.0f );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int nPointID, int nScriptID, list< pair<int, CObjectBase*> > *pObjects, const bool bOnWater, const CVec2 &vTarget )
 {
 	if ( !GetScenarioTracker() )
@@ -355,7 +355,7 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, int
 	else 
 		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, StrFmt( "CallReinforcement: cannot call reinforcement type %i to point %i for player %i (no point or no reinforcement)", eType, nPointID, nPlayer ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::ShotSuperWeapon()
 {
 	if ( superWeaponType == NDb::SUPER_WEAPON_ARTILLERY )
@@ -365,7 +365,7 @@ void CPlayerReinforcement::ShotSuperWeapon()
 
 	superWeaponState = SWS_WAIT_FOR_FLY;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::CallSuperWeapon()
 {
 	// get reinforcment
@@ -427,7 +427,7 @@ void CPlayerReinforcement::CallSuperWeapon()
 	}
 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::Segment()
 {
 	// Reinforcement counter recycle
@@ -467,7 +467,7 @@ void CPlayerReinforcement::Segment()
 	if ( superWeaponState == SWS_FLYING && ( !IsValid( pSuperWeaponShell ) || !(pSuperWeaponShell->IsAlive()) ) )
 		ShotSuperWeapon();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::UpdateDeletePosition( int nUniqueID ) const
 {
 	if ( nPlayer != theDipl.GetMyNumber() )
@@ -479,7 +479,7 @@ void CPlayerReinforcement::UpdateDeletePosition( int nUniqueID ) const
 	pUpdate->nPointID = nUniqueID;
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::UpdateAddPosition( int nID, const NDb::SReinforcementPosition &point ) const
 {
 	if ( nPlayer != theDipl.GetMyNumber() )
@@ -493,7 +493,7 @@ void CPlayerReinforcement::UpdateAddPosition( int nID, const NDb::SReinforcement
 
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::UpdateReinfButtonState( bool bEnable, NTimer::STime timeWhenEnabled, float fPercentComplete )
 {
 	bReinfButtonEnabled = bEnable;
@@ -507,7 +507,7 @@ void CPlayerReinforcement::UpdateReinfButtonState( bool bEnable, NTimer::STime t
 	pUpdate->fProgress = fPercentComplete;
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_RECYCLE, 0, -1 );		
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::SetRecycleCoeff( const float fNewCoeff )
 {
 	if ( fRecycleTimeCoeff == fNewCoeff )
@@ -555,7 +555,7 @@ void CPlayerReinforcement::SetRecycleCoeff( const float fNewCoeff )
 	}
 	fRecycleTimeCoeff = fNewCoeff;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SReinforcementPosition * CPlayerReinforcement::GetPosition( int nPositionID ) const
 {
 	CPositions::const_iterator pos = positions.find( nPositionID );
@@ -563,7 +563,7 @@ const NDb::SReinforcementPosition * CPlayerReinforcement::GetPosition( int nPosi
 		return &pos->second.first;
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerReinforcement::GetReinforcementCallsLeft() const
 {
 	if ( !GetScenarioTracker() )
@@ -571,7 +571,7 @@ int CPlayerReinforcement::GetReinforcementCallsLeft() const
 
 	return GetScenarioTracker()->GetReinforcementCallsLeft( nPlayer );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayerReinforcement::HasGroundReinforcements() const
 {
 	for ( CInfos::const_iterator it = reinforcementInfos.begin(); it != reinforcementInfos.end(); ++it )
@@ -587,7 +587,7 @@ bool CPlayerReinforcement::HasGroundReinforcements() const
 	}
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayerReinforcement::CanCallNow() const
 {
 	if ( curTime < timeReinfButtonEnable )
@@ -606,7 +606,7 @@ bool CPlayerReinforcement::CanCallNow() const
 
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerReinforcement::GetRandomPointID() const
 {
 	vector<int> pointIDs;
@@ -620,12 +620,12 @@ int CPlayerReinforcement::GetRandomPointID() const
 	
 	return pointIDs[NRandom::Random( pointIDs.size() )];
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CPlayerReinforcement::GetRandomPoint() const
 {
 	return GetPosition( GetRandomPointID() )->vPosition;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayerReinforcement::HasReinforcement( NDb::EReinforcementType eType ) const
 {
 	if ( eType == _RT_NONE )
@@ -638,12 +638,12 @@ bool CPlayerReinforcement::HasReinforcement( NDb::EReinforcementType eType ) con
 		return pos != reinforcementInfos.end();
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTimer::STime CPlayerReinforcement::GetRecycleTimeLeft() const
 {
 	return timeReinfButtonEnable < curTime ? 0 : timeReinfButtonEnable - curTime;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerReinforcement::GetNEntries( NDb::EReinforcementType eType ) const
 {
 	CInfos::const_iterator pos = reinforcementInfos.find( eType );
@@ -651,7 +651,7 @@ int CPlayerReinforcement::GetNEntries( NDb::EReinforcementType eType ) const
 		return pos->second->entries.size();
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SHPObjectRPGStats * CPlayerReinforcement::GetUnitSample( NDb::EReinforcementType eType, int nEntry ) const
 {
 	CInfos::const_iterator pos = reinforcementInfos.find( eType );
@@ -667,14 +667,14 @@ const NDb::SHPObjectRPGStats * CPlayerReinforcement::GetUnitSample( NDb::EReinfo
 	}
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CPlayerReinforcement::GetUnitAvailability( const NDb::EDBUnitRPGType eUnit, const NDb::EReinforcementType eReinf )
 { 
 	if ( unitAvailability.GetSizeX() > eUnit && unitAvailability.GetSizeY() > eReinf )
 		return unitAvailability[eReinf][eUnit]; 
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::PlaceInitialUnits()
 {
 	const NDb::SReinforcement *pReinf = GetScenarioTracker()->GetStartUnits( nPlayer );
@@ -700,7 +700,7 @@ void CPlayerReinforcement::PlaceInitialUnits()
 
 	NReinforcement::PlaceSingleLandReinforcement( nPlayer, pReinf, NDb::_RT_NONE, pTemplate, positionToDeploy.vPosition, positionToDeploy.nDirection, -1, 0, false );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounter )
 {
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
@@ -724,7 +724,7 @@ void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounte
 		pScenarioTracker->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcement::CheckReinfButton()
 {
 	const bool bNotYetTime = timeReinfButtonEnable > 0 && ( curTime < timeReinfButtonEnable );
@@ -766,9 +766,9 @@ void CPlayerReinforcement::CheckReinfButton()
 	else if ( !bReinfButtonEnabled )
 		UpdateReinfButtonState( true, 0, 0.0f );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPlayerReinforcementArray
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcementArray::InitPlayerReinforcementArray( const NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts )
 {
 	resize( pMapInfo->players.size() );
@@ -777,34 +777,34 @@ void CPlayerReinforcementArray::InitPlayerReinforcementArray( const NDb::SMapInf
 		operator[]( i ).InitPlayerReinforcement( i, pMapInfo, pConsts );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerReinforcementArray::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (vector<CPlayerReinforcement>*)(this) );
 	return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcementArray::Segment()
 {
 	for ( vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
 		it->Segment();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcementArray::SetRecycleCoeff( const int nPlayer, const float fNewCoeff )
 {
 	if ( nPlayer >= 0 && nPlayer < size() )
 		operator[]( nPlayer ).SetRecycleCoeff( fNewCoeff );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcementArray::PlaceInitialUnits()
 {
 	for ( vector<CPlayerReinforcement>::iterator it = begin(); it != end(); ++it )
 		it->PlaceInitialUnits();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerReinforcementArray::GiveReinforcementCalls( const int nPlayer, const int nCalls, const bool bResetCounter )
 {
 	if ( nPlayer >= 0 && nPlayer < size() )
 		operator[]( nPlayer ).GiveReinforcementCalls( nCalls, bResetCounter );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+

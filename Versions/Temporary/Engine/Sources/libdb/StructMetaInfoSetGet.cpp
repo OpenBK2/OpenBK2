@@ -3,12 +3,12 @@
 #include "BindArray.h"
 #include "Bind.h"
 #include "EditorDb.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 namespace NMetaInfo
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool VariantToEnum( int *pRes, const CVariant &value, NTypeDef::STypeDef *pType )
 {
 	if ( value.GetType() == CVariant::VT_STR )
@@ -27,7 +27,7 @@ bool VariantToEnum( int *pRes, const CVariant &value, NTypeDef::STypeDef *pType 
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool EnumToVariant( CVariant *pRes, int nValue, NTypeDef::STypeDef *pType )
 {
 	string szValue;
@@ -35,7 +35,7 @@ bool EnumToVariant( CVariant *pRes, int nValue, NTypeDef::STypeDef *pType )
 	*pRes = szValue;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CRAP{ legacy - remove it ASAP
 void CutTypeNameFromRef( string *pRes, const string &szRefName )
 {
@@ -49,7 +49,7 @@ void CutTypeNameFromRef( string *pRes, const string &szRefName )
 		pRes->assign( szRefName.begin() + nPos + 1, szRefName.end() );
 }
 // CRAP}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDBID GetDBIDFromValue( const CVariant &value )
 {
 	string szNewRefName;
@@ -86,7 +86,7 @@ CDBID GetDBIDFromValue( const CVariant &value )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SStructMetaInfo::SField::SetValueToStructInt( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
 {
 	void *pData = pThis + GetBinaryShift();
@@ -166,7 +166,7 @@ bool SStructMetaInfo::SField::SetValueToStructDBID( const CVariant &value, BYTE 
 	*((CDBPtr<CResource>*)pData) = pRes;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
@@ -181,7 +181,7 @@ bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pT
 		return data.pArray->Remove( nSize - nDesiredSize, -1, *this, pThis );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** get-from-struct functions
@@ -189,7 +189,7 @@ bool SStructMetaInfo::SField::SetValueArraySize( const CVariant &value, BYTE *pT
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SStructMetaInfo::SField::GetValueFromStructInt( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
 {
 	void *pData = pThis + GetBinaryShift();
@@ -246,7 +246,7 @@ bool SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, BYTE *pThis, 
 	*pValue = data.pArray->GetSize( *this, pThis );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** set-to-own functions
@@ -254,7 +254,7 @@ bool SStructMetaInfo::SField::GetValueArraySize( CVariant *pValue, BYTE *pThis, 
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SStructMetaInfo::SField::SetValueToOwnInt( const CVariant &value, BYTE *pThis, NBind::UValue *ownValues )
 {
 	NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
@@ -341,7 +341,7 @@ bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, BYTE *pT
 	data.pObjMan = pObjMan;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** get-from-own functions
@@ -349,7 +349,7 @@ bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, BYTE *pT
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SStructMetaInfo::SField::GetValueFromOwnInt( CVariant *pValue, BYTE *pThis, const NBind::UValue *ownValues ) const
 {
 	const NBind::UValue &data = ownValues[ GetOwnValueIndex() ];
@@ -406,6 +406,6 @@ bool SStructMetaInfo::SField::GetValueFromOwnDBID( CVariant *pValue, BYTE *pThis
 		*pValue = CDBID();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }

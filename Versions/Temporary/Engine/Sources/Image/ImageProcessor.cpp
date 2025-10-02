@@ -8,7 +8,7 @@
 
 namespace NImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** image save/load
@@ -16,7 +16,7 @@ namespace NImage
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool LoadAnyImage( CArray2D<DWORD> *pRes, CDataStream *pStream )
 {
 	NI_ASSERT( pStream != 0, "Can't load to NULL stream" );
@@ -29,7 +29,7 @@ bool LoadAnyImage( CArray2D<DWORD> *pRes, CDataStream *pStream )
 		return NImage::LoadImageTGA( pRes, pStream );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** subimage copying
@@ -37,7 +37,7 @@ bool LoadAnyImage( CArray2D<DWORD> *pRes, CDataStream *pStream )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Copy( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<DWORD> &dst, const CTPoint<long> &dstPos )
 {
 	const CTRect<long> rcRect = (pSrcRect == 0) ? CTRect<long>( 0, 0, src.GetSizeX(), src.GetSizeY() ) : *pSrcRect;
@@ -53,7 +53,7 @@ bool Copy( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<DW
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<DWORD> &dst, const CTPoint<long> &dstPos )
 {
 	const CTRect<long> rcRect = (pSrcRect == 0) ? CTRect<long>( 0, 0, src.GetSizeX(), src.GetSizeY() ) : *pSrcRect;
@@ -88,5 +88,5 @@ bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

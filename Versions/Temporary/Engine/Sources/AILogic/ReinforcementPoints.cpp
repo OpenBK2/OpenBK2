@@ -1,13 +1,13 @@
 #include "stdafx.h"
 /*
 #include "ReinforcementPoints.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CGlobalStock theStock;
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 CReinforcementPointsTracker theReinfPoints;
 extern NTimer::STime curTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::Init( int nPlayerIndex, const vector<SReinforcementPosition> &positions, int nGlobalRecycle )
 {
 	nPlayer = nPlayerIndex;
@@ -21,13 +21,13 @@ void CPlayerPointsTracker::Init( int nPlayerIndex, const vector<SReinforcementPo
 	}
 	nMaxPointIndex = positions.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerPointsTracker::AddReinforcementPoint( const NDb::SReinforcementPosition &point )
 {
 	allPositions[nMaxPointIndex + 1] = point;
 	return nMaxPointIndex++;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SReinforcementPosition* CPlayerPointsTracker::GetPositionInfo( int nPositionID ) const
 {
 	CPositionMap::const_iterator it = allPositions.find( nPositionID );
@@ -35,7 +35,7 @@ const SReinforcementPosition* CPlayerPointsTracker::GetPositionInfo( int nPositi
 		return 0;
 	return &(it->second);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::SetPositionAvailible( int nPositionID )
 {
 	if ( allPositions.find( nPositionID ) == allPositions.end() )
@@ -47,7 +47,7 @@ void CPlayerPointsTracker::SetPositionAvailible( int nPositionID )
 	if ( bEmpty )
 		theStock[nPlayer]->AddAvailReinforcementType( position.nFactoryID, nPositionID, position.eType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::RemovePositionAvailibility( int nPositionID )
 {
 	if ( allPositions.find( nPositionID ) == allPositions.end() )
@@ -67,7 +67,7 @@ void CPlayerPointsTracker::RemovePositionAvailibility( int nPositionID )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayerPointsTracker::IsPositionEnabled( int nPositionID ) const
 {
 	CPositionMap::const_iterator pos = allPositions.find( nPositionID );
@@ -91,7 +91,7 @@ bool CPlayerPointsTracker::IsPositionEnabled( int nPositionID ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::StartRecycle( int nFactoryID )
 {
 	if ( recycles.find( nFactoryID ) == recycles.end() )
@@ -99,12 +99,12 @@ void CPlayerPointsTracker::StartRecycle( int nFactoryID )
 	pendingRecycles[nFactoryID] = curTime;
 	UpdatePositionByFactory( nFactoryID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlayerPointsTracker::IsRecycling( const int nFactoryID ) const
 {
 	return pendingRecycles.find( nFactoryID ) != pendingRecycles.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::UpdatePositionByFactory( const int nFactoryID )
 {
 	for ( CPositionMap::const_iterator it = allPositions.begin(); it != allPositions.end(); ++it )
@@ -113,7 +113,7 @@ void CPlayerPointsTracker::UpdatePositionByFactory( const int nFactoryID )
 			UpdateReinfPoint( nFactoryID, it->first );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTimer::STime CPlayerPointsTracker::GetNextRecycleEnd()
 {
 	hash_map<int,int>::iterator it = recycles.begin();
@@ -135,7 +135,7 @@ NTimer::STime CPlayerPointsTracker::GetNextRecycleEnd()
 
 	return timeMin;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::Segment()
 {
 	for ( hash_map<int,int>::iterator it = pendingRecycles.begin(); it != pendingRecycles.end(); )
@@ -148,7 +148,7 @@ void CPlayerPointsTracker::Segment()
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTimer::STime CPlayerPointsTracker::GetRecycleTyme( const int nFactoryID ) const
 {
 	hash_map<int,int>::const_iterator pos = recycles.find( nFactoryID );
@@ -156,13 +156,13 @@ NTimer::STime CPlayerPointsTracker::GetRecycleTyme( const int nFactoryID ) const
 		return pos->second;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::SetRecycleTime( const int nFactory, const int nRecycleTime )
 {
 	recycles[nFactory] = nRecycleTime;
 	Segment(); // to update recycle time in client
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlayerPointsTracker::UpdateReinfPoint( int nFactoryID, int nPointID ) const
 {
 	if ( nPlayer != theDipl.GetMyNumber() )
@@ -182,7 +182,7 @@ void CPlayerPointsTracker::UpdateReinfPoint( int nFactoryID, int nPointID ) cons
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerPointsTracker::operator&( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
@@ -195,14 +195,14 @@ int CPlayerPointsTracker::operator&( IBinSaver &saver )
 	
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlayerPointsTracker::SFactoryData::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &availibility );
 	saver.Add( 2, &nCounter );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinforcementPointsTracker::Init( const vector<SMapPlayerInfo> &info )
 {
 	trackers.resize( info.size() );
@@ -212,23 +212,23 @@ void CReinforcementPointsTracker::Init( const vector<SMapPlayerInfo> &info )
 	}
 	theStock.ForcedUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlayerPointsTracker* CReinforcementPointsTracker::operator[]( const int &nIndex )
 {
 	NI_ASSERT( nIndex >= 0 && nIndex < trackers.size(), "Player index out of range" );
 	return &(trackers[nIndex]);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinforcementPointsTracker::Segment()
 {
 	for ( int i = 0; i < trackers.size(); ++i )
 		trackers[i].Segment();	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CReinforcementPointsTracker::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &trackers );
 
 	return 0;
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

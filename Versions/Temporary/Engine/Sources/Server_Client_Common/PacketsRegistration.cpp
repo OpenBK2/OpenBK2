@@ -6,7 +6,7 @@
 #include "GamePackets.h"
 #include "LoginPackets.h"
 #include "ZipPacket.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 1, CLoginPacket );
 REGISTER_SAVELOAD_CLASS( 2, CRegisterPacket );
 REGISTER_SAVELOAD_CLASS( 3, CCheckConnectPacket );
@@ -92,12 +92,12 @@ REGISTER_SAVELOAD_CLASS( 67, CGameStartLoadingPacket )
 REGISTER_SAVELOAD_CLASS( 69, CLadderShortStatisticsPacket ) 
 REGISTER_SAVELOAD_CLASS( 70, CLadderSurrenderPacket )
 REGISTER_SAVELOAD_CLASS( 71, CLadderInvalidStatisticsPacket )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // For too smart linker
 void ForcePacketRegistration()
 {
 	static int nForcePackerRegistration = 0;
 	++nForcePackerRegistration;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19245C01, SGameInfo );

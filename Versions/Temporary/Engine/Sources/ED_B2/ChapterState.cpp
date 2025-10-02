@@ -16,15 +16,15 @@
 #include "..\LibDB\EditorDB.h"
 #include "..\LibDB\ObjMan.h"
 #include "..\mapeditorlib\MaskManipulator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CChapterState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
 	pChapterEditor( _pChapterEditor ),
 	bDragging( false ),
@@ -32,7 +32,7 @@ CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
 	pPickedArrow( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::Enter()
 {
 //	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<DWORD>( new CChapterInterfaceCommand( new CChapterInterface() ) ) );
@@ -48,7 +48,7 @@ void CChapterState::Enter()
 	//
 	CDefaultInputState::Enter();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::Leave()
 {
 	CDefaultInputState::Leave();
@@ -72,7 +72,7 @@ void CChapterState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_SCROLLBARS, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::PostDraw( class CPaintDC *pPaintDC )
 {
 	CTRect<float> wrc;
@@ -149,7 +149,7 @@ void CChapterState::PostDraw( class CPaintDC *pPaintDC )
 
 	CDefaultInputState::PostDraw( pPaintDC );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	CVec2 vScreenPos;
@@ -206,7 +206,7 @@ void CChapterState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 	
 	UpdateMaskManipulator();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
@@ -230,7 +230,7 @@ void CChapterState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 
 	CDefaultInputState::OnLButtonUp( nFlags, rMousePoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	pPickedMission = 0;
@@ -239,7 +239,7 @@ void CChapterState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint 
 
 	CDefaultInputState::OnRButtonDown( nFlags, rMousePoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bDragging )
@@ -263,7 +263,7 @@ void CChapterState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 
 	CDefaultInputState::OnMouseMove( nFlags, rMousePoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CWaitCursor wc;
@@ -291,7 +291,7 @@ void CChapterState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 	CDefaultInputState::OnKeyDown( nChar, nRepCnt, nFlags );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::LoadChapterMap()
 {
 	NI_ASSERT( Singleton<IUIScene>() != 0, "CChapterState::LoadChapterMap: Singleton<IUIScene>() == 0" );
@@ -366,7 +366,7 @@ void CChapterState::LoadChapterMap()
 	
 	UpdateFrontLines();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::CreateScreen()
 {
 	const CChapterEditorSettings &editorSettings = pChapterEditor->GetEditorSettings();
@@ -390,7 +390,7 @@ void CChapterState::CreateScreen()
 	// avoid fitting UI to viewport size
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChapterState::MoveMission( SChapterMapMenuHelper::SMission *pMission, const CVec2 &vPos, bool bSave )
 {
 	if ( !pMission || !IsValid( pMission->pWnd ) )
@@ -430,7 +430,7 @@ bool CChapterState::MoveMission( SChapterMapMenuHelper::SMission *pMission, cons
 	
 	return bMoved;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec2 &vPos, bool bSave )
 {
 	if ( !pArrow )
@@ -485,7 +485,7 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 
 	return bMoved;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::UpdateFrontLines()
 {
 	if ( pFrontLines )
@@ -503,7 +503,7 @@ void CChapterState::UpdateFrontLines()
 				mission.bShowPotentialComplete ? mission.fPotentialComplete : mission.fPotentialIncomplete );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::SetMaskManipulatorMission( SChapterMapMenuHelper::SMission *pMission )
 {
 	IView *pView = ClearView();
@@ -518,7 +518,7 @@ void CChapterState::SetMaskManipulatorMission( SChapterMapMenuHelper::SMission *
 
 	SetView( pView );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArrow )
 {
 	IView *pView = ClearView();
@@ -538,7 +538,7 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 
 	SetView( pView );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IView* CChapterState::ClearView()
 {
 	if ( pMaskManipulator != 0 )
@@ -556,7 +556,7 @@ IView* CChapterState::ClearView()
 	
 	return pView;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::SetView( IView *pView )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
@@ -581,7 +581,7 @@ void CChapterState::SetView( IView *pView )
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::ClearMaskManipulator()
 {
 	if ( pMaskManipulator != 0 )
@@ -600,7 +600,7 @@ void CChapterState::ClearMaskManipulator()
 		pMaskManipulator = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::UpdateMaskManipulator()
 {
 	if ( pPickedMission != 0 )
@@ -616,7 +616,7 @@ void CChapterState::UpdateMaskManipulator()
 		ClearMaskManipulator();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::OnKeyArrows( int nDeltaX, int nDeltaY )
 {
 	if ( pPickedMission || pPickedArrow )
@@ -635,7 +635,7 @@ void CChapterState::OnKeyArrows( int nDeltaX, int nDeltaY )
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChapterState::UpdateView()
 {
 	pHelper->ReReadPotentials();
@@ -644,4 +644,4 @@ void CChapterState::UpdateView()
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

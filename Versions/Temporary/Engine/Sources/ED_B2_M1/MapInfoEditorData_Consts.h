@@ -14,7 +14,7 @@
 #define PLAYER_CHANGED			0x08
 #define FRAME_INDEX_CHANGED	0x10
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMapInfoEditor
 {
 	extern const DWORD BRUSH_COLOR;
@@ -299,5 +299,5 @@ namespace NMapInfoEditor
 	bool CheckLinkCapability( const string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, UINT nFrameIndex,
 														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, UINT nLinkToFrameIndex );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPINFO_EDITOR_DATA__CONSTS__)

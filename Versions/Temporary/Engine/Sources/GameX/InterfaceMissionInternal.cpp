@@ -61,7 +61,7 @@
 #endif // _PROFILER
 //CRAP}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int WARFOG_HARD_RECT_WIDTH = 2;
 static int WARFOG_MIN_VALUE = 128;
 static int WARFOG_UPDATE_PERIOD = 1000;
@@ -73,46 +73,46 @@ static int CHAT_MESSAGE_MAX_SPEED = 60; // pixels per second
 static int CHAT_MESSAGE_INTERVAL = 5;
 
 static wstring MISSION_BUTTONS_BIND_SECTION;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int s_nTransitionEffectDuration = 800;
 static bool s_bEnableScrollTransition = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bDeepMapLoad = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int TAB_MULTI_SELECT				= 0;
 const int TAB_SINGLE_SELECT				= 3;
 const int TAB_REINF_SELECT				= 1;
 const int TAB_SUPER_WEAPON_SELECT	= 4;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int ACTION_TAB_SELECT						= 0;
 const int ACTION_TAB_CANCEL						= 1;
 const int ACTION_TAB_FORMATIONS				= 2;
 const int ACTION_TAB_REINF						= 3;
 const int ACTION_TAB_SUPER_WEAPON			= 3;
 const int ACTION_TAB_RADIO_CONTROLLED	= 5;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int TAB_APPEARANCE_SINGLE_SELECT	= 0;
 const int TAB_APPEARANCE_REINF					= 1;
 const int TAB_APPEARANCE_SUPER_WEAPON		= 2;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector< SMiniMapUnitInfo > s_unitsForMiniMap;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DoQuickSave();
 void DoQuickLoad();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetRawWarfog( BYTE value )
 {
 	CArray2D<BYTE> warFog( 1, 1 );
 	warFog.FillEvery( value );
 	Scene()->SetWarFog( warFog, 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 MEMORYLIB_EXPORT void DumpMemoryStats();
 static void MsgDumpMemoryStats( const SGameMessage &msg )
 {
 	DumpMemoryStats();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const NDb::SMapInfo *GetMapInfo( const string &_szParam )
 {
 	NI_VERIFY( !NStr::IsDecNumber(_szParam), "Deprecated way to identify resources! Use DBID instead!", return 0 );
@@ -122,7 +122,7 @@ static const NDb::SMapInfo *GetMapInfo( const string &_szParam )
 		return NDb::Get<NDb::SMapInfo>( CDBID(szParam) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD ConvertColor( const CVec3 &vColor )
 {
 	const int r = vColor.r * 255.0f;
@@ -131,7 +131,7 @@ static DWORD ConvertColor( const CVec3 &vColor )
 
   return 0xFF000000 + (( r & 0xFF ) << 16) + (( g & 0xFF ) << 8) + ( b & 0xFF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDrawProgress : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CDrawProgress )
@@ -158,7 +158,7 @@ public:
 	void OnTotalCount( ECounter eCounter, int nTotalCount );
 	void OnCount( ECounter eCounter, int nCount );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDrawProgress::CLoadingCounter : public ILoadingCounter
 {
 	OBJECT_NOCOPY_METHODS( CLoadingCounter );
@@ -176,7 +176,7 @@ public:
 	void Step();
 	//}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CICLoadB2 : public CICLoadBase
 {
 	OBJECT_NOCOPY_METHODS( CICLoadB2 );
@@ -188,7 +188,7 @@ public:
 
 	void OnProgress( EStage eStage );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CICSaveB2 : public CICSaveBase
 {
 	OBJECT_NOCOPY_METHODS( CICSaveB2 );
@@ -201,7 +201,7 @@ public:
 
 	void OnProgress( EStage eStage );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** observers
@@ -209,11 +209,11 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMission::CReactions
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::CReactions::Execute( const string &szSender, const string &szReaction, WORD wKeyboardFlags )	
 {
 	if ( szReaction == "FullInfoMember" )
@@ -283,9 +283,9 @@ bool CInterfaceMission::CReactions::Execute( const string &szSender, const strin
 		
 	return false; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMission
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMission::CInterfaceMission()
 : CInterfaceScreenBase( "Mission", "mission" ), nCurrentSlot( 0 ), nCurrentIconSlot( 0 ), 
 	bScreenLoaded( false ), nCurrentReinfPoint( -1 ), bFrozen( false ), bEscMenuPressed( false ),
@@ -373,7 +373,7 @@ CInterfaceMission::CInterfaceMission()
 
 	s_unitsForMiniMap.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceMission::~CInterfaceMission()
 {
 	pReinf = 0;
@@ -398,7 +398,7 @@ CInterfaceMission::~CInterfaceMission()
 	Singleton<IClientAckManager>()->Clear();
 	GameTimer()->SetSpeed( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::Init()
 {
 	Singleton<IGameTimer>()->Pause( false, PAUSE_TYPE_USER_PAUSE );
@@ -426,7 +426,7 @@ bool CInterfaceMission::Init()
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::RegisterObservers()
 {
 	AddObserver( "win_loose", &CInterfaceMission::MsgWinLoose );
@@ -464,7 +464,7 @@ void CInterfaceMission::RegisterObservers()
 
 	AddObserver( "dump_mem_stats", &MsgDumpMemoryStats );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgToggleGamePause( const SGameMessage &msg )
 {
 	if ( !pScenarioTracker || 
@@ -479,12 +479,12 @@ void CInterfaceMission::MsgToggleGamePause( const SGameMessage &msg )
 		NInput::PostEvent( "show_game_paused", 0, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgNotificationsCameraBack( const SGameMessage &msg )
 {
 	pNotifications->Notify( EVNT_CAMERA_BACK, -1, VNULL2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 {
 	//раздача цветов
@@ -503,7 +503,7 @@ void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 	}
 	pWorld->SetMinimapColors( minimapColors );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::OnGetFocus( bool bFocus )
 {
 	if ( bFocus && InterfaceState()->IsTransitEffectFlag() )
@@ -530,7 +530,7 @@ void CInterfaceMission::OnGetFocus( bool bFocus )
 
 	UpdateInterfacePause();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::RestoreBindSection()
 {
 	vector<string> sections;
@@ -540,13 +540,13 @@ void CInterfaceMission::RestoreBindSection()
 		sections.push_back( szButtonsBindSection );
 	NInput::SetSection( sections );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::StartInterface()
 {
 	CInterfaceScreenBase::StartInterface();
 	//
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::ProcessEvent( const struct SGameMessage &msg )
 {
 	// don't allow input messages furhter
@@ -567,7 +567,7 @@ bool CInterfaceMission::ProcessEvent( const struct SGameMessage &msg )
 
 	return pWorld->ProcessEvent( msg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::AddActionButton( NDb::EUserAction eUserAction, IWindow *pWnd )
 {
 	NI_ASSERT( eUserAction != NDb::USER_ACTION_UNKNOWN, "Trying to link button and NDb::USER_ACTION_UNKNOWN" );
@@ -577,7 +577,7 @@ void CInterfaceMission::AddActionButton( NDb::EUserAction eUserAction, IWindow *
 		actionButtons.push_back( CActionButton( eUserAction, pWnd ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, const SAbilitySwitchState &state )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
@@ -615,7 +615,7 @@ void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *_pScenarioTracker, int nPlayer )
 {
 	// clear previous chat input
@@ -881,7 +881,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	}
 	Singleton<IMusicSystem>()->Init( pMapInfo->pMusic, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SUIConstsB2 *pUIConsts )
 {
 	if ( !bScreenLoaded )
@@ -1234,12 +1234,12 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		bScreenLoaded = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgToggleWarFog( const SGameMessage &msg )
 {
 	SetWarForVisibility( !bShowWarFog );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateMinimapPos( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -1256,7 +1256,7 @@ void CInterfaceMission::MsgUpdateMinimapPos( const SGameMessage &msg )
 		pWorld->SetOnMinimap( bOnMinimap );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgReinfMode( const SGameMessage &msg )
 {
 	if ( msg.nParam1 == 0 )
@@ -1264,14 +1264,14 @@ void CInterfaceMission::MsgReinfMode( const SGameMessage &msg )
 	else
 		SetActionMode( EAM_REINF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgBadWeather( const SGameMessage &msg )
 {
 	bool bBadWeather = msg.nParam1;
 	if ( pReinf )
 		pReinf->BadWeather( bBadWeather );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgAviaReturns( const SGameMessage &msg )
 {
 	const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_BAD_WEATHER_AVIA_BACK" );
@@ -1291,7 +1291,7 @@ void CInterfaceMission::MsgAviaReturns( const SGameMessage &msg )
 	}
 	pNotifications->OnEvent( params );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUserAbilitySlot( const SGameMessage &msg, int nParam )
 {
 	if ( nParam >= lActiveAbilities.size() )
@@ -1315,7 +1315,7 @@ void CInterfaceMission::MsgUserAbilitySlot( const SGameMessage &msg, int nParam 
 			OnNewActionButtonClick( pWnd->GetName(), 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultistatePanelMinimize( const SGameMessage &msg )
 {
 	if ( msg.nParam1 == 0 )
@@ -1328,7 +1328,7 @@ void CInterfaceMission::MsgMultistatePanelMinimize( const SGameMessage &msg )
 			pMinimizeBtn->Enable( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultistatePanelMaximize( const SGameMessage &msg )
 {
 	if ( msg.nParam1 == 0 )
@@ -1341,7 +1341,7 @@ void CInterfaceMission::MsgMultistatePanelMaximize( const SGameMessage &msg )
 			pMinimizeBtn->Enable( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultistatePanelToggle( const SGameMessage &msg )
 {
 	if ( !pMinimizeBtn->IsEnabled() )
@@ -1352,7 +1352,7 @@ void CInterfaceMission::MsgMultistatePanelToggle( const SGameMessage &msg )
 	else
 		MultifunctionPanelMinimize();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MultifunctionPanelMinimize()
 {
 	if ( !bMultifunctionPanelMinimized )
@@ -1370,7 +1370,7 @@ void CInterfaceMission::MultifunctionPanelMinimize()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MultifunctionPanelMaximize()
 {
 	if ( bMultifunctionPanelMinimized )
@@ -1388,7 +1388,7 @@ void CInterfaceMission::MultifunctionPanelMaximize()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::BlinkActionButton( int nButton, bool bOn )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( (NDb::EUserAction)( nButton ) );
@@ -1401,7 +1401,7 @@ void CInterfaceMission::BlinkActionButton( int nButton, bool bOn )
 	if ( button.pBlinkWnd )
 		button.pBlinkWnd->ShowWindow( bOn );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateSpecialSelectBtn( const SGameMessage &msg )
 {
 	int nIndex = msg.nParam1;
@@ -1413,7 +1413,7 @@ void CInterfaceMission::MsgUpdateSpecialSelectBtn( const SGameMessage &msg )
 			pBtn->ShowWindow( bEnable );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgResetForcedAction( const SGameMessage &msg )
 {
 	eActivePanel = NDb::ACTION_BTN_PANEL_DEFAULT;
@@ -1422,18 +1422,18 @@ void CInterfaceMission::MsgResetForcedAction( const SGameMessage &msg )
 
 	NInput::PostEvent( "game_reset_forced_action", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUnitViewClick( const SGameMessage &msg )
 {
 	if ( pWorld )
 		pWorld->CenterSelectedUnit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateWinLooseState( const SGameMessage &msg )
 {
 	UpdateWinLooseState();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateWinLooseState()
 {
 	// reinforcements
@@ -1447,7 +1447,7 @@ void CInterfaceMission::UpdateWinLooseState()
 		pShowObjectives->Enable( false );
 //	NInput::PostEvent( "mission_objectives_close", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgTestCommand( const SGameMessage &msg )
 {
 	string szTestCommand = NStr::ToMBCS( NGlobal::GetVar( "test_command", "" ) );
@@ -1470,7 +1470,7 @@ void CInterfaceMission::MsgTestCommand( const SGameMessage &msg )
 		NMainLoop::Command( ML_COMMAND_MISSION_OBJECTIVES, "" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 {
 	if ( _bShowWarFog != bShowWarFog )
@@ -1483,7 +1483,7 @@ void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 			SetRawWarfog( 255 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateChat( NTimer::STime nDeltaTime )
 {
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
@@ -1491,7 +1491,7 @@ void CInterfaceMission::UpdateChat( NTimer::STime nDeltaTime )
 	UpdateChatAbs( nDeltaAbsTime );
 	nChatTime = nCurrTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 {
 	if ( !pChatMessages || !pChatMessagesElement )
@@ -1581,7 +1581,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool bForced )
 {
 	const int nMapSizeX = Singleton<IAILogic>()->GetMiniMapWarFogSizeX();
@@ -1670,7 +1670,7 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 		Scene()->SetWarFogBlend( fBlend );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::StepLocal( bool bAppActive )
 {
 	Sleep( 1 );
@@ -1884,7 +1884,7 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::CheckInactiveInput()
 {
 	// check if input is inactive for N seconds. run command
@@ -1917,7 +1917,7 @@ void CInterfaceMission::CheckInactiveInput()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateMultiplayerScoreBoard()
 {
 	if ( !pScenarioTracker )
@@ -1995,19 +1995,19 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 		pTimeToLooseOrWin->ShowWindow( false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateInterfacePause()
 {
 	PauseIntermission( pScenarioTracker && 
 		( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE || NGlobal::GetVar( "History.Playing", 0 ) ) && 
 		(!IsInFocus() /*&& !IsMoveSequence() */) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::IsScreenControl( const CVec2 &vPos ) const
 {
 	return bScreenLoaded && ( pScreen->Pick( vPos, false ) != 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 {
 	if ( bIsActiveScreen != IsScreenControl( vPos ) )
@@ -2071,7 +2071,7 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 		
 	CheckMouseBorder( vPos, bAllowBorderScroll && !NGlobal::GetVar( "script_movie_on", false ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::CheckMouseBorder( const CVec2 &vPos, const bool bAllowScroll )
 {
 	ICamera *pCamera = Camera();
@@ -2101,7 +2101,7 @@ void CInterfaceMission::CheckMouseBorder( const CVec2 &vPos, const bool bAllowSc
 		pCamera->SetScrollSpeedY( nDY * fBorderScrollY );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::OnButtonDown( const CVec2 &vPos, int nButton )
 {
 	if ( IsScreenControl( vPos ) )
@@ -2118,7 +2118,7 @@ void CInterfaceMission::OnButtonDown( const CVec2 &vPos, int nButton )
 			pWorld->DoRButtonDown( vPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::OnButtonUp( const CVec2 &vPos, int nButton )
 {
 	if ( eActiveControl != AC_SCREEN ) {
@@ -2131,7 +2131,7 @@ void CInterfaceMission::OnButtonUp( const CVec2 &vPos, int nButton )
 	//	pScreen->OnButtonUp( vPos, nButton );
 	eActiveControl = AC_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::OnButtonDblClk( const CVec2 &vPos, int nButton )
 {
 	//if ( IsScreenControl( vPos ) )
@@ -2144,7 +2144,7 @@ void CInterfaceMission::OnButtonDblClk( const CVec2 &vPos, int nButton )
 			pWorld->DoRButtonDblClk( vPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::ResetAbilityButtons()
 {
 	for ( CActionButtons::iterator it = lActiveAbilities.begin(); it != lActiveAbilities.end(); ++it )
@@ -2155,7 +2155,7 @@ void CInterfaceMission::ResetAbilityButtons()
 	lActiveAbilities.clear();
 	nCurrentSlot = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace )
 {
 	if ( !pWnd )
@@ -2180,7 +2180,7 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 		nCurrentSlot++;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultiplayerWin( const SGameMessage &msg )
 {
 	Singleton<IInterfaceState>()->SendCommandsToCloseAllIncluding( this );
@@ -2188,7 +2188,7 @@ void CInterfaceMission::MsgMultiplayerWin( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 	NMainLoop::Command( ML_COMMAND_MP_STATISTICS, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultiplayerLoose( const SGameMessage &msg )
 {
 	Singleton<IInterfaceState>()->SendCommandsToCloseAllIncluding( this );
@@ -2196,42 +2196,42 @@ void CInterfaceMission::MsgMultiplayerLoose( const SGameMessage &msg )
 	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 	NMainLoop::Command( ML_COMMAND_MP_STATISTICS, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::MsgOnBeforeMouseMove( const SGameMessage &msg )
 {
 	pWorld->SetOnMinimap( false );
 	
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMessageBoxOk( const SGameMessage &msg )
 {
 	// Пока только уведомления (CVisualNotifications) - не делаем ничего
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgNotificationOpenReinf( const SGameMessage &msg )
 {
 //	if ( !pReinf->IsOpen() && pReinf->IsEnabled() && pReinf->IsAviaPresents() )
 //		OnReinfShow( "notifications" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgOnMultiplayerPause( const SGameMessage &msg )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_MP_PAUSE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgOnScriptBlinkActionButton( const SGameMessage &msg )
 {
 	BlinkActionButton( msg.nParam1, (msg.nParam2 != 0) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgBlinkObjectiveBtn( const SGameMessage &msg )
 {
 	bool bBlink = msg.nParam1;
 	if ( pObjectivesBlink )
 		pObjectivesBlink->ShowWindow( bBlink );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgOnRemovePlayer( const SGameMessage &msg )
 {
 	int nPlayer = msg.nParam1;
@@ -2241,7 +2241,7 @@ void CInterfaceMission::MsgOnRemovePlayer( const SGameMessage &msg )
 	params.eEventType = NDb::NEVT_PLAYER_ELIMINATED;
 	pNotifications->OnEvent( params );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::MsgScrollMap( const SGameMessage &msg )
 {
 	if ( s_bEnableScrollTransition )
@@ -2257,7 +2257,7 @@ bool CInterfaceMission::MsgScrollMap( const SGameMessage &msg )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 {
 	if ( !Singleton<IScenarioTracker>()->IsMissionActive() )
@@ -2277,7 +2277,7 @@ void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 	if ( pScreen )
 		pScreen->ShowWindow( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgEscMenu( const SGameMessage &msg )
 {
 	if ( bEscMenuPressed )
@@ -2287,18 +2287,18 @@ void CInterfaceMission::MsgEscMenu( const SGameMessage &msg )
 	//if ( IsMoveSequence() )
 		//Cursor()->Show( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgOk( const SGameMessage &msg )
 {
 	if ( bTryExitWindows )
 		NInput::PostEvent( "exit", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgCancel( const SGameMessage &msg )
 {
 	bTryExitWindows = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgTryExitWindows( const SGameMessage &msg )
 {
 	bTryExitWindows = true;
@@ -2306,38 +2306,38 @@ void CInterfaceMission::MsgTryExitWindows( const SGameMessage &msg )
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
 		InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgShowObjectives( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_MISSION_OBJECTIVES, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgSelectMode( const SGameMessage &msg )
 {
 	SetActionMode( EAM_SELECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMultiSelectMode( const SGameMessage &msg )
 {
 	bMultiSelectSubMode = true;
 	bPreSelectSubMode = false;
 	UpdateSelectMode();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgSingleSelectMode( const SGameMessage &msg )
 {
 	bMultiSelectSubMode = false;
 	bPreSelectSubMode = false;
 	UpdateSelectMode();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgPreSelectMode( const SGameMessage &msg )
 {
 	bMultiSelectSubMode = false;
 	bPreSelectSubMode = true;
 	UpdateSelectMode();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateSelectMode()
 {
 	if ( pWorld->GetActionMode() != EAM_SELECT )
@@ -2363,7 +2363,7 @@ void CInterfaceMission::UpdateSelectMode()
 	
 	UpdateActionPanel();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateSingleUnit( const SGameMessage &msg )
 {
 	if ( pMultiFunctionTab && TAB_SINGLE_SELECT < pMultiFunctionTab->GetNTabs() )
@@ -2372,7 +2372,7 @@ void CInterfaceMission::MsgUpdateSingleUnit( const SGameMessage &msg )
 		pUnitFullInfo->SetObject( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateUnitStats( const SGameMessage &msg )
 {
 	if ( bMultiSelectSubMode )
@@ -2386,7 +2386,7 @@ void CInterfaceMission::MsgUpdateUnitStats( const SGameMessage &msg )
 		pUnitFullInfo->UpdateObject( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateSuperWeaponStats( const SGameMessage &msg )
 {
 	if ( pSuperWeapon )
@@ -2395,12 +2395,12 @@ void CInterfaceMission::MsgUpdateSuperWeaponStats( const SGameMessage &msg )
 		pSuperWeapon->UpdateObject( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUpdateButtons( const SGameMessage &msg )
 {
 	UpdateActionPanel();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgUnpdateIcon( const SGameMessage &msg )
 {
 	if ( bMultiSelectSubMode )
@@ -2422,7 +2422,7 @@ void CInterfaceMission::MsgUnpdateIcon( const SGameMessage &msg )
 		pUnitFullInfo->UpdateObject( pMO );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgHighlightUnits( const SGameMessage &msg )
 {
 	for ( int i = 0; i < iconSlots.size(); ++i )
@@ -2433,7 +2433,7 @@ void CInterfaceMission::MsgHighlightUnits( const SGameMessage &msg )
 		pBtn->SetState( ( msg.nParam1 <= i && i <= msg.nParam2 ) ? 1 : 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgSetAbilityState( const SGameMessage &msg )
 {
 	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
@@ -2441,7 +2441,7 @@ void CInterfaceMission::MsgSetAbilityState( const SGameMessage &msg )
 	state.dwStateValue = msg.nParam2;
 	SetAbilityState( eUserAction, state );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SReinfInfo
 {
 	const NDb::SHPObjectRPGStats *pStats;
@@ -2453,11 +2453,11 @@ struct SReinfInfo
 		return bResult;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SetArmyPoints( int nPoints )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, vector<float> *pHPs, bool *pIsSquad )
 {
 	if ( !pMO )
@@ -2488,7 +2488,7 @@ void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, vector<float> *pHPs, b
 //	*pIsSquad = bSquad;
 	*pIsSquad = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 {
 	if ( !pMO )
@@ -2567,7 +2567,7 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 		nCurrentIconSlot++;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnClickFullInfoMember( const string &szSender )
 {
 	if ( pReinf->IsOpen() )
@@ -2576,7 +2576,7 @@ bool CInterfaceMission::OnClickFullInfoMember( const string &szSender )
 		pUnitFullInfo->OnClickMember( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnFullInfoMemberOverOn( const string &szSender )
 {
 	if ( pReinf->IsOpen() )
@@ -2585,7 +2585,7 @@ bool CInterfaceMission::OnFullInfoMemberOverOn( const string &szSender )
 		pUnitFullInfo->OnMemberOverOn( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnFullInfoMemberOverOff( const string &szSender )
 {
 	if ( pReinf->IsOpen() )
@@ -2594,7 +2594,7 @@ bool CInterfaceMission::OnFullInfoMemberOverOff( const string &szSender )
 		pUnitFullInfo->OnMemberOverOff( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnFullInfoWeaponOverOn( const string &szSender )
 {
 	if ( pReinf->IsOpen() )
@@ -2603,7 +2603,7 @@ bool CInterfaceMission::OnFullInfoWeaponOverOn( const string &szSender )
 		pUnitFullInfo->OnWeaponOverOn( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnFullInfoWeaponOverOff( const string &szSender )
 {
 	if ( pReinf->IsOpen() )
@@ -2612,7 +2612,7 @@ bool CInterfaceMission::OnFullInfoWeaponOverOff( const string &szSender )
 		pUnitFullInfo->OnWeaponOverOff( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CInterfaceMission::MakeActionTooltip( IWindow *pWnd, const string &szCommand, bool bHotkey )
 {
 	list<NInput::SBind> binds;
@@ -2639,17 +2639,17 @@ bool CInterfaceMission::OnFullInfoWeaponOverOff( const string &szSender )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeAbilityTooltip( IWindow *pWnd, int nSlot )
 {
 	MakeActionTooltip( pWnd, StrFmt( "user_ability_slot_%02d", nSlot ), !GetActionOwnReaction( pWnd ).empty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeCommandTooltip( IWindow *pWnd )
 {
 	MakeActionTooltip( pWnd, GetActionOwnReaction( pWnd ), true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CInterfaceMission::GetActionOwnReaction( IWindow *pWnd ) const
 {
 	if ( CDynamicCast<IButton> pBtn = pWnd )
@@ -2666,7 +2666,7 @@ string CInterfaceMission::GetActionOwnReaction( IWindow *pWnd ) const
 	}
 	return string();
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const string &szCommand, bool bHotkey )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
@@ -2704,7 +2704,7 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
@@ -2715,7 +2715,7 @@ void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nS
 		MakeActionTooltip( eUserAction, StrFmt( "user_ability_slot_%02d", nSlot ), !action.bPassive );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MakeCommandTooltip( NDb::EUserAction eUserAction )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
@@ -2726,7 +2726,7 @@ void CInterfaceMission::MakeCommandTooltip( NDb::EUserAction eUserAction )
 		MakeActionTooltip( eUserAction, action.szHotkeyCmd, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 {
 //	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
@@ -2737,7 +2737,7 @@ bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 		eAction == NDb::USER_ACTION_ENGINEER_CLEAR_MINES;// CRAP
 //		eAction == NDb::USER_ACTION_CAPTURE_ARTILLERY; // CRAP
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CInterfaceMission::GetActionByButtonName( const string &szName ) const
 {
 	int nLen = strlen( "NewActionButton" );
@@ -2747,7 +2747,7 @@ NDb::EUserAction CInterfaceMission::GetActionByButtonName( const string &szName 
 	NDb::EUserAction eAction = (NDb::EUserAction)( NStr::ToInt( szName.substr( nLen ) ) );
 	return eAction;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateActionPanel()
 {
 	if ( pWorld->GetActionMode() != EAM_SELECT )
@@ -2787,7 +2787,7 @@ void CInterfaceMission::UpdateActionPanel()
 
 	UpdateActionButtons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAbility
 {
 	int nTier;
@@ -2796,7 +2796,7 @@ struct SAbility
 	bool bFixedPlace;
 	bool bEnabled;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAbilitySort
 {
 	bool operator()( const SAbility &ability1, const SAbility &ability2 ) const
@@ -2804,7 +2804,7 @@ struct SAbilitySort
 		return ability1.nTier < ability2.nTier;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateActionButtons()
 {
 	vector<SAbility> abilities;
@@ -2875,7 +2875,7 @@ void CInterfaceMission::UpdateActionButtons()
 	bool bCanLeave = enabledActions.HasAction( NDb::USER_ACTION_LEAVE );
 	pUnitFullInfo->UpdateMembers( bCanLeave );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::RegisterActionObservers()
 {
 	for ( CNewActionButtons::iterator it = newActionButtons.begin(); it != newActionButtons.end(); ++it )
@@ -2887,7 +2887,7 @@ void CInterfaceMission::RegisterActionObservers()
 			AddObserver( action.szHotkeyCmd, &CInterfaceMission::MsgActionCmd, (int)(eAction) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::TrySkipMovie( const SGameMessage &msg )
 {
 	if ( NGlobal::GetVar( "temp.script_movie", false ) != 0 )
@@ -2902,7 +2902,7 @@ void CInterfaceMission::TrySkipMovie( const SGameMessage &msg )
 	}
 	//return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::MsgActionCmd( const SGameMessage &msg, int nAction )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( (NDb::EUserAction)( nAction ) );
@@ -2924,7 +2924,7 @@ bool CInterfaceMission::MsgActionCmd( const SGameMessage &msg, int nAction )
 	
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::UpdateMissionTime( bool bAppActive )
 {
 	NTimer::STime timeCurrent = Singleton<IGameTimer>()->GetAbsTime();
@@ -2942,17 +2942,17 @@ void CInterfaceMission::UpdateMissionTime( bool bAppActive )
 		pScenarioTracker->SetStatistics( nLocalPlayer, IScenarioTracker::ESK_TIME, nMissionTimeMSec / 1000 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgNewUpdateReinfAvail( const SGameMessage &msg )
 {
 	pReinf->UpdateNewAvail();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgNewUpdateReinfPoint( const SGameMessage &msg )
 {
 	pReinf->UpdateNewPoint( msg.nParam1 != 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgForcedActionCallReinf( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -2961,12 +2961,12 @@ void CInterfaceMission::MsgForcedActionCallReinf( const SGameMessage &msg )
 
 	SetActionMode( EAM_SELECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgForcedActionCallNoReinf( const SGameMessage &msg )
 {
 	pReinf->CallNoReinf();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgForcedActionCallSuperWeapon( const SGameMessage &msg )
 {
 	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
@@ -2975,7 +2975,7 @@ void CInterfaceMission::MsgForcedActionCallSuperWeapon( const SGameMessage &msg 
 
 	SetActionMode( EAM_SELECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgResetTarget( const SGameMessage &msg )
 {
 	if ( pWorld->GetActionMode() == EAM_SELECT )
@@ -2986,7 +2986,7 @@ void CInterfaceMission::MsgResetTarget( const SGameMessage &msg )
 			SetActionMode( EAM_SELECT );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgSetAbilityParam( const SGameMessage &msg )
 {
 	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
@@ -3010,7 +3010,7 @@ void CInterfaceMission::MsgSetAbilityParam( const SGameMessage &msg )
 			return;
 		}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMiniMapShowObjectives( const SGameMessage &msg )
 {
 	const int nSelectedID = msg.nParam1;
@@ -3019,12 +3019,12 @@ void CInterfaceMission::MsgMiniMapShowObjectives( const SGameMessage &msg )
 	pNotifications->Notify( EVNT_SHOW_OBJECTIVES, -1, VNULL2 );
 	pNotifications->Notify( EVNT_CHECK_OBJECTIVES, -1, VNULL2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgMiniMapHideObjectives( const SGameMessage &msg )
 {
 	pNotifications->Notify( EVNT_HIDE_OBJECTIVES, -1, VNULL2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgQuickSave( const SGameMessage &msg )
 {
 	if ( pMovieBorder && pMovieBorder->IsVisible() )
@@ -3032,14 +3032,14 @@ void CInterfaceMission::MsgQuickSave( const SGameMessage &msg )
 	if ( !NGlobal::GetVar( "Multiplayer.Host" ) && NGlobal::GetVar( "Multiplayer.Client", "" ).GetString() == L"" )
 		DoQuickSave();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgQuickLoad( const SGameMessage &msg )
 {
 	if ( pMovieBorder && pMovieBorder->IsVisible() )
 		return;
 	DoQuickLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::MsgShowGamePaused( const SGameMessage &msg )
 {
 	bool bUserPaused = Singleton<IGameTimer>()->HasPause( PAUSE_TYPE_USER_PAUSE );
@@ -3049,7 +3049,7 @@ void CInterfaceMission::MsgShowGamePaused( const SGameMessage &msg )
 	
 	Singleton<ISFX>()->Pause( bUserPaused || bInterfacePaused ); // на паузе выключаются только эффекты, музыка остается
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::MsgBeginScriptMovieSequence( const SGameMessage &msg )
 {
 	bMovieMode = true;
@@ -3076,7 +3076,7 @@ bool CInterfaceMission::MsgBeginScriptMovieSequence( const SGameMessage &msg )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::EndScriptMovieSequence()
 {
 	bMovieMode = false;
@@ -3098,14 +3098,14 @@ void CInterfaceMission::EndScriptMovieSequence()
 		eSkipState = ESMS_DONE;
 		*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfSelect( const string &szSender )
 {
 	pReinf->Select( szSender );
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfSelectDblClick( const string &szSender )
 {
  // CRAP - temporary disable, uncomment it at designer's request
@@ -3115,7 +3115,7 @@ bool CInterfaceMission::OnReinfSelectDblClick( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnToggleReinf( const string &szSender )
 {
 	if ( !pReinf->IsOpen() )
@@ -3125,44 +3125,44 @@ bool CInterfaceMission::OnToggleReinf( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfUnitInfo( const string &szSender )
 {
 	pReinf->ShowUnitInfo( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfFullInfoBack( const string &szSender )
 {
 	pReinf->UnitFullInfoBack();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfMouseOverForward( const string &szSender )
 {
 	pReinf->MouseOverForward( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfMouseOverBackward( const string &szSender )
 {
 	pReinf->MouseOverBackward( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfCallMode( const string &szSender )
 {
 	pReinf->OnReinfCallMode();
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnReinfAutoShowReinf( const string &szSender, bool bOn )
 {
 	pReinf->OnReinfAutoShowReinf( bOn );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnClickMultiSelectUnit( const string &szSender, WORD wKeyboardFlags )
 {
 	const int nSize = strlen( "unit_slot_" );
@@ -3172,7 +3172,7 @@ bool CInterfaceMission::OnClickMultiSelectUnit( const string &szSender, WORD wKe
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnSelectSpecialGroup( const string &szSender, WORD wKeyboardFlags )
 {
 	if ( szSender == "Button01" )
@@ -3192,7 +3192,7 @@ bool CInterfaceMission::OnSelectSpecialGroup( const string &szSender, WORD wKeyb
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnUnselectSpecialGroup( const string &szSender, WORD wKeyboardFlags )
 {
 	if ( szSender == "Button04" )
@@ -3202,7 +3202,7 @@ bool CInterfaceMission::OnUnselectSpecialGroup( const string &szSender, WORD wKe
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnNewActionButtonClick( const string &szSender, WORD wKeyboardFlags )
 {
 	NDb::EUserAction eAction = GetActionByButtonName( szSender );
@@ -3211,7 +3211,7 @@ bool CInterfaceMission::OnNewActionButtonClick( const string &szSender, WORD wKe
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eAction );
@@ -3243,7 +3243,7 @@ void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnNewActionButtonRightClick( const string &szSender, WORD wKeyboardFlags )
 {
 	NDb::EUserAction eAction = GetActionByButtonName( szSender );
@@ -3261,14 +3261,14 @@ bool CInterfaceMission::OnNewActionButtonRightClick( const string &szSender, WOR
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnNotificationEventBtn( const string &szSender, bool bRightBtn )
 {
 	pNotifications->OnBtn( szSender, bRightBtn );
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnEnterPressed( WORD wKeyboardFlags )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -3284,7 +3284,7 @@ bool CInterfaceMission::OnEnterPressed( WORD wKeyboardFlags )
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnChatInputEnterPressed()
 {
 	if ( chatInput.pEdit )
@@ -3294,21 +3294,21 @@ bool CInterfaceMission::OnChatInputEnterPressed()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnChatInputEscPressed()
 {
 	CloseChatInput();
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceMission::OnChatInputFocusLost()
 {
 	CloseChatInput();
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::StartChatInput( bool _bTeam )
 {
 	chatInput.bTeam = _bTeam;
@@ -3340,7 +3340,7 @@ void CInterfaceMission::StartChatInput( bool _bTeam )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SendChat( const wstring &wszText, bool bTeam )
 {
 	if ( wszText.empty() )
@@ -3352,7 +3352,7 @@ void CInterfaceMission::SendChat( const wstring &wszText, bool bTeam )
 	// CRAP - test echo
 //	InterfaceState()->AddMPChatMessage( wszText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::FastMinimizePanels()
 {
 	NInput::PostEvent( "mission_multistate_panel_minimize_move_fast", 0, 0 );
@@ -3361,7 +3361,7 @@ void CInterfaceMission::FastMinimizePanels()
 	NInput::PostEvent( "mission_reinf_panel_minimize_move_fast", 0, 0 );
 	NInput::PostEvent( "mission_minimap_panel_minimize_move_fast", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::FastMaximizePanels()
 {
 	NInput::PostEvent( "mission_multistate_panel_maximize_move_fast", 0, 0 );
@@ -3370,7 +3370,7 @@ void CInterfaceMission::FastMaximizePanels()
 	NInput::PostEvent( "mission_reinf_panel_maximize_move_fast", 0, 0 );
 	NInput::PostEvent( "mission_minimap_panel_maximize_move_fast", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::CloseChatInput()
 {
 	if ( chatInput.pPanel && chatInput.pPanel->IsVisible() )
@@ -3383,7 +3383,7 @@ void CInterfaceMission::CloseChatInput()
 			FastMaximizePanels();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::AfterLoad()
 {
 	if ( pMission == 0 )
@@ -3417,12 +3417,12 @@ void CInterfaceMission::AfterLoad()
 	UpdateWarFog( nCurrentTime, false, true );
 	pReinf->AfterLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::Freeze( const bool bFreeze )
 {
 	bFrozen = bFreeze;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::Draw( NGScene::CRTPtr *pTexture )
 {
 	if ( eUIState == EUIS_ON_ENTER_TRANSIT_START )
@@ -3506,7 +3506,7 @@ void CInterfaceMission::Draw( NGScene::CRTPtr *pTexture )
 		NGScene::Flip();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 {
 	pWorld->SetActionMode( eActionMode );
@@ -3557,7 +3557,7 @@ void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceMission::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CInterfaceScreenBase*)this );
@@ -3660,9 +3660,9 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDrawProgress
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress ) :
 	pProgress( _pProgress )
 {
@@ -3670,7 +3670,7 @@ CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress ) :
 	pTerrains = new CLoadingCounter( this, EC_TERRAINS );
 	pTextures = new CLoadingCounter( this, EC_TEXTURES );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDrawProgress::OnTotalCount( ECounter eCounter, int nTotalCount )
 {
 	switch ( eCounter )
@@ -3683,7 +3683,7 @@ void CDrawProgress::OnTotalCount( ECounter eCounter, int nTotalCount )
 		break;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 {
 	switch ( eCounter )
@@ -3696,15 +3696,15 @@ void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 		break;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDrawProgress::CLoadingCounter
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDrawProgress::CLoadingCounter::CLoadingCounter( CDrawProgress *_pOwner, ECounter _eCounter ) :
 	pOwner( _pOwner ),
 	eCounter( _eCounter )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDrawProgress::CLoadingCounter::LeftToLoad( int _nLeftCount )
 {
 	if ( pOwner )
@@ -3713,7 +3713,7 @@ void CDrawProgress::CLoadingCounter::LeftToLoad( int _nLeftCount )
 		pOwner->OnCount( eCounter, nTotalCount - nLeftCount );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDrawProgress::CLoadingCounter::SetTotalCount( int _nTotalCount )
 {
 	if ( pOwner )
@@ -3723,19 +3723,19 @@ void CDrawProgress::CLoadingCounter::SetTotalCount( int _nTotalCount )
 		pOwner->OnTotalCount( eCounter, nTotalCount );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDrawProgress::CLoadingCounter::Step()
 {
 	LeftToLoad( nLeftCount - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICLoadB2
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CICLoadB2::CICLoadB2( const string &szFileName ) : 
 	CICLoadBase( szFileName )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICLoadB2::OnProgress( EStage eStage )
 {
 	switch ( eStage )
@@ -3811,13 +3811,13 @@ void CICLoadB2::OnProgress( EStage eStage )
 		break;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICSaveB2
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CICSaveB2::CICSaveB2( const string &szFileName ) : CICSaveBase( szFileName )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICSaveB2::OnProgress( EStage eStage )
 {
 	switch ( eStage )
@@ -3840,7 +3840,7 @@ void CICSaveB2::OnProgress( EStage eStage )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 {
 	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE && NGlobal::GetVar( "History.Playing", 0 ) == 0 )
@@ -3864,12 +3864,12 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 	}
 	InterfaceState()->WriteToMissionConsole( wszText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdQuickLoad( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	DoQuickLoad();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdLoadGame( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 1 )
@@ -3886,7 +3886,7 @@ static void CmdLoadGame( const string &szID, const vector<wstring> &paramsSet, v
 		NMainLoop::Command( ML_COMMAND_LOAD_GAME, szParam.c_str() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DoQuickSave()
 {
 	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
@@ -3933,7 +3933,7 @@ void DoQuickSave()
 		NMainLoop::Command( ML_COMMAND_SAVE_GAME, szName01.c_str() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DoQuickLoad()
 {
 	string szName01 = string( NSaveLoad::SAVE_NAME_PREFIX ) + "quick01";
@@ -3945,12 +3945,12 @@ void DoQuickLoad()
 	if ( !szName01.empty() )
 		NMainLoop::Command( ML_COMMAND_LOAD_GAME, szName01.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CmdQuickSave( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	DoQuickSave();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DoAutosaveInMission( const bool bOnWin )
 {
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
@@ -3976,24 +3976,24 @@ void DoAutosaveInMission( const bool bOnWin )
 			NSaveLoad::MakeUniqueSave( wszName + wszCampaignName + wszMissionName + ( bOnWin ? L" 1" : L" 2" ), true, false, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CICMission                                  *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CICMission::CICMission( ITransceiver *pTransceiver )
 : nPlayerForWarFog( -1 )
 {
 	pTrans = pTransceiver;
 	pMap = pTrans->GetMap();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMission::PreCreate()
 {
 //	NI_ASSERT( !NMainLoop::GetTopInterface(), "Non-empty interface stack at mission start" ); // sanity check
 	CInterfaceCommandBase<CInterfaceMission>::PreCreate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMission::PostCreate( CICMission::IInterface *pInterface ) 
 { 
 #ifndef _FINALRELEASE
@@ -4022,7 +4022,7 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 
 	NMainLoop::PushInterface( pInterface ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICMission::Configure( const char *pszConfig )
 { 
 	if ( pTrans )
@@ -4055,9 +4055,9 @@ void CICMission::Configure( const char *pszConfig )
 		nPlayerForWarFog = Singleton<IAIScenarioTracker>()->GetLocalPlayer();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceMission::SNewActionButton
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SNewActionButton::Enable( bool _bEnable )
 {
 	bEnabled = _bEnable;
@@ -4071,14 +4071,14 @@ void CInterfaceMission::SNewActionButton::Enable( bool _bEnable )
 	if ( pIconFgDisabledWnd )
 		pIconFgDisabledWnd->ShowWindow( !bPassive && !bEnabled );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceMission::SNewActionButton::SetProgress( float fProgress )
 {
 	if ( pClockWnd )
 		pClockWnd->SetAngles( FP_PI2, FP_2PI + FP_PI2 - fProgress * FP_2PI );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void StartNewMap( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() ) 
@@ -4124,7 +4124,7 @@ void StartNewMap( const string &szID, const vector<wstring> &paramsSet, void *pC
 
 	NMainLoop::Command( ML_COMMAND_MISSION, szVal.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void BalanceTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	NGlobal::SetVar( "balance_test", NStr::ToInt( NStr::ToMBCS( paramsSet[0] ) ) );
@@ -4132,7 +4132,7 @@ void BalanceTest( const string &szID, const vector<wstring> &paramsSet, void *pC
 		NGlobal::SetVar( "balance_test_n_iteration", 0 );
 	StartNewMap( szID, paramsSet, pContext );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ReplayHistory( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
@@ -4183,7 +4183,7 @@ public:
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CompareSaves( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 2 )
@@ -4241,7 +4241,7 @@ OMG_I_USE_GOTO_AGAIN:
 	}
 }
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DemoExit( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	const string szParam = "Movies\\demo_final_outro.xml;final_exit";
@@ -4249,7 +4249,7 @@ void DemoExit( const string &szID, const vector<wstring> &paramsSet, void *pCont
 	NMainLoop::ResetStack();
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szParam.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MissionCommands)
 
 REGISTER_VAR_EX( "chat_message_visible_time", NGlobal::VarIntHandler, &CHAT_MESSAGE_VISIBLE_TIME, 5000, STORAGE_NONE );
@@ -4283,11 +4283,11 @@ REGISTER_CMD( "compare_saves", CompareSaves );
 #endif
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( MISSION_INTERFACE, CInterfaceMission );
 REGISTER_SAVELOAD_CLASS_NM( 0x1009DCC2, CReactions, CInterfaceMission );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_MISSION, CICMission )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_LOAD_GAME, CICLoadB2 );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_SAVE_GAME, CICSaveB2 );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
+
+

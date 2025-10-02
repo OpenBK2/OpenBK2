@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "SceneInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddPolyline( const int nID, const vector<CVec3> &_points, const CVec4 &vColor, bool bDepthCheck )
 {
 	// translate to Vis coords
@@ -20,7 +20,7 @@ int CScene::AddPolyline( const int nID, const vector<CVec3> &_points, const CVec
 	}
 	return AddIndexedPolylineInternal( nID, points, indices, vColor, bDepthCheck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddIndexedPolyline( const int nID, const vector<CVec3> &_points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	// translate to Vis coords
@@ -30,16 +30,16 @@ int CScene::AddIndexedPolyline( const int nID, const vector<CVec3> &_points, con
 	//
 	return AddIndexedPolylineInternal( nID, points, indices, vColor, bDepthCheck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddIndexedPolylineInternal( const int nID, const vector<CVec3> &points, const vector<WORD> &indices, const CVec4 &vColor, bool bDepthCheck )
 {
 	const int nLineID = GetID( nID );
 	data[eScene]->polylines[nLineID] = data[eScene]->GetGScene()->CreatePolyline( points, indices, vColor, bDepthCheck );
 	return nLineID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemovePolyline( const int nID )
 {
 	data[eScene]->polylines.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

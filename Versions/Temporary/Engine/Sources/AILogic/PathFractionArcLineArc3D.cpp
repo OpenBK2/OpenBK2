@@ -6,11 +6,11 @@
 #include "../misc/StrProc.h"
 
 REGISTER_SAVELOAD_CLASS(0x11095C81, CPahtFractionArcLineArc3D)
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CPahtFractionArcLineArc
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths ) 
 {
 	CPathFractionArc3D *pStartArc = pStart->GetArc();
@@ -27,14 +27,14 @@ void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 		pPaths->push_back( pFinishArcCopy );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CPahtFractionArcLineArc3D::Init( const SPrevPathParams &prevPath, 
 																	 const CVec3 &x1, const CVec3 &v1,
 																	 const float fR0, const float fR1 )
 {
 	Init( prevPath.p2, x1, prevPath.vSpeed, v1, fR0, fR1 );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coordinates
 					 const CVec3 &v0, const CVec3 &v1,			// directions
 					 const float r0, const float r1 )			// turn radii
@@ -71,7 +71,7 @@ void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coo
 		pStart->Init( x0, v0, vBackArcFinish, r0 );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void PlanePathTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	CVec3 x0( 7073.2544f, 1606.7415f, 1149.9806f );
@@ -109,7 +109,7 @@ void PlanePathTest( const string &szID, const vector<wstring> &paramsSet, void *
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::BLUE );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(CPlanePaths)
 REGISTER_CMD( "PlanePathTest", PlanePathTest );
 FINISH_REGISTER

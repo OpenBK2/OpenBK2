@@ -9,22 +9,22 @@
 #include "GroupLogic.h"
 #include "Artillery.h"
 #include "Soldier.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define N_GRIDCELL_SIZE 8
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEventUpdater updater;
 extern CGroupLogic theGroupLogic;
 extern CDiplomacy theDipl;
 extern SCheats theCheats;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CUpdateData
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 hash_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
 REGISTER_SAVELOAD_CLASS_NM( 0x110B2C80, CUpdateData , CEventUpdater );
 //REGISTER_SAVELOAD_CLASS_NM( 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
 
 const int DIVIDER_CONST = AI_TILES_IN_VIS_TILE * 2;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::CUpdateData::Init()
 {
 	clientTransformers.clear();
@@ -79,7 +79,7 @@ void CEventUpdater::CUpdateData::Init()
 	clientTransformers[ACTION_NOTIFY_SUPERWEAPON_CONTROL] = new CUpdateSuperWeaponControlTransform;
 	clientTransformers[ACTION_NOTIFY_SUPERWEAPON_RECYCLE] = new CUpdateSuperWeaponRecycleTransform;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SAIBasicUpdate* CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
 {
 	hash_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
@@ -98,20 +98,20 @@ SAIBasicUpdate* CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
 
 	return pUpdate;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CEventUpdater
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEventUpdater::CEventUpdater()
 {
 	pendingIt = pendingSuspendableUpdates.begin();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::DestroyContents()
 {
 	CEventUpdater::~CEventUpdater();
 	new(this) CEventUpdater();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::Init( const int nStaticMapSizeX, const int nStaticMapSizeY )
 {
 	CUpdateData::Init();
@@ -130,7 +130,7 @@ void CEventUpdater::Init( const int nStaticMapSizeX, const int nStaticMapSizeY )
 	interpolatableUpdates.clear();
 	suspended.SetSizes( nStaticMapSizeX / DIVIDER_CONST, nStaticMapSizeY / DIVIDER_CONST );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj *pObj, int nAnimation )
 {
 	const SUnitBaseRPGStats *pStats = dynamic_cast<const SUnitBaseRPGStats*>( pObj->GetStats() );
@@ -182,19 +182,19 @@ CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 	}
 	return new CUpdateData( nTime, nCounter, ACTION_NOTIFY_ANIMATION_CHANGED, pObj, nAnimIndex );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEventUpdater::IsInterpolatableEvent( EActionNotify eUpdateType ) const
 {
 	return eUpdateType == ACTION_NOTIFY_PLACEMENT || 
 		eUpdateType == ACTION_NOTIFY_TURRET_VERT_TURN || 
 		eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEventUpdater::IsOneCopyEvent( EActionNotify eUpdateType ) const
 {
 	return eUpdateType == ACTION_NOTIFY_RPG_CHANGED || IsInterpolatableEvent( eUpdateType );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::AddUpdate( EFeedBack eFeedBack, int nParam, CObjectBase *pParam )
 {
 	SAIFeedbackUpdate *pUpdate = new SAIFeedbackUpdate;
@@ -203,7 +203,7 @@ void CEventUpdater::AddUpdate( EFeedBack eFeedBack, int nParam, CObjectBase *pPa
 	pUpdate->info.pParam = pParam;
 	AddUpdate( pUpdate, ACTION_NOTIFY_FEEDBACK, 0, nParam );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam )
 {
 	CPtr<SAIBasicUpdate> pUpdate = _pUpdate; // чтоб не потерялся
@@ -321,13 +321,13 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 
 	updatesBush.resize(0);
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::InsertSuspendedUpdate( CUpdateData* pUpdate, const SVector &_vPosition )
 {
 	const SVector vPosition( _vPosition.x / DIVIDER_CONST, _vPosition.y / DIVIDER_CONST );
 	suspended[vPosition.y][vPosition.x].push_back( pUpdate );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType )
 {
 	//delete all updates by mask (actually, mark as invalid)
@@ -376,7 +376,7 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
 {
 	CPtr<CUpdateData> pData = 0;
@@ -412,7 +412,7 @@ CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
 		return pData.Extract();
   } while( true );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
 {
 	if ( nTime == nNewTime )
@@ -427,7 +427,7 @@ void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
 	}
 	shootGroupUnits.clear();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::TileBecameVisibleFromWarFog( const SVector &_vPos, const int nParty )
 {
 	const int nDivider = DIVIDER_CONST / AI_TILES_IN_VIS_TILE;
@@ -437,7 +437,7 @@ void CEventUpdater::TileBecameVisibleFromWarFog( const SVector &_vPos, const int
 	if ( !suspended[vPos.y][vPos.x].empty() )
 		visibleTiles.insert( vPos );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::PumpUpdates()
 {
 	bool bUpdatesChanged = false;
@@ -480,14 +480,14 @@ void CEventUpdater::PumpUpdates()
 	if ( bSuspendableUpdatesChanged )
 		pendingSuspendableUpdates.sort( SUpdateDataLessCompare() );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::ClearInterpolatable()
 {
 	for ( CUpdateList::iterator it = interpolatableUpdates.begin(); it != interpolatableUpdates.end(); ++it )
 		(*it)->bValid = false;
 	interpolatableUpdates.clear();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 {
 	pendingUpdates.splice( pendingUpdates.end(), interpolatableUpdates );
@@ -528,7 +528,7 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::UpdateAreasGroup( const bool bShow, EActionNotify eType )
 {
 	bShowAreas = bShow;
@@ -537,7 +537,7 @@ void CEventUpdater::UpdateAreasGroup( const bool bShow, EActionNotify eType )
 	ClearUpdates( (CUpdatableObj*)0, ACTION_NOTIFY_SHOOT_AREA );
 	ClearUpdates( (CUpdatableObj*)0, ACTION_NOTIFY_RANGE_AREA );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEventUpdater::IsPlacementUpdated( CUpdatableObj *pObj ) const
 {
 	if ( !pObj || !pObj->IsRefValid() )
@@ -545,17 +545,17 @@ bool CEventUpdater::IsPlacementUpdated( CUpdatableObj *pObj ) const
 
 	return updatedPlacements.find( pObj->GetUniqueId() ) != updatedPlacements.end();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::ClearPlacementUpdates()
 {
 	updatedPlacements.clear();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::PrepareUpdates()
 {
 	CollectUpdates( CAITimer::GetGameTime() );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SAIBasicUpdate* CEventUpdater::GetUpdate()
 {
 	if ( CAITimer::GetGameTime() > nReturnTime )
@@ -567,7 +567,7 @@ SAIBasicUpdate* CEventUpdater::GetUpdate()
 	
 	return pData->GetClientStruct( nReturnTime ) ;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUpdateInfo
 {
 	int nValidCount;
@@ -575,11 +575,11 @@ struct SUpdateInfo
 
 	SUpdateInfo() : nValidCount( 0 ), nInvalidCount( 0 ) {}
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<EActionNotify, SUpdateInfo, SEnumHash> TDumpUpdatesHash; // update id -> update info
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<int, TDumpUpdatesHash> TDumpObjectsHash; // object id (-1 for invalid) -> object's updates
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEventUpdater::DumpSizes()
 {
 	TDumpUpdatesHash allUpdates;
@@ -650,9 +650,9 @@ void CEventUpdater::DumpSizes()
 	}
 	DebugTrace( str2.c_str() );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Serialization
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CEventUpdater::CUpdateData::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nUpdateTime );
@@ -665,7 +665,7 @@ int CEventUpdater::CUpdateData::operator&( IBinSaver &saver )
 
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CEventUpdater::operator&( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
@@ -717,4 +717,4 @@ int CEventUpdater::operator&( IBinSaver &saver )
 
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

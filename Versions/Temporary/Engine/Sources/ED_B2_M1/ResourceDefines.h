@@ -2,11 +2,11 @@
 #define __ED_B2_M1__RESOURCE_DEFINES__
 //
 #include "../MapEditorLib/ResourceDefines.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Common IDs
 #define IDR_ED_B2_M1_MANIFEST												1
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Map Info context menu numbers
 #define MICM_MAPOBJECT_OBJECT_LIST									0
 #define MICM_VSO_OBJECT_LIST												1
@@ -14,11 +14,11 @@
 #define MICM_TERRAIN_HEIGHT_STATE_V3_TILE_LIST			3
 #define MICM_MOVIES_EDITOR													4
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Model context menu numbers
 #define MCM_STATE																		0
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //10200...10399 Bitmaps
 #define IDB_TMITH_BITMAP														10200
 //
@@ -42,12 +42,12 @@
 #define IDI_DMOVED_PAUSE_MOVIE											10266
 #define IDB_DMOVED_CHECK_RESIZE_WND									10267
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //10000...10199 Toolbars
 #define IDT_MAPINFO_TOOLS														10000
 #define IDT_MAPINFO_VIEW														10001
 #define IDT_MODEL																		10010
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //10600...10799 Menus
 #define IDM_MAIN																		10600
 #define IDM_MAPINFO																	10610
@@ -55,7 +55,7 @@
 #define IDM_MODEL																		10620
 #define IDM_MODEL_CONTEXT_MENU											10621
 #define IDM_MINIMAP_POPUP														10630
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //03000...09999 ComandIDs
 // MIS = MAPINFO STATE
 #define ID_MIS_CHANGE_STATE													3000
@@ -182,7 +182,7 @@
 #define ID_UPDATE_SCENE_SIZE												3676
 #define ID_UPDATE_SCENE_VIEW												3677
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ID_MODEL_VIEW_TOOLBAR												3700
 #define ID_MODEL_VIEW_TOOL													3701
 #define ID_MODEL_RELOAD_EDITOR											3702
@@ -196,7 +196,7 @@
 #define ID_MODEL_SPEED_DOWN													3710
 #define ID_MODEL_SPEED_UP														3711
 		
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //13000...19999 Strings
 #define IDS_TOOLBAR_MAPINFO_TOOLS										13000
 #define IDS_TOOLBAR_MAPINFO_VIEW										13001
@@ -245,7 +245,7 @@
 #define IDS_STATUS_STRING_OBJECTS										14082
 
 #define IDS_PM_PLACE_FIELD													14090
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //23000...43999 диалоги
 #define IDD_TAB_MI_TERRAIN_HEIGHT_V3								23080
 #define IDC_TMITHV3_BRUSH_LABEL											23081
@@ -590,7 +590,7 @@
 #define IDC_MOVEDKEY_PARAM_LABEL        						24518
 #define IDC_MOVEDKEY_PARAM_EDIT         						24519
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // MapInfo window IDs
 #define ID_MAPINFO_EDITOR_SHORTCUT_DW								(IDC_DOCKING_WINDOW_0 + 0)
 #define ID_MAPINFO_EDITOR_MINIMAP_DW								(IDC_DOCKING_WINDOW_0 + 1)
@@ -605,5 +605,5 @@
 #define ID_MODEL_EDITOR_DW													(IDC_DOCKING_WINDOW_0 + 40)
 //
 #define ID_MOVIES_EDITOR_DW													(IDC_DOCKING_WINDOW_0 + 50)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__ED_B2_M1__RESOURCE_DEFINES__)

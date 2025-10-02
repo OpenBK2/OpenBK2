@@ -22,11 +22,11 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define MOV_ED_DEF_LEN (60.0f) // default movie length (sec)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //		CAMERA UTILS
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetCameraPlacement( NCamera::CCameraPlacement *pCameraPlacement )
 {
 	if ( CObj<ICamera> pCamera = Camera() )
@@ -39,13 +39,13 @@ static void GetCameraPlacement( NCamera::CCameraPlacement *pCameraPlacement )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		SCRIPT CAMERA STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptCameraState::CScriptCameraState( CMapInfoEditor *_pMapInfoEditor )
 	: pMapInfoEditor( _pMapInfoEditor ),
 	nFOV( 26 ),
@@ -54,7 +54,7 @@ CScriptCameraState::CScriptCameraState( CMapInfoEditor *_pMapInfoEditor )
 	NI_ASSERT( pMapInfoEditor != 0, "CScriptCameraState(): Invalid parameter: pMapInfoEditor == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::Enter()
 {
 	dialogData.scriptCameras.clear();
@@ -76,7 +76,7 @@ void CScriptCameraState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MOVIES_EDITOR_WINDOW, ID_MOV_ED_SET_TIMER, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::Leave()
 {
 	if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
@@ -98,7 +98,7 @@ void CScriptCameraState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MOVIES_EDITOR_WINDOW, ID_MOV_ED_RESET_DIALOG, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID ) 
@@ -409,7 +409,7 @@ bool CScriptCameraState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptCameraState::UpdateCommand(), pbEnable == 0" );
@@ -429,7 +429,7 @@ bool CScriptCameraState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // align DB data by it's own rules
 void CScriptCameraState::FixDBMoviesIndexes( int nDeletedKey )
 {
@@ -468,7 +468,7 @@ void CScriptCameraState::FixDBMoviesIndexes( int nDeletedKey )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // creates new ScriptCamera position and adds new MOV_ED_DEF_LEN sec. length cyclic movie sequence
 bool CScriptCameraState::AddSequence()
 {
@@ -518,7 +518,7 @@ bool CScriptCameraState::AddSequence()
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 {
 	bool bReturn = false;
@@ -549,7 +549,7 @@ bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::AddScriptPlacement()
 {
 	bool bReturn = false;
@@ -597,7 +597,7 @@ bool CScriptCameraState::AddScriptPlacement()
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::UpdateScriptPlacement( int nCamera )
 {
 	bool bReturn = false;
@@ -633,7 +633,7 @@ bool CScriptCameraState::UpdateScriptPlacement( int nCamera )
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 {
 	bool bReturn = false;
@@ -661,7 +661,7 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::AddPosKey( float fTime, int nSeqIndex )
 {
 	bool bReturn = false;
@@ -708,7 +708,7 @@ bool CScriptCameraState::AddPosKey( float fTime, int nSeqIndex )
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 {
 	int nCount = 0;
@@ -765,7 +765,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, bool bDeleteWholeSequence )
 {
 	bool bReturn = false;
@@ -811,7 +811,7 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::SetSequenceLength( float fNewLength, int nSeqIndex )
 {
 	bool bReturn = false;
@@ -870,7 +870,7 @@ bool CScriptCameraState::SetSequenceLength( float fNewLength, int nSeqIndex )
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue, int nSeqIndex )
 {
 	bool bReturn = false;
@@ -936,7 +936,7 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 	return bReturn;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::Draw( CPaintDC *pPaintDC )
 {
 	return;
@@ -981,7 +981,7 @@ void CScriptCameraState::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::PostDraw( CPaintDC *pPaintDC )
 {
 	return;
@@ -1014,7 +1014,7 @@ void CScriptCameraState::PostDraw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::RefreshDialogData( bool bNeedUpdateFromDB )
 {
 	if ( bNeedUpdateFromDB )
@@ -1039,7 +1039,7 @@ void CScriptCameraState::RefreshDialogData( bool bNeedUpdateFromDB )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (DWORD)(&nFOV) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -1097,14 +1097,14 @@ void CScriptCameraState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptCameraState::IsCameraPlacementInDB( int nCameraIndex )
 {
 	int nCamerasCount = GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size();
 	return ( (nCamerasCount > 0) && (nCameraIndex >= 0) && (nCameraIndex < nCamerasCount) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::GetDBData()
 {
 	dialogData.scriptCameras.clear();
@@ -1139,7 +1139,7 @@ void CScriptCameraState::GetDBData()
 		moviesData.nActiveMovie = moviesData.scriptMoviesData.scriptMovieSequences.size() - 1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::GetCameraPlacementByID( NCamera::CCameraPlacement *pCamera, int nID )
 {
 	int i = 0;
@@ -1152,7 +1152,7 @@ void CScriptCameraState::GetCameraPlacementByID( NCamera::CCameraPlacement *pCam
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::DeleteScriptCameraMarkers()
 {
 	CPtr<IEditorScene> pScene = EditorScene();
@@ -1165,7 +1165,7 @@ void CScriptCameraState::DeleteScriptCameraMarkers()
 	cameraMarkers.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::RefreshScriptCameraMarkers()
 {
 	DeleteScriptCameraMarkers();
@@ -1222,7 +1222,7 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 {
 	const float fFOVeps = 0.1f;
@@ -1238,7 +1238,7 @@ void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (DWORD)( &nFOV ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	return;
@@ -1276,7 +1276,7 @@ void CScriptCameraState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	return;
@@ -1309,7 +1309,7 @@ void CScriptCameraState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::ScriptCameraRun( NDb::EScriptCameraRunType eRunType )
 {
 	NI_VERIFY( !(dialogData.scriptCameras.empty()), "CScriptCameraState::ScriptCameraRun - No cameras in scene!\n", return );
@@ -1370,7 +1370,7 @@ void CScriptCameraState::ScriptCameraRun( NDb::EScriptCameraRunType eRunType )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::SetCameraPlacement( const NCamera::CCameraPlacement &rCameraPlacement )
 {
 	if ( CObj<ICamera> pCamera = Camera() )
@@ -1389,7 +1389,7 @@ void CScriptCameraState::SetCameraPlacement( const NCamera::CCameraPlacement &rC
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraState::SetMovie( int nMovieIndex )
 {
 	const NDb::SScriptMovies &dbMoviesData = GetMapInfoEditor()->pMapInfo->scriptMovies;
@@ -1404,7 +1404,7 @@ void CScriptCameraState::SetMovie( int nMovieIndex )
 	Camera()->SetScriptMutatorsHolder( pMutatorsHolder );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) const
 {
 	NI_VERIFY( (nMovieID >= 0)  && (nMovieID < moviesData.scriptMoviesData.scriptMovieSequences.size()), "Error getting movie", return -1 )
@@ -1418,4 +1418,4 @@ int CScriptCameraState::SelectCameraByMovieParams( int nMovieID, float fTime ) c
 	return -1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

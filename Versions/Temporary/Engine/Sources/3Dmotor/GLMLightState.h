@@ -2,7 +2,7 @@
 
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_SKY_SINGLE_STRENGTH_MUL = 2.0f;
 interface IGScene;
 struct SPerVertexLightState;
@@ -12,7 +12,7 @@ struct SLightStateCalcSeed
 
 	SLightStateCalcSeed() : nSeed(0) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightState
 {
 	void AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &vColor );
@@ -52,5 +52,5 @@ public:
 	void CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, IGScene *pVis, int nSkyDirs );
 	void CreateSimple( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, int nSkyDirs );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "UnitStates.h"
 #include "..\Common_RTS_AI\Terrain.h"
 #include "StatusUpdatesHelper.h"
@@ -7,7 +7,7 @@ namespace NDb
 {
 	struct SMechUnitRPGStats;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // выход из танк-пита. 
 class CTankPitLeaveState : public IUnitState
 {
@@ -35,7 +35,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // зарыться в землю ( самостоятельно окопаться )
 class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelper
 {
@@ -81,7 +81,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 	EUnitStateNames GetName() { return EUSN_ENTRENCH_SELF; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSoldierEnterHoldSectorState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEnterHoldSectorState );
@@ -100,7 +100,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMilitaryCar;
 class CMechUnitRestOnBoardPath;
 class CMechUnitInsideMechUnitState : public IUnitState
@@ -150,4 +150,4 @@ public:
 	const CVec2 GetPurposePoint() const { return vDestination; }
 	EUnitStateNames GetName() { return EUSN_MECHUNIT_REST_ON_BOARD; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

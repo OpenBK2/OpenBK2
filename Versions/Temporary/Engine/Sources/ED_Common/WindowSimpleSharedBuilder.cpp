@@ -13,15 +13,15 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //REGISTER_BUILDER_IN_DLL( WindowSimpleShared, CWindowSimpleSharedBuilder )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CWindowSimpleSharedBuilder::BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME[] = "BackgroundSimpleTexture";
 const char CWindowSimpleSharedBuilder::TEXTURE_TYPE_NAME[] = "Texture";
 const string CWindowSimpleSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowSimpleSharedBuilder";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
@@ -41,7 +41,7 @@ bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManip
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName,
 																											 string *pszUniqueObjectName,
 																											 bool bFromMainMenu,
@@ -149,6 +149,6 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

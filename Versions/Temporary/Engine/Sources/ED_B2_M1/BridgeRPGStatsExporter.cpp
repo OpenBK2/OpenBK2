@@ -21,10 +21,10 @@ static char THIS_FILE[] = __FILE__;
 static const char *AI_GEOMETRY_PREFIX[] = { "mAI", "center", "border" };
 //static const char GEOMETRY_FOLDER[] = "bin\\Geometries\\";
 static const char BRIDGE_FOLDER[] = "bin\\Bridges\\";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( BridgeRPGStats, CBridgeRPGStatsExporter )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::GetTempAIGeometryName( string *pszAIGeometryName, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry )
 {
 	NI_ASSERT( pszAIGeometryName != 0, "CBridgeRPGStatsExporter::GetTempAIGeometryName() pszAIGeometryName == 0" );
@@ -40,7 +40,7 @@ void CBridgeRPGStatsExporter::GetTempAIGeometryName( string *pszAIGeometryName, 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::GetVisObjectNameList( list<string> *pVisOblectNameList, IManipulator *pManipulator )
 {
 	NI_ASSERT( pVisOblectNameList != 0, "CBridgeRPGStatsExporter::GetVisObjectNameList() pVisOblectNameList == 0" );
@@ -61,7 +61,7 @@ void CBridgeRPGStatsExporter::GetVisObjectNameList( list<string> *pVisOblectName
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
@@ -89,7 +89,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const CTPoint<int>  &rSourceSize )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
@@ -114,7 +114,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<BYTE> *pDestination, const 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, int nAITileCount )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
@@ -145,7 +145,7 @@ void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<BYTE> *pDestination, CVec2 
 	pOrigin->x += ( AI_TILE_SIZE * nAITileCount );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
@@ -183,7 +183,7 @@ void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<BYTE> *pDestination, CVec2 
 	pOrigin->y = pDestination->GetSizeY() * AI_TILE_SIZE / 2.0f;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<BYTE> *pDestination, const CArray2D<BYTE> &rSource, LOCK_TYPE lockType )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::SetArrayInfo() pDestination == 0" );
@@ -218,14 +218,14 @@ void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<BYTE> *pDestination, const 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::FinishExport( const string &rszObjectTypeName, bool bForce )
 {
 	CStaticObjectRPGStatsExporter::FinishExport( rszObjectTypeName, bForce );
 	//
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, const string &rszObjectName, const CDBID &rDBID )
 {
 	list<string> visualObjectNameList;
@@ -301,7 +301,7 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																										 const string &rszObjectTypeName,
 																										 const string &rszObjectName,
@@ -594,6 +594,6 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	//
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

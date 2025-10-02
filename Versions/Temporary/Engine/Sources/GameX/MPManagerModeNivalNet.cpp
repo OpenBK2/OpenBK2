@@ -24,7 +24,7 @@
 #include "../Misc/Win32Random.h"
 #include "InterfaceMisc.h"
 #include "MultiplayerTestNet.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
 
@@ -32,7 +32,7 @@ const int NIVAL_NET_PORT = 4200;
 #define GAMES_REFRESH_PERIOD 5000
 static wstring s_wszStoredLogin = L"";
 static wstring s_wszStoredPassword = L"";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x192444C0, CMPManagerModeNivalNet );
 START_REGISTER(NivalNetGVars)
 // This GVar is here to force it to be saved in user.cfg
@@ -40,7 +40,7 @@ START_REGISTER(NivalNetGVars)
 REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredLogin", NGlobal::VarWStrHandler, &s_wszStoredLogin, L"", STORAGE_USER );
 REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredPassword", NGlobal::VarWStrHandler, &s_wszStoredPassword, L"", STORAGE_USER );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMPManagerModeNivalNet::CMPManagerModeNivalNet() :
 nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false )
 {
@@ -87,7 +87,7 @@ nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false )
 	gamesUpdate.bUpdating = false;
 	gamesUpdate.timeUpdatePeriod = GAMES_REFRESH_PERIOD;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::UpdateGameList()
 {
 	if ( eState != EGS_CUSTOM_GAME )
@@ -96,7 +96,7 @@ void CMPManagerModeNivalNet::UpdateGameList()
 	CPtr<CGetLobbyGamesPacket> pPkt = new CGetLobbyGamesPacket( 0, gamesUpdate.dwVersion );
 	pClient->SendPacket( pPkt );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::TryToCreateGame()
 {
 	eState = EGS_JOINING;
@@ -109,7 +109,7 @@ void CMPManagerModeNivalNet::TryToCreateGame()
 	pClient->SendPacket( pCreatePkt );
 	bLadderGame = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::TryToJoinGame( const SNetGameInfo &game )
 {
 	nGameID = -1;
@@ -121,13 +121,13 @@ void CMPManagerModeNivalNet::TryToJoinGame( const SNetGameInfo &game )
 	bHost = false;
 	bLadderGame = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::OnSetMySlotNumber()
 {
 	pClient->SendGamePacket( new CB2SlotInfoPacket( nHostClientID, nOwnSlot, slots[nOwnSlot] ), false );
 	CheckJoinGameConditions();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::CheckJoinGameConditions()
 {
 	if ( eState != EGS_JOINING )
@@ -162,7 +162,7 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	}
 	DebugTrace( szDebugOut.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::OnLeaveGame()
 {
 	// Send LeaveGame
@@ -174,13 +174,13 @@ void CMPManagerModeNivalNet::OnLeaveGame()
 	}
 	eState = EGS_CUSTOM_GAME;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::ShouldSendHeartbeatNow()
 {
 	return ( ( IsGameRunning() || IsInGameRoom() || eState == EGS_LADDER_WAIT_CLIENTS ) 
 		&& nGameID >= 0 && ( Singleton<IGameTimer>()->GetAbsTime() > timeNextGameHeartbeat ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::Segment()
 {
 	if ( ShouldSendHeartbeatNow() )
@@ -199,12 +199,12 @@ bool CMPManagerModeNivalNet::Segment()
 
 	return CMPManagerMode::Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::OnGameSpecificInfo()
 {
 	CheckJoinGameConditions();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::StartGame()
 {
 	if ( IsGameHost() || bLadderGame && bHost )
@@ -241,7 +241,7 @@ void CMPManagerModeNivalNet::StartGame()
 	eState = EGS_GAME_STARTED;
 	CMPManagerMode::StartGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::EndGame()
 {
 	if ( eState == EGS_GAME_STARTED )
@@ -267,7 +267,7 @@ void CMPManagerModeNivalNet::EndGame()
 		bLadderGame = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::SetServerGameInfo( SGameInfo *pInfo )
 {
 	pInfo->nID = nGameID;
@@ -282,7 +282,7 @@ void CMPManagerModeNivalNet::SetServerGameInfo( SGameInfo *pInfo )
 	pInfo->bHasPassword = !( szPassword.length() == 0 );
 	pInfo->szPassword = szPassword;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::InitLobby()
 {
 	updateChannels.dwVersion = 0;
@@ -292,7 +292,7 @@ void CMPManagerModeNivalNet::InitLobby()
 
 	chatChannels.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 {
 	if ( IsInGameRoom() && IsGameHost() )
@@ -301,7 +301,7 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 		pClient->SendPacket( pKickPkt );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::CreateServerClient()
 {
 	pClient = 0;
@@ -310,7 +310,7 @@ void CMPManagerModeNivalNet::CreateServerClient()
 	pClient = new CServerClient( szNivalNetIP.c_str(), NGlobal::GetVar( "NetGameVersion", 1 ), nNivalNetPort, 30 );
 	CNet::SetTimeOut( 20.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::SendGameStatistics()
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
@@ -345,7 +345,7 @@ void CMPManagerModeNivalNet::SendGameStatistics()
 	}
 	pClient->SendPacket( pPkt );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::ProcessLadderWaitForClients()
 {
 	if ( GameTimer()->GetAbsTime() > timeOutLadderGame )
@@ -379,7 +379,7 @@ void CMPManagerModeNivalNet::ProcessLadderWaitForClients()
 	SendStartGamePacket();
 	StartGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMPManagerModeNivalNet::DetermineLadderCountry( const int nInitial, const NDb::EHistoricalSide eSide )
 {
 	if ( nInitial >= 0 )
@@ -395,7 +395,7 @@ int CMPManagerModeNivalNet::DetermineLadderCountry( const int nInitial, const ND
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &oldStats, const SLadderStatistics &newStats )
 {
 	SMPUIGameAftemathMessage *pMsg = new SMPUIGameAftemathMessage( true );
@@ -422,7 +422,7 @@ void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &o
 
 	PushMessage( pMsg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMPManagerModeNivalNet::GetRankFromLevel( const int nRace, const int nLevel, wstring *pwszOut )
 {
 	if ( pwszOut )
@@ -442,7 +442,7 @@ const int CMPManagerModeNivalNet::GetRankFromLevel( const int nRace, const int n
 	}
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::ExtractGameInfo( SNetGameInfo *pDst, const struct SGameInfo &src )
 {
 	pDst->nGameID = src.nID;
@@ -456,7 +456,7 @@ void CMPManagerModeNivalNet::ExtractGameInfo( SNetGameInfo *pDst, const struct S
 	pDst->nTechLevel = src.nTechLevel;
 	pDst->bPasswordRequired = src.bHasPassword;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMPManagerModeNivalNet::OnSurrender()
 {
 	if ( !IsGameRunning() || !bLadderGame )
@@ -464,13 +464,13 @@ void CMPManagerModeNivalNet::OnSurrender()
 
 	pClient->SendPacket( new CLadderSurrenderPacket( 0, nGameID ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //
 //   Messages
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 bool CMPManagerModeNivalNet::OnLoginNivalNetMessage( SMPUILoginNivalNetMessage *pMsg )
 {
 	CreateServerClient();	
@@ -500,7 +500,7 @@ bool CMPManagerModeNivalNet::OnLoginNivalNetMessage( SMPUILoginNivalNetMessage *
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnCustomGameMessage( SMPUIMessage *pMsg )
 {
 	CPtr<CEnterLobbyPacket> pPkt = new CEnterLobbyPacket( 0, ERID_CUSTOM );
@@ -513,7 +513,7 @@ bool CMPManagerModeNivalNet::OnCustomGameMessage( SMPUIMessage *pMsg )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnBackFromGameListMessage( SMPUIMessage *pMsg )
 {
 	NI_ASSERT( eState == EGS_CUSTOM_GAME || eState == EGS_LOBBY, "PRG: NivalNet: Wrong state to receive BackFromGameList" );
@@ -522,7 +522,7 @@ bool CMPManagerModeNivalNet::OnBackFromGameListMessage( SMPUIMessage *pMsg )
 	InitLobby();
 	return false;		// so that MPManager handles it as well
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnRegisterNivalNetMessage( SMPUIRegisterMessage *pMsg )
 {
 	CreateServerClient();
@@ -540,7 +540,7 @@ bool CMPManagerModeNivalNet::OnRegisterNivalNetMessage( SMPUIRegisterMessage *pM
 	eState = EGS_LOGGING_IN;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLadderInfoRequestMessage( SMPUILadderInfoRequestMessage *pMsg )
 {
 	if ( pMsg->szNick == szMPName && bGotMyLadderStats && !pMsg->bShort )
@@ -556,7 +556,7 @@ bool CMPManagerModeNivalNet::OnLadderInfoRequestMessage( SMPUILadderInfoRequestM
 		bUIAskedStats = true;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnCancelLadderMessage( SMPUIMessage *pMsg )
 {
 	CPtr<CEnterLobbyPacket> pPkt = new CEnterLobbyPacket( 0, ERID_NO_LOBBY );
@@ -564,7 +564,7 @@ bool CMPManagerModeNivalNet::OnCancelLadderMessage( SMPUIMessage *pMsg )
 	eState = EGS_LOBBY;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnSetupLadderGameMessage( SMPUILadderGameMessage *pMsg )
 {
 	CPtr<CEnterLobbyPacket> pLobbyPkt = new CEnterLobbyPacket( 0, ERID_LADDER );
@@ -601,13 +601,13 @@ bool CMPManagerModeNivalNet::OnSetupLadderGameMessage( SMPUILadderGameMessage *p
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //
 //   Packets
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 bool CMPManagerModeNivalNet::OnConnectServerPacket( class CConnectServerPacket *pPacket )
 {
 	CPtr<SMPUIConnectResultMessage> pMsg = new SMPUIConnectResultMessage;
@@ -687,7 +687,7 @@ bool CMPManagerModeNivalNet::OnConnectServerPacket( class CConnectServerPacket *
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 {
 	gamesUpdate.dwVersion = pPacket->dwVersion;
@@ -756,7 +756,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnMyIDPacket( class CMyIDPacket *pPacket )
 {
 	//DebugTrace( "+++ MyID packet from client %d, id %d", pPacket->nClientID, pPacket->nMyID );
@@ -764,7 +764,7 @@ bool CMPManagerModeNivalNet::OnMyIDPacket( class CMyIDPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnConnectGameFailed( class CConnectGameFailed *pPacket )
 {
 	//DebugTrace( "+++ ConnectGameFailed packet from client %d, reason %d", pPacket->nClientID, pPacket->eReason );
@@ -784,7 +784,7 @@ bool CMPManagerModeNivalNet::OnConnectGameFailed( class CConnectGameFailed *pPac
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnConnectedGameIDPacket( class CConnectedGameID *pPacket )
 {
 	//DebugTrace( "+++ ConnectedGameID packet, game %d", pPacket->nGameID );
@@ -812,7 +812,7 @@ bool CMPManagerModeNivalNet::OnConnectedGameIDPacket( class CConnectedGameID *pP
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnNewGameClientPacket( class CNewGameClient *pPacket )
 {
 	if ( IsGameHost() )
@@ -833,7 +833,7 @@ bool CMPManagerModeNivalNet::OnNewGameClientPacket( class CNewGameClient *pPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnEnterLobbyPacket( class CEnterLobbyPacket *pPacket )
 {
 	//DebugTrace( "+++ EnterLobby packet from client %d, lobby %d", pPacket->nClientID, pPacket->nLobbyID );
@@ -842,7 +842,7 @@ bool CMPManagerModeNivalNet::OnEnterLobbyPacket( class CEnterLobbyPacket *pPacke
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *pPacket )
 {
 	//DebugTrace( "+++ ClientWasKicked packet for client %d", pPacket->nKicked );
@@ -874,7 +874,7 @@ bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pPacket )
 {
 	if ( pPacket->nClientID == 0 )			// Disconnected from Server 
@@ -885,13 +885,13 @@ bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pP
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnGameClientDeadPacket( class CGameClientDead *pPacket )
 {
 	RemoveClient( pPacket->nDeadClient, false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLadderShortStatisticsPacket( class CLadderShortStatisticsPacket *pPacket )
 {
 	if ( pPacket->nRace < 0 || pPacket->nRace >= pMPConsts->sides.size() )
@@ -906,7 +906,7 @@ bool CMPManagerModeNivalNet::OnLadderShortStatisticsPacket( class CLadderShortSt
 	PushMessage( pMsg );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pPacket )
 {
 	//DebugTrace( "+++ LadderInvite packet" );
@@ -994,7 +994,7 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLadderStatisticsPacket( class CLadderStatisticsPacket *pPacket )
 {
 	if ( pPacket->szNick == szMPName )
@@ -1018,7 +1018,7 @@ bool CMPManagerModeNivalNet::OnLadderStatisticsPacket( class CLadderStatisticsPa
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnSystemBroadcastPacket( class CSystemBroadcastPacket *pPacket )
 {
 	if ( pPacket->wszText.length() == 0 )
@@ -1030,7 +1030,7 @@ bool CMPManagerModeNivalNet::OnSystemBroadcastPacket( class CSystemBroadcastPack
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMsg ).c_str() );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMPManagerModeNivalNet::OnLadderInvalidStatisticsPacket( class CLadderInvalidStatisticsPacket *pPacket )
 {
 	if ( bAwaitingLadderStatsChange )
@@ -1040,4 +1040,4 @@ bool CMPManagerModeNivalNet::OnLadderInvalidStatisticsPacket( class CLadderInval
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

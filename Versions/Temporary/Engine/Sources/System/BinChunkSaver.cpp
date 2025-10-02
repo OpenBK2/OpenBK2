@@ -16,15 +16,15 @@ static string szWhoSaved;
 #endif
 
 typedef IBinSaver::chunk_id chunk_id;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStructureSaver::CChunkLevel
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::SChunkLevel::ClearCache() 
 { 
 	idLastChunk = (chunk_id)0xff;
 	nLastPos = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::SChunkLevel::Clear() 
 {
 	idChunk = (chunk_id)0xff; 
@@ -32,9 +32,9 @@ void CStructureSaver::SChunkLevel::Clear()
 	nLength = 0; 
 	ClearCache(); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // chunks operations with whole saves
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ReadShortChunkSave( CDataStream &file, chunk_id &dwID, CMemoryStream &chunk )
 {
 	DWORD dwLeng = 0;
@@ -54,7 +54,7 @@ static bool ReadShortChunkSave( CDataStream &file, chunk_id &dwID, CMemoryStream
 	file.Read( chunk.GetBufferForWrite(), dwLeng );
 	return file.IsOk();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream &chunk, bool bPack )
 {
 	if ( bPack )
@@ -98,7 +98,7 @@ static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream
 	file.Write( chunk.GetBuffer(), chunk.GetSize() );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream &chunk, int nBaseSeek, bool bPacked )
 {
 	chunk_id dwRid;
@@ -129,9 +129,9 @@ static bool GetShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream &
 	chunk.Clear();
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // chunks operations with ChunkLevels
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ReadPtrData( const unsigned char *pData, void *pDst, int &nPos, int nSize )
 {
 	memcpy( pDst, pData + nPos, nSize );
@@ -143,7 +143,7 @@ static void WritePtrData( unsigned char *pDst, const void *pSrc, int *nPos, int 
 	memcpy( pDst + *nPos, pSrc, nSize );
 	*nPos += nSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &res )
 {
 	const unsigned char *pSrc = data.GetBuffer() + src.nStart;
@@ -162,7 +162,7 @@ bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &
 	nPos += dwLeng;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID, 
 																			const unsigned char *pData, int nLength )
 {
@@ -198,7 +198,7 @@ bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID,
 		dst.nLength += nLength;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLevel &res, int nNumber )
 {
 	ASSERT( dwID != 0xff );
@@ -248,7 +248,7 @@ bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLeve
 	src.ClearCache();
 	return GetShortChunk( src, dwID, res, nNumber );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStructureSaver::CountShortChunks( SChunkLevel &src, chunk_id dwID )
 {
 	int nPos = 0, nRes = 0;
@@ -260,9 +260,9 @@ int CStructureSaver::CountShortChunks( SChunkLevel &src, chunk_id dwID )
 	}
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStructureSaver main methods
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 {
 	SChunkLevel &last = chunks.back();
@@ -285,7 +285,7 @@ void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize,
 		WriteShortChunk( last, idChunk, (const unsigned char*) pData, nSize );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::WriteRawData( const void *pData, int nSize )
 {
 // this can happen to be valid data, so making this assert is not entirely correct
@@ -301,7 +301,7 @@ void CStructureSaver::WriteRawData( const void *pData, int nSize )
 	unsigned char *pDst = data.GetBufferForWrite() + res.nStart;
 	WritePtrData( pDst, pData, &res.nLength, nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::RawData( void *pData, int nSize )
 {
 	if ( IsReading() )
@@ -315,7 +315,7 @@ void CStructureSaver::RawData( void *pData, int nSize )
 		WriteRawData( pData, nSize );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::DataChunkString( stdString &str )
 {
 	if ( IsReading() )
@@ -329,7 +329,7 @@ void CStructureSaver::DataChunkString( stdString &str )
 		WriteRawData( str.data(), str.size() );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::DataChunkString( stdWString &str )
 {
 	if ( IsReading() )
@@ -343,7 +343,7 @@ void CStructureSaver::DataChunkString( stdWString &str )
 		WriteRawData( str.data(), str.size() * 2 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject )
@@ -371,7 +371,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 	}
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CStructureSaver::LoadObject()
 {
 	void *pServerPtr = 0;
@@ -387,7 +387,7 @@ CObjectBase* CStructureSaver::LoadObject()
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 {
 	if ( IsReading() )
@@ -405,7 +405,7 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 {
 	SChunkLevel &last = chunks.back();
@@ -428,7 +428,7 @@ bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 		return true;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::FinishChunk()
 {
 	if ( IsReading() ) 
@@ -444,18 +444,18 @@ void CStructureSaver::FinishChunk()
 		AlignDataFileSize();
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::AlignDataFileSize()
 {
 	SChunkLevel &last = chunks.back();
 	data.SetSize( last.nStart + last.nLength );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStructureSaver::CountChunks( const chunk_id idChunk )
 {
 	return CountShortChunks( chunks.back(), idChunk );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::Start( const vector<SBinSaverExternalObject> &ext )
 {
 #ifdef CALC_SIZE
@@ -596,7 +596,7 @@ void CStructureSaver::Start( const vector<SBinSaverExternalObject> &ext )
 			RegisterExternalObject( ext[k].pObj, ext[k].nID );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStructureSaver::Finish()
 {
 	CDataStream &res = *pRes;
@@ -692,17 +692,17 @@ void CStructureSaver::Finish()
 	toStore.clear();
 	chunks.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const vector<SBinSaverExternalObject> &ext )
 {
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, mode, ext );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const vector<SBinSaverExternalObject> &external, vector< CPtr<IDebugSaveCheckObj> > &checkers )
 {
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, SAVER_MODE_WRITE, external, checkers );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef CALC_SIZE
 static void Size( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
@@ -714,16 +714,16 @@ static void Size( const string &szID, const vector<wstring> &paramsSet, void *pC
 
 	DbgTrc( "save_size %d", nSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ObjSizes( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
 		DbgTrc( "%s\t%d", iter->first.c_str(), iter->second );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MissionCommands)
 REGISTER_CMD( "save_size", Size )
 REGISTER_CMD( "obj_sizes", ObjSizes )
 FINISH_REGISTER
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

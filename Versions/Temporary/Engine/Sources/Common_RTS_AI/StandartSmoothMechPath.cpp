@@ -5,12 +5,12 @@
 #include "..\System\RandomGen.h"
 #include "BasePathUnit.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float MIN_LENGTH_FOR_LARGE_TURN = 1024.0f;  //! минимальное расстояние с которого начинает строиться большой разворот
 const float MIN_LENGTH_FOR_SMALL_TURN = 256.0f;   //! минимальное расстояние с которого начинает строиться серий маленьких разворотов
 const float THRESHOLD_FOR_LARGE_TURN = 0.95f;			//! минимальное значение косинуса угла между обратным направлением юнита и сплайном, при котором возможет большой разворот
 const WORD  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разнице в угле нужно гладко поворачиваться 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPushTileFunctional
 {
 	list<SVector> *pTiles;
@@ -23,7 +23,7 @@ public:
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckTileFunctional
 {
 	CBasePathUnit *pUnit;
@@ -36,7 +36,7 @@ public:
 		return ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCheckTileFunctionalWithMark
 {
 	CBasePathUnit *pUnit;
@@ -52,7 +52,7 @@ public:
 		return ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 WORD CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const WORD wStartAngle, const WORD wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward )
 {
 	//DEBUG{
@@ -67,7 +67,7 @@ WORD CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const WORD wStartAng
 	CCheckTileFunctional checkFunc( GetUnit(), GetAIMap()->GetTerrain() );
 	return CheckArcTiles( checkFunc, vUnit, wStartAngle, wDiffAngle, fRadius, bClockWise, bForward, GetAIMap() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // построить большой разворот
 bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint )
 {
@@ -121,7 +121,7 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const WORD wStartDir, const WORD w
 	//DebugTrace( "BuildLargeTurn returns true (circles.empty() = %s)", circles.empty() ? "true" : "false" );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::BuildSmallTurns( const WORD wStartDir, const WORD wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward )
 {
 	return false;
@@ -193,7 +193,7 @@ bool CStandartSmoothMechPath::BuildSmallTurns( const WORD wStartDir, const WORD 
 	return false;
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const bool bCheckThreshold )
 {
 	CVec2 vDir = GetSplineDX();
@@ -250,7 +250,7 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothMechPath::AddSmoothTurn()
 {
 	// Для небольшого поворота, просто сглаживание
@@ -266,7 +266,7 @@ void CStandartSmoothMechPath::AddSmoothTurn()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::CheckTurn( const WORD wNewDir )
 {
 	bool bCanBackward = GetPath()->CanGoBackward( GetUnit() );
@@ -324,7 +324,7 @@ bool CStandartSmoothMechPath::CheckTurn( const WORD wNewDir )
 		return ( nResult == 1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::RideAway()
 {
 	return false;
@@ -384,7 +384,7 @@ bool CStandartSmoothMechPath::RideAway()
 		return false;
 */
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _bSmoothTurn, bool _bCheckTurn, CAIMap *pAIMap )
 {
 	lastCheckToRightTurn = 0;
@@ -414,7 +414,7 @@ bool CStandartSmoothMechPath::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint )
 {
 	if ( !IsFinished() && circles.empty() && ( fabs2( vCenter - vLastValidatedPoint ) >= sqr( GetAIMap()->GetTileSize() / 2.0f ) /* || GetUnit()->IsTurning()*/ ) )
@@ -490,7 +490,7 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStandartSmoothMechPath::UpdateDirection()
 {
 	if ( GetSplineDX() != VNULL2 )
@@ -507,7 +507,7 @@ bool CStandartSmoothMechPath::UpdateDirection()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, const float fSpeed )
 {
 	if ( IsFinished() || ( circles.empty() && IsSplinePointsEqual() ) )
@@ -643,7 +643,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	}
 	return vResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStandartSmoothMechPath::CanGoBackward() const
 {
 	if ( GetPath() != 0 )
@@ -656,11 +656,11 @@ const bool CStandartSmoothMechPath::CanGoBackward() const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStandartSmoothMechPath::Stop()
 {
 	GetUnit()->StopTurning();
 	CStandartSmoothPathBasis::FinishPath();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( STANDART_SMOOTH_MECH_PATH, CStandartSmoothMechPath );

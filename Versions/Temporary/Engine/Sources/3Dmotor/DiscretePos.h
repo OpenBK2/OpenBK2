@@ -1,5 +1,5 @@
 #pragma once
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFBTransform: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CFBTransform);
@@ -13,7 +13,7 @@ public:
 	const SFBTransform& GetValue() const { return pos; }
 	void Set( const SFBTransform &_pos ) { pos = _pos; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDiscretePos
 {
 	enum 
@@ -39,7 +39,7 @@ struct SDiscretePos
 	void MoveAndRotate( vector<CVec3> *pPoints ) const;
 	CFBTransform* GetTransform() const;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AngleToRotationID( int nRotation )
 {
 	nRotation %= 360;
@@ -58,7 +58,7 @@ inline int AngleToRotationID( int nRotation )
 			return SDiscretePos::FLIP;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int RotationIDToAngle( int nRotationID )
 {
 	switch ( nRotationID )
@@ -76,7 +76,7 @@ inline int RotationIDToAngle( int nRotationID )
 			return 45;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 {
 	ASSERT( p );
@@ -99,14 +99,14 @@ inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 	}
 	*p += ptMove;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void SDiscretePos::MoveAndRotate( vector<CVec3> *pPoints ) const
 {
 	ASSERT( pPoints );
 	for ( int i = 0; i < pPoints->size(); ++i )
 		MoveAndRotate( &(*pPoints)[i] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void SDiscretePos::InvMoveAndRotate( CVec3 *pPoint ) const
 {
 	ASSERT( pPoint );

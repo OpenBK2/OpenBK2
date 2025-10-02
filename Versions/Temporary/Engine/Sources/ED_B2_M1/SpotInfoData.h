@@ -5,7 +5,7 @@
 #include "MapInfoEditorData.h"
 #include "..\Misc\Planegeometry.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMapInfoEditor
 {
 	//  Spot Square
@@ -153,5 +153,5 @@ namespace NMapInfoEditor
 		bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 	};
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__SPOT_INFO_DATA__)

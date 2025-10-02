@@ -16,13 +16,13 @@
 extern "C" { 
 #include "../vendor/S3TC/s3tc.h"
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma comment( lib, "s3tc.lib" )
 #pragma comment( lib, "d3d9.lib" )
 #pragma comment( lib, "d3dx9.lib" )
 #pragma comment( linker, "/NODEFAULTLIB:libc.lib" )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // converts DirectX error code to the string
 static const char* DXErrorToString( HRESULT hErrorCode )
 {
@@ -75,7 +75,7 @@ static const char* DXErrorToString( HRESULT hErrorCode )
 	}
 	return "Unrecognized error value.";
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #if defined( _DO_ASSERT_SLOW )
 #define NI_ASSERTHR( x, user_text )                        \
 {                                                          \
@@ -90,12 +90,12 @@ static const char* DXErrorToString( HRESULT hErrorCode )
 #define NI_ASSERTHR( x, user_text ) ((void)0);
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGfx;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RecognizeFormatDDS( CDataStream *pStream )
 {
 	DWORD dwSignature = 0;;
@@ -107,7 +107,7 @@ bool RecognizeFormatDDS( CDataStream *pStream )
 	pStream->Seek( pStream->GetPosition() - 4 );
 	return dwSignature == SDDSFileHeader::SIGNATURE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** ARGB subformats decoding
@@ -115,7 +115,7 @@ bool RecognizeFormatDDS( CDataStream *pStream )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCompBytes )
 {
 	SPixelConvertInfo pci( hdr.ddspf.dwABitMask, hdr.ddspf.dwRBitMask, hdr.ddspf.dwGBitMask, hdr.ddspf.dwBBitMask );
@@ -137,7 +137,7 @@ static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCom
 			NI_ASSERT( false, "better read it directly to image" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** main load function - load DDS image and unpack it to ARGB8888 format
@@ -145,7 +145,7 @@ static void DecompressARGB( DWORD *pRes, const SDDSHeader &hdr, const BYTE *pCom
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
 {
 	// skip signature
@@ -210,7 +210,7 @@ bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** DXT# and ARGB compression using S3TC compressor
@@ -218,7 +218,7 @@ bool LoadImageDDS( CArray2D<DWORD> *pRes, CDataStream *pStream )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pFormat )
 {
 	switch ( format ) 
@@ -255,7 +255,7 @@ static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pForm
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CompressDXTN( vector<BYTE> &compImage, const CArray2D<DWORD> &srcImage, EPixelFormat format )
 {
 	float fWeights[] = { 0.309f, 0.609f, 0.082f, 0, 0, 0, 0, 0 };
@@ -314,7 +314,7 @@ static bool CompressDXTN( vector<BYTE> &compImage, const CArray2D<DWORD> &srcIma
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CompressRGBA( vector<BYTE> &compImage, const CArray2D<DWORD> &srcImage, NGfx::EPixelFormat format )
 {
 	const int nSizeX = srcImage.GetSizeX();
@@ -362,7 +362,7 @@ static bool CompressRGBA( vector<BYTE> &compImage, const CArray2D<DWORD> &srcIma
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool Compress( vector<BYTE> &compImage, const CArray2D<DWORD> &srcImage, EPixelFormat format )
 {
 	if ( (format >= CF_DXT1) && (format <= CF_DXT5) )
@@ -372,7 +372,7 @@ static bool Compress( vector<BYTE> &compImage, const CArray2D<DWORD> &srcImage, 
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	// get BPP of the image
@@ -415,13 +415,13 @@ static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPix
 		pHdr->dwPitchOrLinearSize = pHdr->dwWidth * nBPP / 8;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	const int nMaxPossible = GetMSB( Min(nWidth, nHeight) ) - ( (ePixelFormat >= CF_DXT1) && (ePixelFormat <= CF_DXT5) ? 2 : 0 );
 	return nNumMipLevels <= 0 ? nMaxPossible : Min( nNumMipLevels, nMaxPossible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** special image processing for improved DDS texture-oriented quality
@@ -429,7 +429,7 @@ static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelF
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Prepare image for compression in accordance with type
 void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType, 
 																bool bWrapX, bool bWrapY, float fMappingSize )
@@ -466,7 +466,7 @@ void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType,
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GenerateMipLevelsAndPrepareForCompression( vector<CArray2D<DWORD> > *pMips, const CArray2D<CVec4> &srcImage, 
 																								EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, 
 																								bool bWrapX, bool bWrapY, float fMappingSize )
@@ -491,7 +491,7 @@ void GenerateMipLevelsAndPrepareForCompression( vector<CArray2D<DWORD> > *pMips,
 		mip = src;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** DX compression specific functions
@@ -499,7 +499,7 @@ void GenerateMipLevelsAndPrepareForCompression( vector<CArray2D<DWORD> > *pMips,
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WriteDDS( IDirect3DDevice9 *pDevice, const string &szFileName, NGfx::EPixelFormat ePixelFormat, 
 	const vector<CArray2D<DWORD> > &mips )
 {
@@ -557,7 +557,7 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const string &szFileName, NGfx:
 		NI_ASSERTHR( hr, StrFmt("Can't write final DXT texture \"%s\", DXT conversion failed", szFileName.c_str()) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const string &szFileName, const CArray2D<CVec4> &srcImage, 
 	EImageType eImageType, NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
@@ -567,7 +567,7 @@ static void ConvertAndSaveAsDDS( IDirect3DDevice9 *pDevice, const string &szFile
 
 	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const string &szFileName, const CArray2D<DWORD> &srcImage, 
 	NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels )
 {
@@ -587,7 +587,7 @@ static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const string &szFileName
   }
 	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_INV_255 ( 1.0f / 255 )
 void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const string &szFileName, const CArray2D<DWORD> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
@@ -618,7 +618,7 @@ void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const string &szFile
 
   SaveAsDDSWithDX( pDevice, szFileName, srcImage, nSubFormat, nNumMipLevels );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** S3TC specific compression functions
@@ -626,7 +626,7 @@ void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const string &szFile
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ConvertAndSaveAsDDS( CDataStream *pStream, const CArray2D<DWORD> &srcImage,
 													EImageType eImageType, NGfx::EPixelFormat eSubFormat, int _nNumMipLevels, 
 													bool bWrapX, bool bWrapY, float fMappingSize )
@@ -657,5 +657,5 @@ bool ConvertAndSaveAsDDS( CDataStream *pStream, const CArray2D<DWORD> &srcImage,
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

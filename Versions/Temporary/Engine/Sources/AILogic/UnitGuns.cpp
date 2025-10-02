@@ -6,19 +6,19 @@
 #include "Turret.h"
 #include "PathFinder.h"
 #include "Weather.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
 extern CWeather theWeather;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										CUnitGuns																			*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4C7, CMechUnitGuns );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C8, CInfantryGuns );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C9, SCommonGunInfo );
 BASIC_REGISTER_CLASS( CUnitGuns );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUnitGuns::AddGun( const interface IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo )
 {
 	NI_VERIFY( pWeapon != 0, "Gun w/o weapon! See next assert for unit ID", return false );
@@ -82,13 +82,13 @@ bool CUnitGuns::AddGun( const interface IGunsFactory &gunsFactory, const int nPl
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitGuns::Segment()
 {
 	for ( int i = 0; i < guns.size(); ++i )
 		guns[i]->Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const WORD wWillPower, CTurret *pTurret, CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const
 {
 	*pTimeToTurn = 0;
@@ -122,7 +122,7 @@ void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const WORD wWillPower, CTurret 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUnitGuns::FindTimeToStatObjGo( CAIUnit *pUnit, CStaticObject *pObj, const SWeaponRPGStats *pStats, CUnitGuns::SWeaponPathInfo &info ) const
 {
 	const float fFireRangeMax = GetFireRangeMax( pStats, pUnit );
@@ -136,7 +136,7 @@ bool CUnitGuns::FindTimeToStatObjGo( CAIUnit *pUnit, CStaticObject *pObj, const 
 	info.pStaticPath = pPath;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj, NTimer::STime *pTime )
 {
 	if ( pOwner->GetNGuns() == 0 )
@@ -196,25 +196,25 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 	else
 		return pOwner->GetGun( nGun );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitGuns::SetOwner( CAIUnit *pUnit )
 {
 	for ( int i = 0; i < guns.size(); ++i )
 		guns[i]->SetOwner( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SBaseGunRPGStats& CUnitGuns::GetCommonGunStats( const int nCommonGun ) const
 {
 	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
 	return guns[gunsBegins[nCommonGun]]->GetGun();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CUnitGuns::GetNAmmo( const int nCommonGun ) const
 {
 	NI_ASSERT( nCommonGun < nCommonGuns, StrFmt( "Wrong number of gun (%d), total number of guns (%d)", nCommonGun, nCommonGuns ) );
 	return commonGunsInfo[nCommonGun]->nAmmo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // nAmmo со знаком
 void CUnitGuns::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {
@@ -222,7 +222,7 @@ void CUnitGuns::ChangeAmmo( const int nCommonGun, const int nAmmo )
 	commonGunsInfo[nCommonGun]->nAmmo += nAmmo;
 	commonGunsInfo[nCommonGun]->nAmmo = Clamp( commonGunsInfo[nCommonGun]->nAmmo, 0, GetNAmmo( nCommonGun ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const EUnitAckType CUnitGuns::GetRejectReason() const
 {
 	int nMaxPriority = 10000;
@@ -256,7 +256,7 @@ const EUnitAckType CUnitGuns::GetRejectReason() const
 
 	return eReason;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUnitGuns::DoesExistRejectReason( const EUnitAckType &ackType ) const
 {
 	for ( int i = 0; i < guns.size(); ++i )
@@ -267,7 +267,7 @@ bool CUnitGuns::DoesExistRejectReason( const EUnitAckType &ackType ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CUnitGuns::GetMainGun() const
 {
 	if ( guns.size() != 0 )
@@ -275,16 +275,16 @@ CBasicGun* CUnitGuns::GetMainGun() const
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CUnitGuns::GetMaxFireRange( const CAIUnit *pOwner ) const
 {
 	return fMaxFireRange;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CMechUnitGuns																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 {
 	CAIUnit *pUnit = checked_cast<CAIUnit*>(pCommonUnit);
@@ -342,7 +342,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
 {
 	int i = 0;
@@ -362,7 +362,7 @@ bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShe
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMechUnitGuns::GetActiveShellType() const
 {
 	if ( nFirstArtGun == -1 )
@@ -370,18 +370,18 @@ const int CMechUnitGuns::GetActiveShellType() const
 	else
 		return GetGun(nFirstArtGun)->GetShell().eDamageType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBasicGun* CMechUnitGuns::GetFirstArtilleryGun() const
 { 
 	if ( nFirstArtGun >= 0 ) 
 		return GetGun( nFirstArtGun ); 
 	else return 0; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CInfantryGuns																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 {
 	CSoldier *pUnit = checked_cast<CSoldier*>(pCommonUnit);
@@ -395,4 +395,4 @@ void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 		NI_ASSERT( bSuccess, StrFmt("Can't add gun to unit \"%s\"", NDb::GetResName(pStats)) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

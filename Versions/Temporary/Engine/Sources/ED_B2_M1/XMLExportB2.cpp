@@ -2,10 +2,10 @@
 #include "XMLExport.h"
 #include "../libdb/ResourceManager.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NXMLExport
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &szTypeName )
 {
 	if ( szTypeName == "MapInfo" )
@@ -187,17 +187,7 @@ void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &
 		*pszPostfix = '/' + szTypeName + ".xdb";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ************************************************************************************************************************ //
-// **
-// ** 
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -205,7 +195,17 @@ void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+// ************************************************************************************************************************ //
+// **
+// ** 
+// **
+// **
+// **
+// ************************************************************************************************************************ //
+
 class CXmlExporterB2 : public CXmlExporter
 {
 	typedef hash_map<string, string> CNamesMap;
@@ -215,7 +215,7 @@ class CXmlExporterB2 : public CXmlExporter
 	//
 	string MakePathName( const string &szObjectName, const string &szClassTypeName, const string &szFieldName );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CXmlExporterB2::MakePathName( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
 {
 	string szFullName = szClassTypeName + ':' + szObjectName;// + ':' + szFieldName;
@@ -239,15 +239,15 @@ string CXmlExporterB2::MakePathName( const string &szObjectName, const string &s
 	else
 		return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CXmlExporterB2::MakePathNameOther( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
 {
 	string szPrefix, szPostfix;
 	MakePrefixAndPostfix( &szPrefix, &szPostfix, szClassTypeName );
 	return szPrefix + szObjectName + szPostfix;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CXmlExporterB2 theExporter;
 CXmlExporter *GetExporter() { return &theExporter; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

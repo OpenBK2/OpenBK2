@@ -10,9 +10,9 @@ const float F_MIN_COLOR_SQUARED = sqr( sqr( 0.02f ) );
 
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CLightState
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float Halton( int b, int i )
 {
 	float x = 0, fBInv = 1.0f / b, f = fBInv;
@@ -24,7 +24,7 @@ static float Halton( int b, int i )
 	}
 	return x;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateRandomSphereVector( CVec3 *pRes )
 {
 	for(;;)
@@ -37,7 +37,7 @@ static void GenerateRandomSphereVector( CVec3 *pRes )
 		return;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_POINT_RADIUS = 16;
 const float F_POINT_STRENGTH = 0.5f * 4 * 3.14f * F_POINT_RADIUS * F_POINT_RADIUS / F_POINT_LIGHT_FALLOFF / F_POINT_LIGHT_FALLOFF;
 void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_vColor )
@@ -79,7 +79,7 @@ void CLightState::AddRay( const CVec3 &vFrom, const CVec3 &vDir, const CVec3 &_v
 		vReflect -= ( 2 * ( vReflect * vNormal ) ) * vNormal;
 	AddRay( vPoint + vReflect * 0.01f, vReflect, vRefColor * 0.9f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightState::AddParallel( const SSphere &_bound, const CVec3 &vDir, const CVec3 &_vColor )
 {
 	CVec3 vColor = _vColor;
@@ -119,7 +119,7 @@ void CLightState::AddParallel( const SSphere &_bound, const CVec3 &vDir, const C
 		AddRay( vShifted, vDir, vColor );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightState::AddPoint( const CVec3 &vCenter, float fRadius, const CVec3 &_vColor )
 {
 	//if ( bDoRender )
@@ -146,7 +146,7 @@ void CLightState::AddPoint( const CVec3 &vCenter, float fRadius, const CVec3 &_v
 		AddRay( vCenter, vDir, vColor );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CLightState::GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs )
 {
 	CVec3 vSky;
@@ -168,13 +168,13 @@ CVec3 CLightState::GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs )
 	}
 	return vSky;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetLinear( float f ) { return pow( f, 2.4f ); }
 inline CVec3 GetLinearColor( const CVec3 &_vColor )
 {
 	return CVec3( GetLinear( _vColor.x ), GetLinear( _vColor.y ), GetLinear( _vColor.z ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightState::CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_bounds, 
 	const SPerVertexLightState &l, IGScene *_pVis, int nSkyDirs )
 {
@@ -198,7 +198,7 @@ void CLightState::CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_b
 		AddPoint( p.vCenter, p.fRadius, GetLinearColor( p.vColor ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightState::CreateSimple( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, int nSkyDirs )
 {
 	CreateScattered( pSeed, _bounds, l, 0, nSkyDirs );

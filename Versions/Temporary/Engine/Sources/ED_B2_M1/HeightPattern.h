@@ -5,7 +5,7 @@
 #include "..\misc\2DArray.h"
 #include "..\MapEditorLib\Tools_Gradient.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SHeightPattern
 {
 	CTPoint<int> pos;
@@ -36,7 +36,7 @@ struct SHeightPattern
 	bool CreateByValue( float fValue, int nGridLines, bool bEllipse );
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал создающий паттерн по градиенту
 struct SCreateHeightPatternByGradientFunctional
 {
@@ -59,7 +59,7 @@ struct SCreateHeightPatternByGradientFunctional
 	}
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCreateHeightPatternByValueFunctional
 {
 	SHeightPattern *pHeightPattern;
@@ -78,7 +78,7 @@ struct SCreateHeightPatternByValueFunctional
 	}
 };
 	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал создающий паттерн заравнивания
 struct SCreateHeightPatternToLevelFunctional
 {
@@ -105,7 +105,7 @@ struct SCreateHeightPatternToLevelFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал создающий паттерн заравнивания, все высоты приводятся к положительным величинам
 struct SCreateHeightPatternToLevelOverZeroFunctional
 {
@@ -144,7 +144,7 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал создающий паттерн в высотами
 struct SCreateHeightPatternFunctional
 {
@@ -168,7 +168,7 @@ struct SCreateHeightPatternFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //функционал определяющий среднее значение высоты
 struct SCalculateAverageHeightFunctional
 {
@@ -192,7 +192,7 @@ struct SCalculateAverageHeightFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для всех элементов SHeightPattern.heights
 template<class TYPE>
 bool ApplyHightPatterns( const CTRect<int> &rRect,
@@ -242,7 +242,7 @@ bool ApplyHightPatterns( const CTRect<int> &rRect,
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов для всех элементов SHeightPattern.heights
 template<class TYPE>
 bool ApplyHeightPattern( const CTRect<int> &rRect,
@@ -290,7 +290,7 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Специальнй случай - применение функционала в цепочке точек (не нужно создавать несколько функционалов)
 template<class TYPE>
 bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
@@ -362,7 +362,7 @@ bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //применение функционалов внутри эллипса для полея heights
 template<class TYPE>
 static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
@@ -396,5 +396,5 @@ static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //#if !defined(__HEIGHT_PATTERN__)

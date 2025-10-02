@@ -7,9 +7,9 @@
 static int nDirectionalLightID, nPointLightID;
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDirectionalLight
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor, CFuncBase<CVec3> *_pGlossColor, 
 	const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir,
 	float _fMaxHeight, 
@@ -24,7 +24,7 @@ CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor, CFuncBase<CVec3
 	vLightDir = _vLightDir;
 	vShadowsLightDir = _vShadowsLightDir;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CDirectionalLight::NeedUpdate()
 {
 	bool bHasChanged = false;
@@ -40,7 +40,7 @@ bool CDirectionalLight::NeedUpdate()
 	}
 	return bHasChanged;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDirectionalLight::AddToState( SPerVertexLightState *pRes )
 {
 //	float fTestBrightness = 0.25f;//
@@ -51,7 +51,7 @@ void CDirectionalLight::AddToState( SPerVertexLightState *pRes )
 		pAmbient->GetValue(), pColor->GetValue(), pShadeColor->GetValue(), pIncidentShadeColor->GetValue(),
 		-vLightDir, nDirectionalLightID, vDymanicLightsModification );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDirectionalLight::PrepareLightInfo( SLightInfo *pLightInfo )
 {
 	SLightInfo &lightInfo = *pLightInfo;
@@ -64,7 +64,7 @@ void CDirectionalLight::PrepareLightInfo( SLightInfo *pLightInfo )
 	lightInfo.vIncidentShadeColor = pIncidentShadeColor->GetValue();
 	lightInfo.vLightPos = CVec4(-vLightDir, 0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CDirectionalLight::GetSmoothedSceneHeight( float f )
 {
 	if ( f < fSmoothedSceneHeight * 0.7f )
@@ -73,7 +73,7 @@ float CDirectionalLight::GetSmoothedSceneHeight( float f )
 		fSmoothedSceneHeight = Float2Int( f + 0.5f );
 	return fSmoothedSceneHeight;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture *CDirectionalLight::GetCloudsTexture() 
 { 
 	if ( !pClouds )
@@ -81,7 +81,7 @@ NGfx::CTexture *CDirectionalLight::GetCloudsTexture()
 	pClouds.Refresh();
 	return pClouds->GetValue();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 {
 	if ( !pClouds )
@@ -92,13 +92,13 @@ void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 	pCloudsProjection.Refresh();
 	*pRes = pCloudsProjection->GetValue();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPointLight
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID ) 
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPointLight::CPointLight( const CVec3 &_vColor, const CVec3 &_ptCenter, float _fRadius )
 	: vColor(_vColor), vCenter( _ptCenter), fRadius(_fRadius), nThisPointLightID( ++nPointLightID )
 {
@@ -109,19 +109,19 @@ CPointLight::CPointLight( const CVec3 &_vColor, const CVec3 &_ptCenter, float _f
 
 	sBound.SphereInit( _ptCenter, _fRadius );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPointLight::CheckCulling( CTransformStack *pTS )
 {
 	return pTS->IsIn( sBound );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointLight::AddToState( SPerVertexLightState *pRes )
 {
 	pRes->AddPointLight( vCenter, fRadius, vColor, nThisPointLightID );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDynamicPointLight
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CDynamicPointLight::CheckCulling( CTransformStack *pTS )
 {
 	if ( !bIsOn )
@@ -133,7 +133,7 @@ bool CDynamicPointLight::CheckCulling( CTransformStack *pTS )
 		return false;
 	return pTS->IsIn( SSphere( l.position, l.fRadius ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDynamicPointLight::AddToState( SPerVertexLightState *pRes )
 {
 	pLight.Refresh();
@@ -142,9 +142,9 @@ void CDynamicPointLight::AddToState( SPerVertexLightState *pRes )
 		return;
 	pRes->AddPointLight( l.position, l.fRadius, l.color );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CLightStateNode
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bDynamicLights = true;
 bool CLightStateNode::NeedUpdate()
 {
@@ -176,7 +176,7 @@ bool CLightStateNode::NeedUpdate()
 	bRes |= !value.dynamicPointLights.empty();
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::Recalc()
 {
 	bSmthHasChanged = false;
@@ -191,44 +191,44 @@ void CLightStateNode::Recalc()
 	}
 	value.SortPointLights();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::SetWarFogBlend( float fBlend )
 {
 	value.SetWarFogBlend( fBlend );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::SetWarFog( const CArray2D<unsigned char> &_fog, float _fScale )
 {
 	if ( value.SetWarFog( _fog, _fScale ) )
 		bSmthHasChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::SetDirectional( CDirectionalLight *p )
 {
 	pDirectionalLight = p;
 	bSmthHasChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::AddPointLight( CPointLight *p )
 {
 	lights.push_back( p );
 	bSmthHasChanged = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::AddPointLight( CDynamicPointLight *p )
 {
 	dynamicLights.push_back( p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightStateNode::SetClipTS( const CTransformStack &_ts ) 
 { 
 	tsClip = _ts; 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GRenderLight)
 REGISTER_VAR_EX( "gfx_dynamic_lights", NGlobal::VarBoolHandler, &s_bDynamicLights, true, STORAGE_USER )
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x02511009, CDirectionalLight )

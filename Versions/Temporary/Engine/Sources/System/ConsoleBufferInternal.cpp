@@ -6,11 +6,11 @@
 #pragma warning( disable : 4530 )
 #include <fstream>
 using std::wofstream;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bWriteLog = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Erase IML tags
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static wstring EraseTags( const wstring &szStr )
 {
 	wstring szRet;
@@ -32,16 +32,16 @@ static wstring EraseTags( const wstring &szStr )
 	}
 	return szRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CConsoleBuffer
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, const DWORD color, const bool bPersistentMsg )
 {
 	if ( pszString == 0 ) 
 		return;
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsoleBuffer::Write( const int nStreamID, const wstring &szString, const DWORD color, const bool bPersistentMsg )
 {
 	++nSlowCompress;
@@ -69,7 +69,7 @@ void CConsoleBuffer::Write( const int nStreamID, const wstring &szString, const 
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConsoleBuffer::GetNextLine( SConsoleLine *pRes, int *pSequenceID )
 {
 	int &nSeq = *pSequenceID;
@@ -87,7 +87,7 @@ bool CConsoleBuffer::GetNextLine( SConsoleLine *pRes, int *pSequenceID )
 	nSeq = lines[ nBest ].nSequenceID;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsoleBuffer::CompressLines()
 {
 	vector<bool> take;
@@ -105,7 +105,7 @@ void CConsoleBuffer::CompressLines()
 	}
 	lines.resize( nDst );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConsoleBuffer::DumpLog()
 {
 	bool bNeedDumpToFile = false;
@@ -134,14 +134,14 @@ void CConsoleBuffer::DumpLog()
 		fclose( file );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // pipes support
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WriteToPipe( int nPipe, const string &sz, DWORD dwColor, bool bPersistentMsg )
 {
 	WriteToPipe( nPipe, NStr::ToUnicode( sz ), dwColor, bPersistentMsg );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor, bool bPersistentMsg )
 {
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
@@ -152,7 +152,7 @@ void WriteToPipe( int nPipe, const wstring &sz, DWORD dwColor, bool bPersistentM
 	for ( int k = 0; k < dst.copyToStreams.size(); ++k )
 		pBuffer->Write( dst.copyToStreams[k], sz, dwColor, bPersistentMsg );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
 {
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
@@ -163,7 +163,7 @@ static bool GetPipeMessage( int nPipe, SPipeMessage *pRes )
 	dst.msgs.pop_front();
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor )
 {
 	*pRes = "";
@@ -177,7 +177,7 @@ bool ReadFromPipe( int nPipe, string *pRes, DWORD *pDWColor )
 		*pDWColor = msg.dwColor;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor )
 {
 	*pRes = L"";
@@ -191,14 +191,14 @@ bool ReadFromPipe( int nPipe, wstring *pRes, DWORD *pDWColor )
 		*pDWColor = msg.dwColor;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream )
 {
 	CConsoleBuffer *pBuffer = Singleton<CConsoleBuffer>();
 	SPipeChannel &dst = pBuffer->GetPipeChannel( nSrcPipe );
 	dst.copyToStreams.push_back( nDstStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300C8D40, CConsoleBuffer )
 START_REGISTER(ConsoleBufferInternal)
 	REGISTER_VAR_EX( "game_writelog", NGlobal::VarBoolHandler, &bWriteLog, false, STORAGE_NONE )

@@ -5,12 +5,12 @@
 
 namespace NBSU
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //inline char *CC( const string &str )
 //{
 //	return const_cast<char*>(str.c_str());
 //}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ListView_AddColumn( HWND hwnd, const string &strCaption, int nWidth )
 {
 	LV_COLUMN  Column;
@@ -23,7 +23,7 @@ void ListView_AddColumn( HWND hwnd, const string &strCaption, int nWidth )
 
 	ListView_InsertColumn( hwnd, 1000, &Column );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int ListView_AddItem( HWND hwnd, const string &strText, LPARAM lParam, int nItem )
 {
 	LVITEM Item;
@@ -35,12 +35,12 @@ int ListView_AddItem( HWND hwnd, const string &strText, LPARAM lParam, int nItem
 	Item.cchTextMax = strText.size();
 	return ListView_InsertItem( hwnd, &Item );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetFileName( const string &strFullPath )
 {
 	return strFullPath.substr( strFullPath.rfind( '\\' ) + 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries )
 {
 	SendMessage( hwndCallStack, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
@@ -78,7 +78,7 @@ void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries )
 //		ListView_SetItemText( hwndCallStack, nNewLine, 7, buf );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void AddListBoxItem( HWND hWnd, const char *pszString, const void *pItemData )
 //{
 //  int nItem = SendMessage( hWnd, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>( pszString ) );
@@ -88,7 +88,7 @@ void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries )
 //{
 //	AddListBoxItem( hWnd, pEntry->pszFunctionName, pEntry );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //const void* GetListBoxItem( HWND hWnd, int nItemIndex )
 //{
 //	long nVal = SendMessage( hWnd, LB_GETITEMDATA, nItemIndex, 0 );
@@ -113,7 +113,7 @@ void FillStackList( HWND hwndCallStack, const vector<SCallStackEntry> &entries )
 //{
 //	return reinterpret_cast<const SCallStackEntry*>( GetListBoxCurrentItem(hWnd) );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString )
 {
 	return SetWindowText( GetDlgItem(hwndDlg, nElementID), pszString ) != FALSE;
@@ -124,7 +124,7 @@ bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString )
 //	sprintf( buff, "%d", nValue );
 //	return SetWindowText( hwndDlg, nElementID, buff );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void* SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData )
 {
 	return reinterpret_cast<void*>( SetWindowLong( GetDlgItem(hwndDlg, nElementID), 
@@ -142,12 +142,12 @@ void* GetDlgUserData( HWND hwndDlg )
 {
 	return reinterpret_cast<void*>( GetWindowLong( hwndDlg, DWL_USER ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //int GetCheckButtonState( HWND hwndDlg, const int nElementID )
 //{
 //	return SendMessage( GetDlgItem(hwndDlg, nElementID), BM_GETCHECK, 0, 0 );
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription, 
 												const vector<SCallStackEntry> &entries )
 {
@@ -184,5 +184,5 @@ void WriteReportToFile( const char *pszFileName, const char *pszCondition, const
 		fclose( file );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

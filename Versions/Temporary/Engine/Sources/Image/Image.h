@@ -1,7 +1,7 @@
 #pragma once
 
 template<class T> class CArray2D;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IDirect3DDevice9;
 namespace NGfx
 {
@@ -9,7 +9,7 @@ enum EPixelFormat;
 }
 namespace NImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EImageType
 {
 	IMAGE_TYPE_PICTURE_FASTMIP,
@@ -25,7 +25,7 @@ bool CopyAB( const CArray2D<DWORD> &src, const CTRect<long> *pSrcRect, CArray2D<
 bool LoadAnyImage( CArray2D<DWORD> *pRes, CDataStream *pStream );
 void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const string &szFileName, const CArray2D<DWORD> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SColor
 {
   union

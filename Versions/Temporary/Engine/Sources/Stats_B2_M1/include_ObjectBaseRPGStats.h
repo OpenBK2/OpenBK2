@@ -22,12 +22,12 @@ virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 	else
 		return visibility; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const
 {
 	return passProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 {
 	if ( bUsePassabilityForVisibility )
@@ -38,7 +38,7 @@ virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 		return emptyProfile;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const NDb::SComplexSoundDesc* GetAmbientSoundDesc( const NDb::ESeason season, const NDb::EDayNight daytime ) const
 {
 	const int nDayTimeMask = 0x01 << (int)daytime;
@@ -49,4 +49,4 @@ virtual const NDb::SComplexSoundDesc* GetAmbientSoundDesc( const NDb::ESeason se
 	}
 	return pAmbientSound;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

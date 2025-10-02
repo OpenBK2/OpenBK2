@@ -15,7 +15,7 @@ struct CSymString
 	}
 	bool operator ==( const char *psz ) { return strcmp( szStr, psz ) == 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class MEMORYLIB_EXPORT CSymEngine
 {
 	CSymEngine( const CSymEngine &a ) {}
@@ -28,7 +28,7 @@ public:
 	HANDLE GetProcess() const { return hProcess; }
 };
 MEMORYLIB_EXPORT CSymEngine &GetSymEngine();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCallStackEntry
 {
 	DWORD dwAddress;

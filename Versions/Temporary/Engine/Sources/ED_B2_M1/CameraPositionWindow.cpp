@@ -8,13 +8,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //		
 //		CAMERA POSITION WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CCameraPositionWindow, CResizeDialog)
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
@@ -24,7 +24,7 @@ BEGIN_MESSAGE_MAP(CCameraPositionWindow, CResizeDialog)
 	ON_BN_CLICKED(IDC_OW_ALL_PARAMS_RADIO, OnBnClickedParamType)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCameraPositionWindow::CCameraPositionWindow( CWnd *pParentWindow )
 	:	CResizeDialog( CCameraPositionWindow::IDD, pParentWindow )
 {
@@ -37,34 +37,34 @@ CCameraPositionWindow::CCameraPositionWindow( CWnd *pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CAMERA_POSITION_WINDOW, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCameraPositionWindow::~CCameraPositionWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_WINDOW );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CCameraPositionWindow::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
 	DDX_Control( pDX, IDC_OW_PLAYER_COMBO_BOX, wndPalyerComboBox );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::GetDialogData( SCameraPositionWindowData *pData )
 {
 	if ( !bIsDataSetting )
@@ -85,7 +85,7 @@ void CCameraPositionWindow::GetDialogData( SCameraPositionWindowData *pData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pData )
 {
 	bIsDataSetting = true;
@@ -100,7 +100,7 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 	bIsDataSetting = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraPositionWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SCameraPositionWindowData *pData = reinterpret_cast<SCameraPositionWindowData*>(dwData);
@@ -122,7 +122,7 @@ bool CCameraPositionWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraPositionWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCameraPositionWindow::UpdateCommand(), pbEnable == 0" );
@@ -140,7 +140,7 @@ bool CCameraPositionWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::OnCbnSelchangeOwPlayerComboBox()
 {
 	if ( bIsDataSetting )
@@ -151,7 +151,7 @@ void CCameraPositionWindow::OnCbnSelchangeOwPlayerComboBox()
 																												ID_CPE_ON_PLAYER_CHANGED, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::OnBnClickedButtonSave()
 {
 	CWaitCursor wcur;
@@ -159,11 +159,11 @@ void CCameraPositionWindow::OnBnClickedButtonSave()
 																												ID_CPW_ON_SAVE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionWindow::OnBnClickedParamType()
 {
 	CWaitCursor wcur;
 	Singleton<ICommandHandlerContainer>()->HandleCommand(	CHID_CAMERA_POSITION_STATE, ID_CPW_PARAM_TYPE_CHANGED, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

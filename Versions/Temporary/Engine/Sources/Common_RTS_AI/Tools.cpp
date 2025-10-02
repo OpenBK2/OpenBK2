@@ -2,19 +2,19 @@
 
 #include "BasePathUnit.h"
 #include "Tools.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float BOUND_RECT_FACTOR = 1.0f;
 const int SPEED_FACTOR = 800;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CBSplne																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CBSpline::DELTA = 0.02f;
 const float CBSpline::DELTA_FORWARD = 0.08f;
 const int CBSpline::N_OF_ITERATONS = 1 / CBSpline::DELTA;
 const int CBSpline::N_ITERS_TO_FORWARD = CBSpline::DELTA_FORWARD / CBSpline::DELTA;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBSpline::Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CVec2 &p0 )
 {
 	a = 1.0f/6.0f * ( -p3 + 3 * p2 - 3 * p1 + p0 );
@@ -45,7 +45,7 @@ void CBSpline::Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CV
 	d3x = 6 * a * sqr( del ) * del;
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBSpline::Iterate()
 {
 	x += dx;
@@ -62,7 +62,7 @@ void CBSpline::Iterate()
 		cntToForward = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CBSpline::GetReverseR() const 
 { 
 	const CVec2 first = 3 * a * sqr( t ) + 2 * b * t + c;
@@ -71,7 +71,7 @@ const float CBSpline::GetReverseR() const
 
 	return fabs( first.x * second.y - first.y * second.x ) / ( sqr( tanLen ) * tanLen );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const void CBSpline::StartForwardIterating( SForwardIter *pIter )
 {
 	pIter->t = tForward;
@@ -80,7 +80,7 @@ const void CBSpline::StartForwardIterating( SForwardIter *pIter )
 	pIter->fw_d2x = fw_d2x;
 	pIter->fw_d3x = fw_d3x;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const void CBSpline::IterateForward( SForwardIter *pIter )
 {
 	if ( pIter->t != -1 && pIter->t + DELTA_FORWARD <= 1 )
@@ -93,7 +93,7 @@ const void CBSpline::IterateForward( SForwardIter *pIter )
 	else
 		pIter->t = -1;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CBSpline ::operator&( IBinSaver &saver )
 {
 
@@ -113,17 +113,17 @@ int CBSpline ::operator&( IBinSaver &saver )
 	saver.Add( 14, &cntToForward );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBSpline::DumpState() const
 {
 	Singleton<IConsoleBuffer>()->WriteASCII( 500, StrFmt("spline: x=(%g,%g), dx=(%g,%g), d2x=(%g,%g), d3x=(%g,%g)", x.x, x.y, dx.x, dx.y, d2x.x, d2x.y, d3x.x, d3x.y ), 0, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //*******************************************************************
 //*														CCircle																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CCirclePath::Iterate( const float fLength )
 {
 	const float fDelta = fLength/fRadius;
@@ -146,7 +146,7 @@ float CCirclePath::Iterate( const float fLength )
 
 	return fResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCirclePath::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &fStartDir );
@@ -163,7 +163,7 @@ int CCirclePath::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantry )
 {
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
@@ -189,7 +189,7 @@ const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInf
 	return speedRect;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantry )
 {
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
@@ -214,7 +214,7 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 
 	return speedRect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect GetUnitSmallRect( const CBasePathUnit *pUnit )
 {
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
@@ -229,7 +229,7 @@ const SRect GetUnitSmallRect( const CBasePathUnit *pUnit )
 
 	return smallRect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect GetUnitNormalRect( const CBasePathUnit *pUnit )
 {
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
@@ -243,4 +243,4 @@ const SRect GetUnitNormalRect( const CBasePathUnit *pUnit )
 
 	return unitRect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

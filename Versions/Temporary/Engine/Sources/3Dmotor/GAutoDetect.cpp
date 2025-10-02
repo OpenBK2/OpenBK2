@@ -5,13 +5,13 @@
 #include "GAutoDetect.h"
 #include "..\Misc\HPTimer.h"
 #include "..\3Dmotor\GfxBenchmark.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 struct SCfgValue { const char *pszName; float fValue; };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Jerky
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //static SCfgValue lightingQuality0[] = {
 //	{ "gfx_cl_sky_textures", 0 },
 //	{ "gfx_cl_use_precise_shadows", 0 },
@@ -37,9 +37,9 @@ struct SCfgValue { const char *pszName; float fValue; };
 //	{ 0, 0 } 
 //};
 //static SCfgValue *lightingQualityConfig[4] = { lightingQuality0, lightingQuality1, lightingQuality2, lightingQuality3 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Speed
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SCfgValue speed0[] = {
 	//{ "gfx_fog", 2 },
 	//{ "gfx_specular", 1 },
@@ -97,9 +97,9 @@ static SCfgValue speed3[] = {
 	{ 0, 0 } 
 };
 static SCfgValue *speedConfig[4] = { speed0, speed1, speed2, speed3 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Texture
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SCfgValue texture0[] = {
 	//{ "gfx_cl_cube_resolution", 32 },
 	//{ "gfx_texture_usedxt", 1 },
@@ -131,9 +131,9 @@ static SCfgValue texture3[] = {
 	{ 0, 0 } 
 };
 static SCfgValue *textureConfig[4] = { texture0, texture1, texture2, texture3 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // FSAA
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SCfgValue fsaa0[] = {
 	{ "gfx_fsaa", 0 },
 	{ "gfx_register_resolution", 0.5f },
@@ -156,7 +156,7 @@ static SCfgValue fsaa3[] = {
 	{ 0, 0 } 
 };
 static SCfgValue *fsaaConfig[4] = { fsaa0, fsaa1, fsaa2, fsaa3 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
 {
 	if ( nValue == CV_CUSTOM )
@@ -171,7 +171,7 @@ static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
 			NGlobal::SetVar( pCfgEntry->pszName, pCfgEntry->fValue );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 {
 	for ( int nTemp = 0; nTemp < nCfgEntries; nTemp++ )
@@ -193,7 +193,7 @@ static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 
 	return CV_CUSTOM;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define HWLEVEL_ANY -1
 struct SAutoDetectCfg
 {
@@ -236,14 +236,14 @@ static SAutoDetectCfg configAutoDetect[] =
 	{ NGfx::VC_DEFAULT, NGfx::HL_GFORCE3, CV_HIGH,   CV_HIGH,  0, "Unknown card, ps.1.1 class hardware" },
 	{ NGfx::VC_DEFAULT, NGfx::HL_TNL_DEVICE, CV_VHIGH, CV_MED,1, "Unknown card, DX7 class hardware" }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsLowRAM()
 {
 	MEMORYSTATUS memoryStatus;
 	GlobalMemoryStatus( &memoryStatus );
 	return memoryStatus.dwTotalPhys <= 256 * 1024 * 1024;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // code currently happens to require DXT support
 void AutoDetectVideoConfig()
 {
@@ -353,22 +353,22 @@ void AutoDetectVideoConfig()
 	SetTextureMode( (EConfigValue)nDefaultTexture );
 	SetFSAAMode( (EConfigValue)nDefaultFSAA );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //EConfigValue GetLightingQualityMode()
 //{
 //	return FindCfgMode( lightingQualityConfig, ARRAY_SIZE( lightingQualityConfig ) );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void SetLightingQualityMode( EConfigValue eMode )
 //{
 //	ApplyCfgValues( lightingQualityConfig, ARRAY_SIZE( lightingQualityConfig ), eMode );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EConfigValue GetSpeedMode()
 {
 	return FindCfgMode( speedConfig, ARRAY_SIZE( speedConfig ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetSpeedMode( EConfigValue eMode )
 {
 	ApplyCfgValues( speedConfig, ARRAY_SIZE( speedConfig ), eMode );
@@ -387,17 +387,17 @@ void SetSpeedMode( EConfigValue eMode )
 	}
 	NGlobal::SetVar( "gfx_hsr", nHSRMode );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EConfigValue GetTextureMode()
 {
 	return FindCfgMode( textureConfig, ARRAY_SIZE( textureConfig ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetTextureMode( EConfigValue eMode )
 {
 	ApplyCfgValues( textureConfig, ARRAY_SIZE( textureConfig ), eMode );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EConfigValue GetFSAAMode()
 {
 	return FindCfgMode( fsaaConfig, ARRAY_SIZE( fsaaConfig ) );
@@ -406,15 +406,15 @@ void SetFSAAMode( EConfigValue eMode )
 {
 	ApplyCfgValues( fsaaConfig, ARRAY_SIZE( fsaaConfig ), eMode );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandGfxAutodetect( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	AutoDetectVideoConfig();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GAutoDetect)
 	REGISTER_CMD( "gfx_autodetect", CommandGfxAutodetect )
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

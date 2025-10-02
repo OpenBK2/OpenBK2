@@ -5,11 +5,11 @@
 #include "../Server_Client_Common/GamePackets.h"
 #include "../Server_Client_Common/Net.h"
 #include "../Server_Client_Common/PacketProcessor.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                    CFinishConnectionFilter                       *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFinishConnectionFilter : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CFinishConnectionFilter );
@@ -23,14 +23,14 @@ public:
 	bool ProcessRemoveClient( class CNetRemoveClient *pPacket );
 	bool ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFinishConnectionFilter::CFinishConnectionFilter()
 : bConnectionAlive( true )
 {
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessRemoveClient );
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessConnectServerPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFinishConnectionFilter::ProcessRemoveClient( CNetRemoveClient *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -42,7 +42,7 @@ bool CFinishConnectionFilter::ProcessRemoveClient( CNetRemoveClient *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFinishConnectionFilter::ProcessConnectServerPacket( CConnectServerPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
@@ -54,16 +54,16 @@ bool CFinishConnectionFilter::ProcessConnectServerPacket( CConnectServerPacket *
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFinishConnectionFilter::Segment()
 {
 	return bConnectionAlive;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                 CTestConnectionPacket                           *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTestConnectionPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTestConnectionPacket );
@@ -76,13 +76,13 @@ public:
 	CTestConnectionPacket( const int nClientID, const int _nClientServerID )
 		: CNetPacket( nClientID ), nClientServerID( _nClientServerID ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 92, CTestConnectionPacket );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CSimpleConnection                           *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSimpleConnection::CSimpleConnection( CNet *_pNet, bool _bAsClient, const int _nClientServerID, const int _nClientLocalID, const int _nMyServerID )
 : pNet( _pNet ), bAsClient( _bAsClient ), nClientServerID( _nClientServerID ), nClientLocalID( _nClientLocalID ),
 	nMyServerID( _nMyServerID ), bConnectionTested( false )
@@ -90,13 +90,13 @@ CSimpleConnection::CSimpleConnection( CNet *_pNet, bool _bAsClient, const int _n
 	pFinishConnection = new CFinishConnectionFilter();
 	pNet->SendPacket( new CTestConnectionPacket( nClientLocalID, nMyServerID ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleConnection::SendGamePacket( CNetPacket *pPacket )
 {
 	pPacket->nClientID = nClientLocalID;
 	pNet->SendPacket( pPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSimpleConnection::CheckTestConnection( CNetPacket *pPacket )
 {
 	if ( CTestConnectionPacket *pTestPacket = dynamic_cast<CTestConnectionPacket*>( pPacket ) )
@@ -119,7 +119,7 @@ int CSimpleConnection::CheckTestConnection( CNetPacket *pPacket )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 {
 	if ( bAsClient )
@@ -146,7 +146,7 @@ bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetPacket* CSimpleConnection::GetPacket()
 {
 	if ( !packets.empty() )
@@ -179,33 +179,33 @@ CNetPacket* CSimpleConnection::GetPacket()
 		return pFinishConnectionPacket;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleConnection::IsAlive() const
 {
 	return pFinishConnection->Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleConnection::TogglePauseNet( const bool bPause ) const
 {
 	if ( bAsClient )
 		pNet->DebugTogglePause( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                    CThroughServerConnection                     *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CThroughServerConnection::CThroughServerConnection( const int _nClientServerID, CNet *_pNet )
 : nClientServerID( _nClientServerID ), pNet( _pNet ), bConnectionTested( false )
 {
 	pNet->SendPacket( new CThroughServerGamePacket( 0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CThroughServerConnection::SendGamePacket( CNetPacket *pPacket )
 {
 	pNet->SendPacket( new CThroughServerGamePacket( 0, nClientServerID, pPacket ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CThroughServerConnection::ProcessPacketFromServer( CNetPacket *pRawPacket )
 {
 	CPtr<CThroughServerGamePacket> pPacket = dynamic_cast<CThroughServerGamePacket*>( pRawPacket );
@@ -232,7 +232,7 @@ bool CThroughServerConnection::ProcessPacketFromServer( CNetPacket *pRawPacket )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetPacket* CThroughServerConnection::GetPacket()
 {
 	if ( !packets.empty() )
@@ -244,9 +244,9 @@ CNetPacket* CThroughServerConnection::GetPacket()
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CThroughServerConnection::TogglePauseNet( const bool bPause ) const
 {
 	pNet->DebugTogglePause( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

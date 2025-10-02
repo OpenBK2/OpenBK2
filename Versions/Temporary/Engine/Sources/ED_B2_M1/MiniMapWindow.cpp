@@ -23,7 +23,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CMiniMapWindow, CWnd)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDOWN()
@@ -31,7 +31,7 @@ BEGIN_MESSAGE_MAP(CMiniMapWindow, CWnd)
 	ON_WM_MOUSEMOVE()
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline NImage::SColor GetColor( const NDb::STerrain &terrainDesc, const STerrainInfo &terrainInfo, const int nX, const int nY )
 {
 	if ( terrainInfo.tileTerraMap[nY][nX] >= terrainDesc.pTerraSet->terraTypes.size() )
@@ -39,7 +39,7 @@ inline NImage::SColor GetColor( const NDb::STerrain &terrainDesc, const STerrain
 	else
 		return NImage::SColor( terrainDesc.pTerraSet->terraTypes[terrainInfo.tileTerraMap[nY][nX]]->nColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 {
 	if ( !IsWindow( m_hWnd ) )
@@ -117,14 +117,14 @@ void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 		bMapLoaded = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::SetMapInfoEditorSize( const int nSizeX, const int nSizeY )
 {
 	mapInfoEditorSize.cx = nSizeX;
 	mapInfoEditorSize.cy = nSizeY;
 	Invalidate();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapWindow::Create( CWnd *parentWindow )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MINIMAP_WINDOW, this );
@@ -140,7 +140,7 @@ bool CMiniMapWindow::Create( CWnd *parentWindow )
 	SetRect( &defaultRect, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT );
 	return CWnd::Create( AfxRegisterWndClass( CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, ::LoadCursor( NULL, IDC_ARROW ), 0, 0 ), "MiniMap", 0, defaultRect, parentWindow, 666 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::Destroy()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_MINIMAP_WINDOW );
@@ -154,7 +154,7 @@ void CMiniMapWindow::Destroy()
 	CWnd::DestroyWindow();
 	LoadMap( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapWindow::EditorToMiniMap( CVec2 *pvResult, const CVec2 &vEditorPos )
 {
 	CRect clientRect;
@@ -175,7 +175,7 @@ bool CMiniMapWindow::EditorToMiniMap( CVec2 *pvResult, const CVec2 &vEditorPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapWindow::MiniMapToEditor( CVec2 *pvResult, const CVec2 &vMiniMapPos )
 {
 	CRect clientRect;
@@ -189,7 +189,7 @@ bool CMiniMapWindow::MiniMapToEditor( CVec2 *pvResult, const CVec2 &vMiniMapPos 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::OnPaint()
 {
 	CPaintDC paintDC( this );
@@ -244,7 +244,7 @@ void CMiniMapWindow::OnPaint()
 	paintDC.BitBlt( clientRect.left, clientRect.top, clientRect.Width(), clientRect.Height(), &dc, 0, 0, SRCCOPY );
 	dc.SelectObject( pOldBitmap );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	CWnd::OnLButtonDown( nFlags, point );
@@ -252,7 +252,7 @@ void CMiniMapWindow::OnLButtonDown( UINT nFlags, CPoint point )
 	MiniMapToEditor( &vAIPosition, CVec2( point.x, point.y ) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_CAMERA_POSITION, PackCoords( vAIPosition ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::OnMouseMove( UINT nFlags, CPoint point )
 {
 	CWnd::OnMouseMove( nFlags, point );
@@ -264,12 +264,12 @@ void CMiniMapWindow::OnMouseMove( UINT nFlags, CPoint point )
 		OnPaint();	
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::OnLButtonUp( UINT nFlags, CPoint point )
 {
 	CWnd::OnLButtonUp( nFlags, point );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapWindow::OnContextMenu( CWnd* pWnd, CPoint point )
 {
 	CWnd::OnContextMenu( pWnd, point );
@@ -287,7 +287,7 @@ void CMiniMapWindow::OnContextMenu( CWnd* pWnd, CPoint point )
 	mainPopupMenu.DestroyMenu();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -303,7 +303,7 @@ bool CMiniMapWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMiniMapWindow::UpdateCommand(), pbEnable == 0" );
@@ -320,4 +320,4 @@ bool CMiniMapWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -16,7 +16,7 @@
 #include "../Stats_B2_M1/TerraAIObserver.h"
 
 #include "SceneInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ITerraManager *CScene::GetTerraManager()
 {
 	if ( !DoesTerraManagerExist() ) 
@@ -27,12 +27,12 @@ ITerraManager *CScene::GetTerraManager()
 	}
 	return data[eScene]->pTerraManager;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetSoundSceneMode( const enum ESoundSceneMode eMode )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddTrack( const int nID, const float fFadingSpeed,
 											 const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
 											 const CVec2 &vNorm, const float _fWidth, const float fAplha )
@@ -40,28 +40,28 @@ void CScene::AddTrack( const int nID, const float fFadingSpeed,
 	if ( data[eScene]->pTracksManager ) 
 		data[eScene]->pTerraManager->AddTrack( nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, data[eScene]->pTracksManager );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial )
 {
 	data[eScene]->pTerraManager->AddExplosion( _vMin, _vMax, pMaterial );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial )
 {
 	data[eScene]->pTerraManager->AddDynamicDebris( vCenter, vSize, fAngle, fWidth, pMaterial );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetWarFog( const CArray2D<unsigned char> &fog, float fScale )
 {
 	data[eScene]->GetGScene()->SetWarFog( fog, fScale );
 	data[eScene]->GetGScene()->SetWarFogBlend( 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetWarFogBlend( const float fBlend )
 {
 	data[eScene]->GetGScene()->SetWarFogBlend( fBlend );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetLight( const NDb::SAmbientLight *pLight )
 {
 	if ( !pLight )
@@ -86,7 +86,7 @@ void CScene::SetLight( const NDb::SAmbientLight *pLight )
 		screenData.p3DView->SetAmbient( data[eScene]->pSceneConsts->pInterfaceLight );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
 	const int nObjectID = GetID( nID );	
@@ -118,12 +118,12 @@ int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptO
 	else
 		return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ToggleShowMsg( const SGameMessage &msg, ESceneShow eShow ) 
 { 
 	ToggleShow( eShow ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ToggleShowPassability()
 {
 	if ( ITerraManager *pTerraManager = GetTerraManager() )
@@ -143,14 +143,14 @@ bool CScene::ToggleShowPassability()
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ProcessEvent( const SGameMessage &msg )
 {
 	if ( Camera()->ProcessEvent( msg ) )
 		return true;
 	return observers.ProcessEvent( msg, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AfterLoad()
 {
 	// check for after-load already done
@@ -236,12 +236,12 @@ void CScene::AfterLoad()
 	if ( timeBadWeatherLeft > 0 )
 		SwitchWeather( true, timeBadWeatherLeft );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SwitchSceneAfterLoad( const EScene _eScene )
 {
 	eScene = _eScene;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const
 {
 	SSceneData::CVisObjectsMap::const_iterator pos = data[eScene]->visObjects.find( nID );
@@ -251,7 +251,7 @@ bool CScene::GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const
 	(*pTransform).backward = pos->second->GetPlacement().backward;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NScene
 {
 static const DWORD overdrawColors[] = 
@@ -278,7 +278,7 @@ static const DWORD overdrawColors[] =
 	0x00FF00FF
 };
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
 	hash_map<DWORD, int> colors;
@@ -345,4 +345,4 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 	while ( ToggleShow(SCENE_SHOW_UI) == false );
 	while ( ToggleShow(SCENE_SHOW_OVERDRAW) != false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

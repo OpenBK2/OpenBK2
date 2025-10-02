@@ -2,7 +2,7 @@
 #include "executor.h"
 
 class CMilitaryCar;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExecutorWatchForEnemyUnloadPassangers : public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorWatchForEnemyUnloadPassangers)
@@ -20,4 +20,4 @@ public:
 	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
 	virtual bool IsExecutorValid() const { return IsExecutorValidInternal(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

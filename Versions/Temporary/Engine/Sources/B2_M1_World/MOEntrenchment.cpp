@@ -3,7 +3,7 @@
 #include "MOEntrenchment.h"
 #include "..\SceneB2\TerraGen.h"
 #include "../DebugTools/DebugInfoManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	CDBPtr<NDb::SEntrenchmentRPGStats> pStats = checked_cast<const NDb::SEntrenchmentRPGStats*>( GetStats() );
@@ -30,7 +30,7 @@ bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUn
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( placement.bNewFormat )
@@ -49,7 +49,7 @@ void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement
 	}
 	pScene->MoveObject( GetID(), cached.mPlace );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
 //{
 //	CSegment segm;
@@ -63,7 +63,7 @@ void CMOEntrenchmentPart::AIUpdatePlacement( const SAINotifyPlacement &placement
 //	segm.dir = segm.p2 - segm.p1;
 //	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // calculate transform from position, rotation, normal
 void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const WORD _wDir )
 {
@@ -131,24 +131,24 @@ void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const WORD _wDir 
 	// Combine
 	cached.mPlace = mTransform * mShear;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchmentPart::GetHoleParams( CVec2 *pStart, CVec2 *pEnd, float *pWidth )
 { 
 	*pStart = cached.vHoleStart;
 	*pEnd = cached.vHoleEnd;
 	*pWidth = cached.fHoleWidth;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOEntrenchmentPart::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	return CMapObj::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchmentPart::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMOSelectable::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchmentPart::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -156,11 +156,11 @@ void CMOEntrenchmentPart::GetActions( CUserActions *pActions, EActionsType eActi
 		pActions->SetAction( NDb::USER_ACTION_BOARD );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchmentPart::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOEntrenchmentPart::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CMapObj*>(this) );
@@ -168,9 +168,9 @@ int CMOEntrenchmentPart::operator&( IBinSaver &saver )
 	saver.Add( 3, &nFrameIndex );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMOEntrenchment
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOEntrenchment::~CMOEntrenchment(void)
 {
 	while ( !parts.empty() ) 
@@ -180,7 +180,7 @@ CMOEntrenchment::~CMOEntrenchment(void)
 		pPart->SetParent( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOEntrenchment::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	//const SAITrenchUpdate *pUpdate = checked_cast<const SAITrenchUpdate *>( _pUpdate );
@@ -188,7 +188,7 @@ bool CMOEntrenchment::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdat
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, const bool bDigBySegment /*= false*/ )
 { 
 	vector<CVec2> pts;
@@ -271,12 +271,12 @@ void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchment::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMOSelectable::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchment::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -285,11 +285,11 @@ void CMOEntrenchment::GetActions( CUserActions *pActions, EActionsType eActions 
 		pActions->SetAction( NDb::USER_ACTION_BOARD );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOEntrenchment::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMOEntrenchment::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
@@ -297,18 +297,18 @@ NDb::EUserAction CMOEntrenchment::GetBestAutoAction( const CUserActions &actions
 		
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOEntrenchment::IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const
 {
 	return eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOEntrenchment::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, checked_cast<CMapObj*>(this) );
 	saver.Add( 2, &parts );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7482, CMOEntrenchmentPart );
 REGISTER_SAVELOAD_CLASS( 0x100A7483, CMOEntrenchment );

@@ -12,15 +12,15 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //REGISTER_BUILDER_IN_DLL( WindowMSButtonShared, CWindowMSButtonSharedBuilder )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CWindowMSButtonSharedBuilder::BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME[] = "BackgroundSimpleTexture";
 const char CWindowMSButtonSharedBuilder::TEXTURE_TYPE_NAME[] = "Texture";
 const string CWindowMSButtonSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowMSButtonSharedBuilder";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
@@ -73,7 +73,7 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeName,
 																												 string *pszUniqueObjectName,
 																												 bool bFromMainMenu,
@@ -149,7 +149,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButtonSharedBuilder::CreateVisualState( const string		 & rszUniqueObjectName, 
 																										  IManipulator		 * pBuildDataManipulator, 
 																											IManipulator		 * pMSBManipulator,
@@ -168,7 +168,7 @@ bool CWindowMSButtonSharedBuilder::CreateVisualState( const string		 & rszUnique
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUniqueObjectName, 
 																										  IManipulator		 * pBuildDataManipulator, 
 																											IManipulator		 * pMSBManipulator,
@@ -253,6 +253,6 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

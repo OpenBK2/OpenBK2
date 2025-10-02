@@ -11,13 +11,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CComboBoxGDBBrowser::CComboBoxGDBBrowser( int _nGDBBrowserID ) : pwndParent( 0 ), nControlID( 0 ), bEnableEdit( true ), nGDBBrowserID( _nGDBBrowserID )
 {
 	ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CComboBoxGDBBrowser::~CComboBoxGDBBrowser()
 {
 	for ( int nTabIndex = 0; nTabIndex < tabList.size(); ++nTabIndex )
@@ -30,7 +30,7 @@ CComboBoxGDBBrowser::~CComboBoxGDBBrowser()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CComboBoxGDBBrowser::MoveWindow( const CRect &rRect )
 {
 	if ( IsWindow( wndComboBox.m_hWnd ) )
@@ -50,7 +50,7 @@ void CComboBoxGDBBrowser::MoveWindow( const CRect &rRect )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::Create( CWnd *_pwndParent, UINT _nControlID )
 {
 	pwndParent = _pwndParent;
@@ -64,7 +64,7 @@ bool CComboBoxGDBBrowser::Create( CWnd *_pwndParent, UINT _nControlID )
 	return bResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CComboBoxGDBBrowser::SwitchTabs()
 {
 	for ( int nTabIndex = 0; nTabIndex < tabList.size(); ++nTabIndex )
@@ -81,7 +81,7 @@ void CComboBoxGDBBrowser::SwitchTabs()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::ActivateTab( CTreeGDBBrowserBase* pwndActiveTab )
 {
 	if ( pwndActiveTab != 0 )
@@ -107,7 +107,7 @@ bool CComboBoxGDBBrowser::ActivateTab( CTreeGDBBrowserBase* pwndActiveTab )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( int nTabIndex )
 {
 	if ( ( nTabIndex >=0 ) && ( nTabIndex < tabList.size() ) )
@@ -117,7 +117,7 @@ CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( int nTabIndex )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( const string &rszObjectTypeName )
 {
 	for ( int nItemIndex = 0; nItemIndex < wndComboBox.GetCount(); ++nItemIndex )
@@ -134,7 +134,7 @@ CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( const string &rszObjectTypeNam
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::GetActiveTab( CTreeGDBBrowserBase** ppwndActiveTab )
 {
 	const int nSelectedString = wndComboBox.GetCurSel();
@@ -156,7 +156,7 @@ bool CComboBoxGDBBrowser::GetActiveTab( CTreeGDBBrowserBase** ppwndActiveTab )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::GetActiveTabName( string *pszName )
 {
 	const int nSelectedString = wndComboBox.GetCurSel();
@@ -173,7 +173,7 @@ bool CComboBoxGDBBrowser::GetActiveTabName( string *pszName )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::ShowWindow( int nCmdShow )
 {
 	wndComboBox.ShowWindow( nCmdShow );
@@ -189,7 +189,7 @@ bool CComboBoxGDBBrowser::ShowWindow( int nCmdShow )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::IsFocused()
 {
 	HWND hWnd = ::GetFocus();
@@ -206,7 +206,7 @@ bool CComboBoxGDBBrowser::IsFocused()
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CComboBoxGDBBrowser::InitImageLists()
 {
 	{
@@ -229,7 +229,7 @@ void CComboBoxGDBBrowser::InitImageLists()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CComboBoxGDBBrowser::RemoveAllTabs()
 {
 	wndComboBox.ResetContent();
@@ -250,7 +250,7 @@ void CComboBoxGDBBrowser::RemoveAllTabs()
 	tabList.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CComboBoxGDBBrowser::EnableEdit( bool bEnable )
 {
 	bEnableEdit = bEnable;
@@ -263,7 +263,7 @@ void CComboBoxGDBBrowser::EnableEdit( bool bEnable )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::GetObjectSet( SObjectSet *pObjectSet )
 {
 	CTreeGDBBrowserBase *pwndActiveTab = 0;
@@ -277,7 +277,7 @@ bool CComboBoxGDBBrowser::GetObjectSet( SObjectSet *pObjectSet )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::GetSelectionSet( SSelectionSet *pSelectionSet )
 {
 	CTreeGDBBrowserBase *pwndActiveTab = 0;
@@ -291,7 +291,7 @@ bool CComboBoxGDBBrowser::GetSelectionSet( SSelectionSet *pSelectionSet )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -305,7 +305,7 @@ bool CComboBoxGDBBrowser::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CComboBoxGDBBrowser::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "C3DTabGDBBrowser::UpdateCommand(), pbEnable == 0" );
@@ -326,6 +326,6 @@ bool CComboBoxGDBBrowser::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 	}
 }
 /**/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -4,7 +4,7 @@
 
 #include "Interface_UserData.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class CArray2DType>
 void Trace2DByteArray( const CArray2DType &rArray, const string &rszAdditionalMessage )
 {
@@ -33,7 +33,7 @@ void Trace2DByteArray( const CArray2DType &rArray, const string &rszAdditionalMe
 	DebugTrace( szTrace.c_str() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class CArray2DType>
 void Trace2DFloatArray( const CArray2DType &rArray, const string &rszAdditionalMessage )
 {
@@ -62,7 +62,7 @@ void Trace2DFloatArray( const CArray2DType &rArray, const string &rszAdditionalM
 	DebugTrace( szTrace.c_str() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Берёт опцию из mayaExportData секции UserData.
 // Производится lookup сначала в пользовательском наборе установок, затем в общем
 // таким образом локальные установки пользователя имеют приоритет.
@@ -76,10 +76,10 @@ template<class T> const T & GetOption( const T SUserData::SMayaExportData::* pFi
 		);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // get granny export settings file name for Maya export
 string GetGrannyExportSettingsFileName( const string &szTypeName );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // cut extension from file name
 void CutExtension( string *pFileName, const char *pszExt );
 void MakeDoubleSlash( string *pszPath );
@@ -91,10 +91,10 @@ bool BuildSrcFilePath( string *pszFilePath, const string &szRefValue );
 bool BuildSrcFilePath( string *pszFilePath, struct IManipulator *pManipulator, const string &szRefFieldDBPath );
 // construct full destination file path from nObjectID or "uid" field (if present)
 string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // return true if bForced == true or if szSrc file is newer then szDst file
 bool CheckFilesUpdated( const string &szSrc, const string &szDst, bool bForced );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Interactive Maya support routines
 // retrieves Maya install path from registry
 void GetMayaInstallPath( string & szPath, const string &szMayaVersion );
@@ -104,7 +104,7 @@ bool StartupMayaProcess( class CInteractiveMaya *pMayaProcess );
 bool WaitForFile( const string &szFileName, const double fMaxWaitTime /* = 10000 */, bool bReportAsError = true );
 // execute single script with interactive Maya
 bool ExecuteMayaScript( const string &szScript );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Non-interactive Maya Export (granny or particles)
 // Сформировать первые строки скрипта экспорта результатов работы Maya в данные игры
 void MEStartScript( string *pszScriptText, bool bGUIMode );
@@ -113,7 +113,7 @@ void MEFinishScript( string *pszScriptText, bool bGUIMode );
 // Выполнить скрипт Maya
 // bNeedExport - есть необходимость выполнять скрит ( если false - только сохранить скрипт на диск )
 bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Получить размер картинки
 bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize  );
 // Получить размер картинки
@@ -145,9 +145,9 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 	return true;
 	// CRAP} PLAIN_TEXT
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! move temp file, made during export, to real destination and register it in RCS
 void MoveTempFileToDestination( const string &szTempFileFullName, const string &szDstFileFullName );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_EXPORTER_METHODS__)
  

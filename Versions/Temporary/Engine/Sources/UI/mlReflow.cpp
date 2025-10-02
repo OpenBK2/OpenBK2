@@ -3,14 +3,14 @@
 #include "..\3dMotor\G2DView.h"
 #include "..\3DMotor\Locale.h"
 #include "..\3Dmotor\GLocale.h"
-////
+
 #include "mlReflow.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NML
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReflowState
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CReflowState: public IReflowState
 {
 private:
@@ -67,12 +67,12 @@ public:
 	const CTPoint<float>& GetSize() const { return size; }
 	NGScene::ILayoutFakeView* GetScene() const { return pView; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReflowState::CReflowState( NGScene::ILayoutFakeView* _pView, float _fWidth ):
 	pView(_pView), fWidth(_fWidth), fLineWidth(0), fLineHeight(0), rangeLeft(0,-1), rangeRight(_fWidth,-1), size(0,0)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowState::AddObject( IVisReflowObject *pObject )
 {
 	if ( !IsValid( pObject ) )
@@ -114,7 +114,7 @@ void CReflowState::AddObject( IVisReflowObject *pObject )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowState::CreateLine( bool bEndBlock )
 {
 	ProcessWraped();
@@ -133,7 +133,7 @@ void CReflowState::CreateLine( bool bEndBlock )
 	if ( size.y - rangeRight.fHeight > -FP_EPSILON )
 		rangeRight.fValue = fWidth;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowState::Finalize()
 {
 	if ( !line.empty() )
@@ -200,7 +200,7 @@ void CReflowState::Finalize()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowState::ProcessWraped()
 {
 	for( TVisObjects::iterator iTemp = lineLeft.begin(); iTemp != lineLeft.end(); ++iTemp )
@@ -228,7 +228,7 @@ void CReflowState::ProcessWraped()
 	lineLeft.clear();
 	lineRight.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowState::RemoveSpaces()
 {
 	for( TVisObjects::iterator iTemp = line.begin(); iTemp != line.end(); )
@@ -250,9 +250,9 @@ void CReflowState::RemoveSpaces()
 			break;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReflowLayout
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CReflowLayout: public IReflowLayout
 {
 	OBJECT_BASIC_METHODS(CReflowLayout)
@@ -275,17 +275,17 @@ public:
 
 	const CTPoint<float>& GetSize() const { return size; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReflowLayout::CReflowLayout():
 	size( 0, 0 )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowLayout::AddObject( IReflowObject *pObject )
 {
 	objects.push_back( pObject );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowLayout::Generate( NGScene::ILayoutFakeView *pView, float fWidth )
 {
 	CReflowState state( pView, fWidth );
@@ -304,7 +304,7 @@ void CReflowLayout::Generate( NGScene::ILayoutFakeView *pView, float fWidth )
 	state.Finalize();
 	size = state.GetSize();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window )
 {
 	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
@@ -313,7 +313,7 @@ void CReflowLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float
 			pVisObject->Render( pView, position, window );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflowLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window )
 {
 	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
@@ -322,15 +322,15 @@ void CReflowLayout::Render( list<CTRect<float> > *pRender, const CTPoint<float> 
 			pVisObject->Render( pRender, position, window );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CreateReflowLayout
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IReflowLayout* CreateReflowLayout()
 {
 	return new CReflowLayout();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( 0xB5529180, CReflowLayout )

@@ -2,10 +2,10 @@
 #include "TestType.h"
 #include "MeasureTimer.h"
 #include "../libdb/ObjMan.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NTest
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD flags1[2] = { 0x0f0f0f0f, 0xf0f0f0f0 };
 DWORD flags2[2] = { 0x11223344, 0x55667788 };
 // {51A5BCA0-B663-41a7-8DED-0673AD1C7F60}
@@ -66,7 +66,7 @@ const STestSetGetData *FindTestData( const char *pszName )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool TestMetaSetGet( NDb::IObjMan *pBind, const STestSetGetData *pData )
 {
 	CVariant variant;
@@ -85,7 +85,7 @@ bool TestMetaSetGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 		NI_VERIFY( TestMetaSetGet( pBind, pData ) != false, "Set/Get test failed", return false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TField>
 bool TestMetaSetDirectGet( TField *pField, const char *pszFieldName )
 {
@@ -135,7 +135,7 @@ bool TestMetaSetDirectGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TField> TField GetFromVariant( const CVariant &var ) { return (TField)var; }
 template <> string GetFromVariant<string>( const CVariant &var ) { return var.GetStr(); }
 template <> wstring GetFromVariant<wstring>( const CVariant &var ) { return var.GetWStr(); }
@@ -186,5 +186,5 @@ bool TestDirectSetMetaGet( NDb::IObjMan *pBind, NDb::SMechUnit *pMechUnit )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

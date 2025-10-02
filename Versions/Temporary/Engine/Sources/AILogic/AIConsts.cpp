@@ -3,14 +3,14 @@
 #include "ManuverInternal.h"
 #include "..\Stats_B2_M1\RPGStatsAutomagic.h"
 #include "DBAIConsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAIConsts
 {
 	const int WAR_FOG_FULL_UPDATE() { return SAIConsts::WAR_FOG_FULL_UPDATE; }
 	const int VIS_POWER() { return SAIConsts::VIS_POWER; }
 }
 bool g_bUseRoundUnits;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float SConsts::PLANE_SPLINE_STEP = 0.1f;
 float SConsts::PLANE_SPLINE_POINT_DIST = 90.0f;
 int SConsts::PLANE_TARGET_SCAN_PERIOD = 1000;
@@ -263,7 +263,7 @@ float SConsts::REINFORCEMENT_GROUP_DISTANCE = 900.0f;
 NTimer::STime SConsts::INFANTRY_FULL_HEAL_TIME = 2000;
 //float SConsts::TILE_HEIGHT_DIFF_TO_LOCK = 10.0f;
 NTimer::STime SConsts::STORAGE_CAPTURE_TIME = 5000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //REGISTER_VAR_EX( "gfx_16bit_mode", NGlobal::VarBoolHandler, &bUse16BitMode, 0, true )
 float fSpyGlassAngle = 45;
 float fMinRotateAngle;
@@ -488,7 +488,7 @@ START_REGISTER(AILogicConsts)
 	
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConsts::Load()
 {
 	LoadRevealInfo();
@@ -519,7 +519,7 @@ void SConsts::Load()
 	}
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConsts::LoadRevealInfo()
 {
 	CPtr<IRPGStatsAutomagic> pAutoMagic = MakeObject<IRPGStatsAutomagic>( IRPGStatsAutomagic::tidTypeID );
@@ -544,11 +544,11 @@ void SConsts::LoadRevealInfo()
 	}
 	while ( !pAutoMagic->IsLastStr( szStatsIter.c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SConsts::InitPriorities( const vector<NDb::SUnitTypePriority> &priorities )
 {
 	PRIORITIES.clear();
 	for ( vector<SUnitTypePriority>::const_iterator it = priorities.begin(); it != priorities.end(); ++it )
 		PRIORITIES[ it->eUnitType ] = it->nPriority;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

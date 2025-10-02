@@ -12,12 +12,12 @@
 #include "../Parser/LangNode.h"
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 namespace NCodeGenTool
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STypesSort
 {
 	bool operator()( NDb::NTypeDef::STypeDef *pType1, NDb::NTypeDef::STypeDef *pType2 ) const 
@@ -25,7 +25,7 @@ struct STypesSort
 		return pType1->GetTypeName() < pType2->GetTypeName();
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const vector<string> &files, const string &szDescriptorsPath )
 {
 	bool bParse = NLang::Parse( files, szDescriptorsPath + "base.cll" );
@@ -44,7 +44,7 @@ bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, con
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo )
 {
 	CFileStream stream( szTypesFilePath, CFileStream::WIN_CREATE );
@@ -59,7 +59,7 @@ bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInf
 	NI_ASSERT( false, StrFmt("Can't save compiled types to \"%s\"", szTypesFilePath.c_str()) );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo )
 {
 	if ( NCodeGen::CCodeStructure *pCodeStructure = dynamic_cast_ptr<NCodeGen::CCodeStructure *>( pTypesInfo->pCodeStructure ) )
@@ -82,7 +82,7 @@ bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SC
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadFile( vector<BYTE> &data, const string &szFileName )
 {
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
@@ -95,7 +95,7 @@ bool ReadFile( vector<BYTE> &data, const string &szFileName )
 	stream.Read( &(data[0]), nSize );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ProcessFile( const string &szSrcFileName, const string &szDstFileName )
 {
 	// check for changed
@@ -116,7 +116,7 @@ bool ProcessFile( const string &szSrcFileName, const string &szDstFileName )
 	//
 	return NFile::CopyFile( szSrcFileName, szDstFileName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CopySourceCode( const list<string> &filetitles, const string &szSrcPath, const string &szDstPath )
 {
 	for ( list<string>::const_iterator it = filetitles.begin(); it != filetitles.end(); ++it )
@@ -135,6 +135,6 @@ bool CopySourceCode( const list<string> &filetitles, const string &szSrcPath, co
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }

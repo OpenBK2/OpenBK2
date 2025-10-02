@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterContainer::StartExport( const string &rszExportTypeName,
 																			const string &rszObjectTypeName,
 																			bool bExport,
@@ -69,7 +69,7 @@ bool CExporterContainer::StartExport( const string &rszExportTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::FinishExport( const string &rszExportTypeName,
 																			 const string &rszObjectTypeName,
 																			 bool bExport,
@@ -116,7 +116,7 @@ void CExporterContainer::FinishExport( const string &rszExportTypeName,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT	CExporterContainer::ExportObject( const string &rszExportTypeName,
 																								IManipulator* pManipulator,
 																								const string &rszObjectTypeName,
@@ -170,13 +170,13 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const string &rszExportTypeName,
 	return ER_FAIL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterContainer::CanExportObject( const string &rszObjectTypeName )
 {
 	return NExporterFactory::CanCreateExporter( rszObjectTypeName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IExporter* CExporterContainer::GetExporter( const string &rszObjectTypeName )
 {
 	if ( !CanExportObject( rszObjectTypeName ) )
@@ -192,14 +192,14 @@ IExporter* CExporterContainer::GetExporter( const string &rszObjectTypeName )
 	return posExporter->second;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::Create( const string &rszObjectTypeName )
 {
 	IExporter *pExporter = GetExporter( rszObjectTypeName );
 	NI_ASSERT( pExporter != 0, "CExporterContainer::Create() pExporter == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::Destroy( const string &rszObjectTypeName )
 {
 	CExporterMap::iterator posExporter = exporterMap.find( rszObjectTypeName );
@@ -209,14 +209,14 @@ void CExporterContainer::Destroy( const string &rszObjectTypeName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::RegisterExportTool( IExportTool *pExportTool )
 {
 	UnRegisterExportTool( pExportTool );
 	exportToolList.push_back( pExportTool );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::UnRegisterExportTool( IExportTool *pExportTool )
 {
 	CExportToolList::iterator itExportTool = find( exportToolList.begin(), exportToolList.end(), pExportTool );
@@ -227,7 +227,7 @@ void CExporterContainer::UnRegisterExportTool( IExportTool *pExportTool )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterContainer::StartExport( const string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences )
 {
 	return StartExport( bExportReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
@@ -237,7 +237,7 @@ bool CExporterContainer::StartExport( const string &rszObjectTypeName, bool bFor
 											bStartTools );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::FinishExport( const string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences )
 {
 	FinishExport( bExportReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
@@ -247,7 +247,7 @@ void CExporterContainer::FinishExport( const string &rszObjectTypeName, bool bFo
 								bFinishTools );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT	CExporterContainer::ExportObject( IManipulator* pManipulator,
 																								const string &rszObjectTypeName,
 																								const string &rszObjectName,
@@ -262,7 +262,7 @@ EXPORT_RESULT	CExporterContainer::ExportObject( IManipulator* pManipulator,
 											 bForce );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExporterContainer::StartCheck( const string &rszObjectTypeName, bool bStartTools, bool bCheckReferences )
 {
 	return StartExport( bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
@@ -272,7 +272,7 @@ bool CExporterContainer::StartCheck( const string &rszObjectTypeName, bool bStar
 											bStartTools );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExporterContainer::FinishCheck( const string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences )
 {
 	FinishExport( bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
@@ -282,7 +282,7 @@ void CExporterContainer::FinishCheck( const string &rszObjectTypeName, bool bFin
 								bFinishTools );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterContainer::CheckObject( IManipulator* pManipulator,
 																							 const string &rszObjectTypeName,
 																							 const string &rszObjectName,
@@ -296,7 +296,7 @@ EXPORT_RESULT CExporterContainer::CheckObject( IManipulator* pManipulator,
 											 false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterContainer::GetExportResult( const string &rszObjectRefName )
 {
 	if ( IExporter *pExporter = GetExporter( DEFAULT_EXPORTER_LABEL_TXT ) )
@@ -309,7 +309,7 @@ EXPORT_RESULT CExporterContainer::GetExportResult( const string &rszObjectRefNam
 	return ER_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CExporterContainer::GetExportResult( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	if ( IExporter *pExporter = GetExporter( DEFAULT_EXPORTER_LABEL_TXT ) )
@@ -324,6 +324,6 @@ EXPORT_RESULT CExporterContainer::GetExportResult( const string &rszObjectTypeNa
 	return ER_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

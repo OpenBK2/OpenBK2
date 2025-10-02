@@ -6,11 +6,11 @@
 #include "../MapEditorLib/ManipulatorManager.h"
 #include "../MapEditorLib/PCIEMnemonics.h"
 #include "../System/FilePath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define NUM_SYSTEM_CHUNKS 1
 namespace NXMLExport
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLevelDesc
 {
 	string szName;
@@ -27,7 +27,7 @@ inline bool IsInRect( const CLevelsList &levels )
 		return false;
 	return ( levels[levels.size() - 2].szType == "Rect" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertXMLSysChars( string *pString )
 {
 	string szRes;
@@ -81,7 +81,7 @@ void ConvertXMLSysChars( string *pString )
 	}
 	*pString = szRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void VariantToString( string *pString, const CVariant &variant, EPCIEType ePCIType, bool bConvertSysChars )
 {
 	switch ( variant.GetType() )
@@ -134,7 +134,7 @@ void VariantToString( string *pString, const CVariant &variant, EPCIEType ePCITy
 		NI_ASSERT( false, StrFmt("Can't convert type %d to string", variant.GetType()) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PrintTabs( const int nAmount, FILE *file )
 {
 	if ( nAmount <= 0 )
@@ -145,7 +145,7 @@ void PrintTabs( const int nAmount, FILE *file )
 	buffer[nAmount] = 0;
 	fprintf( file, buffer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartLevel( const string &szName, const string &szType, CLevelsList &levels, FILE *file, int nArraySize, list< pair<string, string> > *pAtributes )
 {
 	string szAttributes;
@@ -186,7 +186,7 @@ void StartLevel( const string &szName, const string &szType, CLevelsList &levels
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FinishLevel( CLevelsList &levels, FILE *file )
 {
 	NI_VERIFY( !levels.empty(), "Can't finish empty levels stack!", return );
@@ -200,7 +200,7 @@ void FinishLevel( CLevelsList &levels, FILE *file )
 	}
 	levels.pop_back();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string MakeSimpleChunkName( const string &szFullName, CLevelsList &levels, FILE *file )
 {
 	int nLastPos = 0;
@@ -220,7 +220,7 @@ string MakeSimpleChunkName( const string &szFullName, CLevelsList &levels, FILE 
 	const string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
 	return szChunkName[0] == '[' ? "Item" : szChunkName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MoveToNextLevel( const string &szFullName, const string &szType, CLevelsList &levels, FILE *file, int nArraySize )
 {
 	int nLastPos = 0;
@@ -240,7 +240,7 @@ void MoveToNextLevel( const string &szFullName, const string &szType, CLevelsLis
 	string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
 	StartLevel( szChunkName, szType, levels, file, nArraySize, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string GetTypeName( const SPropertyDesc *pDesc, const string &szFullName )
 {
 	if ( pDesc->bArray && szFullName[szFullName.size() - 1] != ']' )
@@ -248,7 +248,7 @@ const string GetTypeName( const SPropertyDesc *pDesc, const string &szFullName )
 	else
 		return pDesc->szTypeName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, const int nClassTypeID, 
 																			const string &szObjectName, const int nObjectID, const string &szFieldName )
 {
@@ -441,7 +441,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const string &szTypeName, cons
 	//
 	FinishExport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXmlExporter::ExportObject( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
 {
 	const string szFullName = MakePathName( szObjectName, szClassTypeName, szFieldName );
@@ -480,7 +480,7 @@ bool CXmlExporter::ExportObject( const string &szObjectName, const string &szCla
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXmlExporter::StartExport( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
 {
 	CObjectsStack::iterator pos = objectsStack.insert( objectsStack.end(), SObjStackEntry() );
@@ -488,12 +488,12 @@ void CXmlExporter::StartExport( const string &szObjectName, const string &szClas
 	pos->szObjectName = szObjectName;
 	pos->szFieldName = szFieldName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXmlExporter::FinishExport()
 {
 	objectsStack.pop_back();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DumpTypeNames()
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -523,7 +523,7 @@ static void DumpTypeNames()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char *s_pszTypeNames[] = 
 {
 	{ "AIExpLevel" },
@@ -738,7 +738,7 @@ static const char *s_pszTypeNames[] =
 	{ "GameRoot" },
 	{ 0 }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DumpAllObjects()
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -784,5 +784,5 @@ void DumpAllObjects()
 		DebugTrace( "***** =====> \"%s\"", szTypeName.c_str() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

@@ -16,7 +16,7 @@ namespace NDb
 {
 	struct STexture;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFormattingInfo
 {
 	enum EType
@@ -73,7 +73,7 @@ struct SFormattingInfo
 	void AddGrayFilter( DWORD _dwColor ) { cmds.push_back( SCmd( _dwColor ) ); }
 	void ChainLastCmd( int nShift = 1 ) { int nCmds = cmds.size(); cmds[ nCmds - 1 ].nChainX = nCmds - 1 - nShift; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CIconOutliner : public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_NOCOPY_METHODS(CIconOutliner);

@@ -11,10 +11,10 @@
 #include "../System/FilePath.h"
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMEGeomAttribs
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTempAttributesTool : public IExportTool
 {
 	OBJECT_NOCOPY_METHODS( CTempAttributesTool );
@@ -136,7 +136,7 @@ public:
 		}
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<CTempAttributesTool> pTempAttributesTool;
 IExportTool *GetOrCreateTempAttributesExportTool() 
 { 
@@ -145,7 +145,7 @@ IExportTool *GetOrCreateTempAttributesExportTool()
 	return pTempAttributesTool; 
 }
 void DestroyTempAttributesExportTool() { pTempAttributesTool = 0; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 {
 	if ( pMan == 0 )
@@ -171,7 +171,7 @@ granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 		CManipulatorManager::CreateManipulatorFromReference( "Models.[0].Model", pMan, 0, 0, 0 );
 	return GetAttribsByModel( pModelMan );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_file_info *GetAttribsByModel( IManipulator *pMan )
 {
 	if ( pMan == 0 )
@@ -180,7 +180,7 @@ granny_file_info *GetAttribsByModel( IManipulator *pMan )
 		CManipulatorManager::CreateManipulatorFromReference( "Geometry", pMan, 0, 0, 0 );
 	return GetAttribsByGeometry( pGeomMan );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_file_info *GetAttribsBySkeleton( IManipulator *pMan )
 {
 	if ( pMan == 0 )
@@ -195,7 +195,7 @@ granny_file_info *GetAttribsBySkeleton( IManipulator *pMan )
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
 	return GetAttribs( pUD->constUserData.szExportSourceFolder + szSrcFileName, "", szRootJoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 {
 	if ( pMan == 0 )
@@ -212,7 +212,7 @@ granny_file_info *GetAttribsByGeometry( IManipulator *pMan )
 	const SUserData *pUD = Singleton<IUserDataContainer>()->Get();
 	return GetAttribs( pUD->constUserData.szExportSourceFolder + szSrcFileName, szRootMesh, szRootJoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_file_info *GetAttribs( const string &szFileName, const string &szRootMesh, const string &szRootJoint )
 {
 	if ( szFileName.empty() || (pTempAttributesTool == 0) )
@@ -220,7 +220,7 @@ granny_file_info *GetAttribs( const string &szFileName, const string &szRootMesh
 	//
 	return pTempAttributesTool->GetAttribs( szFileName, szRootMesh, szRootJoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **ppszAttribNames, const int nNumAttribs )
 {
 	vector<granny_data_type_definition> gdtd( nNumAttribs + 1 );
@@ -235,5 +235,5 @@ void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **pps
 	//
 	GrannyConvertSingleObject( pBone->ExtendedData.Type, pBone->ExtendedData.Object, &(gdtd[0]), pDstData );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };

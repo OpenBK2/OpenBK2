@@ -8,7 +8,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRegistrySection::CRegistrySection( HKEY hKey, REGSAM samDesired, LPCTSTR pszRegistrySection )
 {
   LONG eResult = ERROR_SUCCESS;
@@ -28,7 +28,7 @@ CRegistrySection::CRegistrySection( HKEY hKey, REGSAM samDesired, LPCTSTR pszReg
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRegistrySection::~CRegistrySection()
 {
   if ( hRegistrySection != 0 )
@@ -38,7 +38,7 @@ CRegistrySection::~CRegistrySection()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LONG CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const
 {
   if ( ( pszLoadValue != 0 ) && ( hRegistrySection != 0 ) )
@@ -71,7 +71,7 @@ LONG CRegistrySection::LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue,
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LONG CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const
 {
 	return ::RegSetValueEx( hRegistrySection,
@@ -82,7 +82,7 @@ LONG CRegistrySection::SaveString( LPCTSTR pszRegistryKey, const string &szSaveV
 													szSaveValue.size() + 1 );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LONG CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, DWORD *pdwLoadValue, DWORD dwDefaultValue ) const
 {
   if ( ( pdwLoadValue != 0 ) && ( hRegistrySection != 0 ) )
@@ -115,7 +115,7 @@ LONG CRegistrySection::LoadDWORD( LPCTSTR pszRegistryKey, DWORD *pdwLoadValue, D
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LONG CRegistrySection::SaveDWORD( LPCTSTR pszRegistryKey, DWORD dwSaveValue ) const
 {
 	return ::RegSetValueEx( hRegistrySection,
@@ -125,6 +125,6 @@ LONG CRegistrySection::SaveDWORD( LPCTSTR pszRegistryKey, DWORD dwSaveValue ) co
 													reinterpret_cast<const BYTE*>( &dwSaveValue ),
 													sizeof( DWORD ) );    	
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

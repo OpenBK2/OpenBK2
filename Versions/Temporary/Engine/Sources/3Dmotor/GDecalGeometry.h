@@ -11,7 +11,7 @@ namespace NGScene
 {
 class CObjectInfo;
 const float F_DEPTH_WINDOW = 0.2f;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDecalGeometry: public CPtrFuncBase<CObjectInfo>
 {
 	OBJECT_BASIC_METHODS(CDecalGeometry);
@@ -36,7 +36,7 @@ public:
 		const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fRotation, const CVec2 &_vShift = VNULL2,
 		float fNormalEdge = -0.01f, float fDepthMargin = 1e10f );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IPart;
 class CPerPolyDecal : public CPtrFuncBase<CObjectInfo>
 {
@@ -53,7 +53,7 @@ public:
 	CPerPolyDecal() {}
 	CPerPolyDecal( IPart *pPart, const vector<CVec3> &_srcPositions );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExplosionDecalGeometry : public CPerPolyDecal
 {
 	OBJECT_BASIC_METHODS(CExplosionDecalGeometry);
@@ -69,7 +69,7 @@ public:
 	CExplosionDecalGeometry( IPart *_pPart, const vector<CVec3> &positions, const CVec3 &_vOrigin, float _fSize, float _fRotation )
 		: CPerPolyDecal(_pPart, positions), vOrigin(_vOrigin), fSize(_fSize), fRotation(_fRotation) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPerPolyDecalGeometry: public CPerPolyDecal
 {
 	OBJECT_BASIC_METHODS(CPerPolyDecalGeometry);
@@ -88,6 +88,6 @@ public:
 		const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fRotation, const CVec2 &_vShift = VNULL2 )
 		: CPerPolyDecal(_pPart, positions), vOrigin(_vOrigin), vNormal(_vNormal), vSize(_vSize), fRotation(_fRotation), vShift(_vShift) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

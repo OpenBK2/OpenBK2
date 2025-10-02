@@ -44,7 +44,7 @@ public:
 	virtual bool Is2Sided() const { return pPart->Is2Sided(); }
 	virtual int GetSortValue() const { return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightmapsHolder : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CLightmapsHolder);
@@ -89,7 +89,7 @@ public:
 		}*/
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLMPartCalc
 {
 	CObj<ISomePart> pPart;
@@ -112,7 +112,7 @@ struct SLMGroup
 
 	SLMGroup( float _fResolution = 0 ) : lmAlloc( N_LM_TEXTURE_SIZE ), fResolution(_fResolution) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightmapsTempHolder : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CLightmapsTempHolder);
@@ -121,7 +121,7 @@ public:
 	vector<SLMGroup> lmGroups;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&lmGroups); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CPtrFuncBase<CObjectInfo> *GetRawGeometry( ISomePart *pPart )
 {
 	CPtrFuncBase<CObjectInfo> *pGeom = pPart->GetObjectInfoNode();
@@ -132,7 +132,7 @@ static CPtrFuncBase<CObjectInfo> *GetRawGeometry( ISomePart *pPart )
 	ASSERT( dynamic_cast<CLMGeometryGen*>( pGeom ) == 0 );
 	return pGeom;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float CalcLMRes( const SSphere &highResLM, const SBound &partBV )
 {
 	float fDist = fabs( highResLM.ptCenter - partBV.s.ptCenter );
@@ -140,7 +140,7 @@ static float CalcLMRes( const SSphere &highResLM, const SBound &partBV )
 	f = Max( f, 0.0f );
 	return 10 / ( 1 + sqr( f / highResLM.fRadius ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddPart( const SSphere &highResLM, vector<SLMGroup> *pRes, ISomePart *pPart )
 {
 	//const CTPoint<int> &lmSize;
@@ -178,7 +178,7 @@ static void AddPart( const SSphere &highResLM, vector<SLMGroup> *pRes, ISomePart
 	}
 	g.parts.push_back( SLMPartCalc( pPart, lmPos, lmSize, fLMResolution, geomBound, lmQuads ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderParallelDepth( IRender *pRender, NGfx::CRenderContext *pRC, 
 																const SSphere &_bound, const CVec3 &vDir, const SGroupSelect &_groupSelect,
 																SDirectionalDepthInfo *pDepthInfo )
@@ -212,7 +212,7 @@ static void RenderParallelDepth( IRender *pRender, NGfx::CRenderContext *pRC,
 	MakeSingleOp( &res, geom, true, -1, 0, RO_LP_DEPTH, &depthInfo );
 	Execute( pRender, pRC, ts, res, geom, lightInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DrawBorder( NGfx::CRenderContext *pRC, int nXSize, int nYSize )
 {
 	CRectLayout borderLayout;
@@ -223,7 +223,7 @@ static void DrawBorder( NGfx::CRenderContext *pRC, int nXSize, int nYSize )
 	NGfx::C2DQuadsRenderer qr( *pRC, CVec2( nXSize, nYSize ), NGfx::QRM_DEPTH_NONE|NGfx::QRM_NOCOLOR );
 	RenderRectLayout( &qr, 0, borderLayout );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::EColorWriteMask depthChannels[3] = 
 {
 	NGfx::COLORWRITE_RED, NGfx::COLORWRITE_GREEN, NGfx::COLORWRITE_BLUE
@@ -253,7 +253,7 @@ static void RecalcDepthChannels( IRender *pRender, NGfx::CTexture *pDepth, const
 	// depth map border
 	DrawBorder( &rcDepth, N_DEFAULT_RT_RESOLUTION, N_DEFAULT_RT_RESOLUTION );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLightmapTargetGeom
 {
 	NGfx::CRenderContext *pRC;
@@ -264,7 +264,7 @@ struct SLightmapTargetGeom
 	SLightmapTargetGeom( CSceneFragments *_pGeom, NGfx::CRenderContext *_pRC, CTransformStack *_pTS ) 
 		: pGeom(_pGeom), pRC(_pRC), pTS(_pTS) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderLight( 
 												SLightmapTargetGeom *pTarget, const SLightInfo &lightInfo,
 												ERenderOperation op, ERenderOperation opTrans, CRenderCmdList::UParameter param1, 
@@ -292,7 +292,7 @@ static void RenderLight(
 	}
 	Execute( 0, &rc, *pTarget->pTS, res, *pTarget->pGeom, lightInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderSkyCheck( SLightmapTargetGeom *pTarget, 
 													 const vector<CVec3> &skyDirs, const vector<SDirectionalDepthInfo> &depthInfos,
 													 const CVec3 &vColor,
@@ -325,7 +325,7 @@ static void RenderSkyCheck( SLightmapTargetGeom *pTarget,
 	else
 		ASSERT(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void InitLightInfo( SLightInfo *pRes, const CVec3 &_vCenter, float fRadius, const CVec3 &_vColor )
 {
 	SLightInfo &lightInfo = *pRes;
@@ -334,7 +334,7 @@ static void InitLightInfo( SLightInfo *pRes, const CVec3 &_vCenter, float fRadiu
 	lightInfo.vLightPos = CVec4( _vCenter, 0 );
 	NGfx::InitRadius( &lightInfo.vRadius, fRadius );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderQuad( NGfx::CRenderContext *pRC, const CVec3 &_vCenter, const CVec3 &_vNormal, float _fRadius )
 {
 	NGfx::CRenderContext rc = *pRC;
@@ -366,7 +366,7 @@ static void RenderQuad( NGfx::CRenderContext *pRC, const CVec3 &_vCenter, const 
 	rc.SetEffect( &cl );
 	rc.DrawPrimitive( pGeom, tris );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderCubeMapDepth(
 	IRender *pRender,
 	const CVec3 &_vCenter, float fRadius, const CVec3 &_vNormal, 
@@ -430,7 +430,7 @@ static void RenderCubeMapDepth(
 			RenderQuad( &rc, _vCenter, _vNormal, fRadius );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderPointLightShadowed( 
 	SLightmapTargetGeom *pTarget, 
 	const CVec3 &_vCenter, float fRadius, const CVec3 &_vColor,
@@ -450,7 +450,7 @@ static void RenderPointLightShadowed(
 
 	RenderLight( pTarget, lightInfo, RO_CL_PNT_LIGHT_SHADOWED, RO_CL_PNT_LIGHT_SHADOWED, &info, DPM_NONE|ABM_NONE );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeLMTS( CTransformStack *pTS, CVec4 &vZ, int nLMSize )
 {
 	CTransformStack &ts = *pTS;
@@ -459,7 +459,7 @@ static void MakeLMTS( CTransformStack *pTS, CVec4 &vZ, int nLMSize )
 	m.z = vZ;
 	ts.Init( m );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSphere &_bound, 
 	const SLMGroup &lmGroup,
 	const CLightState &ls,
@@ -536,7 +536,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 	// get result
 	GetRenderTargetData( pRes, pTarget );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // calc color for all out of triangle samples from inside triangle samples
 static void FixBorders( CArray2D<NGfx::SPixel8888> *pRes, const vector<SLMQuad> &quads )
 {
@@ -562,7 +562,7 @@ static void FixBorders( CArray2D<NGfx::SPixel8888> *pRes, const vector<SLMQuad> 
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CalcLM( IRender *pRender, const CLightState &ls, SLMGroup *pRes )
 {
 	int nSize = pRes->parts.size();
@@ -622,7 +622,7 @@ static bool CalcLM( IRender *pRender, const CLightState &ls, SLMGroup *pRes )
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateLightState( IGScene *pScene, IRender *pRender, CLightState *pRes, ELightmapQuality quality )
 {
 	SLightStateCalcSeed lsSeed;
@@ -644,7 +644,7 @@ static void GenerateLightState( IGScene *pScene, IRender *pRender, CLightState *
 		ASSERT(0);
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FilterLightmappableParts( vector<ISomePart*> *pRes )
 {
 	int nDst = 0;
@@ -663,7 +663,7 @@ static void FilterLightmappableParts( vector<ISomePart*> *pRes )
 	}
 	pRes->resize( nDst );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, bool bTakeNotLoaded, vector<ISomePart*> *pRes )
 {
 	CTransformStack ts;
@@ -711,7 +711,7 @@ static void CollectParts( IRender *pRender, CObjectBase *pUser, int nUserID, boo
 	}
 	FilterLightmappableParts( pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CLightmapsHolder *CombineLightmaps( const vector<SLMGroup> &groups )
 {
 	CLightmapsHolder *pRes = new CLightmapsHolder;
@@ -753,7 +753,7 @@ static CLightmapsHolder *CombineLightmaps( const vector<SLMGroup> &groups )
 
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder )
 {
 	return CombineLightmaps( pTmpHolder->lmGroups );
@@ -762,7 +762,7 @@ CLightmapsTempHolder *CreateLightmapsTempHolder()
 {
 	return new  CLightmapsTempHolder();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, int nUserID, 
 	const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder )
 {
@@ -835,7 +835,7 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase 
 
 	return CombineLightmaps( lmGroups );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD  )
 {
 	
@@ -906,7 +906,7 @@ const CArray2D< NGfx::SPixel8888>& CLightmapsLoader::GetTexture(int UID)
 
 	return pLM.GetPtr()->textures[UID];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLightmapsHolder* CLightmapsLoader::GetHolder()
 {
 	if (pLM == 0)
@@ -921,7 +921,7 @@ CLightmapsHolder* CLightmapsLoader::GetHolder()
 	return pLM.GetPtr();
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightmapsLoader::ReleaseHint()
 {
 	nUseCount++;

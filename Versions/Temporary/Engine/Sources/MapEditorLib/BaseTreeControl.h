@@ -5,7 +5,7 @@
 #include "ControlConfig.h"
 #include "ControlData.h"
 #include "ControlSelection.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // funtionality															struct	algorithm
 // item data expansion / storage						*
 // sort by any column												*
@@ -51,5 +51,5 @@ class CBaseTreeControl
 	CStringControlSelection controlSelection;
 	CControlConfig controlConfig;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__BASE_TREE_CONTROL__)

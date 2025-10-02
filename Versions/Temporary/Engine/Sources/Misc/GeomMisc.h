@@ -7,7 +7,7 @@
 // get MSb
 #define FP_SIGN_BIT( fp ) ( FP_BITS( fp ) & 0x80000000 )
 #define FP_SIGN_BIT_CONST( fp ) ( FP_BITS_CONST( fp ) & 0x80000000 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define FP_NORM_TO_BYTE(i,p)            \
 {                                       \
 	float _n = (p) + 1.0f;                \
@@ -43,7 +43,7 @@ inline DWORD GetFloatBits( float fVal )
 	u.f = fVal;
 	return ( DWORD(u.c[3]) << 24L ) | ( DWORD(u.c[2]) << 16L ) | ( DWORD(u.c[1]) << 8L ) | DWORD( u.c[0] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline DWORD PackDWORD( const WORD high, const WORD low ) 
 { 
 	return ( DWORD(high) << 16 ) | DWORD(low); 
@@ -66,7 +66,7 @@ inline float fabsxyz2( const CVec4 &a ) { return fabs2( a.x, a.y, a.z ); }
 inline float fabsxyz( const CVec4 &a ) { return fabs( a.x, a.y, a.z ); }
 inline float fabsxy2( const CVec4 &a ) { return fabs2( a.x, a.y ); }
 inline float fabsxy( const CVec4 &a ) { return fabs( a.x, a.y ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** bresenham's line algorithm classes and functions for 2D and 3D lines
@@ -74,7 +74,7 @@ inline float fabsxy( const CVec4 &a ) { return fabs( a.x, a.y ); }
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBresenham3
 {
 	int x1, y1, z1;
@@ -139,9 +139,9 @@ template <class TFunctional>
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma pack(pop)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** Bresenham circle function
@@ -149,7 +149,7 @@ template <class TFunctional>
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TFunctional>
 void BresenhamCircle( int nCenterX, int nCenterY, int nRadius, TFunctional &func )
 {
@@ -185,7 +185,7 @@ void BresenhamCircle( int nCenterX, int nCenterY, int nRadius, TFunctional &func
 	func( nCenterX, nCenterY + nRadius );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TFunctional>
 void BresenhamFilledCircle( int nCenterX, int nCenterY, int nRadius, TFunctional &func )
 {
@@ -230,7 +230,7 @@ void BresenhamFilledCircle( int nCenterX, int nCenterY, int nRadius, TFunctional
 	func( nCenterX, nCenterY + nRadius );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** Bresenham ellipse function
@@ -238,7 +238,7 @@ void BresenhamFilledCircle( int nCenterX, int nCenterY, int nRadius, TFunctional
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TFunctional>
 void BresenhamEllipse( int nCenterX, int nCenterY, int nXRadius, float fY2XRatio, TFunctional &func )
 {
@@ -274,7 +274,7 @@ void BresenhamEllipse( int nCenterX, int nCenterY, int nXRadius, float fY2XRatio
 	func( nCenterX, nCenterY + nXRadius * fY2XRatio );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TFunctional>
 void BresenhamFilledEllipse( int nCenterX, int nCenterY, int nRadius, float fY2XRatio, TFunctional &func )
 {
@@ -320,7 +320,7 @@ void BresenhamFilledEllipse( int nCenterX, int nCenterY, int nRadius, float fY2X
 	func( nCenterX, nCenterY + nXRadius * fY2XRatio );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** viewing matrix creation. RH => right-handed coordinate system, LH => left-handed coordinate system
@@ -328,7 +328,7 @@ void BresenhamFilledEllipse( int nCenterX, int nCenterY, int nRadius, float fY2X
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // low-level creation
 inline void CreateViewMatrix( SHMatrix *pRes, const CVec3 &vX, const CVec3 &vY, const CVec3 &vZ, const CVec3 &vO )
 {
@@ -409,7 +409,7 @@ inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &vFrom, const CVec3 
 	//
 	CreateViewMatrix( pRes, vX, vY, vZ, vFrom );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** direct transform (texel-to-pixel) matrix creation
@@ -417,7 +417,7 @@ inline void CreateViewMatrixLH( SHMatrix *pRes, const CVec3 &vFrom, const CVec3 
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CreateDirectTransformMatrix( SHMatrix *pRes, const float fWidth, const float fHeight )
 {
 	Zero( *pRes );
@@ -427,10 +427,10 @@ inline void CreateDirectTransformMatrix( SHMatrix *pRes, const float fWidth, con
 	pRes->_24 = 1.0 + 1.0f / fHeight;
 	pRes->_33 = pRes->_44 = 1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //const SHMatrix MNULL = SHMatrix( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 //const SHMatrix MONE  = SHMatrix( 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** projection matrix creation. RH => right-handed coordinate system, LH => left-handed coordinate system
@@ -438,7 +438,7 @@ inline void CreateDirectTransformMatrix( SHMatrix *pRes, const float fWidth, con
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // perspective projection matrix
 inline void CreatePerspectiveProjectionMatrixLH( SHMatrix *pRes, float fov, float fAspect, float fNear, float fFar )
 {

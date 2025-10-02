@@ -11,7 +11,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -26,28 +26,28 @@ bool CBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObj
 	return pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderBase::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->CopyObject( rszObjectTypeName, rszDestination, rszSource );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderBase::RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->RenameObject( rszObjectTypeName, rszDestination, rszSource );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderBase::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, false );
 }
 /**
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool HierarchicalDelete( const string &szObjectTypeName, const string &szObjectName )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -69,6 +69,6 @@ bool HierarchicalDelete( const string &szObjectTypeName, const string &szObjectN
 	return false;
 }
 /**/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -29,7 +29,7 @@
 #include "AILogicInternal.h"
 #include "../DebugTools/DebugInfoManager.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CWeather theWeather;
 extern CScripts *pScripts;
 extern CSupremeBeing theSupremeBeing;
@@ -39,18 +39,18 @@ extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 extern CShellsStore theShellsStore;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float g_fBombDiveDistance = 0.0f;
 static const float LEAVE_DISSAPEAR_DISTANCE = 512.0f;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(SuicideVars)
 REGISTER_VAR_EX( "AI.Aviation.FAU2_DiveDistance", NGlobal::VarFloatHandler, &g_fBombDiveDistance, 0.0f, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneStatesFactory													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtr<CPlaneStatesFactory> CPlaneStatesFactory::pFactory = 0;
 
 IStatesFactory* CPlaneStatesFactory::Instance()
@@ -60,7 +60,7 @@ IStatesFactory* CPlaneStatesFactory::Instance()
 
 	return pFactory;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
@@ -81,7 +81,7 @@ bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_PATROL
 		);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
 {
 	NI_ASSERT( dynamic_cast<CAviation*>( pObj ) != 0, "Wrong unit type" );
@@ -231,24 +231,24 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CPlaneStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
 	NI_ASSERT( dynamic_cast<CAviation*>( pUnit ) != 0, "Wrong unit type" );
 	return new CPlaneRestState( checked_cast<CAviation*>( pUnit ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlanePatrolState*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneSwarmToState::CPlaneSwarmToState( CAviation *pUnit, const CVec2 &_vPoint, const bool _bScanForTarget )
 : CPlanePatrolState( pUnit ), eState( PSTS_ESTIMATING ),
 	CPlaneDeffensiveFire( pUnit ), bScanForTarget( _bScanForTarget )
 {
 	AddPoint( _vPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneSwarmToState::Segment()
 {
 	switch( eState )
@@ -274,24 +274,24 @@ void CPlaneSwarmToState::Segment()
 	PathSegment();
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneSwarmToState::TryInterruptState( class CAICommand *pCommand )
 {
 	
 	pPlane->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneScoutState*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneScoutState::CPlaneScoutState ( CAviation *_pPlane  ) 
 : CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
 	eState( EPSS_GOTO_GUARDPOINT )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneScoutState::Segment()
 {
 	if ( pPlane->GetNextCommand() != 0 && pPlane->GetNextCommand()->ToUnitCmd().nCmdType == ACTION_COMMAND_PATROL )
@@ -327,23 +327,23 @@ void CPlaneScoutState::Segment()
 		eState = EPSS_ESCAPE;
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneScoutState::TryInterruptState( class CAICommand *pCommand )
 {
 	pPlane->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneDeffensiveFire*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneDeffensiveFire::CPlaneDeffensiveFire( class CAviation *pPlane ) 
 : timeLastBSUUpdate( 0 ), pOwner( pPlane )
 {  
 	pDefShootEstimator = new CPlaneDeffensiveFireShootEstimator( pPlane );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneDeffensiveFire::AnalyzeBSU()
 {
 	if ( curTime - timeLastBSUUpdate > SConsts::AA_BEH_UPDATE_DURATION )
@@ -381,11 +381,11 @@ void CPlaneDeffensiveFire::AnalyzeBSU()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlanePatrolState*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlanePatrolState::CPlanePatrolState( CAviation *_pPlane )
 	: pPlane( _pPlane ), nCurPointIndex( 0 ),
 	enemie( _pPlane ), timeNextScan( curTime ), bEconomyMode ( false )
@@ -393,7 +393,7 @@ CPlanePatrolState::CPlanePatrolState( CAviation *_pPlane )
 	pShootEstimator = new CPlaneShturmovikShootEstimator( pPlane );
 	AdvancePlane();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::IsBombsPresent() const
 {
 	bool bPresent = false;
@@ -410,13 +410,13 @@ bool CPlanePatrolState::IsBombsPresent() const
 	}
 	return bPresent;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::Escape()
 {
 	pPlane->SetCommandFinished();
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE), pPlane, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAviation * CPlanePatrolState::FindBetterEnemiyPlane( CAviation * pEnemie, const CVec2 &vPoint, const float fRadius ) const
 {
 	CPtr<CAviation> pBetter; 
@@ -467,7 +467,7 @@ CAviation * CPlanePatrolState::FindBetterEnemiyPlane( CAviation * pEnemie, const
 	}
 	return pEnemie;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::FindNewGroundEnemie( const CVec2 &vPoint, const float fRadius )
 {
 	pShootEstimator->Reset( 0, true, 0 );
@@ -487,7 +487,7 @@ bool CPlanePatrolState::FindNewGroundEnemie( const CVec2 &vPoint, const float fR
 
 	return enemie.IsValid();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::DisableBombAbility()
 {
 	CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
@@ -501,12 +501,12 @@ void CPlanePatrolState::DisableBombAbility()
 
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pPlane, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CanAttackEnemy( CAIUnit *pEnemy ) const
 {
 	return pPlane != pEnemy && ( pPlane->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pEnemy->GetStats()->etype != RPG_TYPE_AVIA_BOMBER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAviation * CPlanePatrolState::FindNewEnemyPlane( const CVec2 &vPoint, const float fRadius ) const
 {
 	CPtr<CAviation> pEnemie;
@@ -547,7 +547,7 @@ CAviation * CPlanePatrolState::FindNewEnemyPlane( const CVec2 &vPoint, const flo
 	}
 	return pEnemie;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::TargetScan()
 {
 	bool bFoundEnemy = false;
@@ -585,23 +585,23 @@ bool CPlanePatrolState::TargetScan()
 	}
 	return bFoundEnemy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::AddPoint( const CVec2 &vAddPoint )
 {
 	vPatrolPoints.push_back( vAddPoint + pPlane->GetGroupShift() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::SetPoint( const CVec2 &_vPoint )
 {
 	InternalSetPoint( _vPoint, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::InternalSetPoint( const CVec2 &_vPoint, const bool _bAttackState )
 {
 	vPatrolPoints.clear();
 	vPatrolPoints.push_back( _vPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::AdvancePlane()
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -616,7 +616,7 @@ void CPlanePatrolState::AdvancePlane()
 		bEconomyMode = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::PathSegment()
 {
 	AdvancePlane();
@@ -628,7 +628,7 @@ bool CPlanePatrolState::PathSegment()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::InitPathToEnemyPlane( class CPlanesFormation *_pEnemy )
 {
 	CPlanesFormation * pFormation = pPlane->GetPlanesFormation();
@@ -638,7 +638,7 @@ void CPlanePatrolState::InitPathToEnemyPlane( class CPlanesFormation *_pEnemy )
 		bEconomyMode = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::InitPathToPoint( const CVec3 &vPoint, const bool _bEconomyMode, const bool _bToHorisontal )
 {
 	CPlanesFormation * pFormation = pPlane->GetPlanesFormation();
@@ -658,11 +658,11 @@ void CPlanePatrolState::InitPathToPoint( const CVec3 &vPoint, const bool _bEcono
 		bEconomyMode = _bEconomyMode;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //*										  CPlaneRestState *
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 : CPlanePatrolState( pUnit ), CPlaneDeffensiveFire( pUnit )
 {
@@ -714,7 +714,7 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 		// InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneRestState::Segment()
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -732,19 +732,19 @@ void CPlaneRestState::Segment()
 	}
  	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneRestState::TryInterruptState( class CAICommand *pCommand )
 {
 	
 	pPlane->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //*******************************************************************
 //*										  CPlaneBombState															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint )
 : CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
 	eState( ECBS_ESTIMATE ), fInitialHeight ( _pPlane->GetCenter().z ), 
@@ -755,7 +755,7 @@ CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint )
 	//TODO{ check bHaveBombs and refuse to attack if no bombs
 	//TODO}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CPlaneBombState::RecalcStartAttack() const
 {
 	float fStartAttackDist = 0.0f;
@@ -786,7 +786,7 @@ float CPlaneBombState::RecalcStartAttack() const
 	}
 	return fStartAttackDist;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneBombState::Segment()
 {
 	switch ( eState )
@@ -891,7 +891,7 @@ void CPlaneBombState::Segment()
 	PathSegment();
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneBombState::TryInterruptState( class CAICommand *pCommand )
 {
 	
@@ -899,11 +899,11 @@ ETryStateInterruptResult CPlaneBombState::TryInterruptState( class CAICommand *p
 	return TSIR_YES_IMMIDIATELY;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneParaDropState													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneParaDropState::CPlaneParaDropState ( CAviation *pPlane, const enum EActionLeaveParam param, const CVec2 &vLandPoint, CFormation *_pSquad ) 
 : CPlanePatrolState( pPlane ), 
 	CPlaneDeffensiveFire( pPlane ), nDroppingSoldier( 0 ),
@@ -919,7 +919,7 @@ CPlaneParaDropState::CPlaneParaDropState ( CAviation *pPlane, const enum EAction
 	else
 		eState = PPDS_PREPARE_TO_DROP;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneParaDropState::CanDrop( const CVec2 & point )
 {
 	if ( !GetAIMap()->IsTileInside( AICellsTiles::GetTile( point ) ) )
@@ -940,7 +940,7 @@ bool CPlaneParaDropState::CanDrop( const CVec2 & point )
 	//fall to locked tile ( death will occur )
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneParaDropState::Segment()
 {
 	bool bRepeat = true;
@@ -1054,7 +1054,7 @@ void CPlaneParaDropState::Segment()
 	PathSegment();
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneParaDropState::TryInterruptState( CAICommand *pCommand )
 {
 	if ( !pCommand )
@@ -1081,16 +1081,16 @@ ETryStateInterruptResult CPlaneParaDropState::TryInterruptState( CAICommand *pCo
 	pPlane->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CPlaneParaDropState::GetPurposePoint() const
 {
 	return GetPoint();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneLeaveState														*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneLeaveState::CPlaneLeaveState( CAviation *_pPlane )
 : eState( EPLS_STARTING ), 
 	CPlanePatrolState( _pPlane ),
@@ -1106,7 +1106,7 @@ CPlaneLeaveState::CPlaneLeaveState( CAviation *_pPlane )
 
 	InitPathToPoint( CVec3( vAwayPoint, pPlane->GetCenter().z ), true, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneLeaveState::Segment()
 {
 	switch( eState )
@@ -1132,7 +1132,7 @@ void CPlaneLeaveState::Segment()
 
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneLeaveState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( 0 == pCommand )
@@ -1145,7 +1145,7 @@ ETryStateInterruptResult CPlaneLeaveState::TryInterruptState( class CAICommand *
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CPlaneLeaveState::GetPurposePoint() const
 {
 	if ( pPlane && pPlane->IsRefValid() && pPlane->IsAlive() )
@@ -1156,28 +1156,28 @@ const CVec2 CPlaneLeaveState::GetPurposePoint() const
 	else
 		return CVec2( -1.0f, -1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneFighterPatrolState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit* CPlaneFighterPatrolState::GetTargetUnit() const 
 { 
 	return pEnemie;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneFighterPatrolState::IsAttacksUnit() const 
 { 
 	return IsValidObj( pEnemie );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneFighterPatrolState::SetNewEnemy( CAviation *pNewEnemy, CAviation *pCompareEnemy )
 {
 	pEnemie = pNewEnemy;
 	enemie.SetUnitEnemy( pNewEnemy );
 	return pNewEnemy != pCompareEnemy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneFighterPatrolState::CPlaneFighterPatrolState ( CAviation *_pPlane, const CVec2 &_vPoint, CAviation *pTarget )
 : CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
 	eState( ECFS_GOTO_GUARDPOINT ), 
@@ -1197,13 +1197,13 @@ CPlaneFighterPatrolState::CPlaneFighterPatrolState ( CAviation *_pPlane, const C
 		//TODO}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneFighterPatrolState::IsEnemyAlive( CAviation *pEnemie ) const 
 {
 	return IsValid( pEnemie ) && pEnemie->IsAlive() &&
 		EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), pEnemie->GetPlayer() ) ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFighterPatrolState::Segment()
 {
 	if ( pPlane->GetNextCommand() != 0 && pPlane->GetNextCommand()->ToUnitCmd().nCmdType == ACTION_COMMAND_PATROL )
@@ -1338,7 +1338,7 @@ void CPlaneFighterPatrolState::Segment()
 		eState = ECFS_ESCAPE;
 	AnalyzeBSU();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFighterPatrolState::TryInitPathToEnemie( const bool _bNewEnemy )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -1348,7 +1348,7 @@ void CPlaneFighterPatrolState::TryInitPathToEnemie( const bool _bNewEnemy )
 		nextPathUpdate = curTime + 1000;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneFighterPatrolState::TryInterruptState( class CAICommand *pCommand )
 {
 	vPatrolPoints.clear();
@@ -1356,17 +1356,17 @@ ETryStateInterruptResult CPlaneFighterPatrolState::TryInterruptState( class CAIC
 	FinishState();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFighterPatrolState::FinishState()
 {
 	pPlane->SetCommandFinished();
 	SetNewEnemy( 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CEnemyContainer															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::CEnemyContainer::SetBuildingEnemy( CBuilding * _pBuilding )
 {
 	if ( pEnemy )
@@ -1374,7 +1374,7 @@ void CPlanePatrolState::CEnemyContainer::SetBuildingEnemy( CBuilding * _pBuildin
 	SetUnitEnemy( 0 );
 	pBuilding = _pBuilding;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CEnemyContainer::CanBreakTarget( const bool bBombsAllowed )
 {
 	if ( IsValidBuilding() )
@@ -1390,7 +1390,7 @@ bool CPlanePatrolState::CEnemyContainer::CanBreakTarget( const bool bBombsAllowe
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 {
 	if ( pEnemy == pNewEnemy ) return;
@@ -1414,7 +1414,7 @@ void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 	}
 	pEnemy = pNewEnemy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CEnemyContainer::CanShootToTarget( class CBasicGun *pGun ) const
 {
 	if ( IsValidUnit() )
@@ -1424,7 +1424,7 @@ bool CPlanePatrolState::CEnemyContainer::CanShootToTarget( class CBasicGun *pGun
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlanePatrolState::CEnemyContainer::StartBurst( class CBasicGun *pGun )
 {
 	if ( IsValidUnit() )
@@ -1432,7 +1432,7 @@ void CPlanePatrolState::CEnemyContainer::StartBurst( class CBasicGun *pGun )
 	if ( IsValidBuilding() )
 		pGun->StartPointBurst( GetCenter(), false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CPlanePatrolState::CEnemyContainer::GetZ() const 
 {
 	if ( IsValidUnit() )
@@ -1442,7 +1442,7 @@ float CPlanePatrolState::CEnemyContainer::GetZ() const
 	NI_ASSERT( false, "asked invalid target about Z" );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CPlanePatrolState::CEnemyContainer::GetCenter() const
 {
 	if ( IsValidUnit() )
@@ -1452,12 +1452,12 @@ CVec2 CPlanePatrolState::CEnemyContainer::GetCenter() const
 	NI_ASSERT( false, "asked invalid target about attack center" );
 	return VNULL2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit * CPlanePatrolState::CEnemyContainer::GetGroundEnemy()
 {
 	return IsValidUnit() && !pEnemy->GetStats()->IsAviation() ? pEnemy : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAviation * CPlanePatrolState::CEnemyContainer::GetAviationEnemy()
 {
 	if ( IsValidUnit() && pEnemy->GetStats()->IsAviation() )
@@ -1467,18 +1467,18 @@ CAviation * CPlanePatrolState::CEnemyContainer::GetAviationEnemy()
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBuilding * CPlanePatrolState::CEnemyContainer::GetBuilding()
 {
 	return IsValidBuilding() ? pBuilding : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CEnemyContainer::IsValidBuilding() const
 {
 	return IsValidObj( pBuilding ) &&
 		EDI_ENEMY == theDipl.GetDiplStatus( pBuilding->GetPlayer(), pOwner->GetPlayer() ) ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CEnemyContainer::IsValidUnit() const
 {
 	//CRAP{ TO FAST START
@@ -1486,16 +1486,16 @@ bool CPlanePatrolState::CEnemyContainer::IsValidUnit() const
 		//EDI_ENEMY == theDipl.GetDiplStatus( pEnemy->GetPlayer(), pOwner->GetPlayer() ) ;
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlanePatrolState::CEnemyContainer::IsValid() const
 {
 	return IsValidUnit() || IsValidBuilding();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneShturmovikPatrolState *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState ( CAviation *_pPlane, const CVec2 &_vPoint, CAIUnit *pTarget, CBuilding *pBuilding, const bool _bMustDropBombs ) 
 : CPlanePatrolState( _pPlane ),
 	CPlaneDeffensiveFire( _pPlane ),
@@ -1547,7 +1547,7 @@ CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState ( CAviation *_pPlane, c
 		//TODO}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::OnFindEnemy()
 {
 	if ( enemie.IsValid() || FindNewGroundEnemie( GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS ) )
@@ -1559,7 +1559,7 @@ void CPlaneShturmovikPatrolState::OnFindEnemy()
 	else
 		eState = PSPS_AIM_TO_NEXT_POINT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::OnTurnToTarget()
 {
 	if ( !enemie.IsValid() )
@@ -1573,7 +1573,7 @@ void CPlaneShturmovikPatrolState::OnTurnToTarget()
 		eState = PSPS_TURNING_TO_TARGET;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::Segment()
 {
 	if ( pPlane->GetNextCommand() != 0 && pPlane->GetNextCommand()->ToUnitCmd().nCmdType == ACTION_COMMAND_PATROL )
@@ -1827,13 +1827,13 @@ void CPlaneShturmovikPatrolState::Segment()
 	if ( PathSegment() && PSPS_ESCAPE != eState )
 		eState = PSPS_ESCAPE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneShturmovikPatrolState::IsTargetBehind( const CVec2 &vTarget ) const
 {
 	const CVec2 vDist = vTarget - pPlane->GetCenterPlain();
 	return DirsDifference( GetDirectionByVector( vDist ), pPlane->GetFrontDirection() /* GetDirectionByVector( pPlane->GetSpeed() ) */ ) > 65535/4;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
 {
 	const CVec3 vSpeed( pPlane->GetSpeedB2() );
@@ -1861,7 +1861,7 @@ void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::TryDropBombs()
 {
 	const CVec3 vSpeed3 ( pPlane->GetSpeedB2() );
@@ -1898,7 +1898,7 @@ void CPlaneShturmovikPatrolState::TryDropBombs()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::TryBurstAllGuns()
 {
 	// do not burst durin gain height
@@ -1919,7 +1919,7 @@ void CPlaneShturmovikPatrolState::TryBurstAllGuns()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInFiringSector()
 {
 	const CVec3 vCurPoint( pPlane->GetPosB2() );
@@ -1946,7 +1946,7 @@ CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInFiringSector()
 	}
 	return pShootEstimator->GetBestUnit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector() 
 {
 	CVec3 vSpeed = pPlane->GetSpeedB2();
@@ -1988,7 +1988,7 @@ CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
 	}
 	return pShootEstimator->GetBestUnit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::TryInitPathToEnemie( const bool bForceNewPath )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -2001,7 +2001,7 @@ void CPlaneShturmovikPatrolState::TryInitPathToEnemie( const bool bForceNewPath 
 			InitPathToPoint( CVec3( enemie.GetCenter(), enemie.GetZ() ), false, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::TryInitPathToPoint( const CVec3 &_vPos, const bool _bNewPoint, const bool _bToHorisontal )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -2009,7 +2009,7 @@ void CPlaneShturmovikPatrolState::TryInitPathToPoint( const CVec3 &_vPos, const 
 		InitPathToPoint( _vPos, false, _bToHorisontal );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneShturmovikPatrolState::TryInterruptState( class CAICommand *pCommand )
 {
 	vPatrolPoints.clear();
@@ -2018,17 +2018,17 @@ ETryStateInterruptResult CPlaneShturmovikPatrolState::TryInterruptState( class C
 	FinishState();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneShturmovikPatrolState::FinishState()
 {
 	pPlane->SetCommandFinished();
 	enemie.SetUnitEnemy( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CPlaneFlyDeadState													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneFlyDeadState::CPlaneFlyDeadState ( CAviation *_pPlane )
 : eState( EPDS_START_DIVE ), timeStart( curTime ), bExplodeInstantly( true ),
 	fHeight( 0.0f ), bFatality( false ), CPlanePatrolState( _pPlane ), bGroundCrash( false )
@@ -2051,7 +2051,7 @@ CPlaneFlyDeadState::CPlaneFlyDeadState ( CAviation *_pPlane )
 
 	deadZone.Init();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFlyDeadState::CDeadZone::Init() 
 {
 	fMaxX = GetAIMap()->GetSizeX() * SConsts::TILE_SIZE + 3000;
@@ -2059,7 +2059,7 @@ void CPlaneFlyDeadState::CDeadZone::Init()
 	fMinX = -3000;
 	fMinY = -3000;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 * pPoint )
 {
 	const float fXMaxDiff = fabs(pPoint->x - fMaxX);
@@ -2085,12 +2085,12 @@ void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 * pPoint )
 			pPoint->y = fMaxY;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPlaneFlyDeadState::CDeadZone::IsInZone( const CVec2 &vPoint )
 {
 	return vPoint.x < fMinX || vPoint.x > fMaxX || vPoint.y < fMinY || vPoint.y > fMaxY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFlyDeadState::InitPathToNearestPoint()
 {
 	const CVec2 vDirVector( pPlane->GetDirVector() );
@@ -2102,7 +2102,7 @@ void CPlaneFlyDeadState::InitPathToNearestPoint()
 	if ( pFormation )
 		pFormation->CreatePointManuver( CVec3(vPoint,Max(SPlanesConsts::GetMinHeight(),pPlane->GetCenter().z * 0.8f)), true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneFlyDeadState::Segment()
 {
 	switch( eState )
@@ -2177,7 +2177,7 @@ void CPlaneFlyDeadState::Segment()
 	PathSegment();
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneFlyDeadState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( !pCommand || ACTION_COMMAND_DISAPPEAR == pCommand->ToUnitCmd().nCmdType )
@@ -2187,7 +2187,7 @@ ETryStateInterruptResult CPlaneFlyDeadState::TryInterruptState( class CAICommand
 	}
 	return TSIR_YES_WAIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CPlaneFlyDeadState::GetPurposePoint() const 
 {
 	if ( pPlane && pPlane->IsRefValid() && pPlane->IsAlive() )	
@@ -2198,9 +2198,9 @@ const CVec2 CPlaneFlyDeadState::GetPurposePoint() const
 	else
 		return CVec2( -1.0f, -1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPlaneSuicideState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarget )
 : pPlane( _pPlane ), eState( EPSS_START ), vTarget( _vTarget ), pWeapon( 0 ), fDistToDive2( 0.0f )
 {
@@ -2224,7 +2224,7 @@ CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarge
 	const CPlanePreferences &planePrefs = pPlane->GetPreferencesB2();
 	fDistToDive2 = sqr( Max( planePrefs.GetR( fabs( pPlane->GetSpeedB2() ) ), g_fBombDiveDistance ) );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlaneSuicideState::Segment()
 {
 	switch( eState )
@@ -2272,7 +2272,7 @@ void CPlaneSuicideState::Segment()
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	pFormation->Advance( SConsts::AI_SEGMENT_DURATION );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CPlaneSuicideState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( !pCommand || ACTION_COMMAND_DISAPPEAR == pCommand->ToUnitCmd().nCmdType )
@@ -2282,7 +2282,7 @@ ETryStateInterruptResult CPlaneSuicideState::TryInterruptState( class CAICommand
 	}
 	return TSIR_YES_WAIT;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D489, CPlaneStatesFactory );
 REGISTER_SAVELOAD_CLASS( 0x1108D48B, CPlaneBombState );
 REGISTER_SAVELOAD_CLASS( 0x1108D46B, CPlaneParaDropState );

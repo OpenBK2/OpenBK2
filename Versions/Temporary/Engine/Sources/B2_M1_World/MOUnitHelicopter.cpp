@@ -15,14 +15,14 @@ typedef hash_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x31197AC0, CMOUnitHelicopter );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int GetAttachedGunID( const int nPlatform, const int nGun )
 {
 	return (nPlatform << 6) | nGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 {
 	if ( !bIsInitializedByDB )
@@ -48,7 +48,7 @@ static const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 		return iconsSetDefault;
 	return it->second;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitHelicopter::Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	if ( !CMOUnit::Create( nUniqueID, pUpdate, eSeason, eDayTime, bInEditor ) )
@@ -100,7 +100,7 @@ bool CMOUnitHelicopter::Create( const int nUniqueID, const SAIBasicUpdate *pUpda
 
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::SetPropellersSpeed( const float _fPropSpeed, NDb::ESeason eSeason )
 {
 	if ( fPropSpeed == _fPropSpeed )
@@ -209,7 +209,7 @@ void CMOUnitHelicopter::SetPropellersSpeed( const float _fPropSpeed, NDb::ESeaso
 	}
 	fPropSpeed = _fPropSpeed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene )
 {
 /*
@@ -231,7 +231,7 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateMovement( const NTimer::STim
 */
 	return CMOUnit::AIUpdateMovement( time, _bMove, pScene, pSoundScene );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
@@ -247,7 +247,7 @@ void CMOUnitHelicopter::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			(*it)->UpdatePlacement( vPos, qRot, currTime, IsVisible() );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStatsLocal()->fMaxHP;
@@ -260,7 +260,7 @@ IClientUpdatableProcess* CMOUnitHelicopter::AIUpdateRPGStats( const SAINotifyRPG
 		return CMOUnit::AIUpdateRPGStats( notify, pAckManager, eSeason );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::ESeason eSeason )
 {
 	DetachSound( EAST_MOVEMENT );
@@ -311,7 +311,7 @@ void CMOUnitHelicopter::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate, NDb::
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitHelicopter::IsInside( const int nID )
 {
 	for ( vector< CPtr<CMOSelectable> >::const_iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
@@ -321,7 +321,7 @@ bool CMOUnitHelicopter::IsInside( const int nID )
 	}
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CMOUnitHelicopter::UpdateIcons()
 {
 	SetIconsHitbar( IsVisible(), IsSelected() );
@@ -329,7 +329,7 @@ bool CMOUnitHelicopter::IsInside( const int nID )
 
 	CMOUnit::UpdateIcons();
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::Select( bool bSelect )
 {
 	//#define SHOW_UNIT_SELECTION
@@ -343,7 +343,7 @@ void CMOUnitHelicopter::Select( bool bSelect )
 	CMOSelectable::Select( bSelect );
 	UpdateIcons();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitHelicopter::Load( interface IMOUnit *pMO, bool bEnter )
 {
 	const int nID = pMO->GetID();
@@ -373,7 +373,7 @@ bool CMOUnitHelicopter::Load( interface IMOUnit *pMO, bool bEnter )
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitHelicopter::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
@@ -405,7 +405,7 @@ bool CMOUnitHelicopter::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_VERIFY( pBuffer, "Wrong pointer", return );
@@ -413,17 +413,17 @@ void CMOUnitHelicopter::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 	for ( int i = 0; i < vPassangers.size(); ++i )
 		(*pBuffer)[i] = vPassangers[i];
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnitHelicopter::GetFreePlaces() const
 {
 	return pStats->nPassangers-(vPassangers.size() - GetMechPassangersCount());
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnitHelicopter::GetFreeMechPlaces() const
 {
 	return pStats->boardedMechUnitPosition.size() - GetMechPassangersCount();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMOUnitHelicopter::GetMechPassangersCount() const
 {
 	int nCount = 0;
@@ -434,7 +434,7 @@ const int CMOUnitHelicopter::GetMechPassangersCount() const
 	}
 	return nCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc )
 {
 	const int nID = GetID();
@@ -464,7 +464,7 @@ void CMOUnitHelicopter::InitAttached( const NDb::ESeason eSeason, IChooseAttache
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
 {																																								
 	const SAINotifyMechShot &shot = *( static_cast<const SAINotifyMechShot*>(&_shot) );
@@ -532,7 +532,7 @@ void CMOUnitHelicopter::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
 {
 	const int nID = GetID();
@@ -578,10 +578,10 @@ CMOProjectile* CMOUnitHelicopter::LaunchProjectile( const SAINewProjectileUpdate
 	else
 		return 0;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitHelicopter::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	DetachSound( EAST_MOVEMENT );
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

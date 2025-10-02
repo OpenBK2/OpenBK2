@@ -3,9 +3,9 @@
 #include "PathFractionComplex.h"
 class CPathFractionArc3D;
 class CPathFractionLine;
-/////////////////////////////////////////////////////////////////////////////
+
 //	CPathFractionArcLine3D
-/////////////////////////////////////////////////////////////////////////////
+
 // sircle arc - line path fraction (in 3D)
 // v1 in x1 doesn't matter. the only thing is that whole maneuver is in 1 plane (v0, x1-x0)
 class CPathFractionArcLine3D : public CPathFractionComplexBase

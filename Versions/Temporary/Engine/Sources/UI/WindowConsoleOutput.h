@@ -6,7 +6,7 @@ struct SWindowEditLine;
 class CWindowEditLine;
 
 interface IML;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 {
 	OBJECT_BASIC_METHODS(CWindowConsoleOutput)

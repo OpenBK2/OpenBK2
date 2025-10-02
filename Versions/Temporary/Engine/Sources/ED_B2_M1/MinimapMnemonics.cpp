@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "dbminimap.h"
 #include "MinimapMnemonics.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMinimapLayerMnemonics::CMinimapLayerMnemonics() : 
 CMnemonicsCollector<int>( NDb::LAYER_UNKNOWN, "LAYER_UNKNOWN" )
 {
@@ -23,7 +23,7 @@ CMnemonicsCollector<int>( NDb::LAYER_UNKNOWN, "LAYER_UNKNOWN" )
 	Insert( NDb::LAYER_OCEAN,			"LAYER_OCEAN" );
 	Insert( NDb::LAYER_TERRAIN,		"LAYER_TERRAIN" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImageScaleMethod::CImageScaleMethod() : 
 CMnemonicsCollector<int>( NDb::IMAGE_SCALE_METHOD_DEFAULT, "IMAGE_SCALE_METHOD_DEFAULT" )
 {
@@ -36,7 +36,7 @@ CMnemonicsCollector<int>( NDb::IMAGE_SCALE_METHOD_DEFAULT, "IMAGE_SCALE_METHOD_D
 	Insert( NDb::IMAGE_SCALE_METHOD_LANCZOS3,	"IMAGE_SCALE_METHOD_LANCZOS3" );
 	Insert( NDb::IMAGE_SCALE_METHOD_MITCHELL,	"IMAGE_SCALE_METHOD_MITCHELL" );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMinimapLayerMnemonics typeMinimapLayer;
 CImageScaleMethod typeImageScaleMethod;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -8,28 +8,28 @@
 
 extern CDiplomacy theDipl;
 extern CEventUpdater updater;
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CKeyBuildingBonusSystem theBonusSystem;
 extern CPlayerReinforcementArray theReinfArray;
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CKeyBuildingBonusSystem::InitBonusSystem( const NDb::SMapInfo * pMapInfo )
 {
 	for ( int i = 0; i < pMapInfo->playerBonusObjects.size(); ++i )
 		buildingBonuses[pMapInfo->playerBonusObjects[i].nLinkID] = pMapInfo->playerBonusObjects[i];
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CKeyBuildingBonusSystem::IsStorage( int nLinkID ) const
 {
 	CBuildingBonuses::const_iterator pos = buildingBonuses.find( nLinkID );
 	return pos != buildingBonuses.end() && pos->second.bStorage; 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CKeyBuildingBonusSystem::IsKeyBuilding( int nLinkID ) const
 {
 	CBuildingBonuses::const_iterator pos = buildingBonuses.find( nLinkID );
 	return pos != buildingBonuses.end(); 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CKeyBuildingBonusSystem::SendUpdates() const 
 { 
 	if ( !GetScenarioTracker() )
@@ -52,7 +52,7 @@ void CKeyBuildingBonusSystem::SendUpdates() const
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer, int nLinkID, bool bDuringMapLoad )
 {
 	if ( !GetScenarioTracker() )

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern bool g_bDontUpdateRoads;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CollectAllCragsAndRiversInArea( vector<int> *pColCrags, vector<int> *pColRivers,
 																							 const CVec2i &vBBMin, const CVec2i &vBBMax,
 																							 const int nExcludeCragID, const int nExcludeRiverID )
@@ -32,7 +32,7 @@ void CTerraGen::CollectAllCragsAndRiversInArea( vector<int> *pColCrags, vector<i
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateCragsAndRiversInArea( const vector<int> &updCrags, const vector<int> &updRivers,
 																					 const CVec2i &vBBMin, const CVec2i &vBBMax )
 {
@@ -52,7 +52,7 @@ void CTerraGen::UpdateCragsAndRiversInArea( const vector<int> &updCrags, const v
 		PutCragOnTerrain( FindCragInfo(*it), vBBMin, vBBMax );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2i &vMax )
 {
 	AddAllNeededFoots();
@@ -86,7 +86,7 @@ void CTerraGen::UpdateAllOnTerrainObjectsInArea( const CVec2i &vMin, const CVec2
 		UpdateTerraSpot( *it );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ConvertVSOPointsFromAIToVisAndPutOnTerrain( vector<NDb::SVSOPoint> *pDstPoints, const vector<NDb::SVSOPoint> &srcPoints )
 {
 	float fHeight;
@@ -102,7 +102,7 @@ void CTerraGen::ConvertVSOPointsFromAIToVisAndPutOnTerrain( vector<NDb::SVSOPoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, DWORD dwUpdateFlags )
 {
 	static vector<int> updatedCrags( 128 );
@@ -114,4 +114,4 @@ void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, cons
 	UpdateAllOnTerrainObjectsInArea( CVec2i(nTileX1, nTileY1), CVec2i(nTileX2, nTileY2) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

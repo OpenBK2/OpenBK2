@@ -9,7 +9,7 @@
 #include "..\Scintilla\scintilla.h"
 #include "ReplaceTextDlg.h"
 
-/////////////////////////////////////////////////////////////////////////////
+
 // CLuaEditor window
 
 class CLuaEditor : public CWnd
@@ -106,7 +106,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-/////////////////////////////////////////////////////////////////////////////
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

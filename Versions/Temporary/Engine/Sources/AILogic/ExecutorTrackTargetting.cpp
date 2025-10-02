@@ -9,14 +9,14 @@
 extern CGroupLogic theGroupLogic;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorTrackTargetting::CExecutorTrackTargetting( CAIUnit *_pUnit )
 : state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000/SConsts::AI_SEGMENT_DURATION ), 
 timeLastUpdate( curTime ), pUnit( _pUnit )
 {  
 	NI_ASSERT( _pUnit, "Attempt to create TrackTargetting executor for null unit" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorTrackTargetting::Segment()
 {
 	if ( !pUnit || !IsValid( pUnit ) || !pUnit->IsAlive() )
@@ -60,7 +60,7 @@ int CExecutorTrackTargetting::Segment()
 
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorTrackTargetting::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
@@ -79,13 +79,13 @@ void CExecutorTrackTargetting::UpdateProgress( const SAbilitySwitchState _state,
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorTrackTargetting::SetAutocast( const bool _bAutocast )
 {
 	state.bAutocast = _bAutocast;
 	UpdateProgress( state , 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorTrackTargetting::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par;
@@ -97,7 +97,7 @@ void CExecutorTrackTargetting::RegisterOnEvents( IExecutorContainer *pContainer 
 	par.eEventID = EID_ABILITY_DEACTIVATE_AUTOCAST;
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
@@ -127,6 +127,6 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19152B80, CExecutorTrackTargetting )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

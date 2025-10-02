@@ -60,7 +60,7 @@
 #include "FeedbackSystem.h"
 #include "DBAIConsts.h"
 #include "GlobalWarFog.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CBalanceTest theBalanceTest;
 extern CExecutorContainer theExecutorContainer;
@@ -82,21 +82,21 @@ extern CScanLimiter theScanLimiter;
 extern CDifficultyLevel theDifficultyLevel;
 extern CGraveyard theGraveyard;
 extern bool g_bUseRoundUnits;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool g_bUseSmartScan = true;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD g_dwTimeForDangerousTurnRound = 3000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int MAX_TARGETS_CACHE_SIZE = 15;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D4AC, CAIUnitInfoForGeneral );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											  CAIUnit																		*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CAIUnit );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 {
 	if ( GetAIMap()->IsRectOnLockedTiles( rect, EAC_ANY ) )
@@ -123,7 +123,7 @@ bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CAIUnit::GetGunCenter( const int nGun, const int nPlatform ) const
 { 
 	const NDb::SUnitBaseRPGStats *pStats = GetStats();
@@ -137,17 +137,17 @@ const CVec2 CAIUnit::GetGunCenter( const int nGun, const int nPlatform ) const
 	const CVec2 vDir( GetFrontDirectionVector() );
 	return vCenter2D + (vGunPos2D ^ vDir);
 } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit * CAIUnit::GetUnitByUniqueID( const int nUniqueID )
 {
 	return checked_cast<CAIUnit*>( CLinkObject::GetObjectByUniqueId( nUniqueID ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType )
 {
 	theStatistics.UnitKilled( nPlayerOfShoot, GetPlayer(), GetStats()->fExpPrice, eKillerType, eDeadType, IsInfantry() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRect, const CVec2 &explCoord, const int nRandPiercing, const int nRandArmor ) const
 {
 	// попали по комбат системе
@@ -162,7 +162,7 @@ const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRe
 	else
 		return SAINotifyHitInfo::EHT_MISS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir, const SRect &unitRect )
 {
 	switch ( nArmorDir )
@@ -175,7 +175,7 @@ const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, const bool bFromExpl )
 {
 	if ( !IsInSolidPlace() )
@@ -227,7 +227,7 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	const CVec3 vExplCoord3D( pExpl->GetExplCoordinates() );
@@ -248,7 +248,7 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	// нет точного попадания
@@ -259,7 +259,7 @@ bool CAIUnit::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, const fl
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::IncreaseHitPoints( const float fInc ) 
 { 
 	const float fMaxHP = GetStats()->fMaxHP;
@@ -271,7 +271,7 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int nCntGuns = 0;
 float fRange = 0;
 void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WORD dir, const BYTE _player, ICollisionsCollector *pCollisionsCollector )
@@ -356,7 +356,7 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const WOR
 	//NI_ASSERT( CAIUnit::GetSightRadius() / ( 2 * SConsts::TILE_SIZE ) <= theWarFog.GetMaxRadius(),
 	//	StrFmt( "Invalid sight radius for unit %s", NDb::GetResName( GetStats() ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 {
 	GetPlacement( pNewUnitInfo, 0 );
@@ -372,7 +372,7 @@ void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->nExpLevel = theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
 }
 /*
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 { 
 	NI_ASSERT( timeDiff <= SConsts::AI_SEGMENT_DURATION, StrFmt( "wrong segment time %i", timeDiff ) );
@@ -392,7 +392,7 @@ void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime 
 	pPlacement->cSoil = GetTerrain()->GetSoilType( GetCenterTile() );
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::PrepareToDelete()
 {
 	if ( IsAlive() )
@@ -426,13 +426,13 @@ void CAIUnit::PrepareToDelete()
 		theGroupLogic.UnregisterSegments( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Disappear()
 {
 	PrepareToDelete();
 	theGraveyard.AddToDissapeared( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::DieTrain( const float fDamage )
 {
 	if ( IsAlive() )
@@ -467,7 +467,7 @@ void CAIUnit::DieTrain( const float fDamage )
 			theWarFog.DeleteUnit( GetUniqueId() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 {
 	if ( IsAlive() )
@@ -509,18 +509,18 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 		theStatistics.UnitDead( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::IsVisible( const BYTE cParty ) const
 {
 	return visible4Party[cParty];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CalculateUnitVisibility4Party( const BYTE party )
 {
 	const int bVisibility = CalculateUnitVisibility4PartyInner( party );
 	return UpdateUnitVisibilityForParty( party, bVisibility );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CalculateUnitVisibility4PartyInner( const BYTE party ) const
 {
 	// NI_ASSERT( !bAlwaysVisible, "always visible, but not coast battery" );
@@ -535,7 +535,7 @@ bool CAIUnit::CalculateUnitVisibility4PartyInner( const BYTE party ) const
 		return GetStats()->IsAviation() || party == cParty || theWarFog.IsUnitVisible( GetCenterTile(), party, IsCamoulflated());
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateCrewAndTruckVisibility( BYTE party,  bool bNewVisibility ) 
 {
 	if ( GetStats()->IsArtillery() )
@@ -562,7 +562,7 @@ void CAIUnit::UpdateCrewAndTruckVisibility( BYTE party,  bool bNewVisibility )
 		}
 	}	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibility )
 {
 	const int bVisibilityChanged = int(bVisibility) != visible4Party[party];
@@ -625,12 +625,12 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const BYTE party, const bool bVisibi
 	}
 	return visible4Party[party]; // not changed
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD CAIUnit::GetNormale() const
 {
 	return CCommonUnit::GetNormale( GetCenterPlain() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const 
 { 
 	pTiles->clear();
@@ -638,7 +638,7 @@ void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const
 	if ( GetAIMap()->IsTileInside( tile ) )
 		pTiles->push_back( tile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return 
@@ -646,7 +646,7 @@ bool CAIUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 			eAction == ACTION_NOTIFY_GET_DEAD_UNITS_UPDATE ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::CheckForReveal()
 {
 	if ( !theDipl.IsNetGame() && nextRevealCheck <= curTime )
@@ -674,7 +674,7 @@ void CAIUnit::CheckForReveal()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Segment()
 {
 	if ( IsAlive() )
@@ -707,7 +707,7 @@ void CAIUnit::Segment()
 		timeLastAttackedAck = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::FreezeSegment()
 {
 	if ( !theDipl.IsNetGame() )
@@ -743,13 +743,13 @@ void CAIUnit::FreezeSegment()
 
 	units.UpdateUnitVis4Enemy( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::IsVisibleByPlayer()
 {
 	return visible4Party[theCheats.GetNPartyForWarFog()];
 //	return bVisibleByPlayer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 {
 	if ( bIgnoreTime || curTime >= creationTime + SConsts::AI_SEGMENT_DURATION * SConsts::SHOW_ALL_TIME_COEFF )
@@ -772,7 +772,7 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 		creationTime = curTime;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats ) 
 { 
 	pStats->fHitPoints = GetHitPoints();
@@ -790,27 +790,27 @@ void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 	
 	pStats->time = curTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	return GetStats()->HasCommand( int( pCommand->ToUnitCmd().nCmdType ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CanCommandBeExecutedByStats( CAICommand *pCommand )
 {
 	return CanCommandBeExecutedByStats( pCommand->ToUnitCmd().nCmdType);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 {
 	return GetStats()->HasCommand( nCmd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetSightRadius() const
 {
 	return GetStatsModifier()->sightRange.Get( GetStats()->fSight ) * SConsts::TILE_SIZE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ApplyStatsModifier( const NDb::SUnitStatsModifier *pModifier, const bool bForward )
 {
 	if ( pModifier )
@@ -820,12 +820,12 @@ void CAIUnit::ApplyStatsModifier( const NDb::SUnitStatsModifier *pModifier, cons
 		//	StrFmt( "DESIGNERS BUG: Invalid sight radius for unit %s after appling modificator %s", NDb::GetResName( GetStats() ), NDb::GetResName( pModifier ) ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetCamouflage() const 
 {
 	return fCamoflage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	if ( fHitPoints > 0 )
@@ -891,12 +891,12 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanTurnRound() const
 {
 	return curTime > timeLastAttacked + g_dwTimeForDangerousTurnRound;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Fired( const float fGunRadius, const int nGun )
 {
 	if ( pAntiArtillery != 0 && fGunRadius != 0.0f )
@@ -916,7 +916,7 @@ void CAIUnit::Fired( const float fGunRadius, const int nGun )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateUnitsRequestsForResupply()
 {
 	if ( !theDipl.IsNetGame() )
@@ -957,7 +957,7 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ChangePlayer( const BYTE cPlayer )
 {
 	const BYTE cOldPlayer = GetPlayer();
@@ -1022,17 +1022,17 @@ void CAIUnit::ChangePlayer( const BYTE cPlayer )
 
 	InitSpecialAbilities();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CAIUnit::GetRemissiveCoeff() const
 {
 	return GetStatsModifier()->smallAABBCoeff.Get( GetStats()->fSmallAABBCoeff );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NTimer::STime CAIUnit::GetTimeToCamouflage() const
 {
 	return SConsts::TIME_BEFORE_CAMOUFLAGE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::CheckAmmoStatus()
 {
 	EUnitStatus eStats = EUS_RESUPPLY_GROUP;
@@ -1051,7 +1051,7 @@ void CAIUnit::CheckAmmoStatus()
 	}
 	updater.AddUpdate( CreateStatusUpdate( eStats, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ChangeAmmo( const int nCommonGun, const int nAmmo ) 
 { 
 	CUnitGuns * pGuns = GetGuns();
@@ -1060,13 +1060,13 @@ void CAIUnit::ChangeAmmo( const int nCommonGun, const int nAmmo )
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	CheckAmmoStatus();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::CreateAntiArtillery( const float fMaxRevealRadius )
 {
 	pAntiArtillery = new CAntiArtillery( this );
 	pAntiArtillery->Init( fMaxRevealRadius, GetParty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const
 {
 	float fSpeed = 0;
@@ -1078,7 +1078,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const DWORD dwGuns ) const
 
 	return fSpeed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const DWORD dwGuns ) const
 {
 	float fSpeed = 0;
@@ -1091,7 +1091,7 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 
 	return fSpeed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const
 {
 	float fPiercingProbability = 0.0f;
@@ -1152,7 +1152,7 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 			return 1.0f;		// For the projector
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 {
 	float fPiercingProbability = 0.0f;
@@ -1205,7 +1205,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 			return 1.0f; // For the projector
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy ) const
 {
 	int i = 0;
@@ -1217,7 +1217,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy ) const
 
 	return GetKillSpeed( pEnemy, GetGun( i ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateTakenDamagePower( const float fUpdate ) 
 { 
 	if ( fTakenDamagePower <= 0.0f && fUpdate >= 0 && !GetState()->IsAttackingState() )
@@ -1235,21 +1235,21 @@ void CAIUnit::UpdateTakenDamagePower( const float fUpdate )
 		NI_ASSERT( fTakenDamagePower >= 0, "Wrong taken damage power" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ResetTargetScan()
 {
 	GetLastBehTime() = 0;
 //	SetTargetScanRandom();	
 	targetScanRandom = NRandom::Random( 800, 1000 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ResetGunChoosing()
 {
 	GetLastBehTime() = curTime;
 //	SetTargetScanRandom();	
 	targetScanRandom = NRandom::Random( 800, 1000 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
 {
 	if ( IsTimeToAnalyzeTargetScan() )
@@ -1263,7 +1263,7 @@ CBasicGun* CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetTargetScanRandom()
 {
 	if ( GetStats()->IsInfantry() )
@@ -1282,7 +1282,7 @@ void CAIUnit::SetTargetScanRandom()
 		targetScanRandom = NRandom::Random( 800, 1000 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IObstacle* CAIUnit::LookForObstacle()
 {
 	if ( CanShoot() && theSupremeBeing.MustShootToObstacles( GetPlayer() ) )
@@ -1295,7 +1295,7 @@ IObstacle* CAIUnit::LookForObstacle()
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetTargetScanRadius()
 {
 	// дальнобойное AI орудие
@@ -1313,7 +1313,7 @@ const float CAIUnit::GetTargetScanRadius()
 		return Min( fCallForHelpRadius, fFireRange );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun, const float fRange, const bool bIteratePlanes, const bool bIterateBuildings )
 {
 	if ( curTime < lastScanTime + realScanDuration )
@@ -1412,7 +1412,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 
 	return *pBestTarget;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun )
 {
 	if ( IsValid( pCurTarget ) && pCurTarget->IsAlive() )
@@ -1455,7 +1455,7 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 		*pGun = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun )
 {
 	CAIUnit *pChosenTarget = *pBestTarget;
@@ -1493,18 +1493,18 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 	bFreeEnemySearch = false;
 	SetCircularAttack( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetCircularAttack( const bool bCanAttack )
 {
 	for ( int i = 0; i < GetNGuns(); ++i )
 		GetGun( i )->SetCircularAttack( bCanAttack );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsTimeToAnalyzeTargetScan() const
 {
 	return curTime - GetLastBehTime() >= GetBehUpdateDuration() + targetScanRandom;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 {
 	if ( IsValidObj( pTarget ) && ( pCurTarget == 0 || pTarget != pCurTarget ) )
@@ -1525,7 +1525,7 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
 {
 	if ( IsTimeToAnalyzeTargetScan() && theScanLimiter.CanScan() )
@@ -1566,17 +1566,17 @@ BYTE CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated,
 	else
 		return AttackTarget( GetBestShootEstimatedUnit(), pCurTarget ) ? 3 : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetAmbush()
 {
 	updater.AddUpdate( 0, ACTION_NOTIFY_SET_AMBUSH, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::RemoveAmbush()
 {
 	updater.AddUpdate( 0, ACTION_NOTIFY_REMOVE_AMBUSH, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
 	pInfo->vPos.x = GetCenterTile().x / AI_TILES_IN_VIS_TILE;
@@ -1585,7 +1585,7 @@ void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 	pInfo->nRadius = IsInSolidPlace() ? 0 : GetSightRadius() / SConsts::TILE_SIZE / AI_TILES_IN_VIS_TILE;
 	pInfo->sector = SSector();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::WarFogChanged()
 {
 	if ( IsAlive() )
@@ -1605,7 +1605,7 @@ void CAIUnit::WarFogChanged()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::ChooseFatality( const float fDamage )
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
@@ -1656,7 +1656,7 @@ const int CAIUnit::ChooseFatality( const float fDamage )
 	else
 		return -1 * int( NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH].anims.size() ) + 2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const
 {
 	pArea->vCenter3D = CVec3( GetCenterPlain(), 0.0f );
@@ -1683,7 +1683,7 @@ void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const flo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 {
 	//construct( pShootAreas );
@@ -1750,7 +1750,7 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 		InitializeShootArea( &(pShootAreas->areas.back()), 0, 0.0f, GetMaxFireRange() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 { 
 	pTankPit = _pTankPit;
@@ -1763,7 +1763,7 @@ void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 
 	updater.AddUpdate( CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible )
 {
 	if ( !bVisibilityChanged )
@@ -1774,7 +1774,7 @@ void CAIUnit::UpdateTankPitVisibility( const bool bVisibilityChanged, const bool
 	else
 		updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, GetTankPit(), -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetOffTankPit()
 {
 	if ( IsValidObj( pTankPit ) )
@@ -1787,7 +1787,7 @@ void CAIUnit::SetOffTankPit()
 	bIsInTankPit = false;
 	updater.AddUpdate( CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetCamoulfage()
 {
 	if ( GetStats()->fCamouflage == 0 ) // sniper or other unit with camo ability
@@ -1800,7 +1800,7 @@ void CAIUnit::SetCamoulfage()
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_SET_CAMOUFLAGE, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::RemoveCamouflage( ECamouflageRemoveReason eReason )
 {
 	if ( CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_CAMOFLAGE_MODE ) ) || CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_ADAVNCED_CAMOFLAGE_MODE ) ) )
@@ -1826,18 +1826,18 @@ void CAIUnit::RemoveCamouflage( ECamouflageRemoveReason eReason )
 		updater.AddUpdate( 0, ACTION_NOTIFY_REMOVE_CAMOUFLAGE, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::StartCamouflating()
 {
 	camouflateTime = curTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CAIUnit::InitAviationPath()
 {
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( GetStats() );
 	pPathUnit->InitAviationPath( pStats );
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::AnalyzeCamouflage()
 {
 	if ( GetStats()->fCamouflage != 0 )
@@ -1863,7 +1863,7 @@ void CAIUnit::AnalyzeCamouflage()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::EnemyKilled( CAIUnit *pEnemy )
 {
 	if ( pEnemy && pEnemy->IsRefValid() &&
@@ -1891,7 +1891,7 @@ void CAIUnit::EnemyKilled( CAIUnit *pEnemy )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsNoticableByUnit( CCommonUnit *pUnit, const float fNoticeRadius )
 {
 	const bool bRadiusOk = fabs2( pUnit->GetCenter() - GetCenter() ) <= sqr( fNoticeRadius );
@@ -1899,12 +1899,12 @@ bool CAIUnit::IsNoticableByUnit( CCommonUnit *pUnit, const float fNoticeRadius )
 	return 
 		bRadiusOk && ( IsVisible( pUnit->GetParty() ) || IsRevealed() && pUnit->CanMove() && !pUnit->NeedDeinstall() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateArea( const EActionNotify eAction ) 
 {
 	updater.AddUpdate( 0, eAction, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce )
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
@@ -1936,74 +1936,74 @@ void CAIUnit::SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool 
 			theAckManager.AddAcknowledgment( ack, this, nSet );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SendAcknowledgement( EUnitAckType ack, bool bForce )
 {
 	SendAcknowledgement( GetCurCmd(), ack, bForce );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EUnitAckType CAIUnit::GetGunsRejectReason() const
 {
 	EUnitAckType eRejectReason = GetGuns()->GetRejectReason();
 	return ( eRejectReason == ACK_NONE ) ? ACK_NEGATIVE : eRejectReason;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::DoesExistRejectGunsReason( const EUnitAckType &ackType ) const
 {
 	return GetGuns()->DoesExistRejectReason( ackType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetMinArmor() const
 {
 	return GetStats()->nMinArmor;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetMaxArmor() const
 {
 	return GetStats()->nMaxArmor;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetMinPossibleArmor( const int nSide ) const
 {
 	return GetStats()->GetMinPossibleArmor( nSide );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetMaxPossibleArmor( const int nSide ) const
 {
 	return GetStats()->GetMaxPossibleArmor( nSide );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetArmor( const int nSide ) const
 {
 	return GetStats()->GetArmor( nSide );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetRandomArmor( const int nSide ) const
 {
 	return GetStats()->GetRandomArmor( nSide );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetCover() const 
 { 
 	return  GetStatsModifier()->cover.Get( 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsSavedByCover() const
 { 
 	return 
 		NRandom::Random( 0.0f, 1.0f ) >= GetCover();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetNCommonGuns() const { return GetGuns() ? GetGuns()->GetNCommonGuns() : 0; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SBaseGunRPGStats& CAIUnit::GetCommonGunStats( const int nCommonGun ) const { return GetGuns()->GetCommonGunStats( nCommonGun ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAIUnit::GetNAmmo( const int nCommonGun ) const { return GetGuns()->GetNAmmo( nCommonGun ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsCommonGunFiring( const int nCommonGun ) const { return GetGuns()->IsCommonGunFiring( nCommonGun ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetPassability() const { return GetStats()->fPassability; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetDirection( const WORD wDirection )
 { 
 	CBasePathUnit::SetDirection( wDirection );
@@ -2011,37 +2011,37 @@ void CAIUnit::SetDirection( const WORD wDirection )
 	if ( GetVisionAngle() != 32768 )
 		WarFogChanged();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UnRegisterAsBored( const enum EUnitAckType eBoredType )
 {
 	theAckManager.UnRegisterAsBored( eBoredType, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::RegisterAsBored( const enum EUnitAckType eBoredType )
 {
 	theAckManager.RegisterAsBored( eBoredType, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool const CAIUnit::IsTrain() const
 {
 	return GetStats()->IsTrain();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetTimeToForget() const
 {
 	return SGeneralConsts::TIME_TO_FORGET_UNIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnitInfoForGeneral* CAIUnit::GetUnitInfoForGeneral() const
 {
 	return pUnitInfoForGeneral;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetLastVisibleTime( const NTimer::STime time )
 {
 	pUnitInfoForGeneral->SetLastVisibleTime( time );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanMove() const
 { 
 	return
@@ -2049,23 +2049,23 @@ const bool CAIUnit::CanMove() const
 		GetBehaviourMoving() != SBehaviour::EMHoldPos &&
 		GetStats()->fSpeed != 0 ; //optimisation (returned true in CBasePathUnit) "&& CCommonUnit::CanMove();"
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanMoveCritical() const
 {
 	return
 		GetStats()->fSpeed != 0 && CanMove();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanRotate() const
 {
 	return ( !IsRestInside() ) && ( GetStats()->IsInfantry() || GetStats()->fRotateSpeed != 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CAIUnit::GetPriceMax() const
 {
 	return GetStats()->fPrice;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
 {
 	if ( !bOnlyThisUnitCommand )
@@ -2081,19 +2081,19 @@ void CAIUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyT
 	}
 	CCommonUnit::UnitCommand( pCommand, bPlaceInQueue, bOnlyThisUnitCommand );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Lock( const CBasicGun *pGun )
 {
 	if ( !GetStats()->IsTrain() )
 		CCommonUnit::Lock( pGun );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Unlock( const CBasicGun *pGun )
 {
 	if ( !GetStats()->IsTrain() )
 		CCommonUnit::Unlock( pGun );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsLocked( const CBasicGun *pGun ) const
 {
 	if ( GetStats()->IsTrain() || bRestInside )
@@ -2101,38 +2101,38 @@ bool CAIUnit::IsLocked( const CBasicGun *pGun ) const
 	else
 		return CCommonUnit::IsLocked( pGun );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
 {
 	if ( GetGuns()->SetActiveShellType( eShellType ) )
 		updater.AddUpdate( 0, ACTION_NOTIFY_SHELLTYPE_CHANGED, this, static_cast<int>(eShellType) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::AnimationSet( int nAnimation )
 {
 	pAnimUnit->AnimationSet( nAnimation );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::AnimationSegment()
 {
 	pAnimUnit->Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Moved()
 {
 	pAnimUnit->Moved();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::Stopped()
 {
 	pAnimUnit->Stopped();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::StopCurAnimation()
 {
 	pAnimUnit->StopCurAnimation();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::WantedToReveal( CAIUnit *pWhoRevealed )
 {
 	if ( !theDipl.IsNetGame() &&
@@ -2140,23 +2140,23 @@ void CAIUnit::WantedToReveal( CAIUnit *pWhoRevealed )
 			 theDipl.GetDiplStatus( pWhoRevealed->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
 		bQueredToReveal = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsRevealed() const
 {
 	return bRevealed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::IsInfantry() const
 {
 	return GetStats()->IsInfantry();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::CanMoveAfterUserCommand() const
 {
 	return GetStats()->HasCommand( ACTION_COMMAND_MOVE_TO ) && 
 				 GetStats()->fSpeed != 0 && CanMove();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::NotifyAbilityRun( class CAICommand * pCommand )
 {
 	// if the command is ability command
@@ -2173,7 +2173,7 @@ void CAIUnit::NotifyAbilityRun( class CAICommand * pCommand )
 }
 #include "ExecutorSniperCamouflage.h"
 #include "ExecutorThrowGrenade.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateEnableAblitiy( const int nAbility )
 {
 	CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
@@ -2184,18 +2184,18 @@ void CAIUnit::UpdateEnableAblitiy( const int nAbility )
 	pUpdate->info.nObjUniqueID = GetUniqueId();
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetXPLevel()
 {
 	return 1 + theStatistics.GetXPLevel( GetPlayer(), GetReinforcementType() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAIUnit::GetAbilityLevel()
 {
 	//return nAbilityLevel <= 0 ? 1 + theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() ) : nAbilityLevel;
 	return 1 + theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::InitSpecialAbilities( int nFromLevel )
 {
 	NI_ASSERT( GetStats()->GetActions() != 0, StrFmt("Empty actions set for unit \"%s\" of type \"%s\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
@@ -2209,7 +2209,7 @@ void CAIUnit::InitSpecialAbilities( int nFromLevel )
 			InitAbility( GetStats()->GetActions()->specialAbilities[i]->eName );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 {
 	// unit can run this command, and ability
@@ -2492,7 +2492,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 //		NI_ASSERT( false, StrFmt( "Unknown ability %i", nAbility ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanShootInMovement()
 {
 	if ( GetStats()->IsAviation() )			// Aviation can always shoot in movement
@@ -2512,7 +2512,7 @@ const bool CAIUnit::CanShootInMovement()
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetHoldSector()
 {
 	if ( !bHoldingSector )
@@ -2548,7 +2548,7 @@ void CAIUnit::SetHoldSector()
 		bHoldingSector = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::ResetHoldSector()
 {
 	if ( bHoldingSector )
@@ -2582,7 +2582,7 @@ void CAIUnit::ResetHoldSector()
  		bHoldingSector = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetTrackTargeting( bool bOn )
 {
 	if ( bOn == bTargetingTrack )
@@ -2597,7 +2597,7 @@ void CAIUnit::SetTrackTargeting( bool bOn )
 		updater.AddUpdate( CreateStatusUpdate( EUS_TRACK_TARGET, bTargetingTrack, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetIgnoreAABBCoeff( const bool bIgnore ) 
 { 
 	if ( bIgnoreAABBCoeff != bIgnore )
@@ -2615,32 +2615,32 @@ void CAIUnit::SetIgnoreAABBCoeff( const bool bIgnore )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIUnit::IsRestInside() const
 {
 	return bRestInside && IsInfantry();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetRestInside( const bool bInside, CAIUnit *pTransport )
 {
 	bRestInside = bInside;
 	pObjInside = pTransport;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const
 {
 	pInfo->nTargetUniqueID = pObjInside ? checked_cast<CUpdatableObj*>(pObjInside)->GetUniqueId() : 0;
 	pInfo->bEnter = IsRestInside();
 	pInfo->nInfantryUniqueID = GetUniqueId();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetAimTimeBonus() const
 { 
 	if ( bTargetingTrack )
 		return SConsts::TRACK_TARGETING_AIM_BONUS;
 	return 1.0f; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect & CAIUnit::GetUnitRect() const
 {
 	static SRect unitRect;
@@ -2650,7 +2650,7 @@ const SRect & CAIUnit::GetUnitRect() const
 
 	return unitRect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CAIUnit::GetCenterShift() const
 {
 	const CVec2 realDirVec( GetFrontDirectionVector() );
@@ -2658,23 +2658,23 @@ const CVec2 CAIUnit::GetCenterShift() const
 
 	return CVec2( realDirVec * GetStats()->vAABBCenter.y + dirPerp * GetStats()->vAABBCenter.x );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetTurnSpeed() const
 {
 	return GetStatsModifier()->rotateSpeed.Get( GetStats()->fRotateSpeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SUnitProfile &CAIUnit::GetUnitProfile() const
 {
 	return unitProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CAIUnit::GetVisZ() const
 {
 	const CVec2 vPos( GetCenterPlain() );
 	return GetHeights()->GetVisZ( vPos.x, vPos.y ) + GetZ();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateUnitProfile()
 {
 	if ( IsRound() && !IsStaticUnit() )
@@ -2689,7 +2689,7 @@ void CAIUnit::UpdateUnitProfile()
 		unitProfile.rect = GetUnitRect();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirection, const bool bNeedUpdate )
 {
 	CCommonUnit::UpdatePlacement( vOldPosition, wOldDirection, bNeedUpdate );
@@ -2698,17 +2698,17 @@ void CAIUnit::UpdatePlacement( const CVec3 &vOldPosition, const WORD wOldDirecti
 	if ( !IsInSolidPlace() )
 		units.UnitChangedPosition( this, GetCenterPlain() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NTimer::STime CAIUnit::GetDisappearInterval() const
 { 
 	return SConsts::TIME_TO_DISAPPEAR; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NTimer::STime CAIUnit::GetBehUpdateDuration() const
 { 
 	return SConsts::BEH_UPDATE_DURATION; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UnitTrampled( const CBasePathUnit *pTramplerUnit )
 {
 	const CAIUnit *pUnit = dynamic_cast<const CAIUnit *>( pTramplerUnit );
@@ -2722,13 +2722,13 @@ void CAIUnit::UnitTrampled( const CBasePathUnit *pTramplerUnit )
 	bTrampled = true;
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DIE, false ), this, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::UpdateVisibilityForced()
 {
 	const bool bVisible = visible4Party[theDipl.GetMyParty()] || visible4Party[theCheats.GetNPartyForWarFog()] ;
 	updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, bVisible );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType )
 {
 	const NDb::EUnitSpecialAbility eAbility = ( eType == NDb::ABILITY_PLACE_CONTROLLED_CHARGE || eType == NDb::ABILITY_DETONATE ) ? NDb::ABILITY_RADIO_CONTROLLED_MODE : eType;
@@ -2755,14 +2755,14 @@ const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUni
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const ECollidingType CAIUnit::GetCollidingType( CBasePathUnit *pUnit ) const
 {
 	if ( GetState()->GetName() != EUSN_MECHUNIT_REST_ON_BOARD )
 		return bRestInside ? ECT_NONE : ECT_ALL;
 	return ECT_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::CanLockTiles() const
 {
 	if ( GetState()->GetName() != EUSN_MECHUNIT_REST_ON_BOARD )
@@ -2770,12 +2770,12 @@ const bool CAIUnit::CanLockTiles() const
 	return false;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAIUnit::IsRound() const 
 { 
 	return g_bUseRoundUnits && GetStats()->boundCircle.bIsRound; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 {
 	if ( !GetScenarioTracker() )
@@ -2823,7 +2823,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 		eReinforcementType = eType;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( AIUnit )
 REGISTER_VAR_EX( "ai_use_smart_scan", NGlobal::VarBoolHandler, &g_bUseSmartScan, true, STORAGE_NONE );
 REGISTER_VAR_EX( "AI.Common.TimeForDangerousTurnRound", NGlobal::VarIntHandler, &g_dwTimeForDangerousTurnRound, 3000, STORAGE_NONE );

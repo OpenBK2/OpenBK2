@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "XMLSAXParser.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NLXML
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EXmlNodeType
 {
 	XML_NODE_TYPE_NONE,
@@ -13,12 +13,12 @@ enum EXmlNodeType
 	XML_NODE_TYPE_COMMENT,
 	XML_NODE_TYPE_ELEMENT,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsWhiteSpace( const char chr )
 {
 	return ( (chr >= 0x09 && chr <= 0x0D) || chr == 0x20 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** buffered stream helper class
@@ -26,7 +26,7 @@ static bool IsWhiteSpace( const char chr )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBufferedStream
 {
 	enum { BUFFER_SIZE = 4096 };
@@ -107,7 +107,7 @@ public:
 	//
 	bool IsEnd() const { return nBytesRead >= nStreamSize && IsBufferEmpty(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** name and text reading functions
@@ -115,10 +115,10 @@ public:
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ParseXMLImpl( IXmlSaxVisitor *pVisitor, CBufferedStream &stream );
 bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadName( string *pszName, CBufferedStream &stream )
 {
 	pszName->clear();
@@ -139,7 +139,7 @@ bool ReadName( string *pszName, CBufferedStream &stream )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // "amp;"		'&'
 // "lt;"		'<'
 // "gt;"		'>'
@@ -335,7 +335,7 @@ char ReadSysChar( string *pszBuff, CBufferedStream &stream )
 		return char(0xff);
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadText( string *pszText, CBufferedStream &stream, const char *pszEndTag )
 {
 	while ( !stream.IsEnd() )
@@ -385,7 +385,7 @@ bool ReadText( string *pszText, CBufferedStream &stream, const char *pszEndTag )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML node type identification
@@ -393,7 +393,7 @@ bool ReadText( string *pszText, CBufferedStream &stream, const char *pszEndTag )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // What is this thing? 
 // - Elements start with a letter or underscore, but xml is reserved (min element node <a/>)
 // - Comments: <!-- (min comment node is <!---->)
@@ -445,7 +445,7 @@ EXmlNodeType Identify( CBufferedStream &stream )
 		return XML_NODE_TYPE_ELEMENT;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** different component parsers
@@ -453,7 +453,7 @@ EXmlNodeType Identify( CBufferedStream &stream )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // attribute parser
 bool ParseAttribute( string *pszName, string *pszText, CBufferedStream &stream )
 {
@@ -495,7 +495,7 @@ bool ParseAttribute( string *pszName, string *pszText, CBufferedStream &stream )
 	}
 	return !stream.IsEnd();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // header parse
 bool ParseHeader( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
@@ -527,7 +527,7 @@ bool ParseHeader( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	//
 	return !stream.IsEnd();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // comment block
 bool ParseComment( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
@@ -536,7 +536,7 @@ bool ParseComment( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		return false;
 	return pVisitor->VisitComment( szText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	// read in text and elements in any order.
@@ -581,7 +581,7 @@ bool ParseElementValue( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	}
 	return !stream.IsEnd();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	if ( stream.SkipWhiteSpaces() == false )
@@ -627,7 +627,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	}
 	return !stream.IsEnd();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** general parser method
@@ -635,7 +635,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ParseXMLImpl( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 {
 	while ( !stream.IsEnd() )
@@ -664,7 +664,7 @@ bool ParseXMLImpl( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ParseXML( IXmlSaxVisitor *pVisitor, CDataStream *pStream )
 {
 	CBufferedStream stream( pStream );
@@ -673,6 +673,6 @@ bool ParseXML( IXmlSaxVisitor *pVisitor, CDataStream *pStream )
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

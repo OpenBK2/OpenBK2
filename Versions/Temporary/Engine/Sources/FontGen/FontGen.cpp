@@ -6,14 +6,14 @@
 #include "../Misc/StrProc.h"
 #include "../Misc/nalgoritm.h"
 #include "../System/FileUtils.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_LEADING_PIXELS = 2;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
 	typedef CArray2D<CVec4> CImage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCharRange
 {
 	int nBit;
@@ -21,7 +21,7 @@ struct SCharRange
 	int nRangeEnd;
 	const char* szName;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SCharRange sCharRanges[] =
 {
 	{  0, 0x0020, 0x007E, "Basic Latin" },
@@ -114,10 +114,10 @@ static SCharRange sCharRanges[] =
 	{ 82, 0x2800, 0x28FF, "Braille" },
 	{ 83, 0xA000, 0xA48C, "Yi, Yi Radicals" }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HWND hWnd;
 HINSTANCE hInst;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFontInfo
 //      This class stores information about the currently loaded font.
 //      This includes LOGFONT and CHOOSEFONT structures for use with the
@@ -147,13 +147,13 @@ struct SFontInfo
 	SFontInfo() : hFont( 0 ), nTextureSizeX( 0 ), nTextureSizeY( 0 ) {  }
 	virtual ~SFontInfo() { if ( hFont ) DeleteObject( hFont ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // estimate, is requested number of chars fit in the selected texture
 inline bool IsFit( const SFontInfo &fi, DWORD dwNumChars, DWORD dwSizeX, DWORD dwSizeY )
 {
   return ( dwSizeX / (fi.tm.tmAveCharWidth + 2) ) * ( dwSizeY / fi.tm.tmHeight ) >= dwNumChars;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool EstimateTextureSize( SFontInfo *pFI, DWORD dwNumChars )
 {
 	SFontInfo &fi = *pFI;
@@ -176,12 +176,12 @@ bool EstimateTextureSize( SFontInfo *pFI, DWORD dwNumChars )
   // too big texture!!!
   return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SKPZeroFunctional
 {
   bool operator()( const KERNINGPAIR &kp ) const { return kp.iKernAmount == 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //      Fills CFontInfo fi (global) with text metrics and char widths
 //      -> hdc: HDC that the font is currently selected into
 //
@@ -250,7 +250,7 @@ void MeasureFont( HDC hdc, SFontInfo *pFI, vector<WORD> *pChars )
     x += nNextCharShift;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD FontType, LPARAM lParam )
 {
 	vector<WORD> *pChars = (vector<WORD>*)lParam;
@@ -285,7 +285,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 
 	return TRUE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsWinXPOrLater()
 {
 	OSVERSIONINFO osvi;
@@ -298,7 +298,7 @@ static bool IsWinXPOrLater()
 
 	return (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && ( osvi.dwMajorVersion > 4 ) && ( osvi.dwMinorVersion > 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, DWORD dwCharSet, 
 	bool bAntialias, DWORD dwPitch, LPCTSTR pszFaceName, vector<WORD> *pChars )
 {
@@ -397,7 +397,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
   // release HDC:
   ReleaseDC( hWnd, hdc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // draw font in the DC
 bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<WORD> &chars )
 {
@@ -419,7 +419,7 @@ bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<WORD> &chars )
   }
   return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<WORD> &chars )
 {
   // Create an offscreen bitmap:
@@ -464,9 +464,9 @@ void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<WO
   }
 	NImage::FlipY( *pRes );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFontGen
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFontGen
 {
 public:
@@ -531,7 +531,7 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
 		pSaver->Add( 1, &pFormat );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, DWORD dwHeight, DWORD dwWeight, bool bItalic, DWORD dwCharSet, 
 	bool bAntialias, DWORD dwPitch, LPCTSTR pszFaceName, vector<WORD> *pChars )
 {
@@ -552,7 +552,7 @@ void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, DWORD dwHeight, DWORD dw
 	CFontGen::CreateFontFormat( pszDstFile, fi, *pChars );
 	printf( "well done\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // params:
 //   height (in pixels)
 //   weight (100-900. normal == 400, bold == 700)
@@ -743,5 +743,5 @@ int __cdecl main( int argc, char *argv[] )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //#if !defined(ELK)

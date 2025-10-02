@@ -9,7 +9,7 @@
 #include "PC_MainTreeControl.h"
 
 #define PC_TREE_COLUMN_COUNT (3)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCDialog : public CResizeDialog, public CPCBaseDialog
 {
 	static const UINT	PC_TREE_COLUMN_NAME  [PC_TREE_COLUMN_COUNT];
@@ -56,5 +56,5 @@ public:
 	void EnableEdit( bool bEnable ) { tree.EnableEdit( bEnable ); }
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_DIALOG__)

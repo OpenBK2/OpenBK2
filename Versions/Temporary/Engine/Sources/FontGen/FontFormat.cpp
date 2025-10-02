@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "FontFormat.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFontFormatInfo::operator&( CStructureSaver &f )
 {
 	f.Add( 10, &nHeight );
@@ -14,5 +14,5 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	f.Add( 2, &kerns );
 	return 0;	
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x02321170, CFontFormatInfo );

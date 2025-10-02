@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CRefListDialog, CResizeDialog)
 	ON_NOTIFY( LVN_ITEMCHANGED, IDC_REF_LIST_OBJECTS, OnItemChanged )
 	ON_BN_CLICKED( IDC_REF_LIST_EMPTY_CURRENT, OnSetEmptyCurrent )
@@ -21,7 +21,7 @@ BEGIN_MESSAGE_MAP(CRefListDialog, CResizeDialog)
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRefListDialog::CRefListDialog( CWnd* pParent )
 	: CResizeDialog( CRefListDialog::IDD, pParent )
 {
@@ -32,7 +32,7 @@ CRefListDialog::CRefListDialog( CWnd* pParent )
 	SetControlStyle( IDOK, ANCHORE_BOTTOM | ANCHORE_HOR_CENTER, 2.0f / 3.0f, 0.5f, 1.0f, 1.0f );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::SetData( const string &szObjectTypeName, const string &szObjectName, list<string> *_pReferenceObjectsList )
 {
 	szTargetTypeName = szObjectTypeName;
@@ -40,7 +40,7 @@ void CRefListDialog::SetData( const string &szObjectTypeName, const string &szOb
 	pReferenceObjectsList = _pReferenceObjectsList;
 	CStringManager::GetRefValueFromTypeAndName( &szTargetFullName, szTargetTypeName, szTargetName, TYPE_SEPARATOR_CHAR );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::BuildReferenceObjectsList()
 {
 	ASSERT( szTargetTypeName.empty() == false );
@@ -84,7 +84,7 @@ void CRefListDialog::BuildReferenceObjectsList()
 	}
 
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::BuildFieldsListForObject( const SReferenceObject &object )
 {
 	const string &szName = object.szObjectName;
@@ -122,7 +122,7 @@ void CRefListDialog::BuildFieldsListForObject( const SReferenceObject &object )
 	}
 	fieldsCtrl.SetWindowText( szText.c_str() );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CRefListDialog::OnInitDialog()
 {
 	CWaitCursor wait;
@@ -159,20 +159,20 @@ BOOL CRefListDialog::OnInitDialog()
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::OnOK()
 {
 	CResizeDialog::OnOK();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::OnItemChanged( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	CWaitCursor wait;
@@ -194,7 +194,7 @@ void CRefListDialog::OnItemChanged( NMHDR* pNMHDR, LRESULT* pResult )
 			nSelectedItem = INVALID_NODE_ID;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::OnSetEmptyCurrent()
 {
 	if ( nSelectedItem == INVALID_NODE_ID )
@@ -243,7 +243,7 @@ void CRefListDialog::OnSetEmptyCurrent()
 	}
 	
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRefListDialog::OnClearAll()
 {
 	CString strMessage( (LPCTSTR)IDS_REF_LIST_EMPTY_ALL_LONG_TIME_WARNING );
@@ -289,4 +289,4 @@ void CRefListDialog::OnClearAll()
 		CResizeDialog::OnOK();
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

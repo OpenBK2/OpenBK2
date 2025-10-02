@@ -7,7 +7,7 @@
 #include "DBScene.h"
 #include "RectLayout.h"
 #include "GTexture.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 	static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash > shareSWTextures(112);
@@ -15,9 +15,9 @@ CSWTexture* GetSWTex( const NDb::STexture *pTex )
 {
 	return shareSWTextures.Get( pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Structures
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T, class TElement>
 class CSomeRender: public CArrayRasterizer<T, TElement>
 {
@@ -44,7 +44,7 @@ protected:
 	float fScale;
 	NGfx::SPixel8888 multColor;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 struct STextureIterator
 {
@@ -178,7 +178,7 @@ private:
 	}
 	friend class CRasterizer<CTrueColorRender>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBumpRender;
 class CBumpRender : public CSomeRender<CBumpRender, SBumpPixel>
 {
@@ -214,7 +214,7 @@ private:
 	}
 	friend class CRasterizer<CBumpRender>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFogRender;
 class CFogRender: public CSomeRender<CFogRender, int>
 {
@@ -235,9 +235,9 @@ private:
 	}
 	friend class CRasterizer<CFogRender>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SW Rects
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class ISWRects: public CObjectBase
 {
 public:
@@ -245,9 +245,9 @@ public:
 	virtual void Draw( CBumpRender *pRes ) = 0;
 	virtual void Draw( CFogRender *pRes ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSWRects
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FillTextureRect( CVec3 *vTextureRect, const CTRect<float> &r )
 {
 	vTextureRect[0] = CVec3( r.x1, r.y1, 0 );
@@ -255,7 +255,7 @@ static void FillTextureRect( CVec3 *vTextureRect, const CTRect<float> &r )
 	vTextureRect[2] = CVec3( r.x2, r.y2, 0 );
 	vTextureRect[3] = CVec3( r.x2, r.y1, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSWRects: public ISWRects
 {
 	OBJECT_BASIC_METHODS(CSWRects);
@@ -304,9 +304,9 @@ public:
 	void Draw( CBumpRender *pRes ) { DrawRect( pRes ); }
 	void Draw( CFogRender *pRes ) { DrawRect( pRes ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSWSpot
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSWSpot: public ISWRects
 {
 	OBJECT_BASIC_METHODS(CSWSpot);
@@ -357,7 +357,7 @@ public:
 	void Draw( CBumpRender *pRes ) { DrawSpot( pRes ); }
 	void Draw( CFogRender *pRes ) { DrawSpot( pRes ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class C2DPostFilter : public ISWRects
 {
 	OBJECT_NOCOPY_METHODS(C2DPostFilter);
@@ -437,7 +437,7 @@ public:
 	void Draw( CBumpRender *pRes ) { ASSERT(0); }
 	void Draw( CFogRender *pRes ) { ASSERT(0); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGrayingFilter : public ISWRects
 {
 	OBJECT_NOCOPY_METHODS(CGrayingFilter);
@@ -465,9 +465,9 @@ public:
 	void Draw( CBumpRender *pRes ) { ASSERT(0); }
 	void Draw( CFogRender *pRes ) { ASSERT(0); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Software 2D Scene
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSW2DScene: public ISW2DScene
 {
 	OBJECT_BASIC_METHODS(CSW2DScene);
@@ -513,16 +513,16 @@ public:
 	void DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport );
 	void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Create scene
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ISW2DScene* Make2DSWScene()
 {
 	return new CSW2DScene;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSW2DScene
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout )
 {
 	if ( !pTexture )
@@ -531,7 +531,7 @@ CObjectBase* CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, co
 	rects.push_back( pRes );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
 	const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle )
 {
@@ -541,19 +541,19 @@ CObjectBase* CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
 	rects.push_back( pSpot );
 	return pSpot;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSW2DScene::AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY )
 {
 	if ( !pTexture )
 		return;
 	rects.push_back( new C2DPostFilter( pTexture, _nCenterX, _nCenterY ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSW2DScene::AddGrayingFilter( const CVec4 &vConvolution )
 {
 	rects.push_back( new CGrayingFilter( vConvolution ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma warning( disable : 4799 )
 static void StartHiColorConvert4444()
 {
@@ -570,7 +570,7 @@ static void StartHiColorConvert4444()
 		punpckldq mm7, mm7
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ConvertToHiColor4444( void *pDst, void *pSrc, int nSize )
 {
 	ASSERT( ( nSize & 1 ) == 0 && nSize > 0 );
@@ -598,7 +598,7 @@ lp:
 		jnz lp
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcMip( CArray2D<NGfx::SPixel8888> *pRes )
 {
 	CArray2D<NGfx::SPixel8888> src = *pRes;
@@ -620,7 +620,7 @@ static void CalcMip( CArray2D<NGfx::SPixel8888> *pRes )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear )
 {
 	CTrueColorRender r;
@@ -666,7 +666,7 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 		CalcMip( &r.res );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSW2DScene::DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport )
 {
 	CFogRender r;
@@ -684,7 +684,7 @@ void CSW2DScene::DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport 
 			(*pFogMap)[y][x] = r.res[y][x];
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcMip( CArray2D<SBumpPixel> *pRes )
 {
 	CArray2D<SBumpPixel> src = *pRes;
@@ -700,7 +700,7 @@ static void CalcMip( CArray2D<SBumpPixel> *pRes )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget, int nMip, float fScale )
 {
 	CDynamicCast<NGfx::I2DBuffer> p2DBuffer( pTarget );
@@ -739,7 +739,7 @@ static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget,
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSW2DScene::DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float _fBumpScale )
 {
 	float fBumpScale = _fBumpScale;
@@ -756,9 +756,9 @@ void CSW2DScene::DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewpor
 		fBumpScale /= 2;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;
 BASIC_REGISTER_CLASS( ISWRects );
 REGISTER_SAVELOAD_CLASS( 0xF3005171, CSWRects )

@@ -9,7 +9,7 @@
 #include "TerrainInfo.h"
 #include "Scene.h"
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_INV_255 ( 1.0f / 255.0f )
 #define DEF_HEIGHT_BIAS 0.1f
 
@@ -76,9 +76,9 @@
 #define DEF_FOAM_SPEED_QUAD 0.1f
 #define DEF_FOAM_SPEED_QUAD_X 0.31622776f
 #define DEF_FOAM_SPEED_QUAD_SCALE (1.0f / DEF_FOAM_SPEED_QUAD)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //static int nLastRandSeed = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // normal.w - transparency
 // texU.rgb - dwColor (texU.w is occupied by fog)
 // texV.rgb - cScndTex (texV.w is occupied by fog)
@@ -93,7 +93,7 @@ static __forceinline void SetupColors( NGScene::SVertex *pRes, const DWORD dwCol
 	nSndTex |= nSndTex << 16;
 	pRes->texV.dw = nSndTex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWaterPatch::CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, CCSBound *_pBound )
 : pDesc( _pDesc ), pTimer( _pTimer ), pBound( _pBound )
 {
@@ -107,14 +107,14 @@ CWaterPatch::CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, 
 	layerWater.pPatch = new CWaterPatchLayer( this );
 	layerSurf.pPatch = new CWaterPatchLayer( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterPatch::Create( NGScene::IGameView *pGView )
 {
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo(NGScene::LF_SKIP_LIGHTING, -100), 0, 0 );
 	layerWater.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo(layerWater.pPatch, pDesc->pWaterSet->water.pMaterial), 0, pBound, NGScene::MakeLargeHintBound(), room );
 	layerSurf.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo(layerSurf.pPatch, pDesc->pWaterSet->pSurf), 0, pBound, NGScene::MakeLargeHintBound(), room );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //static vector<CVec3> lastPositions( 128 );
 int CWaterPatch::Process( const long nTime )
 {
@@ -608,28 +608,28 @@ int CWaterPatch::Process( const long nTime )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float CWaterPatch::GetPhase( const int x, const int y, const int curw )
 {
 	return waves[curw].fDeepWaveNumber / GetTanHyperbolic( waves[curw].fDeepWaveNumber * waterSurf[y][x].fHeight );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float CWaterPatch::GetTanHyperbolic( const float z )
 {
 	return ( exp( z ) - exp( -z )) / ( exp( z ) + exp( -z ));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float CWaterPatch::GetFracPart( const float z )
 {
 	return z - (int)z;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float CWaterPatch::GetWaveProfile( const float z )
 {
 	const float t = z - 0.5f;
 	return 24.0f * t * t * t * t * t * t;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVec2 &dsize, const CVec2 &org, const float _fRotAngle )
 {
 	unsigned long nCount = 0;
@@ -939,7 +939,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 {
 	float fDefPhase;
@@ -992,7 +992,7 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterPatch::Recalc()
 {
 	NTimer::STime time = pTimer->GetValue();
@@ -1002,7 +1002,7 @@ void CWaterPatch::Recalc()
 	layerWater.pPatch->UpdateMesh( &objDataWater );
 	layerSurf.pPatch->UpdateMesh( &objDataSurf );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int nPatchesY )
 {
 	int nWaterWidth = 15;
@@ -1082,23 +1082,23 @@ void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int 
 												CVec2(DEF_WATER_TILE_SIZE, DEF_WATER_TILE_SIZE), vOffs, fAngle );
 	patches.back()->Create( pGView );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWaterPatchLayer::operator&( IBinSaver &saver )
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWaterPatch::operator&( IBinSaver &saver )
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWater::operator&( IBinSaver &saver )
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100BB400, CWaterPatchLayer );
 REGISTER_SAVELOAD_CLASS( 0x100BB401, CWaterPatch );
 REGISTER_SAVELOAD_CLASS( 0x100BB402, CWater );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

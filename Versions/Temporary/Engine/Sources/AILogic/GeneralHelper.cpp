@@ -42,12 +42,12 @@ bool SGeneralHelper::SDeadPredicate::operator() ( CCommonUnit * pUnit )
 {
 	return !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGeneralHelper::SInactiveUnitPredicate::operator() ( class CCommonUnit * pUnit )
 {
 	return !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() || pUnit->GetParty() != nParty;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											SGeneralHelper*
 //*******************************************************************
@@ -81,7 +81,7 @@ float SGeneralHelper::CalcUnitSeverity( const CCommonUnit *pUnit )
 	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return 0;
 	return pUnit->GetPriceMax();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGeneralHelper::RemoveDead( CommonUnits *pUnits )
 {
 	SGeneralHelper::SDeadPredicate deadPred;
@@ -90,7 +90,7 @@ bool SGeneralHelper::RemoveDead( CommonUnits *pUnits )
 	pUnits->erase( firstDead, pUnits->end() );
 	return bDeleted;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGeneralHelper::RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer )
 {
 	SGeneralHelper::SInactiveUnitPredicate deadPred( nPlayer );
@@ -99,4 +99,4 @@ bool SGeneralHelper::RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer )
 	pUnits->erase( firstDead, pUnits->end() );
 	return bDeleted;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -4,10 +4,10 @@
 #include "../System/FilePath.h"
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NSlnAnalyzer
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SXMLValue
 {
 	string szName, szValue;
@@ -68,7 +68,7 @@ inline SXMLSection operator+( const SXMLSection &a, const SXMLValue &b )
 	res += b;
 	return res;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSection
 {
 	string szName, szParam;
@@ -171,7 +171,7 @@ static const char *LoadSection( const char *pszData, vector<SSection> *pRes, int
 	}
 	return pszData;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char *pszSlnHeader = "Microsoft Visual Studio Solution File, Format Version 8.00\r\n";
 static void LoadSln( const char *pszData, vector<SSection> *pRes, const string &szSlnFile )
 {
@@ -184,7 +184,7 @@ static void LoadSln( const char *pszData, vector<SSection> *pRes, const string &
 	while ( *pszData )
 		pszData = LoadSection( pszData, pRes, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SProject
 {
 	string szName, szGUID;
@@ -215,7 +215,7 @@ static void CollectProjects( const vector<SSection> &sln, vector<SProject> *pRes
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CollectProjects( const string &szSlnName, const string &szBasePath, vector<SProject> *pProjects )
 {
 	const string szSlnFile = szBasePath + szSlnName + ".sln";
@@ -235,7 +235,7 @@ static void CollectProjects( const string &szSlnName, const string &szBasePath, 
 
 	CollectProjects( sections, pProjects );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetProjectsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pProjects )
 {
 	vector<SProject> projects;
@@ -245,7 +245,7 @@ void GetProjectsOfSln( const string &szSlnName, const string &szBasePath, vector
 	for ( int i = 0; i < projects.size(); ++i )
 		(*pProjects)[i] = projects[i].szName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char *SkipSpaces( const char *p )
 {
 	while ( *p && isspace(*p) )
@@ -270,7 +270,7 @@ static const char *ReadName( const char *p, string *pRes )
 	}
 	return p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const char *LoadXMLStatement( SXMLSection *pRes, const char *pszData )
 {
 	pszData = SkipSpaces( pszData );
@@ -319,9 +319,9 @@ static const char *LoadXMLStatement( SXMLSection *pRes, const char *pszData )
 	}
 	return pszData;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char *szXMLHeader = "<?xml version=\"1.0\" encoding=\"windows-1251\"?>";
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool LoadXML( SXMLSection *pRes, const char *pszData )
 {
 	int nXMLHeaderSize = strlen(szXMLHeader);
@@ -337,7 +337,7 @@ static bool LoadXML( SXMLSection *pRes, const char *pszData )
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CollectFiles( SXMLSection *pRes, vector<string> *pFiles )
 {
 	if ( !pRes )
@@ -353,7 +353,7 @@ static void CollectFiles( SXMLSection *pRes, vector<string> *pFiles )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFilesAdder
 {
 	vector<string> *pFiles;
@@ -370,7 +370,7 @@ struct SFilesAdder
 		}
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetAllFilesOfDescProj( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
 {
 	vector<string> projects;
@@ -411,7 +411,7 @@ static void GetAllFilesOfDescProj( const string &szSlnName, const string &szBase
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetAllSlnFilesFromDisc( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
 {
 	vector<string> projects;
@@ -425,7 +425,7 @@ static void GetAllSlnFilesFromDisc( const string &szSlnName, const string &szBas
 		NFile::EnumerateFiles( szPath, "*.cll", SFilesAdder( pFiles ), true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetTypesDescriptorsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
 {
 	vector<string> allDBFiles;
@@ -461,6 +461,6 @@ void GetTypesDescriptorsOfSln( const string &szSlnName, const string &szBasePath
 	pFiles->push_back( szBasePath + "base.cll" );
 	pFiles->push_back( szBasePath + "game.cll" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

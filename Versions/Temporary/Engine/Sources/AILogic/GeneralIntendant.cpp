@@ -20,7 +20,7 @@
 #include "Artillery.h"
 #include "../System/Commands.h"
 #include "GlobalWarFog.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NAI::CTimeCounter timeCounter;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
@@ -28,40 +28,40 @@ extern CStaticObjects theStatObjs;
 extern CSupremeBeing theSupremeBeing;
 extern NTimer::STime curTime;
 extern CGlobalWarFog theWarFog;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CGeneralIntendant );
 static const unsigned int INTENDANT_TASKS_PER_SEGMENT = 5;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D495, CGeneralTaskCheckCellDanger );
 REGISTER_SAVELOAD_CLASS( 0x1508D496, CGeneralTaskToResupplyCell );
 REGISTER_SAVELOAD_CLASS_NM( 0x1508D497, CWaitForChangePlayer, CGeneralTaskToDefendStorage );
 REGISTER_SAVELOAD_CLASS( 0x1508D498, CResupplyCellInfo );
 REGISTER_SAVELOAD_CLASS( 0x1508D49B, CGeneralTaskToDefendStorage );
 REGISTER_SAVELOAD_CLASS( 0x1508D49C, CGeneralIntendant );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CGeneralTaskToDefendStorage*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToDefendStorage::CWaitForChangePlayer::CWaitForChangePlayer( CBuilding * pStorage, CGeneralTaskToDefendStorage * pMainTask, const int nParty )
 	: pStorage( pStorage ), pMainTask( pMainTask ), nParty( nParty )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendStorage::CWaitForChangePlayer::IsTimeToRun() const
 {
 	return theDipl.GetNParty( pStorage->GetPlayer() ) == nParty ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::CWaitForChangePlayer::Run()
 {
 	pMainTask->Recaptured();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CGeneralTaskToDefendStorage*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage ( CBuilding * pStorage, const int nParty ) 
 : pStorage( pStorage ),
   fSeverity( 0 ),
@@ -72,7 +72,7 @@ CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage ( CBuilding * pStorage,
 	eState = EDI_FRIEND == theDipl.GetDiplStatusForParties( theDipl.GetNParty(pStorage->GetPlayer()), nParty ) ?
 					 TS_OPERATE : TS_RECAPTURE ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit )
 {
 	if ( !bInit && fSeverity < fMaxSeverity )
@@ -90,7 +90,7 @@ void CGeneralTaskToDefendStorage::AskForWorker( ICommander *pManager, const floa
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendStorage::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
 	switch( eType )
@@ -107,12 +107,12 @@ bool CGeneralTaskToDefendStorage::EnumWorker( class CCommonUnit *pUnit, const en
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralTaskToDefendStorage::NeedNBest( const enum EForceType eType ) const 
 { 
 	return (eType == FT_TRUCK_REPAIR_BUILDING ? 1 : 0);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const 
 { 
 	switch( eType )
@@ -131,7 +131,7 @@ float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, co
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendStorage::EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const
 {
 	switch( eType )
@@ -143,7 +143,7 @@ bool CGeneralTaskToDefendStorage::EvaluateWorker( CCommonUnit * pUnit, const enu
 	//
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
 {
 	if ( wRequestID && eState == TS_FINISH_RECAPTURE )
@@ -159,19 +159,19 @@ void CGeneralTaskToDefendStorage::ReleaseWorker( ICommander *pManager, const flo
 		pRepairTransport = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::CancelTask( ICommander *pManager )
 {
 	if ( pRepairTransport )
 		pManager->Give( pRepairTransport );
 	pRepairTransport = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::Recaptured()
 {
 	eState = TS_FINISH_RECAPTURE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendStorage::Segment()
 {
 	switch( eState )
@@ -232,11 +232,11 @@ void CGeneralTaskToDefendStorage::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CGeneralIntendant::SEnumStorages*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate 
 {
@@ -252,11 +252,11 @@ struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CGeneralTaskToResupplyCell*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToResupplyCell::CGeneralTaskToResupplyCell( CResupplyCellInfo * pCell, const int nParty, const enum EResupplyType _eResupplyType, class CGeneralIntendant *_pCells ) 
 : pCell( pCell ), fSeverity( 1.0f ), eResupplyType( _eResupplyType ), bFinished( false ), nParty( nParty ),
 	timeNextCheck ( curTime ), pCells( _pCells )
@@ -265,7 +265,7 @@ CGeneralTaskToResupplyCell::CGeneralTaskToResupplyCell( CResupplyCellInfo * pCel
 	vResupplyCenter = pCell->CalcResupplyPos( eResupplyType );
 	theSupremeBeing.RegisterDelayedTask( new CGeneralTaskCheckCellDanger( this, pCell, eResupplyType, _pCells ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToResupplyCell::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit ) 
 { 
 	if ( !bInit &&
@@ -274,7 +274,7 @@ void CGeneralTaskToResupplyCell::AskForWorker( ICommander *pManager, const float
 			 !IsValidObj( pResupplyTransport) )
 		pManager->EnumWorkers( FT_TRUCK_RESUPPLY, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const float fMinSeverity ) 
 { 
 	if ( bFinished )
@@ -287,13 +287,13 @@ void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const floa
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToResupplyCell::CancelTask( ICommander *pManager ) 
 { 
 	bFinished = true;
 	ReleaseWorker( pManager, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToResupplyCell::Segment() 
 { 
 	//transport was killed.
@@ -315,7 +315,7 @@ void CGeneralTaskToResupplyCell::Segment()
 	if ( fSeverity == 1 && curTime >= timeNextCheck )
 		fSeverity = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enum EForceType _eType ) 
 { 
 	NI_ASSERT( !IsValidObj( pResupplyTransport ), "2 transport at 1 task" );
@@ -325,33 +325,33 @@ bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enu
 	fSeverity = 0;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToResupplyCell::EvaluateWorker( CCommonUnit * pUnit, const enum EForceType _eType ) const
 { 
 	return pCell->IsUnitSuitable( pUnit, eResupplyType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralTaskToResupplyCell::NeedNBest( const enum EForceType _eType ) const
 { 
 	return 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToResupplyCell::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType _eType ) const
 { 
 	return 1000.0f / fabs2( pUnit->GetCenterPlain() - vResupplyCenter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //*******************************************************************
 //*								CResupplyCellInfo*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CResupplyCellInfo::CResupplyCellInfo()
 : cMarkedUnderSupply( 0 ), fCount( 0.0f ), timeLastDanger( 0 )
 {
 	resupplyCount.resize( _ERT_COUNT, 0.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::AddUnitResupply( CCommonUnit *pUnit, const enum EResupplyType eType )
 {
 	if ( pUnit->IsRefValid() && pUnit->IsAlive() )
@@ -371,7 +371,7 @@ void CResupplyCellInfo::AddUnitResupply( CCommonUnit *pUnit, const enum EResuppl
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::RemoveUnitResupply( class CCommonUnit *pUnit, const enum EResupplyType eType )
 {
 	const int nID = pUnit->GetUniqueId();
@@ -383,7 +383,7 @@ void CResupplyCellInfo::RemoveUnitResupply( class CCommonUnit *pUnit, const enum
 			RemoveUnitResupplyInternal( pUnit, eType );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::RemoveUnitResupplyInternal( class CCommonUnit *pUnit, const enum EResupplyType eType )
 {
 	const float fPrice = pUnit->GetPriceMax();
@@ -398,17 +398,17 @@ void CResupplyCellInfo::RemoveUnitResupplyInternal( class CCommonUnit *pUnit, co
 	if ( 0 == curInfo->second )
 		resupplyInfo.erase( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::SetDanger( const NTimer::STime timeDanger ) 
 { 
 	timeLastDanger = timeDanger; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CResupplyCellInfo::IsDangerous() const 
 { 
 	return timeLastDanger && timeLastDanger > curTime; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const BYTE cRes )
 {
 	NI_ASSERT( 0 !=  cRes, "unit doesn't need resupply" );
@@ -422,7 +422,7 @@ void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const BYTE cRes )
 			AddUnitResupply( pUnit, static_cast<EResupplyType>(i) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BYTE CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 {
 //	const float fPrice = pUnit->GetPriceMax();
@@ -442,7 +442,7 @@ BYTE CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CResupplyCellInfo::GetNNeeded( const BYTE cTypeMask ) const
 {
 	float fLocalCount = 0;
@@ -453,18 +453,18 @@ float CResupplyCellInfo::GetNNeeded( const BYTE cTypeMask ) const
 	}
 	return fLocalCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CResupplyCellInfo::IsEmpty() const
 {
 	return fCount == 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CResupplyCellInfo::IsUnitRegistered( CCommonUnit * pUnit ) const
 {
 	CResupplyInfo::const_iterator it = resupplyInfo.find( pUnit->GetUniqueId() );
 	return it != resupplyInfo.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::MarkUnderSupply( const enum EResupplyType eType, const bool bSupply )
 {
 	if ( bSupply )
@@ -472,7 +472,7 @@ void CResupplyCellInfo::MarkUnderSupply( const enum EResupplyType eType, const b
 	else
 		cMarkedUnderSupply &= ~(1<<eType);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CResupplyCellInfo::IsUnitSuitable( const class CCommonUnit * pUnit, const enum EResupplyType eType )
 {
 	switch( eType )
@@ -492,7 +492,7 @@ bool CResupplyCellInfo::IsUnitSuitable( const class CCommonUnit * pUnit, const e
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CResupplyCellInfo::IssueCommand( class CCommonUnit * pUnit, const enum EResupplyType eType, const CVec2 &vResupplyCenter )
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_TO_NOT_PRESIZE, vResupplyCenter, SConsts::GENERAL_CELL_SIZE * 2 ), pUnit, false );
@@ -518,12 +518,12 @@ void CResupplyCellInfo::IssueCommand( class CCommonUnit * pUnit, const enum ERes
 	}
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CResupplyCellInfo::CalcResupplyPos( const enum EResupplyType eType ) const
 {
 	return AICellsTiles::GetCenterOfGeneralCell( vCell );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CFreeArtilleryHolder                              *
 //*******************************************************************
@@ -537,7 +537,7 @@ void CFreeArtilleryHolder::ResetIterator()
 		timeFromReset = curTime;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFreeArtilleryHolder::AddArtillery( CArtillery *pArtillery )
 {
 	const int nUnitID = pArtillery->GetUniqueID();
@@ -550,7 +550,7 @@ void CFreeArtilleryHolder::AddArtillery( CArtillery *pArtillery )
 	else
 		itCurrent = artilleries.find( nCurrentID );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFreeArtilleryHolder::RemoveArtillery( CArtillery *pArtillery )
 {
 	const int nUnitID = pArtillery->GetUniqueID();
@@ -567,7 +567,7 @@ void CFreeArtilleryHolder::RemoveArtillery( CArtillery *pArtillery )
 	else
 		itCurrent = artilleries.find( nCurrentID );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CFreeArtilleryHolder::IsValidCurrent() const
 {
 	if ( itCurrent == artilleries.end() )
@@ -575,7 +575,7 @@ const bool CFreeArtilleryHolder::IsValidCurrent() const
 	
 	return IsValid( itCurrent->second.pArtillery ) && !(itCurrent->second.pArtillery->HasServeCrew());
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CFreeArtilleryHolder::IsFreeCurrent() const
 {
 	if ( itCurrent == artilleries.end() )
@@ -590,7 +590,7 @@ const bool CFreeArtilleryHolder::IsFreeCurrent() const
 	itCurrent->second.pCatchingFormation = 0;
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFreeArtilleryHolder::Segment()
 {
 	if ( artilleries.empty() )
@@ -615,28 +615,28 @@ void CFreeArtilleryHolder::Segment()
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CArtillery *CFreeArtilleryHolder::Get() const
 {
 	return itCurrent == artilleries.end() ? 0 : itCurrent->second.pArtillery;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFreeArtilleryHolder::TryCatch( CFormation *pFormation )
 {
 	if ( itCurrent != artilleries.end() )
 		itCurrent->second.pCatchingFormation = pFormation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFreeArtilleryHolder::OnSerialize( IBinSaver &f )
 {
 	if ( f.IsReading() )
 		ResetIterator();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								CGeneralIntendant*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralIntendant::CGeneralIntendant( const int nParty, CCommander *pGeneral)
 : nParty( nParty ), pGeneral( pGeneral ), bInitedByParcel( false )
 {
@@ -645,7 +645,7 @@ CGeneralIntendant::CGeneralIntendant( const int nParty, CCommander *pGeneral)
 	// Switched sizes (X and Y) in an attempt to evade assert - Stas
 	//Init();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::Give( CCommonUnit *pWorker )
 {
 	NI_ASSERT( dynamic_cast<CAIUnit*>( pWorker ) != 0, "not mech unit" );
@@ -669,7 +669,7 @@ void CGeneralIntendant::Give( CCommonUnit *pWorker )
 	const CVec2 vLookPoint( vPositions[nBest].first + GetVectorByDirection( vPositions[nBest].second ) );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_ROTATE_TO, vLookPoint), pWorker, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::AddReiforcePositions( const struct NDb::SAIGeneralParcel &patchInfo )
 {
 	bInitedByParcel = true;
@@ -688,13 +688,13 @@ void CGeneralIntendant::AddReiforcePositions( const struct NDb::SAIGeneralParcel
 	if ( vPositions.empty() )
 		vPositions.push_back( CPosition( patchInfo.vCenter, patchInfo.GetDir() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::AddReiforcePosition( const CVec2 & vPos, const WORD wDirection )
 {
 	if ( !bInitedByParcel )
 		vPositions.push_back( CPosition( vPos, wDirection ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::Init()
 {
 	SEnumStorages en;
@@ -721,22 +721,22 @@ void CGeneralIntendant::Init()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator )
 {
 	EnumWorkersInternal( eType, pEnumerator, &resupplyTrucks );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralIntendant::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType )
 {
 	return pGeneral->RequestForSupport( vSupportCenter, eType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::CancelRequest( int nRequestID, enum EForceType eType )
 {
 	pGeneral->CancelRequest( nRequestID, eType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::UnitDead( class CCommonUnit * pUnit )
 {
 	if ( !IsUnitRegistered( pUnit ) )	return;
@@ -746,7 +746,7 @@ void CGeneralIntendant::UnitDead( class CCommonUnit * pUnit )
 	if ( pFormerCell->second->IsEmpty() )
 		cellsWithRequests.erase( pFormerCell );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &vNewPos )
 {
 	if ( !IsUnitRegistered( pUnit ) ) return;
@@ -759,7 +759,7 @@ void CGeneralIntendant::UnitChangedPosition( class CCommonUnit *pUnit, const CVe
 	if ( pFormerCell->second->IsEmpty() )
 		cellsWithRequests.erase( pFormerCell );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::SetArtilleryVisible( const CAIUnit *pArtillery, const bool bVisible )
 {
 	/*
@@ -769,7 +769,7 @@ void CGeneralIntendant::SetArtilleryVisible( const CAIUnit *pArtillery, const bo
 		it->second->SetVisible( pArtillery, bVisible );
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit * pUnit, const enum EResupplyType eType, const bool bSet )
 {
 	if ( eType == ERT_HUMAN_RESUPPLY && !pUnit->IsFormation() )
@@ -818,14 +818,14 @@ void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit * pUnit, const e
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CGeneralIntendant::IsUnitRegistered( CCommonUnit * pUnit ) const
 {
 	const SVector vCell( AICellsTiles::GetGeneralCell( pUnit->GetCenterPlain() ) );
 	ResupplyCells::const_iterator it = cellsWithRequests.find( vCell );
 	return cellsWithRequests.end() != it && it->second->IsUnitRegistered( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralIntendant::ResupplyCells::iterator CGeneralIntendant::GetCell( const CVec2 &vPos )
 {
 	// if the cell with unit exists, them return int
@@ -842,7 +842,7 @@ CGeneralIntendant::ResupplyCells::iterator CGeneralIntendant::GetCell( const CVe
 	cellsWithRequests[vCell] = cells[vCell.y][vCell.x];
 	return cellsWithRequests.find( vCell );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::SearchCrewForArtillery()
 {
 	freeArtilleryHolder.Segment();
@@ -881,7 +881,7 @@ void CGeneralIntendant::SearchCrewForArtillery()
 		//DebugTrace( "formation %d try take artillery %d (dist2: %2.3f)", pBestFormation->GetUniqueID(), pArtillery->GetUniqueID(), fBestDist2 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::Segment()
 {
 	CCommander::Segment();
@@ -938,7 +938,7 @@ void CGeneralIntendant::Segment()
 	}
 	SearchCrewForArtillery();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralIntendant::MarkCellsDangerous( const SVector &vCell )
 {
 	const int nRadius = SGeneralConsts::INTENDANT_DANGEROUS_CELL_RADIUS / ( SConsts::GENERAL_CELL_SIZE ) + 1;
@@ -961,4 +961,4 @@ void CGeneralIntendant::MarkCellsDangerous( const SVector &vCell )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

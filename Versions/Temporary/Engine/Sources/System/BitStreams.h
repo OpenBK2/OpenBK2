@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // класс для последовательной записи/считывания данных, включая возможность записи
 // или считывания побитных данных, может использоваться на произовольных областях
 // памяти
@@ -58,7 +58,7 @@ public:
 
 	friend class CBitEmbedded;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // класс для выполнения побитного и скоростного ввода/вывода в поток общего назначения
 // после того, как с CDataStream начинает работать CBitLocker прямые операции с 
 // DataStream приведут к некорректному результату
@@ -79,7 +79,7 @@ public:
 	void ReserveWrite( unsigned int nSize );
 	void Free();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBitEmbedded: public CBitStream
 {
 	CBitStream &bits;
@@ -94,9 +94,9 @@ public:
 				~CBitEmbedded() { bits.pCurrent = pCurrent; }
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CBitStream realization
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CBitStream::Init( unsigned char *pData, Mode _mode, int nSize )
 {
 	pCurrent = pData; nBitsCount = 0; pBitPtr = 0;
@@ -105,7 +105,7 @@ inline void CBitStream::Init( unsigned char *pData, Mode _mode, int nSize )
 	pReservedEnd = pCurrent + nSize;
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CBitStream::WriteBits( unsigned int _nBits, unsigned int _nBitsCount )
 {
 	if ( nBitsCount != 0 )
@@ -127,7 +127,7 @@ inline void CBitStream::WriteBits( unsigned int _nBits, unsigned int _nBitsCount
 	}
 	CheckCurrentW();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CBitStream::WriteBit( unsigned int _nBits )
 {
 	if ( nBitsCount == 0 )
@@ -149,7 +149,7 @@ inline void CBitStream::WriteBit( unsigned int _nBits )
 	}
 	CheckCurrentW();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline unsigned int CBitStream::ReadBits( unsigned int _nBitsCount )
 {
 	while ( nBitsCount < _nBitsCount )
@@ -163,7 +163,7 @@ inline unsigned int CBitStream::ReadBits( unsigned int _nBitsCount )
 	CheckCurrentR();
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline unsigned int CBitStream::ReadBit()
 {
 	if ( nBitsCount < 1 )

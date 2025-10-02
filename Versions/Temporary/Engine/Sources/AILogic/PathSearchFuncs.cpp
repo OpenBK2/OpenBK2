@@ -3,9 +3,9 @@
 #include "PathFinder.h"
 #include "Soldier.h"
 #include "PointChecking.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IStaticPathFinder );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, bool bIgnoreObstacles )
 {
 	// видно в любой стороны
@@ -71,7 +71,7 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 				fRangeMin, fRangeMax, fMinDist, ( pSoldier->GetMaxAngle() - pSoldier->GetMinAngle() ) / 2, bIgnoreObstacles );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const WORD wHalfAngle, const bool bIgnoreObstacles )
 {
 	const WORD wAttackDir = GetDirectionByVector( attackDir );
@@ -101,7 +101,7 @@ IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarg
 	else
 		return pPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking )
 {
 	// чтобы удалилось
@@ -116,7 +116,7 @@ IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTarge
 
 	return pPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath* CreateStaticPathForStObjAttack( CBasePathUnit *pUnit, CStaticObject *pObj, const float fRangeMin, const float fRangeMax, const bool bIgnoreObstacles )
 {
 	const CVec2 vUnitCenter( pUnit->GetCenterPlain() );	
@@ -132,7 +132,7 @@ IStaticPath* CreateStaticPathForStObjAttack( CBasePathUnit *pUnit, CStaticObject
 
 	return pPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path, const CAIUnit *Standing )
 {
 	if( !Path ) 
@@ -150,7 +150,7 @@ bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path
 	return 
 		rMovingFinal.IsIntersected( rStanding );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Path, const CVec2 &point )
 {
 	if( !Path ) 
@@ -168,7 +168,7 @@ bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Pat
 	return 
 		rMovingFinal.IsPointInside( point );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Path, const CStaticObject *standing )
 {
 	if( !Path ) 
@@ -188,7 +188,7 @@ bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Pa
 	return 
 		rMovingFinal.IsIntersected( rStanding );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsUnitNearObject( const CAIUnit *pUnit, const CStaticObject *pObj )
 {
 	SRect r1 = pUnit->GetUnitRect();
@@ -200,7 +200,7 @@ bool IsUnitNearObject( const CAIUnit *pUnit, const CStaticObject *pObj )
 	
 	return r1.IsIntersected( r2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsUnitNearUnit( const CAIUnit *pUnit1, const CAIUnit *pUnit2 )
 {
 	SRect r1 = pUnit1->GetUnitRect();
@@ -211,7 +211,7 @@ bool IsUnitNearUnit( const CAIUnit *pUnit1, const CAIUnit *pUnit2 )
 	
 	return r1.IsIntersected( r2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsUnitNearPoint( const CAIUnit *pUnit, const CVec2 &point, const int add )
 {
 	SRect r1 = pUnit->GetUnitRect();
@@ -219,9 +219,9 @@ bool IsUnitNearPoint( const CAIUnit *pUnit, const CVec2 &point, const int add )
 
 	return r1.IsPointInside( point );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsPointNearPoint( const CVec2 &point1, const CVec2 &point2 )
 {
 	return fabs2(point1-point2) < sqr(static_cast<int>(SConsts::TILE_SIZE) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

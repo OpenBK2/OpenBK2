@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum
 {
 	CONSOLE_STREAM_CONSOLE	= 2,					// feedback to console (just to display)
@@ -12,7 +12,7 @@ enum
 	// +0, +1 - debug windows, scrollable texts
 	// +2, +3, +4, +5 - single string windows.
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IConsoleBuffer : public CObjectBase
 {
 	enum { tidTypeID = 0 };
@@ -34,7 +34,7 @@ interface IConsoleBuffer : public CObjectBase
 	virtual void SetLogfile( const char *pszFilename ) = 0;
 	virtual bool GetNextLine( SConsoleLine *pRes, int *pSequenceID ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum
 {
 	PIPE_WORLD_CMDS = 0,

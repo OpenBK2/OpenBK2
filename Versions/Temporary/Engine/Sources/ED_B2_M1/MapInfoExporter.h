@@ -4,7 +4,7 @@
 #pragma once
 #include "..\mapeditorlib\interface_commandhandler.h"
 #include "..\MapEditorLib\Interface_Exporter.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapInfoExporter : public IExporter, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CMapInfoExporter );
@@ -44,5 +44,5 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPINFO_EXPORTER__)

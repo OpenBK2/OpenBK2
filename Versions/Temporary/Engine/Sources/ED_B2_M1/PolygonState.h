@@ -7,7 +7,7 @@
 #include "..\MapEditorLib\Interface_CommandHandler.h"
 #include "MapInfoStoreInputState.h"
 #include "../libdb/Manipulator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPolygonSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -31,7 +31,7 @@ class CPolygonSelectState : public CDefaultInputState
 	void OnRButtonDown		( UINT nFlags, const CTPoint<int> &rMousePoint );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPolygonEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -57,7 +57,7 @@ class CPolygonEditState : public CDefaultInputState
 	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPolygonAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -85,7 +85,7 @@ class CPolygonAddState : public CDefaultInputState
 	void OnKeyDown				( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPolygonState : public CMultiInputState, public ICommandHandler
 {
 	friend class CPolygonStoreInputState;
@@ -236,6 +236,6 @@ public:
 	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__POLYGON_STATE__)
 

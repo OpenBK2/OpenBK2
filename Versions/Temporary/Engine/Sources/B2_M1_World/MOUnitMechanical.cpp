@@ -17,20 +17,20 @@
 #include "../Stats_B2_M1/IClientGameConsts.h"
 #include "../System/Text.h"
 #include "../Common_RTS_AI/AIClasses.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map< NDb::EDesignUnitType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int GetAttachedGunID( const int nPlatform, const int nGun )
 {
 	return (nPlatform << 6) | nGun;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 {
 	if ( !bIsInitializedByDB )
@@ -56,9 +56,9 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 		return iconsSetDefault;
 	return it->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } //namespace
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitMechanical::IsInside( const int nID )
 {
 	for ( vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
@@ -68,7 +68,7 @@ bool CMOUnitMechanical::IsInside( const int nID )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::SetDiveSound( bool bDive )
 {
 	if ( GetStatsLocal()->pSoundDive )
@@ -79,7 +79,7 @@ void CMOUnitMechanical::SetDiveSound( bool bDive )
 			DetachSound( EAST_PLANE_DIVE );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc )
 {
 	const NDb::SMechUnitRPGStats* pStats = GetStatsLocal();
@@ -110,7 +110,7 @@ void CMOUnitMechanical::InitAttached( const NDb::ESeason eSeason, IChooseAttache
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	bMoved = false;
@@ -188,7 +188,7 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMOUnit::GetStatus( pStatus );
@@ -247,7 +247,7 @@ void CMOUnitMechanical::GetStatus( SObjectStatus *pStatus ) const
 
 	pStatus->bIsTransport = GetStatsLocal()->IsTransport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CMOUnit::GetActions( pActions, eActions );
@@ -315,7 +315,7 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 			pActions->RemoveAction( NDb::USER_ACTION_SUPPORT_RESUPPLY );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	CMOUnit::GetDisabledActions( pActions, eActions );
@@ -332,7 +332,7 @@ void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateState( const int nParam )
 {
 	switch( nParam ) 
@@ -349,7 +349,7 @@ void CMOUnitMechanical::AIUpdateState( const int nParam )
 		NInput::PostEvent( "update_selected_unit", 0, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CMOUnitMechanical::GetFirePoint( const int nPlatform, const int nGun ) const
 {
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
@@ -362,7 +362,7 @@ const CVec3 CMOUnitMechanical::GetFirePoint( const int nPlatform, const int nGun
 	NI_VERIFY( pAnimator->GetBonePosition( gun.szShootPoint.c_str(), &mShootPoint ), StrFmt( "Shoot point not found for gun %d at platform %d (bone's name \"%s\")", nGun, nPlatform, gun.szShootPoint.c_str() ), return VNULL3 );
 	return CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
 {																																								
 	const SAINotifyMechShot &shot = *( static_cast<const SAINotifyMechShot*>(&_shot) );
@@ -429,7 +429,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, const struct SAINotifyBaseShot &shot,
 																			const CVec3 &vStart, const NTimer::STime &currTime, IScene *pScene )
 {
@@ -446,7 +446,7 @@ void CMOUnitMechanical::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon
 		//pScene->AddLaserMark( vStart, vEnd );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &turn, const NTimer::STime &currTime, IScene *pScene, const bool bHorTurn )
 {
 	CQuat qRotTurret;
@@ -486,7 +486,7 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
@@ -685,7 +685,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			(*it)->UpdatePlacement( vPos, qRot, currTime, IsVisible() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport ) 
 { 
 	bool bChanged = (pTransport != _pTransport);
@@ -701,7 +701,7 @@ void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport )
 	if ( bChanged )
 		UpdateVisibility( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene )
 {
 	pIdleProcess = 0;
@@ -745,7 +745,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 	}
 	return pIdleProcess;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitMechanical::Load( interface IMOUnit *pMO, bool bEnter )
 {
 	const int nID = pMO->GetID();
@@ -776,7 +776,7 @@ bool CMOUnitMechanical::Load( interface IMOUnit *pMO, bool bEnter )
 	UpdateIcons();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitMechanical::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
@@ -810,7 +810,7 @@ bool CMOUnitMechanical::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 	UpdateIcons();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
@@ -818,19 +818,19 @@ void CMOUnitMechanical::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 	for ( int i = 0; i < vPassangers.size(); ++i )
 		(*pBuffer)[i] = vPassangers[i];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnitMechanical::GetFreePlaces() const
 {
 	const NDb::SMechUnitRPGStats *stats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	return stats->nPassangers - (vPassangers.size() - GetMechPassangersCount());
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnitMechanical::GetFreeMechPlaces() const
 {
 	const NDb::SMechUnitRPGStats *stats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 	return stats->boardedMechUnitPosition.size() - GetMechPassangersCount();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnitMechanical::GetMechPassangersCount() const
 {
 	int nCount = 0;
@@ -841,7 +841,7 @@ int CMOUnitMechanical::GetMechPassangersCount() const
 	}
 	return nCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::SetTrackBroken( const bool bNewValue )
 { 
 	if ( bTrackBroken != bNewValue ) 
@@ -850,7 +850,7 @@ void CMOUnitMechanical::SetTrackBroken( const bool bNewValue )
 		UpdateIcons();
 	} 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	SetIconsHitbar( IsVisible(), IsSelected() );
@@ -862,7 +862,7 @@ void CMOUnitMechanical::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 //	if ( bTrackBroken )
 //		iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_BROKENTRUCK );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 	const NDb::SModel *pModel, const vector<NDb::Svector_AnimDescs> &animdescs, 
 	const NDb::EAnimationType eAnimType, const int nAnimID )
@@ -879,7 +879,7 @@ const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::PlayAnimDescForAttached( IAttachedObject *pObject, const vector<NDb::Svector_AnimDescs> &animdescs,
 																								const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID )
 {
@@ -908,7 +908,7 @@ void CMOUnitMechanical::PlayAnimDescForAttached( IAttachedObject *pObject, const
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 {
 	const int nID = GetID();
@@ -953,7 +953,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, 
 																				 ISoundScene *pSoundScene, interface IClientAckManager *pAckManager )
 {
@@ -1054,7 +1054,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 		PlaceCrater( pStats->pdeathCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 {
 	const NTimer::STime timeEffect = Min( GameTimer()->GetGameTime(), pUpdate->nUpdateTime );
@@ -1082,7 +1082,7 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 			PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectFatality, timeEffect, GetCenter() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
@@ -1102,7 +1102,7 @@ void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 		pTransport->Load( this, false );
 	SetTransport( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason )
 {
 	switch ( pUpdate->eUpdateType ) 
@@ -1205,7 +1205,7 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::Select( bool bSelect )
 {
 	// show unit selections	
@@ -1217,12 +1217,12 @@ void CMOUnitMechanical::Select( bool bSelect )
   CMOSelectable::Select( bSelect );
   UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnitMechanical::NeedShowInterrior() const
 {
 	return !bArtilleryHooked;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOProjectile* CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
 {
 	const int nID = GetID();
@@ -1274,11 +1274,11 @@ CMOProjectile* CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::OnSerialize( IBinSaver &saver )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnitMechanical::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( IsValid( pOneFromCrew ) )
@@ -1286,5 +1286,5 @@ void CMOUnitMechanical::SendAcknowledgement( interface IClientAckManager *pAckMa
 	else
 		return CMOUnit::SendAcknowledgement( pAckManager, eAck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7487, CMOUnitMechanical );

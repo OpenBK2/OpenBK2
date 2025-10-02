@@ -3,7 +3,7 @@
 #include "MOUnitInfantry.h"
 #include "../3Dmotor/GAnimation.hpp"
 #include "../Stats_B2_M1/DBAnimB2.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CParatrooperAnimationProcess::Update( const NTimer::STime &time )
 {
 	if ( time >= timeToChange )
@@ -20,7 +20,7 @@ bool CParatrooperAnimationProcess::Update( const NTimer::STime &time )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CParachuteFinishProcess::Update( const NTimer::STime &time )
 {
 	if ( time >= timeToChange )
@@ -35,6 +35,6 @@ bool CParachuteFinishProcess::Update( const NTimer::STime &time )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1015CD00, CParatrooperAnimationProcess );
 REGISTER_SAVELOAD_CLASS( 0x1015E400, CParachuteFinishProcess );

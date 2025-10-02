@@ -11,10 +11,10 @@
 #include "../Common_RTS_AI/StaticMapHeights.h"
 #include "../System/RandomGen.h"
 #include <float.h>
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD TURN_TOLERANCE = 0;
 NTimer::STime lastTimeDiff = 50;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 {
 	vector<SRect> mediateRects;
@@ -36,7 +36,7 @@ struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasePathUnit::CBasePathUnit()
 {
 	bPlacementUpdated = false;
@@ -83,7 +83,7 @@ CBasePathUnit::CBasePathUnit()
 	wOldDirection = 0;
 	//DebugTrace( "wOldDirection = %d(0x%04x)", wOldDirection, wOldDirection );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ISmoothPath* CBasePathUnit::CreateSmoothPath()
 {
 	ISmoothPath *result = IsInfantry() ? MakeObject<ISmoothPath>( STANDART_SMOOTH_SOLDIER_PATH ) : MakeObject<ISmoothPath>( STANDART_SMOOTH_MECH_PATH );
@@ -91,7 +91,7 @@ ISmoothPath* CBasePathUnit::CreateSmoothPath()
 	result->Init( this, pPath, !IsInfantry(), true, pAIMap );
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::Init( const CVec3 &_vCenter, const WORD _wDirection, CAIMap *_pAIMap, ICollisionsCollector *_pCollisionsCollector, CCommonPathFinder *_pPathFinder )
 {
 	pPathFinder = _pPathFinder;
@@ -148,7 +148,7 @@ void CBasePathUnit::Init( const CVec3 &_vCenter, const WORD _wDirection, CAIMap 
 	}
 	bNoCollision = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SRect CBasePathUnit::GetUnitModifiedRect( const float fCompress ) const
 {
 	SRect result;
@@ -161,7 +161,7 @@ const SRect CBasePathUnit::GetUnitModifiedRect( const float fCompress ) const
 	result.Compress( fCompress );
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SetDirection( const WORD _wDirection, const bool bNeedUpdate )
 {
 //	const WORD wNewDirection = IsGoForward() ? _wDirection : _wDirection + 32768;
@@ -182,7 +182,7 @@ void CBasePathUnit::SetDirection( const WORD _wDirection, const bool bNeedUpdate
 			LockTiles();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 {
 	//DEBUG{ переодически попадаются "подземные юниты" (с z координатой равной 0). выставлять z координату - 
@@ -236,7 +236,7 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 	}
 	//bPlacementUpdated |= bNeedUpdate;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SetGoForward( const bool _bGoForward )
 {
 	if ( _bGoForward != bGoForward )
@@ -245,7 +245,7 @@ void CBasePathUnit::SetGoForward( const bool _bGoForward )
 		wDirection += 32768;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::MakeTurnToDirection( const WORD _wDirection )
 {
 	const WORD wNewFrontDir = IsGoForward() ? _wDirection : _wDirection + 32768;
@@ -278,7 +278,7 @@ const bool CBasePathUnit::MakeTurnToDirection( const WORD _wDirection )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::TurnToDirection( const WORD _wDirection, const bool bCanBackward, const bool bCanForward )
 {
 	bTurnCalled = true;
@@ -309,13 +309,13 @@ const bool CBasePathUnit::TurnToDirection( const WORD _wDirection, const bool bC
 		return MakeTurnToDirection( _wDirection );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::TurnToTarget( const CVec2 &vTarget )
 {
 	const CVec3 vPos( GetCenter() );
 	return TurnToDirection( GetDirectionByVector( CVec2( vTarget.x - vPos.x, vTarget.y - vPos.y ) ), false, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 {
 	if ( IsRound() )
@@ -334,7 +334,7 @@ bool CBasePathUnit::CanMake180DegreesTurn( SRect rect ) const
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildPath )
 {
 	if ( IsRound() )
@@ -428,12 +428,12 @@ const bool CBasePathUnit::CanTurnTo( const WORD wNewDir, const bool bCanRebuildP
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::CanTurnToFrontDir( const WORD _wDirection ) const
 {
 	return CheckTurn( 1.0f, GetVectorByDirection( _wDirection ), true, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const
 {
 	if ( IsRound() )
@@ -477,7 +477,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 		return IterateUnits( rect.center, rect.lengthAhead, false, SCheckTurnIterateUnitsCallback( mediateRects ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SetSpeed( const EAdjustSpeedParam eAdjust, const float fValue )
 {
 	switch( eAdjust ) 
@@ -493,7 +493,7 @@ void CBasePathUnit::SetSpeed( const EAdjustSpeedParam eAdjust, const float fValu
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::LockTiles()
 {
 	if ( CanLockTiles() && !IsInfantry() && !bFixUnlocking && !IsStaticUnit() )
@@ -502,7 +502,7 @@ void CBasePathUnit::LockTiles()
 		bLocking = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::ForceLockTiles()
 {
 	if ( CanLockTiles() && !IsStaticUnit() )
@@ -511,7 +511,7 @@ void CBasePathUnit::ForceLockTiles()
 		bLocking = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::UnlockTiles()
 {
 	if ( bLocking && !IsStaticUnit() )
@@ -520,7 +520,7 @@ void CBasePathUnit::UnlockTiles()
 		bLocking = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::StaticLockTiles() const
 {
 	if ( IsStaticUnit() )
@@ -546,7 +546,7 @@ void CBasePathUnit::StaticLockTiles() const
 		pAIMap->GetTerrain()->AddStaticObjectTiles( tiles );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::IsOnLockedTiles( const SUnitProfile &profile ) const
 {
 	CTemporaryUnitProfileUnlocker unlocker( GetUniqueID(), GetUnitProfile(), IsLockingTiles(), GetMovementPlane() == PLANE_WATER, pAIMap->GetTerrain() );
@@ -556,7 +556,7 @@ const bool CBasePathUnit::IsOnLockedTiles( const SUnitProfile &profile ) const
 	else
 		return pAIMap->IsCircleOnLockedTiles( profile.circle, GetAIPassabilityClass() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::Stop()
 {
 	pLastPushUnit = 0;
@@ -578,7 +578,7 @@ void CBasePathUnit::Stop()
 
 	CalculateIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::AdjustSpeed()
 {
 	if ( !bNotified )
@@ -598,7 +598,7 @@ void CBasePathUnit::AdjustSpeed()
 	else if ( IsInfantry() )
 		fSpeed = GetMaxSpeedHere();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::FirstSegment( const NTimer::STime timeDiff )
 {
 	lastTimeDiff = timeDiff;
@@ -640,7 +640,7 @@ void CBasePathUnit::FirstSegment( const NTimer::STime timeDiff )
 			Stop();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::CallUpdatePlacement()
 {
 	if ( bPlacementUpdated )
@@ -651,7 +651,7 @@ void CBasePathUnit::CallUpdatePlacement()
 		wOldDirection = GetFrontDirection();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 {
 	if ( bTurning && !bTurnCalled )
@@ -728,7 +728,7 @@ void CBasePathUnit::SecondSegment( const NTimer::STime timeDiff )
 	}
 	CallUpdatePlacement();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CBasePathUnit::GetMaxSpeedHere( const CVec2 &vPosition, const bool bAdjust ) const
 {
 	const float fMapPass = pAIMap->GetTerrain()->GetPass( vPosition );
@@ -738,7 +738,7 @@ const float CBasePathUnit::GetMaxSpeedHere( const CVec2 &vPosition, const bool b
 
 	return fSpeed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking )
 {
 	CPtr<IStaticPath> pPath = 0;
@@ -775,7 +775,7 @@ IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const
 
 	return pPath.Extract();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn )
 {
 	bool bResult = true;
@@ -817,7 +817,7 @@ const bool CBasePathUnit::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &
 	*/
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::SendAlongPath( IPath *pPath )
 {
 	bool bResult = false;
@@ -848,7 +848,7 @@ const bool CBasePathUnit::SendAlongPath( IPath *pPath )
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SendAlongSmoothPath( ISmoothPath *pPath )
 {
 	if ( CanMoveCritical() )
@@ -869,7 +869,7 @@ void CBasePathUnit::SendAlongSmoothPath( ISmoothPath *pPath )
 		CalculateIdle();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::CalculateIdle()
 {
 	const bool bOldIdle = bIdle;
@@ -877,13 +877,13 @@ void CBasePathUnit::CalculateIdle()
 	if ( !bOldIdle && bIdle )
 		OnIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::TurnToDirectionContinuesly( const WORD _wDirection )
 {
 	bTurningToDirContinuesly = true;
 	wDirToContinueslyTurn = _wDirection;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::SetCollision( ICollision *pCollision, IPath *pPath )
 {
 	if ( pCollision->GetName() == NCollision::ECN_GIVE_PLACE )
@@ -911,7 +911,7 @@ void CBasePathUnit::SetCollision( ICollision *pCollision, IPath *pPath )
 
 	CalculateIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::NotifyAboutClosestThreat( const CBasePathUnit *pUnit, const float fDistance )
 {
 	if ( pUnit->CanMoveCritical() )
@@ -957,7 +957,7 @@ void CBasePathUnit::NotifyAboutClosestThreat( const CBasePathUnit *pUnit, const 
 
 	bNotified = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const EMovementPlane CBasePathUnit::GetProbablePlane( const SVector &vPos ) const
 {
 	EMovementPlane result = PLANE_TERRAIN;
@@ -979,7 +979,7 @@ const EMovementPlane CBasePathUnit::GetProbablePlane( const SVector &vPos ) cons
 
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 {
 	const CVec3 vOldCenter( vCenter );
@@ -1008,7 +1008,7 @@ const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 			pAIMap->IsPointInside( unitProfile.circle.center+CVec2( 0, -unitProfile.circle.r ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBasePathUnit::IsValidDirection( const WORD _wDirection )
 {
 	// GetUnitProfile использует GetFrontDirectionVector для вычисления профайла ПРЯМОУГОЛЬНЫХ юнитов.
@@ -1036,7 +1036,7 @@ const bool CBasePathUnit::IsValidDirection( const WORD _wDirection )
 			pAIMap->IsPointInside( unitProfile.circle.center+CVec2( 0, -unitProfile.circle.r ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::RestoreLock()
 {
 	if ( IsLockingTiles() )
@@ -1045,7 +1045,7 @@ void CBasePathUnit::RestoreLock()
 		pAIMap->GetTerrain()->AddUnitTiles( GetUniqueID(), GetUnitProfile(), GetMovementPlane() == PLANE_WATER );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::RestoreSmoothPath()
 {
 	//DebugTrace( "Restore smooth path for unit %d", GetUniqueID() );
@@ -1059,7 +1059,7 @@ void CBasePathUnit::RestoreSmoothPath()
 	bNoCollision = false;
 	Stop();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CBasePathUnit::GetMoveDirection() const
 {
 	CVec2 vResult = pSmoothPath->PeekPathPoint( 0 ) - GetCenterPlain();
@@ -1067,7 +1067,7 @@ const CVec2 CBasePathUnit::GetMoveDirection() const
 		vResult = GetDirectionVector();
 	return vResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBasePathUnit::OnSerialize( IBinSaver &f )
 {
 	SerializeBasePathUnit( f, 2, &pLastPushUnit );
@@ -1077,7 +1077,7 @@ void CBasePathUnit::OnSerialize( IBinSaver &f )
 	if ( pPathFinder == 0 )
 		pPathFinder = Singleton<CCommonPathFinder>();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit )
 {
 	if ( saver.IsReading() )
@@ -1092,4 +1092,4 @@ void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit 
 		saver.Add( nChunkID, &pObject );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

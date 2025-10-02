@@ -3,10 +3,10 @@
 #include "2DScene.h"
 #include "GfxUtils.h"
 #include "GRenderModes.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class C2DScene: public I2DScene
 {
 	OBJECT_NOCOPY_METHODS(C2DScene);
@@ -32,7 +32,7 @@ public:
 	void StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlphaMode2D _AlphaMode2D );
 	void Flush();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	float fZ = sLayout.fZ;
@@ -46,7 +46,7 @@ void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const
 	else
 		RenderRectLayoutClipped( pQR, 0, sLayout, sPosition, sWindow, fZ, LRM_NORMAL );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, 
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 {
@@ -60,13 +60,13 @@ void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	else
 		RenderRect( pQR, 0, pPos4, pColors4, rectTexture, 0.0f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DScene::CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	NGfx::C2DQuadsRenderer *pQR = GetQR( false );
 	RenderRectLayoutClipped( pQR, 0, sLayout, sPosition, sWindow, sLayout.fZ, LRM_CLEAR_RECT );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DScene::StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlphaMode2D _AlphaMode2D )
 {
 	NGfx::CRenderContext rc;
@@ -81,19 +81,19 @@ void C2DScene::StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlph
 	quadRender.SetTarget( rc, vSize, NGfx::QRM_OVERWRITE );
 	quadRenderTest.SetTarget( rc, vSize, NGfx::QRM_DEPTH_NORMAL );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void C2DScene::Flush()
 {
 	quadRender.Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Make scene
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 I2DScene* Make2DScene()
 {
 	return new C2DScene;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESOACE
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0xF2005171, C2DScene );

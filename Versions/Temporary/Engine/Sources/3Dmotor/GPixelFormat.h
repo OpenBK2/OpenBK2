@@ -3,10 +3,10 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGfx
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EPixelFormat
 {
 	CF_DXT1     = 1,
@@ -40,7 +40,7 @@ inline int GetBPP( EPixelFormat format )
 		default: return 0;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPixelFloat
 {
 	enum { ID = CF_R32F, XSize = 1, YSize = 1 };
@@ -155,7 +155,7 @@ struct SPixelDXT5
 	enum { ID = CF_DXT5, XSize = 4, YSize = 4 };
 	DWORD colors1, colors2, colors3, colors4;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SShortTextureUV
 {
 	union
@@ -164,7 +164,7 @@ struct SShortTextureUV
 		DWORD dw;
 	};
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCompactVector
 {
 	union
@@ -184,7 +184,7 @@ inline CVec3 GetVector( const SCompactVector &a )
 {
 	return CVec3( ( ((int)a.x) - 128 ) / 127.0f, ( ((int)a.y) - 128 ) / 127.0f, ( ((int)a.z) - 128 ) / 127.0f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline DWORD Get255Range( float f ) 
 {
 	return Max( 0, Min( 255, Float2Int( f * 256 ) ) );
@@ -202,7 +202,7 @@ inline CVec4 GetCVec4Color( DWORD cr )
 {
 	return CVec4( cr >> 16 & 0xff, cr >> 8 & 0xff, cr & 0xff, cr >> 24 & 0xff ) / 255;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CInterpolateColor
 {
 	typedef DWORD RET;
@@ -215,7 +215,7 @@ struct CInterpolateColor
 			( Float2Int( ((a>>24)&0xff) * (1-f) + ((b>>24)&0xff) * f ) << 24 );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STriangleList
 {
 	const STriangle *pTri;
@@ -227,7 +227,7 @@ struct STriangleList
 	STriangleList( const vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex(0), nOffset(0) {}
 	STriangleList( const STriangle *_pTri, int _nTris, int _nBaseIndex = 0, int _nOffset = 0 ) : pTri(_pTri), nTris(_nTris), nBaseIndex(_nBaseIndex), nOffset(_nOffset) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMMXWord
 {
 	short nZ, nY, nX, nW;
@@ -236,7 +236,7 @@ struct SCompactTransformer
 {
 	SMMXWord a, b, c;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }; // namespace NGfx
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __GPIXELFORMAT_H__

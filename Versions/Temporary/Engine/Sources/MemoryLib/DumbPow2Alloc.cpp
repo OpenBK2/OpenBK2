@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #define ARRAY_SIZE( a ) ( sizeof( a ) / sizeof( (a)[0] ) )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define TRACK_MEMORY_ALLOC
 const int N_SIZE = 0x18000000;
 const int N_WAYS = 24;
@@ -25,7 +25,7 @@ static int nLock = 0;
 static void *pLazyBlocksList = 0;
 //
 static bool bFastAllocInited = false;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline void RealEnterCritical()
 {
 	_asm
@@ -42,7 +42,7 @@ Retry:
 Ok:
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline void RealLeaveCritical()
 {
 	_asm 
@@ -51,7 +51,7 @@ static __forceinline void RealLeaveCritical()
 		//lock sub nLock, 1
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define _NIVAL_NET_SERVER
 // STARFORCE{
 #if defined(_FINALRELEASE) && !defined(_NIVAL_NET_SERVER)
@@ -87,7 +87,7 @@ static void InitDumbAlloc()
 	}
 	bFastAllocInited = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline void* RealFastDumbAlloc( int _nSize )
 {
 	nPrevAllocSize = _nSize;
@@ -144,7 +144,7 @@ static __forceinline void* RealFastDumbAlloc( int _nSize )
 	pPrevAllocFree = pWay;
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __declspec( thread ) int nFastThread = 0;
 static __forceinline void* FastDumbAlloc( int _nSize )
 {
@@ -165,7 +165,7 @@ void DisableFastMemAlloc()
 {
 	nFastThread = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline void RealFastDumbFree( void *pData )
 {
 	int nChunk = ((int)( ((char*)pData) - ((char*)pBase) )) / (N_SIZE/N_CHUNKS);
@@ -173,7 +173,7 @@ static __forceinline void RealFastDumbFree( void *pData )
 	*((void**)pData) = *pFree;
 	*pFree = pData;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline bool FastDumbFree( void *pData )
 {
 	if ( pData < pBase || pData > ( (char*)pBase + N_SIZE ) )
@@ -206,7 +206,7 @@ static __forceinline bool FastDumbFree( void *pData )
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DebugRegister( size_t n, void *pRes );
 void* __cdecl operator new( size_t n )
 {
@@ -236,7 +236,7 @@ void* __cdecl operator new( size_t n )
 #endif
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int nBlameLinker = 0;
 #ifdef TRACK_MEMORY_ALLOC
 void DumpMemoryStats();
@@ -250,7 +250,7 @@ public:
 	}
 };
 #endif
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DebugFree( void *p );
 void __cdecl operator delete( void *p )
 {
@@ -267,17 +267,17 @@ void __cdecl operator delete( void *p )
 		free( p );
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void *__cdecl operator new[](size_t count) //_THROW1(std::bad_alloc)
 {
 	return operator new(count);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void __cdecl operator delete[]( void * p )
 {
 	operator delete(p);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_PAGE_SIZE = 4096;
 void DumpMemoryBlockUtilization()
 {
@@ -352,7 +352,7 @@ void DumpMemoryBlockUtilization()
 	DebugTraceMMgr( "Total bytes in used pages = %d\n", nTotalPages * N_PAGE_SIZE ); 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void __cdecl DebugTraceMMgr( const char *pszFormat, ... )
 {
 	static char buff[20000];

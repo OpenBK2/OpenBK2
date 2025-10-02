@@ -9,7 +9,7 @@
 REGISTER_SAVELOAD_CLASS(0x11075B43,CForegroundTextString)
 REGISTER_SAVELOAD_CLASS(0x1715A340,CPlacedText)
 extern CVec2 vScreenRect;
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SForegroundTextString *pDesc ( checked_cast<const NDb::SForegroundTextString*>( _pDesc ) );
@@ -18,7 +18,7 @@ void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	wszCustomText = GetDBFormatText() + GetDBInstanceText();
 	Init();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::InitText()
 {
 	pGfxText = CreateML();
@@ -26,12 +26,12 @@ void CForegroundTextString::InitText()
 	pGfxText->SetText( GetText(), 0 );
 	pGfxText->Generate( VirtualToScreenX( rcParent.GetSizeX() ) );
 }
-//////////////////////////////////////////////////////////////////////
+
 int CForegroundTextString::GetOptimalWidth() const 
 { 
 	return ScreenToVirtualX( pGfxText->GetSize().x );
 }
-//////////////////////////////////////////////////////////////////////
+
 const wstring& CForegroundTextString::GetDBInstanceText() const
 {
 	static wstring szEmpty;
@@ -42,7 +42,7 @@ const wstring& CForegroundTextString::GetDBInstanceText() const
 	else 
 		return szEmpty;
 }
-//////////////////////////////////////////////////////////////////////
+
 const wstring& CForegroundTextString::GetDBFormatText() const
 {
 	static wstring szEmpty;
@@ -51,25 +51,25 @@ const wstring& CForegroundTextString::GetDBFormatText() const
 	else 
 		return szEmpty;
 }
-//////////////////////////////////////////////////////////////////////
+
 const wstring & CForegroundTextString::GetText() const
 {
 	return wszCustomText;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::SetText( const wstring &_szText ) 
 { 
 	wszCustomText = _szText;
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////
+
 const NDb::SWindowPlacement* CForegroundTextString::GetPlacement() const
 {
 	if ( pInstance->pShared )
 		return &pInstance->pShared->position;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::Visit( interface IUIVisitor *pVisitor )
 {
 	if ( pGfxText ) 
@@ -85,38 +85,38 @@ void CForegroundTextString::Visit( interface IUIVisitor *pVisitor )
 		pVisitor->VisitUIText( pGfxText, tmp.GetLeftTop(), tmp );
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::Init()
 {
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::SetPos( const CVec2 &vPos, const CVec2 &vSize )
 {
 	rcParent.Set( vPos.x, vPos.y, vPos.x + vSize.x, vPos.y + vSize.y );
 	InitText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::SetFadeValue( float fValue )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CForegroundTextString::SetInternalFadeValue( float fValue )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPlacedText
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPlacedText::CPlacedText()
 : vScreenRect( VNULL2 )
 {
 	rcParent.SetEmpty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::Init()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::Visit( interface IUIVisitor *pVisitor )
 {
 	static CTPoint<int> ptEmpty( 0, 0 );
@@ -134,7 +134,7 @@ void CPlacedText::Visit( interface IUIVisitor *pVisitor )
 		pVisitor->VisitUIText( pGfxText, tmp.GetLeftTop(), tmp );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::SetText( const wstring &_wszText )
 {
 	if ( wszText == _wszText )
@@ -143,12 +143,12 @@ void CPlacedText::SetText( const wstring &_wszText )
 	wszText = _wszText;
 	InitGfxText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::SetPlacement( const struct NDb::SWindowPlacement &_placement )
 {
 	placement = _placement;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::InitGfxText()
 {
 	if ( rcParent.GetSizeX() <= 0 || GetText().empty() )
@@ -162,7 +162,7 @@ void CPlacedText::InitGfxText()
 	pGfxText->SetFade( fFadeValue );
 	pGfxText->Generate( VirtualToScreenX( rcParent.GetSizeX() ) - VirtualToScreenX( 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTPoint<int> CPlacedText::GetSize() const
 {
 	static CTPoint<int> ptEmpty( 0, 0 );
@@ -176,14 +176,14 @@ CTPoint<int> CPlacedText::GetSize() const
 	ScreenToVirtual( ptEmpty, &point0 );
 	return point - point0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CPlacedText::GetOptimalWidth() const
 {
 	if ( !pGfxText )
 		return 0;
 	return ScreenToVirtualX( pGfxText->GetSize().x ) - ScreenToVirtualX( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::Reposition( const CTRect<float> &parentRect )
 {
 	float fOldWidth = rcParent.Width();
@@ -193,7 +193,7 @@ void CPlacedText::Reposition( const CTRect<float> &parentRect )
 	this->vScreenRect = ::vScreenRect;
 	InitGfxText();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPlacedText::SetInternalFadeValue( float fValue )
 {
 	if ( pGfxText && fValue != fFadeValue )
@@ -202,4 +202,4 @@ void CPlacedText::SetInternalFadeValue( float fValue )
 		InitGfxText();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -12,7 +12,7 @@
 #include "MarkerSet.h"
 #include "BuildingEditor.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPointsListState : public CDefaultInputState, public ICommandHandler
 {
 	CPtr<CMaskManipulator> pMaskManipulator;
@@ -65,7 +65,7 @@ public:
 	virtual EDirMeasure GetDirMeasure() { return DIR_IN_AIGRAD; }
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSmokePointsState  : public CPointsListState
 {
 public:
@@ -81,7 +81,7 @@ public:
 	virtual void GetMaskFields(vector<string> *pMaskFields );
 	virtual bool IsOriginInUse() { return true; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSlotPointsState : public CPointsListState
 {
 public:
@@ -97,7 +97,7 @@ public:
 	virtual void GetMaskFields(vector<string> *pMaskFields );
 	virtual EDirMeasure GetDirMeasure() { return DIR_IN_DEGREES; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEntrancePointsState : public CPointsListState
 {
 public:
@@ -113,7 +113,7 @@ public:
 	virtual void GetMaskFields( vector<string> *pMaskFields );
 	virtual string GetDirectionFieldName() { return "Dir"; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSurfacePointsState : public CPointsListState
 {
 	vector<NDb::SHPObjectRPGStats::SModelSurfacePoint> surfPoints;
@@ -134,7 +134,7 @@ public:
 	virtual void Draw( CPaintDC *pPaintDC );
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDamageLevelsState : public CPointsListState
 {
 public:
@@ -155,5 +155,5 @@ public:
 	void SetPointMarkers() {}
 	void Leave();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif//#if !defined(__POINTS_LIST_STATE__)

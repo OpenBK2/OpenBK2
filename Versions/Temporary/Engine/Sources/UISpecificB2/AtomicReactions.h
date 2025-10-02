@@ -3,7 +3,7 @@
 #include "..\UI\IMessageReaction.h"
 #include "DBUISpecificB2.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSetForcedAction : public IMessageReactionB2 
 {
 	OBJECT_BASIC_METHODS( CARSetForcedAction );
@@ -13,7 +13,7 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CARSetSpecialAbility : public IMessageReactionB2 
 {
 	OBJECT_BASIC_METHODS( CARSetSpecialAbility );
@@ -23,4 +23,4 @@ public:
 	virtual bool Execute( interface IScreen *pScreen, interface IScriptWrapper *pScript, interface IProgrammedReactionsAndChecks *pProg, WORD wKeyboardFlags ) const;	
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

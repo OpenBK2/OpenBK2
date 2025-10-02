@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IProgressHook : public CObjectBase
 {
 	// set number of steps in current subrange
@@ -16,7 +16,7 @@ interface IProgressHook : public CObjectBase
 	// direct set a step in the current subrange
 	virtual void SetCurrentStep( int nCurrentStep ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NProgressHook
 {
 	inline void SetNumSteps( IProgressHook *pProgressHook, const int nNumSteps )
@@ -54,7 +54,7 @@ namespace NProgressHook
 		DebugUnLock( szFileName, nLine );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FINALRELEASE
 #define LOCK_RANGE( pProgressHook, nLength ) NProgressHook::LockRange( pProgressHook, nLength, __FILE__, __LINE__ );
 #define UNLOCK_RANGE( pProgressHook ) NProgressHook::UnlockRange( pProgressHook, __FILE__, __LINE__ );

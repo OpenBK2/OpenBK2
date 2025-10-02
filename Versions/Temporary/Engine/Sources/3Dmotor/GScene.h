@@ -6,12 +6,12 @@
 #include "..\3Dlib\GGeometry.h"
 #include "GRenderModes.h"
 #include "..\System\Time.hpp"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransformStack;
 class CRectLayout;
 class CFontFormatInfo;
 class ILoadingCounter;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGfx
 {
 	class CTexture;
@@ -21,7 +21,7 @@ namespace NGfx
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CRenderPart;
 class CPolyline;
 class IMaterial;
@@ -30,7 +30,7 @@ class CParticleEffect;
 struct SRenderStats;
 class ITextureLoader;
 struct SDepthOfField;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGroupSelect
 {
 	unsigned short nMaskAny, nMaskEvery;
@@ -54,7 +54,7 @@ const int N_MASK_FLOORS = 0xfff;
 
 
 inline SGroupSelect MakeSelectAll() { return SGroupSelect( N_MASK_FLOORS, 0 ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGroupInfo
 {
 	unsigned short nLightFlags, nObjectGroup;
@@ -64,7 +64,7 @@ struct SGroupInfo
 	bool operator==( const SGroupInfo &a ) const { return a.nLightFlags == nLightFlags && a.nObjectGroup == nObjectGroup; }
 	bool IsMaskMatch( const SGroupSelect &m ) const { return ( nObjectGroup & m.nMaskAny ) != 0 && ( nObjectGroup & m.nMaskEvery ) == m.nMaskEvery; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_USERID_MASK = 0xffffff; // these bits do not depend on part number
 struct SFullGroupInfo
 {
@@ -76,7 +76,7 @@ struct SFullGroupInfo
 	SFullGroupInfo() : nUserID(0) {}
 	SFullGroupInfo( const SGroupInfo &_g, CObjectBase *_p, int _nUserID ) : groupInfo(_g), pUser(_p), nUserID(_nUserID) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAnimLight: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CAnimLight);
@@ -87,7 +87,7 @@ public:
 	bool bActive;
 	bool bEnd;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSunFlares: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CSunFlares)
@@ -107,7 +107,7 @@ public:
 	CDGPtr<CPtrFuncBase<NGfx::CTexture> > pOverbright;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&flares); f.Add(3,&pOverbright); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EParticleFlags
 {
 //	PF_NOSHADOWS = 0,
@@ -121,7 +121,7 @@ enum ELightingOptions
 {
 	LO_NOSHADOWS = 1
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRenderGeometryInfo;
 struct SPostProcessData;
 class IPostProcess : public CObjectBase
@@ -136,7 +136,7 @@ public:
 	};
 	virtual void Render( SPostProcessData *pDst, const vector<SObject> &render ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // hintBV specifies area where object will be moving, if area is not limited just specify very large BV
 struct SDecalMappingInfo;
 class CDecalTarget;
@@ -196,7 +196,7 @@ public:
 
 	virtual void SetLoadingCounter( ILoadingCounter *pCounter ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IGScene* CreateScene();
 // wrappers to Gfx to exclude interface on Gfx dependency
 _3DMOTOR_EXPORT bool Is3DActive();
@@ -229,5 +229,5 @@ CLightmapsTempHolder *CreateLightmapsTempHolder();
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder );
 CLightmapsHolder *CalcLightmaps( IGScene *pScene, CObjectBase *pUser, int nUserID, const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder );
 void ApplyLightmaps( IGScene *pScene, CObjectBase *pUser, CLightmapsHolder *pLightmaps,  CLightmapsLoader * pLD  );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

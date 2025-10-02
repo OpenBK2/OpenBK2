@@ -2,10 +2,10 @@
 #include <limits>
 #include "GText.h"
 #include "..\Misc\StrProc.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! Размер TAB-а
 const int
 	N_TAB_SIZE		= 32;
@@ -22,7 +22,7 @@ const int
 	FONT_SIZE_LARGE			= 0x00000020 | FONT_SIZE_POINTS,
 	FONT_SIZE_XLARGE		= 0x00000030 | FONT_SIZE_POINTS,
 	FONT_SIZE_XXLARGE		= 0x00000040 | FONT_SIZE_POINTS;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Enums
 enum ECharType
 {
@@ -46,7 +46,7 @@ enum EAlignStyle
 	ALIGN_JUSTIFY,
 	ALIGN_NOWRAP
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Structures
 struct SState
 {
@@ -82,9 +82,9 @@ struct SChunk
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const wstring &_wsText )
 		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTextFormater
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTextFormater: public CFuncBase<SText>
 {
 	OBJECT_BASIC_METHODS(CTextFormater);
@@ -123,7 +123,7 @@ protected:
 public:
 	CTextFormater() {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase< wstring > *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs )
 {
 	CTextFormater *pTextFormater = new CTextFormater;
@@ -135,9 +135,9 @@ CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *
 
 	return pTextFormater;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTextFormater
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::Recalc()
 {
 	value.sSize.x = 0;
@@ -147,7 +147,7 @@ void CTextFormater::Recalc()
 
 	Generate();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::Generate()
 {
 	int nTemp = 0, nWordBegin = 0;
@@ -272,7 +272,7 @@ void CTextFormater::Generate()
 
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::GenerateLine()
 {
 	/*
@@ -362,7 +362,7 @@ void CTextFormater::GenerateLine()
 */
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::ProcessTAG( const wstring &wsTag )
 {
 	if ( wsTag.compare( L"br" ) == 0 )
@@ -407,7 +407,7 @@ void CTextFormater::ProcessTAG( const wstring &wsTag )
 	else if ( wsTag.substr( 0, 5 ).compare( L"color" ) == 0 )
 		TagColor( wsTag );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWString
 {
 	ECharType eType;
@@ -416,7 +416,7 @@ struct SWString
 	SWString() {}
 	SWString( ECharType _eType, const wstring &_wsString ): eType( _eType ), wsString( _wsString ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SplitString( const wstring &wsString, list<SWString> *pParts )
 {
 	int nTemp = 0, nWordBegin = 0;
@@ -451,7 +451,7 @@ void SplitString( const wstring &wsString, list<SWString> *pParts )
 		eLastChar = eThisChar;
 	}while( wcChar != 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::TagFont( const wstring &wsTag )
 {
 	list<SWString> partsList;
@@ -515,7 +515,7 @@ void CTextFormater::TagFont( const wstring &wsTag )
 	sState.sFont = sNewFont;
 	GetFontFormatInfo( sNewFont, &sFontInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::TagColor( const wstring &wsTag )
 {
 	list<SWString> partsList;
@@ -560,7 +560,7 @@ void CTextFormater::TagColor( const wstring &wsTag )
 	else
 		swscanf( iTemp->wsString.c_str(), L"%x", &sState.sColor.dwColor );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRectLayout* CTextFormater::GetLayout( const SFont &sFont )
 {
 	SFont sSearch( sFont );
@@ -586,7 +586,7 @@ CRectLayout* CTextFormater::GetLayout( const SFont &sFont )
 
 	return &pLayout->sLayout;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo )
 {
 	SFont sSearch( sFont );
@@ -613,7 +613,7 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 
 	return;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x02931161, CTextFormater );

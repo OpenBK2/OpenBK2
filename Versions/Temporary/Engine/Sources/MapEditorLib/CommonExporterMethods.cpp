@@ -21,7 +21,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetGrannyExportSettingsFileName( const string &szTypeName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -32,7 +32,7 @@ string GetGrannyExportSettingsFileName( const string &szTypeName )
 	return szSettingsFileName;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckFilesUpdated( const string &szSrc, const string &szDst, bool bForced )
 {
 	if ( bForced ) 
@@ -44,7 +44,7 @@ bool CheckFilesUpdated( const string &szSrc, const string &szDst, bool bForced )
 
 	return src.mtime < dst.mtime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeDoubleSlash( string *pszPath )
 {
   NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
@@ -65,7 +65,7 @@ void MakeDoubleSlash( string *pszPath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MEStartScript( string *pszScriptText, bool bGUIMode )
 {
 	NI_ASSERT( pszScriptText != 0, "MEStartScript() pszScriptText == 0" );
@@ -75,7 +75,7 @@ void MEStartScript( string *pszScriptText, bool bGUIMode )
 	pszScriptText->clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MEFinishScript(string *pszScriptText, bool bGUIMode )
 {
   NI_ASSERT( pszScriptText != 0, "MEFinishScript() pszScriptText == 0" );
@@ -88,7 +88,7 @@ void MEFinishScript(string *pszScriptText, bool bGUIMode )
 	MakeDoubleSlash( pszScriptText );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -202,7 +202,7 @@ bool MERunScript( const string &rszScriptText, const string &rszFileNamePostfix,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Получить размер картинки
 bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 {
@@ -223,7 +223,7 @@ bool GetDDSImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Получить размер картинки
 bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 {
@@ -244,7 +244,7 @@ bool GetTGAImageSize( const string &szImageFileName, CTPoint<int> *pSize )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CutExtension( string *pFileName, const char *pszExt )
 {
 	const int nPos = pFileName->rfind( '.' );
@@ -256,7 +256,7 @@ void CutExtension( string *pFileName, const char *pszExt )
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NormalizeFilePath( string *pszPath )
 {
 	for ( string::iterator i = pszPath->begin(); i != pszPath->end(); ++i )
@@ -268,7 +268,7 @@ void NormalizeFilePath( string *pszPath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool BuildSrcFilePath( string *pszFilePath, const string &szRefValue )
 {
 	if ( szRefValue.size() )
@@ -280,7 +280,7 @@ bool BuildSrcFilePath( string *pszFilePath, const string &szRefValue )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool BuildSrcFilePath( string *pszFilePath, IManipulator *pManipulator, const string &szRefFieldDBPath )
 {
 	if ( CManipulatorManager::GetValue( pszFilePath, pManipulator, szRefFieldDBPath ) )
@@ -303,7 +303,7 @@ bool BuildSrcFilePath( string *pszFilePath, IManipulator *pManipulator, const st
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder )
 {
 	CVariant varUID;
@@ -317,7 +317,7 @@ string BuildDestFilePath( IManipulator* pManipulator, const string &szDestFolder
 	return szDestFolder + NBinResources::GUIDToString( uid );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetMayaInstallPath( string *szPath, const string &szMayaVersion )
 {
 	DWORD type;
@@ -335,7 +335,7 @@ void GetMayaInstallPath( string *szPath, const string &szMayaVersion )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 {
 	if ( !pMayaProcess->IsStarted() )
@@ -394,7 +394,7 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bReportAsError )
 {
 	NHPTimer::STime timeCurr, timeOriginal;
@@ -423,7 +423,7 @@ bool WaitForFile( const string &szFileName, const double fMaxWaitTime, bool bRep
 	pLogger->Log( eLogType, StrFmt("\tFile name: %s\n", szFileName.c_str()) );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ExecuteMayaScript( const string &szScript )
 {
 	CInteractiveMaya *pMayaProcess = CInteractiveMaya::Get();
@@ -440,7 +440,7 @@ bool ExecuteMayaScript( const string &szScript )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName )
 {
 	NI_ASSERT( pObjectSet != 0, "GetSelectedObjects(): SObjectSet == 0" );
@@ -457,13 +457,13 @@ bool GetSelectedObjects( SObjectSet *pObjectSet, const string &szObjectTypeName 
 	//
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MoveTempFileToDestination( const string &szTempFileFullName, const string &szDstFileFullName )
 {
 	const bool bAddToRCS = NFile::DoesFileExist( szDstFileFullName ) == false;
 	NFile::CopyFile( szTempFileFullName, szDstFileFullName );
 	DeleteFile( szTempFileFullName.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

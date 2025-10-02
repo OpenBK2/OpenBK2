@@ -5,25 +5,25 @@
 #include "StaticObjectsIters.h"
 #include "..\Common_RTS_AI\AIMap.h"
 #include "GlobalWarFog.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern NTimer::STime curTime;
 extern CStaticObjects theStatObjs;
 extern CGlobalWarFog theWarFog; 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D4B5, CSmokeScreen );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSmokeScreen::CSmokeScreen( const CVec3 &_vCenter, const float _fRadius, const int _nTransparency, const int nTime )
 : vCenter( _vCenter ), fRadius( _fRadius ), nTransparency( _nTransparency ), timeOfDissapear( curTime + nTime ),
 	CExistingObject( 0, 1.0f ), tileCenter( AICellsTiles::GetTile( CVec2(_vCenter.x,_vCenter.y) ) ), bTransparencySet( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::Init()
 {
 	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
 	theStatObjs.RegisterSegment( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::Segment()
 {
 	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
@@ -33,7 +33,7 @@ void CSmokeScreen::Segment()
 		theStatObjs.DeleteInternalObjectInfo( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::TraceToPoint( const int x, const int y, const bool bAdd )
 {
 	const SVector center = tileCenter;
@@ -50,7 +50,7 @@ void CSmokeScreen::TraceToPoint( const int x, const int y, const bool bAdd )
 		//theWarFog.SetTransparency( bres.GetDirection(), !bAdd );
 	} while ( bres.GetDirection() != finishPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::OctupleTrace( const int x, const int y, const bool bAdd )
 {
 	TraceToPoint(  x,  y, bAdd );
@@ -63,7 +63,7 @@ void CSmokeScreen::OctupleTrace( const int x, const int y, const bool bAdd )
 	TraceToPoint( -y,  x, bAdd );
 	TraceToPoint( -y, -x, bAdd ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::Trace( const bool bAdd )
 {
 	/*
@@ -97,19 +97,19 @@ void CSmokeScreen::Trace( const bool bAdd )
 		OctupleTrace( x, y, bAdd );
 	}	while ( x <= y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::SetTransparencies()
 {
 	Trace( true );
 	bTransparencySet = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::RestoreTransparenciesImmidiately()
 {
 	if ( bTransparencySet )
 		SetTransparencies();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::RemoveTransparencies()
 {
 	Trace( false );
@@ -120,7 +120,7 @@ void CSmokeScreen::RemoveTransparencies()
 		(*iter)->RestoreTransparencies();
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSmokeScreen::GetCoveredTiles( list<SVector> *pTiles ) const
 {
 	pTiles->clear();
@@ -135,4 +135,4 @@ void CSmokeScreen::GetCoveredTiles( list<SVector> *pTiles ) const
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -2,7 +2,7 @@
 #define __COMMON_TOOLS__GRADIENT__
 #pragma once
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGradient
 {
 private:
@@ -43,5 +43,5 @@ public:
 	bool Get( float *pfValue, float fPosition, bool bSquareInterpolated ) const;
 	inline float operator()( float fPosition, bool bSquareInterpolated = false ) const { float fValue = 0.0f; Get( &fValue, fPosition, bSquareInterpolated ); return fValue; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //#if !defined(__COMMON_TOOLS__GRADIENT__)

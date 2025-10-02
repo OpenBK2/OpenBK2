@@ -7,7 +7,7 @@
 #include "..\MapEditorLib\DefaultView.h"
 #include "TerrainState.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTerrainEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CTerrainState;
@@ -39,5 +39,5 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData ) { return false; }
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__TERRAIN_EDITOR__)

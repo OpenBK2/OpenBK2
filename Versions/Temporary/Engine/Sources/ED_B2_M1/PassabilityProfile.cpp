@@ -4,7 +4,7 @@
 #include "../SceneB2/TerraTools.h"
 #include "../Stats_B2_M1/DBPassProfile.h"
 #include "../Stats_B2_M1/Vis2AI.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define _DEBUG_GENERATION
 
 #ifdef _DEBUG_GENERATION
@@ -77,7 +77,7 @@ public:
 static CDebugMask mask;
 
 #endif //_DEBUG_GENERATION
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPointsSort
 {
 	CVec2 vStart;
@@ -89,7 +89,7 @@ public:
 		return fabs2( v1 - vStart ) < fabs2( v2 - vStart );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SConnectedPoint
 {
 	CVec2 vPoint;
@@ -99,12 +99,12 @@ struct SConnectedPoint
 	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber )
 		: vPoint( _vPoint ), nNumber( _nNumber ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPolygon
 {
 	vector<CVec2> points;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float fEps = 0.0001f;
 class CPassabilityProfileCreator
 {
@@ -130,7 +130,7 @@ class CPassabilityProfileCreator
 public:
 	CPassabilityProfileCreator(const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName, const float fZEps )
 {
 	vector<CVec3> verts;
@@ -200,13 +200,13 @@ void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName
 	mask.Clear();
 #endif //_DEBUG_GENERATION
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static bool IsEqual( const T &fVar, const T &fValue )
 {
 	return fabs( fVar - fValue ) < fEps;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float Sign( const float x )
 {
 	if ( fabs( x ) < fEps )
@@ -216,7 +216,7 @@ static const float Sign( const float x )
 	else
 		return 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float ExactSign( const float fX )
 {
 	if ( fX > 0 )
@@ -226,7 +226,7 @@ static const float ExactSign( const float fX )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
@@ -235,7 +235,7 @@ bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 		Sign( vPoint.x - v1.x ) * Sign( v2.x - vPoint.x ) >= 0 &&
 		Sign( vPoint.y - v1.y ) * Sign( v2.y - vPoint.y ) >= 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CVec2 &v22, list<CVec2> *pRes )
 {
 	pRes->clear();
@@ -264,7 +264,7 @@ static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v
 			pRes->push_back( vRes );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::GenerateAllSegments()
 {
 	list<CSegment> newSegments;
@@ -313,7 +313,7 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 	mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 #endif //_DEBUG_GENERATION
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 {
 	int nNumber = -1;
@@ -328,13 +328,13 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 
 	return nNumber == -1 ? nMaxNumber + 1 : nNumber;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::AddEdge( const int n1, const int n2 )
 {
 	connections[n1][n2] = 1;;
 	connections[n2][n1] = 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::MakeConnections()
 {
 	int nMaxPoint = -1;
@@ -385,7 +385,7 @@ void CPassabilityProfileCreator::MakeConnections()
 	mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::DelNotBreaks()
 {
 	hash_set<int> goodPoints;
@@ -496,7 +496,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::FormPolygon()
 {
 	SConnectedPoint point;
@@ -603,7 +603,7 @@ void CPassabilityProfileCreator::FormPolygon()
 	}
 	while ( !IsEqual( polygon.points.front(), polygon.points.back() ) && polygon.points.size() <= connNum2Point.size() + 10 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 {
 	if ( polygon.points.size() == 1 )
@@ -654,7 +654,7 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPassabilityProfileCreator::SimplifyPolygons()
 {
 	const float fTolerance = 0.05f;
@@ -726,7 +726,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 			++iter;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPassabilityProfileCreator::CPassabilityProfileCreator(const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
 : fInfinity( 0.0f )
 {
@@ -771,7 +771,7 @@ CPassabilityProfileCreator::CPassabilityProfileCreator(const string &szGrannyFil
 		pPassProfile->polygons[nCnt].verts.swap( polygon.points );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
 {
 	CPassabilityProfileCreator profileCreator( szGrannyFileName, fZEps, pPassProfile );
@@ -792,7 +792,7 @@ bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SavePassProfile( const NDb::SPassProfile &passProfile, const string &_szPrefix, const string &szFieldName, IManipulator *pManipulator )
 {
 	const string szPrefix = _szPrefix.empty() ? _szPrefix : _szPrefix + ".";
@@ -816,4 +816,4 @@ void SavePassProfile( const NDb::SPassProfile &passProfile, const string &_szPre
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

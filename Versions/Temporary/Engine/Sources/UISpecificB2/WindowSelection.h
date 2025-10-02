@@ -11,7 +11,7 @@
 #include "..\UI\Background.h"
 #include "DBUISpecificB2.h"
 
-/////////////////////////////////////////////////////////////////////////////
+
 class CWindowSelection : public CWindow, public ISelection
 {
 	OBJECT_BASIC_METHODS(CWindowSelection)
@@ -35,4 +35,4 @@ public:
 	virtual void Visit( interface IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
-/////////////////////////////////////////////////////////////////////////////
+

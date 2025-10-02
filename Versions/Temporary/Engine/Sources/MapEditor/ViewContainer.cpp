@@ -9,7 +9,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Add, pView == 0" );
@@ -19,7 +19,7 @@ void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const C
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CViewContainer::Remove( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Remove, pView == 0" );
@@ -37,7 +37,7 @@ void CViewContainer::Remove( IView *pView, const string &rszObjectTypeName, cons
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CViewContainer::GetViewSet( CViewSet *pViewSet, const string &rszObjectTypeName, const CDBID &rObjectDBID ) const
 {
 	if ( !rszObjectTypeName.empty() )
@@ -59,7 +59,7 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const string &rszObjectType
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CViewContainer::Add( IView *pView, const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() )
@@ -71,7 +71,7 @@ void CViewContainer::Add( IView *pView, const SObjectSet &rObjectSet )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CViewContainer::Remove( IView *pView, const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() )
@@ -83,7 +83,7 @@ void CViewContainer::Remove( IView *pView, const SObjectSet &rObjectSet )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const
 {
 	bool bResult = false;
@@ -117,6 +117,6 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSe
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -2,7 +2,7 @@
 
 #include "Interface_ObjectCollector.h"
 interface IManipulator;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBasicDataExtractor : public IObjectDataExtractor
 {
 	bool LoadImagesFromCache( class CBitmap *pNormalBitmap, class CBitmap *pSmallBitmap, const string &rszObjectTypeName, const string &rszObjectName );
@@ -26,5 +26,5 @@ public:
 											const string &rszObjectName,
 											const string &rszDataExtractorType );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

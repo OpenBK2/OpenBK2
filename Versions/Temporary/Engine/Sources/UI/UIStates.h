@@ -1,11 +1,11 @@
 #pragma once
 
 
-//////////////////////////////////////////////////////////////////////
+
 // UIScreen recieve command sequience, produce states sequience
 // and track execution of states. when Effect is finished or
 // no effect was produced by command, state sequience moves to next state
-//////////////////////////////////////////////////////////////////////
+
 struct SUIState
 {
 	CDBPtr<NDb::SUIStateBase> pCmd;										// cmd that creates this state
@@ -22,7 +22,7 @@ struct SUIState
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////
+
 class CStates 
 {
 	vector<SUIState> states;
@@ -73,4 +73,4 @@ public:
 	const bool IsForward() const { return bForward; }
 	int operator&( IBinSaver &saver );
 };
-//////////////////////////////////////////////////////////////////////
+

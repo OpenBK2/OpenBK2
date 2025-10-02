@@ -14,7 +14,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::Clear()
 {
 	scriptAreaMap.clear();
@@ -22,7 +22,7 @@ void CScriptAreaState::Clear()
 	scriptAreaIDCollector.Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // прочитать список скриптовых областей из базы
 void CScriptAreaState::GetScriptAreaMap()
 {
@@ -106,7 +106,7 @@ void CScriptAreaState::GetScriptAreaMap()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::UpdateScriptArea( UINT nScriptAreaID )
 {
 	if ( ( pMapInfoEditor == 0 ) || ( pMapInfoEditor->GetViewManipulator() == 0  ) )
@@ -148,7 +148,7 @@ void CScriptAreaState::UpdateScriptArea( UINT nScriptAreaID )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UINT CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
 																				 const string &rszName,
 																				 const CVec3 &rStart,
@@ -186,7 +186,7 @@ UINT CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
 	return scriptArea.nScriptAreaID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::RemoveScriptArea( UINT nScriptAreaID )
 {
 	if ( ( pMapInfoEditor == 0 ) || ( pMapInfoEditor->GetViewManipulator() == 0  ) )
@@ -212,13 +212,13 @@ void CScriptAreaState::RemoveScriptArea( UINT nScriptAreaID )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptAreaState::CScriptAreaState( CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEditor( _pMapInfoEditor ), bShift( false ), scriptAreaIDToIndexCollector( INVALID_NODE_ID )
 {
 	NI_ASSERT( pMapInfoEditor, "CScriptAreaState::CScriptAreaState(): pMapInfoEditor == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::Enter()
 {
 	CPolygonState::Enter();
@@ -232,7 +232,7 @@ void CScriptAreaState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::Leave()
 {
 	CPolygonState::Leave();
@@ -246,7 +246,7 @@ void CScriptAreaState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::Draw( CPaintDC *pPaintDC )
 {
 	sceneDrawTool.Clear();
@@ -261,20 +261,20 @@ void CScriptAreaState::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPolygonState::EMoveType CScriptAreaState::GetMoveType()
 {
 	return CPolygonState::MT_MULTI;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::GetBounds( int *pnMinCount, int *pnMaxCount )
 {
 	*pnMinCount = 2;
 	*pnMaxCount = 2;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPolygonState::CControlPointList* CScriptAreaState::GetControlPoints( int nPolygonID )
 {
 	CScriptAreaMap::iterator posScriptArea = scriptAreaMap.find( nPolygonID );
@@ -285,13 +285,13 @@ CPolygonState::CControlPointList* CScriptAreaState::GetControlPoints( int nPolyg
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::PrepareControlPoints( CPolygonState::CControlPointList *pControlPointList )
 {
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPolygonIDList )
 {
 	if ( !bShift )
@@ -327,7 +327,7 @@ void CScriptAreaState::PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPol
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 {
 	switch ( eEpdateType )
@@ -351,7 +351,7 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UINT CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
 	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Area name", "Area name" );
@@ -370,7 +370,7 @@ UINT CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList
 	return INVALID_NODE_ID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::RemovePolygon( int nPolygonID )
 {
 	RemoveScriptArea( nPolygonID );
@@ -379,7 +379,7 @@ void CScriptAreaState::RemovePolygon( int nPolygonID )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMask eChangeMask )
 {
 	dialogData.scriptAreaList.clear();
@@ -407,7 +407,7 @@ bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMa
 	return bRes;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::ClearSelection()
 {
 	// сбросить selection для областей
@@ -417,7 +417,7 @@ void CScriptAreaState::ClearSelection()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::ProcessScriptAreaWindowData()
 {
 	DWORD dwData = reinterpret_cast<DWORD>( &dialogData );
@@ -477,7 +477,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 	return bRes;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
@@ -496,7 +496,7 @@ bool CScriptAreaState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CScriptAreaState::UpdateCommand(), pbEnable == 0" );
@@ -518,7 +518,7 @@ bool CScriptAreaState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_SHIFT )
@@ -533,11 +533,11 @@ void CScriptAreaState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 	CPolygonState::OnLButtonDown( nFlags, rMousePoint );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptAreaState::SScriptArea::SScriptArea() : eType( NDb::EAT_CIRCLE ), nScriptAreaID( -1 ), bSelected( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::SScriptArea::Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const
 {
 	const int N_NUM_CIRCLE_PARTS = 20;
@@ -587,7 +587,7 @@ void CScriptAreaState::SScriptArea::Draw( CPaintDC *pPaintDC, CSceneDrawTool *pS
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScriptAreaState::SScriptArea::Pick( const CVec3 &rPoint ) const
 {
 	switch ( eType )
@@ -626,7 +626,7 @@ bool CScriptAreaState::SScriptArea::Pick( const CVec3 &rPoint ) const
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CScriptAreaState::SScriptArea::GetAABBHalfSize() const
 {
 	if ( cpList.size() != 2 )
@@ -639,7 +639,7 @@ CVec2 CScriptAreaState::SScriptArea::GetAABBHalfSize() const
 	return CVec2( res.x, res.y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CScriptAreaState::SScriptArea::GetCenter() const
 {
 	if ( cpList.size() != 2 )
@@ -652,7 +652,7 @@ CVec2 CScriptAreaState::SScriptArea::GetCenter() const
 	return CVec2( res.x, res.y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScriptAreaState::SScriptArea::GetRadius() const
 {
 	if ( cpList.size() != 2 )
@@ -671,7 +671,7 @@ float CScriptAreaState::SScriptArea::GetRadius() const
 	return fR;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptAreaState::PostDraw( CPaintDC *pPaintDC )
 {
 	ICamera *pCam = Camera();
@@ -696,4 +696,4 @@ void CScriptAreaState::PostDraw( CPaintDC *pPaintDC )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

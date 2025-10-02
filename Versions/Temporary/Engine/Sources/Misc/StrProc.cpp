@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NStr 
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int gs_nCodePage = GetACP();
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // разделить строку на массив строк по заданному разделителю
 template <class T1>
 static void SplitStringT( const basic_string<T1> &szString, vector< basic_string<T1> > *pVector, const T1 tSeparator )
@@ -30,14 +30,14 @@ void SplitString( const wstring &szString, vector<wstring> *pVector, const wchar
 {
 	SplitStringT( szString, pVector, cSeparator );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TChar>
 void SplitStringWithMultipleBracketsT( const basic_string<TChar> &szString, vector<basic_string<TChar> > &szVector, const TChar cSeparator )
 {
 	for ( CStringIterator<TChar, const basic_string<TChar>&, CBracketSeparator<TChar, SBracketsQuoteTest<TChar> > > it(szString, cSeparator); !it.IsEnd(); it.Next() )
 		szVector.push_back( it.Get() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SplitStringWithMultipleBrackets( const string &szString, vector<string> &szVector, const char cSeparator )
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
@@ -46,7 +46,7 @@ void SplitStringWithMultipleBrackets( const wstring &szString, vector<wstring> &
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // отрезать все символы 'cTrim' справа
 void TrimRight( string &szString, const char cTrim )
 {
@@ -91,7 +91,7 @@ void TrimInside( string &szString, const char *pszTrim )
 {
   szString.erase( remove_if(szString.begin(), szString.end(), CSymbolCheckFunctional(pszTrim)), szString.end() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int ToInt( const char *pszString )
 {
 	int nNumber = 0;
@@ -116,7 +116,7 @@ unsigned long ToULong( const char *pszString )
 	sscanf( pszString, "%ul", &ulNumber );
 	return ulNumber;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // <[+/-]>[dec digit]*
 bool IsDecNumber( const string &szString )
 {
@@ -162,7 +162,7 @@ bool IsHexNumber( const string &szString )
 	for ( i=nFirstDigit + 2; (i < szString.size()) && IsHexDigit(szString[i]); ++i ) { ; }
 	return ( (i > nFirstDigit) && (i == szString.size()) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** string-to-bin and vice versa
@@ -170,7 +170,7 @@ bool IsHexNumber( const string &szString )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* BinToString( const void *pData, int nSize, char *pszBuffer )
 {
 	char *pszCurr = pszBuffer;
@@ -190,7 +190,7 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 		*pnSize = int( pData - (BYTE*)pBuffer );
 	return pBuffer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** перевод Unicode <=> UTF-8
@@ -201,7 +201,7 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 // **     4 |   21 | 11110vvv 10vvvvvv 10vvvvvv 10vvvvvv
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UnicodeToUTF8( string *pRes, const wstring &szString )
 {
 	pRes->resize( 0 );
@@ -256,7 +256,7 @@ void UTF8ToUnicode( wstring *pRes, const string &szString )
 		++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // перевод MBCS <=> Unicode
 void SetCodePage( const int nCodePage )
 {
@@ -276,7 +276,7 @@ void ToUnicode( wstring *pRes, const string &szSrc )
 	const int nLength = MultiByteToWideChar( gs_nCodePage, 0, szSrc.c_str(), szSrc.length(), &((*pRes)[0]), nBuffLen );
 	pRes->resize( nLength );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UTF8ToMBCS( string *pRes, const string &szSrc )
 {
 	wstring wszTemp;
@@ -289,7 +289,7 @@ void MBCSToUTF8( string *pRes, const string &szSrc )
 	ToUnicode( &wszTemp, szSrc );
 	UnicodeToUTF8( pRes, wszTemp );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // GUID => string
 void GUID2String( string *pString, const GUID &guid )
 {
@@ -318,6 +318,6 @@ void String2GUID( const string &szString, GUID *pGuid )
 	pGuid->Data4[6] = ( HexSymbolToHalfByte( szString[32] ) << 4 ) | HexSymbolToHalfByte( szString[33] );
 	pGuid->Data4[7] = ( HexSymbolToHalfByte( szString[34] ) << 4 ) | HexSymbolToHalfByte( szString[35] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }; // end of namespace NStr
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

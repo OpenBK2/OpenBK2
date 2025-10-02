@@ -5,7 +5,7 @@
 #include "ResourceDefines.h"
 #include "PC_StringMultibuttonEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCStringBrowseEditor : public CPCStringMultibuttonEditor
 {
 public:
@@ -24,5 +24,5 @@ public:
 	virtual void GetButtonTitle( CString *pstrTitle, EButtonType eButtonType );
 	virtual void OnBrowse() = 0;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_BROWSE__)

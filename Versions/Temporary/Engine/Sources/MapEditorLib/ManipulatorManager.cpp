@@ -15,7 +15,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.objectNameSet.empty() )
@@ -44,7 +44,7 @@ IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipulator,
 																							IManipulator *pSourceManipulator,
 																							bool bEqual )
@@ -149,7 +149,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::GetParamsFromReference( const string &rszRefValueName,
 																									const IManipulator *pSourceManipulator,
 																									string *pszRefObjectTypeName,
@@ -198,7 +198,7 @@ bool CManipulatorManager::GetParamsFromReference( const string &rszRefValueName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string &rszRefValueName,
 																																	 const IManipulator *pSourceManipulator,
 																																	 string *pszRefObjectTypeName,
@@ -227,7 +227,7 @@ IManipulator* CManipulatorManager::CreateManipulatorFromReference( const string 
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator> *pResultManipulator,
 																															IManipulator *pManipulator,
 																															const string &szTableName,
@@ -265,7 +265,7 @@ bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator>
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList,
 																					const IManipulator* pSourceManipulator,
 																					const UINT nFlags,
@@ -352,7 +352,7 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManipulator, const string &rszArrayName )
 {
 	int nExistingCount = 0;
@@ -384,7 +384,7 @@ bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManip
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CManipulatorManager::Remove2DArray( interface IManipulator *pManipulator, const string &rszName )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Remove2DArray(): pManipulator == 0" );
@@ -411,7 +411,7 @@ bool CManipulatorManager::Remove2DArray( interface IManipulator *pManipulator, c
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CManipulatorManager::Trace( const string &rszPrefix, IManipulator* pManipulator )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Trace(): pManipulator == 0" );
@@ -446,6 +446,6 @@ void CManipulatorManager::Trace( const string &rszPrefix, IManipulator* pManipul
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

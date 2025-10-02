@@ -19,7 +19,7 @@
 #define MIVSOSEP_THUMBNAILS		0x00000020
 #define MIVSOSEP_ALL					0xFFFFFFFF
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVSOMultiState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMultiInputState;
@@ -144,6 +144,6 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__VSO_MULTI_STATE__)
 

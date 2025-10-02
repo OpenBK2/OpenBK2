@@ -22,16 +22,16 @@ virtual void ToAIUnits( bool bInEditor )
 	damagedSegmentsOtherSide.passability.PostLoad( bInEditor );
 	destroyedSegments.passability.PostLoad( bInEditor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // general fences rule:
 // frame index counting - 
 // 1) center segments vis objects
 // 2) damage segments vis objects
 // 3) destroyed segments vis objects
 // 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //
 const SSegments& GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) const
 {
@@ -56,7 +56,7 @@ const SSegments& GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) 
 	NI_ASSERT( false, StrFmt( "wrong frame index for fence, %i", nFrameIndex ) );
 	return centerSegments;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj * GetVisObjByFrameIndex( const int nFrameIndex ) const
 {
 	int nCur;
@@ -67,7 +67,7 @@ const NDb::SVisObj * GetVisObjByFrameIndex( const int nFrameIndex ) const
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const CVec2& GetOrigin( const int nIndex = -1 ) const
 {
 	int nCur; 
@@ -75,7 +75,7 @@ virtual const CVec2& GetOrigin( const int nIndex = -1 ) const
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].vOrigin;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const
 {
 	int nCur; 
@@ -83,7 +83,7 @@ virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].passability;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
 {
 	int nCur; 
@@ -91,7 +91,7 @@ virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].vVisOrigin;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 {
 	static SByteArray2 empty;
@@ -101,19 +101,19 @@ virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 		return segm.passability;
 	return empty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const
 {
 	int nCur; 
 	return GetSegmentsByFrameIndex( nIndex, &nCur ).passProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 {
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ETypesOfLife 
 { 
 	ETOL_SAFE, 
@@ -121,12 +121,12 @@ enum ETypesOfLife
 	ETOL_RIGHT,
 	ETOL_DESTROYED 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool HasLeftDamaged() const
 {
 	return !damagedSegmentsOtherSide.visObjes.empty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 {
 	switch( eType )
@@ -152,7 +152,7 @@ int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 	NI_ASSERT( false, "unknown fence life type" );
 	return -1;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 {
 	const int nMaxIndexSafe = centerSegments.visObjes.size();
@@ -173,4 +173,4 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 	NI_ASSERT( false, StrFmt( "[MAP DESIGNER ERROR] Invalid frame index (%d). Object \"%d\" has no appropriate lite type.", GetDBID().ToString().c_str() ) );
 	return ETOL_SAFE;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

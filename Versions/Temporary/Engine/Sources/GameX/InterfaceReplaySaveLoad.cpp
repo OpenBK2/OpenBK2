@@ -11,15 +11,15 @@
 #include "GameRoomData.h"
 #include "../Misc/StrProc.h"
 #include "InterfaceMisc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceReplaySaveLoad
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceReplaySaveLoad::CInterfaceReplaySaveLoad() : CInterfaceScreenBase( "ReplaySaveLoad", "intermission" )
 {
 	AddObserver( "message_box_ok", &CInterfaceReplaySaveLoad::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceReplaySaveLoad::MsgCancel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
@@ -30,7 +30,7 @@ bool CInterfaceReplaySaveLoad::Init()
 	eQuestion = EQM_NONE;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::SetMode( const string &szMode )
 {
 	if ( szMode == "save" )
@@ -47,7 +47,7 @@ void CInterfaceReplaySaveLoad::SetMode( const string &szMode )
 	}
 	NI_ASSERT( 0, StrFmt( "PRG: Wrong parameter (%s) passed to ReplaySaveLoad", szMode.c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::ShowHideControls()
 {
 	if ( pLoadBtn )
@@ -63,7 +63,7 @@ void CInterfaceReplaySaveLoad::ShowHideControls()
 	if ( pPlayerList )
 		pPlayerList->Enable( !bSaveMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "react_on_back" )
@@ -78,12 +78,12 @@ bool CInterfaceReplaySaveLoad::Execute( const string &szSender, const string &sz
 		return OnSelect();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceReplaySaveLoad::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MakeInterior()
 {
 	pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
@@ -116,7 +116,7 @@ void CInterfaceReplaySaveLoad::MakeInterior()
 	PopulateReplayList();
 	nSelected = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::GetReplays()
 {
 	NSaveLoad::CReplays srcReplays;
@@ -133,7 +133,7 @@ void CInterfaceReplaySaveLoad::GetReplays()
 		dst.info = src.replayInfo;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::PopulateReplayList()
 {
 	if ( !pReplayItemTemplate || !pReplayList )
@@ -174,7 +174,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		pReplayList->PushBack( pWnd, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::CleanSelectionInfo()
 {
 	if ( pPlayerList )
@@ -189,14 +189,14 @@ void CInterfaceReplaySaveLoad::CleanSelectionInfo()
 	if ( pMinimapWnd )
 		pMinimapWnd->SetTexture( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MakeInfo( const SReplayEntry &entry )
 {
 	CleanSelectionInfo();
 	MakeTeams( entry.info );
 	MakeMinimap( entry.info );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 {
 	if ( !pPlayerItemTemplate )
@@ -224,7 +224,7 @@ void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 	if ( nWinTeam == 1 ) 
 		pPlayerList->Select( pWnd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, const SMultiplayerReplayInfo &info )
 {
 	ITextView *pHeaderWon = GetChildChecked<ITextView>( pWnd, "ItemHeaderWin", true );
@@ -257,7 +257,7 @@ void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, 
 	if ( pPlayers )
 		pPlayers->SetText( pPlayers->GetDBText() + NStr::ToUnicode( szNameList ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 {
 	const NDb::SMapInfo *pMap = info.pMap;
@@ -318,7 +318,7 @@ void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 		pNameView->SetText( pNameView->GetDBText() + NStr::ToUnicode( slot.szName ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::OnBack()
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -328,7 +328,7 @@ bool CInterfaceReplaySaveLoad::OnBack()
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::DoSaveReplay()
 {
 	string szNewName;
@@ -346,7 +346,7 @@ void CInterfaceReplaySaveLoad::DoSaveReplay()
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", GetScreen()->GetTextEntry( szErrorCode ) ).c_str() );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::OnSave()
 {
 	string szNewName;
@@ -371,7 +371,7 @@ bool CInterfaceReplaySaveLoad::OnSave()
 	DoSaveReplay();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::OnLoad()
 {
 	NI_VERIFY( nSelected > -1, "PRG: No replay selected to load", return true );
@@ -395,7 +395,7 @@ bool CInterfaceReplaySaveLoad::OnLoad()
 	NGlobal::ProcessCommand( NStr::ToUnicode( szCmd ) );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::OnDelete()
 {
 	if ( nSelected < 0 )
@@ -407,7 +407,7 @@ bool CInterfaceReplaySaveLoad::OnDelete()
 		GetScreen()->GetTextEntry( "T_DELETE_QUESTION" ) ).c_str() );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceReplaySaveLoad::OnSelect()
 {
 	IWindow *pSelected = pReplayList->GetSelectedItem();
@@ -434,7 +434,7 @@ bool CInterfaceReplaySaveLoad::OnSelect()
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MsgOk( const SGameMessage &msg )
 {
 	if ( eQuestion == EQM_OVERWRITE )
@@ -452,28 +452,28 @@ void CInterfaceReplaySaveLoad::MsgOk( const SGameMessage &msg )
 	}
 	eQuestion = EQM_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceReplaySaveLoad::MsgCancel( const SGameMessage &msg )
 {
 	eQuestion = EQM_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICInterfaceReplaySaveLoad
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICInterfaceReplaySaveLoad::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICInterfaceReplaySaveLoad::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 	pInterface->SetMode( szMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICInterfaceReplaySaveLoad::Configure( const char *pszConfig )
 {
 	szMode = pszConfig;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19288C40, CInterfaceReplaySaveLoad );
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_REPLAY_SAVE_LOAD, CICInterfaceReplaySaveLoad );

@@ -17,7 +17,7 @@
 #define MIMOSEP_THUMBNAILS				0x00000010
 #define MIMOSEP_ALL								0xFFFFFFFF
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectMultiState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMultiInputState;
@@ -132,6 +132,6 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPOBJECT_MULTI_STATE__)
 

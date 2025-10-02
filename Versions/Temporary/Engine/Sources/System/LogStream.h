@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EConsoleColor
 {
 	CC_WHITE,
@@ -36,7 +36,7 @@ public:
 	
 	CLogStream& operator<< ( CLogStream& (*Func)( CLogStream& csStream ) );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SConsoleLine
 {
 	int nID;
@@ -48,11 +48,11 @@ struct SConsoleLine
 	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const wstring &_szText )
 		: nID( _nID ), nStream( _nStream ), bCommand( _bCommand ), szText( _szText ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CLogStream& endl( CLogStream& sStream )
 {
 	sStream << L"\n";
 	return sStream;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXTERNVAR SYSTEM_EXPORT CLogStream csSystem, csScript;

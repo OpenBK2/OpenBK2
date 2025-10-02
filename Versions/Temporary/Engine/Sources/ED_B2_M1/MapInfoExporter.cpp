@@ -29,10 +29,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( MapInfo, CMapInfoExporter )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoExporter::SReGenerateGeometry::operator()( const string &rszObjectTypeName, const CDBID &rDBID )
 {
 	NLog::GetLogger()->Log( LT_NORMAL, StrFmt("Regenerating map: %s\n", rDBID.ToString().c_str() ) );
@@ -67,7 +67,7 @@ bool CMapInfoExporter::SReGenerateGeometry::operator()( const string &rszObjectT
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, const CDBID &rDBID )
 {
 	string szObjectName = rDBID.ToString();
@@ -153,27 +153,27 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoExporter::CMapInfoExporter()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_EXPORTER, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EXPORTER, ID_TOOLS_DEBUG_CHECK_MAP, ID_TOOLS_REGEN_GEOMETRY );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoExporter::~CMapInfoExporter()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_EXPORTER );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_EXPORTER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoExporter::StartExport( const string &rszObjectTypeName, bool bForce )
 {
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 																							const string &rszObjectTypeName,
 																							const string &rszObjectName,
@@ -215,7 +215,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoExporter::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SObjectSet objectSet;
@@ -254,7 +254,7 @@ bool CMapInfoExporter::HandleCommand( UINT nCommandID, DWORD dwData )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoExporter::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
@@ -276,4 +276,4 @@ bool CMapInfoExporter::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

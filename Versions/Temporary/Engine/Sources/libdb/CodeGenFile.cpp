@@ -7,15 +7,15 @@
 #include "../Misc/StrProc.h"
 #include "../Parser/FileNode.h"
 #include "../System/XmlSaver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCodeGen
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const string CutRootDir( const string &szFileName, const string &szRootDir )
 {
 	return szFileName.substr( szRootDir.size(), szFileName.size() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const string GetIncludeRefName( const vector<string> &splittedFileDirs, const string &szRootDir, const string &szFullIncludeName )
 {
 	const string szIncludeName = CutRootDir( szFullIncludeName, szRootDir );
@@ -41,7 +41,7 @@ static const string GetIncludeRefName( const vector<string> &splittedFileDirs, c
 
 	return "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	szName = CutRootDir( pFileNode->GetName(), szRootDir );
@@ -66,7 +66,7 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 
 	pNamespace = new CNamespace( pFileNode->GetNamespace(), nodes2TypeDefs, pTermTypesDesc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFile::GenerateCode( const string &szRootDir )
 {
 	const string szFullHFileName = szRootDir + szName + ".h";
@@ -126,7 +126,7 @@ void CFile::GenerateCode( const string &szRootDir )
 		cppStream.Write( szCPPEOF.c_str(), szCPPEOF.size() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFile::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Name", &szName );
@@ -136,8 +136,8 @@ int CFile::operator&( IXmlSaver &saver )
 	saver.Add( "Namespace", &pNamespace );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D05, CFile );

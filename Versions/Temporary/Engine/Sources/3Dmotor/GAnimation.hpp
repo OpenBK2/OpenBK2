@@ -6,16 +6,16 @@
 #include "GChannelAnimator.h"
 #include "..\System\Time.hpp"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SSkeleton;
 	struct SAnimBase;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAnimation
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAnimHandle
 {
 	ZDATA
@@ -26,13 +26,13 @@ struct SAnimHandle
 	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : 
 		pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IAnimMutator : public CObjectBase
 {
 	virtual bool NeedUpdate() { return true; }
 	virtual void MutateSkeletonPose( granny_local_pose *pPose ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public IChannelAnimator
 {
 	typedef int SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
@@ -85,7 +85,7 @@ interface ISkeletonAnimator : public CFuncBase<SGrannySkeletonPose>, public ICha
 	virtual CFuncBase<SFBTransform>* CreateTransform( const string &szBoneName ) = 0;
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
 	const SGrannySkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace

@@ -2,11 +2,11 @@
 #include "uistates.h"
 #include "UIScreen.h"
 
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CStates::
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 CStates::CStates( const NDb::SUIStateSequence &seq, const string &_szCmdName, const bool _bReversable, WORD _wKeyboardFlags ) 
 : szCmdName( _szCmdName ), nCurIndex( 0 ), bForward( true ), bReversable( _bReversable ), bEnd( true ) ,
 	wKeyboardFlags( _wKeyboardFlags )
@@ -16,7 +16,7 @@ CStates::CStates( const NDb::SUIStateSequence &seq, const string &_szCmdName, co
 		Add( *it );
 	CheckEnd();
 }
-//////////////////////////////////////////////////////////////////////
+
 int CStates::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &states );
@@ -30,18 +30,18 @@ int CStates::operator&( IBinSaver &saver )
 	saver.Add( 9, &wKeyboardFlags );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::FastForward( const int timeDiff, class CWindowScreen *pScreen )
 {
 	Play( timeDiff, pScreen, true );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::NotifyParent()
 {
 	if ( IsValid(pNotifySink) )
 		pNotifySink->NotifyStateSequenceFinished();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::CheckEnd()
 {
 	if ( bForward && nCurIndex >= states.size() )
@@ -59,26 +59,26 @@ void CStates::CheckEnd()
 	else if ( !states.empty() )
 		bEnd = false;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::Add( const NDb::SUIStateBase *_pCmd )
 {
 //	NI_VERIFY( _pCmd, "No command", return );
 	states.push_back( SUIState( _pCmd ) );
 	CheckEnd();
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::Advance() 
 { 
 	NI_ASSERT( states.size() != 0, "no states" );
 	bForward ? ++nCurIndex : --nCurIndex;
 	CheckEnd();
 }
-//////////////////////////////////////////////////////////////////////
+
 const bool CStates::IsToBeDeleted() const 
 { 
 	return IsEnd() &&	(!bForward || !bReversable );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::Reverse() 
 {
 	bForward = !bForward;
@@ -90,14 +90,14 @@ void CStates::Reverse()
 				states[i].pEffect->Reverse();
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::Segment( const int timeDiff, class CWindowScreen *pScreen )
 {
 	NI_ASSERT( !IsEnd(), "ended states, but segment called" );
 
 	Play( timeDiff, pScreen, false );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::Play( const int timeDiff, class CWindowScreen *pScreen, const bool bFastForward )
 {
 	int timeAllowed = timeDiff;
@@ -124,7 +124,7 @@ void CStates::Play( const int timeDiff, class CWindowScreen *pScreen, const bool
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 IUIEffector *CStates::CreateEffect( const NDb::SUIStateBase *pCmd, class CWindowScreen *pScreen, SWindowContext *pContext )
 {
 	IUIEffector * pEff = CUIFactory::MakeEffect( pCmd, pScreen, pContext, id.second ? id.second->GetName() : 
@@ -137,10 +137,10 @@ IUIEffector *CStates::CreateEffect( const NDb::SUIStateBase *pCmd, class CWindow
 	}
 	return pEff;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CStates::SetAnimatedWindow( const int nID, class CWindow * pWindow )
 { 
 	id.first = nID;
 	id.second = pWindow; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

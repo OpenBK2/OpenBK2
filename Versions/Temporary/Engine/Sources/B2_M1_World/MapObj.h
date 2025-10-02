@@ -2,7 +2,7 @@
 
 #include "B2_M1_World_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "../misc/2darray.h"
 #include "../zlib/zconf.h"
 #include "../stats_b2_m1/actioncommand.h"
@@ -15,7 +15,7 @@
 #include "../SceneB2/Scene.h"
 #include "../Stats_B2_M1/AIUpdates.h"
 #include "../Misc/HashFuncs.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int ARMOR_FRONT				= 0;
 const int ARMOR_SIDE_1			= 1;
 const int ARMOR_BACK				= 2;
@@ -23,15 +23,15 @@ const int ARMOR_SIDE_2			= 3;
 const int ARMOR_TOP					= 4;
 const int ARMOR_BOTTOM			= 5;
 const int ARMOR_COUNT				= 6;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern const float SOLID_ICON_ALPHA;
 extern float FADED_ICON_ALPHA;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMOUnit;
 interface IMOContainer;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef list< CPtr<IMOUnit> >CUnitsList;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAIBasicUpdate;
 namespace NDb
 {
@@ -43,7 +43,7 @@ namespace NAnimation
 {
 	interface ISkeletonAnimator;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EObjectStatusArmor
 {
 	EOS_ARMOR_FRONT,
@@ -53,7 +53,7 @@ enum EObjectStatusArmor
 
 	EOS_ARMOR_COUNT,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct B2_M1_WORLD_EXPORT SObjectStatus
 {
 	struct SWeapon
@@ -104,7 +104,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	void Clear();
 	void AddWeapon( const SWeapon &weapon );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SIconsSetInfo
 {
 	ZDATA
@@ -116,7 +116,7 @@ struct SIconsSetInfo
 	SIconsSetInfo( float _fRaising, float _fHPBarLen ) : 
 		fRaising( _fRaising ), fHPBarLen( _fHPBarLen ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAbilityInfo 
 {
 	SAbilitySwitchState	abilityState;
@@ -127,10 +127,10 @@ struct SAbilityInfo
 	abilityState( _abilityState ), fParam( _fParam ) {}
 };
 typedef hash_map< NDb::EUnitSpecialAbility, SAbilityInfo, SEnumHash > CAbilityInfo;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbility, const SAbilityInfo &abilityInfo );
 B2_M1_WORLD_EXPORT void CombineAbilities( CAbilityInfo *pAbilities, const CAbilityInfo &abilities );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	if ( pVisObj )
@@ -144,7 +144,7 @@ inline const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeas
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const NDb::SModel* GetExactLowLevelModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	if ( pVisObj )
@@ -158,26 +158,26 @@ inline const NDb::SModel* GetExactLowLevelModel( const NDb::SVisObj *pVisObj, ND
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const NDb::SModel* GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	const NDb::SModel *pExactModel = GetExactModel( pVisObj, eSeason );
 	return pExactModel != 0 ? pExactModel : GetExactModel( pVisObj, NDb::SEASON_SUMMER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const NDb::SModel* GetLowLevelModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	const NDb::SModel *pExactModel = GetExactLowLevelModel( pVisObj, eSeason );
 	return pExactModel != 0 ? pExactModel : GetExactLowLevelModel( pVisObj, NDb::SEASON_SUMMER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EActionsType 
 {
 	ACTIONS_WITH,
 	ACTIONS_BY,
 	ACTIONS_ALL
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 {
 	// CPtr<CObjectBase> pAIObj;
@@ -362,7 +362,7 @@ public:
 	//
 	virtual int operator&( IBinSaver &saver );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class B2_M1_WORLD_EXPORT CMOSelectable : public CMapObj
 {
 	bool bSelected;
@@ -435,7 +435,7 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMOContainer : public CMOSelectable
 {
 protected:
@@ -466,7 +466,7 @@ public:
 	virtual bool IsOpen() const = 0;
 	virtual void SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck ) { NI_ASSERT( false, "wrong call" ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMOSquad : public IMOContainer
 {
 	ZDATA_(IMOContainer)
@@ -480,7 +480,7 @@ interface IMOSquad : public IMOContainer
 	virtual void SetContainer( IMOContainer *_pContainer ) = 0;
 	virtual IMOContainer* GetContainer() const = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMOUnit : public IMOContainer
 {
 	ZDATA_(IMOContainer)
@@ -525,7 +525,7 @@ interface IMOUnit : public IMOContainer
 	virtual void SetPointer( const NDb::SModel *pModel ) = 0;
 	virtual void ClearPointer() = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceCrater( const NDb::SCraterSet *pCrater, NDb::ESeason eSeason, const CVec2 &vPos );
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace );
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos );
@@ -534,12 +534,12 @@ void PlayComplexEffect( const int nID, const string &szBoneName, ESceneSubObjTyp
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, NDb::ESeason eSeason );
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot, NDb::ESeason eSeason );
 int PlayComplexSeasonedEffect( const int nID, const NDb::SComplexSeasonedEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace, NDb::ESeason eSeason );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISkeletonAnimator *pAnimator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetPlacementFromUpdate( CVec3 *pvPos, CQuat *pqRot, const SAINewUnitUpdate *pUpdate );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator, bool bLooped, float fSpeed = 1.0f );
 B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

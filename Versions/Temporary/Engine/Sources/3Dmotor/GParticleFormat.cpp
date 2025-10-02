@@ -2,9 +2,9 @@
 #include "GParticleFormat.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CParticlesInfo
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CParticlesInfo::CalcBound( SBound *pRes )
 {
 	CVec3 ptMin, ptMax;
@@ -43,7 +43,7 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 	}
 	pRes->BoxInit( ptMin, ptMax );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //static bool IsInRange( DWORD a, DWORD b, DWORD c ) { if ( a < b ) return c >= a && c <= b; return c >= b && c <= a; }
 template<>
 void Interpolate( const DWORD &v1, const DWORD &v2, float f1, float f2, DWORD *pRes )
@@ -105,14 +105,14 @@ void Scale( const DWORD &v, float f, DWORD *pRes )
 		emms
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CParticlesLoader
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFileRequest* CParticlesLoader::CreateRequest()
 {
 	return CreateFileRequiest( "Effects", GetKey() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 {
 	pValue = new CParticlesInfo;
@@ -148,7 +148,7 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 		particle.sprite.keys = (TKey<short>*)(pData + (int)particle.sprite.keys);
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x02541140, CParticlesLoader );

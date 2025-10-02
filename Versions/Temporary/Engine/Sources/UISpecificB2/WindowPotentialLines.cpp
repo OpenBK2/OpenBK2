@@ -14,7 +14,7 @@
 #include "../GameX/DBGameRoot.h"
 #include "../System/Commands.h"
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float s_fWeightMainStrike = 0.007f;
 static float s_fWeightMaskNoise = 0.00001f;
 static float s_fWeightPerlinNoise = 0.0f; //0.0002f;
@@ -22,7 +22,7 @@ static float s_fWeightNodes = 1.0f;
 static int s_nPerlinGridSize = 20;
 static int s_nPotentialGridSize = 10;
 static int s_nBorderWidth = 10;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CWindowChapterMapLayer
@@ -30,7 +30,7 @@ static int s_nBorderWidth = 10;
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowChapterMapLayer::Recalc()
 {
 	if ( !IsValid( pValue ) )
@@ -42,7 +42,7 @@ void CWindowChapterMapLayer::Recalc()
 		memcpy( lock[y], &points[y][0], nSize );
 	bNeedUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowChapterMapLayer::SetSize( const int _nWidth, const int _nHeight )
 {
 	nWidth = _nWidth;
@@ -51,26 +51,26 @@ void CWindowChapterMapLayer::SetSize( const int _nWidth, const int _nHeight )
 	pValue = 0;
 	bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowChapterMapLayer::SetPixelAlpha( const int x, const int y, const BYTE &nAlpha )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
 		points[y][x].a = nAlpha;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BYTE CWindowChapterMapLayer::GetPixelAlpha( const int x, const int y )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
 		return points[y][x].a;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowChapterMapLayer::PutPixel( const int x, const int y, const NGfx::SPixel8888 &color )
 {
 	if ( y >= 0 && y < nHeight && x >= 0 && x < nWidth )
 		points[y][x] = color;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NGfx::SPixel8888 CWindowChapterMapLayer::GetPixel( const int x, const int y )
 {
 	if ( x >= 0 && y >= 0 && x < nWidth && y < nHeight )
@@ -78,12 +78,12 @@ const NGfx::SPixel8888 CWindowChapterMapLayer::GetPixel( const int x, const int 
 	else
 		return NGfx::SPixel8888( 0, 0, 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowChapterMapLayer::Clear()
 {
 	points.FillEvery( NGfx::SPixel8888( 0, 0, 0, 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowChapterMapLayer::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &points );
@@ -93,7 +93,7 @@ int CWindowChapterMapLayer::operator&( IBinSaver &saver )
 	nLastUpdateTime = 0;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 {
 	const float fH = abs( fX1 - fX2 );
@@ -102,7 +102,7 @@ static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 
 	return Min ( fOrto, ( fH + fV ) * 0.666f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define LINE_BLUR_PART 0.3f
 void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 {
@@ -130,7 +130,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CWindowPotentialLines
@@ -138,7 +138,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*#define s_nPotentialGridSize 16
 #define STEP2 8*/
 #define STEP_TWIN_OFFSET 0
@@ -147,7 +147,7 @@ CWindowPotentialLines::CWindowPotentialLines()
 {
 	pTerritoryLayer = new CWindowChapterMapLayer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STextureEntryEqual
 {
 	string szID;
@@ -158,7 +158,7 @@ struct STextureEntryEqual
 		return szID == value.szTextID;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 {
 	Recalculate();
@@ -181,7 +181,7 @@ void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 	pVisitor->VisitUITextureRect( pLinesLayer, 3, rects );
 	DrawArrows( pVisitor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
 	const NDb::SWindowPotentialLines *pWindowDesc( checked_cast<const NDb::SWindowPotentialLines*>( pDesc ) );
@@ -194,7 +194,7 @@ void CWindowPotentialLines::InitByDesc( const struct NDb::SUIDesc *pDesc )
 
 	ClearNodes();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::Recalculate()
 {
 	if ( bValid )
@@ -375,7 +375,7 @@ void CWindowPotentialLines::Recalculate()
 	pTerritoryLayer->SetNeedUpdate();
 	bValid = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CWindowPotentialLines::GetValue( int nX, int nY ) const
 {
 	float fResult = 0.0f;
@@ -391,7 +391,7 @@ const float CWindowPotentialLines::GetValue( int nX, int nY ) const
 
 	return fResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CWindowPotentialLines::GetSquaredDistanceToSegment( const SNodeDesc &node, int nX, int nY ) const
 {
 	float fT = node.nEndOffsetX * ( nX - node.nX ) + node.nEndOffsetY * ( nY - node.nY );
@@ -407,14 +407,14 @@ float CWindowPotentialLines::GetSquaredDistanceToSegment( const SNodeDesc &node,
 
 	return fDX * fDX + fDY * fDY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::ClearNodes()
 {
 	nodes.clear();
 
 	bValid = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue )
 {
 	for ( CNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it )
@@ -439,7 +439,7 @@ void CWindowPotentialLines::SetNode( int nX, int nY, int nEndOffsetX, int nEndOf
 
 	bValid = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::SetParams( const string &szMask, const string &szDiffColourMap, const CVec2 &_vMainStrike, const DWORD _dwBorderColour1, const DWORD _dwBorderColour2 )
 {
 	vMainStrike = _vMainStrike;
@@ -451,7 +451,7 @@ void CWindowPotentialLines::SetParams( const string &szMask, const string &szDif
 
 	SetupNoise();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::AddArrow( const vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, DWORD dwArrowColour  )
 {
 	if ( pArrowTexture->IsRefInvalid() )
@@ -465,7 +465,7 @@ void CWindowPotentialLines::AddArrow( const vector<CVec2> &arrowTraj, float fArr
 
 	arrows.push_back( newDesc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::DrawArrows( interface IUIVisitor *pVisitor )
 {
 	CVec2 sPos[4];
@@ -559,7 +559,7 @@ void CWindowPotentialLines::DrawArrows( interface IUIVisitor *pVisitor )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 {
 	int nX, nY;
@@ -613,7 +613,7 @@ void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::OnSerialize( IBinSaver &f ) 
 {
 	if ( f.IsReading() ) 
@@ -625,7 +625,7 @@ void CWindowPotentialLines::OnSerialize( IBinSaver &f )
 		SetupNoise();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowPotentialLines::SetupNoise()
 {
 	CArray2D<DWORD> noiseMask;
@@ -689,7 +689,7 @@ void CWindowPotentialLines::SetupNoise()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x191B5380, CWindowPotentialLines )
 REGISTER_SAVELOAD_CLASS( 0x191B5B80, CWindowChapterMapLayer )
 
@@ -702,4 +702,4 @@ REGISTER_VAR_EX( "frontlines_perlin_gridsize", NGlobal::VarIntHandler, &s_nPerli
 REGISTER_VAR_EX( "frontlines_gridsize", NGlobal::VarIntHandler, &s_nPotentialGridSize, 10, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_border_width", NGlobal::VarIntHandler, &s_nPotentialGridSize, 10, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

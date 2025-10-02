@@ -4,9 +4,9 @@ namespace NCollider
 {
 vector<int> fetchBufferArray;
 SSkipColliderAnalyzer skipAnalyzer;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVolumeContainer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::Init( const CVec3 &_ptMin, const CVec3 &ptMax, float fRegularSize )
 {
 	ptMin = _ptMin;
@@ -33,14 +33,14 @@ void CVolumeContainer::Init( const CVec3 &_ptMin, const CVec3 &ptMax, float fReg
 	fetchMark.clear();
 	nLastFetch = 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::GetCoords( SIntCoords *pRes, const CVec3 &src )
 {
 	pRes->x = Float2Int( ( src.x - ptMin.x ) * fSize1x - 0.5f );
 	pRes->y = Float2Int( ( src.y - ptMin.y ) * fSize1y - 0.5f );
 	pRes->z = Float2Int( ( src.z - ptMin.z ) * fSize1z - 0.5f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vector<int> CVolumeContainer::fetchBufferArray;
 void CVolumeContainer::Fetch( const SBound &bound )
 {
@@ -100,7 +100,7 @@ void CVolumeContainer::Fetch( const SBound &bound )
 	++nLastFetch;
 	nFetched = pFetchBufferPtr - &fetchBufferArray[0];
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SIntCoords &a, const SIntCoords &b, const SIntCoords &c )
 {
 	pRes->mn.x = Min( a.x, Min( b.x, c.x ) );
@@ -110,7 +110,7 @@ void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SIntCoords &a, con
 	pRes->mx.y = Max( a.y, Max( b.y, c.y ) );
 	pRes->mx.z = Max( a.z, Max( b.z, c.z ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::InitFirstPt( SVolumeBounds *pRes, const SHMatrix &pos, const CVec3 &coord )
 {
 	SIntCoords pt;
@@ -121,7 +121,7 @@ void CVolumeContainer::InitFirstPt( SVolumeBounds *pRes, const SHMatrix &pos, co
 	pRes->mn.y = pRes->mx.y = pt.y;
 	pRes->mn.z = pRes->mx.z = pt.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::EnlargeVolumeBounds( SVolumeBounds *pRes, const SHMatrix &pos, const CVec3 &coord )
 {
 	SIntCoords pt;
@@ -141,13 +141,13 @@ void CVolumeContainer::EnlargeVolumeBounds( SVolumeBounds *pRes, const SHMatrix 
 	if ( pt.z < pRes->mn.z )
 		pRes->mn.z = pt.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const SBound &bound )
 {
 	InitFirstPt( pRes, pos, bound.s.ptCenter - bound.ptHalfBox );
 	EnlargeVolumeBounds( pRes, pos, bound.s.ptCenter + bound.ptHalfBox );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, const vector<CVec3> &coords )
 {
 	ASSERT( coords.size() > 0 );
@@ -155,20 +155,20 @@ void CVolumeContainer::MakeVolume( SVolumeBounds *pRes, const SHMatrix &pos, con
 	for ( int i = 1; i < coords.size(); ++i )
 		EnlargeVolumeBounds( pRes, pos, coords[i] );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVolumeContainer::IsOut( const SVolumeBounds &t )
 {
 	int nMax = ( 1 << ( volumeData.size() - 1 ) ) - 1;
 	return t.mx.x < 0 || t.mx.y < 0 || t.mx.z < 0 || t.mn.x > nMax || t.mn.y > nMax || t.mn.z > nMax;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::ClipVolume( SVolumeBounds *pRes )
 {
 	int nMax = ( 1 << ( volumeData.size() - 1 ) ) - 1;
 	pRes->mn.x = Max( 0, pRes->mn.x ); pRes->mn.y = Max( 0, pRes->mn.y ); pRes->mn.z = Max( 0, pRes->mn.z );
 	pRes->mx.x = Min( nMax, pRes->mx.x ); pRes->mx.y = Min( nMax, pRes->mx.y ); pRes->mx.z = Min( nMax, pRes->mx.z );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
 {
 	int nD = b.GetSize();

@@ -7,10 +7,10 @@
 #include "../Parser/ErrorsAndMessages.h"
 #include "../Parser/LangNodesDefinitions.h"
 #include "../Parser/FileNode.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCompileCLike
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSimpleType
 {
 	ObjectFactoryNewFunc pfnFunc;
@@ -53,12 +53,12 @@ void ClearStruct( T *pT )
 	_Destroy( pT );
 	construct( pT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisitor::CVisitor( vector< CObj<NDb::NTypeDef::STypeDef> > *_pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *_pTermTypesDesc )
 : pTypes( _pTypes ), pTermTypesDesc( _pTermTypesDesc ), bFailed( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CBaseTypeNode *pBaseTypeNode )
 {
 	pCreatedType = 0;
@@ -74,7 +74,7 @@ void CVisitor::Visit( NLang::CBaseTypeNode *pBaseTypeNode )
 		nodes2TypeDefs[pBaseTypeNode] = pCreatedType;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pStruct )
 {
 	CDynamicCast<NDb::NTypeDef::STypeClass> pClass = pStruct;
@@ -102,7 +102,7 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 			pStruct->pAttributes = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 {
 	if ( pComplexTypeNode->IsForward() )
@@ -173,7 +173,7 @@ void CVisitor::Visit( NLang::CComplexTypeNode *pComplexTypeNode )
 		pCreatedType = pStruct;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVariant Val2Variant( const NLang::CSimpleValue &value )
 {
 	switch( value.GetType() )
@@ -212,12 +212,12 @@ CVariant Val2Variant( const NLang::CSimpleValue &value )
 
 	return CVariant( "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CAttributeNode *pAttributeNode )
 {
 	attr = Val2Variant( pAttributeNode->GetValue() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 {
 	pCreatedType = 0;
@@ -278,7 +278,7 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CEnumEntryNode *pEnumEntryNode )
 {
 	ClearStruct( &enumEntry );
@@ -286,7 +286,7 @@ void CVisitor::Visit( NLang::CEnumEntryNode *pEnumEntryNode )
 	enumEntry.szName = pEnumEntryNode->GetName();
 	enumEntry.nVal = pEnumEntryNode->GetValue();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CEnumNode *pEnumNode )
 {
 	if ( pEnumNode->IsForward() )
@@ -326,7 +326,7 @@ void CVisitor::Visit( NLang::CEnumNode *pEnumNode )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pField )
 {
 	if ( pField->pAttributes != 0 )
@@ -343,7 +343,7 @@ static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pFi
 			pField->pAttributes = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::VisitVariable( NLang::CVariable *pVariableNode, const bool bArray )
 {
 	NLang::CTypeNode *pType = pVariableNode->GetType()->GetRealType();
@@ -397,7 +397,7 @@ void CVisitor::VisitVariable( NLang::CVariable *pVariableNode, const bool bArray
 
 	ParseImportantFieldAttr( &field );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CVariableNode *pVariableNode )
 {
 	ClearStruct( &field );
@@ -412,7 +412,7 @@ void CVisitor::Visit( NLang::CVariableNode *pVariableNode )
 
 	nodes2TypeDefs[pVariableNode] = field.pType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CVectorNode *pVectorNode )
 {
 	ClearStruct( &field );
@@ -434,12 +434,12 @@ void CVisitor::Visit( NLang::CVectorNode *pVectorNode )
 
 	nodes2TypeDefs[pVectorNode] = field.pType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CAttributeDefNode *pAttrDefNode )
 {
 	// do nothing
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STypeStructBase *pUpperType )
 {
 	if ( CDynamicCast<NLang::CAttributeDefNode> pAttrDefNode = pNode )
@@ -479,7 +479,7 @@ void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STy
 		NI_ASSERT( false, StrFmt( "can't recognize node %s", typeid( *pNode ).name() ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisitor::Visit( NLang::CNamespace *pNM )
 {
 	if ( namespaces.empty() )
@@ -519,6 +519,6 @@ void CVisitor::Visit( NLang::CNamespace *pNM )
 		namespaces.pop_back();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

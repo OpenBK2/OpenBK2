@@ -5,9 +5,9 @@
 #include "AIUnit.h"
 #include "UnitStates.h"
 #include "../System/FastMath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS(CLongObjectCreation);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 WORD CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 {
 	CVec2 vTmp = vEnd - vBegin;  
@@ -17,7 +17,7 @@ WORD CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 		fAngle = FP_2PI - fAngle;
 	return WORD ( (fAngle/( 2.0f * PI ) ) * 65535 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLongObjectCreation::SplitLineToSegrments( vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH )
 {
 	CVec2 currentPoint = vBegin;
@@ -49,7 +49,7 @@ void CLongObjectCreation::SplitLineToSegrments( vector<CVec2> *_vPoints, const C
 		vAddSegment.y += currentPoint.y;
 	}	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLongObjectCreation::GetUnitsPreventing( const SRect &r1, list< CPtr<CAIUnit> > *units ) const
 {
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
@@ -63,7 +63,7 @@ void CLongObjectCreation::GetUnitsPreventing( const SRect &r1, list< CPtr<CAIUni
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLongObjectCreation::IsAnyUnitPrevent( const SRect &r1 ) const
 {
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
@@ -78,7 +78,7 @@ bool CLongObjectCreation::IsAnyUnitPrevent( const SRect &r1 ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLongObjectCreation::CanBuildOnRect( SRect r1, const list<SVector> &tilesUnder ) const
 {
 	// hack! to avoid problem with bounds (due to open set of coordinates)
@@ -99,7 +99,7 @@ bool CLongObjectCreation::CanBuildOnRect( SRect r1, const list<SVector> &tilesUn
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLongObjectCreation::UnlockPreventingUnits( list<CPtr<CAIUnit> > &preventing ) const
 {
 	for ( list<CPtr<CAIUnit> >::iterator it = preventing.begin(); it != preventing.end(); ++it )

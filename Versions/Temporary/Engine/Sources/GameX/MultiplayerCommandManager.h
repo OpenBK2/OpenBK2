@@ -1,15 +1,15 @@
 #ifndef __MULTIPLAYER_COMMAND_MANAGER_H__
 #define __MULTIPLAYER_COMMAND_MANAGER_H__
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma ONCE
 #include "MPInterfaceData.h"
 #include "../Server_Client_Common/LadderStatistics.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SMapInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EMPUIMessageType
 {
 	EMUI_UNKNOWN,
@@ -69,7 +69,7 @@ enum EMPUIMessageType
 	EMUI_NIVAL_NET_LADDER_STATS,
 	EMUI_NIVAL_NET_LADDER,					// 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIMessage : public CObjectBase
 {
 	ZDATA
@@ -79,9 +79,9 @@ struct SMPUIMessage : public CObjectBase
 	SMPUIMessage() : eMessageType( EMUI_UNKNOWN ) {}
 	SMPUIMessage( const EMPUIMessageType _eMessageType ) : eMessageType(_eMessageType) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Interface with UI
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IMPToUIManager : public CObjectBase
 {
 	enum { tidTypeID = 0x1911A400 };
@@ -95,11 +95,11 @@ interface IMPToUIManager : public CObjectBase
 	virtual void MPUISegment() = 0;
 	virtual bool SaveReplay( const string &szFileName ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*		 									messages from MP to UI and back				  		*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUISimpleMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUISimpleMessage );
@@ -107,7 +107,7 @@ public:
 	SMPUISimpleMessage() {} // serialize only
 	SMPUISimpleMessage( const EMPUIMessageType _eMessageType ) : SMPUIMessage ( _eMessageType ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILoginNivalNetMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILoginNivalNetMessage );
@@ -122,7 +122,7 @@ public:
 	SMPUILoginNivalNetMessage( const wstring &_wszLogin, const wstring &_wszPassword, const bool _bRemember ) :
 		SMPUIMessage( EMUI_LOGIN_NIVAL_NET ), wszLogin( _wszLogin ), wszPassword( _wszPassword ), bRememberPassword(_bRemember) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIJoinGameMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIJoinGameMessage );
@@ -138,7 +138,7 @@ public:
 	SMPUIJoinGameMessage( int _nGameID, const string &_szPassword ) :
 		SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ), szPassword( _szPassword ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // General info for any game using the same net (same net driver, same net; or on same server)
 struct SUIGameInfo
 {
@@ -155,7 +155,7 @@ struct SUIGameInfo
 	int					nTechLevel;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&szSessionName); f.Add(4,&szMapName); f.Add(5,&nPlayers); f.Add(6,&nPlayersMax); f.Add(7,&bPwdReq); f.Add(8,&nSizeX); f.Add(9,&nSizeY); f.Add(10,&nGameType); f.Add(11,&nTechLevel); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIGameListMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIGameListMessage );
@@ -170,7 +170,7 @@ public:
 	SMPUIGameListMessage() : SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates(false) {}
 	SMPUIGameListMessage( const bool _bSendUpdates ) : SMPUIMessage( EMUI_UPDATE_GAME_LIST ), bSendUpdates(_bSendUpdates) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUICreateGameMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUICreateGameMessage );
@@ -183,7 +183,7 @@ public:
 
 	SMPUICreateGameMessage() : SMPUIMessage( EMUI_CREATE_GAME ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIUpdateSlotMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIUpdateSlotMessage );
@@ -196,7 +196,7 @@ public:
 
 	SMPUIUpdateSlotMessage() : SMPUIMessage( EMUI_UPDATE_SLOT ), nSlot(-1) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIGameRoomInitMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIGameRoomInitMessage );
@@ -222,7 +222,7 @@ public:
 	SMPUIGameRoomInitMessage() : SMPUIMessage( EMUI_GAME_ROOM_INIT ) {}
 	SMPUIGameRoomInitMessage( const ERejectReason _eResult ) : SMPUIMessage( EMUI_GAME_ROOM_INIT ), eResult(_eResult) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILagMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILagMessage );
@@ -236,7 +236,7 @@ public:
 	SMPUILagMessage( const DWORD dwPlayerMask, const bool bOnStart ) 
 		: SMPUIMessage( EMUI_WAITING_FOR_PLAYERS ), dwLaggingPlayers(dwPlayerMask), bInitialWait(bOnStart) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILagInfoMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILagInfoMessage );
@@ -257,7 +257,7 @@ public:
 	SMPUILagInfoMessage( const bool _bOwnLag ) 
 		: SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag(_bOwnLag) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILadderGameMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILadderGameMessage );
@@ -272,7 +272,7 @@ public:
 
 	SMPUILadderGameMessage() : SMPUIMessage( EMUI_NIVAL_NET_LADDER_GAME ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIConnectResultMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIConnectResultMessage );
@@ -286,7 +286,7 @@ public:
 	SMPUIConnectResultMessage( const bool _bSuccess, const string &_szTextTag ) 
 		: SMPUIMessage( EMUI_CONNECT_RESULT ), bSuccess(_bSuccess), szTextTag(_szTextTag) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIServerMessageMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIServerMessageMessage );
@@ -298,7 +298,7 @@ public:
 	SMPUIServerMessageMessage() : SMPUIMessage( EMUI_SERVER_MESSAGE ) {}
 	SMPUIServerMessageMessage( const wstring &_wszText ) : SMPUIMessage( EMUI_SERVER_MESSAGE ), wszText(_wszText) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIChatMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS(SMPUIChatMessage);
@@ -315,7 +315,7 @@ public:
 	SMPUIChatMessage( const string &_szName, const wstring &_wszText )
 		: SMPUIMessage( EMUI_CHAT_MESSAGE ), szName(_szName), wszText(_wszText), bPrivate(true) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIJoinChannelMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIJoinChannelMessage );
@@ -327,7 +327,7 @@ public:
 	SMPUIJoinChannelMessage(): SMPUIMessage ( EMUI_JOIN_CHAT_CHANNEL ) {} // serialization only
 	SMPUIJoinChannelMessage( const string &_szChannel ) : SMPUIMessage ( EMUI_JOIN_CHAT_CHANNEL ), szChannel(_szChannel) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIChatChannelListMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIChatChannelListMessage );
@@ -338,7 +338,7 @@ public:
 
 	SMPUIChatChannelListMessage(): SMPUIMessage ( EMUI_CHAT_CHANNELS ) {} // serialization only
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIChatChannelNicksMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIChatChannelNicksMessage );
@@ -355,7 +355,7 @@ public:
 
 	SMPUIChatChannelNicksMessage(): SMPUIMessage ( EMUI_CHAT_NICKS ) {} // serialization only
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EMPChatStatus { EMPS_ONLINE,	EMPS_OFFLINE,	EMPS_BUSY };
 
 struct SMPUIChatChannelNicksChangeMessage : public SMPUIMessage
@@ -372,7 +372,7 @@ public:
 	SMPUIChatChannelNicksChangeMessage( const string &_szNick, const EMPChatStatus _eStatus, const bool _bFriend )
 		: SMPUIMessage ( EMUI_CHAT_NICKS_CHANGE ), szNick(_szNick), eStatus(_eStatus), bFriend(_bFriend) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILadderInfoRequestMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILadderInfoRequestMessage );
@@ -386,7 +386,7 @@ public:
 	SMPUILadderInfoRequestMessage( const string &_szNick, const bool _bShort )
 		: SMPUIMessage ( EMUI_REQUEST_INFO ), szNick(_szNick), bShort(_bShort) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIShortInfoMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIShortInfoMessage );
@@ -398,7 +398,7 @@ public:
 
 	SMPUIShortInfoMessage(): SMPUIMessage ( EMUI_SHORT_INFO ) {} // serialization only
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIChangeFriendIgnoreStatusMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIChangeFriendIgnoreStatusMessage );
@@ -418,7 +418,7 @@ public:
 	SMPUIChangeFriendIgnoreStatusMessage( const string &_szNick, const EAction _eAction )
 		: SMPUIMessage ( EMUI_CHANGE_FRIEND_IGNORE ), szNick(_szNick), eAction(_eAction) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SMedal;
@@ -443,7 +443,7 @@ public:
 	SMPUIGameAftemathMessage(): SMPUIMessage ( EMUI_GAME_AFTERMATH ) {} // serialization only
 	SMPUIGameAftemathMessage( const bool &_bIsLadder ) : SMPUIMessage ( EMUI_GAME_AFTERMATH ), bShowLadderInfo(_bIsLadder) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIRegisterMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUIRegisterMessage );
@@ -459,7 +459,7 @@ public:
 	SMPUIRegisterMessage( const wstring &_wszName, const wstring &_wszPassword, const wstring &_wszCDKey, const wstring &_wszEmail ) 
 		: SMPUIMessage ( EMUI_REGISTER_NIVAL_NET ), wszName( _wszName ), wszPassword( _wszPassword ), wszCDKey( _wszCDKey ), wszEmail( _wszEmail ) { }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILadderStatsMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILadderStatsMessage );
@@ -472,7 +472,7 @@ public:
 	SMPUILadderStatsMessage(): SMPUIMessage ( EMUI_NIVAL_NET_LADDER_STATS ) {} // serialization only
 	SMPUILadderStatsMessage( const SLadderStatistics &_info ): SMPUIMessage ( EMUI_NIVAL_NET_LADDER_STATS ), info( _info ) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUILadderStatusChangeMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS( SMPUILadderStatusChangeMessage );
@@ -490,7 +490,7 @@ public:
 	SMPUILadderStatusChangeMessage(): SMPUIMessage ( EMUI_NIVAL_NET_LADDER ) {} // serialization only
 	SMPUILadderStatusChangeMessage( const EState _eState ): SMPUIMessage ( EMUI_NIVAL_NET_LADDER ), eState( _eState ) {} // serialization only
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMPUIInGameChatMessage : public SMPUIMessage
 {
 	OBJECT_NOCOPY_METHODS(SMPUIInGameChatMessage);
@@ -505,5 +505,5 @@ public:
 	SMPUIInGameChatMessage( const wstring &_wszText, bool _bTeamOnly ): 
 		SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ), wszText(_wszText), bTeamOnly( _bTeamOnly ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //__MULTIPLAYER_COMMAND_MANAGER_H__

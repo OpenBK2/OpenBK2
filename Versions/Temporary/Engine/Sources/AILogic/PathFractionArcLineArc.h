@@ -5,9 +5,9 @@
 class CPathFractionArc;
 class CPathFractionLine;
 struct CDirectedCircle;
-/////////////////////////////////////////////////////////////////////////////
+
 //	CPahtFractionArcLineArc
-/////////////////////////////////////////////////////////////////////////////
+
 // s-shaped path (circle arc - line - circle arc )
 class CPahtFractionArcLineArc : public CPathFractionComplexBase
 {

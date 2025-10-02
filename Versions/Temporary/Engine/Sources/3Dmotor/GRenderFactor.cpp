@@ -5,7 +5,7 @@
 #include "..\Misc\2DArray.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<NGfx::CTexture> pSpecularResponse, pUniformBump;
 static CObj<NGfx::CTexture> pBlackTexture, pSpecularResponseR300, pWhiteTexture, pDefaultLightmap;
 static CObj<NGfx::CTexture> pFalloffLookup, pChecker;
@@ -20,7 +20,7 @@ static void InitSolidTexture( CObj<NGfx::CTexture> *pTexture, const NGfx::SPixel
 			lock[y][x] = color;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetUniformBump()
 {
 	if ( IsValid(pUniformBump) )
@@ -28,7 +28,7 @@ NGfx::CTexture* GetUniformBump()
 	InitSolidTexture( &pUniformBump, NGfx::SPixel8888( 128, 128, 255, 255 ), 1 );
 	return pUniformBump;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetBlackTexture()
 {
 	if ( IsValid(pBlackTexture) )
@@ -36,7 +36,7 @@ NGfx::CTexture* GetBlackTexture()
 	InitSolidTexture( &pBlackTexture, NGfx::SPixel8888( 0,0,0,0 ), 1 );
 	return pBlackTexture;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetWhiteTexture()
 {
 	if ( IsValid(pWhiteTexture) )
@@ -44,7 +44,7 @@ NGfx::CTexture* GetWhiteTexture()
 	InitSolidTexture( &pWhiteTexture, NGfx::SPixel8888( 255,255,255,255 ), 1 );
 	return pWhiteTexture;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetDefaultLightmap()
 {
 	if ( IsValid(pDefaultLightmap) )
@@ -52,7 +52,7 @@ NGfx::CTexture* GetDefaultLightmap()
 	InitSolidTexture( &pDefaultLightmap, NGfx::SPixel8888( 0,0,0,255 ), 1 );
 	return pDefaultLightmap;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RefreshSpecularResponse()
 {
 	if ( IsValid( pSpecularResponse ) )
@@ -94,7 +94,7 @@ static void RefreshSpecularResponse()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RefreshSpecularResponseR300()
 {
 	if ( IsValid( pSpecularResponseR300 ) )
@@ -124,19 +124,19 @@ static void RefreshSpecularResponseR300()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetSpecularResponse()
 {
 	RefreshSpecularResponse();
 	return pSpecularResponse;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetSpecularResponseR300()
 {
 	RefreshSpecularResponseR300();
 	return pSpecularResponseR300;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<NGfx::CCubeTexture> pNormalize;
 const int N_CUBE_SIZE = 128;
 static float Rnd()
@@ -179,7 +179,7 @@ static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CCubeTexture* GetNormalizeTexture()
 {
 	if ( IsValid( pNormalize ) )
@@ -193,7 +193,7 @@ NGfx::CCubeTexture* GetNormalizeTexture()
 	NormaliseFace( pNormalize, NGfx::NEGATIVE_Z );
 	return pNormalize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Normalize( CArray2D<float> *pRes )
 {
 	float fM = 0, fA = 0;
@@ -217,7 +217,7 @@ static void Normalize( CArray2D<float> *pRes )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetLightFallLookup()
 {
 	if ( IsValid( pFalloffLookup ) )
@@ -241,7 +241,7 @@ NGfx::CTexture* GetLightFallLookup()
 	}
 	return pFalloffLookup;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* GetCheckerTexture()
 {
 	if ( IsValid( pChecker ) )
@@ -259,7 +259,7 @@ NGfx::CTexture* GetCheckerTexture()
 	}
 	return pChecker;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* Get16bitDepthLookup()
 {
 	if ( IsValid( p16bitDepthLookup ) )
@@ -273,6 +273,6 @@ NGfx::CTexture* Get16bitDepthLookup()
 	}
 	return p16bitDepthLookup;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;

@@ -11,7 +11,7 @@
 #include "FakeObjects.h"
 #include "..\Common_RTS_AI\AIMap.h"
 #include "../Stats_B2_M1/AnimationFromAction.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGraveyard theGraveyard;
 
 extern CEventUpdater updater;
@@ -19,7 +19,7 @@ extern NTimer::STime curTime;
 extern CGlobalWarFog theWarFog;
 extern CUnits units;
 extern CDiplomacy theDipl;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     SKilledUnit                                 *
 //*******************************************************************
@@ -42,11 +42,11 @@ public:
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( 0 ), bAnimFinished( false ) {}
 	SKilledUnit( CAIUnit *_pUnit, const NTimer::STime _timeToEndDieAnimation, const NTimer::STime _endFogTime ) : pUnit( _pUnit ), timeToEndDieAnimation( _timeToEndDieAnimation ), endFogTime( _endFogTime ), bAnimFinished( false ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*													CGraveyard															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::Segment()
 {
 	list< CPtr<SKilledUnit> >::iterator iter = killed.begin();
@@ -118,7 +118,7 @@ void CGraveyard::Segment()
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDeath, const int nFatality )
 {
 	pUnit->UnfixUnlocking();
@@ -189,12 +189,12 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 	killed.push_back( pKillInfo );
 	units.DeleteUnitFromMap( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int GetTileNum( const SVector &tile )
 {
 	return (tile.x << 12) | tile.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 {
 	list<SVector> rectTiles;
@@ -212,7 +212,7 @@ void CGraveyard::DelKilledUnitsFromBridge( const SRect &bridgeRect )
 		bridgeDeadSoldiers.erase( nTileNum );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::CheckSoonBeDead()
 {
 	// The quection is: to be or not to be?...
@@ -247,7 +247,7 @@ void CGraveyard::CheckSoonBeDead()
 	for ( list<CAIUnit*>::iterator iter = deadObjs.begin(); iter != deadObjs.end(); ++iter )
 		soonBeDead.erase( (*iter)->GetUniqueId() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::Clear()
 {
 	killed.clear();
@@ -255,12 +255,12 @@ void CGraveyard::Clear()
 	bridgeDeadSoldiers.clear();
 	dissapeared.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::AddToDissapeared( CAIUnit *pUnit )
 {
 	dissapeared.push_back( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::AddToSoonBeDead( CAIUnit *pUnit, const float fDamage )
 {
 	const int nUniqueID = pUnit->GetUniqueID();
@@ -269,7 +269,7 @@ void CGraveyard::AddToSoonBeDead( CAIUnit *pUnit, const float fDamage )
 	if ( pUnit->IsVisible( theDipl.GetMyParty() ) )
 		diedVisible[nUniqueID] = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier )
 {
 	//CRAP{
@@ -277,37 +277,37 @@ void CGraveyard::AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier 
 	//CRAP}
 	bridgeDeadSoldiers[GetTileNum( tile )].push_back( pDeadUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CDeadUnit																	*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, bool _bPutMud )
 : pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( -1 ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDeadUnit::CDeadUnit( CCommonUnit *_pDieObj, const NTimer::STime _dieTime, const EActionNotify _dieAction, const int _nFatality, bool _bPutMud )
 : pDieObj( _pDieObj ), dieTime( _dieTime ), dieAction( _dieAction ), nFatality( _nFatality ), tileCenter( _pDieObj->GetCenterTile() ), bPutMud( _bPutMud )
 {
 	SetUniqueIdForObjects();
 	bVisibleWhenDie = pDieObj->IsVisible( theDipl.GetMyParty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CDeadUnit::IsVisible( const BYTE cParty ) const
 {
 	return theWarFog.IsTileVisible( tileCenter, cParty );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDeadUnit::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	pTiles->clear();
 	if ( GetAIMap()->IsTileInside( tileCenter ) )
 		pTiles->push_back( tileCenter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CDeadUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 
@@ -319,7 +319,7 @@ bool CDeadUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 			eAction == ACTION_NOTIFY_GET_DEAD_UNITS_UPDATE ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie )
 {
 	pDyingInfo->nObjUniqueID = pDieObj->GetUniqueId();
@@ -348,17 +348,17 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 	if ( pbVisibleWhenDie )
 		*pbVisibleWhenDie = bVisibleWhenDie;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUpdatableObj* CDeadUnit::GetDieObject() const 
 { 
 	return pDieObj; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGraveyard::IsDiedVisible( int nUniqueID )
 {
 	return diedVisible.find( nUniqueID ) != diedVisible.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGraveyard::OnSerialize( IBinSaver &saver )
 {
 	if ( !saver.IsChecksum() )
@@ -373,6 +373,6 @@ void CGraveyard::OnSerialize( IBinSaver &saver )
 	}*/
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4CB, CDeadUnit );
 REGISTER_SAVELOAD_CLASS( 0x3015A500, SKilledUnit );

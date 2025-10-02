@@ -11,33 +11,33 @@
 #include "InterfaceScreenBase.h"
 #include "../System/Text.h"
 #include "../Misc/Win32Random.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define GET_ARRAY_SIZE( pre_name, name ) ( pre_name##name##FileRefs.size() )
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name##name##FileRefs[index] ) )
 #define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name##name##FileRefs.empty() )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wchar_t* FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // общепринятое допустимое в обществе ругательство
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char* TUTORIAL_RECOMMENDED_MISSION = "TutorialRecommendedMission";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCustomMLHandler: public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CCustomMLHandler );
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300C8D43, CCampaignState )
 REGISTER_SAVELOAD_CLASS( 0x300C8D44, CInterfaceState )
 REGISTER_SAVELOAD_CLASS( 0x1716F400, CCustomMLHandler )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IInterfaceState* CreateInterfaceState()
 {
 	CInterfaceState *pState = new CInterfaceState();
 	pState->Init();
 	return pState;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SScreenEntryEqual
 {
 	string szName;
@@ -48,7 +48,7 @@ struct SScreenEntryEqual
 		return szName == value.szType;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STextEntryEqual
 {
 	string szTextID;
@@ -60,7 +60,7 @@ struct STextEntryEqual
 		return szTextID == value->szName;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STagEntryEqual
 {
 	string szName;
@@ -71,7 +71,7 @@ struct STagEntryEqual
 		return szName == value.szName;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSoundEntryEqual
 {
 	string szTextID;
@@ -82,7 +82,7 @@ struct SSoundEntryEqual
 		return szTextID == value.szType;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STextureEntryEqual
 {
 	string szID;
@@ -93,37 +93,37 @@ struct STextureEntryEqual
 		return szID == value.szTextID;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCampaignState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCampaignState::Init( const CDBID &_dbid )
 {
 	dbidCampaign = _dbid;
 	bIsCompleted = GetProfileVar( "Completed", 0 ) != 0;
 	bIsStarted = GetProfileVar( "Started", 0 ) != 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CDBID &CCampaignState::GetDBID() const
 {
 	return dbidCampaign;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CCampaignState::GetProfileVarAbbr( const string &szName ) const
 {
 	return StrFmt( "Campaign.%s.%s", dbidCampaign.ToString().c_str(), szName.c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCampaignState::GetProfileVar( const string &szName, const int nDefault ) const
 {
 	int nValue = NGlobal::GetVar( GetProfileVarAbbr( szName ), nDefault );
 	return nValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCampaignState::SetProfileVar( const string &szName, const int nValue )
 {
 	NGlobal::SetVar( GetProfileVarAbbr( szName ), nValue, STORAGE_USER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCampaignState::IsCompleted() const
 {
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
@@ -132,26 +132,26 @@ bool CCampaignState::IsCompleted() const
 		
 	return bIsCompleted;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCampaignState::SetCompleted( const bool bValue )
 {
 	bIsCompleted = bValue;
 	SetProfileVar( "Completed", bIsCompleted ? 1 : 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCampaignState::IsStarted() const
 {
 	return bIsStarted;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCampaignState::SetStarted( const bool bValue )
 {
 	bIsStarted = bValue;
 	SetProfileVar( "Started", bIsStarted ? 1 : 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::Init()
 {
 	//pScreenShot = new NGScene::CScreenshotTexture;
@@ -166,7 +166,7 @@ void CInterfaceState::Init()
 
 	Singleton<IUIInitialization>()->SetMLHandler( L"val", new CCustomMLHandler() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::InitForbiddenWords()
 {
 	if ( bForbiddenWordsInitialized )
@@ -203,21 +203,21 @@ void CInterfaceState::InitForbiddenWords()
 			forbiddenWords.push_back( wszWord );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SGameRoot* CInterfaceState::GetGameRoot() const
 {
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_ASSERT( pGameRoot, "Game root not defined" );
 	return pGameRoot;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUIConstsB2* CInterfaceState::GetUIConsts() const
 {
 	const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts();
 	NI_ASSERT( pUIConsts, "UI consts not defined" );
 	return pUIConsts;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDBID CInterfaceState::GetScreenEntryDBID( const string &szName ) const
 {
 //	const int nID = NGlobal::GetVar( ("screenID_" + szName).c_str(), -1 );
@@ -228,7 +228,7 @@ CDBID CInterfaceState::GetScreenEntryDBID( const string &szName ) const
 		return pEntry->pScreen->GetDBID();
 	return CDBID();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
@@ -242,7 +242,7 @@ const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const string &szName
 	NI_ASSERT( 0, StrFmt( "interface screen entry '%s' not found", szName.c_str() ) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CInterfaceState::GetTextEntry( const string &szTextID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
@@ -256,7 +256,7 @@ const wstring& CInterfaceState::GetTextEntry( const string &szTextID ) const
 	static wstring empty;
 	return empty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
@@ -269,7 +269,7 @@ const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const string &szNa
 	NI_ASSERT( 0, StrFmt( "interface sound entry '%s' not found", szName.c_str() ) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::STexture* CInterfaceState::GetTextureEntry( const string &szID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
@@ -282,7 +282,7 @@ const NDb::STexture* CInterfaceState::GetTextureEntry( const string &szID ) cons
 	NI_ASSERT( 0, StrFmt( "texture entry '%s' not found", szID.c_str() ) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CInterfaceState::GetMLTag( const wstring &wszName ) const
 {
 	static wstring empty;
@@ -301,7 +301,7 @@ const wstring& CInterfaceState::GetMLTag( const wstring &wszName ) const
 	NI_ASSERT( 0, StrFmt( "Designers: custom ML tag '%s' not found", szName.c_str() ) );
 	return empty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const
 {
 	static wstring wszEmpty;
@@ -322,7 +322,7 @@ const wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) con
 	}
 	return wszEmpty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 {
 	wstring wszEmpty;
@@ -345,7 +345,7 @@ wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 
 	return wszEmpty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const
 {
 	wstring wszEmpty;
@@ -356,17 +356,17 @@ wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) const
 	wstring wszSize = NStr::ToUnicode( StrFmt( "%dx%d", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
 	return wszSize;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceState::GetDifficulty() const
 {
 	return nDifficulty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SetDifficulty( int _nDifficulty )
 {
 	nDifficulty = _nDifficulty;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICampaignState* CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
 {
 	CCampaignState *pCampaignState = new CCampaignState();
@@ -374,7 +374,7 @@ ICampaignState* CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
 	campaigns[dbidCampaign] = pCampaignState;
 	return pCampaignState;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty )
 {
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
@@ -398,35 +398,35 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapte
 
 	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMission->GetDBID().ToString().c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGScene::CScreenshotTexture* CInterfaceState::GetScreenShotTexture()
 {
 	if ( !pScreenShot )
 		pScreenShot = new NGScene::CScreenshotTexture;
 	return pScreenShot.GetPtr();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SetMissionConsoleColor( DWORD dwColor )
 {
 	dwMissionChatColor = dwColor;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::WriteToMissionConsole( const wstring &wszText )
 {
 	WriteToPipe( PIPE_CHAT, wszText, dwMissionChatColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::WriteToMissionConsoleSelected( const wstring &wszText )
 {
 	WriteToPipe( PIPE_CHAT, wszText, 0xFFFF0000 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::GetMissionConsoleMLTag() const
 {
 	wstring wszText = NStr::ToUnicode( StrFmt( "<color=0x%X>", dwMissionChatColor ) );
 	return wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SendCommandsToCloseAllIncluding( const string &szInterfaceID )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
@@ -437,7 +437,7 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( const string &szInterface
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase * pLastInterfaceToClose )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
@@ -447,13 +447,13 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase * pLastInt
 			break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SendCommandsToBringOnTop( IInterfaceBase * pNewTop )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0 && pI != pNewTop; pI = NMainLoop::GetPrevInterface( pI ) )
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVar
 {
 	ZDATA
@@ -465,7 +465,7 @@ struct SVar
 	SVar( const string &_szName, const NGlobal::CValue &_value ) :
 		szName( _szName ), value( _value ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::OnSerialize( IBinSaver &saver )
 {
 	vector< pair<string, NGlobal::CValue> > vars;
@@ -493,7 +493,7 @@ void CInterfaceState::OnSerialize( IBinSaver &saver )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IInterfaceState::EScenarioTrackerType CInterfaceState::GetScenarioTrackerType() const
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -504,7 +504,7 @@ IInterfaceState::EScenarioTrackerType CInterfaceState::GetScenarioTrackerType() 
 	else
 		return ESTT_SINGLE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::MakeScenarioTracker( EScenarioTrackerType eType )
 {
 	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
@@ -536,23 +536,23 @@ void CInterfaceState::MakeScenarioTracker( EScenarioTrackerType eType )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::VerifyScenarioTracker( EScenarioTrackerType _eType ) const
 {
 	EScenarioTrackerType eType = CInterfaceState::GetScenarioTrackerType();
 	NI_ASSERT( eType == _eType, "Wrong scenario tracker" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceState::IsTransitEffectFlag() const
 {
 	return bTransitEffectFlag;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::SetTransitEffectFlag( bool bTransit )
 {
 	bTransitEffectFlag = bTransit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 {
 	const NDb::STexture *pBackground = 0;
@@ -575,7 +575,7 @@ const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 	
 	return pBackground;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::GetRandomCitation()
 {
 	wstring wszText;
@@ -588,7 +588,7 @@ wstring CInterfaceState::GetRandomCitation()
 	}
 	return wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceState::GetAndRegisterIDForMLHandler( const vector< pair<wstring, wstring> > &params )
 {
 	int nID;
@@ -605,13 +605,13 @@ int CInterfaceState::GetAndRegisterIDForMLHandler( const vector< pair<wstring, w
 	paramsForMLHandler[nID] = params;
 	return nID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::UnregisterIDForMLHandler( int nID )
 {
 	if ( paramsForMLHandler.erase( nID ) != 0 )
 		freeIDsForMLHandler.push_back( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring& CInterfaceState::ExpandMLTag( const wstring &wszTag, int nIDForHandler ) const
 {
 	if ( !wszTag.empty() && wszTag[0] == L'%' )
@@ -652,7 +652,7 @@ const wstring& CInterfaceState::ExpandMLTag( const wstring &wszTag, int nIDForHa
 	const wstring &wszText = GetMLTag( wszTag );
 	return wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const vector< pair<wstring, wstring> >& CInterfaceState::GetParamsForMLHandler( int nID ) const
 {
 	static vector< pair<wstring, wstring> > emptyParams;
@@ -665,12 +665,12 @@ const vector< pair<wstring, wstring> >& CInterfaceState::GetParamsForMLHandler( 
 	}
 	return emptyParams;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::AddMPChatMessage( const wstring &wszText )
 {
 	mpChatMessages.push_back( wszText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::GetMPChatMessage()
 {
 	wstring wszText;
@@ -681,12 +681,12 @@ wstring CInterfaceState::GetMPChatMessage()
 	}
 	return wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::ClearMPChatMessages()
 {
 	mpChatMessages.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CInterfaceState::FilterMPChatText( const wstring &_wszText )
 {
 	InitForbiddenWords();
@@ -725,25 +725,25 @@ wstring CInterfaceState::FilterMPChatText( const wstring &_wszText )
 	}
 	return wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceState::GetTutorialRecommendedMission() const
 {
 	int nRecommendedMission = NGlobal::GetVar( TUTORIAL_RECOMMENDED_MISSION, 0 );
 	return nRecommendedMission;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::MarkTutorialRecommendedMission( int nMission )
 {
 	nTutorialRecommendedMission = nMission;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceState::ApplyTutorialRecommendedMission()
 {
 	NGlobal::SetVar( TUTORIAL_RECOMMENDED_MISSION, nTutorialRecommendedMission, STORAGE_USER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCustomMLHandler
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring> &paramsSet )
 {
 	vector<wstring>::const_iterator it = paramsSet.begin();
@@ -759,8 +759,8 @@ void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const vector<wstring
 	if ( !wszText.empty() )
 		pIML->GetStream()->InsertString( wszText );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 static int GetDifficultyFromName( const string &szName )
 {
 	if ( NStr::IsDecNumber(szName) )
@@ -776,7 +776,7 @@ static int GetDifficultyFromName( const string &szName )
 	else
 		return 0;	// default = easy
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex, const string &_szMissionName )
 {
 	string szMissionName = _szMissionName;
@@ -800,7 +800,7 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDBID GetCampaignDBIDFromName( const string &_szName )
 {
 	string szName = _szName;
@@ -808,7 +808,7 @@ CDBID GetCampaignDBIDFromName( const string &_szName )
 	NI_VERIFY( !NStr::IsDecNumber(szName), "Deprecated way to identify resource! Use DBID instead!", return CDBID() );
 	return CDBID( szName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void StartSingleMission( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	NI_VERIFY( paramsSet.size() >= 3, "Not enough params for 'mission' commmand (mission <campaign_id> <chapter number 0..> <mission number 0..> [<difficulty level 0..>])", return );
@@ -823,8 +823,8 @@ void StartSingleMission( const string &szID, const vector<wstring> &paramsSet, v
 	
 	InterfaceState()->StartSingleMission( dbidCampaign, nChapterIndex, nMissionIndex, nDifficulty );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(InterfaceState)
 REGISTER_CMD( "mission", StartSingleMission );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

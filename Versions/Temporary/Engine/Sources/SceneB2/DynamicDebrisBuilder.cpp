@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_VERTICES_NUM_ALLOC 256
 #define DEF_TRIANGLES_NUM_ALLOC 256
 #define DEF_DEBRIS_HEIGHT 0.1f
 #define DEF_DEBRIS_TEX_SCALE 0.04f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AddUniqueDebrisVertex( NMeshData::SMeshDataTex2 &data, const CVec3 &vert, const int nTileX, const int nTileY,
 																	const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vNorm4,
 																	const CVec2 &vTex, NGScene::SVertex &templ, const float fDistX, const float fDistY )
@@ -27,7 +27,7 @@ inline int AddUniqueDebrisVertex( NMeshData::SMeshDataTex2 &data, const CVec3 &v
 	data.secondTex.push_back( vTex );
 	return ( data.vertices.size() - 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const float fAngle, const int nSmoothRad, const NDb::SMaterial *pMaterial )
 {
 	const float fExtCoeff = (float)nSmoothRad / ( DEF_DYNAMIC_DEBRIS_TEX_SIZE - nSmoothRad * 2 ) + 0.5f;
@@ -217,4 +217,4 @@ void CTerraGen::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const f
 
 	dynamicDebrisManager.AddDynamicDebris( data, pMaterial );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -10,7 +10,7 @@ namespace NScript
 /*
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 // CDBPtrWrapper
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class T >
 class CDBPtrWrapper: public CObjectBase
 {
@@ -23,7 +23,7 @@ public:
 	CDBPtrWrapper() {}
 	CDBPtrWrapper( T *_pRecord ): pRecord( _pRecord ) {}
 };*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void luaPushCPtr( lua_State* pState, CObjectBase *pObj );
 void luaPushCObj( lua_State* pState, CObjectBase *pObj );
 CObjectBase* luaGetPtr( const Script::Object &o );
@@ -52,7 +52,7 @@ template < class T > void luaPushCDBPtr( lua_State* pState, T *pObj )
 		luaPushCObj( pState, new CDBPtrWrapper<T>( pObj ) );
 }
 //
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template < class T > bool luaIsDBPtr( const Script::Object &o )
 {
 	if ( CDynamicCast< CDBPtrWrapper<T> > pDBPtr = luaGetPtr( o ) )
@@ -60,7 +60,7 @@ template < class T > bool luaIsDBPtr( const Script::Object &o )
 	else
 		return false;
 }*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 //
 #endif __SCRIPTPTR_H_

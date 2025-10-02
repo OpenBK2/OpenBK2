@@ -3,15 +3,15 @@
 #include "GParticleFormat.h"
 #include "GfxBuffers.h"
 #include "GParticleFilter.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_PRIORITY_DIST = 0.01f;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 NormalizedDif( const CVec3 &a, const CVec3 &b ) { CVec3 d( a - b ); Normalize(&d); return d; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace	NGScene
 {
 static float fRandomShifts[12] = { 0.02f, -0.05f, 0.07f, -0.12f, 0, 0.03f, 0.08f, -0.04f };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture *pTex, float fOffset )
 {
 	NGfx::STexturePlaceInfo place;
@@ -33,7 +33,7 @@ void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture 
 	NGfx::CalcTexCoords( &pRes->vUVs[2], fUFinish, fVFinish );//fVStart );
 	NGfx::CalcTexCoords( &pRes->vUVs[3], fUStart, fVFinish );//fVStart );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetGrassTexturePlace( vector<STransparentTexturePlace> *pRes, int nGrass, NGfx::CTexture *pTex )
 {
 	STransparentTexturePlace toSplit;
@@ -69,7 +69,7 @@ static void GetGrassTexturePlace( vector<STransparentTexturePlace> *pRes, int nG
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void InitTexturePlaces( vector<STransparentTexturePlace> *pRes, 
 	const vector<CObj<CPtrFuncBase<NGfx::CTexture> > > &tex )
 {
@@ -82,9 +82,9 @@ static void InitTexturePlaces( vector<STransparentTexturePlace> *pRes,
 		GetTransparentTexturePlace( &(*pRes)[k], pTex->GetValue() );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStandardParticleEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_SIN_TABLE_PERIOD = 512;
 const float F_SIN_TABLE_MULT = N_SIN_TABLE_PERIOD / FP_2PI;
 static float fSinTable[ N_SIN_TABLE_PERIOD * 2];
@@ -341,7 +341,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float FP_DROP_H = 1.75f; // 0.4f
 const float FP_DROP_W = 0.033f; // 0.033f
 static float fRainDropShifts[4][2] = { { 0, 0 }, {FP_DROP_W,0}, {FP_DROP_W, FP_DROP_H}, {0,FP_DROP_H} };
@@ -361,9 +361,9 @@ void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 		pRender->AddParticle( vPos, 0xffffffff, texturePlaces[ faces[nParticle] ], pos * or.vDepth );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;
 BASIC_REGISTER_CLASS(CStandardParticleEffect)
 BASIC_REGISTER_CLASS(CParticleEffect)

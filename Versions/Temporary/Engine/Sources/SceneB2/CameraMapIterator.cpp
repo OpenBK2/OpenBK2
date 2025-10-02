@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "CameraMapIterator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCameraMapIterator::CCameraMapIterator( float fFOV, float fYaw, float fPitch, float fDistance, 
 																				const CVec2 &vScreenSize, float fMapSizeX, float fMapSizeY )
 : nScreenSizeX( vScreenSize.x ), nScreenSizeY( vScreenSize.y ), nCurrX( 0 ), nCurrY( 0 )
@@ -50,7 +50,7 @@ CCameraMapIterator::CCameraMapIterator( float fFOV, float fYaw, float fPitch, fl
 	if ( fmod(rcBigRect.GetSizeY(), fStepY) > fStepY*0.5f )
 		nNumStepsY += 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraMapIterator::Next()
 {
 	if ( nCurrY >= nNumStepsY )
@@ -71,4 +71,4 @@ bool CCameraMapIterator::Next()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

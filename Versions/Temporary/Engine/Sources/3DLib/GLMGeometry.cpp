@@ -10,15 +10,15 @@ struct SLightmapInfo
 	WORD n1, n2, n3, n4;    // vertices indexing
 	char nOrder1, nOrder2;  // first(1,2,3) | 0x4 for inverse
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLMLOD
 {
 	vector<NRectPacker::SRect> lmaps;
 	CTPoint<int> lmSize;  // in pixels
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSquarePacker
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
@@ -28,7 +28,7 @@ struct SEdgeInfoHash
 {
 	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSquarePacker
 {
 	struct STriInfo
@@ -57,7 +57,7 @@ public:
 	void AddTriangle( int n1, int n2, int n3 );
 	void Build( SLMLOD *pLMLOD, vector<SLightmapInfo> *pLMaps );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // round either to pow2 or pow2 + prev_pow2
 inline int RoundToGood( int n )
 {
@@ -72,7 +72,7 @@ inline int RoundToGood( int n )
 	ASSERT(0);
 	return n;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // n1 - vertex with largest angle
 void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 {
@@ -129,7 +129,7 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 	edgesInfo[edge] = squares.size();
 	squares.push_back( STriInfo( n1, n2, n3, bInverse, nFirst, nXSize, nYSize ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSquarePacker::AddTriangle( int n1, int n2, int n3 )
 {
 	// select largest angle
@@ -154,7 +154,7 @@ void CSquarePacker::AddTriangle( int n1, int n2, int n3 )
 			PushTriangle( n1, n2, n3, 1 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSquarePacker::Build( SLMLOD *pLMLOD, vector<SLightmapInfo> *pLMaps )
 {
 	SLMLOD &lmLOD = *pLMLOD;
@@ -191,7 +191,7 @@ void CSquarePacker::Build( SLMLOD *pLMLOD, vector<SLightmapInfo> *pLMaps )
 	//		ASSERT( lmLOD.lmSize.x <= nLMSize );
 	//		ASSERT( lmLOD.lmSize.y <= nLMSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcMirroredVector( NGfx::SCompactVector *pRes, 
 	const NGfx::SCompactVector &a, const NGfx::SCompactVector &b, const NGfx::SCompactVector &c )
 {
@@ -199,7 +199,7 @@ static void CalcMirroredVector( NGfx::SCompactVector *pRes,
 	Normalize( &v );
 	NGfx::CalcCompactVector( pRes, v );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CopyVertex( SVertex *pDst, CVec2 *pSecondTex, const SVertex &src, const CVec2 &tex )
 {
 	*pDst = src;
@@ -208,7 +208,7 @@ static void CopyVertex( SVertex *pDst, CVec2 *pSecondTex, const SVertex &src, co
 	// using inverse xform from one used in GCombiner
 	*pSecondTex = NGfx::GetTexCoords( lm );//tex;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenVertices( vector<SVertex> *pRes, vector<CVec2> *pSecondTex, const vector<SVertex> &src,
 	const SLMLOD &lmLOD, const vector<SLightmapInfo> &lmaps, int nLMSize, const CTPoint<int> &_shift,
 	float fLMUVShift )
@@ -270,7 +270,7 @@ static void GenVertices( vector<SVertex> *pRes, vector<CVec2> *pSecondTex, const
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLMSize, SLMLOD *pLOD, vector<SLightmapInfo> *pLMaps )
 {
 	SLMLOD &lmLOD = *pLOD;
@@ -284,7 +284,7 @@ static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLM
 
 	packer.Build( &lmLOD, &lmaps );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src, 
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift )
 {
@@ -314,7 +314,7 @@ void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjec
 
 	*pSize = lmLOD.lmSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src, 
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, vector<SLMQuad> *pQuads )
 {
@@ -355,7 +355,7 @@ void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CO
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 {
 	pRes->geometry = src.GetGeometry();

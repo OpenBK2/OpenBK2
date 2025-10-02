@@ -12,20 +12,20 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //						FORMATION WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CFormationWindow, CResizeDialog)
 	ON_WM_DESTROY()
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_FORMATIONS, OnLvnItemchangedPointsList)
 	ON_BN_CLICKED(IDC_CHECK_PROPMASK, OnBnClickedCheckPropmask)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormationWindow::CFormationWindow( CWnd *pParentWindow )
 	:	CResizeDialog( CFormationWindow::IDD, pParentWindow ),
 	nSelectedIndex( -1 ),
@@ -36,13 +36,13 @@ CFormationWindow::CFormationWindow( CWnd *pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_FORMATION_LIST_DIALOG, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormationWindow::~CFormationWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_FORMATION_LIST_DIALOG );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CFormationWindow::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -57,14 +57,14 @@ BOOL CFormationWindow::OnInitDialog()
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
@@ -72,7 +72,7 @@ void CFormationWindow::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_CHECK_PROPMASK, chkPropMask );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::OnLvnItemchangedPointsList(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -87,7 +87,7 @@ void CFormationWindow::OnLvnItemchangedPointsList(NMHDR *pNMHDR, LRESULT *pResul
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::NotifyHandler()
 {
 	if ( bIsDataSetting )
@@ -99,7 +99,7 @@ void CFormationWindow::NotifyHandler()
 																												static_cast<DWORD>(nSelectedIndex) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::GetDialogData( SFormationWindowDialogData *pData )
 {
 	for ( int i = 0; i < formationsList.GetItemCount(); ++i )
@@ -120,7 +120,7 @@ void CFormationWindow::GetDialogData( SFormationWindowDialogData *pData )
 	pData->bChkPropmask = (chkPropMask.GetCheck() == BST_CHECKED);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::SetDialogData( const SFormationWindowDialogData *pData )
 {
 	bIsDataSetting = true;
@@ -142,7 +142,7 @@ void CFormationWindow::SetDialogData( const SFormationWindowDialogData *pData )
 	bIsDataSetting = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SFormationWindowDialogData *pData = reinterpret_cast<SFormationWindowDialogData*>( dwData );
@@ -165,7 +165,7 @@ bool CFormationWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFormationWindow::UpdateCommand(), pbEnable == 0" );
@@ -183,10 +183,10 @@ bool CFormationWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationWindow::OnBnClickedCheckPropmask()
 {
 	NotifyHandler();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

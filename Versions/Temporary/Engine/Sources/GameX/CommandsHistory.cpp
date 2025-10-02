@@ -16,13 +16,13 @@
 #include "InterfaceMisc.h"
 
 bool g_nSaveToSameSpace;
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(CommandHistory)
 REGISTER_VAR_EX( "checksum_overwrite",	NGlobal::VarBoolHandler, &g_nSaveToSameSpace, false, STORAGE_NONE );
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCommandsHistory
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCommandsHistory::CCommandsHistory() : bFinishedHistory( false ), bGameFinished( true ), bLoadedHistory( false ),
 	bCanAddCommand( true ), dwLastCheckSum( 0 )
 {
@@ -30,7 +30,7 @@ CCommandsHistory::CCommandsHistory() : bFinishedHistory( false ), bGameFinished(
 	pStartSeed->Init();
 	NRandom::SetRandomSeed( pStartSeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 {
 	savingHistory.clear();
@@ -42,7 +42,7 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		replayInfo.nLastGameSegment = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CCommandsHistory::SerializeHistory( const string &szFileName, const bool bRead )
 {
 	CFileStream streamMain( StrFmt( "%s%s%s", NSaveLoad::GetReplayPath().c_str(), szFileName.c_str(), NSaveLoad::REPLAY_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
@@ -61,7 +61,7 @@ const bool CCommandsHistory::SerializeHistory( const string &szFileName, const b
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandsHistory::LoadHistory( const string &szFileName )
 {
 	if ( !SerializeHistory( szFileName, true ) )
@@ -106,7 +106,7 @@ bool CCommandsHistory::LoadHistory( const string &szFileName )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandsHistory::SaveReplay( const string &szFileName, const SB2GameSpecificData &gameDesc, const vector<SMPSlot> &slots, const int nWinningSide )
 {
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
@@ -122,7 +122,7 @@ bool CCommandsHistory::SaveReplay( const string &szFileName, const SB2GameSpecif
 //	WriteToPipe( PIPE_CHAT, StrFmt( "Replay \"%s\" succesfully saved", szFileName ), 0xFF00FF00, true );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 {
 	if ( !bLoadedHistory && nEntry == 0 )
@@ -130,7 +130,7 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandsHistory::AddCommand( const int nSegment, IAILogicCommandB2 *pCmd )
 {
 	if ( bCanAddCommand && pCmd->NeedToBeStored() )
@@ -139,7 +139,7 @@ void CCommandsHistory::AddCommand( const int nSegment, IAILogicCommandB2 *pCmd )
 	if ( nSegment > replayInfo.nLastCommandSegment )
 		replayInfo.nLastCommandSegment = nSegment;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver *pTranceiver )
 {
 	if ( !bLoadedHistory )
@@ -179,7 +179,7 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 {
 	CCommandsHistory *pRes = new CCommandsHistory();
@@ -196,5 +196,5 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 
 	return pRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1007AB80, CCommandsHistory );

@@ -17,7 +17,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveMapClipToDB(  CObjectBaseController *pObjectController ) const
 {
 	if ( !pObjectController )
@@ -88,7 +88,7 @@ bool CMapClip::SaveMapClipToDB(  CObjectBaseController *pObjectController ) cons
 		return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadMapClipFromDB( int nMapClipID )
 {
 	Clear();
@@ -146,7 +146,7 @@ bool CMapClip::LoadMapClipFromDB( int nMapClipID )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SavePasteRegionToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	bool bResult = true;
@@ -167,7 +167,7 @@ bool CMapClip::SavePasteRegionToDB(  CObjectBaseController *pObjectController, I
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadPasteRegionFromDB( IManipulator *pManipulator )
 {
 	int nPointsNum = 0;
@@ -185,7 +185,7 @@ bool CMapClip::LoadPasteRegionFromDB( IManipulator *pManipulator )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveHeightsToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	CArray2D<int> intHeights;
@@ -204,7 +204,7 @@ bool CMapClip::SaveHeightsToDB(  CObjectBaseController *pObjectController, IMani
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadHeightsFromDB( IManipulator *pManipulator )
 {
 	CArray2D<int> intHeights;
@@ -229,14 +229,14 @@ bool CMapClip::LoadHeightsFromDB( IManipulator *pManipulator )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveTilesTypeToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
   bool bResult = CManipulatorManager::Set2DArray( tilesType, pManipulator, "TileTypes" );
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadTilesTypeFromDB( IManipulator *pManipulator )
 {
 	tilesType.Clear();
@@ -255,7 +255,7 @@ bool CMapClip::LoadTilesTypeFromDB( IManipulator *pManipulator )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveVSOToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	if ( !pObjectController || !pManipulator )
@@ -302,7 +302,7 @@ bool CMapClip::SaveVSOToDB(  CObjectBaseController *pObjectController, IManipula
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadVSOFromDB( IManipulator *pManipulator )
 {
 	if ( !pManipulator )
@@ -358,7 +358,7 @@ bool CMapClip::LoadVSOFromDB( IManipulator *pManipulator )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveEntrenchmentsToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	if ( !pObjectController || !pManipulator )
@@ -414,7 +414,7 @@ bool CMapClip::SaveEntrenchmentsToDB(  CObjectBaseController *pObjectController,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadEntrenchmentsFromDB( IManipulator *pManipulator )
 {
 	if ( !pManipulator )
@@ -469,7 +469,7 @@ bool CMapClip::LoadEntrenchmentsFromDB( IManipulator *pManipulator )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveBridgesToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	if ( !pObjectController || !pManipulator )
@@ -512,7 +512,7 @@ bool CMapClip::SaveBridgesToDB(  CObjectBaseController *pObjectController, IMani
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadBridgesFromDB( IManipulator *pManipulator )
 {
 	if ( !pManipulator )
@@ -558,7 +558,7 @@ bool CMapClip::LoadBridgesFromDB( IManipulator *pManipulator )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveSpotsToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	bool bResult = true;
@@ -588,7 +588,7 @@ bool CMapClip::SaveSpotsToDB(  CObjectBaseController *pObjectController, IManipu
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadSpotsFromDB( IManipulator *pManipulator )
 {
 	bool bResult = true;
@@ -620,7 +620,7 @@ bool CMapClip::LoadSpotsFromDB( IManipulator *pManipulator )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::SaveObjectsToDB(  CObjectBaseController *pObjectController, IManipulator *pManipulator ) const
 {
 	bool bResult = true;
@@ -653,7 +653,7 @@ bool CMapClip::SaveObjectsToDB(  CObjectBaseController *pObjectController, IMani
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapClip::LoadObjectsFromDB( IManipulator *pManipulator )
 {
 	int nObjNum = 0;
@@ -686,5 +686,5 @@ bool CMapClip::LoadObjectsFromDB( IManipulator *pManipulator )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**/

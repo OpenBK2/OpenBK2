@@ -10,7 +10,7 @@
 #include "lobject.h"
 #include "luadebug.h"
 
-//////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CVectorList
 {
@@ -108,7 +108,7 @@ struct Ref {
 
 struct TM;  /* defined in ltm.h */
 
-//////////////////////////////////////////////////////////////////////////
+
 /// The current state of Lua internal virtual mashine
 struct SLuaVMState
 {
@@ -120,7 +120,7 @@ struct SLuaVMState
 	int nResults;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nProto); f.Add(3,&nClosure); f.Add(4,&base); f.Add(5,&currPC); f.Add(6,&nResults); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////
+
 class CLuaThread : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CLuaThread);
@@ -152,7 +152,7 @@ public:
 	bool HasValidTop() const { return top >= 0 && top < stack.size(); }
 };
 
-//////////////////////////////////////////////////////////////////////////
+
 //class CThreadGroup : public CObjectBase
 //{
 //	OBJECT_NOCOPY_METHODS(CThreadGroup);
@@ -183,11 +183,11 @@ public:
 ////	}
 //};
 
-//////////////////////////////////////////////////////////////////////////
+
 typedef list<CObj<CLuaThread> > CThreads;
 typedef hash_map<TString, bool, TStringHash> CLuaStrings;
 
-//////////////////////////////////////////////////////////////////////////
+
 struct lua_State 
 {
 	// execution context
@@ -228,21 +228,21 @@ struct lua_State
 	CallInfo *GetCallInfo( StkId from ) { return callInfos[ pCT->stack[ from ].GetCI() ]; }
 };
 
-//////////////////////////////////////////////////////////////////////////
+
 inline TObject *LObj( lua_State *L, StkId st )
 {
 	return &L->pCT->stack[ st ];
 }
-//////////////////////////////////////////////////////////////////////////
+
 inline bool iscfunction( lua_State *L, TObject *o )	
 { 
 	return o->GetType() == LUA_TFUNCTION && L->closures[ o->GetCL() ]->isC; 
 }
-//////////////////////////////////////////////////////////////////////////
+
 CLuaThread* lua_newThread( lua_State *L, const char *name );
 void lua_setThread( lua_State *L, CLuaThread *pThread );
 
-//////////////////////////////////////////////////////////////////////////
+
 const string MakeUniqueName( lua_State *L, const char *name );
 
 #endif

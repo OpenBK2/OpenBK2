@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AttachedObj.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SModel;
@@ -12,7 +12,7 @@ namespace NAnimation
 {
 	interface ISkeletonAnimator;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAttachedObject : public IAttachedObject
 {
 	CObj<CObjectBase> pHolder;
@@ -49,7 +49,7 @@ public:
 	// get bone to which attached
 	virtual const int GetBoneIndex() const { return nBoneIndex; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CStaticAttachedObj : public CAttachedObject
 {
 	OBJECT_NOCOPY_METHODS( CStaticAttachedObj )
@@ -69,7 +69,7 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Visit( IAIVisitor *pAIVisitor );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CAnimatedAttachedObj : public CAttachedObject
 {
 	OBJECT_NOCOPY_METHODS( CAnimatedAttachedObj )
@@ -89,7 +89,7 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Visit( IAIVisitor *pAIVisitor );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CAttachedEffect : public CAttachedObject
 {
 	OBJECT_NOCOPY_METHODS( CAttachedEffect )
@@ -111,7 +111,7 @@ public:
 	void Destroy( const NTimer::STime time );
 	void Clear( const NTimer::STime time );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // A transform that removes the rotational part from the transform
 class CAlwaysVerticalTransform: public CFuncBase<SFBTransform>
 {
@@ -129,9 +129,9 @@ public:
 	CAlwaysVerticalTransform() : pBaseTransform(0) {}
 	CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical = false ); 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffectPos
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAttachedLightEffectPos: public CFuncBase<CVec3>
 {
 	OBJECT_NOCOPY_METHODS(CAttachedLightEffectPos)
@@ -150,7 +150,7 @@ public:
 	CAttachedLightEffectPos( CFuncBase<SFBTransform> *_pTransform, const SHMatrix &_mAddTransform )
 		: pTransform( _pTransform ), mAddTransform(_mAddTransform) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAttachedSoundPos: public CFuncBase<CVec3>
 {
 	OBJECT_NOCOPY_METHODS(CAttachedSoundPos)
@@ -167,9 +167,9 @@ public:
 	CAttachedSoundPos() {}
 	CAttachedSoundPos( CFuncBase<SFBTransform> *_pTransform )	: pTransform( _pTransform ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffectDir
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAttachedLightEffectDir: public CFuncBase<CVec3>
 {
 	OBJECT_NOCOPY_METHODS(CAttachedLightEffectDir)
@@ -186,7 +186,7 @@ public:
 	CAttachedLightEffectDir() {}
 	CAttachedLightEffectDir( CFuncBase<SFBTransform> *_pTransform ): pTransform( _pTransform ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CAttachedLightEffect : public CAttachedObject
 {
 	OBJECT_NOCOPY_METHODS( CAttachedLightEffect )
@@ -224,7 +224,7 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Destroy( const NTimer::STime time );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CAttachedStaticLightEffect : public CAttachedObject
 {
 	OBJECT_NOCOPY_METHODS( CAttachedStaticLightEffect )
@@ -258,4 +258,4 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Destroy( const NTimer::STime time );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

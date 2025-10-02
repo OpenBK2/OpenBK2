@@ -3,9 +3,9 @@
 
 #include "3DLib_export.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransformStack;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 _3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos );
 _3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos, int nRotation );
 _3DLIB_EXPORT SFBTransform MakeTransform( const CVec3 &ptPos, const CVec3 &ptScale );
@@ -24,7 +24,7 @@ _3DLIB_EXPORT float CalcRadius2( const SBound &b, const SHMatrix &fwd );
 _3DLIB_EXPORT void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd );
 // original screen is (0,0) - (1,1), (0,0) - upper left corner
 _3DLIB_EXPORT void MakeClipTS( CTransformStack *pRes, const CTransformStack &ts, const CVec2 &vOrigin, const CVec2 &vSize );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< int nMaxNumMatrices, class TElement>
 class CBaseMatrixStack
 {
@@ -40,7 +40,7 @@ public :
 	const TElement& Get() const { return matrices[nCurrentMatrix]; }
 	void Init( const TElement &matrix ) { matrices[nCurrentMatrix = 0] = matrix; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // matrix stack 4x3
 // template parameter == max stack size, second parameter - is stack 4x4
 template <int nMaxNumMatrices>
@@ -56,7 +56,7 @@ public :
 	void PushScale( float x, float y, float z );
 	void PushScale( float val );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // matrix stack 4x4 FBTransforms
 template <int nMaxNumMatrices>
 class CFBMatrixStack: public CBaseMatrixStack<nMaxNumMatrices, SFBTransform>
@@ -80,7 +80,7 @@ public :
 	void PushScale( float x, float y, float z );
 	void PushScale( float val );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DLIB_EXPORT CTransformStack : public CFBMatrixStack<8>
 {
 	typedef int TFlags;
@@ -115,10 +115,10 @@ public:
 	const SFBTransform& GetProjection() const { return matrices[0]; }
 	bool GetCoverRect( CTRect<float> *pRes, const CVec3 &ptCenter, float fRadius );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // some inlined functions
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // a&b 43
 inline void Multiply43( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
@@ -137,7 +137,7 @@ inline void Multiply43( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 	p->_33 = a._31*b._13 + a._32*b._23 + a._33*b._33;
 	p->_34 = a._31*b._14 + a._32*b._24 + a._33*b._34 + a._34;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // b 3x3 a 4x3
 inline void Multiply33( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
@@ -156,7 +156,7 @@ inline void Multiply33( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 	p->_33 = a._31*b._13 + a._32*b._23 + a._33*b._33;
 	p->_34 = a._34;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // b 4x3 a 4x4
 inline void MultiplyF43( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
@@ -180,7 +180,7 @@ inline void MultiplyF43( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 	p->_43 = a._41*b._13 + a._42*b._23 + a._43*b._33;
 	p->_44 = a._41*b._14 + a._42*b._24 + a._43*b._34 + a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // b 3x3 a 4x4
 inline void MultiplyF33( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
@@ -204,7 +204,7 @@ inline void MultiplyF33( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 	p->_43 = a._41*b._13 + a._42*b._23 + a._43*b._33;
 	p->_44 = a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // a 4x4
 inline void MultiplyFScale( SHMatrix *p, const SHMatrix &a, float x, float y, float z )
 {
@@ -228,7 +228,7 @@ inline void MultiplyFScale( SHMatrix *p, const SHMatrix &a, float x, float y, fl
 	p->_43 = a._43*z;
 	p->_44 = a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // b 3x3 a 4x4
 inline void MultiplyF33Inv( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
@@ -252,7 +252,7 @@ inline void MultiplyF33Inv( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 	p->_43 = a._41*b._31 + a._42*b._32 + a._43*b._33;
 	p->_44 = a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void MultiplyTranslate( SHMatrix *p, const SHMatrix &a, const CVec3 &b )
 {
 	p->_11 = a._11;
@@ -275,7 +275,7 @@ inline void MultiplyTranslate( SHMatrix *p, const SHMatrix &a, const CVec3 &b )
 	p->_43 = a._43; 
 	p->_44 = a._41*b.x + a._42*b.y + a._43*b.z + a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void MultiplyInvTranslate( SHMatrix *p, const SHMatrix &a, const CVec3 &b )
 {
 	p->_11 = a._11 - b.x * a._14;
@@ -298,7 +298,7 @@ inline void MultiplyInvTranslate( SHMatrix *p, const SHMatrix &a, const CVec3 &b
 	p->_43 = a._43 - b.z * a._14;
 	p->_44 = a._44;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void MultiplyTranslate43( SHMatrix *p, const SHMatrix &a, const CVec3 &b )
 {
 	p->_11 = a._11;
@@ -316,9 +316,9 @@ inline void MultiplyTranslate43( SHMatrix *p, const SHMatrix &a, const CVec3 &b 
 	p->_33 = a._33;
 	p->_34 = a._31*b.x + a._32*b.y + a._33*b.z + a._34;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMatrixStack43
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <int nMaxNumMatrices>
 inline void CMatrixStack43<nMaxNumMatrices>::Push43( const SHMatrix &matrix ) 
 {
@@ -368,9 +368,9 @@ inline void CMatrixStack43<nMaxNumMatrices>::PushScale( float val )
 {
 	PushScale( val, val, val ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFBMatrixStack
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <int nMaxNumMatrices>
 inline void CFBMatrixStack<nMaxNumMatrices>::Push44( const SHMatrix &matrix ) 
 {
@@ -451,5 +451,5 @@ inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float val )
 {
 	PushScale( val, val, val ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

@@ -3,7 +3,7 @@
 #include "WindowMSButton.h"
 
 REGISTER_SAVELOAD_CLASS( 0x11075AC0, CButtonGroup )
-//////////////////////////////////////////////////////////////////////
+
 IWindow * CButtonGroup::ChooseDefault()
 {
 	IWindow *pDefault = 0;
@@ -22,13 +22,13 @@ IWindow * CButtonGroup::ChooseDefault()
 	}
 	return pDefault;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CButtonGroup::Add( IWindow * pButton ) 
 { 
 	NI_ASSERT( dynamic_cast<CWindowMSButton*>( pButton ) != 0, "not button passed" );
 	buttons.insert( dynamic_cast<CWindowMSButton*>( pButton ) ); 
 }
-//////////////////////////////////////////////////////////////////////
+
 void CButtonGroup::SetActive( IWindow *_pButton )
 {
 	/*IButton *pButton = dynamic_cast<IButton*>( _pButton);
@@ -41,7 +41,7 @@ void CButtonGroup::SetActive( IWindow *_pButton )
 	TrySwitchState( _pButton );
 	dynamic_cast_ptr<IButton*>( pPressed )->SetState( 1 );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CButtonGroup::TrySwitchState( IWindow *pButton )
 {
 	if ( dynamic_cast<IButton*>( pButton )->GetState() == 1 )
@@ -56,7 +56,7 @@ bool CButtonGroup::TrySwitchState( IWindow *pButton )
 	pPressed = pButton;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CButtonGroup::Init()
 {
 	// somehow choose button to be pressed, press it.
@@ -65,12 +65,12 @@ void CButtonGroup::Init()
 	for ( CButtons::iterator it = buttons.begin(); it != buttons.end(); ++it )
 		( *it )->SetState( *it == pPressed ? 1 : 0 );
 }
-//////////////////////////////////////////////////////////////////////
+
 IWindow* CButtonGroup::GetPressed() const
 {
 	return pPressed;
 }
-//////////////////////////////////////////////////////////////////////////
+
 IWindow* CButtonGroup::GetButton( int i )
 {	
 	int k = 0;
@@ -82,10 +82,10 @@ IWindow* CButtonGroup::GetButton( int i )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CButtonGroup::Remove_All()
 {
 	buttons.clear();
 	pPressed = 0;
 }
-//////////////////////////////////////////////////////////////////////
+

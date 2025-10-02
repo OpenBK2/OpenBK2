@@ -5,7 +5,7 @@
 #include "TerraHeight.h"
 #include "VSOConsts.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_RIVER_SAMPLES_PER_PATCH 4
 //
 #define DEF_RIVER_HIGH_BORDER_RAND 0.5f
@@ -40,7 +40,7 @@
 #define DEF_INV_MAX_REFL_ALPHA_LEN ( 1.0f / DEF_MAX_REFL_ALPHA_LEN )
 #define DEF_MIN_REFL_ALPHA_VAL 128
 #define DEF_REFL_ALPHA_RANGE ( 255 - DEF_MIN_REFL_ALPHA_VAL )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline BYTE CalculateAlphaValue( const int nWaterSamplesNum, const int nAlphaCellsNumL, const int nAlphaCellsNumR,
 																 const float fAlphaCellsCoeffL, const float fAlphaCellsCoeffR, const float x,
 																 const float fOpacity)
@@ -49,7 +49,7 @@ inline BYTE CalculateAlphaValue( const int nWaterSamplesNum, const int nAlphaCel
 	const float fAlphaR = x > ( nWaterSamplesNum - 1 - nAlphaCellsNumR ) ? ( (float)( nWaterSamplesNum - 1 - x ) * fAlphaCellsCoeffR ) : 1.0f;
 	return Clamp( Float2Int( min( fAlphaL, fAlphaR ) * fOpacity * 255.0f	), 0, 255 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void UpdateGfxHeights( SRiverGFXInfo *pGfxInfo, const STerrainInfo::SRiver *pRiver, const float fBottomHeight, const float fWaterHeight,
 															const int nCurPatch, const int nPatchInd, int &nBottomInd, int &nWaterInd, int &nWater2Ind,
 															const int nWaterSamplesNum, const int nWater2SamplesNum,
@@ -117,7 +117,7 @@ static void UpdateGfxHeights( SRiverGFXInfo *pGfxInfo, const STerrainInfo::SRive
 		nWater2Ind += nWater2SamplesNum;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance )
 {
 	if ( AddRiver(pInstance, GetVSOSeed(pInstance)) )
@@ -127,21 +127,21 @@ void CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance )
 			PutRiverToAI( pInstance );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InitBottomVertex( NGScene::SVertex &vert )
 {
 	CalcCompactVector( &(vert.texU), V3_AXIS_X );
 	CalcCompactVector( &(vert.texV), V3_AXIS_Y );
 	CalcCompactVector( &(vert.normal), V3_AXIS_Z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InitWaterVertex( NGScene::SVertex &vert )
 {
 	CalcCompactVector( &(vert.normal), V3_AXIS_Z );
 	vert.texU.dw = 0xffffffff;
 	vert.texV.dw = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSeed )
 {
 	NI_VERIFY( pInstance, "CTerraGen::AddRiver - Invalid river instance", return false )
@@ -285,7 +285,7 @@ bool CTerraGen::AddRiver( const NDb::SVSOInstance *pInstance, const int nRandSee
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo *pGfxInfo, const NDb::SVSOInstance *pInstance )
 {
 	// update river heights
@@ -349,7 +349,7 @@ void CTerraGen::UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo 
 		RemoveInvisibleTriangles( &(*itPatch) );
 	}	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void CTerraGen::ClampRiverGfxByMap( SRiverGFXInfo *pGfxInfo )
 //{
 //	for ( vector<NMeshData::SMeshData>::iterator itPatch = pGfxInfo->waterPatches.begin(); itPatch != pGfxInfo->waterPatches.end(); ++itPatch )
@@ -401,7 +401,7 @@ void CTerraGen::UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo 
 //		}
 //	}
 //}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver, const NDb::SVSOInstance *pInstance, const bool bNeedUpdateHeights )
 {
 	NI_ASSERT( pRiver->precVertsL.size() == pInstance->points.size(), "River's info is not corresponded to VSOInstance" );
@@ -609,13 +609,13 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver, const NDb::SVSOIns
 	if ( pGfxObserver )
 		pGfxObserver->AddRiver( &(terrainGfxInfo.rivers.back()) );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllRiversOnTerrain()
 {
 	for ( list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
 		PutRiverOnTerrain( &(*it), CVec2i(-1, -1), CVec2i(-1, -1) );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutRiverOnTerrain( STerrainInfo::SRiver *pRiver, const CVec2i &vMinTile, const CVec2i &vMaxTile )
 {
 	// make hole in terrain
@@ -647,7 +647,7 @@ void CTerraGen::PutRiverOnTerrain( STerrainInfo::SRiver *pRiver, const CVec2i &v
 	if ( pGfxInfo && pGfxObserver )
 		pGfxObserver->UpdateRiver( pRiver->nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemove )
 {
 	const CVec2i vBBMin = pRiver->vSampMin;
@@ -683,7 +683,7 @@ void CTerraGen::RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemo
 	if ( IScene *pScene = Scene() )
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveRiver( const int nVSOID )
 {
 	// if such crag is not exists, than skip it removing
@@ -701,13 +701,13 @@ void CTerraGen::RemoveRiver( const int nVSOID )
 
 	RiverManipulator( &(*itRiver), true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateRiver( const int nVSOID )
 {
 	RemoveRiver( nVSOID );
 	AddRiver( FindRiver(nVSOID) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveRiverInfo( const int nVSOID )
 {
 	for ( list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
@@ -720,7 +720,7 @@ void CTerraGen::RemoveRiverInfo( const int nVSOID )
 	}
 	NI_ASSERT( false, StrFmt("Couldn't find info for river with ID=%d", nVSOID) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemoveRiverGfxInfo( const int nVSOID )
 {
 	for ( list<SRiverGFXInfo>::iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
@@ -733,7 +733,7 @@ void CTerraGen::RemoveRiverGfxInfo( const int nVSOID )
 	}
 	NI_ASSERT( false, StrFmt( "Couldn't find GFX info for river with ID=%d", nVSOID ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddAllRivers()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -759,7 +759,7 @@ void CTerraGen::AddAllRivers()
 	//		AddRiver( &(pDesc->rivers[i]), GetTickCount() );
 	//}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*void CTerraGen::RemoveAllRivers()
 {
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
@@ -782,7 +782,7 @@ void CTerraGen::AddAllRivers()
 	terrainGfxInfo.rivers.clear();
 	terrainInfo.rivers.clear();
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const NDb::SVSOInstance* CTerraGen::FindRiver( int nID ) const
 {
 	for ( vector<NDb::SVSOInstance>::const_iterator it = pDesc->rivers.begin(); it != pDesc->rivers.end(); ++it )
@@ -793,7 +793,7 @@ inline const NDb::SVSOInstance* CTerraGen::FindRiver( int nID ) const
 	//NI_ASSERT( false, StrFmt( "Couldn't find rivers's instance: ID=%d", nID ) );
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STerrainInfo::SRiver* CTerraGen::FindRiverInfo( int nID )
 {
 	for ( list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
@@ -804,7 +804,7 @@ STerrainInfo::SRiver* CTerraGen::FindRiverInfo( int nID )
 	//NI_ASSERT( false, StrFmt("Couldn't find river's info: ID=%d", nID) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRiverProfile
 {
 	float operator()( const float x ) const
@@ -823,7 +823,7 @@ struct SRiverProfile
 		//return ( 1 + cos(FP_PI * tx) ) / 2.0f;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRiverBottomProfile
 {
 	float operator()( const float x ) const
@@ -831,7 +831,7 @@ struct SRiverBottomProfile
 		return 1.0f;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 {
 	if ( terrainInfo.rivers.empty() )
@@ -877,7 +877,7 @@ float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 
 	return bFlag ? -fHeight : 0.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_MAX_UPDATES_COUNT 5
 void CTerraGen::UpdateRiversDepthes()
 {
@@ -1026,7 +1026,7 @@ void CTerraGen::UpdateRiversDepthes()
 
 	UpdateAllNeededPrecipices();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SRiverGFXInfo *CTerraGen::FindRiverGfxInfo( const int nID )
 {
 	for ( list<SRiverGFXInfo>::iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
@@ -1036,7 +1036,7 @@ SRiverGFXInfo *CTerraGen::FindRiverGfxInfo( const int nID )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcBBForGeometry( CVec3 *pBBMin, CVec3 *pBBMax, const NMeshData::SMeshData &data )
 {
 	pBBMin->Set( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
@@ -1047,7 +1047,7 @@ inline void CalcBBForGeometry( CVec3 *pBBMin, CVec3 *pBBMax, const NMeshData::SM
 		pBBMax->Maximize( it->pos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddInterpolatedVertex( vector<NGScene::SVertex> *pClampVerts, const CVec3 &v, const NGScene::SVertex &vert1,
 																	 const NGScene::SVertex &vert2, const NGScene::SVertex &vert3,
 																	 const float fAlpha1, const float fAlpha2, const float fAlpha3 )
@@ -1072,7 +1072,7 @@ inline void AddInterpolatedVertex( vector<NGScene::SVertex> *pClampVerts, const 
 	vertex.texV = vert1.texV;
 	pClampVerts->push_back( vertex );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsPointUnderTrg( const CVec3 &v, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3, const CVec3 &vNorm,
 														 const float fDist, float &fDiff )
 {
@@ -1089,7 +1089,7 @@ inline bool IsPointUnderTrg( const CVec3 &v, const CVec3 &p1, const CVec3 &p2, c
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetIntersectionOfPlaneAndSegment( vector<CVec3> *pIntersVerts, const CVec3 &v1, const CVec3 &v2, const CVec3 &vNorm,
 																							const float fDist )
 {
@@ -1101,7 +1101,7 @@ inline void GetIntersectionOfPlaneAndSegment( vector<CVec3> *pIntersVerts, const
 			PushBackUnique( pIntersVerts, v1 + (v2 - v1) * t );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetClampVertices( vector<CVec3> *pClampVerts, const CVec3 &v1, const CVec3 &v2, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
 	CVec2 vBary;
@@ -1126,7 +1126,7 @@ inline void GetClampVertices( vector<CVec3> *pClampVerts, const CVec3 &v1, const
 		//PushBackUnique( pClampVerts, v2 );
 		pClampVerts->push_back( v2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddCorrectOrientedTrg( NMeshData::SMeshData *pData, const int nInd1, const int nInd2, const int nInd3 )
 {
 	CVec3 vNorm = ( pData->vertices[nInd2].pos - pData->vertices[nInd1].pos ) ^ ( pData->vertices[nInd3].pos - pData->vertices[nInd1].pos );
@@ -1136,7 +1136,7 @@ inline void AddCorrectOrientedTrg( NMeshData::SMeshData *pData, const int nInd1,
 	else
 		pData->triangles.push_back( STriangle(nInd1, nInd3, nInd2) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRiverVertsArrOrder
 {
 	int nNumber;
@@ -1147,13 +1147,13 @@ struct SRiverVertsArrOrder
 		: nNumber( _nNumber ), fDist( _fDist ) {}
 	bool operator < ( const SRiverVertsArrOrder &v ) const { return fDist < v.fDist; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddVertexWithAlphaCalculation( vector<NGScene::SVertex> *pArray, const NGScene::SVertex &vert, const float fAlpha )
 {
 	pArray->push_back( vert );
 	pArray->back().normal.w = 255 - ( DEF_MIN_REFL_ALPHA_VAL + Clamp(Float2Int(fAlpha * DEF_INV_MAX_REFL_ALPHA_LEN * DEF_REFL_ALPHA_RANGE), 0, DEF_REFL_ALPHA_RANGE) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetIntersectionOfTrgAndSegment( vector<CVec3> &pIntersVerts, const CVec3 &v1, const CVec3 &v2,
 																						const CVec3 &vNorm, const float fDist, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
@@ -1171,7 +1171,7 @@ inline void GetIntersectionOfTrgAndSegment( vector<CVec3> &pIntersVerts, const C
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 {
 	if ( pData->triangles.empty() || pData->vertices.empty() )
@@ -1544,7 +1544,7 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 	pData->vertices = newData.vertices;
 	pData->triangles = newData.triangles;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateHeightsAfterRivers( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 )
 {
 	for ( int g = nTileY1; g <= nTileY2; ++g )
@@ -1555,7 +1555,7 @@ void CTerraGen::UpdateHeightsAfterRivers( const int nTileX1, const int nTileY1, 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraGen::IsPointInsideRivers( const CVec3 &v, const int nExcludeID )
 {
 	CVec3dEx vert( v, 0 );
@@ -1573,4 +1573,4 @@ bool CTerraGen::IsPointInsideRivers( const CVec3 &v, const int nExcludeID )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

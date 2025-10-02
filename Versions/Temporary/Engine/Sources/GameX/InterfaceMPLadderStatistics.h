@@ -8,7 +8,7 @@ namespace NDb
 {
 	struct SMedal;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CInterfaceMPLadderStatistics : public CInterfaceScreenBase, 
 	public IProgrammedReactionsAndChecks
 {
@@ -54,7 +54,7 @@ public:
 	int Check( const string &szCheckName ) const;	
 	//}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CICMPLadderStatistics : public CInterfaceCommandBase<CInterfaceMPLadderStatistics>
 {
 	OBJECT_BASIC_METHODS( CICMPLadderStatistics );
@@ -65,5 +65,5 @@ class CICMPLadderStatistics : public CInterfaceCommandBase<CInterfaceMPLadderSta
 public:
 	void Configure( const char *pszConfig );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif //__INTERFACE_MP_LADDER_STATISTICS_H__

@@ -16,13 +16,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float	CPolygonState::CONTROL_POINT_RADIUS	= AI_TILE_SIZE / 1.0f;
 const int		CPolygonState::CONTROL_POINT_PARTS	= 8;
 const float	CPolygonState::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;
 const DWORD	CPolygonState::CONTROL_POINT_COLOR	= 0xFFFF4040;
 const DWORD	CPolygonState::CONTROL_LINE_COLOR		= 0xFFFF4040;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -51,7 +51,7 @@ void CPolygonSelectState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -80,7 +80,7 @@ void CPolygonSelectState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -98,7 +98,7 @@ void CPolygonSelectState::OnRButtonDown( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -163,7 +163,7 @@ void CPolygonEditState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -235,7 +235,7 @@ void CPolygonEditState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePo
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -253,7 +253,7 @@ void CPolygonEditState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -275,7 +275,7 @@ void CPolygonEditState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -347,7 +347,7 @@ void CPolygonEditState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::InsertPolygon()
 {
 	UINT nNewPolygonID = INVALID_NODE_ID;
@@ -411,7 +411,7 @@ void CPolygonAddState::InsertPolygon()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -425,7 +425,7 @@ void CPolygonAddState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -446,7 +446,7 @@ void CPolygonAddState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -472,7 +472,7 @@ void CPolygonAddState::OnRButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -482,7 +482,7 @@ void CPolygonAddState::OnLButtonDblClk( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -506,7 +506,7 @@ void CPolygonAddState::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonState::Enter()
 {
 	nSelectedControlPoint = INVALID_NODE_ID;
@@ -524,7 +524,7 @@ void CPolygonState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonState::Leave()
 {
 	sceneDrawTool.Clear();
@@ -553,7 +553,7 @@ void CPolygonState::Leave()
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonState::Draw( CPaintDC *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -614,7 +614,7 @@ void CPolygonState::Draw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonState::OnDelete()
 {
 	if ( ( GetSelectedPolygonID() != INVALID_NODE_ID ) && ( nSelectedControlPoint != INVALID_NODE_ID ) )
@@ -658,14 +658,14 @@ void CPolygonState::OnDelete()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPolygonState::OnSetFocus( class CWnd* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPolygonState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -681,7 +681,7 @@ bool CPolygonState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPolygonState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPolygonState::UpdateCommand(), pbEnable == 0" );
@@ -701,6 +701,6 @@ bool CPolygonState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChec
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

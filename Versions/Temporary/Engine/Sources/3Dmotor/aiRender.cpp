@@ -1,18 +1,18 @@
 #include "StdAfx.h"
 #include "aiRender.h"
 #include "aiObject.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NAI
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 Unhomogen( const CVec4 &v ) { return CVec3( v.x / v.w, v.y / v.w, v.z / v.w ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFastRenderer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFastRenderer::CFastRenderer() : bUseInvertOrder(false), bPerspective(false)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::SetRegion( const CTRect<int> &_region )
 {
 	region = _region;
@@ -24,7 +24,7 @@ void CFastRenderer::SetRegion( const CTRect<int> &_region )
 
 	pCurrentObject = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::GetDir( CVec3 *pRes, float x, float y ) const
 {
 	ASSERT( bPerspective );
@@ -38,7 +38,7 @@ void CFastRenderer::GetDir( CVec3 *pRes, float x, float y ) const
 	//*pRes = Unhomogen(res) - ptFrom;
 	Normalize( pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::GetCoordsClamped( const CVec3 &v, float *pX, float *pY )
 {
 	CVec4 vRes;
@@ -51,7 +51,7 @@ void CFastRenderer::GetCoordsClamped( const CVec3 &v, float *pX, float *pY )
 	*pX = Clamp( vRes.x - 0.5f, (float)region.x1, region.x2 - 2.001f ) - region.x1;
 	*pY = Clamp( vRes.y - 0.5f, (float)region.y1, region.y2 - 2.001f ) - region.y1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits, int x, int y ) const
 {
 	for( SResult *p = resGrid[y][x]; p; p = p->pNext )
@@ -84,7 +84,7 @@ void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits, in
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits ) const
 {
 	pEnters->resize( 0 );
@@ -95,7 +95,7 @@ void CFastRenderer::GetPoints( vector<CVec3> *pEnters, vector<CVec3> *pExits ) c
 			GetPoints( pEnters, pExits, x, y );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::CalcDistMul()
 {
 	distMult.SetSizes( region.Width(), region.Height() );
@@ -120,7 +120,7 @@ void CFastRenderer::CalcDistMul()
 	else
 		distMult.FillEvery( 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::Init( const CTransformStack &transformStack, int nHalfSize )
 {
 	ptFrom = transformStack.Get().forward.GetTranslation();
@@ -139,7 +139,7 @@ void CFastRenderer::Init( const CTransformStack &transformStack, int nHalfSize )
 	CalcDistMul();
 	backForPoints = ts.Get().backward * ts.GetProjection().forward;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitParallel( const CVec2 &_ptOrigin, float fAngle, float fStep, const CTRect<int> &region )
 {
 	ptFrom = CVec3(_ptOrigin, 0 );
@@ -170,7 +170,7 @@ void CFastRenderer::InitParallel( const CVec2 &_ptOrigin, float fAngle, float fS
 	InvertMatrix( &backForPoints, transform );
 	bUseInvertOrder = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitParallel( const SHMatrix &cameraPos, float fHalfSize, int nHalfSize )
 {
 	ptFrom = cameraPos.GetTranslation();
@@ -188,7 +188,7 @@ void CFastRenderer::InitParallel( const SHMatrix &cameraPos, float fHalfSize, in
 	InvertMatrix( &backForPoints, transform );
 	bUseInvertOrder = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitProjective( const SHMatrix &cameraPos, float fDistance, float fAngle, int nHalfSize, float fAspect )
 {
 	ptFrom = cameraPos.GetTranslation();
@@ -209,7 +209,7 @@ void CFastRenderer::InitProjective( const SHMatrix &cameraPos, float fDistance, 
 	CalcDistMul();
 	backForPoints = ts.Get().backward * ts.GetProjection().forward;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, float fHalfSquare, int nHalfSize )
 {
 	SHMatrix m;
@@ -219,7 +219,7 @@ void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, float fH
 	float fAngle = 2 * ToDegree( atan2( fHalfSquare, fDistance ) );
 	InitProjective( m, fDistance, fAngle, nHalfSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, const CVec2 &halfSquare, int nHalfSize )
 {
 	SHMatrix m;
@@ -229,7 +229,7 @@ void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, const CV
 	float fAngle = 2 * ToDegree( atan2( halfSquare.x, fDistance ) );
 	InitProjective( m, fDistance, fAngle, nHalfSize, halfSquare.y / halfSquare.x );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::InitSingleRay( const CVec3 &src, const CVec3 &dst )
 {
 	ptFrom = src;//CVec3(_ptOrigin, 0 );
@@ -253,7 +253,7 @@ void CFastRenderer::InitSingleRay( const CVec3 &src, const CVec3 &dst )
 	InvertMatrix( &backForPoints, transform );
 	bUseInvertOrder = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 {
 	++nTraceFrame;
@@ -348,13 +348,13 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::SetSource( const SSourceInfo *_pSrc, int _nUserID ) 
 {
 	pCurrentObject = _pSrc->pUserData;
 	objectStart = TPool::SIterator( &res );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::ConvertResults( bool bTerrain )
 {
 	return;
@@ -449,7 +449,7 @@ void CFastRenderer::ConvertResults( bool bTerrain )
 	}
 	*/
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool WalkChain( CFastRenderer::SResult **p )
 {
 	if ( !*p )
@@ -472,7 +472,7 @@ static bool WalkChain( CFastRenderer::SResult **p )
 	}
 	return bRet;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::SortIntervals()
 {
 	return;
@@ -484,7 +484,7 @@ void CFastRenderer::SortIntervals()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::ReduceTerrain()
 {
 	for ( int y = 0; y < resGrid.GetSizeY(); ++y )
@@ -499,11 +499,11 @@ void CFastRenderer::ReduceTerrain()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::TraceEntity( const vector<SConvexHull> &hulls, bool bTerrain )
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFastRenderer::TraceEntity( const SConvexHull &e, bool bTerrain )
 {
 	SetSource( &e.src, e.nUserID );
@@ -512,5 +512,5 @@ void CFastRenderer::TraceEntity( const SConvexHull &e, bool bTerrain )
 	if ( objectStart == TPool::SIterator( &res ) )
 		int aaa = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

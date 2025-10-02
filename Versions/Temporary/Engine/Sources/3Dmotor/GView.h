@@ -5,7 +5,7 @@
 #include "GSkeleton.h"
 #include "..\System\Time.hpp"
 #include "GRenderModes.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRandomSeed;
 class CTransformStack;
 class CMemObject;
@@ -33,7 +33,7 @@ namespace NGfx
 	class CTexture;
 }
 class CAnimLight;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 class CObjectInfo;
@@ -54,7 +54,7 @@ struct SMaterialCreateInfo;
 class IFader;
 struct SDepthOfField;
 class CDecalFader;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRoomInfo
 {
 	typedef unsigned short ushort;
@@ -68,7 +68,7 @@ struct SRoomInfo
 	SRoomInfo( int _nLightFlags, int _nFloor, int _nLODFlags = 0 ): nLightFlags(_nLightFlags), nFloor(_nFloor), nLODFlags(_nLODFlags) {}
 	bool operator==( const SRoomInfo &a ) const { return a.nLightFlags == nLightFlags && a.nFloor == nFloor; }
 };
-//////////////////////////////////////////////////////////////////////////////////////
+
 struct SFullRoomInfo
 {
 	ZDATA
@@ -81,7 +81,7 @@ struct SFullRoomInfo
 	SFullRoomInfo( int _nFloor, int _nLODFlags = 0 ) : room(0, _nFloor, _nLODFlags), nUserID(0) {}
 	SFullRoomInfo( const SRoomInfo &_r, CObjectBase *_p, int _nUserID ) : room(_r), pUser(_p), nUserID(_nUserID) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////
+
 class CCreateMeshTransform
 {
 	SFBTransform place;
@@ -92,7 +92,7 @@ public:
 	const SFBTransform &GetPlace() const { return place; }
 	CFuncBase<SFBTransform> *GetTransformer() const { return pTransformer; }
 };
-//////////////////////////////////////////////////////////////////////////////////////
+
 class CCreateMeshBound
 {
 	ZDATA
@@ -122,7 +122,7 @@ public:
 		hintBV = MakeLargeHintBound();
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////
+
 class CMeshAnimStuff
 {
 	const NDb::SModel *pModel;
@@ -136,7 +136,7 @@ public:
 	CFuncBase<NAnimation::SGrannySkeletonPose> *GetAnimation() const { return pAnimation; }
 	vector<CPtr<CFuncBase<float> > > *GetTransparencyAnimations() const { return pTransparencyAnimations; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IGameView : public CObjectBase
 {
 public:

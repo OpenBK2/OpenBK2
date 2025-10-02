@@ -13,10 +13,10 @@ namespace NGfx
 {
 	_3DLIB_EXPORT int nVCacheSize = 10;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter )
 {
 	int nTarget = 0;
@@ -31,7 +31,7 @@ void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter )
 	}
 	pRes->resize( nTarget );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions )
 {
 	vector<CVec3> mergedPositions;
@@ -57,9 +57,9 @@ void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions )
 	}
 	positions = mergedPositions;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CObjectInfo 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRefTracker
 {
 	vector<int> temp;
@@ -81,7 +81,7 @@ struct SRefTracker
 		return nRef;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::EstablishRefs()
 {
 	SRefTracker rt, rtPos;
@@ -90,7 +90,7 @@ void CObjectInfo::EstablishRefs()
 	for ( int k = 0; k < vertRefPositions.size(); ++k )
 		vertRefPositions[k] = rt.GetRef( posIndices[k], k );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCompoundPosKey
 {
 	CVec3 v;
@@ -138,7 +138,7 @@ void CObjectInfo::MergePositions()
 	positions = mergedPositions;
 	weights = mergedWeights;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::AssignGeometry( const SData &data, vector<STriangle> *pGeom )
 {
 	// initialize stuff
@@ -197,7 +197,7 @@ void CObjectInfo::AssignGeometry( const SData &data, vector<STriangle> *pGeom )
 	attributes = data.attributes;
 	geometry.swap( *pGeom );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void Reorder( vector<T> *pRes, const vector<int> &newPlaces )
 {
@@ -206,7 +206,7 @@ static void Reorder( vector<T> *pRes, const vector<int> &newPlaces )
 		tmp[k] = (*pRes)[ newPlaces[k] ];
 	*pRes = tmp;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::CalcAverageTriArea()
 {
 	vector<STriangle> tris;
@@ -224,7 +224,7 @@ void CObjectInfo::CalcAverageTriArea()
 	}
 	fAverageTriArea = fArea / tris.size();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<DWORD> emptyAttribute;
 const vector<DWORD> &CObjectInfo::GetAttribute( int nID )
 {
@@ -235,7 +235,7 @@ const vector<DWORD> &CObjectInfo::GetAttribute( int nID )
 	}
 	return emptyAttribute;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::SetAttribute( int nID, const vector<DWORD> &attr )
 {
 	for ( int k = 0; k < attributes.size(); ++k )
@@ -250,7 +250,7 @@ void CObjectInfo::SetAttribute( int nID, const vector<DWORD> &attr )
 	it->nID = nID;
 	it->data = attr;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void Shuffle( vector<T> *pRes, const vector<T> &src, const vector<WORD> &vxReorder, int nResVertices )
 {
@@ -312,18 +312,18 @@ void CObjectInfo::Assign( const SData &data, vector<STriangle> *pGeom, bool bOpt
 	EstablishRefs();
 	CalcAverageTriArea();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::Assign( SData *pData, bool bOptimizeVCache )
 {
 	Assign( *pData, &pData->geometry, bOptimizeVCache );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::Assign( const SData &data, bool bOptimizeVCache )
 {
 	vector<STriangle> geom( data.geometry );
 	Assign( data, &geom, bOptimizeVCache );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::AssignFast( SData *pData )
 {
 	AssignGeometry( *pData, &pData->geometry );
@@ -333,21 +333,21 @@ void CObjectInfo::AssignFast( SData *pData )
 		posIndices[k] = k;
 	fAverageTriArea = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::GetVxPositionTriangles( vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !vertRefPositions.empty() )
 		FilterTrinagles( pRes, vertRefPositions );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::GetPosTriangles( vector<STriangle> *pRes ) const
 {
 	*pRes = geometry;
 	if ( !posIndices.empty() )
 		FilterTrinagles( pRes, posIndices );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::CalcBound( SBound *pRes )
 {
 	if ( verts.empty() )
@@ -355,14 +355,14 @@ void CObjectInfo::CalcBound( SBound *pRes )
 	else
 		::CalcBound( pRes, positions, SGetSelf<CVec3>() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectInfo::CalcBound( SSphere *pRes )
 {
 	::CalcBound( pRes, positions, SGetSelf<CVec3>() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SplitWrapping
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVertexShift
 {
 	int nVertex;
@@ -377,7 +377,7 @@ struct SVertexShiftHash
 {
 	int operator()( const SVertexShift &a ) const { return a.nVertex ^ (( a.nXShift + a.nYShift ) << 16); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TGetTex>
 static int GetVertex( CObjectInfo::SData *pData, hash_map<SVertexShift,int,SVertexShiftHash> *pShifted, 
 	int _nXShift, int _nYShift, int _nVertex, TGetTex f )
@@ -401,7 +401,7 @@ static int GetVertex( CObjectInfo::SData *pData, hash_map<SVertexShift,int,SVert
 	tex.v -= _nYShift;
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int GetShift( float fX1, float fX2, float fX3 )
 {
 	int nX1 = Float2Int( fX1 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
@@ -417,7 +417,7 @@ static int GetShift( float fX1, float fX2, float fX3 )
   ASSERT(0);
 	return nXMin + N_MAX_TEX_WRAP * 2 - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TGetTex>
 void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 {
@@ -483,24 +483,24 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 	}
 	*pData = res;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGetTex
 {
 	CVec2& GetTex( CObjectInfo::SData *pData, int k ) { return pData->verts[k].tex; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGetTex2
 {
 	CVec2& GetTex( CObjectInfo::SData *pData, int k ) { return pData->secondTex[k]; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SplitWrapping( CObjectInfo::SData *pData )
 {
   if ( pData->verts.empty() )
     return;
 	SplitWrapping( pData, SGetTex() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SplitWrapping2( CObjectInfo::SData *pData )
 {
   if ( pData->secondTex.empty() )

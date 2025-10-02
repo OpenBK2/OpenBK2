@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "DynamicDebrisManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisDynamicDebrisPatch::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -15,7 +15,7 @@ void CVisDynamicDebrisPatch::Recalc()
 	pValue->AssignFast( &objData );
 	data.Clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &debrisData, const NDb::SMaterial *pMaterial )
 {
 	debrisPatches.push_back( CVisDynamicDebrisPatchHolder() );
@@ -30,4 +30,4 @@ void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &de
 		debrisPatches.back().pHolder = pGScene->CreateMesh( pGScene->MakeMeshInfo( pCurPatch, pMaterial ), placement, 0, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

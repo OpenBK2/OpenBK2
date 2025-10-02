@@ -90,13 +90,13 @@ virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 {
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 virtual void ToAIUnits( bool bInEditor )
 {
@@ -111,7 +111,7 @@ virtual void ToAIUnits( bool bInEditor )
 	end.passability.PostLoad( bInEditor );
 }//
 /*
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int GetTypeFromIndex( const int nIndex, const int nDamageState ) const
 {
 	if ( find(states[nDamageState].begins.begin(), states[nDamageState].begins.end(), nIndex) != states[nDamageState].begins.end() ) 
@@ -124,7 +124,7 @@ const int GetTypeFromIndex( const int nIndex, const int nDamageState ) const
 	NI_ASSERT( false, StrFmt("Unknown span index %d in bridge \"%s\"", nIndex, szParentName.c_str()) );
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int GetIndexFromTypeLocal( const int nType, const int nDamageState, int *pCurRandomSeed ) const
 {
 	switch ( nType ) 
@@ -139,7 +139,7 @@ const int GetIndexFromTypeLocal( const int nType, const int nDamageState, int *p
 	NI_ASSERT( false, StrFmt("Unknown span type %d of damage state %d for the bridge \"%s\"", nType, nDamageState, szParentName.c_str()) );
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const int GetIndexFromType( const int nType, const int nDamageState = 0 ) const
 { return GetIndexFromTypeLocal( nType, nDamageState, 0 ); }
 virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const

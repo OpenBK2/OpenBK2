@@ -3,18 +3,18 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
 #include "GfxBuffers.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_PARTICLES_BUFFER_SIZE = 4096;
 const float F_MARGIN = 0.45f;
 #pragma warning( disable : 4799 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBaseParticlesGeometry : public IVBCombiner, public IParticleOutput
 {
 protected:
@@ -81,7 +81,7 @@ public:
 
 	virtual const SParticleOrientationInfo& GetOrientationInfo() const { return orientation; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TFormat = NGfx::SGeomVecFull>
 class CParticlesGeometry : public CBaseParticlesGeometry
 {
@@ -145,7 +145,7 @@ public:
 		bc.Make( &bound ); 
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShaderParticlesGeometry : public CParticlesGeometry<NGfx::SGeomVecFull>
 {
 	OBJECT_NOCOPY_METHODS(CShaderParticlesGeometry);
@@ -195,7 +195,7 @@ public:
 		pl.Inc();
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTnLParticlesGeometry : public CParticlesGeometry<NGfx::SGeomVecT2C1>
 {
 	OBJECT_NOCOPY_METHODS(CTnLParticlesGeometry);
@@ -269,7 +269,7 @@ public:
 		StoreMMXBoundResult( &bcPart.ptMin, &bcPart.ptMax );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CParticlesTriList : public CFuncBase<vector<NGfx::STriangleList> >
 {
 	OBJECT_BASIC_METHODS(CParticlesTriList);
@@ -284,6 +284,6 @@ public:
 	void AddPart( int nParticles ) { particles.push_back( nParticles ); bNeedUpdate = true; }
 };
 #pragma warning( default : 4799 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

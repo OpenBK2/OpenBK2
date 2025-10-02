@@ -13,7 +13,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCBinaryBitFieldEditor::GetPCItemStringValue() pszValue == 0" );
@@ -38,7 +38,7 @@ bool CPCBinaryBitFieldEditor::GetPCItemStringValue( string *pszValue, const CVar
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
@@ -89,7 +89,7 @@ bool CPCBinaryBitFieldEditor::GetPCItemValue( CVariant *pValue, const string &rs
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCBinaryBitFieldEditor::SetValue( const CVariant &rValue )
 {
 	string szValue;
@@ -97,7 +97,7 @@ void CPCBinaryBitFieldEditor::SetValue( const CVariant &rValue )
 	CPCStringBrowseEditor::SetValue( szValue );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCBinaryBitFieldEditor::GetValue( CVariant *pValue )
 {
 	if ( pValue )
@@ -107,7 +107,7 @@ void CPCBinaryBitFieldEditor::GetValue( CVariant *pValue )
 		GetPCItemValue( pValue, szValue, GetPropertyDesc() );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCBinaryBitFieldEditor::OnBrowse()
 {
 	CVariant value;
@@ -121,4 +121,4 @@ void CPCBinaryBitFieldEditor::OnBrowse()
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

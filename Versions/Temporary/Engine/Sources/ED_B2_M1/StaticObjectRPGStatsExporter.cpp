@@ -9,7 +9,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																													const string &rszObjectTypeName,
 																													const string &rszObjectName,
@@ -20,4 +20,4 @@ EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipu
 	//
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -9,15 +9,15 @@
 #include "../Misc/PlaneGeometry.h"
 #include "../Main/GameTimer.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x1508EAC0, CWindowMiniMap);
 REGISTER_SAVELOAD_CLASS(0x15099C00, CMiniMapLayer);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_ANGLE_DELTA = 0.001f;
 const float F_BIG_UNIT_RADIUS = 5.0f;
 static int s_nDarkWarFogAlpha = 128;
 static int s_nLightWarFogAlpha = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SMatrix2
 {
 	float m[2][2];
@@ -38,7 +38,7 @@ struct SMatrix2
 		return CVec2( m[0][0] * vPos.x + m[0][1] * vPos.y, m[1][0] * vPos.x + m[1][1] * vPos.y );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsSegmentsIntersected( const CVec2 &p11, const CVec2 &p12, const CVec2 &p21, const CVec2 &p22 )
 {
 	const float D = (p12.x - p11.x)*(p22.y - p21.y) - (p12.y - p11.y)*(p22.x - p21.x);
@@ -57,7 +57,7 @@ bool IsSegmentsIntersected( const CVec2 &p11, const CVec2 &p12, const CVec2 &p21
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CMiniMapLayer
@@ -65,7 +65,7 @@ bool IsSegmentsIntersected( const CVec2 &p11, const CVec2 &p12, const CVec2 &p21
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMiniMapLayer::NeedUpdate()
 { 
 	const int nTime = Singleton<IGameTimer>()->GetAbsTime();
@@ -77,7 +77,7 @@ bool CMiniMapLayer::NeedUpdate()
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapLayer::Recalc()
 {
 	if ( nWidth > 0 && nHeight > 0 )
@@ -93,7 +93,7 @@ void CMiniMapLayer::Recalc()
 
 	bNeedUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapLayer::SetSize( const int _nWidth, const int _nHeight )
 {
 	nWidth = _nWidth;
@@ -102,13 +102,13 @@ void CMiniMapLayer::SetSize( const int _nWidth, const int _nHeight )
 	pValue = 0;
 	bNeedUpdate = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapLayer::PutPixel( const int x, const int y, const NGfx::SPixel8888 &color )
 {
 	if ( y < points.GetSizeY() && x < points.GetSizeX() )
 		points[y][x] = color;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NGfx::SPixel8888 CMiniMapLayer::GetPixel( const int x, const int y )
 {
 	if ( x >= 0 && y >= 0 && x < points.GetSizeX() && y < points.GetSizeY() )
@@ -116,12 +116,12 @@ const NGfx::SPixel8888 CMiniMapLayer::GetPixel( const int x, const int y )
 	else
     return NGfx::SPixel8888( 0, 0, 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMiniMapLayer::Clear()
 {
 	points.FillEvery( NGfx::SPixel8888( 0, 0, 0, 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMiniMapLayer::operator&( IBinSaver &saver )
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
@@ -145,7 +145,7 @@ int CMiniMapLayer::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CWindowMiniMap
@@ -153,7 +153,7 @@ int CMiniMapLayer::operator&( IBinSaver &saver )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowMiniMap::CWindowMiniMap() : 
 	bButtonDown( 4, false ), 
 	bNeedScreenToMapRefresh( true ), 
@@ -163,7 +163,7 @@ CWindowMiniMap::CWindowMiniMap() :
 {
 	AddObserver( "mission_win_mouse_move_emit", &CWindowMiniMap::MsgMouseMoveEmit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nWarFogLevel )
 {
 	bNeedScreenToMapRefresh = true;
@@ -189,7 +189,7 @@ void CWindowMiniMap::LoadMap( const int nWidth, const int nHeight, const int _nW
 
 	MakeMaskMimimap();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetBaseRotableParams()
 {
 	// base rectangle
@@ -225,12 +225,12 @@ void CWindowMiniMap::SetBaseRotableParams()
 			vRotableSize = vSize / FP_SQRT_2;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CWindowMiniMap::GetCWindowSize() const
 {
 	return CVec2( CWindow::GetInstance()->placement.size.Get() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::CalculateScreenToMapSlow( const CVec2 &vPos, CVec2 *pvRes )
 {
 	bool bResult = vPos.x >= 0.0f && vPos.y >= 0.0f && vPos.x < vSize.x && vPos.y < vSize.y;
@@ -268,7 +268,7 @@ bool CWindowMiniMap::CalculateScreenToMapSlow( const CVec2 &vPos, CVec2 *pvRes )
 	pvRes->y = Clamp( pvRes->y, 0.0f, 1.0f ) * fMapHeight;
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::MapToScreen( const CVec2 &vMapPos, CVec2 *pvRes ) const
 {
 	bool bResult = ( vMapPos.x >= 0.0f && vMapPos.y >= 0.0f &&
@@ -308,7 +308,7 @@ bool CWindowMiniMap::MapToScreen( const CVec2 &vMapPos, CVec2 *pvRes ) const
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::ScreenToMap( const CVec2 &vPos, CVec2 *pvRes )
 {
 	if ( bNeedScreenToMapRefresh )
@@ -333,7 +333,7 @@ bool CWindowMiniMap::ScreenToMap( const CVec2 &vPos, CVec2 *pvRes )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes )
 {
 	CVec2 vPos( vMapPos.x/fMapWidth, vMapPos.y/fMapHeight );
@@ -362,19 +362,19 @@ void CWindowMiniMap::RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes )
 		pvRes->y = f;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CWindowMiniMap::RadiusMapToScreen( float fRadius )
 {
 	CVec2 v;
 	RadiusMapToScreen( CVec2( fRadius, fRadius ), &v );
 	return (v.x + v.y) * 0.5f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetNortDirectionTexture( const NDb::STexture *pTexture )
 {
 	pRotableNorthPointTexture = pTexture;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
 	const NDb::SWindowMiniMap *pMiniMapDesc( checked_cast<const NDb::SWindowMiniMap*>( pDesc ) );
@@ -433,7 +433,7 @@ void CWindowMiniMap::InitByDesc( const struct NDb::SUIDesc *pDesc )
 	vRotableCenter = VNULL2;
 	vRotableSize = VNULL2;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::MakeMaskMimimap()
 {
 	const int nSizeX = pInstance->placement.size.Get().x;
@@ -455,12 +455,12 @@ void CWindowMiniMap::MakeMaskMimimap()
 	}
 	// FIXIT}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetAdditionalScale( float _fAdditionalScale )
 {
 	fAdditionalScale = _fAdditionalScale;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::UpdateWarFog()
 {
 	pWarFogLayer->Clear();
@@ -487,7 +487,7 @@ void CWindowMiniMap::UpdateWarFog()
 	}
 	pWarFogLayer->SetNeedUpdate();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::Visit( interface IUIVisitor *pVisitor )
 {
 	if ( !IsVisible() )
@@ -605,7 +605,7 @@ void CWindowMiniMap::Visit( interface IUIVisitor *pVisitor )
 	pVisitor->VisitUITextureRect( pFiguresLayer, 3, rects );
 	pVisitor->VisitUITextureRect( pRangesLayer, 3, rects );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::IsActiveArea( const CVec2 &vPos ) const
 {
 	if ( !CWindow::IsActiveArea( vPos ) )
@@ -625,7 +625,7 @@ bool CWindowMiniMap::IsActiveArea( const CVec2 &vPos ) const
 
 	return CP_OUTSIDE != ClassifyPolygon( poligon, vPos - vScreenPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vPoint01, 
 	const CVec2 &vPoint10, const CVec2 &vPoint11 )
 {
@@ -718,7 +718,7 @@ void CWindowMiniMap::MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vP
 	mMapToScreen2[1][1] = vPoint11.y - vPoint10.y;
 	mMapToScreen2[1][2] = vPoint01.y + vPoint10.y - vPoint11.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::MakeRotableTransformParams( const CVec2 &vDirView )
 {
 	bNeedScreenToMapRefresh = true;
@@ -731,7 +731,7 @@ void CWindowMiniMap::MakeRotableTransformParams( const CVec2 &vDirView )
 	MakeMaskMimimap();
 	fPrevRotableAngle = fAngleView;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
  	CWindow::OnButtonDown( vPos, nButton );
@@ -753,7 +753,7 @@ bool CWindowMiniMap::OnButtonDown( const CVec2 &vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
 	CWindow::OnButtonUp( vPos, nButton );
@@ -777,7 +777,7 @@ bool CWindowMiniMap::OnButtonUp( const CVec2 &vPos, const int nButton )
 	NInput::PostEvent( "minimap_up", PackCoords( vAIPos ), nButton );
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::OnMouseMove( const CVec2 &vPos, const int nButton )
 {
 	CWindow::OnMouseMove( vPos, nButton );
@@ -809,7 +809,7 @@ bool CWindowMiniMap::OnMouseMove( const CVec2 &vPos, const int nButton )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowMiniMap::MsgMouseMoveEmit( const SGameMessage &msg )
 {
 	CVec2 vAIPos;
@@ -819,7 +819,7 @@ bool CWindowMiniMap::MsgMouseMoveEmit( const SGameMessage &msg )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetUnits( const vector< SMiniMapUnitInfo > &vUnits )
 {
 	pUnitsLayer->Clear();
@@ -873,7 +873,7 @@ void CWindowMiniMap::SetUnits( const vector< SMiniMapUnitInfo > &vUnits )
 	}
 	pUnitsLayer->SetNeedUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetWarFog( const CArray2D<BYTE> *pWarFogInfo )
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 1 )
@@ -887,7 +887,7 @@ void CWindowMiniMap::SetWarFog( const CArray2D<BYTE> *pWarFogInfo )
 		UpdateWarFog();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetMarkers( const vector<SMarker> &_markers )
 {
 	markers.clear();
@@ -902,7 +902,7 @@ void CWindowMiniMap::SetMarkers( const vector<SMarker> &_markers )
 		dst.vTexturePoint = src.vTexturePoint;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetFigures( const vector<SFigure> &figures )
 {
 	pFiguresLayer->Clear();
@@ -961,7 +961,7 @@ void CWindowMiniMap::SetFigures( const vector<SFigure> &figures )
 
 	pFiguresLayer->SetNeedUpdate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetRangeInfo( const int nUnitID, const SShootAreas &rangeInfo )
 {
 	// Calculate AI radius to X ratio
@@ -1015,7 +1015,7 @@ void CWindowMiniMap::SetRangeInfo( const int nUnitID, const SShootAreas &rangeIn
 	pRangesLayer->SetNeedUpdate();
 	bRangesPresent = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::RemoveAllRangeInfo( )
 {
 	if ( bRangesPresent ) 
@@ -1025,17 +1025,17 @@ void CWindowMiniMap::RemoveAllRangeInfo( )
 		bRangesPresent = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetMaterial( CDBPtr< NDb::SMaterial > _pMaterial )
 {
 	pMaterial = _pMaterial;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetTexture( const NDb::STexture *_pTexture )
 {
 	pTexture = _pTexture;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetLoadingMapParams( int nWidth, int nHeight )
 {
 	fMapWidth = nWidth;
@@ -1047,14 +1047,14 @@ void CWindowMiniMap::SetLoadingMapParams( int nWidth, int nHeight )
 	Normalize( &vDir );
 	MakeRotableTransformParams( vDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CWindowMiniMap::GetAIToScreen( const CVec2 &vPos ) const
 {
 	CVec2 vScreenPos;
 	MapToScreen( vPos, &vScreenPos );
 	return vScreenPos;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetViewport( const vector< CVec2 > &vPoints )
 {
 	NI_VERIFY( vPoints.size() >= 4, "Wrong call", return );
@@ -1110,7 +1110,7 @@ void CWindowMiniMap::SetViewport( const vector< CVec2 > &vPoints )
 	}
 	pViewPortLayer->SetNeedUpdate();
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color )
 {
 	if ( playerColors.size() <= nPlayer )
@@ -1118,13 +1118,13 @@ void CWindowMiniMap::SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &
 
 	playerColors[nPlayer] = color;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowMiniMap::AfterLoad()
 {
 	if ( NGlobal::GetVar( "m1", 0 ).GetFloat() != 0 )
 		MakeMaskMimimap();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowMiniMap::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -1187,11 +1187,11 @@ int CWindowMiniMap::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MiniMapCommands)
 
 REGISTER_VAR_EX( "minimap_dark_warfog_alpha", NGlobal::VarIntHandler, &s_nDarkWarFogAlpha, 128, STORAGE_NONE );
 REGISTER_VAR_EX( "minimap_light_warfog_alpha", NGlobal::VarIntHandler, &s_nLightWarFogAlpha, 0, STORAGE_NONE );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

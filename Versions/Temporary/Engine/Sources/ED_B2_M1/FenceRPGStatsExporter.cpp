@@ -13,17 +13,17 @@
 #include "ExporterMethods.h"
 #include "FenceRPGStatsExporter.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( FenceRPGStats, CFenceRPGStatsExporter )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																										const string &rszObjectTypeName,
 																										const string &rszObjectName,
@@ -56,7 +56,7 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 
 	return ER_SUCCESS;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const string &rszSegmentsSetName, string *pszGeomFileName )
 {
 	// Получаем манипулятор на VisObject-ы
@@ -94,7 +94,7 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	*pszGeomFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, const string &rszSegmentsSetName )
 {
 	string szGrannyFileName;
@@ -105,7 +105,7 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 			SavePassProfile( passProfile, rszSegmentsSetName, "PassProfile", pManipulator ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator, 
 																					  const string &rszSegmentsSetName, 
 																						const CArray2D<BYTE> &rPassabilityArray, 
@@ -126,4 +126,4 @@ bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

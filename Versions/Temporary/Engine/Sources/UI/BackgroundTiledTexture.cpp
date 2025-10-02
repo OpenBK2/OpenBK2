@@ -2,13 +2,13 @@
 #include "backgroundtiledtexture.h"
 #include "UIVisitor.h"
 #include "UIComponents.h"
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075B42,CBackgroundTiledTexture)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 // CBackgroundTiledTexture
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 void CBackgroundTiledTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CBackground::InitByDesc( _pDesc );
@@ -23,7 +23,7 @@ void CBackgroundTiledTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////
+
 int CBackgroundTiledTexture::operator &( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
@@ -31,7 +31,7 @@ int CBackgroundTiledTexture::operator &( IBinSaver &saver )
 	saver.Add( 11, static_cast<CBackground*>(this) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundTiledTexture::DivideSubrects( const NDb::SSubRect &in, CRectLayout *pLayout )
 {
 	if ( in.ptSize.x == 0 || in.ptSize.y == 0 ||
@@ -80,10 +80,10 @@ void CBackgroundTiledTexture::DivideSubrects( const NDb::SSubRect &in, CRectLayo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 #define _X(v) CTPoint<float>(v.ptSize.x,0)
 #define _Y(v) CTPoint<float>(0,v.ptSize.y)
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundTiledTexture::InitBorderAndFill()
 {
 	// corner elements
@@ -107,7 +107,7 @@ void CBackgroundTiledTexture::InitBorderAndFill()
 	// inner element
 	pDesc->rF.rcRect.Set( pos.GetLeftTop() + _X(pDesc->rL) + _Y(pDesc->rT), pos.GetRightBottom() - _X(pDesc->rR) - _Y(pDesc->rB) );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundTiledTexture::SetPos( const CVec2 &vPos, const CVec2 &ptSize )
 {
 	CBackground::SetPos( vPos, ptSize );
@@ -126,7 +126,7 @@ void CBackgroundTiledTexture::SetPos( const CVec2 &vPos, const CVec2 &ptSize )
 	DivideSubrects( pDesc->rB, &layout );
 	DivideSubrects( pDesc->rRB, &layout );
 }
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundTiledTexture::Visit( interface IUIVisitor * pVisitor )
 {
 	if ( !layout.rects.empty() )
@@ -138,8 +138,8 @@ void CBackgroundTiledTexture::Visit( interface IUIVisitor * pVisitor )
 		//CRAP}
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 CBackgroundTiledTexture::CBackgroundTiledTexture()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

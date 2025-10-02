@@ -5,11 +5,11 @@ int nPrimaryGun;
 int nPrimaryPlatform;	// platform with primary gun
 EUnitRPGType etype;
 vector<NDb::EUnitSpecialAbility> abilities;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddValue( CUserCommands &array, int nBit ) { array.SetData( nBit ); }
 inline void RemValue( CUserCommands &array, int nBit ) { array.RemoveData( nBit ); }
 const NDb::SUnitSpecialAblityDesc * GetAbilityDescByCmd( const int nCmdType ) const;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ToAIUnits( bool bInEditor );
 int GetAnimTime( int nAnim ) const { return nAnim < 0 || nAnim >= animdescs.size() || animdescs[nAnim].anims.empty() ? 0 : animdescs[nAnim].anims[0].nLength; }
 int GetAnimActionTime( int nAnim ) const 

@@ -14,37 +14,37 @@ namespace NGfx
 {
 extern SRenderTargetsInfo rtInfo;
 static void OnThrashing();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // INew2DTexAllocCallback
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static list<INew2DTexAllocCallback*> alloc2Dcallback;
 INew2DTexAllocCallback::INew2DTexAllocCallback()
 {
 	alloc2Dcallback.push_back( this );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 INew2DTexAllocCallback::~INew2DTexAllocCallback()
 {
 	alloc2Dcallback.remove( this );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void InformNew2DTextureAlloc()
 {
 	for ( list<INew2DTexAllocCallback*>::iterator i = alloc2Dcallback.begin(); i != alloc2Dcallback.end(); ++i )
 		(*i)->NewTextureWasAllocated();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 static list<CPtr<CLockable> > lockableList;
 bool bWasLinearBufferLock;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 T* RegisterDXBuffer( T *p )
 {
 	lockableList.push_back( p );
 	return p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FreeLinearBuffers()
 {
 	EraseInvalidRefs( &lockableList );
@@ -61,9 +61,9 @@ void FreeLinearBuffers()
 	}
 	bWasLinearBufferLock = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TDXBuffer, class TUserObject>
 class CLinearBuffer : public CObjectBase
 {
@@ -249,7 +249,7 @@ public:
 	unsigned char* Lock() { pDX->Lock( dwNextLockFlags ); dwNextLockFlags = dwLockFlags; return pDX->pLocked; }
 	void Unlock() { pDX->Unlock(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TBuffer, class TDXBuffer, class TUserObject>
 class CLinearBufferElement : 
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CFibElement, TUserObject>,
@@ -275,7 +275,7 @@ public:
 	}
 	virtual void Unlock() { if ( nLocked == 0 ) return; --nLocked; pBuffer->Unlock(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CUserGeometry;
 typedef CLinearBuffer<CVB, CUserGeometry> CGeometryBuffer;
 class CUserGeometry : 
@@ -302,8 +302,8 @@ public:
 	}
 	virtual int GetGeometryFormatID() { return GetFormatID(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 class CTriListWrapper;
 class CTriListWrapperHandle
 {
@@ -321,7 +321,7 @@ public:
 		return pRes;  
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTriListCore: public ILinearBuffer, public CTriList, public CTriListWrapperHandle
 {
 	OBJECT_NOCOPY_METHODS(CTriListCore);
@@ -341,8 +341,8 @@ public:
 	virtual CTriListWrapper* CreateWrapper( int nTris ) { return NewWrapper( this, nTris ); }
 	void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) { ASSERT( 0 ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /*class CTriListCore16;
 typedef CLinearBuffer<CIB16, CTriListCore16> CIndicesBuffer;
 class CTriListCore16: 
@@ -376,7 +376,7 @@ public:
 	}
 	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) { RealDrawPrimitive( nVBStart, nMinIndex, nMaxIndex, nSize ); }
 };*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTriListWrapper: public CTriList, public ISomeBuffer
 {
 	OBJECT_BASIC_METHODS( CTriListWrapper );
@@ -395,9 +395,9 @@ public:
 	virtual CTriListWrapper* CreateWrapper( int nTris ) { return dynamic_cast<CTriListCore*>(pParent.GetPtr())->CreateWrapper( nTris ); }
 	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) { ASSERT(0); }//dynamic_cast<CTriListCore16*>(pParent.GetPtr())->RealDrawPrimitive( nVBStart, nMinIndex, nMaxIndex, nTris ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TEXTURES support classes
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTB: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CTB);
@@ -468,7 +468,7 @@ private:
 	D3DFORMAT format;
 	int nLOD;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // system memory texture for update operations
 class CSysTexture: public CObjectBase
 {
@@ -499,7 +499,7 @@ public:
 	void Free() { bBusy = false; }
 	bool IsBusy() const { return bBusy; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class for ring usage of system memory buffers for texture update operations
 class CSurfaceRing: public CObjectBase
 {
@@ -513,7 +513,7 @@ public:
 	void Switch() { nCurrent = ( nCurrent + 1 ) % textures.size(); }
 	CSysTexture* GetTexture();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSurfaceRing::CSurfaceRing( D3DFORMAT _format, int nSize )
 {
 	textures.resize(0);
@@ -522,7 +522,7 @@ CSurfaceRing::CSurfaceRing( D3DFORMAT _format, int nSize )
 		textures.push_back( new CSysTexture( _format ) );
 	nCurrent = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSysTexture* CSurfaceRing::GetTexture()
 {
 	CSysTexture *pRes;
@@ -536,7 +536,7 @@ CSysTexture* CSurfaceRing::GetTexture()
 	Switch();
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class responsible for texture updates
 class CTextureLocker: public I2DBufferLock
 {
@@ -553,14 +553,14 @@ public:
 	virtual void* GetBuffer() { return buf.pBits; }
 	virtual int GetStride() { return buf.Pitch; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SD3DFormatHash
 {
 	int operator()( D3DFORMAT f ) const { return (int)f; }
 };
 typedef hash_map<D3DFORMAT, CPtr<CSurfaceRing>, SD3DFormatHash > CFormatRingMap;
 static CFormatRingMap sysTextures;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_rect, EAccess _access, D3DFORMAT format, IDirect3DTexture9 *_pTexture )
 : pObj(_pObj), rect(_rect), access( _access ), pTexture(_pTexture)
 {
@@ -610,7 +610,7 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_re
 		buf.Pitch = 0;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTextureLocker::~CTextureLocker()
 {
 	NWin32Helper::com_ptr<IDirect3DSurface9> pTempBuf;
@@ -650,7 +650,7 @@ CTextureLocker::~CTextureLocker()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTexture: public I2DBuffer, 
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTexture>
 {
@@ -685,7 +685,7 @@ public:
 		pDst->Release();
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 I2DBufferLock* CTexture::Lock( int nLevel, EAccess access ) 
 {
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
@@ -698,12 +698,12 @@ I2DBufferLock* CTexture::Lock( int nLevel, EAccess access )
 	//pTB->obj->AddDirtyRect( (RECT*)&region );
 	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), pTB->bIsDynamic ? 0 : pTB->obj );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ReplaceTextureSurface( CTexture *pTex, int nLevel, IDirect3DSurface9 *pSurf )
 {
 	pTex->ReplaceTextureSurface( nLevel, pSurf );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetSurface( CTexture *pTexture, int nLevel, NWin32Helper::com_ptr<IDirect3DSurface9> *pRes )
 {
 	ASSERT( IsValid( pTexture ) );
@@ -715,12 +715,12 @@ void GetSurface( CTexture *pTexture, int nLevel, NWin32Helper::com_ptr<IDirect3D
 	pTexture->Touch();
 	pTexture->pTB->obj->GetSurfaceLevel( nLevel, pRes->GetAddr() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EWrap GetWrap( CTexture *pTex )
 {
 	return pTex->wrap;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCubeTB : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CCubeTB);
@@ -756,7 +756,7 @@ public:
 	int GetSize() const { return nSize; }
 	int GetNumMipLevels() const { return nMipLevels; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCubeTexture : public ICubeBuffer
 {
 	OBJECT_NOCOPY_METHODS(CCubeTexture);
@@ -772,7 +772,7 @@ public:
 	void Touch() { nFrameUsed = nCurrentFrame; }
 	int GetFrameMRU() const { return nFrameUsed; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
 {
 	switch ( face )
@@ -787,7 +787,7 @@ inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
 	ASSERT( 0 );
 	return D3DCUBEMAP_FACE_POSITIVE_X;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access ) 
 {
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
@@ -796,15 +796,15 @@ I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access )
 	CTRect<int> rect( 0, 0, nSize >> nLevel, nSize >> nLevel );
 	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), 0 ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetSurface( CCubeTexture *pTexture, EFace face, int nLevel, NWin32Helper::com_ptr<IDirect3DSurface9> *pRes )
 {
 	ASSERT( IsValid( pTexture ) );
 	pTexture->Touch();
 	pTexture->GetTB()->obj->GetCubeMapSurface( GetD3DFace( face ), nLevel, pRes->GetAddr() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 class CTextureCache
 {
 	typedef NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTexture> CCache;
@@ -898,7 +898,7 @@ public:
 		}
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TBuf, class THandle>
 class CLRUBuffersSet
 {
@@ -951,7 +951,7 @@ public:
 		return pRes;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTextureBuffersSet : public CLRUBuffersSet<CTB, CTexture>
 {
 public:
@@ -964,7 +964,7 @@ public:
 	}
 	virtual CTexture* CreateHandle( CTB *pTB ) { return new CTexture( pTB, CLAMP ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCubemapBufferSet : public CLRUBuffersSet<CCubeTB, CCubeTexture>
 {
 public:
@@ -977,7 +977,7 @@ public:
 	}
 	virtual CCubeTexture* CreateHandle( CCubeTB *pTB ) { return new CCubeTexture( pTB ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static __forceinline void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
 {
 	_asm
@@ -1030,7 +1030,7 @@ last_lp:
 fff:
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct S32Triangle
 {
 	int n1, n2, n3;
@@ -1063,7 +1063,7 @@ public:
 	}
 	TIB* GetBuffer() { return pDynamicTrisBuffer; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDynamicTrisIndices32 : public CDynamicTrisBase<CDynamicTrisIndices32, CIB32Fast>
 {
 	typedef CDynamicTrisBase<CDynamicTrisIndices32, CIB32Fast> TBase;
@@ -1185,7 +1185,7 @@ public:
 		nStart = nLast;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB16Fast>
 {
 	void FlushPrimitive( int nVBStart, int nVBSize, int nMin, int nMax, EPrim _prim )
@@ -1296,7 +1296,7 @@ public:
 		nStart = nLast;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGeometryType
 {
 	EBufferUsage usage;
@@ -1308,9 +1308,9 @@ struct SGeometryTypeHash
 {
 	int operator()( const SGeometryType &s ) const { return s.usage ^ s.nID; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 // all DX buffers
 static list< CMObj<CObjectBase> > lostable;
 static list< CMObj<CObjectBase> > managed;
@@ -1328,28 +1328,28 @@ static CDynamicTrisIndices16 dynamicTris16;
 static NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pCurrentVB;
 static CObj<CTexture> pLinearBufferMRU;
 int nCurrentFrame = NCache::N_START_RU;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OnThrashing()
 {
 	dynamicTris32.FlushPrimitive();
 	for ( int k = 0; k < N_MAX_PRESENTS_IN_QUEUE + 1; ++k )
 		NextFrameBuffes( true );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 T* AddLostable( T *p )
 {
 	lostable.push_back( p );
 	return p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 T* AddManaged( T *p )
 {
 	managed.push_back( p );
 	return p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DestroyLostableBuffers()
 {
 	FreeLinearBuffers();
@@ -1371,12 +1371,12 @@ void DestroyLostableBuffers()
 	transparentCache.Init( 0 );
 	textureCache.Init( 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DestroyManagedBuffers()
 {
 	managed.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bFillTransp = false, bFill2d = false;
 void NextFrameBuffes( bool bOnThrashing )
 {
@@ -1403,7 +1403,7 @@ void NextFrameBuffes( bool bOnThrashing )
 	if ( bNeedFlush )
 		geometries.begin()->second->Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* GetTextureContainer( CTexture *pTex, STexturePlaceInfo *pPlace )
 {
 	if ( !IsValid( pTex ) )
@@ -1421,7 +1421,7 @@ CTexture* GetTextureContainer( CTexture *pTex, STexturePlaceInfo *pPlace )
 	texContainers[pTex->pTB] = pRes;
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 void AddGeometryCache( int nSize, EBufferUsage usage, ETrueBufferUsage trueUsage, T *p = 0 )
 {
@@ -1494,7 +1494,7 @@ void InitBuffers()
 		transparentCache.Init( new CTB( 1024, 1024, 4, PixelID2D3DFormat(SPixel8888::ID), REGULAR ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static ILinearBuffer* MakeGeometry( int nFormatID, int nSize, EBufferUsage usage )
 {
 	//if ( !bHardwareVP )
@@ -1505,42 +1505,42 @@ static ILinearBuffer* MakeGeometry( int nFormatID, int nSize, EBufferUsage usage
 	ASSERT( i != geometries.end() );
 	return i->second->Alloc( nSize );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static ILinearBuffer* MakeTriList( int nSize )// int nSize, EBufferUsage eUsage )
 {
 	CTriListCore *pRes = new CTriListCore( nSize );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ILinearBuffer* CreateBuffer( int nFormatID, int nSize, EBufferUsage usage )
 {
 	if ( nFormatID == S3DTriangle::ID )
 		return MakeTriList( nSize );
 	return MakeGeometry( nFormatID, nSize, usage );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTriList* MakeWrapper( CTriList *pSrc, int nTris )
 {
 	if ( IsValid( pSrc ) )
 		return pSrc->CreateWrapper( nTris );
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* GetTextureCache()
 {
 	return textureCache.GetTexture();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* GetTransparentTextureCache()
 {
 	return transparentCache.GetTexture();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool HasSameContainer( CTexture *p1, CTexture *p2 )
 {
 	return p1->pTB == p2->pTB;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* MakeTexture( int nXSize, int nYSize, int nMipLevels, int nPixelID, ETextureUsage eUsage, EWrap wrap )
 {
 	if ( eUsage == DYNAMIC_TEXTURE )
@@ -1581,14 +1581,14 @@ CTexture* MakeTexture( int nXSize, int nYSize, int nMipLevels, int nPixelID, ETe
 	CTexture *pRes = rtCache[rtDesc].Alloc();
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* MakeRenderTarget( int nXSize, int nYSize, int nPixelID )
 {
 	CTB *pTB = new CTB( nXSize, nYSize, 1, PixelID2D3DFormat( nPixelID ), TARGET );
 	CTexture *pRes = new CTexture( pTB, CLAMP );
 	return pRes;// pRes->Touch(); AddLostable( pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCubeTexture* MakeCubeTexture( int nSize, int nMipLevels, int nPixelID, ETextureUsage eUsage )
 {
 	if ( eUsage == REGULAR  )
@@ -1604,7 +1604,7 @@ CCubeTexture* MakeCubeTexture( int nSize, int nMipLevels, int nPixelID, ETexture
 	CCubeTexture *pRes = cmCache[ rtDesc ].Alloc();
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride )
 {
 	if ( pCurrentVB != pBuf )
@@ -1613,7 +1613,7 @@ static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride )
 		pDevice->SetStreamSource( 0, pBuf, 0, nStride );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<CTexture> pSmallTexture;
 static bool bDrawMip;
 struct STextureSize
@@ -1685,7 +1685,7 @@ void SetTexture( int nStage, CTexture *pTex )
 	HRESULT hRes = pDevice->SetTexture( nStage, pSmallTexture->pTB->obj );
 	ASSERT( hRes == D3D_OK );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CObj<CCubeTexture> pSmallCubeTexture;
 void SetTexture( int nStage, CCubeTexture *pTex )
 {
@@ -1710,7 +1710,7 @@ void SetTexture( int nStage, CCubeTexture *pTex )
 	HRESULT hRes = pDevice->SetTexture( nStage, pSmallCubeTexture->GetTB()->obj );
 	ASSERT( hRes == D3D_OK );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddPrimitiveGeometry( CGeometry *pGeom, CTriList *pTriList, int nBaseVertex, int nVertices )
 {
 	pGeom->DoTouch();
@@ -1730,12 +1730,12 @@ void AddPrimitiveGeometry( CGeometry *pGeom, CTriList *pTriList, int nBaseVertex
 	renderStats.nVertices += nVBSize;
 	renderStats.nTris += nTris;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddPrimitiveGeometry( CGeometry *pGeom, CTriList *pTriList )
 {
 	AddPrimitiveGeometry( pGeom, pTriList, 0, pGeom->GetVBSize() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 __forceinline void AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
@@ -1767,7 +1767,7 @@ __forceinline void AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STrian
 	if ( pTriBufLast )
 		pRes->AddPrimitiveGeometry( pTriBufLast, nTrisLast, nVBStart + nOffsetLast, nVBSize - nOffsetLast );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
 	ASSERT( sizeof(S3DTriangle) == sizeof(STriangle) ); // is required for this function to work
@@ -1776,14 +1776,14 @@ void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCo
 	else
 		AddPrimitiveGeometry( &dynamicTris32, pGeom, pTris, nCount, nMask );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FlushPrimitive()
 {
 	// for 16 bit buffers FlushPrimitive done in AddPrimitiveGeometry
 	if ( !bBan32BitIndices )
 		dynamicTris32.FlushPrimitive();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines )
 {
 	pGeom->DoTouch();
@@ -1797,7 +1797,7 @@ void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines 
 		dynamicTris32.AddLinestrip( nVBGeomStart, nVBGeomSize, pIndices, nLines );
 //	dynamicTris.FlushPrimitive();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetRenderTargetData( NGfx::CTexture *_pTarget, NGfx::CTexture *_pSrc )
 {
 	ASSERT( IsValid( _pSrc ) && IsValid( _pTarget ) );
@@ -1840,7 +1840,7 @@ void GetRenderTargetData( NGfx::CTexture *_pTarget, NGfx::CTexture *_pSrc )
 	hr = pDst->UnlockRect();
 	ASSERT( D3D_OK == hr );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *_pSrc )
 {
 	ASSERT( IsValid( _pSrc ) );
@@ -1864,7 +1864,7 @@ void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *_pSr
 	hr = pDst->UnlockRect();
 	ASSERT( D3D_OK == hr );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CalcTouchedTextureSize()
 {
 	int nRes = 0;
@@ -1876,7 +1876,7 @@ int CalcTouchedTextureSize()
 	}
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CalcTotalTextureSize( int *pnTexturesCount )
 {
 	int nRes = 0, nCount = 0;
@@ -1893,7 +1893,7 @@ int CalcTotalTextureSize( int *pnTexturesCount )
 		*pnTexturesCount = nCount;
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CalcTouchedTextureSizeNotSetMip( int nMip )
 {
 	int nRes = 0;
@@ -1905,7 +1905,7 @@ int CalcTouchedTextureSizeNotSetMip( int nMip )
 	}
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetLODToAllTextures( int nLOD )
 {
 	for ( list< CMObj<CObjectBase> >::iterator i = managed.begin(); i != managed.end(); ++i )
@@ -1915,7 +1915,7 @@ void SetLODToAllTextures( int nLOD )
 			pTexture->pTB->SetLOD( nLOD );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TBuf, class TElem>
 static bool IsThrashing( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 {
@@ -1923,7 +1923,7 @@ static bool IsThrashing( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 	pLinearBuffer->CalcStats( &stats );
 	return stats.bThrashing;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsStaticGeometryThrashing()
 {
 	bool bRes = false;
@@ -1931,7 +1931,7 @@ bool IsStaticGeometryThrashing()
 		bRes |= i->first.usage == STATIC && IsThrashing( i->second.GetPtr() );
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsDynamicGeometryThrashing()
 {
 	bool bRes = false;
@@ -1939,29 +1939,29 @@ bool IsDynamicGeometryThrashing()
 		bRes |= i->first.usage == DYNAMIC && IsThrashing( i->second.GetPtr() );
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Is2DTextureThrashing()
 {
 	return textureCache.IsThrashing();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsTransparentThrashing()
 {
 	return transparentCache.IsThrashing();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CanStreamGeometry()
 {
 	return !bBan32BitIndices;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FlushQueue()
 {
 	if ( geometries.empty() )
 		return;
 	geometries.begin()->second->Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* GetLinearBufferMRU( EBufferUsage usage )
 {
 	if ( !IsValid( pLinearBufferMRU ) )
@@ -1971,7 +1971,7 @@ CTexture* GetLinearBufferMRU( EBufferUsage usage )
 	geometries[SGeometryType(usage,SGeomVecFull::ID)]->DrawRU( pLinearBufferMRU );
 	return pLinearBufferMRU;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TBuf, class TElem>
 void TypeStats( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 {
@@ -1984,7 +1984,7 @@ void TypeStats( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 	else 
 		csSystem << " ok" << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ShowCacheStats( const string &szID, const vector<wstring> &szParams, void *pContext )
 {
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
@@ -2005,7 +2005,7 @@ static void ShowFillTransp( const string &szID, const vector<wstring> &szParams,
 {
 	bFillTransp = !bFillTransp;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GfxBuffers)
 	REGISTER_CMD( "gfx_stats", ShowCacheStats )
 	REGISTER_CMD( "gfx_fill_2d", ShowFill2D )
@@ -2014,7 +2014,7 @@ START_REGISTER(GfxBuffers)
 	REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 FINISH_REGISTER
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGfx;
 BASIC_REGISTER_CLASS( CTexture )
 BASIC_REGISTER_CLASS( CGeometry )

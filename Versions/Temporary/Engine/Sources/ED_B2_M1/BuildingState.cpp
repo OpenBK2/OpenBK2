@@ -19,13 +19,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		BUILDING STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) : 
 	pBuildingEditor( _pBuildingEditor ), 
 	bNeedLoadEnterConfig( true )
@@ -68,7 +68,7 @@ CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) :
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuildingState::LoadEnterConfig()
 {
 	if ( bNeedLoadEnterConfig )
@@ -83,7 +83,7 @@ void CBuildingState::LoadEnterConfig()
 	}
 	CMultiInputState::Enter();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuildingState::Enter()
 {
 	NI_ASSERT( pBuildingEditor != 0, "CBuildingState::Enter(), pBuildingEditor == 0" );
@@ -117,7 +117,7 @@ void CBuildingState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_RESET_CAMERA, false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuildingState::Leave()
 {
 	NI_ASSERT( pBuildingEditor != 0, "CBuildingState::Leave(), pBuildingEditor == 0" );
@@ -134,7 +134,7 @@ void CBuildingState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuildingState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	//DebugTrace( "Changing building state: nCommandID = %d, dwData = %d", nCommandID, dwData );
@@ -166,7 +166,7 @@ bool CBuildingState::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuildingState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CBuildingState::UpdateCommand(), pbEnable == 0" );
@@ -183,4 +183,4 @@ bool CBuildingState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

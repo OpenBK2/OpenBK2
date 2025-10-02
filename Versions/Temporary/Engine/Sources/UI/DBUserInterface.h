@@ -2,14 +2,14 @@
 
 #include "UI_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // automatically generated file, don't change manually!
 
 #include "commandparam.h"
 #include "../system/filepath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IXmlSaver;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	enum EPositionAllign;
@@ -2090,13 +2090,13 @@ namespace NDb
 		DWORD CalcCheckSum() const { return 0; }
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EPositionAllign eValue );
 	EPositionAllign StringToEnum_NDb_EPositionAllign( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EPositionAllign>
 {
@@ -2104,13 +2104,13 @@ struct SKnownEnum<NDb::EPositionAllign>
 	static string ToString( NDb::EPositionAllign eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EPositionAllign ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EPositionAllign( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::ETextEntryType eValue );
 	ETextEntryType StringToEnum_NDb_ETextEntryType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::ETextEntryType>
 {
@@ -2118,13 +2118,13 @@ struct SKnownEnum<NDb::ETextEntryType>
 	static string ToString( NDb::ETextEntryType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ETextEntryType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ETextEntryType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EButtonSubstateType eValue );
 	EButtonSubstateType StringToEnum_NDb_EButtonSubstateType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EButtonSubstateType>
 {
@@ -2132,13 +2132,13 @@ struct SKnownEnum<NDb::EButtonSubstateType>
 	static string ToString( NDb::EButtonSubstateType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EButtonSubstateType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EButtonSubstateType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EButtonChangeStateType eValue );
 	EButtonChangeStateType StringToEnum_NDb_EButtonChangeStateType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EButtonChangeStateType>
 {

@@ -2,7 +2,7 @@
 
 #include "Common_RTS_AI_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // angle (replacememt for WORD angle), multiplayer sync
 struct COMMON_RTS_AI_EXPORT SAIAngle
 {
@@ -39,7 +39,7 @@ struct COMMON_RTS_AI_EXPORT SAIAngle
 		return *this;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 COMMON_RTS_AI_EXPORT bool operator>( const SAIAngle &_1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator>( int _1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator>( const SAIAngle &_1, int _2 );
@@ -48,4 +48,4 @@ COMMON_RTS_AI_EXPORT bool operator<( const SAIAngle &_1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator<( int _1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator<( const SAIAngle &_1, int _2 );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

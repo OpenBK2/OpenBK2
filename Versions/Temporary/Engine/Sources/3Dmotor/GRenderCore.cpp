@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GRenderCore.h"
 #include "..\3Dlib\Transform.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool DoesIntersect( const SSphere &a, const SSphere &b )
 {
 	CVec3 ptDif = a.ptCenter - b.ptCenter;
@@ -9,15 +9,15 @@ inline bool DoesIntersect( const SSphere &a, const SSphere &b )
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSceneFragments
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSceneFragments::CSceneFragments() : nSceneTris(0), bNeedHSR(false)//, pRejected(0), nRejectedUsed(0) 
 {
 	fragments.push_back( fragmentInfos.Alloc() );
 	ASSERT( fragments.size() == 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CSceneFragments::AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGeometry, const SBound &_bv, bool bNotAddBound )
 {
 	SRenderStaticInfo *pRes = staticInfos.Alloc();
@@ -31,7 +31,7 @@ int CSceneFragments::AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGe
 
 	return geometries.size() - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts, 
 	IMaterial *pMaterial, const SPerPartVariables &_vars )
 {
@@ -63,7 +63,7 @@ void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
 			pFragment->elements.push_back( SRenderFragmentInfo::SElement( _nGeometryIndex, i, nFlags ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv )
 {
 	SRenderGeometryInfo *pGeom = geometryInfos.Alloc();
@@ -75,13 +75,13 @@ void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<vector<
 	int nBlock = nPart / 32, nShift = nPart & 31;
 	fragments[0]->elements.push_back( SRenderFragmentInfo::SElement( nGeom, nBlock, 1<<nShift ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneFragments::SetLitParticlesMaterial( IMaterial *p )
 {
 	ASSERT( fragments[0]->pMaterial == 0 || fragments[0]->pMaterial == p );
 	fragments[0]->pMaterial = p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // not exact realisation
 bool CSceneFragments::HasSelectedFragments() const
 {
@@ -117,7 +117,7 @@ bool CSceneFragments::HasSelectedFragments() const
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSceneFragments::HideGeometry( const vector<CPartFlags> &flags )
 {
 	int n = Min( geometries.size(), flags.size() );
@@ -144,8 +144,8 @@ void CSceneFragments::HideGeometry( const vector<CPartFlags> &flags )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &test )
 {
 	CVec3 ptDif = bound.s.ptCenter - test.s.ptCenter;
@@ -164,7 +164,7 @@ inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &tes
 		return FST_ACCEPT;
 	return FST_SPLIT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &test )
 {
 	CVec3 ptDif = bound.ptCenter - test.ptCenter;
@@ -178,9 +178,9 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 		return FST_ACCEPT;
 	return FST_SPLIT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Filter ops
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EFragmentsSplit SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	EFragmentsSplit res = GetIntersectLevel( bv, pStatic->bv );
@@ -197,7 +197,7 @@ EFragmentsSplit SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, S
 	}
 	return res;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EFragmentsSplit SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pTS->PushClipHint( pStatic->bv ) )
@@ -218,7 +218,7 @@ EFragmentsSplit SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRender
 	pTS->PopClipHint();
 	return FST_SPLIT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 //	EFragmentsSplit res = GetIntersectLevel( sph, pStatic->bv.s );
@@ -260,7 +260,7 @@ EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGe
 	}
 	return res;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SIgnorePartsInfo::Init( const CPartFlags &_flags, const vector<CPtr<IPart> > *pParts )
 {
 	flags = _flags;
@@ -273,7 +273,7 @@ void SIgnorePartsInfo::Init( const CPartFlags &_flags, const vector<CPtr<IPart> 
 	}
 	ignore.resize( nRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRawPtrHash { template<class T> int operator()( T *p ) const { return (int)p; } };
 EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
@@ -321,8 +321,8 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 	pRes->CalcAnd( ipi.flags );
 	return FST_SPLIT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade, 
 	SPerspDirectionalDepthInfo *pDepthInfo, unsigned char op,
 	CRenderCmdList::UParameter _p1,
@@ -365,7 +365,7 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 		fi.AddOperation( op, 100, nStencilOp, 0, _p1, _p2, _p3 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;

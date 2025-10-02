@@ -9,13 +9,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		REINFPOINTS WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CReinfPointsWindow, CResizeDialog)
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CReinfPointsWindow, CResizeDialog)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_REINF_POINTS, OnLvnDblclkListReinfPoints)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReinfPointsWindow::CReinfPointsWindow( CWnd* pParentWindow )
 	:	CResizeDialog( CReinfPointsWindow::IDD, pParentWindow ),
 	bIsDataSetting( false ),
@@ -42,13 +42,13 @@ CReinfPointsWindow::CReinfPointsWindow( CWnd* pParentWindow )
 	nSelectedIndex = -1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CReinfPointsWindow::~CReinfPointsWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_REINF_POINTS_WINDOW );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CReinfPointsWindow::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -66,14 +66,14 @@ BOOL CReinfPointsWindow::OnInitDialog()
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
@@ -84,7 +84,7 @@ void CReinfPointsWindow::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_BUTTON_REINF_POINTS_TYPED, btnTyped );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::GetDialogData( SReinfPointsWindowData *pData )
 {
 	pData->Clear();
@@ -109,7 +109,7 @@ void CReinfPointsWindow::GetDialogData( SReinfPointsWindowData *pData )
 	pData->eLastAction = eLastAction;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 {
 	nSelectedIndex = pData->nSelectedPoint;
@@ -150,7 +150,7 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 	bIsDataSetting = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SReinfPointsWindowData *pData = reinterpret_cast<SReinfPointsWindowData*>( dwData );
@@ -174,7 +174,7 @@ bool CReinfPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReinfPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CReinfPointsWindow::UpdateCommand(), pbEnable == 0" );
@@ -192,7 +192,7 @@ bool CReinfPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *p
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::NotifyHandler()
 {
 	if ( bIsDataSetting )
@@ -205,7 +205,7 @@ void CReinfPointsWindow::NotifyHandler()
 																												0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnCbnSelchangeComboPlayer()
 {
 	CWaitCursor wcur;
@@ -214,7 +214,7 @@ void CReinfPointsWindow::OnCbnSelchangeComboPlayer()
 	eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnBnClickedButtonReinfPointsAdd()
 {
 	CWaitCursor wcur;
@@ -223,7 +223,7 @@ void CReinfPointsWindow::OnBnClickedButtonReinfPointsAdd()
 	eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnBnClickedButtonReinfPointsDel()
 {
 	CWaitCursor wcur;
@@ -232,7 +232,7 @@ void CReinfPointsWindow::OnBnClickedButtonReinfPointsDel()
 	eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnBnClickedButtonReinfPointsDeploy()
 {
 	if ( nSelectedIndex == -1 )
@@ -244,7 +244,7 @@ void CReinfPointsWindow::OnBnClickedButtonReinfPointsDeploy()
 	eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnBnClickedButtonReinfPointsTyped()
 {
 	if ( nSelectedIndex == -1 )
@@ -256,7 +256,7 @@ void CReinfPointsWindow::OnBnClickedButtonReinfPointsTyped()
 	eLastAction = SReinfPointsWindowData::RWA_NO_ACTIONS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnLvnItemchangedListReinfPoints( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	if ( bIsDataSetting )
@@ -281,7 +281,7 @@ void CReinfPointsWindow::OnLvnItemchangedListReinfPoints( NMHDR *pNMHDR, LRESULT
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnLvnDblclkListReinfPoints( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	CWaitCursor wcur;
@@ -292,7 +292,7 @@ void CReinfPointsWindow::OnLvnDblclkListReinfPoints( NMHDR *pNMHDR, LRESULT *pRe
 	*pResult = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -306,4 +306,4 @@ void CReinfPointsWindow::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

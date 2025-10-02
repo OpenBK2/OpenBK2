@@ -4,8 +4,8 @@
 #include "FilePath.h"
 #include "../Misc/StrProc.h"
 #include "../Misc/Win32Helper.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // ************************************************************************************************************************ //
 // **
 // ** aliases
@@ -13,10 +13,10 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<string, wstring> CAliasMap;
 static CAliasMap s_AliasMap;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool AddAlias( const string &szAliasName, const wstring &wszCommand )
 {
 	if ( s_AliasMap.find(szAliasName) != s_AliasMap.end() )
@@ -24,7 +24,7 @@ bool AddAlias( const string &szAliasName, const wstring &wszCommand )
 	s_AliasMap[szAliasName] = wszCommand;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring GetAlias( const string &szAliasName )
 {
 	CAliasMap::const_iterator pos = s_AliasMap.find( szAliasName );
@@ -32,7 +32,7 @@ wstring GetAlias( const string &szAliasName )
 		return pos->second;
 	return L"";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TODO{ move it to strproc - after alpha version
 template <class TChar, class TBrackets = SBracketsTest<TChar> >
 class CBracketMulticharSeparator
@@ -70,12 +70,12 @@ static void SplitStringWithMultipleBrackets( const wstring &szString, vector<wst
 		szVector.push_back( it.Get() );
 }
 // TODO}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 namespace NGlobal
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRecord
 {
 	void *pContext; 
@@ -102,7 +102,7 @@ struct SCommandInfo
 	SCommandInfo() : storage(STORAGE_NONE), bIsRegistered(false) {}
 };
 typedef hash_map<string, SCommandInfo> TRecordsMap;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CRecordsMap : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CRecordsMap)
@@ -127,10 +127,10 @@ static CRecordsMap* GetRecordsMap()
 	}
 	return pRecordsMap;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdDefaultHandler( const string &szID, const vector<wstring> &paramsSet, void *pContext );
 static void SplitString( const wstring &szCmd, vector<wstring> *pRes );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int nUniqueVarID = 1;
 int RegisterCmd( const string &szID, CmdHandler pHandler, void *pContext )
 {
@@ -141,7 +141,7 @@ int RegisterCmd( const string &szID, CmdHandler pHandler, void *pContext )
 	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
 	return nUniqueVarID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int RegisterVar( const string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -158,7 +158,7 @@ int RegisterVar( const string &szID, VarHandler pHandler, void *pContext, const 
 	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
 	return nUniqueVarID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UnregisterCmd( const string &szID, int nID )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -171,12 +171,12 @@ void UnregisterCmd( const string &szID, int nID )
 	SCommandInfo &info = iTemp->second;
 	info.data.erase( remove_if( info.data.begin(), info.data.end(), SRecordCheck(nID) ), info.data.end() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UnregisterVar( const string &szID, int nID )
 {
 	UnregisterCmd( szID, nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RemoveVar( const string &szID )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -186,7 +186,7 @@ void RemoveVar( const string &szID )
 	if ( pos != recordsMap.end() )
 		recordsMap.erase( pos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetIDList( vector<string> *pList )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -201,7 +201,7 @@ void GetIDList( vector<string> *pList )
 		nCount++;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetVarsByClass( vector< pair<string, CValue> > *pList, EStorageClass eStorageClass )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -215,7 +215,7 @@ void GetVarsByClass( vector< pair<string, CValue> > *pList, EStorageClass eStora
 			pList->push_back( pair<string, CValue>(it->first, it->second.sValue) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CValue &GetVar( const string &szID, const CValue &sDefault )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -227,7 +227,7 @@ const CValue &GetVar( const string &szID, const CValue &sDefault )
 
 	return iTemp->second.sValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static EStorageClass eNewVarStorageClass = STORAGE_DONT_CARE;
 void SetVar( const string &szVar, const CValue &sValue, EStorageClass storage )
 {
@@ -254,7 +254,7 @@ void SetVar( const string &szVar, const CValue &sValue, EStorageClass storage )
 	}
 	info.sValue = sValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ProcessCommand( const wstring &wsCommandStr )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -326,7 +326,7 @@ void ProcessCommand( const wstring &wsCommandStr )
 	if ( !bWasHandled )
 		CmdDefaultHandler( szCommandName, wordsSet, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void LoadConfig( const string &szFileName, EStorageClass _newVarStorage )
 {
 	eNewVarStorageClass = _newVarStorage;
@@ -363,7 +363,7 @@ void LoadConfig( const string &szFileName, EStorageClass _newVarStorage )
 	}
 	eNewVarStorageClass = STORAGE_DONT_CARE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSaveRecord
 {
 	string szName;
@@ -416,7 +416,7 @@ static void SaveConfig( const string &szFileName, EStorageClass storage )
 
 	fclose( pFile );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SaveAllVars( const string &szGlobalName, const string &szUserName )
 {
 	NFile::CreatePath( NFile::GetFilePath( szGlobalName ) );
@@ -424,7 +424,7 @@ void SaveAllVars( const string &szGlobalName, const string &szUserName )
 	NFile::CreatePath( NFile::GetFilePath( szUserName ) );
 	SaveConfig( szUserName, STORAGE_USER );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ResetVarsToDefault( EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
@@ -444,7 +444,7 @@ void ResetVarsToDefault( EStorageClass storage )
 	for ( int k = 0; k < toDel.size(); ++k )
 		recordsMap.erase( recordsMap.find( toDel[k] ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SplitString( const wstring &szCmd, vector<wstring> *pRes )
 {
 	vector<wstring> params;
@@ -475,7 +475,7 @@ static void SplitString( const wstring &szCmd, vector<wstring> *pRes )
 
 	*pRes = params;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdDefaultHandler( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
@@ -487,7 +487,7 @@ static void CmdDefaultHandler( const string &szID, const vector<wstring> &params
 
 	SetVar( szID, CValue( paramsSet.front() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CmdPrintHelp( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( NGlobal::GetVar( "VVP", 0 ) == 0 )
@@ -501,13 +501,13 @@ void CmdPrintHelp( const string &szID, const vector<wstring> &paramsSet, void *p
 		csSystem << varsSet[nTemp] << endl;
 	csSystem << CC_BLUE << "Total:" << (int)varsSet.size() << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdLoadConfig( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
 		NGlobal::LoadConfig( "..\\" + NStr::ToMBCS( paramsSet[nTemp] ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdSetVar( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
@@ -523,7 +523,7 @@ static void CmdSetVar( const string &szID, const vector<wstring> &paramsSet, voi
 	_control87( _RC_CHOP | _PC_24, _MCW_RC | _MCW_PC );
 	NGlobal::SetVar( NStr::ToMBCS( paramsSet[0] ), NGlobal::CValue( paramsSet[2] ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdAlias( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() < 3 )
@@ -542,9 +542,9 @@ static void CmdAlias( const string &szID, const vector<wstring> &paramsSet, void
 	if ( AddAlias( szAliasName, wszCommand ) == false )
 		csSystem << "alias " << szAliasName << " already exist!" << endl;		
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(Commands)
 REGISTER_CMD( "help", NGlobal::CmdPrintHelp )
 REGISTER_CMD( "exec", NGlobal::CmdLoadConfig )

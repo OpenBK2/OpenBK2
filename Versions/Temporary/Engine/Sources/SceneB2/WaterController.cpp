@@ -12,16 +12,16 @@
 #include "Scene.h"
 #include "WaterController.h"
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WATER_PATCH_SIZE_X 6
 #define DEF_WATER_PATCH_SIZE_Y 6
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WAVES_NUM 9
 #define DEF_WAVES_AMPLITUDE 1.4f
 #define DEF_WAVES_DEEP_WAVE_NUMBER 0.1f
 #define DEF_WAVES_PERIOD 0.3f
 #define DEF_WAVES_PERIOD_VARIATION -0.15f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WAVE_MAX_AMPL 1.5f
 #define DEF_WAVE_MIN_AMPL 0.0f
 #define DEF_WAVES_SCALE_FACTOR 0.6f
@@ -30,51 +30,51 @@
 #define DEF_WAVE_LEN_VARIATION 0.0f/*0.3f*/
 #define DEF_NOWAVE_LEN /*7.5f*/10.0f
 #define DEF_NOWAVE_LEN_VARIATION 0.0f/*0.3f*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WATER_DEPTH 5.0f
 #define DEF_WATER_TIME_STEP /*0.000014f*/0.00003f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WATER_HOR_DEFORM_MIN_RAD 0.0f
 #define DEF_WATER_HOR_DEFORM_MAX_RAD 0.5f
 #define DEF_NEW_TIME ( 1.0f / 50.0f )
 #define DEF_WATER_HOR_DEFORM_MIN_DANG ( 2.5f * DEF_NEW_TIME * 0.0175f )
 #define DEF_WATER_HOR_DEFORM_VAR_DANG ( 7.5f * DEF_NEW_TIME * 0.0175f )
 #define DEF_WATER_HOR_DEFORM_DRAD ( 0.05f * 0.5f * DEF_NEW_TIME )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WATER_TEX_TILES_PER_TEX 6
 #define DEF_WATER_TEX_TILE_COEFF ( 1.0f / ( DEF_WATER_TEX_TILES_PER_TEX - 1 ) )
 //#define DEF_WATER_TEX_ANIM_NUM 4
 //#define DEF_WATER_TEX_COORD_OFFSET (1.0f / DEF_WATER_TEX_ANIM_NUM)
 //#define DEF_WATER_TEX_COORD_OFFSET2 (1.0f / DEF_WATER_TEX_ANIM_NUM - DEF_TEX_ERROR * 2.0f)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define DEF_ANIM_MAX_FRAMES 16
 #define DEF_WATER_ANIM_TIME DEF_NEW_TIME
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define DEF_MESH2_TILES_PER_TEX 2
 //#define DEF_MESH2_TILE_COEFF ( 1.0f / DEF_MESH2_TILES_PER_TEX )
 #define DEF_FOAM_Y_ANIM ( /*0.0125f*/0.015f * DEF_NEW_TIME * 0.5f )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_TEX_ERROR 0.001f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_MIN_HEIGHT 0.3f/*0.575f*/
 #define DEF_MAX_HEIGHT 1.0f/*1.15f*/
 #define DEF_HEIGHT_COEFF ( 1.0f / ( DEF_MAX_HEIGHT - DEF_MIN_HEIGHT ) )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_LIGHT_SCALING ( 255.0f * 4.0f )
 #define DEF_INV_255 ( 1.0f / 255.0f )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_BLENDING_DIST ( DEF_TILE_SIZE * 3 )
 #define DEF_BLENDING_ZERO ( DEF_TILE_SIZE * FP_SQRT_2 / DEF_BLENDING_DIST )
 #define DEF_BLENDING_NON_ZERO_COEFF ( 1.0f / ( 1.0f - DEF_BLENDING_ZERO ) )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float fWaterTexTileCoeff = DEF_WATER_TEX_TILE_COEFF;
 static float fFoamYAnim = DEF_FOAM_Y_ANIM;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetFracPart( const float z )
 {
 	return z - (int)z;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAnimWaterMaterialKey
 {
 	CPtrFuncBase<NGfx::CTexture> *pTex;
@@ -125,11 +125,11 @@ static NGScene::CAnimWaterMaterial * GetAnimatedMaterial( const SAnimWaterMateri
 
 	return animMaterials.back().second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisWaterPatch::UpdateGeomData()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisWaterPatch::Recalc()
 {
 	if ( pValue == 0 ) 
@@ -146,7 +146,7 @@ void CVisWaterPatch::Recalc()
 	pValue->AssignFast( &objData );
 	bUpdate = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 																CFuncBase<STime> *_pTimer,
 																const bool _bUseWaves,
@@ -186,13 +186,13 @@ CVisWaterPatch::CVisWaterPatch( const CWaterController *pContr,
 	fTexCoord2OffsetX = 1.0f / nNumFramesX - DEF_TEX_ERROR * 2.0f;
 	fTexCoord2OffsetY = 1.0f / nNumFramesY - DEF_TEX_ERROR * 2.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void RotateVector( CVec2 *vRotPos, const CVec2 &vPos, const CVec2 &vCenter, const float fCosAng, const float fSinAng )
 {
 	vRotPos->x = ( vPos.x - vCenter.x ) * fCosAng - ( vPos.y - vCenter.y ) * fSinAng + vCenter.x;
 	vRotPos->y = ( vPos.x - vCenter.x ) * fSinAng + ( vPos.y - vCenter.y ) * fCosAng + vCenter.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int FindRealIndex( const CVec2i &val, const vector<CVec2i> &arr )
 {
 	for ( int i = 0; i < arr.size(); ++i )
@@ -203,17 +203,17 @@ inline int FindRealIndex( const CVec2i &val, const vector<CVec2i> &arr )
 	NI_ASSERT( false, "Can't find value in array" );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetTanHyperbolic( const float z )
 {
 	return ( exp( z ) - exp( -z ) ) / ( exp( z ) + exp( -z ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetPhase( const int x, const int y, const float fDeepWaveNumber )
 {
 	return fDeepWaveNumber / GetTanHyperbolic( fDeepWaveNumber * DEF_WATER_DEPTH );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode> > *pWaterNodes )
 {
 	CArray2D<CPtr<SWaterNode> > &waterNodes = *pWaterNodes;
@@ -308,7 +308,7 @@ void CWaterController::ProcessWavesDistribution( CArray2D<CPtr<SWaterNode> > *pW
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int FindWaterParamInd( int nInd, const vector<NWaterStuff::SWaterParams> &params )
 {
 	for ( int k = 0; k < params.size(); ++k )
@@ -318,7 +318,7 @@ inline int FindWaterParamInd( int nInd, const vector<NWaterStuff::SWaterParams> 
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::Init(	const float fAngle,
 															const CArray2D<BYTE> &seaMap,
 															const vector<NWaterStuff::SWaterParams> &_waterParams,
@@ -358,7 +358,7 @@ void CWaterController::Init(	const float fAngle,
 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWaterAlphaSmoothProfile
 {
 	float operator()( const float x ) const
@@ -373,7 +373,7 @@ struct SWaterAlphaSmoothProfile
 		return x < DEF_WATER_BLENDING_ZERO_COEFF ? 0.0f : ( ( x - DEF_WATER_BLENDING_ZERO_COEFF ) * DEF_WATER_BLENDING_NONZERO_COEFF );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsInnerPoint( const CArray2D<CPtr<SWaterNode> > &rWaterNodes, int nY, int nX )
 {
 	bool bResult = ( nX > 0 ) && ( nY > 0 ) &&
@@ -392,7 +392,7 @@ static bool IsInnerPoint( const CArray2D<CPtr<SWaterNode> > &rWaterNodes, int nY
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, const vector<NWaterStuff::SSurfBorder> &waterBorders )
 {
 	CVec3 vBBMin, vBBMax;
@@ -533,7 +533,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode> > *pWaterNodes, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &waterParams, const CArray2D<CPtr<SWaterNode> > &waterNodes )
 {
 	// Identity transform
@@ -868,7 +868,7 @@ void CWaterController::CreatePatches( const vector<NWaterStuff::SWaterParams> &w
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &seaMap, const vector<NWaterStuff::SSurfBorder> &borders )
 {
 	NI_VERIFY( pAlphaMap, "Invalid pointer", return )
@@ -951,7 +951,7 @@ static void CreateAlphaMap( CArray2D<BYTE> *pAlphaMap, const CArray2D<BYTE> &sea
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShaderWater : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	OBJECT_NOCOPY_METHODS(CShaderWater)
@@ -980,11 +980,11 @@ public:
 	{
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<int, int> CVertsHash;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CArray2D<float> randOffsets;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetRandomOffset( int x, int y )
 {
 	if ( randOffsets.IsEmpty() )
@@ -1001,7 +1001,7 @@ inline float GetRandomOffset( int x, int y )
 
 	return randOffsets[y & ( randOffsets.GetSizeY() - 1 )][x & ( randOffsets.GetSizeX() - 1 )];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AddNewVertex(	NGScene::CObjectInfo::SData *pData,
 													int nInd,
 													int nOffsX, int nOffsY,
@@ -1025,7 +1025,7 @@ inline int AddNewVertex(	NGScene::CObjectInfo::SData *pData,
 	pData->secondTex.push_back( CVec2( GetRandomOffset( (x + nOffsX) << 1, y + nOffsY ), fSpeed ) );
 	return pData->verts.size() - 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int AddNewMiddleVertex(	NGScene::CObjectInfo::SData *pData,
 																int nInd,
 																int nOffsX, int nOffsY,
@@ -1049,7 +1049,7 @@ inline int AddNewMiddleVertex(	NGScene::CObjectInfo::SData *pData,
 	pData->secondTex.push_back( CVec2( GetRandomOffset( ( (x + nOffsX) << 1 ) + 1, y + nOffsY ), fSpeed ) );
 	return pData->verts.size() - 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int GetVertexIndex(	CVertsHash *pVertsHash,
 														NGScene::CObjectInfo::SData *pData,
 														int nInd,
@@ -1070,7 +1070,7 @@ inline int GetVertexIndex(	CVertsHash *pVertsHash,
 	else
 		return it->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShaderWater::Recalc()
 {
 	if ( !pValue )
@@ -1161,7 +1161,7 @@ void CShaderWater::Recalc()
 
 	pValue->Assign( data, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
 																				const vector<NWaterStuff::SWaterParams> &waterParams,
 																				const vector<NWaterStuff::SSurfBorder> &waterBorders,
@@ -1226,7 +1226,7 @@ void CWaterController::InitSilentWater( const CArray2D<BYTE> &seaMap,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterController::InitOceanWater( const CArray2D<BYTE> &seaMap,
 																			 const vector<NWaterStuff::SWaterParams> &waterParams,
 																			 const vector<NWaterStuff::SSurfBorder> &waterBorders,
@@ -1332,6 +1332,6 @@ void CWaterController::InitOceanWater( const CArray2D<BYTE> &seaMap,
 	SetBorders( &waterNodes, waterBorders );
 	CreatePatches( waterParams, waterNodes );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x130C8300, SWaterNode );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

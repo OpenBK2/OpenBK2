@@ -8,14 +8,14 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMaskManipulator::CMaskManipulator( const string& rszMask,  IManipulator* _pTargetManipulator, EMaskMode _maskMode )
 	: szMask( rszMask ), pTargetManipulator( _pTargetManipulator ), maskMode( _maskMode )
 {
 	NI_ASSERT( _pTargetManipulator != 0, "CMaskManipulator::CMaskManipulator() pTargetManipulator == 0" );
 }
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::AddName( const string &rszName, bool bFilled, const string& rszType, UINT nID, bool bHidden )
 {
 	propertyList.push_back( rszName );
@@ -42,7 +42,7 @@ bool CMaskManipulator::AddName( const string &rszName, bool bFilled, const strin
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::SetToOriginalName( string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMaskManipulator::SetToOriginalName() pszName == 0" );
@@ -70,7 +70,7 @@ bool CMaskManipulator::SetToOriginalName( string *pszName ) const
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::SetToMaskName( string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMaskManipulator::SetToMaskName() pszName == 0" );
@@ -98,13 +98,13 @@ bool CMaskManipulator::SetToMaskName( string *pszName ) const
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IManipulatorIterator* CMaskManipulator::Iterate( bool bShowHidden, ECacheType eCache )
 {
 	return new CMaskManipulatorIterator( this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SIteratorDesc* CMaskManipulator::GetDesc( const string &rszName ) const
 {
 	string szOriginalName = rszName;
@@ -115,7 +115,7 @@ const SIteratorDesc* CMaskManipulator::GetDesc( const string &rszName ) const
 	return pTargetManipulator->GetDesc( szOriginalName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::GetType( const string &rszName, string *pszType ) const
 {
 	NI_ASSERT( pszType != 0, "CMaskManipulator::GetType() pszType == 0" );
@@ -137,7 +137,7 @@ bool CMaskManipulator::GetType( const string &rszName, string *pszType ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UINT CMaskManipulator::GetID( const string &rszName ) const
 {
 	string szMaskName = rszName;
@@ -157,7 +157,7 @@ UINT CMaskManipulator::GetID( const string &rszName ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::GetName( UINT nID, string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "GetName::GetType() pszName == 0" );
@@ -195,7 +195,7 @@ bool CMaskManipulator::GetName( UINT nID, string *pszName ) const
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::InsertNode( const string &rszName, int nNodeIndex )
 {
 	string szOriginalName = rszName;
@@ -206,7 +206,7 @@ bool CMaskManipulator::InsertNode( const string &rszName, int nNodeIndex )
 	return pTargetManipulator->InsertNode( szOriginalName, nNodeIndex );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::RemoveNode( const string &rszName, int nNodeIndex )
 {
 	string szOriginalName = rszName;
@@ -217,7 +217,7 @@ bool CMaskManipulator::RemoveNode( const string &rszName, int nNodeIndex )
 	return pTargetManipulator->RemoveNode( szOriginalName, nNodeIndex );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::RenameNode( const string &rszName, const string &rszNewName )
 {
 	string szOriginalName = rszName;
@@ -233,7 +233,7 @@ bool CMaskManipulator::RenameNode( const string &rszName, const string &rszNewNa
 	return pTargetManipulator->RenameNode( szOriginalName, szOriginalNewName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::GetValue( const string &rszName, CVariant *pValue ) const
 {
 	NI_ASSERT( pValue != 0, "CMaskManipulator::GetValue() pValue == 0" );
@@ -245,7 +245,7 @@ bool CMaskManipulator::GetValue( const string &rszName, CVariant *pValue ) const
 	return pTargetManipulator->GetValue( szOriginalName, pValue );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::SetValue( const string &rszName, const CVariant &rValue )
 {
 	string szOriginalName = rszName;
@@ -256,7 +256,7 @@ bool CMaskManipulator::SetValue( const string &rszName, const CVariant &rValue )
 	return pTargetManipulator->SetValue( szOriginalName, rValue );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::CheckValue( const string &rszName, const CVariant &rValue, bool *pResult ) const
 {
 	NI_ASSERT( pResult != 0, "CMaskManipulator::CheckValue() pResult == 0" );
@@ -268,13 +268,13 @@ bool CMaskManipulator::CheckValue( const string &rszName, const CVariant &rValue
 	return pTargetManipulator->CheckValue( szOriginalName, rValue, pResult );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::IObjMan* CMaskManipulator::GetObjMan()
 {
 	return pTargetManipulator->GetObjMan();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulator::IsNameExists( const string &rszName ) const
 {
 	string szOriginalName = rszName;
@@ -285,7 +285,7 @@ bool CMaskManipulator::IsNameExists( const string &rszName ) const
 	return pTargetManipulator->IsNameExists( szOriginalName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMaskManipulator::GetNameList( IManipulator::CNameMap *pNameMap ) const
 {
 	if ( pNameMap )
@@ -294,7 +294,7 @@ void CMaskManipulator::GetNameList( IManipulator::CNameMap *pNameMap ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMaskManipulatorIterator::CMaskManipulatorIterator( CMaskManipulator *_pMaskManipulator )
 	:	pMaskManipulator( _pMaskManipulator )
 {
@@ -302,7 +302,7 @@ CMaskManipulatorIterator::CMaskManipulatorIterator( CMaskManipulator *_pMaskMani
 	propertyIterator = pMaskManipulator->propertyList.begin();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulatorIterator::Next()
 {
 	if ( IsEnd() )
@@ -313,20 +313,20 @@ bool CMaskManipulatorIterator::Next()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulatorIterator::IsEnd() const
 {
 	return ( propertyIterator == pMaskManipulator->propertyList.end() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SIteratorDesc* CMaskManipulatorIterator::GetDesc() const
 {
 	string szOriginalName = pMaskManipulator->szMask + ( *propertyIterator );
 	return pMaskManipulator->GetDesc( szOriginalName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulatorIterator::GetName( string *pszName ) const
 {
 	NI_ASSERT( pszName != 0, "CMaskManipulatorIterator::GetName() pszName == 0" );
@@ -339,7 +339,7 @@ bool CMaskManipulatorIterator::GetName( string *pszName ) const
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMaskManipulatorIterator::GetType( string *pszType ) const
 {
 	NI_ASSERT( pszType != 0, "CMaskManipulatorIterator::GetType() pszType == 0" );
@@ -357,7 +357,7 @@ bool CMaskManipulatorIterator::GetType( string *pszType ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UINT CMaskManipulatorIterator::GetID() const
 {
 	const string szMaskName = ( *propertyIterator );
@@ -372,6 +372,6 @@ UINT CMaskManipulatorIterator::GetID() const
 		return pMaskManipulator->pTargetManipulator->GetID( pMaskManipulator->szMask + szMaskName );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

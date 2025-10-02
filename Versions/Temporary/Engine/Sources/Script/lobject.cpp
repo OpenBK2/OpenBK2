@@ -106,7 +106,7 @@ void __cdecl luaO_chunkid (char *out, const char *source, int bufflen) {
     }
   }
 }
-//////////////////////////////////////////////////////////////////////////
+
 Proto::Proto()
 {
   numparams = 0;
@@ -116,9 +116,9 @@ Proto::Proto()
   lineDefined = 0;
 	bCreated = false;
 }
-//////////////////////////////////////////////////////////////////////////
+
 // Serialize
-//////////////////////////////////////////////////////////////////////////
+
 int TObject::operator&( IBinSaver &f )
 {
 	f.Add( 2, &ttype );
@@ -151,7 +151,7 @@ int TObject::operator&( IBinSaver &f )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////
+
 int LocVar::operator&( IBinSaver &f )
 {
 	f.Add( 2, &startpc );
@@ -159,7 +159,7 @@ int LocVar::operator&( IBinSaver &f )
 	lua_AddString( f, 4, &varname );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////
+
 int Closure::operator&( IBinSaver &ff )
 {
 	ff.Add( 2, &isC );
@@ -170,7 +170,7 @@ int Closure::operator&( IBinSaver &ff )
 		ff.Add( 4, &f.nProto );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////
+
 int Proto::operator&( IBinSaver &f )
 {
 	f.Add( 2, &bCreated );
@@ -196,4 +196,4 @@ int Proto::operator&( IBinSaver &f )
 		lua_AddString( f, 15, &strings[i], i + 1 );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////
+

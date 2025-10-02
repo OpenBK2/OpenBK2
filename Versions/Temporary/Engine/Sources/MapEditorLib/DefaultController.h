@@ -5,7 +5,7 @@
 #include "Interface_Controller.h"
 #include "../libdb/Manipulator.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDefaultView;
 class CDefaultController : public IController
 {
@@ -43,6 +43,6 @@ public:
 	virtual SetNameList( const IManipulator::CNameMap &rNameList ) { nameMap = rNameList; }
 	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const string &rszName ) const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__DEFAULT_CONTROLLER__)
 

@@ -3,13 +3,13 @@
 #include "..\ui\dbuserinterface.h"
 #include "../UI/UI.h"
 
-/////////////////////////////////////////////////////////////////////////////
+
 interface IScene;
 namespace NDb
 {
 	struct SComplexSoundDesc;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 // play sound. may wait for sound to finish.
 class CEffectorPlaySound :	public IUIEffector
 {
@@ -26,4 +26,4 @@ public:
 	virtual void Reverse();
 	int operator&( IBinSaver &saver );
 };
-/////////////////////////////////////////////////////////////////////////////
+

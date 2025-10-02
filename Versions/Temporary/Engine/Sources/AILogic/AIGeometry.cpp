@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\System\FastMath.h"
 #include "AIGeometry.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegmentEnd, const CVec2 &vPoint )
 {
 	CLine2 line( vSegmentStart, vSegmentEnd );
@@ -24,7 +24,7 @@ const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegm
 		return fabs( vNormal - vPoint );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &vNormale )
 {
 	// unit's coordinate system  ( M,N,O )
@@ -53,7 +53,7 @@ void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &
 	pQuat->FromEulerMatrix( m );
 	//pQuat->Negate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 MoveVectorByDirection( const CVec2 &vPoint, WORD wDir )
 {
 	/*vRes = GetVectorByDirection( wDir );
@@ -64,4 +64,4 @@ const CVec2 MoveVectorByDirection( const CVec2 &vPoint, WORD wDir )
 	const float fCos = NMath::Cos( fAngle );
 	return CVec2( vPoint.x * fCos - vPoint.y * fSin, vPoint.x * fSin + vPoint.y * fCos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

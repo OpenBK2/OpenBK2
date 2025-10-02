@@ -10,7 +10,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CImportFromXLSDialog::vID[] = 
 {
 	IDC_IFX_XLS_BROWSE_LABEL,		//0
@@ -23,7 +23,7 @@ const int CImportFromXLSDialog::vID[] =
 	IDCANCEL,										//7
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImportFromXLSDialog::CImportFromXLSDialog( CWnd* pParent )
 	: CResizeDialog( CImportFromXLSDialog::IDD, pParent )
 {
@@ -39,7 +39,7 @@ CImportFromXLSDialog::CImportFromXLSDialog( CWnd* pParent )
 	SetControlStyle( IDCANCEL, ANCHORE_BOTTOM | ANCHORE_HOR_CENTER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::GetRegistryKey( string *pszRegistryKey )
 {
 	if ( pszRegistryKey )
@@ -54,7 +54,7 @@ void CImportFromXLSDialog::GetRegistryKey( string *pszRegistryKey )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -62,7 +62,7 @@ void CImportFromXLSDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_IFX_FILE_BROWSE_EDIT, m_FileEdit);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CImportFromXLSDialog, CResizeDialog)
 	ON_BN_CLICKED(IDC_IFX_XLS_BROWSE_BUTTON, OnXLSBrowseButton)
 	ON_EN_CHANGE(IDC_IFX_XLS_BROWSE_EDIT, OnChangeXLSBrowseEdit)
@@ -70,7 +70,7 @@ BEGIN_MESSAGE_MAP(CImportFromXLSDialog, CResizeDialog)
 	ON_EN_CHANGE(IDC_IFX_FILE_BROWSE_EDIT, OnChangeFileBrowseEdit)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CImportFromXLSDialog::OnInitDialog() 
 {
 	CResizeDialog::OnInitDialog();
@@ -89,7 +89,7 @@ BOOL CImportFromXLSDialog::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::GetXLSPath( string *pszXLSPath )
 {
 	NI_ASSERT( pszXLSPath != 0, StrFmt( "CImportFromXLSDialog::GetXLSPath wrong parameter: pszXLSPath %x", pszXLSPath ) );
@@ -99,7 +99,7 @@ void CImportFromXLSDialog::GetXLSPath( string *pszXLSPath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::GetFilePath( string *pszFilePath )
 {
 	NI_ASSERT( pszFilePath != 0, StrFmt( "CImportFromXLSDialog::GetFilePath wrong parameter: pszFilePath %x", pszFilePath ) );
@@ -109,7 +109,7 @@ void CImportFromXLSDialog::GetFilePath( string *pszFilePath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::OnXLSBrowseButton() 
 {
 	CString strDialogTitle;
@@ -140,7 +140,7 @@ void CImportFromXLSDialog::OnXLSBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::OnFileBrowseButton() 
 {
 	CString strDialogTitle;
@@ -171,7 +171,7 @@ void CImportFromXLSDialog::OnFileBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::OnChangeXLSBrowseEdit() 
 {
 	CString strFolderName;
@@ -180,7 +180,7 @@ void CImportFromXLSDialog::OnChangeXLSBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::OnChangeFileBrowseEdit() 
 {
 	CString strFileName;
@@ -189,7 +189,7 @@ void CImportFromXLSDialog::OnChangeFileBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void	CImportFromXLSDialog::UpdateControls()
 {
 	if ( CWnd *pWnd = GetDlgItem( IDOK ) )
@@ -198,7 +198,7 @@ void	CImportFromXLSDialog::UpdateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromXLSDialog::OnOK() 
 {
 	CStringManager::ExtendFileExtention( &resizeDialogOptions.szParameters[0], ".xls" );
@@ -206,6 +206,6 @@ void CImportFromXLSDialog::OnOK()
 	CResizeDialog::OnOK();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

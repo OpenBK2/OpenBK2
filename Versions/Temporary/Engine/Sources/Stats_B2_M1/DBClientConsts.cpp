@@ -5,12 +5,12 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbclientconsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SWCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "SelfActions", &selfActions, pThis );
@@ -18,7 +18,7 @@ void SWCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) 
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "EnemyActions", &enemyActions, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "NeutralActions", &neutralActions, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWCActionsPriority::operator&( IXmlSaver &saver )
 {
 	saver.Add( "SelfActions", &selfActions );
@@ -28,7 +28,7 @@ int SWCActionsPriority::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWCActionsPriority::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &selfActions );
@@ -38,7 +38,7 @@ int SWCActionsPriority::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SWCActionsPriority::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -53,9 +53,9 @@ DWORD SWCActionsPriority::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SM1WCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "SelfActions", &selfActions, pThis );
@@ -63,7 +63,7 @@ void SM1WCActionsPriority::ReportMetaInfo( const string &szAddName, BYTE *pThis 
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "EnemyActions", &enemyActions, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "NeutralActions", &neutralActions, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SM1WCActionsPriority::operator&( IXmlSaver &saver )
 {
 	saver.Add( "SelfActions", &selfActions );
@@ -73,7 +73,7 @@ int SM1WCActionsPriority::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SM1WCActionsPriority::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &selfActions );
@@ -83,7 +83,7 @@ int SM1WCActionsPriority::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SM1WCActionsPriority::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -98,16 +98,16 @@ DWORD SM1WCActionsPriority::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCursor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "FileName", (BYTE*)&szFileName - pThis, sizeof(szFileName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Action", (BYTE*)&eAction - pThis, sizeof(eAction), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "M1Action", (BYTE*)&eM1Action - pThis, sizeof(eM1Action), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCursor::operator&( IXmlSaver &saver )
 {
 	saver.Add( "FileName", &szFileName );
@@ -116,7 +116,7 @@ int SCursor::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCursor::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szFileName );
@@ -125,7 +125,7 @@ int SCursor::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCursor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -140,9 +140,9 @@ DWORD SCursor::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAckParameter::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AckType", (BYTE*)&eAckType - pThis, sizeof(eAckType), NTypeDef::TYPE_TYPE_ENUM );
@@ -151,7 +151,7 @@ void SAckParameter::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 	NMetaInfo::ReportMetaInfo( szAddName + "TimeAfterPrevious", (BYTE*)&nTimeAfterPrevious - pThis, sizeof(nTimeAfterPrevious), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Position", (BYTE*)&ePosition - pThis, sizeof(ePosition), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckParameter::operator&( IXmlSaver &saver )
 {
 	saver.Add( "AckType", &eAckType );
@@ -162,7 +162,7 @@ int SAckParameter::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckParameter::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eAckType );
@@ -173,7 +173,7 @@ int SAckParameter::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAckParameter::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -188,9 +188,9 @@ DWORD SAckParameter::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAckManagerConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MinAckRadius", (BYTE*)&nMinAckRadius - pThis, sizeof(nMinAckRadius), NTypeDef::TYPE_TYPE_INT );
@@ -198,7 +198,7 @@ void SAckManagerConsts::ReportMetaInfo( const string &szAddName, BYTE *pThis ) c
 	NMetaInfo::ReportMetaInfo( szAddName + "TimeAckWait", (BYTE*)&nTimeAckWait - pThis, sizeof(nTimeAckWait), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "NumSelectionsBeforeAnnoyed", (BYTE*)&nNumSelectionsBeforeAnnoyed - pThis, sizeof(nNumSelectionsBeforeAnnoyed), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckManagerConsts::operator&( IXmlSaver &saver )
 {
 	saver.Add( "MinAckRadius", &nMinAckRadius );
@@ -208,7 +208,7 @@ int SAckManagerConsts::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckManagerConsts::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nMinAckRadius );
@@ -218,7 +218,7 @@ int SAckManagerConsts::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAckManagerConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -233,15 +233,15 @@ DWORD SAckManagerConsts::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMapCommandAck::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "ShowTime", (BYTE*)&fShowTime - pThis, sizeof(fShowTime), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMapCommandAck::operator&( IXmlSaver &saver )
 {
 	saver.Add( "VisObj", &pVisObj );
@@ -249,7 +249,7 @@ int SMapCommandAck::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMapCommandAck::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pVisObj );
@@ -257,7 +257,7 @@ int SMapCommandAck::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMapCommandAck::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -272,9 +272,9 @@ DWORD SMapCommandAck::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SClientGameConsts::SMechUnitIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -282,7 +282,7 @@ void SClientGameConsts::SMechUnitIconsSet::ReportMetaInfo( const string &szAddNa
 	NMetaInfo::ReportMetaInfo( szAddName + "Raising", (BYTE*)&fRaising - pThis, sizeof(fRaising), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SMechUnitIconsSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -292,7 +292,7 @@ int SClientGameConsts::SMechUnitIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SMechUnitIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -302,7 +302,7 @@ int SClientGameConsts::SMechUnitIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SClientGameConsts::SMechUnitIconsSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -317,9 +317,9 @@ DWORD SClientGameConsts::SMechUnitIconsSet::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SClientGameConsts::SSquadIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -327,7 +327,7 @@ void SClientGameConsts::SSquadIconsSet::ReportMetaInfo( const string &szAddName,
 	NMetaInfo::ReportMetaInfo( szAddName + "Raising", (BYTE*)&fRaising - pThis, sizeof(fRaising), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SSquadIconsSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -337,7 +337,7 @@ int SClientGameConsts::SSquadIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SSquadIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -347,7 +347,7 @@ int SClientGameConsts::SSquadIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SClientGameConsts::SSquadIconsSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -362,9 +362,9 @@ DWORD SClientGameConsts::SSquadIconsSet::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SClientGameConsts::SBuildingIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -372,7 +372,7 @@ void SClientGameConsts::SBuildingIconsSet::ReportMetaInfo( const string &szAddNa
 	NMetaInfo::ReportMetaInfo( szAddName + "Raising", (BYTE*)&fRaising - pThis, sizeof(fRaising), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SBuildingIconsSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -382,7 +382,7 @@ int SClientGameConsts::SBuildingIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SBuildingIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -392,7 +392,7 @@ int SClientGameConsts::SBuildingIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SClientGameConsts::SBuildingIconsSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -407,15 +407,15 @@ DWORD SClientGameConsts::SBuildingIconsSet::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SClientGameConsts::SPassengerIconsSet::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SPassengerIconsSet::operator&( IXmlSaver &saver )
 {
 	saver.Add( "IconsSet", &pIconsSet );
@@ -423,7 +423,7 @@ int SClientGameConsts::SPassengerIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::SPassengerIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pIconsSet );
@@ -431,7 +431,7 @@ int SClientGameConsts::SPassengerIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SClientGameConsts::SPassengerIconsSet::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -446,9 +446,9 @@ DWORD SClientGameConsts::SPassengerIconsSet::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SClientGameConsts::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ClientGameConsts", typeID, sizeof(*this) );
@@ -470,7 +470,7 @@ void SClientGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Noises", (BYTE*)&szNoises - pThis, sizeof(szNoises), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -491,7 +491,7 @@ int SClientGameConsts::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SClientGameConsts::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pCamera );
@@ -511,7 +511,7 @@ int SClientGameConsts::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SClientGameConsts::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -526,7 +526,7 @@ DWORD SClientGameConsts::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1007BA80, SClientGameConsts ) 

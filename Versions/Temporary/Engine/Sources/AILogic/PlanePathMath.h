@@ -8,9 +8,9 @@
 inline CVec3 ToVec3( const CVec2 &v ) { return CVec3(v,0); }
 inline CVec3 ToVec3( const CVec3 &v ) { return v; }
 extern const float nOrientation;
-/////////////////////////////////////////////////////////////////////////////
+
 //	CAnalyticBSpline3
-/////////////////////////////////////////////////////////////////////////////
+
 class CAnalyticBSpline3
 {
 	static const int N_PARTS_FOR_CLOSEST_POINT_SEARCHING;
@@ -41,9 +41,9 @@ public:
 		return fLen;
 	}
 };
-/////////////////////////////////////////////////////////////////////////////
+
 //	CBezierCurve
-/////////////////////////////////////////////////////////////////////////////
+
 // Безье
 //R(t) = P0*fTNeg^3   +    P1 * t * fTNeg^2   +    P2 * t^2 * fTNeg    +    P3 * t^3 ,
 //R'(t) = -3*P0*fTNeg^2    +    P1*fTNeg^2   -   2*P1*t*fTNeg     +     2*P2*t*fTNeg   -    P2*t^2  +   3*P3*t^2
@@ -80,9 +80,9 @@ public:
 };
 
 
-/////////////////////////////////////////////////////////////////////////////
+
 //	CDirectedCircle 
-/////////////////////////////////////////////////////////////////////////////
+
 // circle with preferred direction
 struct CDirectedCircle : public CCircle
 {
@@ -94,9 +94,9 @@ struct CDirectedCircle : public CCircle
 	{
 	}
 };
-/////////////////////////////////////////////////////////////////////////////
+
 void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 );
-/////////////////////////////////////////////////////////////////////////////
+
 // travel angle from start to finish. returned angle is in range [0, 65535]
 WORD DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir );
 WORD DirectedDirsDifference( const WORD wStart, const WORD wFinish, const int nDir );
@@ -106,9 +106,9 @@ WORD DirectedDirsDifference( const WORD wStart, const WORD wFinish, const int nD
 bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirectedCircle &to, CVec2 *v1, CVec2 *v2 );
 
 
-/////////////////////////////////////////////////////////////////////////////
+
 // CHermitCurve
-/////////////////////////////////////////////////////////////////////////////
+
 template <class TVEC> 
 class CHermitCurve
 {

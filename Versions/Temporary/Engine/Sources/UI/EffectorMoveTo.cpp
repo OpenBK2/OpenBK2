@@ -1,16 +1,16 @@
 // EffectorMoveTo.cpp: implementation of the CEffectorMoveTo class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include "EffectorMoveTo.h"
 
 #include "Window.h"
-//////////////////////////////////////////////////////////////////////
+
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075C01,CEffectorMoveTo)
-//////////////////////////////////////////////////////////////////////
+
 int CEffectorMoveTo::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pElement );
@@ -24,7 +24,7 @@ int CEffectorMoveTo::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////
+
 void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, interface IScreen *pScreen, SWindowContext *pContext, const string &szAnimatedWindow ) 
 { 
 	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo*>( _pCmd ) );
@@ -75,7 +75,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, interface IScre
 		fElapsedTime = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////
+
 void CEffectorMoveTo::Reverse()
 {
 	pair<CVec2,int> res( GetCur() );
@@ -92,7 +92,7 @@ void CEffectorMoveTo::Reverse()
 	vSpeed.Negate();
 	bFinished = false;
 }
-//////////////////////////////////////////////////////////////////////
+
 const pair<CVec2,int> CEffectorMoveTo::GetCur() const
 {
 	pair<CVec2,int> res;
@@ -108,7 +108,7 @@ const pair<CVec2,int> CEffectorMoveTo::GetCur() const
 	}
 	return res;
 }
-//////////////////////////////////////////////////////////////////////
+
 const int CEffectorMoveTo::Segment( const int timeDiff, interface IScreen *pScreen, const bool bFastForward )
 {
 	const float fFormerElapsedTime = fElapsedTime;

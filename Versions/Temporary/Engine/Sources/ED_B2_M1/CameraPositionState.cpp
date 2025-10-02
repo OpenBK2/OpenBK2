@@ -19,7 +19,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMapInfoMan, int nPlayerIndex )
 {
 	if ( !pResult || !pMapInfoMan )
@@ -56,7 +56,7 @@ static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMa
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCameraPos &rCamPos, int nPlayerIndex ) 
 {
 	if ( !pMapInfoMan )
@@ -83,7 +83,7 @@ static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCamera
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetCameraPosition( SCameraPos *pCamPos )
 {
 	if ( !Camera() || !pCamPos )
@@ -97,13 +97,13 @@ static bool GetCameraPosition( SCameraPos *pCamPos )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		START CAMERA POSITION STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCameraPositionState::CCameraPositionState( CMapInfoEditor* _pMapInfoEditor )
 	: pMapInfoEditor( _pMapInfoEditor ),
 	nCurrentPlayer( 0 )
@@ -111,7 +111,7 @@ CCameraPositionState::CCameraPositionState( CMapInfoEditor* _pMapInfoEditor )
 	NI_ASSERT( pMapInfoEditor != 0, "CCameraPositionState(): Invalid parameter: pMapInfoEditor == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::Enter()
 {
 	cameraPositions.clear();
@@ -122,7 +122,7 @@ void CCameraPositionState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::Leave()
 {
 	cameraPositions.clear();
@@ -131,7 +131,7 @@ void CCameraPositionState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_STATE );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::SavePosition()
 {
 	SCameraPos camPos;
@@ -144,7 +144,7 @@ void CCameraPositionState::SavePosition()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraPositionState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch ( nCommandID )
@@ -183,7 +183,7 @@ bool CCameraPositionState::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCameraPositionState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCameraPositionState::UpdateCommand(), pbEnable == 0" );
@@ -204,14 +204,14 @@ bool CCameraPositionState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CCameraPositionState::GetPlayersCountFromDB()
 {
 	int nCount = 0;
 	CManipulatorManager::GetValue( &nCount, pMapInfoEditor->GetViewManipulator(), "Players" );
 	return nCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 {
 	if ( bGetFromDB )
@@ -241,7 +241,7 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::Draw( CPaintDC *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
@@ -280,7 +280,7 @@ void CCameraPositionState::Draw( CPaintDC *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::PostDraw( CPaintDC *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
@@ -306,7 +306,7 @@ void CCameraPositionState::PostDraw( CPaintDC *pPaintDC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
@@ -338,7 +338,7 @@ void CCameraPositionState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMous
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
@@ -366,7 +366,7 @@ void CCameraPositionState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( !bMove )
@@ -379,7 +379,7 @@ void CCameraPositionState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMouseP
 	bMove = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCameraPositionState::GetDBInfo()
 {
 	cameraPositions.clear();
@@ -395,4 +395,4 @@ void CCameraPositionState::GetDBInfo()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

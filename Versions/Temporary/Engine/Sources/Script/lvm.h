@@ -26,9 +26,9 @@ void luaV_Cclosure (lua_State *L, lua_CFunction c, int nelems);
 void luaV_Lclosure (lua_State *L, int nProto, int nelems);
 int luaV_lessthan (lua_State *L, StkId stL, StkId stR, StkId top);
 void luaV_strconc (lua_State *L, int total, StkId top);
-//////////////////////////////////////////////////////////////////////////
+
 /// Step-by-step execution
 void luaV_beginExecute(lua_State *L, int nClosure, StkId base, int nResults );
 void luaV_stepExecute( lua_State *L );
-//////////////////////////////////////////////////////////////////////////
+
 #endif

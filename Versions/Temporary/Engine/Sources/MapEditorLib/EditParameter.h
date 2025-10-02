@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TList, class TControl>
 void GetComboBoxEditParameters( TList *pList, int *pIndex, const TControl &rControl, const bool bCount, const bool bIndex )
 {
@@ -42,7 +42,7 @@ void GetComboBoxEditParameters( TList *pList, int *pIndex, const TControl &rCont
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TList, class TControl>
 void SetComboBoxEditParameters( const TList &rList, const int nIndex, TControl *pControl, const bool bCount, const bool bIndex )
 {
@@ -94,7 +94,7 @@ void SetComboBoxEditParameters( const TList &rList, const int nIndex, TControl *
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TList, class TControl>
 void GetListEditParameters( TList *pList, int *pIndex, const TControl &rControl, const bool bCount, const bool bIndex )
 {
@@ -132,7 +132,7 @@ void GetListEditParameters( TList *pList, int *pIndex, const TControl &rControl,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TList, class TControl>
 void SetListEditParameters( const TList &rList, const int nIndex, TControl *pControl, const string &rszTypeName, TList *pList, const bool bCount, const bool bIndex )
 {
@@ -196,7 +196,7 @@ void SetListEditParameters( const TList &rList, const int nIndex, TControl *pCon
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TControl>
 int GetSelectedComboBoxIndex( const TControl &rControl )
 {
@@ -211,7 +211,7 @@ int GetSelectedComboBoxIndex( const TControl &rControl )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TControl>
 int GetSelectedListIndex( const TControl &rControl )
 {
@@ -226,5 +226,5 @@ int GetSelectedListIndex( const TControl &rControl )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__EDIT_PARAMETER_TEMPLATES__)

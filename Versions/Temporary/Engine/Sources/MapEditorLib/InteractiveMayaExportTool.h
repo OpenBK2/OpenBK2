@@ -5,7 +5,7 @@
 #include "Interface_Exporter.h"
 #include "InteractiveMaya.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CInteractiveMayaExportTool : public IExportTool
 {
 	OBJECT_NOCOPY_METHODS( CInteractiveMayaExportTool );

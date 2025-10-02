@@ -3,19 +3,19 @@
 #include "TerraTools.h"
 #include "../System/FastMath.h"
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_EXPAND_TILES_NUM 3
 #define DEF_EXPAND_TILES_NUM_EXT ( int( FP_SQRT_2 * DEF_EXPAND_TILES_NUM ) )
 #define DEF_CONST_TILES_NUM 1
 #define DEF_CONST_DIST ( DEF_TILE_SIZE * FP_SQRT_2 * DEF_CONST_TILES_NUM )
 #define DEF_NON_CONST_DIST ( DEF_TILE_SIZE * FP_SQRT_2 * DEF_EXPAND_TILES_NUM - DEF_CONST_DIST )
 #define DEF_INV_INTERPOLATE_DIST ( 1.0f / DEF_NON_CONST_DIST )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetObjTerraProfile( const float x )
 {
 	return 0.5f + NMath::Sin( x * FP_PI - FP_PI2 ) * 0.5f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 )
 {
 	const CVec2 p1( AI2Vis(_p1.x), AI2Vis(_p1.y) );
@@ -112,4 +112,4 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 
 	UpdateVectorAreaInfo( vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y, TERRAIN_UPDATE_ALL );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

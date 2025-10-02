@@ -3,7 +3,7 @@
 #pragma once
 
 #include "..\B2_M1_World\UpdatableWorld.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEditorUpdatableWorld : public CUpdatableWorld
 {
 	OBJECT_NOCOPY_METHODS( CEditorUpdatableWorld );
@@ -34,5 +34,5 @@ namespace NCreateUpdate
 	CObjectBase* RemoveObject( int nObjectID );
 	CObjectBase* MoveObject( int nObjectID, const CVec3 &rvPlacement, const CQuat &rRotation );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__EDITOR_UPDATATABLE_WORLD__)

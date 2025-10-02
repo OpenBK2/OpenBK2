@@ -3,7 +3,7 @@
 #include "WindowMSButton.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075B81,CWindow1LvlTreeControl)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindow1LvlTreeControl::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindowScrollableContainerBase*>( this ) );
@@ -12,7 +12,7 @@ int CWindow1LvlTreeControl::operator&( IBinSaver &saver )
 	saver.Add( 6, &pShared );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow1LvlTreeControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindow1LvlTreeControl *pDesc( checked_cast<const NDb::SWindow1LvlTreeControl*>( _pDesc ) );
@@ -21,7 +21,7 @@ void CWindow1LvlTreeControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CWindowScrollableContainerBase::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindow1LvlTreeControlShared*>( pDesc->pShared );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow * CWindow1LvlTreeControl::AddItem()
 {
 	CPtr<CWindowMSButton> pInsert = dynamic_cast<CWindowMSButton*>( CUIFactory::MakeWindow( pShared->pItemSample ) );
@@ -33,7 +33,7 @@ IWindow * CWindow1LvlTreeControl::AddItem()
 	PushBack( pInsert, 0 );
 	return items.back().pItem;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow1LvlTreeControl::Expand( CWindow1LvlTreeControl::SItem *pContainer )
 {
 	pContainer->bCollapsed = false;
@@ -53,7 +53,7 @@ void CWindow1LvlTreeControl::Expand( CWindow1LvlTreeControl::SItem *pContainer )
 	*/
 	Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow1LvlTreeControl::Collapse( CWindow1LvlTreeControl::SItem *pContainer )
 {
 	pContainer->bCollapsed = true;
@@ -73,7 +73,7 @@ void CWindow1LvlTreeControl::Collapse( CWindow1LvlTreeControl::SItem *pContainer
 	*/
 	Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindow1LvlTreeControl::SItem * CWindow1LvlTreeControl::GetContainer( IWindow* pCont )
 {
 	for ( vector<SItem>::iterator it = items.begin(); it != items.end(); ++it )
@@ -85,21 +85,21 @@ CWindow1LvlTreeControl::SItem * CWindow1LvlTreeControl::GetContainer( IWindow* p
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow1LvlTreeControl::Released( class CWindow *pWho )
 {
 	SItem * pCont = GetContainer( pWho );
 	if ( pCont )
 		pCont->bCollapsed ? Expand( pCont ) : Collapse( pCont );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindow1LvlTreeControl::Init()
 {
 	CWindow::Init();
 	RemoveItems();
 	items.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow * CWindow1LvlTreeControl::AddSubItem( IWindow *pItem )
 {
 	SItem *pCont = GetContainer( pItem );

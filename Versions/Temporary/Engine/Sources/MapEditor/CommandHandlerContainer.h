@@ -3,7 +3,7 @@
 #pragma once
 
 #include "..\MapEditorLib\Interface_CommandHandler.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class  CCommandHandlerContainer : public ICommandHandlerContainer
 {
 	OBJECT_NOCOPY_METHODS( CCommandHandlerContainer );
@@ -48,6 +48,6 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMAND_HANDLER__CONTINER__)
 

@@ -2,12 +2,12 @@
 #include "AICmdsAutoMagicInterface.h"
 #include "..\System\ChunklessSaver.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IBinSaver *IAICmdsAutoMagic::MakeCommandSerializer( CMemoryStream *pStream, ESaverMode mode )
 {
 	return CreateChunklessSaver( 0, pStream, mode );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDefaultAICmdsAutoMagic : public IAICmdsAutoMagic
 {
 	OBJECT_NOCOPY_METHODS(CDefaultAICmdsAutoMagic);

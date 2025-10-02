@@ -3,13 +3,13 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCache
 {
 typedef unsigned int MRU_TYPE;
 const int MRU_LAST = 0xffffffff;
 const int N_START_RU = 10;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SStats
 {
 	int nFree, nUsed, nBlocks;
@@ -19,7 +19,7 @@ struct SStats
 
 	SStats() { nEldestEntry = MRU_LAST; nUsed = 0; nFree = 0; nBlocks = 0; bThrashing = false; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CShortPtrAllocator
 {
@@ -63,10 +63,10 @@ public:
 	}
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<template<class T> class TAlloc, class TElement, class TUser>
 class CGatheringCache;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<template<class T> class TAlloc, class TElement, class TUser>
 class CGatherElementBase : virtual public CObjectBase
 {
@@ -107,7 +107,7 @@ public:
 	}
 	friend class CGatheringCache<TAlloc,TElement,TUser>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<template<class T> class TAlloc, class TElement, class TUser>
 class CGatheringCache: public CObjectBase
 {
@@ -492,7 +492,7 @@ public:
 
 	friend class CGatherElementBase<TAlloc, TElement, TUser>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CQuadTreeElement
 {
 public:
@@ -584,7 +584,7 @@ public:
 	CQuadTreeElement( int _nXSize, int _nYSize, int _nShiftX, int _nShiftY )
 		: nXSize(_nXSize), nYSize(_nYSize), nShiftX(_nShiftX), nShiftY(_nShiftY) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_MAX_FIB = 64;
 extern int nFibbonachiSeries[N_MAX_FIB];
 inline int fib( int nDepth ) { ASSERT( nDepth < N_MAX_FIB ); return nFibbonachiSeries[nDepth]; }
@@ -595,7 +595,7 @@ inline int GetMajorFib( int _n )
 		++k;
 	return k;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFibElement
 {
 public:
@@ -629,6 +629,6 @@ public:
 	CFibElement( int _nSize, int _nShift )
 		: nSize(_nSize), nShift(_nShift) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

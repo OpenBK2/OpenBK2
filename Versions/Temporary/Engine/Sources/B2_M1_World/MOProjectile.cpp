@@ -13,12 +13,12 @@ START_REGISTER(ProjectileConsts)
 REGISTER_VAR_EX( "Sound.ProjectileFallSoundMaxTime", NGlobal::VarIntHandler, &g_nProjectileFallSoundMaxTime, 2000, STORAGE_NONE );
 FINISH_REGISTER
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOProjectile::~CMOProjectile()
 {
 	DetachSound( EAST_MOVEMENT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::CreateAttachedEffect()
 {
 	if ( const NDb::SComplexEffect *pComplexEffect = pProjectile->pAttachedEffect )
@@ -38,7 +38,7 @@ void CMOProjectile::CreateAttachedEffect()
 		AttachSound( EAST_MOVEMENT, pTrajectoryEffect->pSoundEffect, pTrajectoryEffect->pSoundEffect->bLooped );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRot, NTimer::STime currTime )
 {
 	if ( pProjectile && pProjectile->pSmokyExhaustEffect )
@@ -60,7 +60,7 @@ void CMOProjectile::InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRo
 	else
 		pTrailEffect = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SProjectile *_pProjectile, const CVec3 &vVisPos, const CQuat &qRot, const NDb::SComplexEffect *_pTrajectoryEffect )
 {
 	pProjectile = _pProjectile;
@@ -98,12 +98,12 @@ bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SP
 	SetVisible( false, NDb::SEASON_SUMMER, false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMapObj::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	if ( bHitTarget )
@@ -198,7 +198,7 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason eSeason, const CVec3 &vCenter, const CVec3 &vDir )
 {
 	if ( bHitTarget )
@@ -264,7 +264,7 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 			PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, Singleton<IGameTimer>()->GetGameTime(), vCenter );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOProjectile::SetM1Info( CMapObj *_pTarget, const NDb::SWeaponRPGStats* _pWeapon, int _nShell, bool _bTraceTargetIntersection, float _fDamage )
 {
 	pTarget = _pTarget;
@@ -273,5 +273,5 @@ void CMOProjectile::SetM1Info( CMapObj *_pTarget, const NDb::SWeaponRPGStats* _p
 	bTraceTargetIntersection = _bTraceTargetIntersection;
 	fDamage = _fDamage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300C2400, CMOProjectile )

@@ -5,7 +5,7 @@
 
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // time period of one particle falling
 const float FP_DROP_RAIN_CYCLE = 200;//60;
 // speed of falling in meters per segment

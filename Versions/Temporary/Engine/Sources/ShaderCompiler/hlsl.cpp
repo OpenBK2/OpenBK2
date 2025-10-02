@@ -36,7 +36,7 @@ void Parse( SHLSLSrcInfo *pRes, const char *psz )
 	else if ( words[0] == "psparam" )
 		pRes->psParams.push_back( SHLSLParam( words[2], words[1], words[3] ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AssignIndices( vector<SHLSLParam> *pRes )
 {
 	hash_map<string,int> lastIndices;
@@ -53,7 +53,7 @@ static void AssignIndices( vector<SHLSLParam> *pRes )
 		++i->second;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void WriteRootFile( const string &_szFName, 
 	const vector<SHLSLParam> &vsOutput, const vector<SHLSLParam> &params, const vector<string> &defines, const string &szInclude )
 {
@@ -79,7 +79,7 @@ static void WriteRootFile( const string &_szFName,
 	root << "};\n\n";
 	root << "#include \"" << szInclude << "\"" << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static LPD3DXBUFFER CompileShader( const char *pszFName, const char *pszFuncName, const char *pszProfile, string *pszError )
 {
 	LPD3DXBUFFER pCode = 0, pError = 0;
@@ -101,7 +101,7 @@ static LPD3DXBUFFER CompileShader( const char *pszFName, const char *pszFuncName
 		pError->Release();
 	return pCode;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CanBeCompiled( const vector<SHLSLParam> &vsOutput, const vector<SHLSLParam> &params, const vector<string> &defines, 
 	const char *pszFName, const char *pszFunc, const char *pszProfile, string *pszError )
 {
@@ -112,7 +112,7 @@ static bool CanBeCompiled( const vector<SHLSLParam> &vsOutput, const vector<SHLS
 		pCode->Release();
 	return pCode != 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CompileShader( const vector<SHLSLParam> &vsOutput, const vector<SHLSLParam> &params, const vector<string> &defines, 
 	const char *pszFName, const char *pszFunc, const char *pszProfile, vector<DWORD> *pRes )
 {
@@ -128,7 +128,7 @@ static void CompileShader( const vector<SHLSLParam> &vsOutput, const vector<SHLS
 		pCode->Release();
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ReadFile( const char *pszName, vector<string> *pRes )
 {
 	pRes->resize(0);
@@ -140,7 +140,7 @@ static void ReadFile( const char *pszName, vector<string> *pRes )
 		pRes->push_back( buf );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SShaderFile
 {
 	vector<string> lines;
@@ -161,7 +161,7 @@ static void WriteFile( const char *pszName, const SShaderFile &src )
 		f << src.lines[k] << endl;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void TypeSrcInfo( const string &szFile, const vector<string> &defines )
 {
 	cout << "compiling " << szFile << " with defines : ";
@@ -169,7 +169,7 @@ static void TypeSrcInfo( const string &szFile, const vector<string> &defines )
 		cout << defines[k] << " ";
 	cout << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool CompileShaders( SHLSLShader *pRes, const SHLSLSrcInfo &h, const vector<string> &defines, int _nID )
 {
 	vector<SHLSLParam> vsOutput = h.vsOutput;
@@ -261,7 +261,7 @@ static bool CompileShaders( SHLSLShader *pRes, const SHLSLSrcInfo &h, const vect
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Compile( const SHLSLSrcInfo &h )
 {
 	SHLSLShaderGroup sg;

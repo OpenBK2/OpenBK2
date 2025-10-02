@@ -3,9 +3,9 @@
 #include "System_export.h"
 
 EXTERNVAR SYSTEM_EXPORT int nDGCurrentFrame;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // DG 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // any function should have version of its value to recalc only when function result
 // has changed, has frame counter to prevent frequent reevaluations
 class CVersioningBase: public CObjectBase
@@ -38,7 +38,7 @@ public:
 	//
 	virtual int operator&( IBinSaver &f ) { return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TResult>
 class CFuncBase: public CVersioningBase
 {
@@ -49,7 +49,7 @@ public:
 	CFuncBase( const TResult &_t ): value(_t) {}
 	const TResult& GetValue() const { ASSERT( IsFrameMatch() ); return value; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TResult>
 class CPtrFuncBase: public CVersioningBase
 {
@@ -59,10 +59,10 @@ public:
 	TResult* GetValue() { ASSERT( IsFrameMatch() ); if ( !IsValid( pValue ) ) Recalc(); return pValue; }
   bool HasZeroValue() const { return pValue == 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT void SetToHoldQueue( CObjectBase *p, int *pnFrame );
 SYSTEM_EXPORT void ClearHoldQueue();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TResult>
 class CHoldedPtrFuncBase: public CPtrFuncBase<TResult>
 {
@@ -77,7 +77,7 @@ protected:
 public:
 	CHoldedPtrFuncBase(): nDeleteFrame(-1) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TResult>
 class CHoldedFuncBase: public CFuncBase<TResult>
 {
@@ -92,7 +92,7 @@ protected:
 public:
 	CHoldedFuncBase(): nDeleteFrame(-1) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEFINE_DG_CONSTANT_NODE( ClassName, Type ) \
 class ClassName: public CFuncBase< Type >          \
 {                                                  \
@@ -104,7 +104,7 @@ public:                                            \
 	void Set( const Type &_t ) { value = _t; Updated(); }\
 	int operator&( IBinSaver &f ) { f.Add( 1, &value ); return 0; }\
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for use in CDGPtr only!
 class CAccessForDGPtr
 {
@@ -113,9 +113,9 @@ public:
 	void DoUpdate( CVersioningBase *pNode ) const { pNode->DoUpdate(); }
 	int GetVersion( CVersioningBase *pNode ) const { return pNode->nVersion; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT void MarkNewDGFrame();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TFunc, typename CPtrType = CObj<TFunc> >
 class CDGPtr
 {
@@ -148,7 +148,7 @@ public:
 };
 template <class T, typename TPtrType>
 inline bool IsValid( const CDGPtr<T,TPtrType> &p ) { return IsValid( p.Get() ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EDGNodeChange
 {
 	DG_CHANGE_UNKNOWN,
@@ -185,7 +185,7 @@ public:
 	}
 	int operator&( IBinSaver &f ) { f.DoPtr( &p ); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TSet, class TParam>
 inline void UpdateSet( TSet *a, TParam *p )
 {
@@ -201,7 +201,7 @@ inline void UpdateSet( TSet *a, TParam *p )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TSet, class TParam, class TParam2>
 inline void UpdateSet( TSet *a, TParam *p, TParam2 *p2 )
 {
@@ -217,7 +217,7 @@ inline void UpdateSet( TSet *a, TParam *p, TParam2 *p2 )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TSet, class TParam, class TParam2, class TParam3>
 inline void UpdateSet( TSet *a, TParam *p, TParam2 *p2, TParam3 *p3 )
 {

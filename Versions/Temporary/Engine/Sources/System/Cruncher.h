@@ -4,7 +4,7 @@
 
 const int N_COMPRESS_MAX_BLOCK = 34 + 64 + 128 - 1;//;256; // must be less then half of history
 const int N_COMPRESS_HISTORY = 1024;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CNetCompressor
 {
 	unsigned char cBuffer[ N_COMPRESS_HISTORY * 2 ];//+ N_COMPRESS_MAX_BLOCK ];

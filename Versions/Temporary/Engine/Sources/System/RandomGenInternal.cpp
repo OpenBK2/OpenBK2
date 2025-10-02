@@ -4,7 +4,7 @@
 #include "RandomGenInternal.h"
 #include "Commands.h"
 #include "XmlSaver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** random generator
@@ -12,7 +12,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bLogRandomCalls = false;
 namespace NRandom
 {
@@ -55,9 +55,9 @@ namespace NRandom
 		return rndFunc;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ind(mm,x)  (*(unsigned _int32 *)(( unsigned _int8 *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define rngstep(mix,a,b,mm,m,m2,r,x) \
 { \
   x = *m;  \
@@ -65,7 +65,7 @@ namespace NRandom
   *(m++) = y = ind( mm, x ) + a + b; \
   *(r++) = b = ind( mm, y >> RANDSIZL ) + x; \
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define mix(a,b,c,d,e,f,g,h) \
 { \
    a ^= b << 11; d += a; b += c; \
@@ -77,7 +77,7 @@ namespace NRandom
    g ^= h << 8;  b += g; h += a; \
    h ^= a >> 9;  c += h; a += b; \
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NRandom::Isaac( SRandData *pRnd )
 {
 	unsigned _int32 a, b, x, y, *m, *mm, *m2, *r, *mend;
@@ -102,7 +102,7 @@ void NRandom::Isaac( SRandData *pRnd )
 	pRnd->randb = b; 
 	pRnd->randa = a;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRandomGenAutoMagic
 {
 	SRandomGenAutoMagic()
@@ -113,7 +113,7 @@ struct SRandomGenAutoMagic
 	}
 };
 SRandomGenAutoMagic automagic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NRandom::SetRandomSeed( IRandomSeed *pSeed )
 {
 #ifndef _FINALRELEASE
@@ -132,7 +132,7 @@ IRandomSeed *NRandom::CreateRandomSeedCopy()
 	pSeed->SetRandData( rnd );
 	return pSeed;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** random generator seed
@@ -140,7 +140,7 @@ IRandomSeed *NRandom::CreateRandomSeedCopy()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void __declspec(dllexport) CRandomGenSeed::SFLB0_InitVariables()
 {
 	rnd.randa = rnd.randb = rnd.randc = 0;
@@ -174,7 +174,7 @@ void __declspec(dllexport) CRandomGenSeed::SFLB0_InitVariables()
 	// prepare to use the first set of results
 	rnd.randcnt = RANDSIZ;		
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRandomGenSeed::Init()
 {
 	//DEBUG{ fixed random
@@ -185,13 +185,13 @@ void CRandomGenSeed::Init()
 
 	SFLB0_InitVariables();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRandomGenSeed::InitByZeroSeed()
 {
 	Zero( rnd.randrsl );
 	SFLB0_InitVariables();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_FROM_START = 1024;
 bool CRandomGenSeed::RecFindFile( LPSTR pszFindedName, LPCSTR pszBaseMask, int nToFind, int* pnTotFinded )
 {
@@ -218,7 +218,7 @@ bool CRandomGenSeed::RecFindFile( LPSTR pszFindedName, LPCSTR pszBaseMask, int n
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // The purpose of this func is to fill randrsl[RANDSIZ] arrays
 // with initial random values
 // It's uses first RANDSIZ values from random file for this
@@ -291,7 +291,7 @@ void CRandomGenSeed::FillRandRsl()
 			rnd.randrsl[i] ^= rand();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRandomGenSeed::Store( CDataStream *pStream )
 {
 	pStream->Write( &rnd.randcnt, sizeof(rnd.randcnt) );
@@ -301,7 +301,7 @@ void CRandomGenSeed::Store( CDataStream *pStream )
 	pStream->Write( &rnd.randb, sizeof(rnd.randb) );
 	pStream->Write( &rnd.randc, sizeof(rnd.randc) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CRandomGenSeed::Restore( CDataStream *pStream )
 {
 	pStream->Read( &rnd.randcnt, sizeof(rnd.randcnt) );
@@ -311,7 +311,7 @@ void CRandomGenSeed::Restore( CDataStream *pStream )
 	pStream->Read( &rnd.randb, sizeof(rnd.randb) );
 	pStream->Read( &rnd.randc, sizeof(rnd.randc) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CRandomGenSeed::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &rnd.randcnt );
@@ -322,7 +322,7 @@ int CRandomGenSeed::operator&( IBinSaver &saver )
 	saver.Add( 6, &rnd.randc );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CRandomGenSeed::operator&( IXmlSaver &saver )
 {
 	saver.Add( "RandCounter", &rnd.randcnt );
@@ -333,9 +333,9 @@ int CRandomGenSeed::operator&( IXmlSaver &saver )
 	saver.AddRawData( "RandMem", &(rnd.randmem[0]), sizeof(rnd.randmem) );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(RandomGen_0x10170B00)
 REGISTER_VAR_EX( "log_random_calls", NGlobal::VarBoolHandler, &s_bLogRandomCalls, false, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1009DC80, CRandomGenSeed )

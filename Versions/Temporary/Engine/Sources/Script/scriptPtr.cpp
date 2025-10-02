@@ -5,9 +5,9 @@
 //
 namespace NScript
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int luaGarbageCollector( lua_State* pState );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void luaPushCPtr( lua_State* pState, CObjectBase *pObj )
 {
 	Script script( pState );
@@ -16,7 +16,7 @@ void luaPushCPtr( lua_State* pState, CObjectBase *pObj )
 	else
 		script.PushUserTag( pObj, tagLuaCPtr );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void luaPushCObj( lua_State* pState, CObjectBase *pObj )
 {
 	Script script( pState );
@@ -25,7 +25,7 @@ void luaPushCObj( lua_State* pState, CObjectBase *pObj )
 	else
 		script.PushUserTag( pObj, tagLuaCObj );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* luaGetPtr( const Script::Object &o )
 {
 	if ( !o.IsUserData() )
@@ -34,7 +34,7 @@ CObjectBase* luaGetPtr( const Script::Object &o )
 		return 0;
 	return o.GetUserData();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int luaMakeCPtr( lua_State* pState )
 {
 	Script script( pState );
@@ -45,7 +45,7 @@ int luaMakeCPtr( lua_State* pState )
 	luaPushCPtr( pState, luaGetPtr( o ) );
 	return 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int luaMakeCObj( lua_State* pState )
 {
 	Script script( pState );
@@ -56,24 +56,24 @@ int luaMakeCObj( lua_State* pState )
 	luaPushCObj( pState, luaGetPtr( o ) );
 	return 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool luaIsPtr( const Script::Object &o )
 {
 	return o.IsUserData() && ( o.Tag() == tagLuaCPtr || o.Tag() == tagLuaCObj );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool luaIsValidPtr( const Script::Object &o )
 {
 	return o.IsUserData() && IsValid( luaGetPtr( o ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int luaIsValid( lua_State* pState )
 {
 	Script script( pState );
 	luaPushBool( pState, luaIsValidPtr( script.GetObject( 1 ) ) );
 	return 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NScript;
 //

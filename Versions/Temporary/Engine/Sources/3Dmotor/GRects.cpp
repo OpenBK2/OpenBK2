@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "GRects.h"
 #include "GfxUtils.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const CRectLayout &l, float fZ, ELayoutRenderMode lrm )
 {
 	for ( int i = 0; i < l.rects.size(); ++i )
@@ -19,7 +19,7 @@ void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const
 		pRes->AddRect( rTarget, pTex, rSrc, color, fZ );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex, 
 	const CRectLayout::SRect &sRect, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
@@ -49,7 +49,7 @@ bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex,
 	sTex.rcTexRect.y2 += fCSHeight * ( sClippedRect.y2 - sSourceRect.y2  );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow, float fZ, ELayoutRenderMode lrm )
 {
 	for ( int nTemp = 0; nTemp < sLayout.rects.size(); nTemp++ )
@@ -68,12 +68,12 @@ void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex
 		pRes->AddRect( sClippedRect, pTex, sTex.rcTexRect, color, fZ );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, 
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, float fZ )
 {
 	pRes->AddRect( pPos4, pColors4, pTex, rSrc, fZ );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
 using namespace NGScene;

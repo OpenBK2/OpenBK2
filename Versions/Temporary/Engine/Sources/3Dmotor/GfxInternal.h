@@ -3,9 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // full description of buffers & textures for internal use & some internal data access
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <D3D9.h>
 #include "..\Misc\Win32Helper.h"
 #include "GPixelFormat.h"
@@ -31,9 +31,9 @@ namespace NGfx
 	extern int nTotalFrames;
 	extern bool bInitOk;
 	extern bool b16BitMode, bDXTSupported, b8888Supported, b16BitTextures;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Vertex info
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SGeomFormatInfo
 {
 	int nFormatID;
@@ -42,21 +42,21 @@ struct SGeomFormatInfo
 	DWORD dwFVF;
 };
 extern SGeomFormatInfo geometryFormatInfo[6];
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int GetGeomFormatSize( int nFormatID )
 {
 	ASSERT( nFormatID >= 0 && nFormatID < ARRAY_SIZE( geometryFormatInfo ) );
 	ASSERT( nFormatID == geometryFormatInfo[nFormatID].nFormatID );
 	return geometryFormatInfo[nFormatID].nSize;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline const D3DVERTEXELEMENT9* GetVertexLayout( int nFormatID )
 {
 	ASSERT( nFormatID >= 0 && nFormatID < ARRAY_SIZE( geometryFormatInfo ) );
 	ASSERT( nFormatID == geometryFormatInfo[nFormatID].nFormatID );
 	return geometryFormatInfo[nFormatID].pdwVSD;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int D3DFormat2PixelID( D3DFORMAT format )
 {
 	switch ( format )
@@ -79,7 +79,7 @@ inline int D3DFormat2PixelID( D3DFORMAT format )
 	ASSERT(0);
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int D3DFormat2PixelBitSize( D3DFORMAT format )
 {
 	switch ( format )
@@ -101,7 +101,7 @@ inline int D3DFormat2PixelBitSize( D3DFORMAT format )
 	ASSERT(0);
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline D3DFORMAT PixelID2D3DFormat( int nPixelID )
 {
 	switch ( nPixelID )
@@ -121,7 +121,7 @@ inline D3DFORMAT PixelID2D3DFormat( int nPixelID )
 	ASSERT( 0 );
 	return D3DFMT_A8R8G8B8;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CGeometry : virtual public CObjectBase
 {
 public:
@@ -132,7 +132,7 @@ public:
 	virtual int GetVBSize() const = 0;
 	virtual int GetGeometryFormatID() = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct S3DTriangle;
 class CTriListWrapper;
 class CTriList: virtual public CObjectBase
@@ -143,7 +143,7 @@ public:
 	virtual void DrawPrimitive( int nVBStart, int nMinIndex, int nMaxIndex ) = 0;
 	virtual CTriListWrapper* CreateWrapper( int nTris ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void InitBuffers();
 void NextFrameBuffes( bool bOnThrashing = false );
 void ReduceHWLag();
@@ -168,7 +168,7 @@ bool CanOverwriteStatic();
 int GetBpp( D3DFORMAT format );
 int GetMaxBufferedFlipsNum();
 void ForceTextureFilterSetup();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

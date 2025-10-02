@@ -1,6 +1,6 @@
 // WindowTextView.h: interface for the CWindowTextView class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_)
 #define AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_
@@ -14,7 +14,7 @@
 #include "Window.h"
 
 interface IML;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // plain text window
 // user gives Font, Color, String, Alignment,
 // and Window parameters
@@ -66,5 +66,5 @@ public:
 	void SetIDForMLHandler( int nID );
 	int GetIDForMLHandler() const { return nIDForMLHandler; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(AFX_WINDOWTEXTVIEW_H__1660DBF3_B2C3_40F5_B322_906F49DC1A41__INCLUDED_)

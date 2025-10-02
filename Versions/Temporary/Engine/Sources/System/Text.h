@@ -3,7 +3,7 @@
 #include "System_export.h"
 
 #define UNICODE_SIGNATURE 0xfeff
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NText
 {
 	//! get text from resources by filename
@@ -13,7 +13,7 @@ namespace NText
 	//! load unicode text from stream to wstring
 	SYSTEM_EXPORT bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CRAP{ for transition-to-text-files period only
 //#define CHECK_TEXT_NOT_EMPTY_PRE( pre_name, name ) ( pre_name##p##name != 0 || !pre_name##sz##name##FileRef.empty() )
 //#define GET_TEXT_PRE( pre_name, name ) ( pre_name##sz##name##FileRef.empty() ? (pre_name##p##name == 0 ? NText::GetText("") : pre_name##p##name##->wszText ) : NText::GetText( pre_name##sz##name##FileRef ) )
@@ -24,4 +24,4 @@ namespace NText
 #define CHECK_TEXT_NOT_EMPTY( name ) ( !sz##name##FileRef.empty() )
 #define GET_TEXT( name ) NText::GetText( sz##name##FileRef )
 // CRAP}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

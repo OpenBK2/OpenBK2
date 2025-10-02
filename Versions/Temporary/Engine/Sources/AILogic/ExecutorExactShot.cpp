@@ -6,13 +6,13 @@
 extern CGroupLogic theGroupLogic;
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorExactShot::CExecutorExactShot( CAIUnit *_pUnit )
 : state( EASS_READY_TO_ON ), CExecutor( TID_EXACT_SHOT, 1000/SConsts::AI_SEGMENT_DURATION ), 
 timeLastUpdate( curTime ), pUnit( _pUnit )
 {  
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorExactShot::Segment()
 {
 	if ( !IsExecutorValid() )
@@ -24,7 +24,7 @@ int CExecutorExactShot::Segment()
 
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorExactShot::UpdateProgress( const SAbilitySwitchState _state, const float fParam )
 {
 	if ( !pUpdate )
@@ -43,7 +43,7 @@ void CExecutorExactShot::UpdateProgress( const SAbilitySwitchState _state, const
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorExactShot::SetAutocast( const bool _bAutocast )
 {
 	if ( ( state.bAutocast != 0 ) != _bAutocast )
@@ -55,7 +55,7 @@ void CExecutorExactShot::SetAutocast( const bool _bAutocast )
 		UpdateProgress( state , 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorExactShot::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par;
@@ -67,7 +67,7 @@ void CExecutorExactShot::RegisterOnEvents( IExecutorContainer *pContainer )
 	par.eEventID = EID_ABILITY_DEACTIVATE_AUTOCAST;
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 {
 	//Filter out wrong calls
@@ -95,6 +95,6 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1112D400, CExecutorExactShot )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

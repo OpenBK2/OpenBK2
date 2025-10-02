@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 //REGISTER_EXPORTER_IN_EXE( Font, CFontExporter )
 //REGISTER_EXPORTER_IN_EXE( Texture, CTextureExporter )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SFont::ECharset CELK::GetCharset( int nCodePage )
 {
 	DWORD dwTemp = nCodePage;
@@ -107,7 +107,7 @@ NDb::SFont::ECharset CELK::GetCharset( int nCodePage )
 	return NDb::SFont::DEF_CHARSET;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SELKElement::GetDataBaseFolder( const string &rszELKPath, string *pszDataBaseFolder )
 {
 	NI_ASSERT( pszDataBaseFolder != 0, StrFmt( _T( "CELK::GetDataBaseFolder() wrong parameter: pszDataBaseFolder %x" ), pszDataBaseFolder ) );
@@ -119,7 +119,7 @@ void SELKElement::GetDataBaseFolder( const string &rszELKPath, string *pszDataBa
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SELKElement::GetDataBaseReserveFolder( const string &rszELKPath, string *pszDataBaseReserveFolder )
 {
 	NI_ASSERT( pszDataBaseReserveFolder != 0, StrFmt( _T( "CELK::GetDataBaseReserveFolder() wrong parameter: pszDataBaseReserveFolder %x" ), pszDataBaseReserveFolder ) );
@@ -131,7 +131,7 @@ void SELKElement::GetDataBaseReserveFolder( const string &rszELKPath, string *ps
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // = _T( "MICROSOFT EXCEL DRIVER (*.XLS)" );
 bool GetExcelODBCDriverName( CString *pstrExcelODBCDriverName )
 {
@@ -160,7 +160,7 @@ bool GetExcelODBCDriverName( CString *pstrExcelODBCDriverName )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::GetOriginalText( const string &rszTextPath, CString *pstrText, int nCodePage, bool bRemove_0D )
 {
 	NI_ASSERT( pstrText != 0, StrFmt( _T( "CELK::GetOriginalText() wrong parameter: pstrText %x" ), pstrText ) );
@@ -179,7 +179,7 @@ void CELK::GetOriginalText( const string &rszTextPath, CString *pstrText, int nC
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::GetTranslatedText( const string &rszTextPath, CString *pstrText,  int nCodePage, bool bRemove_0D )
 {
 	NI_ASSERT( pstrText != 0, StrFmt( _T( "CELK::GetTranslatedText() wrong parameter: pstrText %x" ), pstrText ) );
@@ -198,7 +198,7 @@ void CELK::GetTranslatedText( const string &rszTextPath, CString *pstrText,  int
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::GetDescription( const string &rszTextPath, CString *pstrText, int nCodePage, bool bRemove_0D )
 {
 	NI_ASSERT( pstrText != 0, StrFmt( _T( "CELK::GetDescription() wrong parameter: pstrText %x" ), pstrText ) );
@@ -233,7 +233,7 @@ void CELK::GetDescription( const string &rszTextPath, CString *pstrText, int nCo
 	}	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELK::GetState( const string &rszTextPath, bool *pbTranslated )
 {
 	SELKTextProperty textProperty;
@@ -246,7 +246,7 @@ int CELK::GetState( const string &rszTextPath, bool *pbTranslated )
 	return textProperty.nState;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::SetTranslatedText( const string &rszTextPath, const CString &rstrText, int nCodePage, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
@@ -259,7 +259,7 @@ void CELK::SetTranslatedText( const string &rszTextPath, const CString &rstrText
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELK::SetState( const string &rszTextPath, int nState, bool *pbTranslated )
 {
 	SELKTextProperty textProperty;
@@ -284,7 +284,7 @@ int CELK::SetState( const string &rszTextPath, int nState, bool *pbTranslated )
 	return nPreviousState;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::CreatePAK( const string &rszGamePath, const string &rszFilePath, const string &rszZIPToolPath, CProgressDialog* pwndProgressDialog )
 {
 	if ( pwndProgressDialog && ( pwndProgressDialog->GetSafeHwnd() != 0 ) )
@@ -417,7 +417,7 @@ bool CELK::CreatePAK( const string &rszGamePath, const string &rszFilePath, cons
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::ExportToPAK( const string &rszELKPath,
 												const string &rszPAKPath,
 												const string &rszZIPToolPath,
@@ -600,7 +600,7 @@ bool CELK::ExportToPAK( const string &rszELKPath,
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCopyFileFunctional
 {
 	string szSourceFolder;
@@ -625,7 +625,7 @@ public:
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::GenerateFonts( const string &rszDataBaseFolder,
 													const string &rszPAKPath,
 													CSymbolSetMap *pSymbolMap,
@@ -745,7 +745,7 @@ void CELK::GenerateFonts( const string &rszDataBaseFolder,
 	NFile::DeleteFiles( rszPAKPath.c_str(), "*.tga", true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CImportFromPAKEraseFile
 {
 	hash_set<string> *pUsedPaths;
@@ -772,7 +772,7 @@ public:
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bool bAbsolute, string *pszNewVersion, CProgressDialog* pwndProgressDialog )
 {
 	if ( pwndProgressDialog && ( pwndProgressDialog->GetSafeHwnd() != 0 ) )
@@ -967,7 +967,7 @@ bool CELK::ImportFromPAK( const string &rszPAKPath, const string &rszELKPath, bo
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::ExportToXLS( const CELK &rELK, const string &rszXLSPath, CELKTreeWindow *pwndELKTreeWindow, int nCodePage, CProgressDialog* pwndProgressDialog )
 {
 	if ( pwndProgressDialog && ( pwndProgressDialog->GetSafeHwnd() != 0 ) )
@@ -1077,7 +1077,7 @@ bool CELK::ExportToXLS( const CELK &rELK, const string &rszXLSPath, CELKTreeWind
 	return true;	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::ImportFromXLS( const CELK &rELK, const string &rszXLSPath, string *pszNewVersion, int nCodePage, CProgressDialog* pwndProgressDialog )
 {
 	if ( pwndProgressDialog && ( pwndProgressDialog->GetSafeHwnd() != 0 ) )
@@ -1265,7 +1265,7 @@ bool CELK::ImportFromXLS( const CELK &rELK, const string &rszXLSPath, string *ps
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::CreateStatistic( SELKStatistic *pStatistic, class CELKTreeWindow *pwndELKTreeWindow, const string &rszParentName, int nCodePage, CProgressDialog* pwndProgressDialog )
 {
 	NI_ASSERT( pStatistic != 0, StrFmt( _T( "CELK::CreateStatistic() wrong parameter: pStatistic %x" ), pStatistic ) );
@@ -1356,7 +1356,7 @@ bool CELK::CreateStatistic( SELKStatistic *pStatistic, class CELKTreeWindow *pwn
 	return true;	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELK::UpdateELK( const string &rszPath, const string &rszPAKFileName, class CProgressDialog* pwndProgressDialog )
 {
 	CELK elk;
@@ -1547,7 +1547,7 @@ bool CELK::UpdateELK( const string &rszPath, const string &rszPAKFileName, class
 	return ( !elk.elementList.empty() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::UpdateGame( const CELK &rELK,
 											 const string &rszZIPToolPath,
 											 class CELKTreeWindow *pwndELKTreeWindow,
@@ -1585,7 +1585,7 @@ void CELK::UpdateGame( const CELK &rELK,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	void SaveChanges();
@@ -1609,7 +1609,7 @@ public:
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELK::DBIndex( const string &rszDBFolder )
 {
 	CObj<NVFS::IVFS> pMainVFS = NVFS::CreateWinVFS( rszDBFolder );
@@ -1644,4 +1644,4 @@ void CELK::DBIndex( const string &rszDBFolder )
 	pMainVFS = 0;
 	pMainFileCreator = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

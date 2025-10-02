@@ -1,7 +1,7 @@
 #ifndef _EffectorRunReaction_h_Included_
 #define _EffectorRunReaction_h_Included_
 
-/////////////////////////////////////////////////////////////////////////////
+
 // run message reaction
 class CEffectorRunReaction : public IUIEffector
 {
@@ -21,5 +21,5 @@ public:
 	virtual void Reverse();
 	virtual int operator&( IBinSaver &saver );
 };
-/////////////////////////////////////////////////////////////////////////////
+
 #endif //_EffectorRunReaction_h_Included_

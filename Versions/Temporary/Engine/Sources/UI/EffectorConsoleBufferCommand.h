@@ -1,7 +1,7 @@
 #pragma once
 
 
-/////////////////////////////////////////////////////////////////////////////
+
 class CEffectorConsoleBufferCommand : public IUIEffector
 {
 	OBJECT_BASIC_METHODS(CEffectorConsoleBufferCommand)
@@ -16,4 +16,4 @@ public:
 	virtual void Visit( interface IUIVisitor *pVisitor ) { }
 	virtual void Reverse() {  }
 };
-/////////////////////////////////////////////////////////////////////////////
+

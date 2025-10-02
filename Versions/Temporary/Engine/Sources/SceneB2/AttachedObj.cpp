@@ -9,18 +9,18 @@
 #include "../Sound/SoundScene.h"
 #include "../Sound/DBSound.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IAttachedObject );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										 IAttachedObject														 *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAttachedObject* IAttachedObject::CreateStaticObj( const NDb::SModel *pModel, CFuncBase<SFBTransform> *pTransform, const int nBoneIndex, CFuncBase<SBound> *pBound, bool bUseLOD )
 {
 	return new CStaticAttachedObj( pModel, pTransform, nBoneIndex, pBound, bUseLOD );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAttachedObject* IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel, CFuncBase<SFBTransform> *pTransform,
 																										 CFuncBase<STime> *pTime, const int nBoneIndex, CFuncBase<SBound> *pBound )
 {
@@ -37,7 +37,7 @@ IAttachedObject* IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel, 
 	
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAttachedObject* IAttachedObject::CreateEffect( const NDb::SEffect *pEffect, CFuncBase<SFBTransform> *pTransform,
 																							  const NTimer::STime nStartTime, const int nBoneIndex, bool bVertical )
 {
@@ -46,20 +46,20 @@ IAttachedObject* IAttachedObject::CreateEffect( const NDb::SEffect *pEffect, CFu
 	else
 		return new CAttachedEffect( pEffect, pTransform, nStartTime, nBoneIndex );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAttachedObject* IAttachedObject::CreateAnimatedLightEffect( const NDb::SAttachedLightEffect *pEffect,
 																														 CFuncBase<SFBTransform> *pTransform, const NTimer::STime nStartTime,
 																														 const int nBoneIndex, const bool bInEditor )
 {
 	return new CAttachedLightEffect( pEffect, pTransform, nStartTime, nBoneIndex, bInEditor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IAttachedObject* IAttachedObject::CreateStaticLightEffect( const NDb::SAttachedLightEffect *pEffect, const int nObjectID,
 																													 const NTimer::STime nStartTime, const bool bInEditor )
 {
 	return new CAttachedStaticLightEffect( pEffect, nObjectID, nStartTime, bInEditor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedObject::Destroy( const NTimer::STime time )
 {
 	pHolder = 0;
@@ -68,13 +68,13 @@ void CAttachedObject::Clear( const NTimer::STime time )
 {
 	pHolder = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*								 Attached objects implementation								 *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CStaticAttachedObj
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticAttachedObj::Visit( IAIVisitor *pAIVisitor )
 {
 	if ( pModel && pModel->pGeometry->pAIGeometry ) 
@@ -83,12 +83,12 @@ void CStaticAttachedObj::Visit( IAIVisitor *pAIVisitor )
 		pAIVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetTransform()->GetValue().forward, 0, 0, 1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SModel* CStaticAttachedObj::GetModel() const
 { 
 	return pModel; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	if ( pModel != 0 )
@@ -106,9 +106,9 @@ void CStaticAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAnimatedAttachedObj
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAnimatedAttachedObj::Visit( IAIVisitor *pAIVisitor )
 {
 	if ( pModel && pModel->pGeometry->pAIGeometry ) 
@@ -117,12 +117,12 @@ void CAnimatedAttachedObj::Visit( IAIVisitor *pAIVisitor )
 		pAIVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetTransform()->GetValue().forward, 0, 0, 1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SModel* CAnimatedAttachedObj::GetModel() const
 { 
 	return pModel; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAnimatedAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	if ( pModel != 0 && pAnimator != 0 )
@@ -141,15 +141,15 @@ void CAnimatedAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedEffect
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	if ( pEffect != 0 )
 		SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, GetTransform() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedEffect::Destroy( const NTimer::STime time )
 {
 	Clear( time );
@@ -157,7 +157,7 @@ void CAttachedEffect::Destroy( const NTimer::STime time )
 
 	// CAttachedObject::Destroy( time );	// Do not destroy holder
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedEffect::Clear( const NTimer::STime time )
 {
 	if ( GetHolder() != 0 )
@@ -167,20 +167,20 @@ void CAttachedEffect::Clear( const NTimer::STime time )
 		SetToSceneHoldQueue( this, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAttachedEffect::~CAttachedEffect()
 {
 //	if ( pEffect != 0 && IsValid( GetHolder() ) )
 //		Destroy( Singleton<IGameTimer>()->GetGameTime() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAlwaysVerticalTransform
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical ) 
 : pBaseTransform(_pBaseTransform), bKeepVertical(_bKeepVertical)
 { 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAlwaysVerticalTransform::Recalc()
 {
 	pBaseTransform.Refresh();
@@ -203,15 +203,15 @@ void CAlwaysVerticalTransform::Recalc()
 		value.backward = pBaseTransform->GetValue().backward;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffectTransform
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier ) 
 : pBaseTransform(_pBaseTransform), mMultiplier(_mMultiplier)
 { 
 	pvTranslatePart = new CCCVec3();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffectTransform::Recalc()
 {
 	pBaseTransform.Refresh();
@@ -221,9 +221,9 @@ void CAttachedLightEffectTransform::Recalc()
 	////
 	pvTranslatePart->Set( value.forward.GetTrans3() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CConstantOffsetTransform
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform )
 	: pBaseTransform( _pBaseTransform ),
 	nTargetID( _nTargetID ),
@@ -233,7 +233,7 @@ CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const 
 {
 	Identity( &mMultiplier );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const string &_szBoneName,
 																									  CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform )
 	: pBaseTransform( _pBaseTransform ),
@@ -244,7 +244,7 @@ CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const 
 	pParentTransform = dynamic_cast<CConstantOffsetTransform*>( _pParentTransform );
 	Identity( &mMultiplier );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConstantOffsetTransform::Recalc()
 {
 	pBaseTransform.Refresh();
@@ -271,9 +271,9 @@ void CConstantOffsetTransform::Recalc()
 	value.backward = mMultiplier * value.backward;
 	value.forward.HomogeneousInverse( value.backward );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCenterOffsetTransform
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCenterOffsetTransform::CCenterOffsetTransform( const int _nTargetID, CFuncBase<SFBTransform> *_pBaseTransform,
 	const SHMatrix &_mMultiplier ) :
 	pBaseTransform( _pBaseTransform ),
@@ -282,7 +282,7 @@ CCenterOffsetTransform::CCenterOffsetTransform( const int _nTargetID, CFuncBase<
 {
 	mMultiplierInv.HomogeneousInverse( mMultiplier );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCenterOffsetTransform::Recalc()
 {
 	pBaseTransform.Refresh();
@@ -294,27 +294,27 @@ void CCenterOffsetTransform::Recalc()
 	value.backward = mMultiplierInv * value.backward;
 	value.backward.Set( value.backward.GetTrans3(), QNULL );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffectPos
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffectPos::Recalc()
 {
 	pTransform.Refresh();
 	const SHMatrix &forward = pTransform->GetValue().forward * mAddTransform;
 	value = forward.GetTrans3(); // + CVec3( forward._13, forward._23, forward._33 ) * 2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffectPos
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffectDir::Recalc()
 {
 	pTransform.Refresh();
 	const SHMatrix &forward = pTransform->GetValue().forward;
 	value = CVec3( forward._13, forward._23, forward._33 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedLightEffect
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect, CFuncBase<SFBTransform> *pTransform,
 																					  const NTimer::STime _nStartTime, const int nBoneIndex, const bool _bInEditor )
 	: CAttachedObject( pTransform, nBoneIndex, 0 ),
@@ -329,7 +329,7 @@ CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pE
 	RegeneratePositions();
 	SetHolder( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() ) 
@@ -337,7 +337,7 @@ void CAttachedLightEffect::OnSerialize( IBinSaver &saver )
 		bNeedRecalc = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::RegeneratePositions()
 {
 	const float fDummyConeSize = lightEffect.fConeSize ? lightEffect.fConeSize : 1.0f;
@@ -359,7 +359,7 @@ void CAttachedLightEffect::RegeneratePositions()
 
 	bNeedRecalc = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	const NDb::SSceneConsts *pSceneConsts = Scene()->GetSceneConsts();
@@ -415,7 +415,7 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	}
 	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
 {
 	if ( nSoundID != -1 )
@@ -423,7 +423,7 @@ void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
 
 	nSoundID = SoundScene()->AddSound( pSound, pSoundPos, SFX_MIX_SUBSTITUTE, pSound->bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::RemoveSound()
 {
 	if ( nSoundID == -1 )
@@ -432,7 +432,7 @@ void CAttachedLightEffect::RemoveSound()
 	SoundScene()->RemoveSound( nSoundID );
 	nSoundID = -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedLightEffect::Destroy( const NTimer::STime time )
 {
 	// Destroy point light
@@ -463,9 +463,9 @@ void CAttachedLightEffect::Destroy( const NTimer::STime time )
 
 	//CAttachedObject::Destroy( time );				// Destroys light cone, if any
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAttachedStaticLightEffect
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLightEffect *_pEffect, const int _nObjectID,
 																											  const NTimer::STime _nStartTime, const bool _bInEditor )
 	: nStartTime( _nStartTime ),
@@ -484,7 +484,7 @@ CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLigh
 	// Calculate matrices
 	RegeneratePositions();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedStaticLightEffect::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() ) 
@@ -492,7 +492,7 @@ void CAttachedStaticLightEffect::OnSerialize( IBinSaver &saver )
 		bNeedRecalc = true;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedStaticLightEffect::RegeneratePositions()
 {
 	SHMatrix mLocal( lightEffect.vPos, lightEffect.qRot );
@@ -524,7 +524,7 @@ void CAttachedStaticLightEffect::RegeneratePositions()
 
 	bNeedRecalc = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
 {
 	const NDb::SSceneConsts *pSceneConsts = Scene()->GetSceneConsts();
@@ -576,7 +576,7 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )
 {
 	// Destroy point light
@@ -603,7 +603,7 @@ void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )
 
 	//CAttachedObject::Destroy( time );			
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3013D340, CStaticAttachedObj );
 REGISTER_SAVELOAD_CLASS( 0x3013D341, CAnimatedAttachedObj );
 REGISTER_SAVELOAD_CLASS( 0x3013D342, CAttachedEffect );
@@ -615,4 +615,4 @@ REGISTER_SAVELOAD_CLASS( 0xB4416170, CAttachedLightEffectPos );
 REGISTER_SAVELOAD_CLASS( 0xB4416171, CAttachedLightEffectDir );
 REGISTER_SAVELOAD_CLASS( 0x3116CD01, CConstantOffsetTransform );
 REGISTER_SAVELOAD_CLASS( 0x17243B80, CCenterOffsetTransform );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

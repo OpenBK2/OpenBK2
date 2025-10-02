@@ -11,7 +11,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CPointListDialog, CResizeDialog)
 	ON_WM_DESTROY()
 	ON_WM_ACTIVATE()
@@ -22,9 +22,9 @@ BEGIN_MESSAGE_MAP(CPointListDialog, CResizeDialog)
 	ON_BN_CLICKED(IDC_CHECK_PASSABILITY, OnBnClickedCheckPassability)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 list<CPointListDialog*> CPointListDialog::otherDialogs;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPointListDialog::CPointListDialog( UINT _nInstanceID, const CString &rszLabel )
 	:	CResizeDialog( CPointListDialog::IDD ),
 	szLabel( rszLabel ), 
@@ -42,14 +42,14 @@ CPointListDialog::CPointListDialog( UINT _nInstanceID, const CString &rszLabel )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_POINTS_LIST_DIALOG, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPointListDialog::~CPointListDialog()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_POINTS_LIST_DIALOG );
 	otherDialogs.remove(this);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CPointListDialog::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -70,14 +70,14 @@ BOOL CPointListDialog::OnInitDialog()
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::OnDestroy() 
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
@@ -87,25 +87,25 @@ void CPointListDialog::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_CHECK_PROPMASK, chkPropMask );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::OnCbnSelchangeSettingSelectCombo()
 {
 	NotifyHandler();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::OnBnClickedCheckPropmask()
 {
 	NotifyHandler();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::OnBnClickedCheckPassability()
 {
 	NotifyHandler();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::OnLvnItemchangedPointsList( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
@@ -120,7 +120,7 @@ void CPointListDialog::OnLvnItemchangedPointsList( NMHDR *pNMHDR, LRESULT *pResu
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::NotifyHandler()
 {
 	if ( bIsDataSetting )
@@ -132,7 +132,7 @@ void CPointListDialog::NotifyHandler()
 																												nInstanceID );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::GetDialogData( SPointListDialogData *pData )
 {
 	NI_ASSERT( !bIsDataSetting, "CPointListDialog::GetDialogData :: Trying to get dialog data during controls setup" );
@@ -161,7 +161,7 @@ void CPointListDialog::GetDialogData( SPointListDialogData *pData )
 		pData->eSeason = static_cast<NDb::ESeason>(seasonCombo.GetItemData( nSelIdx ));
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 {
 	bIsDataSetting = true;
@@ -220,7 +220,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 	bIsDataSetting = false ;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPointListDialog::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
@@ -252,7 +252,7 @@ bool CPointListDialog::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPointListDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPointListDialog::UpdateCommand(), pbEnable == 0" );
@@ -270,4 +270,4 @@ bool CPointListDialog::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

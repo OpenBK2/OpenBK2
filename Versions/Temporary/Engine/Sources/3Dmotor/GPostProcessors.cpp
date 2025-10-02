@@ -6,7 +6,7 @@
 #include "Gfx.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DoRender( NGfx::CRenderContext *pRC, const vector<IPostProcess::SObject> &render )
 {
 	for ( int k = 0; k < render.size(); ++k )
@@ -19,7 +19,7 @@ static void DoRender( NGfx::CRenderContext *pRC, const vector<IPostProcess::SObj
 	}
 	pRC->Flush();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RenderPostProcess( NGfx::CRenderContext *pRC, const SPostProcessData &data )
 {
 	// works wrong with fog due to smart_alpha
@@ -57,9 +57,9 @@ void RenderPostProcess( NGfx::CRenderContext *pRC, const SPostProcessData &data 
 		DoRender( pRC, i->second );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPostColorer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPostColorer::Render( SPostProcessData *pDst, const vector<SObject> &render )
 {
 	pColor.Refresh();
@@ -67,9 +67,9 @@ void CPostColorer::Render( SPostProcessData *pDst, const vector<SObject> &render
 	vector<IPostProcess::SObject> &dst = pDst->postColorer[ vColor ];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // COccludedColorer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void COccludedColorer::Render( SPostProcessData *pDst, const vector<SObject> &render )
 {
 	pColor.Refresh();
@@ -77,7 +77,7 @@ void COccludedColorer::Render( SPostProcessData *pDst, const vector<SObject> &re
 	vector<IPostProcess::SObject> &dst = pDst->occluded[ vColor ];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x022a2151, CPostColorer )

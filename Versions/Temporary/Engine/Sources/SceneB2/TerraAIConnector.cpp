@@ -2,15 +2,15 @@
 
 #include "GenTerrain.h"
 #include "../Stats_B2_M1/TerraAIObserver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_WATER_TYPE 0xff
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraGen::IsPointOnBridge( float x, float y ) const
 {
 	return ( pAIObserver ? pAIObserver->IsBridge(x, y) : false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RegenerateAIInfo()
 {
 	//NI_VERIFY( pAIObserver, "RegenerateAIInfo - AI Observer does not exist", return )
@@ -21,14 +21,14 @@ void CTerraGen::RegenerateAIInfo()
 		pAIObserver->FinalizeUpdates();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAIInfo()
 {
 	// clear ai info
 	PutAllFeaturesToAI();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 {
 	//NI_VERIFY( pAIObserver, "UpdateAITerraTypes - AI Observer does not exist", return )
@@ -61,7 +61,7 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 		pAIObserver->UpdateTypes( vTexModMin.x, vTexModMin.y, vTexModMax.x + 1, vTexModMax.y + 1, terrainAIInfo.terrTypes );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::SetTerraTypesToAI( const vector<NDb::STerrainAIProperties> &params ) const
 {
 	//NI_VERIFY( pAIObserver, "SetTerraTypesToAI - AI Observer does not exist", return )
@@ -72,7 +72,7 @@ void CTerraGen::SetTerraTypesToAI( const vector<NDb::STerrainAIProperties> &para
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAIInfo( const int nX1, const int nY1, const int nX2, const int nY2 ) const
 {
 	//NI_VERIFY( pAIObserver, "UpdateAIInfo - AI Observer does not exist", return )
@@ -84,7 +84,7 @@ void CTerraGen::UpdateAIInfo( const int nX1, const int nY1, const int nX2, const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateAllAIInfo()
 {
 	//NI_VERIFY( pAIObserver, "UpdateAllAIInfo - AI Observer does not exist", return )
@@ -119,7 +119,7 @@ void CTerraGen::UpdateAllAIInfo()
 	TIME_STAT_FINISH( CTerraGen__UpdateAllAIInfo )
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutCragToAI( const NDb::SVSOInstance *pCragInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutCragToAI - AI Observer does not exist", return )
@@ -131,7 +131,7 @@ void CTerraGen::PutCragToAI( const NDb::SVSOInstance *pCragInstance ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutRiverToAI - AI Observer does not exist", return )
@@ -143,7 +143,7 @@ void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutRoadToAI - AI Observer does not exist", return )
@@ -155,7 +155,7 @@ void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllCragsToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllCragsToAI - AI Observer does not exist", return )
@@ -171,7 +171,7 @@ void CTerraGen::PutAllCragsToAI() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllRiversToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllRiversToAI - AI Observer does not exist", return )
@@ -187,7 +187,7 @@ void CTerraGen::PutAllRiversToAI() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllRoadsToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllRoadsToAI - AI Observer does not exist", return )
@@ -203,7 +203,7 @@ void CTerraGen::PutAllRoadsToAI() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllWaterToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllWaterToAI - AI Observer does not exist", return )
@@ -225,7 +225,7 @@ void CTerraGen::PutAllWaterToAI() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PutAllFeaturesToAI() const
 {
 	PutAllRoadsToAI();
@@ -234,4 +234,4 @@ void CTerraGen::PutAllFeaturesToAI() const
 	PutAllCragsToAI();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

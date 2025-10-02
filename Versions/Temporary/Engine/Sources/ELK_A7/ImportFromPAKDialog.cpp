@@ -10,7 +10,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CImportFromPAKDialog::vID[] = 
 {
 	IDC_IFP_PAK_BROWSE_LABEL,		//0
@@ -23,7 +23,7 @@ const int CImportFromPAKDialog::vID[] =
 	IDCANCEL,										//7
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImportFromPAKDialog::CImportFromPAKDialog( CWnd* pParent )
 	: CResizeDialog( CImportFromPAKDialog::IDD, pParent )
 {
@@ -39,7 +39,7 @@ CImportFromPAKDialog::CImportFromPAKDialog( CWnd* pParent )
 	SetControlStyle( IDCANCEL, ANCHORE_BOTTOM | ANCHORE_HOR_CENTER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::GetRegistryKey( string *pszRegistryKey )
 {
 	if ( pszRegistryKey )
@@ -54,7 +54,7 @@ void CImportFromPAKDialog::GetRegistryKey( string *pszRegistryKey )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -62,7 +62,7 @@ void CImportFromPAKDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_IFP_FILE_BROWSE_EDIT, m_FileEdit);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CImportFromPAKDialog, CResizeDialog)
 	ON_BN_CLICKED(IDC_IFP_PAK_BROWSE_BUTTON, OnPAKBrowseButton)
 	ON_EN_CHANGE(IDC_IFP_PAK_BROWSE_EDIT, OnChangePAKBrowseEdit)
@@ -70,7 +70,7 @@ BEGIN_MESSAGE_MAP(CImportFromPAKDialog, CResizeDialog)
 	ON_EN_CHANGE(IDC_IFP_FILE_BROWSE_EDIT, OnChangeFileBrowseEdit)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CImportFromPAKDialog::OnInitDialog() 
 {
 	CResizeDialog::OnInitDialog();
@@ -89,7 +89,7 @@ BOOL CImportFromPAKDialog::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::GetPAKPath( string *pszPAKPath )
 {
 	NI_ASSERT( pszPAKPath != 0, StrFmt( _T( "CImportFromPAKDialog::GetPAKPath wrong parameter: pszPAKPath %x" ), pszPAKPath ) );
@@ -99,7 +99,7 @@ void CImportFromPAKDialog::GetPAKPath( string *pszPAKPath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::GetFilePath( string *pszFilePath )
 {
 	NI_ASSERT( pszFilePath != 0, StrFmt( _T( "CImportFromPAKDialog::GetFilePath wrong parameter: pszFilePath %x" ), pszFilePath ) );
@@ -109,7 +109,7 @@ void CImportFromPAKDialog::GetFilePath( string *pszFilePath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::OnPAKBrowseButton() 
 {
 	CString strDialogTitle;
@@ -140,7 +140,7 @@ void CImportFromPAKDialog::OnPAKBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::OnFileBrowseButton() 
 {
 	CString strDialogTitle;
@@ -171,7 +171,7 @@ void CImportFromPAKDialog::OnFileBrowseButton()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::OnChangePAKBrowseEdit() 
 {
 	CString strFolderName;
@@ -180,7 +180,7 @@ void CImportFromPAKDialog::OnChangePAKBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::OnChangeFileBrowseEdit() 
 {
 	CString strFileName;
@@ -189,7 +189,7 @@ void CImportFromPAKDialog::OnChangeFileBrowseEdit()
 	UpdateControls();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void	CImportFromPAKDialog::UpdateControls()
 {
 	if ( CWnd *pWnd = GetDlgItem( IDOK ) )
@@ -198,7 +198,7 @@ void	CImportFromPAKDialog::UpdateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CImportFromPAKDialog::OnOK() 
 {
 	CStringManager::ExtendFileExtention( &( resizeDialogOptions.szParameters[0] ), ".pak" );
@@ -206,6 +206,6 @@ void CImportFromPAKDialog::OnOK()
 	CResizeDialog::OnOK();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

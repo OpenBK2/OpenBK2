@@ -18,7 +18,7 @@
 #include "../Common_RTS_AI/AIMap.h"
 #include "../Common_RTS_AI/Terrain.h"
 #include "FeedbackSystem.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CSupremeBeing theSupremeBeing;
 extern CEventUpdater updater;
@@ -27,18 +27,18 @@ extern CScripts* pScripts;
 extern CDiplomacy theDipl;
 extern CExecutorContainer theExecutorContainer;
 extern CUnits units;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int FIND_POSITION_STEP = 5;
 static const int DIRECTION_STEP = 8;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NReinforcement
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool PositionLocked( const CVec2 &vPos, const int nBoundTileRadius, const EAIClasses aiClass )
 {
 	return GetTerrain()->CanUnitGo( nBoundTileRadius, GetAIMap()->GetTile( vPos.x, vPos.y ), aiClass ) == FREE_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius, const EAIClasses aiClass )
 {
 	list<SObjTileInfo> tiles;
@@ -85,7 +85,7 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 	GetTerrain()->RemoveTemporaryLock( nTempLockID );
 	return vResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vector<NDb::SReinforcementEntry> &entries,
 	const vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, WORD wDirection,
 	list< pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates )
@@ -225,14 +225,14 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const vect
 	dynamic_cast<CAILogic*>(Singleton<IAILogic>())->InitLinks( links );
 	theSupremeBeing.GiveNewUnitsToGenerals( units, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceSingleLandReinforcement( EReinforcementType eType, const int nPlayer, const vector<NDb::SReinforcementEntry> &entries,
 	const int nForceID,	const vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const WORD wDirection )
 {
 	list< pair<int, CObjectBase*> > objects;
 	PlaceReinforcement( eType, nPlayer, entries, position, vPosition, wDirection, &objects, nForceID, -1, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const EReinforcementType eType,
 	const NDb::SDeployTemplate *pTemplate, const CVec2 &vPosition, WORD wDirection, const int nScriptID,
 	list< pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates )
@@ -262,7 +262,7 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 		}
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const NDb::SDeployTemplate *pTemplate,
 																	const CVec2 &vPosition, WORD wDirection, const int nScriptID, const CVec2 &vTarget )
 {
@@ -335,6 +335,6 @@ void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *
 	CPtr<CExecutor> pEx = new CExecutorTransportReinforcement( &ships, pReinf, vPosition, vSendTo, vTarget );
 	theExecutorContainer.Add( pEx );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

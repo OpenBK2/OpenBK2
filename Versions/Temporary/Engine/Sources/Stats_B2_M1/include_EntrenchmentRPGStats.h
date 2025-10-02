@@ -46,7 +46,7 @@ virtual void ToAIUnits( bool bInEditor )
 	FOR_EACH_VAL( segments, ToAIUnits, bInEditor ); 
 }
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const int GetTypeFromIndex( const int nIndex ) const
 {
 	if ( find(lines.begin(), lines.end(), nIndex) != lines.end() )
@@ -60,7 +60,7 @@ virtual const int GetTypeFromIndex( const int nIndex ) const
 	NI_ASSERT( false, StrFmt("Wrong index %d in entrenchment \"%s\"", nIndex, szParentName.c_str()) );
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const
 {
 	switch ( nType ) 

@@ -2,18 +2,18 @@
 #include "WindowComboBox.h"
 #include "WindowMSButton.h"
 #include "WindowListCtrl.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x17122340, CWindowComboBox);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CWindowComboBox
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // При клике на иконку вызывается скроллируемый список.
 // Список может располагаться за пределами исходного окна. Стандартный оконный механизм не позволяет
 // обрабатывать такое окно как дочернее для исходного - нормальный путь для мышиных сообщений 
 // проходит исключительно внутри границ всех родительских окон. Поэтому список делается дочерним для 
 // корневого с заданным приоритетом (надо задавать выше чем у всех "обычных" окон, но не тултипов), 
 // получает фокус и убирается при его потере.
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowComboBox::CWindowComboBox() :
 	nSelected( -1 ),
 	bSuppressPopupList( false ),
@@ -21,7 +21,7 @@ CWindowComboBox::CWindowComboBox() :
 {
 	AddObserver( "window_combo_box_close", &CWindowComboBox::OnEscape );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SWindowComboBox *pDesc( checked_cast<const NDb::SWindowComboBox*>( _pDesc ) );
@@ -64,7 +64,7 @@ void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		nListBaseHeight = pList->GetBaseHeight();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::Init()
 {
 	CWindow::Init();
@@ -72,7 +72,7 @@ void CWindowComboBox::Init()
 	if ( pList )
 		pList->Init();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::Reposition( const CTRect<float> &parentRect )
 {
 	CWindow::Reposition( parentRect );
@@ -83,7 +83,7 @@ void CWindowComboBox::Reposition( const CTRect<float> &parentRect )
 		pList->SetPlacement( rect.x1 + vListPos.x, rect.y1 + vListPos.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::ResizeList()
 {
 	if ( pList && nMaxVisibleRows > 0 )
@@ -92,7 +92,7 @@ void CWindowComboBox::ResizeList()
 		pList->SetPlacement( 0, 0, 0, nListBaseHeight + nRowHeight * min( nMaxVisibleRows, GetItemCount() ), EWPF_SIZE_Y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowComboBox::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	bSuppressPopupList = false;
@@ -100,7 +100,7 @@ bool CWindowComboBox::OnButtonDown( const CVec2 &vPos, const int nButton )
 	bSuppressPopupList = false;
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::AddItem( CObjectBase *pData )
 {
 	if ( !pList )
@@ -111,7 +111,7 @@ void CWindowComboBox::AddItem( CObjectBase *pData )
 	
 	ResizeList();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::RemoveItem( CObjectBase *pData )
 {
 	if ( !pList )
@@ -126,7 +126,7 @@ void CWindowComboBox::RemoveItem( CObjectBase *pData )
 	
 	ResizeList();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::RemoveAllItems()
 {
 	Select( -1 );
@@ -135,13 +135,13 @@ void CWindowComboBox::RemoveAllItems()
 	
 	ResizeList();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IListControlItem* CWindowComboBox::GetItem( int nIndex ) const
 {
 	NI_VERIFY( 0 <= nIndex && nIndex < items.size(), "Index out of range", return 0 );
 	return items[nIndex];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::Select( int nIndex )
 {
 	nSelected = nIndex;
@@ -157,21 +157,21 @@ void CWindowComboBox::Select( int nIndex )
 			pViewer->MakeInterior( pLine, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::SetViewer( IDataViewer *_pViewer )
 {
 	pViewer = _pViewer;
 	if ( pList )
 		pList->SetViewer( pViewer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::SetLine( CObjectBase *pData ) 
 {
 	pLineData = pData;
 	if ( pViewer )
 		pViewer->MakeInterior( pLine, pLineData );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::Pushed( class CWindow *pWho )
 {
 	if ( bSuppressPopupList )
@@ -180,12 +180,12 @@ void CWindowComboBox::Pushed( class CWindow *pWho )
 	ShowList( !IsModalList() );
 	bSuppressPopupList = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowComboBox::IsModalList() const
 {
 	return pList && pList->IsVisible();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::ShowList( bool bShow )
 {
 	if ( !pList && pList->IsVisible() != bShow )
@@ -206,7 +206,7 @@ void CWindowComboBox::ShowList( bool bShow )
 	if ( bShow )
 		pList->SetFocus( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::OnSelectData( CObjectBase *pData )
 {
 	int nIndex = -1;
@@ -223,7 +223,7 @@ void CWindowComboBox::OnSelectData( CObjectBase *pData )
 	if ( pList->GetSelectedItem() )
 		RunAnimationAndCommands( pInstance->onSelection, "", true, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::Clicked( interface IWindow *pWho, const int nButton )
 {
 	if ( IsModalList() )
@@ -239,7 +239,7 @@ void CWindowComboBox::Clicked( interface IWindow *pWho, const int nButton )
 	}
 	bSuppressPopupList = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowComboBox::OnFocus( const bool bFocus )
 {
 	if ( !bFocus && IsModalList() && !bSuppressPopupList )
@@ -248,7 +248,7 @@ void CWindowComboBox::OnFocus( const bool bFocus )
 		ShowList( false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowComboBox::OnEscape( const SGameMessage &msg )
 {
 	if ( IsEnabled() && IsModalList() )
@@ -258,9 +258,9 @@ bool CWindowComboBox::OnEscape( const SGameMessage &msg )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowComboBox::IsRelatedFocus( IWindow *pWindow ) const 
 {
 	return this == pWindow || dynamic_cast_ptr<IWindow*>( pList ) == pWindow; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

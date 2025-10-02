@@ -8,14 +8,14 @@
 #include "RailRoads.h"
 
 #include "TerraAIObserver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CEventUpdater updater;
 extern CStaticObjects theStatObjs;
 extern CUnits units;
 extern CGlobalWarFog theWarFog;
 extern SRailRoadSystem theRailRoadSystem;
 CRiverSounds CTerraAIObserverInGame::riverSounds;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerraAIObserverInGame::CTerraAIObserverInGame( const int nSizeX, const int nSizeY  )
 {
 	CTerraAIObserver::CTerraAIObserver();
@@ -28,11 +28,11 @@ CTerraAIObserverInGame::CTerraAIObserverInGame( const int nSizeX, const int nSiz
 
 	pMarkers->Init( pAIMap );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::InitSizes( const int nSizeX, const int nSizeY )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::AddVSO( const NDb::SVSOInstance *pInstance )
 {
 	CTerraAIObserver::AddVSO( pInstance );
@@ -43,7 +43,7 @@ void CTerraAIObserverInGame::AddVSO( const NDb::SVSOInstance *pInstance )
 		theRailRoadSystem.AddRailRoad( pInstance );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2,
 																						const CArray2D<float> &heights )
 {
@@ -62,7 +62,7 @@ void CTerraAIObserverInGame::UpdateHeights( const int nX1, const int nY1, const 
 	theStatObjs.PostAllObjectsInit();
 	//}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
 																					const CArray2D<BYTE> &types )
 {
@@ -74,7 +74,7 @@ void CTerraAIObserverInGame::UpdateTypes( const int nX1, const int nY1, const in
 		pUnit->RestoreLock();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::FinalizeUpdates()
 {
 	CTerraAIObserver::FinalizeUpdates();
@@ -82,13 +82,13 @@ void CTerraAIObserverInGame::FinalizeUpdates()
 	theStatObjs.UpdateAllObjectsPos();
 	theWarFog.FinishInitialization();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::InitInGame()
 {
 	for ( CRiverSounds::iterator it = riverSounds.begin(); it != riverSounds.end(); ++it )
 		updater.AddUpdate( EFB_RIVER_POINT, MAKELONG( it->x, it->y ), 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )
 {
 	CTerraAIObserver::AddRiver( pInstance );
@@ -111,7 +111,7 @@ void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )
 		fDistSoFar = fDist - fSegmentLength;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerraAIObserverInGame::operator&( IBinSaver &saver )
 {
 	saver.Add( 2,(CTerraAIObserver*)this );
@@ -124,5 +124,5 @@ int CTerraAIObserverInGame::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1B214300, CTerraAIObserverInGame )

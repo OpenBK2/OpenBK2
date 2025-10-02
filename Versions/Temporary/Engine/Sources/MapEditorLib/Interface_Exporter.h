@@ -4,7 +4,7 @@
 
 #include "Interface_Builder.h"
 /**
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IReportCollector : public CObjectBase
 {
 	virtual void AddReport( const string &szObjectType,
@@ -13,13 +13,13 @@ interface IReportCollector : public CObjectBase
 													const string &szUserReport ) = 0;
 };
 /**/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEFAULT_EXPORTER_LABEL __DefaultHierarchicalExporter__
 #define DEFAULT_EXPORTER_LABEL_TXT "__DefaultHierarchicalExporter__"
 
 // При иерархическом экспорте вызовы StartExport и FinishExpost производятся в произвольном порядке
 // Вызов Export для родителя производятся раньше чем для потомков
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
 
 // При создании конвертера
@@ -114,7 +114,7 @@ interface IExporter : public CObjectBase
 																			EXPORT_TYPE exportType ) = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IExportTool : public CObjectBase
 {
 	// Вызывается из StartDefaultExport
@@ -123,7 +123,7 @@ interface IExportTool : public CObjectBase
 	virtual void FinishExportTool() = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IExporterContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C1 };
@@ -172,6 +172,6 @@ interface IExporterContainer : public CObjectBase
 	// Проверить на удачность конвертации данного объекта
 	virtual EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__EXPORTER__)
 

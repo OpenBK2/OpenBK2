@@ -3,7 +3,7 @@
 #pragma once
 
 #include "StaticObjectRPGStatsExporter.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CObjectBaseRPGStatsExporter : public CStaticObjectRPGStatsExporter
 {
 	bool ExportDynamicDebris( IManipulator *pManipulator, const string &szObjectName );
@@ -17,6 +17,6 @@ public:
 															bool bForce,
 															EXPORT_TYPE exportType );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__OBJECTBASERPGSTATS_EXPORTER__)
 

@@ -7,7 +7,7 @@
 #include "Selector.h"
 #include "..\SceneB2\Camera.h"
 #include "..\UI\UI.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** B1 mouse translator
@@ -15,12 +15,12 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CMouseTranslator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MIN_ACTION_DIST 20.0f
 #define MIN_ACTION_TIME 200
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect )
 {
 	switch ( GetActionState() )
@@ -46,7 +46,7 @@ void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDi
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 {
 	int nSelectAction;
@@ -78,13 +78,13 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnLButtonDown( const CVec2 &vPos, bool bObject )
 {
 	RaiseEvent( "start_selection", vPos );
 	SetActionState( AS_SELECT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
@@ -104,17 +104,17 @@ void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
 {
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** B2 mouse translator
@@ -122,31 +122,31 @@ void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMo
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMouseTranslatorB2Base::CMouseTranslatorB2Base() :
 	CMouseTranslator( 0 )
 {
 	InitPrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector ) :
 	CMouseTranslator( _pSelector )
 {
 	InitPrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::InitPrivate()
 {
 	AddObserver( "notify_forced_action", &CMouseTranslatorB2Base::MsgNotifyForcedAction );
 	ResetState();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::ResetState()
 {
 	Camera()->SwitchManualScrolling( "mouse_translator", true );
 	bWasForcedAction = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) 
 {
 	switch ( GetActionState() )
@@ -163,7 +163,7 @@ void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMo
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 {
 	int nSelectAction;
@@ -191,7 +191,7 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnLButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
@@ -203,7 +203,7 @@ void CMouseTranslatorB2Base::OnLButtonDown( const CVec2 &vPos, bool bObject )
 		Camera()->SwitchManualScrolling( "mouse_translator", false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnRButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
@@ -224,7 +224,7 @@ void CMouseTranslatorB2Base::OnRButtonDown( const CVec2 &vPos, bool bObject )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
 {
 	if ( bTargetMode )
@@ -235,7 +235,7 @@ void CMouseTranslatorB2Base::OnMinimapLButtonDown( const CVec2 &vPos, bool bTarg
 		SetActionState( AS_SCROLL );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
 {
 	if ( bTargetMode )
@@ -246,27 +246,27 @@ void CMouseTranslatorB2Base::OnMinimapRButtonDown( const CVec2 &vPos, bool bTarg
 	else if ( IsSelected( 0 ) )
 		RaiseEvent( "set_destination_minimap", vPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::CancelAction()
 {
 	CMouseTranslator::CancelAction();
 
 	Camera()->SwitchManualScrolling( "mouse_translator", true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::MsgNotifyForcedAction( const SGameMessage &msg )
 {
 	bWasForcedAction = true;
 	CheckForcedAction();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMouseTranslatorB2Base::ProcessEvent( const SGameMessage &event )
 {
 	bool bResult = CMouseTranslator::ProcessEvent( event );
 	CheckForcedAction();
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslatorB2Base::CheckForcedAction()
 {
 	if ( bWasForcedAction && !IsShiftDown() )
@@ -275,7 +275,7 @@ void CMouseTranslatorB2Base::CheckForcedAction()
 		bWasForcedAction = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** basic mouse translator
@@ -283,7 +283,7 @@ void CMouseTranslatorB2Base::CheckForcedAction()
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	: 
 	pSelector( _pSelector ),
 	bindShift( "shift_key" ),
@@ -296,7 +296,7 @@ CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	:
 	bDownSameTime = false;
 	downTime = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMouseTranslator::IsSelected( class CMapObj *pMO ) const
 {
 	if ( pMO ) 
@@ -309,12 +309,12 @@ bool CMouseTranslator::IsSelected( class CMapObj *pMO ) const
 	else 
 		return !pSelector->IsEmpty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::MsgCancelAction( const SGameMessage &msg )
 {
 	CancelAction();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMouseTranslator::GetFlags() const
 {
 	int nFlags = 0;
@@ -326,7 +326,7 @@ int CMouseTranslator::GetFlags() const
 		nFlags |= EKF_CTRL;
 	return nFlags;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
 //	if ( eActionState == AS_SELECT && pMO && IsSelected( pMO ) )
@@ -342,7 +342,7 @@ void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, b
 		eActionState = AS_NONE;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::DoLButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
 	if ( eButtonState == BS_NONE ) 
@@ -354,7 +354,7 @@ void CMouseTranslator::DoLButtonDown( const CVec2 &vPos, class CMapObj *pMO, boo
 		OnLButtonDown( vPos, pMO != 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
 	bDownSamePos = IsDownSamePos( vPos );
@@ -367,7 +367,7 @@ void CMouseTranslator::DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool 
 		eActionState = AS_NONE;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::DoRButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
 	if ( eButtonState == BS_NONE )
@@ -379,7 +379,7 @@ void CMouseTranslator::DoRButtonDown( const CVec2 &vPos, class CMapObj *pMO, boo
 		OnRButtonDown( vPos, pMO != 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::DoRButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
 //	bDownSamePos = ( vPos == vDownPos );
@@ -393,7 +393,7 @@ void CMouseTranslator::DoRButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool 
 		eActionState = AS_NONE;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMouseTranslator::ProcessEvent( const SGameMessage &event )
 {
 	bindShift.ProcessEvent( event );
@@ -402,13 +402,13 @@ bool CMouseTranslator::ProcessEvent( const SGameMessage &event )
 	
 	return CGMORegContainer::ProcessEvent(event, this);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::OnGetFocus( bool bFocus )
 {
 	if ( !bFocus )
 		CancelAction();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMouseTranslator::CancelAction()
 {
 	switch ( eActionState )
@@ -423,7 +423,7 @@ void CMouseTranslator::CancelAction()
 	eActionState = AS_NONE;
 	eButtonState = BS_NONE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMouseTranslator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pSelector );
@@ -431,18 +431,18 @@ int CMouseTranslator::operator&( IBinSaver &saver )
 		ResetState();
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMouseTranslator::IsDownSamePos( const CVec2 &vPos ) const
 {
 	return fabs( vDownPos - vPos ) < MIN_ACTION_DIST;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMouseTranslator::IsDownSameTime( const NTimer::STime &curTime ) const
 {
 	return curTime - downTime < MIN_ACTION_TIME;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1507B440, CMouseTranslatorB1 );
 REGISTER_SAVELOAD_CLASS( 0x1117AB80, CMouseTranslatorB2Game );
 REGISTER_SAVELOAD_CLASS( 0x1117AB81, CMouseTranslatorB2Replay );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

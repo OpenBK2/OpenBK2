@@ -11,18 +11,18 @@
 #include "../Sound/SoundScene.h"
 #include "../AILogic/ScenarioTracker.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DAMAGE_EFFECT_PROBABILITY 30
 #define WINDOW_BREAK_PROBABILITY 50
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map< NDb::EDesignBuildingType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignBuildingType eType )
 {
 	if ( !bIsInitializedByDB )
@@ -48,11 +48,11 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignBuildingType eType )
 		return iconsSetDefault;
 	return it->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } //namespace
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMOBuilding
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOBuilding::CMOBuilding() :
 	wAmbientSound(0), 
 	wCycledSound(0), 
@@ -62,7 +62,7 @@ CMOBuilding::CMOBuilding() :
 {
 	SetCanSelect( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::IsInside( const int nID )
 {
 	for ( vector< CPtr<CMOSelectable> >::iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
@@ -72,7 +72,7 @@ bool CMOBuilding::IsInside( const int nID )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -142,7 +142,7 @@ bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	fMaxDistance = 0;
@@ -195,7 +195,7 @@ bool CMOBuilding::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, N
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, const bool bIsNight, const bool bInEditor )
 {
 	IMOContainer::SwitchLightFX( bNewState, eSeason, bIsNight, bInEditor );
@@ -203,7 +203,7 @@ void CMOBuilding::SwitchLightFX( const bool bNewState, const NDb::ESeason eSeaso
 	if ( bNewState && GetHP() != 0 )
 		ToggleNightWindows( bIsNight, eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
@@ -226,7 +226,7 @@ void CMOBuilding::GetActions( CUserActions *pActions, EActionsType eActions ) co
 			pActions->RemoveAction( NDb::USER_ACTION_BOARD );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
@@ -245,7 +245,7 @@ void CMOBuilding::GetDisabledActions( CUserActions *pActions, EActionsType eActi
 			pActions->SetAction( NDb::USER_ACTION_ENGINEER_REPAIR );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMOBuilding::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
 	bool bAltMode ) const
 {
@@ -256,7 +256,7 @@ NDb::EUserAction CMOBuilding::GetBestAutoAction( const CUserActions &actionsBy, 
 		pActionsWith->RemoveAction( NDb::USER_ACTION_ATTACK );
 	return CMOSelectable::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::GetStatus( SObjectStatus *pStatus ) const
 {
 	IMOContainer::GetStatus( pStatus );
@@ -300,7 +300,7 @@ void CMOBuilding::GetStatus( SObjectStatus *pStatus ) const
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 {
 	if ( pSquad == 0 )
@@ -336,25 +336,25 @@ bool CMOBuilding::LoadSquad( interface IMOSquad *pSquad, bool bEnter )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
 	for ( vector< CPtr<CMOSelectable> >::const_iterator it = vPassangers.begin(); it != vPassangers.end(); ++it )
 		pBuffer->push_back( (*it) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOBuilding::GetFreePlaces() const
 {
 	const NDb::SBuildingRPGStats *stats = checked_cast<const NDb::SBuildingRPGStats*>( GetStats() );
 	return stats->nRestSlots + stats->nMedicalSlots - vPassangers.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::NeedShowInterrior() const
 {
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) 
 { 
 	nCurrentAmmo = 0;
@@ -464,7 +464,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 	
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float fDamage, const list<int> &probableHitAttached, interface IScene *pScene, NDb::ESeason eSeason, bool bFromAIUpdate )
 {
 	if ( projectilesAlreadyHit.find( nProjectileID ) != projectilesAlreadyHit.end() )
@@ -651,14 +651,14 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	}
 	return ( pHolder->IsEmpty() ) ? 0 : pHolder.Extract();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update )
 {
 	IMOContainer::AIUpdateKeyObject( update );
 	
 	bStorage = update.bStorage;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorIndex )
 {
 	nCapturingColorIndex = nColorIndex;
@@ -666,7 +666,7 @@ void CMOBuilding::AIUpdateKeyObjectCaptureProgress( float fProgress, int nColorI
 
 	UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AddDynamicDebris( const NDb::SModel *pDeadModel, const CVec3 &vPos, const CQuat &qRot, NDb::ESeason eSeason )
 {
 	CDBPtr<NDb::SBuildingRPGStats> pStats = GetStats();
@@ -685,7 +685,7 @@ void CMOBuilding::AddDynamicDebris( const NDb::SModel *pDeadModel, const CVec3 &
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::Select( bool bSelect )
 {
 #define SHOW_UNIT_SELECTION
@@ -700,19 +700,19 @@ void CMOBuilding::Select( bool bSelect )
 
   UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::SetCanSelect( bool bCanSelect )
 {
 	CMOSelectable::SetCanSelect( bCanSelect );
 	
 //	DisableIcons( !bCanSelect );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SBuildingRPGStats* CMOBuilding::GetStats() const
 {
 	return checked_cast<const NDb::SBuildingRPGStats*>( IMOContainer::GetStats() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	DisableIcons( false );//GetPassangersCount() == 0 );
@@ -725,7 +725,7 @@ void CMOBuilding::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	iconInfo.fHPBarAdditionalValue = fCapturingProgress;
 	iconInfo.nHPBarAdditionalColorIndex = nCapturingColorIndex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMOBuilding::GetSlotHPIndex( const int nWindow, const EWindowState eState ) const
 {
 	if ( eState != EWS_DESTROYED )  
@@ -744,7 +744,7 @@ const int CMOBuilding::GetSlotHPIndex( const int nWindow, const EWindowState eSt
 
   return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj* CMOBuilding::GetWindowObj( const int nWindow, const EWindowState eState )
 {
 	switch( eState ) {
@@ -773,7 +773,7 @@ const NDb::SVisObj* CMOBuilding::GetWindowObj( const int nWindow, const EWindowS
 		return 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::DetachWindow( const int nWindow, const NDb::ESeason eSeason )
 {
 	if ( attachedWindows[nWindow] != EWS_NONE )
@@ -781,7 +781,7 @@ void CMOBuilding::DetachWindow( const int nWindow, const NDb::ESeason eSeason )
 		RemoveSubObjectsFromSlot( nWindow, ESSOT_WINDOW );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMOBuilding::AttachWindow( const int nWindow, const NDb::ESeason eSeason, const EWindowState eState )
 {
 	int nResult = -1;
@@ -803,7 +803,7 @@ const int CMOBuilding::AttachWindow( const int nWindow, const NDb::ESeason eSeas
 	attachedWindows[nWindow] = eState;
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMOBuilding::BreakWindow( const int nWindow, const NDb::ESeason eSeason )
 {
 	const vector<NDb::SBuildingRPGStats::SSlot> &slots = GetStats()->slots;
@@ -816,7 +816,7 @@ const int CMOBuilding::BreakWindow( const int nWindow, const NDb::ESeason eSeaso
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::BreakAllWindows( const NDb::ESeason eSeason )
 {
 	RemoveSubObjectsFromSlot( -1, ESSOT_WINDOW );
@@ -824,7 +824,7 @@ void CMOBuilding::BreakAllWindows( const NDb::ESeason eSeason )
 	for ( int i = 0; i < GetStats()->slots.size(); ++i )
 		AttachWindow( i, eSeason, EWS_DESTROYED );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::ToggleNightWindows( const bool bNightOn, const NDb::ESeason eSeason )
 {
 	Scene()->RemoveAllAttached( GetID(), ESSOT_WINDOW );
@@ -841,7 +841,7 @@ void CMOBuilding::ToggleNightWindows( const bool bNightOn, const NDb::ESeason eS
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
 {
 	CDBPtr<NDb::SBuildingRPGStats> pStats = GetStats();
@@ -857,7 +857,7 @@ void CMOBuilding::AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTim
 		AttachComplexEffectToSlot( nSlot, ESSOT_GUN_FIRE, pEffect, pShotInfo->time, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOBuilding::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, checked_cast<IMOContainer*>(this) );
@@ -880,7 +880,7 @@ int CMOBuilding::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AttachEffectToSlot( const int nSlot, const ESceneSubObjType eType, const NDb::SEffect *pEffect, const NTimer::STime _time, const bool bTurnWithWind, const bool bRemoveObject )
 {
 	CVec3 vEffectPos = GetStats()->slots[ nSlot ].vPos;
@@ -921,7 +921,7 @@ void CMOBuilding::AttachEffectToSlot( const int nSlot, const ESceneSubObjType eT
 	else
 		Scene()->AddEffect( OBJECT_ID_GENERATE, pEffect, _time, mPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AttachComplexEffectToSlot( const int nSlot, const ESceneSubObjType eType, const NDb::SComplexEffect *pEffect, const NTimer::STime _time, const bool bRemoveObject )
 {
 	CVec3 vEffectPos = GetStats()->slots[ nSlot ].vPos;
@@ -935,7 +935,7 @@ void CMOBuilding::AttachComplexEffectToSlot( const int nSlot, const ESceneSubObj
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
 		AttachEffectToSlot( nSlot, eType, pSceneEffect, Min(_time, currTime), false, bRemoveObject ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeSlotPos( const CVec3 &_vBuildingPos, const CQuat &qBuildingOrient, const CVec3 &_vSlotPos, const CQuat &qSlotOrient, const CVec2 &vSlotScale, SHMatrix *pmResult )
 {
 	CVec3 vSlotPos;
@@ -957,7 +957,7 @@ static void MakeSlotPos( const CVec3 &_vBuildingPos, const CQuat &qBuildingOrien
 
 	*pmResult = *pmResult * mScale;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CMOBuilding::AttachSubObjectToSlot( const int nSlot, const ESceneSubObjType eType, const NDb::SModel *pSubModel )
 {
 	RemoveSubObjectsFromSlot( nSlot, eType );	
@@ -975,7 +975,7 @@ const int CMOBuilding::AttachSubObjectToSlot( const int nSlot, const ESceneSubOb
 	itAttach->second = nResult;
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::AIUpdatePlacement( const struct SAINotifyPlacement &placement, interface IScene *pScene, interface ISoundScene *pSoundScene, NDb::ESeason eSeason )
 {
 	CAttachedObjIDs &attaches = attachedObjects[ESSOT_WINDOW];
@@ -990,7 +990,7 @@ void CMOBuilding::AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 		pScene->MoveObject( nSlotSceneID, mPos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBuilding::RemoveSubObjectsFromSlot( const int nSlot, const ESceneSubObjType eType )
 {
 	CAttachedObjIDs &attaches = attachedObjects[eType];
@@ -1009,10 +1009,10 @@ void CMOBuilding::RemoveSubObjectsFromSlot( const int nSlot, const ESceneSubObjT
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBuilding::IsHitbarVisible() const
 {
 	return GetPassangersCount() != 0 || IsSelected() || IsMousePicked() || IsKeyObject();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7481, CMOBuilding );

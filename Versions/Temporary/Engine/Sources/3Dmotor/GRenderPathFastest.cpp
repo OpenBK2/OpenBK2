@@ -18,16 +18,16 @@ namespace NGfx
 {
 extern bool bSimpleParticles;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 extern bool bWaterReflection;
 bool bFreeze = false; 
 static CObj<NGfx::CTexture> pCurrentDepthTexture;
 static CObj<NGfx::CTexture> pCurrentWaterReflectionTexture;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern bool bNewShadows;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 vParticleLMShadowTestLight[2]; //[0] - Full, [1] - Shadowed
 bool bNoDepthRender;
 static void RenderParticleShadowTest( COpGenContext &op, const SPerspDirectionalDepthInfo &depthInfo, NGfx::CTexture *pDepthTex )
@@ -35,7 +35,7 @@ static void RenderParticleShadowTest( COpGenContext &op, const SPerspDirectional
 	op.AddOperation( RO_DIR_PARTICLE_LM_SOFT_SHADOW_TEST, 10, ABM_ALPHA_BLEND|DPM_NONE, 0,
 		&depthInfo, pDepthTex, vParticleLMShadowTestLight );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeDepthRenderInfo( SNLProjectionInfo *pRes, int nResolution )
 {
 	//pRes->vInverseScale.x *= 0.5f;
@@ -52,13 +52,13 @@ static void MakeDepthRenderInfo( SNLProjectionInfo *pRes, int nResolution )
 
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeDepthRenderInfo( SPerspDirectionalDepthInfo *pRes, const SPerspDirectionalDepthInfo &src, int nResolution )
 {
 	*pRes = src;
 	MakeDepthRenderInfo( &pRes->nlp, nResolution );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
 	SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
@@ -84,7 +84,7 @@ static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 			fi.AddOperation( normalOp, 100, DPM_NORMAL_NOTEQ, 0, pDepthInfo );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
 								   SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
@@ -115,10 +115,10 @@ static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CRTPtr pDepthShadow16( "DepthMap16" );
 static CRTPtr pDepthShadowCopy( "DepthCopy" );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderDynamicDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom, CDirectionalLight *pLight,
 							   const SLightInfo &lightInfo, const CTransformStack &sts, int nDepthTexResolution, const SParticleLMRenderTargetInfo &particleLM,
 							   SPerspDirectionalDepthInfo *pDepthInfo, IRender *pRender, CSceneFragments &sceneGeom )
@@ -143,7 +143,7 @@ static void RenderDynamicDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragment
 	MakeShadowColorCmdList( &res, geom, 0.01f, &renderDepthInfo, RO_DIR_COLOR , RO_DIR_COLOR );
 	Execute( pRender, &rc, sts, res, geom, lightInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom, CDirectionalLight *pLight,
 	const SLightInfo &lightInfo, const CTransformStack &sts, int nDepthTexResolution, const SParticleLMRenderTargetInfo &particleLM,
 	SPerspDirectionalDepthInfo *pDepthInfo, IRender *pRender, CSceneFragments &sceneGeom )
@@ -252,7 +252,7 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FixParticles( const SParticleLMRenderTargetInfo &particleLM, const SLightInfo &lightInfo )
 {	
 	if ( particleLM.pParticleLMs && !NGfx::bSimpleParticles )
@@ -268,7 +268,7 @@ static void FixParticles( const SParticleLMRenderTargetInfo &particleLM, const S
 		qr.AddRect( rDest, 0, rDest, NGfx::Get8888Color( CVec4( 0.25, 0.25, 0.25, 1 ) ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, IRender *pRender,	const SLightInfo &lightInfo,
 	SPerspDirectionalDepthInfo *pDepthInfo, const SBound &sceneBound, int nLightingOptions, CDirectionalLight *pLight,
 	const SParticleLMRenderTargetInfo &particleLM, float fMinimalSize, NGfx::CTexture *pDepthTexture, CSceneFragments &sceneGeom )
@@ -386,7 +386,7 @@ static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, 
 	}*/
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Render( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pRender, const CSceneFragments &scene,
 	const SLightInfo &lightInfo, SRenderPathContext *pRPC )
 {
@@ -402,7 +402,7 @@ static void Render( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pR
 	}
 	Execute( pRender, pRC, *pTS, lightOps, scene, lightInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetIntersectBound( SBound *pRes, const SBound &b1, const SBound &b2 )
 {
 	const CVec3 vMin1 = b1.s.ptCenter - b1.ptHalfBox;
@@ -418,7 +418,7 @@ static bool GetIntersectBound( SBound *pRes, const SBound &b1, const SBound &b2 
 	pRes->BoxInit( vMin, vMax );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ScaleClipVertex( CVec4 *pRes, const CVec4 &vClip, const SHMatrix &m )
 {
 	CVec4 leng;
@@ -426,9 +426,9 @@ static void ScaleClipVertex( CVec4 *pRes, const CVec4 &vClip, const SHMatrix &m 
 	leng.w = 0;
 	*pRes = vClip * ( 1 / fabs( leng ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float Dot4( const CVec4 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::CRenderContext *pRC, const CSceneFragments &scene,
 													 const SLightInfo &lightInfo )
 {	
@@ -611,7 +611,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 	*/
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CRTPtr pDepthShadow( "DepthMap" );
 static CRTPtr pWaterReflection( "WaterReflection" );
 
@@ -677,7 +677,7 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 	pCurrentDepthTexture = 0;
 	pCurrentWaterReflectionTexture = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GRenderPathFastest)
 	REGISTER_VAR_EX( "gfx_noshadows", NGlobal::VarBoolHandler, &bNoDepthRender, 0, STORAGE_USER )
 	REGISTER_VAR_EX( "gfx_freeze_shadows", NGlobal::VarBoolHandler, &bFreeze, 0, STORAGE_USER )

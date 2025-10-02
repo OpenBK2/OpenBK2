@@ -13,7 +13,7 @@
 #include "MainLoopCommands.h"
 #include "../System/GResource.h"
 #include "../libdb/Db.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NVFS
 {
 	LIBDB_EXPORT void VFSSegmentProfiler();
@@ -48,8 +48,8 @@ static bool ProcessMainLoopCmds( const SGameMessage &msg )
 	}
 	return registers.ProcessEvent( msg, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace NMainLoop
 {
 typedef list< CObj<IInterfaceCommand> > CInterfaceCommandsList;
@@ -58,12 +58,12 @@ static CInterfaceCommandsList icmds;					// interface commands
 static CInterfacesList interfaces;						// interfaces stack
 static string szBaseDir;								// base dir of the main loop
 static bool bInputEnabled = true;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string& GetBaseDir()
 {
 	return szBaseDir;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void InitMainLoop()
 {
 	char buffer[1024];
@@ -84,7 +84,7 @@ void InitMainLoop()
 		szBaseDir += '\\';
 	NStr::ToLower( &szBaseDir );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ResetStack()
 {
 	while ( !interfaces.empty() )
@@ -95,7 +95,7 @@ void ResetStack()
 	}
 	interfaces.clear();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void __declspec(dllexport) SFLB4_PushInterface( IInterfaceBase *pInterface )
 {
 	if ( !interfaces.empty() ) 
@@ -107,7 +107,7 @@ void PushInterface( IInterfaceBase *pInterface )
 {
 	SFLB4_PushInterface( pInterface );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void PopInterface()
 {
 	if ( !interfaces.empty() ) 
@@ -118,12 +118,12 @@ void PopInterface()
 	if ( !interfaces.empty() ) 
 		interfaces.back()->OnGetFocus( true );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Command( IInterfaceCommand *pCommand )
 {
 	icmds.push_back( pCommand );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Command( int nCommandID, const char *pszConfiguration )
 {
 	if ( IInterfaceCommand *pCmd = MakeObject<IInterfaceCommand>( nCommandID ) )
@@ -132,12 +132,12 @@ void Command( int nCommandID, const char *pszConfiguration )
 		Command( pCmd );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IInterfaceBase *GetTopInterface()
 {
 	return !interfaces.empty() ? interfaces.back() : 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface )
 {
 	if( !pCurrentInterface )
@@ -155,12 +155,12 @@ IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface )
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetInputEnabled( bool bEnabled )
 {
 	bInputEnabled = bEnabled;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Serialize( IBinSaver &saver, interface IProgressHook *pHook )
 {
 	SerializeShared( &saver );
@@ -171,7 +171,7 @@ void Serialize( IBinSaver &saver, interface IProgressHook *pHook )
 	//
 	NSystem::Serialize( 11, saver );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AfterLoad()
 {
 	// interfaces after load
@@ -181,7 +181,7 @@ void AfterLoad()
 	if ( !interfaces.empty() )
 		(interfaces.back())->OnGetFocus( true );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ProcessInterfaceCmds()
 {
 	while ( !icmds.empty() )
@@ -197,7 +197,7 @@ static bool ProcessInterfaceCmds()
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ProcessEvent( const SGameMessage &msg )
 {
 	if ( !interfaces.empty() )
@@ -212,7 +212,7 @@ static bool ProcessEvent( const SGameMessage &msg )
 	}
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool StepApp( bool bActive )
 {
 	NDb::SegmentProfiler();
@@ -282,7 +282,7 @@ bool StepApp( bool bActive )
 	return true;
 }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdLoad( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )

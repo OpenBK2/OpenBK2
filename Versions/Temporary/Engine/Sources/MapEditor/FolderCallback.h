@@ -4,7 +4,7 @@
 
 #include "..\MapEditorLib\Interface_FolderCallback.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFolderCallback : public IFolderCallback
 {
 	OBJECT_NOCOPY_METHODS( CFolderCallback );
@@ -35,6 +35,6 @@ protected:
 	bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName, bool bRecursive );
 	bool SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__CONTROLLER__FOLDER_CALLBACK__)
 

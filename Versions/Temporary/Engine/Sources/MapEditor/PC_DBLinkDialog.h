@@ -8,7 +8,7 @@
 #include "..\MapEditorLib\Interface_UserData.h" //CTableSet
 
 #define  PC_DBL_TREE_COLUMN_COUNT (3)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCDBLinkDialog : public CResizeDialog, public CPCBaseDialog
 {
 	static const UINT	PC_DBL_TREE_COLUMN_NAME  [PC_DBL_TREE_COLUMN_COUNT];
@@ -94,5 +94,5 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_DB_LINK_DIALOG__)

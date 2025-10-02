@@ -9,7 +9,7 @@
 
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSWRectLayout
 {
 public:
@@ -61,7 +61,7 @@ public:
 		return 0;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // standard point order: ld, lu, ru, rd
 template<class T>
 inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const T &ld, const T &ru, T *pResult )
@@ -113,7 +113,7 @@ inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const T &ld, co
 		break;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T, class TRes>
 inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const CTRect<T> &r, TRes *pResult )
 {
@@ -122,11 +122,11 @@ inline void ApplyRectOrient( CSWRectLayout::ERectOrient eOrient, const CTRect<T>
 	ru.x = r.x2; ru.y = r.y2;
 	ApplyRectOrient( eOrient, ld, ru, pResult );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DEFINE_DG_CONSTANT_NODE( CCSWRectLayout, CSWRectLayout );
 #ifdef STUPID_VISUAL_ASSIST
 class CCSWRectLayout;
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

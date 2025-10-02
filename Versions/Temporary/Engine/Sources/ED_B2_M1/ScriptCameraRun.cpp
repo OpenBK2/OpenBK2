@@ -9,13 +9,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		RUN ScriptMovie dialog
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScriptCameraRunDlg::CScriptCameraRunDlg(	CWnd* _pParentWindow, SScriptCameraRunDlgData *_pDialogData )
 	: CResizeDialog( CScriptCameraRunDlg::IDD, _pParentWindow ),
 	pDialogData( _pDialogData ),
@@ -23,7 +23,7 @@ CScriptCameraRunDlg::CScriptCameraRunDlg(	CWnd* _pParentWindow, SScriptCameraRun
 {
 	NI_ASSERT( !pDialogData->scriptCameras.empty(), "There are no cameras in scene\n" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX ); 
@@ -37,7 +37,7 @@ void CScriptCameraRunDlg::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_SCRUN_EDIT_SPLINE1, edSpline1 );
 	DDX_Control( pDX, IDC_SCRUN_EDIT_SPLINE2, edSpline2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CScriptCameraRunDlg::OnInitDialog()
 	{
 	CResizeDialog::OnInitDialog();
@@ -74,7 +74,7 @@ BOOL CScriptCameraRunDlg::OnInitDialog()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::OnOK()
 {
 	CString szTime, szLinSpeed, szAngSpeed, szTarget, szSpline1, szSpline2;
@@ -157,12 +157,12 @@ void CScriptCameraRunDlg::OnOK()
 
 	CResizeDialog::OnOK();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CScriptCameraRunDlg, CResizeDialog)
 	ON_CBN_SELCHANGE(IDC_SCRUN_COMBO_TYPE, OnCbnSelchangeScamTypeCombo)
 	ON_EN_UPDATE(IDC_SCRUN_EDIT_TIME, OnEnUpdateScrunEditTime)
 END_MESSAGE_MAP()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::OnCbnSelchangeScamTypeCombo()
 {
 	const int nType = cbType.GetCurSel();
@@ -172,7 +172,7 @@ void CScriptCameraRunDlg::OnCbnSelchangeScamTypeCombo()
 	SetDialogData( *pDialogData );
 	SetControlsMask();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::CopyScriptToClipboard()
 {
 	OpenClipboard();
@@ -186,7 +186,7 @@ void CScriptCameraRunDlg::CopyScriptToClipboard()
 	}
 	SetClipboardData( CF_TEXT, hand );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::SetControlsMask()
 {
 	edTime.EnableWindow( !bSpeed );
@@ -215,7 +215,7 @@ void CScriptCameraRunDlg::SetControlsMask()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::SetDialogData( const SScriptCameraRunDlgData &rDialogData )
 {
 	SetDlgItemText( IDC_SCRUN_EDIT_TIME, StrFmt("%g", rDialogData.fTime) );
@@ -244,7 +244,7 @@ void CScriptCameraRunDlg::SetDialogData( const SScriptCameraRunDlgData &rDialogD
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScriptCameraRunDlg::OnEnUpdateScrunEditTime()
 {
 	pDialogData->nStartCamera = cbStartCam.GetCurSel();
@@ -261,5 +261,5 @@ void CScriptCameraRunDlg::OnEnUpdateScrunEditTime()
 		SetDlgItemText( IDC_SCRUN_EDIT_LSPEED, StrFmt("%g", fLSpeed) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 

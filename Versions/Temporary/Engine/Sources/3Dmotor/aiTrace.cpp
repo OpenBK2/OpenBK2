@@ -2,9 +2,9 @@
 #include "aiTrace.h"
 namespace NAI
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTracer
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracer::InitProjection( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
 {
 	CVec3 v = _ptDir, vAxis1, vAxis2;
@@ -23,24 +23,24 @@ void CTracer::InitProjection( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
 	ptAxis1 = CVec4( vAxis1.x, vAxis1.y, vAxis1.z, -(vAxis1 * ptOrig) );
 	ptAxis2 = CVec4( vAxis2.x, vAxis2.y, vAxis2.z, -(vAxis2 * ptOrig) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //! return true if ray intersects sphere
 bool CTracer::TestSphere( const CVec3 &vSCenter, float fR )
 {
 	CVec3 v = (vSCenter - ptOrig) ^ ptDirNormalized;
 	return fabs(v) <= fR;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracer::InitProjection( const CRay &r )
 {
 	InitProjection( r.ptOrigin, r.ptDir );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float CrossProduct( const CVec2 &a, const CVec2 &b )
 {
 	return a.x * b.y - a.y * b.x;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTracer::SRefTriangle CTracer::GetTriangle( const SConvexHull &e, const SHMatrix &pos, const STriangle &t )
 {
 	int i1, i2, i3;
@@ -64,7 +64,7 @@ CTracer::SRefTriangle CTracer::GetTriangle( const SConvexHull &e, const SHMatrix
 	pos.RotateHVector( &v3, e.points[i3] );
 	return SRefTriangle( v1, v2, v3 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 GetPlanePoint( const CVec3 &a, float f1, const CVec3 &a2, float f2 )
 {
 	return ( a2 * f1 - a * f2 ) / (f1 - f2);
@@ -112,7 +112,7 @@ SInterval::SCrossPoint CTracer::CalcCross( const SRefTriangle &t )
 	}
 	return SInterval::SCrossPoint( ( (ptOnPlane - ptOrig) * ptNormal ) / fDenominator, ptNormal );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float Dot( const CVec3 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + b.w; }
 static float fTraceSign[] = {1,-1};
 void CTracer::TraceEntity( const SConvexHull &e, vector<SInterval::SCrossPoint> *pEnter, vector<SInterval::SCrossPoint> *pExit )
@@ -157,7 +157,7 @@ void CTracer::TraceEntity( const SConvexHull &e, vector<SInterval::SCrossPoint> 
 			enter.push_back( CalcCross( GetTriangle( e, e.trans, *i ) ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracer::TraceEntity( const SConvexHull &e, bool bTerrain )
 {
 	vector<SInterval::SCrossPoint> enter;
@@ -167,7 +167,7 @@ void CTracer::TraceEntity( const SConvexHull &e, bool bTerrain )
 	// fill intervals structure
 	FillIntersectionResults( &intersections, &enter, &exit, e.src, e.nUserID, bTerrain );//!e.tris.bClosed );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracer::TraceEntity( const vector<SConvexHull> &hulls, bool bTerrain )
 {
 	vector<SInterval::SCrossPoint> enter;
@@ -181,5 +181,5 @@ void CTracer::TraceEntity( const vector<SConvexHull> &hulls, bool bTerrain )
 		FillIntersectionResults( &intersections, &enter, &exit, f.src, f.nUserID, bTerrain );//!f.tris.bClosed );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

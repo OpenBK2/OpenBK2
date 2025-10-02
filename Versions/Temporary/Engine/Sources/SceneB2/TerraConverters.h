@@ -2,7 +2,7 @@
 
 #include "../image/targa.h"
 #include "TerrainInfo.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void LegacyLoadTileMap( const string &szMapFilesPath, int nX, int nY, CArray2D<BYTE> *pTileTerraMap )
 {
 	CFileStream streamTileMap( szMapFilesPath + "zonemap.tga", CFileStream::WIN_READ_ONLY );
@@ -18,4 +18,4 @@ void LegacyLoadTileMap( const string &szMapFilesPath, int nX, int nY, CArray2D<B
 		pTileTerraMap->FillZero();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

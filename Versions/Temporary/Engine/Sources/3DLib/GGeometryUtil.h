@@ -4,10 +4,10 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<int N_SIZE>
 struct SVxCache
 {
@@ -19,7 +19,7 @@ struct SVxCache
 	bool IsIn( WORD n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return true; return false; }
 	int GetPos( WORD n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return (nPos - k + N_SIZE ) % N_SIZE; return -1; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //const int N_VX_TRI_CACHE_SIZE = 10;//24;
 class CTriVertexCacheOptimizer
 {
@@ -190,7 +190,7 @@ private:
 public:
 	void Optimize( vector<STriangle> *pTris, vector<WORD> *pVertexReorder, int *pnResVerts, int nVCacheSize );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
@@ -200,6 +200,6 @@ struct SEdgeInfoHash
 {
 	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

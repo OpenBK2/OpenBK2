@@ -1,13 +1,13 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // automatically generated file, don't change manually!
 
 #include "../stats_b2_m1/rpgstats.h"
 #include "../stats_b2_m1/uientries.h"
 #include "../system/filepath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IXmlSaver;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SPlayerRank;
@@ -470,13 +470,13 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMissionEnableType eValue );
 	EMissionEnableType StringToEnum_NDb_EMissionEnableType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMissionEnableType>
 {
@@ -484,13 +484,13 @@ struct SKnownEnum<NDb::EMissionEnableType>
 	static string ToString( NDb::EMissionEnableType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMissionEnableType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionEnableType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMissionType eValue );
 	EMissionType StringToEnum_NDb_EMissionType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMissionType>
 {
@@ -498,13 +498,13 @@ struct SKnownEnum<NDb::EMissionType>
 	static string ToString( NDb::EMissionType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMissionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMissionWeather eValue );
 	EMissionWeather StringToEnum_NDb_EMissionWeather( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMissionWeather>
 {
@@ -512,13 +512,13 @@ struct SKnownEnum<NDb::EMissionWeather>
 	static string ToString( NDb::EMissionWeather eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMissionWeather ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionWeather( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMissionDayTime eValue );
 	EMissionDayTime StringToEnum_NDb_EMissionDayTime( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMissionDayTime>
 {
@@ -526,13 +526,13 @@ struct SKnownEnum<NDb::EMissionDayTime>
 	static string ToString( NDb::EMissionDayTime eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMissionDayTime ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionDayTime( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMissionDifficulty eValue );
 	EMissionDifficulty StringToEnum_NDb_EMissionDifficulty( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMissionDifficulty>
 {
@@ -540,13 +540,13 @@ struct SKnownEnum<NDb::EMissionDifficulty>
 	static string ToString( NDb::EMissionDifficulty eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMissionDifficulty ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMissionDifficulty( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EChapterBonusType eValue );
 	EChapterBonusType StringToEnum_NDb_EChapterBonusType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EChapterBonusType>
 {

@@ -2,7 +2,7 @@
 
 #include "ChatControl.h"
 #include "../UISpecificB2/UISpecificB2.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CChatControlWrapper::CChatControlWrapper( IScrollableContainer *_pList, int _nMaxItems )
 : pList( _pList ), nMaxItems( _nMaxItems ), nItems( 0 )
 {
@@ -12,7 +12,7 @@ CChatControlWrapper::CChatControlWrapper( IScrollableContainer *_pList, int _nMa
 	if ( pItem )
 		pItem->ShowWindow( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CChatControlWrapper::AddItem( const wstring &wszText )
 {
 	if ( !pList || !pItem )
@@ -42,4 +42,4 @@ void CChatControlWrapper::AddItem( const wstring &wszText )
 	pList->EnsureElementVisible( pNewItem );
 	pList->Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

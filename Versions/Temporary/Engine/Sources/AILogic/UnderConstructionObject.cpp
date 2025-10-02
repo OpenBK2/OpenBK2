@@ -10,13 +10,13 @@
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 CUnderConstructionObject theUnderConstructionObject;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnderConstructionObject::SendClearUpdate()
 {
 	CPtr<SAIObjectsUnderConstructionUpdate> pNewUpdate = new SAIObjectsUnderConstructionUpdate( false );
 	updater.AddUpdate( pNewUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnderConstructionObject::Clear() 
 { 
 	//objects.clear();
@@ -58,7 +58,7 @@ public:
 bool bShowUnderConstruction = false;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, const CVec2 &vStart, const CVec2 &vFinish, bool bFinished, CAILogic *pAI )
 {
 	if ( bFinished ) 
@@ -102,7 +102,7 @@ void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, c
 		NI_ASSERT( false, StrFmt( "wrong build command %i", eCommand ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CUnderConstructionObject::operator&( IBinSaver &saver )
 {
 	return 0;

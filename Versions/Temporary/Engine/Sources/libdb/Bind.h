@@ -6,7 +6,7 @@
 #include "ObjMan.h"
 #include "BindProcessor.h"
 #include "ObjManIterator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NLXML
 {
 	class CXMLNode;
@@ -15,13 +15,13 @@ namespace NXxml
 {
 	class CXmlNode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 
 namespace NBind
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef vector< pair<string, wstring> > CAttributesList;
 class CBindStruct : public IObjMan, public ILoadableObjMan
 {
@@ -82,7 +82,7 @@ public:
 	bool SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) { ResetChanged(); return bindProcessor.SaveXML( szAddName, pType, pNode, this ); }
 	bool SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType ) { SetChanged(); return bindProcessor.SetDefault( szAddName, pType ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CStructIterator : public IObjManIterator
 {
 	OBJECT_NOCOPY_METHODS( CStructIterator );
@@ -123,6 +123,6 @@ public:
 	// get current field descriptor
 	const NTypeDef::STypeStructBase::SField *GetDesc() const { return levels.empty() ? 0 : levels.back().GetDesc(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };
 };

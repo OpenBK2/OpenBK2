@@ -4,7 +4,7 @@
 
 interface IView;
 #include "..\MapEditorLib\Interface_CommandHandler.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCBaseDialog : public ICommandHandler
 {
 	// ICommandHandler
@@ -21,5 +21,5 @@ class CPCBaseDialog : public ICommandHandler
 	// не использовать без надобности, использовать только с MaskManipulator
 	virtual void UpdateValues() = 0;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BASE_DIALOG__)

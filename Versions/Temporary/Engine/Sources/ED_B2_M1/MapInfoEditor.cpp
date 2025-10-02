@@ -53,7 +53,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 
 #define RUN_GAME_BAT_FILE_PATH "Editor\\RunGame.bat"
@@ -61,7 +61,7 @@ REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 #define GAME_CFG_NEW_FILE_PATH "Editor\\Game.cfg.new"
 #define GAME_CFG_BACKUP_FILE_PATH "Editor\\Game.cfg.backup"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const UINT TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = 
 {
 	ID_TOOLS_RESET_CAMERA,
@@ -77,14 +77,14 @@ const UINT TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUN
 	ID_VIEW_FILTER,
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const UINT TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] = 
 {
 	ID_MI_VIEW_MINIMAP,
 	ID_MI_VIEW_TOOL,
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMapInfoEditor::CMapInfoEditor()
 	: nMapInfoToolsToolbarID( 0xFFFFFFFF ), 
 		nMapInfoViewToolbarID( 0xFFFFFFFF ), 
@@ -102,9 +102,9 @@ CMapInfoEditor::CMapInfoEditor()
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_MI_VIEW_MINIMAP, ID_MI_VIEW_TOOLS_TOOLBAR );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CRAP{ PLAIN_TEXT
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::CreateControls()
 {
 	NHPTimer::STime time = 0;
@@ -425,7 +425,7 @@ void CMapInfoEditor::CreateControls()
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::PostCreateControls()
 {
 	if ( pwndShortcutBar != 0 )
@@ -451,7 +451,7 @@ void CMapInfoEditor::PostCreateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::PreDestroyControls()
 {
 	if ( pwndShortcutBar != 0 )
@@ -477,7 +477,7 @@ void CMapInfoEditor::PreDestroyControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::DestroyControls()
 {
 	// разрушаем shortcut docking window 
@@ -530,7 +530,7 @@ void CMapInfoEditor::DestroyControls()
 	//Destroy();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::Create()
 {
 	// Сначала грузим файл с установками редактора
@@ -569,7 +569,7 @@ void CMapInfoEditor::Create()
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::Destroy()
 {
 	if ( Singleton<IMainFrameContainer>() &&
@@ -621,7 +621,7 @@ void CMapInfoEditor::Destroy()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::Save( bool bSaveChanges )
 {
 	if ( IsModified() && bSaveChanges )
@@ -647,7 +647,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 	CEditorBase::Save( bSaveChanges );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID ) 
@@ -922,7 +922,7 @@ bool CMapInfoEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 	} 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMapInfoEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapInfoEditor::UpdateCommand(), pbEnable == 0" );
@@ -1078,7 +1078,7 @@ bool CMapInfoEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbChe
 	return false;
 }
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo )
 {
 	string szControllerTemporaryLabel;
@@ -2022,7 +2022,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::Undo( IController* pController )
 {
 	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
@@ -2031,7 +2031,7 @@ void CMapInfoEditor::Undo( IController* pController )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::Redo( IController* pController )
 {
 	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
@@ -2039,14 +2039,14 @@ void CMapInfoEditor::Redo( IController* pController )
 		GetChangesFromController( pObjectController, true ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::ConfigureViewFilter()
 {
 	CMapInfoViewFilterDlg dlg( &editorSettings );
 	if ( dlg.DoModal() == IDOK )
 		ApplyViewFilter();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::ApplyViewFilter()
 {
 	CPtr<IEditorScene> pEditorScene = EditorScene();
@@ -2298,7 +2298,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoEditor::RunGame()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true );
@@ -2340,9 +2340,9 @@ void CMapInfoEditor::RunGame()
 	/**/
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		/**
 		// удаляемые объекты убираем из добавляемых
 		for ( hash_map<UINT,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )

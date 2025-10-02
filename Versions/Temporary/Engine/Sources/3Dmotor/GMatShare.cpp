@@ -6,35 +6,35 @@
 #include "GTexture.h"
 #include "GSceneUtils.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSkyAdapter
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSkyAdapter::NeedUpdate() 
 { 
 	if ( !pTex )
 		return false;
 	return pTex.Refresh(); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkyAdapter::Recalc()
 {
 	pValue = 0;
 	if ( pTex )
 		pValue = pTex->GetValue();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSkyAdapter::SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex ) 
 { 
 	pTex = _pTex;
 	pValue = 0;
 	Updated();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMaterialShare
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
 static CPtrFuncBase<NGfx::CTexture> *GetTexture( const NDb::STexture *pTex )
 {
@@ -44,7 +44,7 @@ static CPtrFuncBase<NGfx::CTexture> *GetTexture( const NDb::STexture *pTex )
 	pRes = shareTextures.Get( GetKey( pTex ) );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, SMaterialCreateInfo *pRes )
 {
 	SMaterialCreateInfo &mc = *pRes;
@@ -111,7 +111,7 @@ void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, S
 	mc.bAddPlaced = _pMaterial->bAddPlaced;
 	mc.bBackFaceCastShadow = _pMaterial->bBackFaceCastShadow;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 {
 	SMaterialCreateInfo mc;
@@ -131,9 +131,9 @@ IMaterial* CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 		return NGScene::CreateMaterial( mc );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CColorMaterialShare
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CColorMaterialShare::CreateMaterial( const CVec3 &color )
 {
 	CMatHashmap::iterator i = materials.find( color );
@@ -146,9 +146,9 @@ IMaterial* CColorMaterialShare::CreateMaterial( const CVec3 &color )
 	materials[color] = pRes;
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTransparentMaterialShare
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoesCastShadow )
 {
 	CVec4 color( cr.x * cr.w, cr.y * cr.w, cr.z * cr.w, cr.w );
@@ -174,7 +174,7 @@ IMaterial* CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoe
 	materials[color] = pRes;
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x01671182, CMaterialShare )

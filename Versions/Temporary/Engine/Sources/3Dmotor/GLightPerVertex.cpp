@@ -26,14 +26,14 @@ inline bool operator==( const CArray2D<T> &a, const CArray2D<T> &b )
 static int nWarFogID;
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // SPerVertexLightState
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SPerVertexLightState::SPerVertexLightState() :
 	bWarFogUseOnlyNew(false), nWarFogNewID(0), nWarFogOldID(0)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ConvertColor( NGfx::SMMXWord *p, const CVec3 &v )
 {
 	p->nZ = Float2Int( v.z * 0x4000 );
@@ -84,19 +84,19 @@ void SPerVertexLightState::SortPointLights()
 {
 	sort( staticPointLights.begin(), staticPointLights.end(), CmpPL );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SPerVertexLightState::SetWarFogBlend( float _fBlend )
 {
 	fWarFogBlend = _fBlend;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float SPerVertexLightState::GetWarFogBlend() const 
 { 
 	if ( warFogNew.GetSizeX() <= 1 ) 
 		return 1; 
 	return bWarFogUseOnlyNew ? 1 : fWarFogBlend; 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float _fScale )
 {
 	bool bRes = false;
@@ -122,7 +122,7 @@ bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float
 	fWarFogScale = _fScale;
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MultiplyOnColor( vector<DWORD> *pRes, const vector<DWORD> &mult )
 {
 	if ( mult.empty() )
@@ -148,9 +148,9 @@ static void MultiplyOnColor( vector<DWORD> *pRes, const vector<DWORD> &mult )
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // calc colors
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x * b.x, a.y * b.y, a.z * b.z ); }
 static void CalcDirectionaLighting( 
 	const vector<CVec3> &srcPos, const vector<WORD> &posIndices, 
@@ -239,7 +239,7 @@ static void CalcDirectionaLighting(
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // sample fog of war array with bilinear filteration and store result to pRes
 #pragma warning( disable : 4799 )
 static void SampleWarFogInt( const vector<int> &intCoords, const CArray2D<unsigned char> &fog, vector<unsigned char> *_pRes, int nVertices )
@@ -276,7 +276,7 @@ static void SampleWarFogInt( const vector<int> &intCoords, const CArray2D<unsign
 	}
 }
 #pragma warning( default : 4799 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SampleWarFog( const vector<CVec3> &srcPos, float fScale, vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
 	vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
 {
@@ -321,7 +321,7 @@ lp:
 		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
 	_m_empty();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float F_PL_RADIUS2 = 64;
 const float F_PL_MIN_DISTANCE_NORMALIZED = 0.25f;
 const int N_PL_ATTENUATION_SCALE = 8191;
@@ -343,7 +343,7 @@ static void CalcPointLightAttenuation( vector<NGfx::SMMXWord> *pRes, const vecto
 		n.nW = 0;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcPointLightAttenuationSSE( vector<NGfx::SMMXWord> *pRes, const vector<CVec3> &srcPos, const CVec3 &_vCenter, float _fRadius )
 {
 	int nSize = srcPos.size();
@@ -422,7 +422,7 @@ static void CalcPointLightAttenuationSSE( vector<NGfx::SMMXWord> *pRes, const ve
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes, 
 	const vector<NGfx::SMMXWord> &attenuation, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
 	const vector<NGfx::SCompactVector> &_normals, 
@@ -486,7 +486,7 @@ static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes,
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes, 
 	const NGfx::SMMXWord &attenuation, const SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
 {
@@ -561,7 +561,7 @@ static void CalcPointLightColors( vector<NGfx::SMMXWord> *pRes,
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vector<NGfx::SMMXWord> &add )
 {
 	ASSERT( pRes->size() >= add.size() );
@@ -634,7 +634,7 @@ static void AddColors( vector<DWORD> *pRes, const vector<DWORD> &src, const vect
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,  
 	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
 	const vector<NGfx::SCompactVector> &_normals, 
@@ -668,7 +668,7 @@ static void AddPointLight( const SPerVertexLightState::SPointLightInfo &p,
 		CalcPointLightColors( pColors, attenuation, pSrc, posIndices, _normals, p.vColor );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPVLightCalcer
 {
 	int nWarFogMask;
@@ -867,7 +867,7 @@ struct SPVLightCalcer
 		//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, vector<float> *pRes )
 {
 	if ( ls.warFogNew.GetSizeX() <= 1 )
@@ -887,11 +887,11 @@ void SampleWarFog( const vector<CVec3> &vPos, const SPerVertexLightState &ls, ve
 		(*pRes)[k] = fRes;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vector<DWORD> SPVLightCalcer::colorsHold, SPVLightCalcer::shadowColorsHold;
 vector<NGfx::SMMXWord> SPVLightCalcer::pointColors;
 vector<unsigned char> SPVLightCalcer::warFogNewHold, SPVLightCalcer::warFogOldHold;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
 	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
 	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,
@@ -960,7 +960,7 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	//NHPTimer::GetTime( &tFinish );
 	//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ScaleColors( vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride, 
 	unsigned char *pScale, int nScaleMask, const vector<WORD> &posIndices, const vector<NGfx::SCompactVector> &transp,
 	bool bMultiplyOnTransparency )
@@ -1014,7 +1014,7 @@ static void ScaleColors( vector<DWORD> *pRes, const DWORD *_pSrc, int nSrcStride
 	}
 	__asm emms
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes, 
 	const vector<CVec3> &srcPos, const SUVInfo *pSrc, const vector<WORD> &posIndices, 
 	const vector<NGfx::SCompactVector> &_normals, const vector<DWORD> &vertexColor,

@@ -4,7 +4,7 @@
 //#define CHECK_CHUNK_ORDER
 #define PARANOID_UNITIALIZED_CHECK
 extern int N_SAVELOAD_VERSION;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // uses the fact that order of chunks during save and during load is the same
 // also requires no countchunks() use
 class CChunklessSerializer : public IBinSaver
@@ -144,7 +144,7 @@ public:
 	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode ) 
 		: pTracker(_pTracker), pRes(_pRes), mode(_mode) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pStream, ESaverMode mode )
 {
 	return new CChunklessSerializer( pPtr, pStream , mode );

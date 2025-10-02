@@ -1,7 +1,7 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MAX_HISTORY_LENGTH 500
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TData>
 class TVersionBaseList
 {
@@ -20,14 +20,14 @@ public:
 	const DWORD GetVersion() const { return dwVersion; }
 	inline bool NeedFullUpdate( const DWORD _dwVersion ) const; 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 TVersionBaseList<TData>::TVersionBaseList<TData>() : dwVersion( MAX_HISTORY_LENGTH + 1 ) 
 {
 	history = vector<TData>( MAX_HISTORY_LENGTH );
 	dataAdded = vector<bool>( MAX_HISTORY_LENGTH );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 void TVersionBaseList<TData>::Add( const TData &data )
 {
@@ -36,7 +36,7 @@ void TVersionBaseList<TData>::Add( const TData &data )
 	history[ dwVersion % MAX_HISTORY_LENGTH ] = data;
 	dataAdded[ dwVersion % MAX_HISTORY_LENGTH ] = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 void TVersionBaseList<TData>::Remove( const TData &data )
 {
@@ -45,13 +45,13 @@ void TVersionBaseList<TData>::Remove( const TData &data )
 	history[ dwVersion % MAX_HISTORY_LENGTH ] = data;
 	dataAdded[ dwVersion % MAX_HISTORY_LENGTH ] = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 inline bool TVersionBaseList<TData>::NeedFullUpdate( const DWORD _dwVersion ) const
 {
 	return ( dwVersion + 1 > _dwVersion + MAX_HISTORY_LENGTH );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 const list<TData> TVersionBaseList<TData>::GetAddDiff( const DWORD _dwVersion ) const
 {
@@ -70,7 +70,7 @@ const list<TData> TVersionBaseList<TData>::GetAddDiff( const DWORD _dwVersion ) 
 		return nowList;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template< class TData >
 const list<TData> TVersionBaseList<TData>::GetRemoveDiff( const DWORD _dwVersion ) const
 {
@@ -85,5 +85,5 @@ const list<TData> TVersionBaseList<TData>::GetRemoveDiff( const DWORD _dwVersion
 	}
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #undef MAX_HISTORY_LENGTH

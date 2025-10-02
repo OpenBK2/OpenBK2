@@ -8,12 +8,12 @@
 #include "../System/VFSOperations.h"
 #include "dbscene.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#include "../Misc/HPTimer.h" // test for perfomance
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma comment(lib, "granny2.lib")
 inline bool operator==( const SPlane &a, const SPlane &b ) { return a.n == b.n && a.d == b.d; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 int SPartAndSkeletonKeyHash::operator()( const SPartAndSkeletonKey &k ) const
@@ -21,16 +21,16 @@ int SPartAndSkeletonKeyHash::operator()( const SPartAndSkeletonKey &k ) const
 	return ( k.pGeometry?k.pGeometry->GetDBID().GetHashKey() : 0 ) ^ k.nGeometryPart ^ 
 		( k.pSkeleton ? k.pSkeleton->GetDBID().GetHashKey() : 0 ) ^ k.nLightMapped;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGrannyFile::~CGrannyFile()
 {
 	if ( pFile ) 
 		GrannyFreeFile( pFile ); 
 	pFile = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CBasicShare<SResKey<SGrannyFileLoaderInfo>, CGrannyMemFileLoader, SGrannyFileLoaderInfoHash> shareGrannyFiles(102);
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 {
 	CFileRequest &req = *p;
@@ -61,7 +61,7 @@ void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 	}
 #pragma warning( default: 4530 )
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGrannyMeshLoader::SetKey( const SPartAndSkeletonKey &_key )
 {
 	key = _key;
@@ -70,7 +70,7 @@ void CGrannyMeshLoader::SetKey( const SPartAndSkeletonKey &_key )
 	if ( key.pSkeleton )
 		pSkeletonFileInfo = NAnimation::GetSkeletonFileInfo( key.pSkeleton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CalcGrannyTypedefOffset( granny_data_type_definition *pType, const char *name )
 {
 	int nRet = 0;
@@ -83,7 +83,7 @@ static int CalcGrannyTypedefOffset( granny_data_type_definition *pType, const ch
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CalcGrannyMemberArraySize( granny_data_type_definition *pType, const char *name )
 {
 	while ( pType && pType->Type != GrannyEndMember )
@@ -94,7 +94,7 @@ static int CalcGrannyMemberArraySize( granny_data_type_definition *pType, const 
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, vector<CVec3> *pRes )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
@@ -114,7 +114,7 @@ void ConvertAIGeomVerticesFromGranny( granny_mesh *pMesh, vector<CVec3> *pRes )
 		memcpy( &dst, pVertex + nPosOffset, 3 * sizeof(float) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, vector<STriangle> *pRes )
 {
 	granny_tri_topology *pTopol = pMesh->PrimaryTopology;
@@ -135,7 +135,7 @@ void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, vector<STriangle> *pRes )
 		ind += 3;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<NGScene::SVertex> *pVerts )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
@@ -228,7 +228,7 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<N
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char *ConvertWeightsFromGrannyEx(
 							  const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex,
 							  vector<SVertexWeight> *pWeights, int nVertices )
@@ -356,7 +356,7 @@ const char *ConvertWeightsFromGrannyEx(
 	return res;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<STriangle> *pGeometry )
 {
 	granny_tri_topology *pTopology = pMesh->PrimaryTopology;
@@ -400,7 +400,7 @@ void ConvertGeometryFromGranny( granny_mesh *pMesh, int nMaterialIndex, vector<S
 /**/
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_model *FindFirstAppropriateModel( granny_file_info *pData, granny_mesh *pMesh )
 {
 	for ( int nM = 0; nM < pData->ModelCount; ++nM )
@@ -414,7 +414,7 @@ granny_model *FindFirstAppropriateModel( granny_file_info *pData, granny_mesh *p
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool EndsWith( const char *pszA, const char *pszB )
 {
 	int nA = strlen( pszA ), nB = strlen( pszB );
@@ -422,14 +422,14 @@ bool EndsWith( const char *pszA, const char *pszB )
 		return false;
 	return strcmp( pszA + nA - nB, pszB ) == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGScene::ELoadMode cMode = E_CACHED_LIGHTMAPS;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetLoadMode( NGScene::ELoadMode eMode )
 {
 	cMode = eMode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGrannyMeshLoader::Recalc()
 {	
 	if( cMode == E_CACHED_LIGHTMAPS )
@@ -535,9 +535,9 @@ void CGrannyMeshLoader::Recalc()
 	}
 #pragma warning( default: 4530 )
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace NGScene
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x13173BC1, CGrannyMemFileLoader )
 REGISTER_SAVELOAD_CLASS( 0x30174280, CGrannyMeshLoader )

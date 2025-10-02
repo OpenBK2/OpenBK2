@@ -37,10 +37,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMPLEMENT_DYNAMIC(CMainFrame, SECWorkbook)
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CMainFrame, SECWorkbook)
 	ON_WM_CREATE()
 	ON_WM_CLOSE()
@@ -80,7 +80,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, SECWorkbook)
 	ON_UPDATE_COMMAND_UI(ID_HELP_CONTENTS, OnUpdateHelpContents)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 CWMMnemonicCodes mnemonicCodes;
 LRESULT CMainFrame::WindowProc( UINT message, WPARAM wParam, LPARAM lParam ) 
@@ -89,7 +89,7 @@ LRESULT CMainFrame::WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
 	return SECWorkbook::WindowProc( message, wParam, lParam );
 }
 /**/
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMainFrame::CMainFrame() : nFreeToolbarID( AFX_IDW_TOOLBAR + 9 ), hwndPreviousFocusedWindow( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
@@ -101,7 +101,7 @@ CMainFrame::CMainFrame() : nFreeToolbarID( AFX_IDW_TOOLBAR + 9 ), hwndPreviousFo
 	EnableBmpMenus();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMainFrame::~CMainFrame()
 {
 	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
@@ -127,7 +127,7 @@ CMainFrame::~CMainFrame()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_VIEW );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMainFrame::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 {
 	if( !SECWorkbook::PreCreateWindow( rCreateStruct ) )
@@ -139,7 +139,7 @@ BOOL CMainFrame::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 	return TRUE;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 {
 	if ( SECWorkbook::OnCreate( pCreateStruct ) == -1 )
@@ -379,7 +379,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT CMainFrame::OnSECToolBarNotify( WPARAM wParam, LPARAM lParam )
 {
 	/**
@@ -415,7 +415,7 @@ LRESULT CMainFrame::OnSECToolBarNotify( WPARAM wParam, LPARAM lParam )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnClose()
 {
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
@@ -465,7 +465,7 @@ void CMainFrame::OnClose()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMainFrame::OnQueryEndSession()
 {
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
@@ -475,13 +475,13 @@ BOOL CMainFrame::OnQueryEndSession()
 	return false;
 }
   
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnEndSession( BOOL bEnding )
 {
 	SECWorkbook::OnEndSession( bEnding );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CMainFrame::OnCopyData( CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct )
 {
 	if ( ( pWnd == 0 ) && ( pCopyDataStruct != 0 ) && ( pCopyDataStruct->dwData == CMapEditorSingletonBase::OPEN_FILE ) )
@@ -496,7 +496,7 @@ BOOL CMainFrame::OnCopyData( CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnDropFiles( HDROP hDropInfo ) 
 {
 	int nFileCount = ::DragQueryFile( hDropInfo, 0xFFFFFFFF, 0, 0 );
@@ -515,7 +515,7 @@ void CMainFrame::OnDropFiles( HDROP hDropInfo )
 	::DragFinish( hDropInfo );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OpenResource( const string &rszResourceName )
 {
 	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
@@ -564,7 +564,7 @@ void CMainFrame::OpenResource( const string &rszResourceName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUserCommand( UINT nCommandID )
 {
 	bool bEnable = false;
@@ -575,7 +575,7 @@ void CMainFrame::OnUserCommand( UINT nCommandID )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 {
 	UINT nMenuID = INVALID_NODE_ID;
@@ -642,7 +642,7 @@ void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnViewToolBar( UINT nCommandID )
 {
 	if ( CControlBar *pBar = GetControlBar( TOOLBAR_CONTROL_ID[nCommandID - ID_VIEW_TOOLBAR_MAIN] ) )
@@ -651,7 +651,7 @@ void CMainFrame::OnViewToolBar( UINT nCommandID )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateViewToolBar( CCmdUI *pCmdUI )
 {
 	if ( CControlBar *pBar = GetControlBar( TOOLBAR_CONTROL_ID[pCmdUI->m_nID - ID_VIEW_TOOLBAR_MAIN] ) )
@@ -662,13 +662,13 @@ void CMainFrame::OnUpdateViewToolBar( CCmdUI *pCmdUI )
 }
 
 /**
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnShowDWGDBBrowser() 
 {
 	ShowControlBar( &wndGDBBrowser, !wndGDBBrowser.IsVisible(), true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateShowDWGDBBrowser( CCmdUI* pCmdUI ) 
 {
 	pCmdUI->Enable( true );
@@ -676,7 +676,7 @@ void CMainFrame::OnUpdateShowDWGDBBrowser( CCmdUI* pCmdUI )
 }
 /**/
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnDWGDBBrowserNew()
 {
 	if ( gdbBrowserList.size() < ( ID_VIEW_DW_GDB_BROWSER_LAST - ID_VIEW_DW_GDB_BROWSER_FIRST ) )
@@ -715,7 +715,7 @@ void CMainFrame::OnDWGDBBrowserNew()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnDWGDBBrowserRemove()
 {
 	if ( gdbBrowserList.size() > 1 )
@@ -761,7 +761,7 @@ void CMainFrame::OnDWGDBBrowserRemove()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnDWGDBBrowserWindow( UINT nCommandID )
 {
 	const int nGDBBrowserIndex = nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST;
@@ -777,14 +777,14 @@ void CMainFrame::OnDWGDBBrowserWindow( UINT nCommandID )
 	}	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateDWGDBBrowserNew( CCmdUI* pCmdUI )
 {
 	pCmdUI->Enable( gdbBrowserList.size() < ( ID_VIEW_DW_GDB_BROWSER_LAST - ID_VIEW_DW_GDB_BROWSER_FIRST ) );
 	pCmdUI->SetCheck( false );	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateDWGDBBrowserRemove( CCmdUI* pCmdUI )
 {
 	pCmdUI->SetCheck( false );	
@@ -807,7 +807,7 @@ void CMainFrame::OnUpdateDWGDBBrowserRemove( CCmdUI* pCmdUI )
 	pCmdUI->Enable( false );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateDWGDBBrowserWindow( CCmdUI *pCmdUI )
 {
 	//DebugTrace( "Update RecentList: %d", pCmdUI->m_nID );
@@ -862,33 +862,33 @@ void CMainFrame::OnUpdateDWGDBBrowserWindow( CCmdUI *pCmdUI )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnShowDWPropertyBrowser() 
 {
 	ShowControlBar( &wndPropertyBrowser, !wndPropertyBrowser.IsVisible(), true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateShowDWPropertyBrowser( CCmdUI* pCmdUI ) 
 {
 	pCmdUI->Enable( true );
 	pCmdUI->SetCheck( wndPropertyBrowser.IsVisible() );	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnShowDWLog() 
 {
 	ShowControlBar( &wndLog, !wndLog.IsVisible(), true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateShowDWLog( CCmdUI* pCmdUI ) 
 {
 	pCmdUI->Enable( true );
 	pCmdUI->SetCheck( wndLog.IsVisible() );	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnToolsCustomize() 
 {
 	SECToolBarsPage toolBarPage;
@@ -926,7 +926,7 @@ void CMainFrame::OnToolsCustomize()
 	toolBarSheet.DoModal();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma comment( lib, "htmlhelp.lib" )
 void CMainFrame::OnHelpContents() 
 {
@@ -945,20 +945,20 @@ void CMainFrame::OnHelpContents()
   }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnHelpAbout() 
 {
 	CAboutDialog aboutDialog( AfxGetMainWnd() );
 	aboutDialog.DoModal();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::OnUpdateHelpContents( CCmdUI *pCmdUI ) 
 {
 	pCmdUI->Enable( NFile::DoesFileExist( (const char*)strHelpFilePath ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 																								UINT nButtonID,
 																								CTPoint<int> *pLeftBottomPos )
@@ -1006,13 +1006,13 @@ bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SECWorksheet* CMainFrame::CreateChildFrame( UINT nResource )
 {
 	return dynamic_cast<SECWorksheet*>( CreateNewChild( RUNTIME_CLASS( CDefaultChildFrame ), nResource, 0, 0 ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, class CWnd *pwndContents )
 {
 	if ( _pwndChildFrame )
@@ -1026,7 +1026,7 @@ bool CMainFrame::SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, cla
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SECControlBar* CMainFrame::CreateControlBar( UINT *pnID,
 																						 const CString &rstrTitle,
 																						 const UINT nStyle,
@@ -1059,7 +1059,7 @@ SECControlBar* CMainFrame::CreateControlBar( UINT *pnID,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::SetControlBarWindowContents( SECControlBar* _pwndDockingWindow, class CWnd *pwndContents )
 {
 	if ( _pwndDockingWindow )
@@ -1073,7 +1073,7 @@ bool CMainFrame::SetControlBarWindowContents( SECControlBar* _pwndDockingWindow,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::AddMenuResources( vector<UINT> &rIDs )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
@@ -1171,7 +1171,7 @@ bool CMainFrame::AddMenuResources( vector<UINT> &rIDs )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::ShowMenu( const UINT nResourceID )
 {
 	m_nIDCurMenuRsrc = nResourceID;
@@ -1185,7 +1185,7 @@ void CMainFrame::ShowMenu( const UINT nResourceID )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::AddToolBarResource( const UINT nStandartResourceID, const UINT nLargeResourceID )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
@@ -1196,7 +1196,7 @@ bool CMainFrame::AddToolBarResource( const UINT nStandartResourceID, const UINT 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::CreateToolBar( UINT *pnID,
 																const CString &rstrTitle,
 																const UINT nButtonCount,
@@ -1229,7 +1229,7 @@ void CMainFrame::CreateToolBar( UINT *pnID,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SECCustomToolBar* CMainFrame::GetToolBar( UINT nID )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
@@ -1239,13 +1239,13 @@ SECCustomToolBar* CMainFrame::GetToolBar( UINT nID )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetStatusBarText( int nPaneIndex, const string &szText )
 {
 	wndStatusBar.SetPaneText( nPaneIndex, szText.c_str() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetWindowTitle( const SSWTParams &rSWTParams )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -1363,7 +1363,7 @@ void CMainFrame::SetWindowTitle( const SSWTParams &rSWTParams )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::Log( ELogOutputType eLogOutputType, const string &szText )
 {
 	if ( ( eLogOutputType == LT_ERROR ) && !wndLog.IsVisible() )
@@ -1373,20 +1373,20 @@ void CMainFrame::Log( ELogOutputType eLogOutputType, const string &szText )
 	wndLog.Log( eLogOutputType, szText );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::ClearLog()
 {
 	wndLog.ClearLog();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SaveObjectStorage( int nGDBBrowserID )
 {
 	Singleton<IUserDataContainer>()->Get()->nFocusedGDBBrowserID = nGDBBrowserID;
 	RestoreObjectStorage();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::RestoreObjectStorage()
 {
 	ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
@@ -1405,7 +1405,7 @@ void CMainFrame::RestoreObjectStorage()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit )
 {
 	NI_ASSERT( pPropertyDesc != 0, "CMainFrame::CreateToolBar() pPropertyDesc == 0" );
@@ -1477,7 +1477,7 @@ bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, c
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
 {
 	const string szObjectTypeName = ( pszObjectTypeName != 0 ) ? ( *pszObjectTypeName ) : string();
@@ -1564,7 +1564,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 	return bResult;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -1601,7 +1601,7 @@ bool CMainFrame::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMainFrame::UpdateCommand(), pbEnable == 0" );
@@ -1622,7 +1622,7 @@ bool CMainFrame::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 {
 	if ( IEditorContainer *pEditorContainer = Singleton<IEditorContainer>() )
@@ -1721,7 +1721,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 	return true;	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::ReloadData()
 {
 	for ( list<CDWGDBBrowser*>::iterator itDWGDBBrowser = gdbBrowserList.begin(); itDWGDBBrowser != gdbBrowserList.end(); ++itDWGDBBrowser )
@@ -1733,7 +1733,7 @@ void CMainFrame::ReloadData()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::CreateProgressDialog()
 {
 	hwndPreviousFocusedWindow = ::GetFocus();
@@ -1748,7 +1748,7 @@ void CMainFrame::CreateProgressDialog()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::DestroyProgressDialog()
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1763,7 +1763,7 @@ void CMainFrame::DestroyProgressDialog()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetProgressDialogTitle( const string &rszTitle )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1772,7 +1772,7 @@ void CMainFrame::SetProgressDialogTitle( const string &rszTitle )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetProgressDialogMessage( const string &rszMessage )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1781,7 +1781,7 @@ void CMainFrame::SetProgressDialogMessage( const string &rszMessage )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetProgressDialogRange( int nStart, int nFinish )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1790,7 +1790,7 @@ void CMainFrame::SetProgressDialogRange( int nStart, int nFinish )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::SetProgressDialogPosition( int nPosition )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1799,7 +1799,7 @@ void CMainFrame::SetProgressDialogPosition( int nPosition )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::IterateProgressDialogPosition()
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
@@ -1807,12 +1807,12 @@ void CMainFrame::IterateProgressDialogPosition()
 		progressDialog.IterateProgressPosition();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /**
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMainFrame::ExecuteCommand( 	bool bCloseEditor, const wstring &rszCommandString )
 {
 	if ( bCloseEditor )

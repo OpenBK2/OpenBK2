@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "parser.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 char* GetNextLine( char *p, int *pnLines )
 {
 	while ( p[0] != 0 && p[0] != 10 && p[0] != 13 )
@@ -12,7 +12,7 @@ char* GetNextLine( char *p, int *pnLines )
 	}
 	return p;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ParseLine( vector<SLexem> *pRes, const char *p, const char *pFinish )
 {
 	pRes->resize( 0 );
@@ -69,7 +69,7 @@ void ParseLine( vector<SLexem> *pRes, const char *p, const char *pFinish )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string StripAfterDot( const char *p, string *pSuffix, string *pPrefix )
 {
 	if ( pSuffix )
@@ -92,14 +92,14 @@ string StripAfterDot( const char *p, string *pSuffix, string *pPrefix )
 	}
 	return res;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetNumber( int n )
 {
 	char szBuf[8] = {0,0,0,0,0,0,0,0};
 	itoa( n, szBuf, 10 );
 	return szBuf;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsOneOf( const char **pList, const char *p )
 {
 	for ( ; pList[0]; ++pList )
@@ -109,7 +109,7 @@ bool IsOneOf( const char **pList, const char *p )
 	}
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //string Filter( char *pszSrc )
 //{
 //	string szRes;
@@ -133,7 +133,7 @@ string Filter( char *pszSrc )
 	return szRes;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SplitString( const char *pszData, vector<string> *pRes )
 {
 	pRes->clear();

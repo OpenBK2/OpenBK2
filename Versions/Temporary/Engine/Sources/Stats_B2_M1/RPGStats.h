@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // automatically generated file, don't change manually!
 
 #include "Stats_B2_M1_export.h"
@@ -17,9 +17,9 @@
 #include "prefix_rpgstats.h"
 #include "unittypes.h"
 #include "../system/filepath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IXmlSaver;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	enum EUnitSpecialAbility;
@@ -3050,13 +3050,13 @@ namespace NDb
 		DWORD CalcCheckSum() const;
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EUnitSpecialAbility eValue );
 	EUnitSpecialAbility StringToEnum_NDb_EUnitSpecialAbility( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EUnitSpecialAbility>
 {
@@ -3064,13 +3064,13 @@ struct SKnownEnum<NDb::EUnitSpecialAbility>
 	static string ToString( NDb::EUnitSpecialAbility eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EUnitSpecialAbility ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbility( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EUnitSpecialAbilityGroup eValue );
 	EUnitSpecialAbilityGroup StringToEnum_NDb_EUnitSpecialAbilityGroup( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EUnitSpecialAbilityGroup>
 {
@@ -3078,13 +3078,13 @@ struct SKnownEnum<NDb::EUnitSpecialAbilityGroup>
 	static string ToString( NDb::EUnitSpecialAbilityGroup eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EUnitSpecialAbilityGroup ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EArmorDirection eValue );
 	EArmorDirection StringToEnum_NDb_EArmorDirection( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EArmorDirection>
 {
@@ -3092,13 +3092,13 @@ struct SKnownEnum<NDb::EArmorDirection>
 	static string ToString( NDb::EArmorDirection eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EArmorDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EArmorDirection( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EObjGameType eValue );
 	EObjGameType StringToEnum_NDb_EObjGameType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EObjGameType>
 {
@@ -3106,13 +3106,13 @@ struct SKnownEnum<NDb::EObjGameType>
 	static string ToString( NDb::EObjGameType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EObjGameType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EObjGameType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EObjectVisType eValue );
 	EObjectVisType StringToEnum_NDb_EObjectVisType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EObjectVisType>
 {
@@ -3120,13 +3120,13 @@ struct SKnownEnum<NDb::EObjectVisType>
 	static string ToString( NDb::EObjectVisType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EObjectVisType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EObjectVisType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::ESelectionType eValue );
 	ESelectionType StringToEnum_NDb_ESelectionType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::ESelectionType>
 {
@@ -3134,13 +3134,13 @@ struct SKnownEnum<NDb::ESelectionType>
 	static string ToString( NDb::ESelectionType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ESelectionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_ESelectionType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue );
 	SWeaponRPGStats::SShell::ETrajectoryType StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::SShell::ETrajectoryType>
 {
@@ -3148,13 +3148,13 @@ struct SKnownEnum<NDb::SWeaponRPGStats::SShell::ETrajectoryType>
 	static string ToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SWeaponRPGStats::SShell::ETrajectoryType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue );
 	SWeaponRPGStats::SShell::EShellDamageType StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::SShell::EShellDamageType>
 {
@@ -3162,13 +3162,13 @@ struct SKnownEnum<NDb::SWeaponRPGStats::SShell::EShellDamageType>
 	static string ToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SWeaponRPGStats::SShell::EShellDamageType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue );
 	SWeaponRPGStats::EWeaponType StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SWeaponRPGStats::EWeaponType>
 {
@@ -3176,13 +3176,13 @@ struct SKnownEnum<NDb::SWeaponRPGStats::EWeaponType>
 	static string ToString( NDb::SWeaponRPGStats::EWeaponType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SWeaponRPGStats::EWeaponType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EBuildingType eValue );
 	EBuildingType StringToEnum_NDb_EBuildingType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EBuildingType>
 {
@@ -3190,13 +3190,13 @@ struct SKnownEnum<NDb::EBuildingType>
 	static string ToString( NDb::EBuildingType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EBuildingType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EBuildingType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EDesignBuildingType eValue );
 	EDesignBuildingType StringToEnum_NDb_EDesignBuildingType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EDesignBuildingType>
 {
@@ -3204,13 +3204,13 @@ struct SKnownEnum<NDb::EDesignBuildingType>
 	static string ToString( NDb::EDesignBuildingType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EDesignBuildingType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignBuildingType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SBridgeRPGStats::EDirection eValue );
 	SBridgeRPGStats::EDirection StringToEnum_NDb_SBridgeRPGStats_EDirection( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SBridgeRPGStats::EDirection>
 {
@@ -3218,13 +3218,13 @@ struct SKnownEnum<NDb::SBridgeRPGStats::EDirection>
 	static string ToString( NDb::SBridgeRPGStats::EDirection eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SBridgeRPGStats::EDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue );
 	SBridgeRPGStats::SSegmentRPGStats::ESegmentType StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType>
 {
@@ -3232,13 +3232,13 @@ struct SKnownEnum<NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType>
 	static string ToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EEntrenchSegmType eValue );
 	EEntrenchSegmType StringToEnum_NDb_EEntrenchSegmType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EEntrenchSegmType>
 {
@@ -3246,13 +3246,13 @@ struct SKnownEnum<NDb::EEntrenchSegmType>
 	static string ToString( NDb::EEntrenchSegmType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EEntrenchSegmType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEntrenchSegmType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EFenceDirection eValue );
 	EFenceDirection StringToEnum_NDb_EFenceDirection( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EFenceDirection>
 {
@@ -3260,13 +3260,13 @@ struct SKnownEnum<NDb::EFenceDirection>
 	static string ToString( NDb::EFenceDirection eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EFenceDirection ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EFenceDirection( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EFenceDamageType eValue );
 	EFenceDamageType StringToEnum_NDb_EFenceDamageType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EFenceDamageType>
 {
@@ -3274,13 +3274,13 @@ struct SKnownEnum<NDb::EFenceDamageType>
 	static string ToString( NDb::EFenceDamageType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EFenceDamageType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EFenceDamageType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue );
 	SFenceRPGStats::EFencePlacementMode StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SFenceRPGStats::EFencePlacementMode>
 {
@@ -3288,13 +3288,13 @@ struct SKnownEnum<NDb::SFenceRPGStats::EFencePlacementMode>
 	static string ToString( NDb::SFenceRPGStats::EFencePlacementMode eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SFenceRPGStats::EFencePlacementMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EMineType eValue );
 	EMineType StringToEnum_NDb_EMineType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EMineType>
 {
@@ -3302,13 +3302,13 @@ struct SKnownEnum<NDb::EMineType>
 	static string ToString( NDb::EMineType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMineType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EMineType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	STATS_B2_M1_EXPORT string EnumToString( NDb::EDBUnitRPGType eValue );
 	STATS_B2_M1_EXPORT EDBUnitRPGType StringToEnum_NDb_EDBUnitRPGType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EDBUnitRPGType>
 {
@@ -3316,13 +3316,13 @@ struct SKnownEnum<NDb::EDBUnitRPGType>
 	static string ToString( NDb::EDBUnitRPGType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EDBUnitRPGType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDBUnitRPGType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EUnitPoliticalSide eValue );
 	EUnitPoliticalSide StringToEnum_NDb_EUnitPoliticalSide( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EUnitPoliticalSide>
 {
@@ -3330,13 +3330,13 @@ struct SKnownEnum<NDb::EUnitPoliticalSide>
 	static string ToString( NDb::EUnitPoliticalSide eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EUnitPoliticalSide ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EUnitPoliticalSide( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EEncyclopediaFilterUnitType eValue );
 	EEncyclopediaFilterUnitType StringToEnum_NDb_EEncyclopediaFilterUnitType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EEncyclopediaFilterUnitType>
 {
@@ -3344,13 +3344,13 @@ struct SKnownEnum<NDb::EEncyclopediaFilterUnitType>
 	static string ToString( NDb::EEncyclopediaFilterUnitType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EEncyclopediaFilterUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	STATS_B2_M1_EXPORT string EnumToString( NDb::EDesignUnitType eValue );
 	STATS_B2_M1_EXPORT EDesignUnitType StringToEnum_NDb_EDesignUnitType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EDesignUnitType>
 {
@@ -3358,13 +3358,13 @@ struct SKnownEnum<NDb::EDesignUnitType>
 	static string ToString( NDb::EDesignUnitType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EDesignUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignUnitType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EEvent eValue );
 	EEvent StringToEnum_NDb_EEvent( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EEvent>
 {
@@ -3372,13 +3372,13 @@ struct SKnownEnum<NDb::EEvent>
 	static string ToString( NDb::EEvent eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EEvent ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EEvent( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EDesignSquadType eValue );
 	EDesignSquadType StringToEnum_NDb_EDesignSquadType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EDesignSquadType>
 {
@@ -3386,13 +3386,13 @@ struct SKnownEnum<NDb::EDesignSquadType>
 	static string ToString( NDb::EDesignSquadType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EDesignSquadType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EDesignSquadType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SSquadRPGStats::ESquadType eValue );
 	SSquadRPGStats::ESquadType StringToEnum_NDb_SSquadRPGStats_ESquadType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SSquadRPGStats::ESquadType>
 {
@@ -3400,13 +3400,13 @@ struct SKnownEnum<NDb::SSquadRPGStats::ESquadType>
 	static string ToString( NDb::SSquadRPGStats::ESquadType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SSquadRPGStats::ESquadType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue );
 	SSquadRPGStats::SFormation::EFormationMoveType StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SSquadRPGStats::SFormation::EFormationMoveType>
 {
@@ -3414,13 +3414,13 @@ struct SKnownEnum<NDb::SSquadRPGStats::SFormation::EFormationMoveType>
 	static string ToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SSquadRPGStats::SFormation::EFormationMoveType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	STATS_B2_M1_EXPORT string EnumToString( NDb::EReinforcementType eValue );
 	STATS_B2_M1_EXPORT EReinforcementType StringToEnum_NDb_EReinforcementType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EReinforcementType>
 {

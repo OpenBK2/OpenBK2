@@ -1,6 +1,6 @@
 // MessageReactions.h: interface for the CMessageReactions class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_MESSAGEREACTIONS_H__E9435A45_ACAE_4421_9CBE_B4BE9882459B__INCLUDED_)
 #define AFX_MESSAGEREACTIONS_H__E9435A45_ACAE_4421_9CBE_B4BE9882459B__INCLUDED_
@@ -12,7 +12,7 @@
 #include "..\Script\ScriptWrapper.h"
 
 interface IMessageReactionB2;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class contains message reactions
 // that may be launched.
 // Message Reaction is a set basic actions 
@@ -34,6 +34,6 @@ public:
 	void Register( const string &szReactionKey, IMessageReactionB2 *pReaction );
 	int operator&( IBinSaver &saver );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #endif // !defined(AFX_MESSAGEREACTIONS_H__E9435A45_ACAE_4421_9CBE_B4BE9882459B__INCLUDED_)

@@ -16,9 +16,9 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EDITOR_IN_DLL( WindowSimpleShared, CWindowSimpleSharedEditor )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_EDITOR_LOCAL( name ) \
 	REGISTER_EDITOR_IN_DLL( name, CWindowSimpleSharedEditor )
 
@@ -46,12 +46,12 @@ REGISTER_EDITOR_LOCAL( WindowStatsSystem )
 REGISTER_EDITOR_LOCAL( WindowTooltip )
 
 #undef REGISTER_EDITOR_LOCAL
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowSimpleSharedEditor::CWindowSimpleSharedEditor()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::Create()
 {
 	{
@@ -61,7 +61,7 @@ void CWindowSimpleSharedEditor::Create()
 	PushState( GetObjectSet(), new CWindowSimpleSharedState( this ), false );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::Destroy()
 {
 	{
@@ -81,7 +81,7 @@ void CWindowSimpleSharedEditor::Destroy()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::PushState( const SObjectSet & _objectSet, CDefaultInputState * pState, bool bCallEnterLeave )
 {
 	if ( bCallEnterLeave )
@@ -101,7 +101,7 @@ void CWindowSimpleSharedEditor::PushState( const SObjectSet & _objectSet, CDefau
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::PopState()
 {
 	states.back().pState->Leave();
@@ -116,7 +116,7 @@ void CWindowSimpleSharedEditor::PopState()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
 {
 	const string szTypeName = _objectSet.szObjectTypeName;
@@ -131,7 +131,7 @@ bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const string &rObjectTypeName, const CDBID &rDBID )
 {
 	CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
@@ -154,7 +154,7 @@ bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const strin
 	return (pUndoManipulator != 0) && (pUndoController != 0);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::UOEnd()
 {
 	if ( bUOResult )
@@ -168,7 +168,7 @@ bool CWindowSimpleSharedEditor::UOEnd()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::UOSetValue( const string & szName, const CVariant & newValue )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
@@ -182,7 +182,7 @@ bool CWindowSimpleSharedEditor::UOSetValue( const string & szName, const CVarian
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::UOInsertNode( const string &szName, const string &szChildTypeName, const CDBID &rDBID )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
@@ -197,7 +197,7 @@ bool CWindowSimpleSharedEditor::UOInsertNode( const string &szName, const string
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::UORemoveNode( const string &szName, int nIndex, const string &szChildTypeName, const CDBID &rDBID )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult )
@@ -212,21 +212,21 @@ bool CWindowSimpleSharedEditor::UORemoveNode( const string &szName, int nIndex, 
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::InsertObject( IManipulator *pManipulator, const string & szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->InsertNode( szName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const string & szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->RemoveNode( szName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::Undo( IController* pController )
 {
 	string tempLabel;
@@ -274,7 +274,7 @@ void CWindowSimpleSharedEditor::Undo( IController* pController )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::Redo( IController* pController )
 {
 	string tempLabel;
@@ -320,19 +320,19 @@ void CWindowSimpleSharedEditor::Redo( IController* pController )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::PushRunModeState( const string &rszEditorTypeName, const CDBID &rDBID )
 {
 	PushState( GetObjectSet(), new CUIRunModeState( this, rszEditorTypeName, rDBID ), true );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::PopRunModeState()
 {
 	PopState();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowSimpleSharedEditor::RemoveViewManipulator()
 {
 	if( HasMoreThanOnePushedStates() )
@@ -351,7 +351,7 @@ void CWindowSimpleSharedEditor::RemoveViewManipulator()
 		//states.back().pState->Enter();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowSimpleSharedEditorSettings::operator&( IXmlSaver &xs )
 {
 	//xs.Add( "ObjectTypeDataMap", &objectTypeDataMap );
@@ -359,4 +359,4 @@ int CWindowSimpleSharedEditorSettings::operator&( IXmlSaver &xs )
 	xs.Add( "TemplateWindowDBID", &templateWindowDBID );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

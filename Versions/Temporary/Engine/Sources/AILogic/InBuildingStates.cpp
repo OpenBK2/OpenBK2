@@ -9,21 +9,21 @@
 #include "GroupLogic.h"
 #include "Diplomacy.h"
 #include "FeedBackSystem.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D4B8, CSoldierAttackInBuildingState ); 
 REGISTER_SAVELOAD_CLASS( 0x1108D48C, CInBuildingStatesFactory );
 REGISTER_SAVELOAD_CLASS( 0x1108D48D, CSoldierRestInBuildingState );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern CFeedBackSystem theFeedBackSystem;
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 extern CGroupLogic theGroupLogic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										  CInBuildingStatesFactory										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtr<CInBuildingStatesFactory> CInBuildingStatesFactory::pFactory = 0;
 
 IStatesFactory* CInBuildingStatesFactory::Instance()
@@ -33,7 +33,7 @@ IStatesFactory* CInBuildingStatesFactory::Instance()
 
 	return pFactory;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInBuildingStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
@@ -46,7 +46,7 @@ bool CInBuildingStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 			cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT
 		);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
 	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
@@ -83,17 +83,17 @@ IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAI
 
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CInBuildingStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
 	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
 	return CSoldierRestInBuildingState::Instance( checked_cast<CSoldier*>( pUnit ), 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										CSoldierRestInBuildingState										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding *pBuilding )
 {
 	CSoldierRestInBuildingState *pRest = new CSoldierRestInBuildingState( pSoldier );
@@ -101,7 +101,7 @@ IUnitState* CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding
 	
 	return pRest;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier )
 : pSoldier( _pSoldier )
 {
@@ -110,7 +110,7 @@ CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier )
 	pSoldier->StartCamouflating();
 	ResetTime( pSoldier );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierRestInBuildingState::SendUnitTo( CBuilding *pBuilding )
 {
 	if ( pBuilding != 0 )
@@ -123,7 +123,7 @@ void CSoldierRestInBuildingState::SendUnitTo( CBuilding *pBuilding )
 	else
 		NI_ASSERT( pSoldier->IsInBuilding(), "Wrong unit state" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierRestInBuildingState::Segment()
 {
 	if ( pSoldier->IsInFollowState() && fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
@@ -131,13 +131,13 @@ void CSoldierRestInBuildingState::Segment()
 	else if ( pSoldier->GetSlot() != -1 )
 		pSoldier->AnalyzeTargetScan( 0, false, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CSoldierRestInBuildingState::TryInterruptState( class CAICommand *pCommand )
 {
 	pSoldier->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CSoldierRestInBuildingState::GetPurposePoint() const
 {
 	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )
@@ -145,16 +145,16 @@ const CVec2 CSoldierRestInBuildingState::GetPurposePoint() const
 	else
 		return CVec2( -1.0f, -1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										 CSoldierAttackInBuildingState								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CSoldierAttackInBuildingState::Instance(  CSoldier *pSoldier, CAIUnit *pEnemy )
 {
 	return new CSoldierAttackInBuildingState( pSoldier, pEnemy );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoldierAttackInBuildingState::CSoldierAttackInBuildingState( class CSoldier *_pSoldier, CAIUnit *_pEnemy )
 : pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), nEnemyParty( _pEnemy->GetParty() )
 {
@@ -163,7 +163,7 @@ CSoldierAttackInBuildingState::CSoldierAttackInBuildingState( class CSoldier *_p
 	if ( !pEnemy->IsAlive() )
 		pSoldier->SendAcknowledgement( ACK_INVALID_TARGET, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierAttackInBuildingState::AnalyzeCurrentState()
 {
 	// можно выстрелить
@@ -188,7 +188,7 @@ void CSoldierAttackInBuildingState::AnalyzeCurrentState()
 		pSoldier->SetCommandFinished();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierAttackInBuildingState::Segment()
 {
 	if ( !pSoldier->GetBuilding()->IsAnyAttackers() || bFinish )
@@ -235,7 +235,7 @@ void CSoldierAttackInBuildingState::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CSoldierAttackInBuildingState::TryInterruptState( class CAICommand *pCommand )
 { 
 	if ( !pCommand )
@@ -260,7 +260,7 @@ ETryStateInterruptResult CSoldierAttackInBuildingState::TryInterruptState( class
 
 	return TSIR_NO_COMMAND_INCOMPATIBLE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CSoldierAttackInBuildingState::GetPurposePoint() const
 {
 	if ( IsValidObj( pEnemy ) )
@@ -268,9 +268,9 @@ const CVec2 CSoldierAttackInBuildingState::GetPurposePoint() const
 	else
 		return CVec2( -1.0f, -1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIUnit* CSoldierAttackInBuildingState::GetTargetUnit() const
 {
 	return pEnemy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

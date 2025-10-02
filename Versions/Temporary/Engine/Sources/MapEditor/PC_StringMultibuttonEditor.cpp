@@ -11,7 +11,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCStringMultibuttonEditor::CPCStringMultibuttonEditor( int _nButtonCount )
 	: bIgnoreFocusChange( false ),
 		bMultiLine( false ),
@@ -20,13 +20,13 @@ CPCStringMultibuttonEditor::CPCStringMultibuttonEditor( int _nButtonCount )
 {	
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPCStringMultibuttonEditor::~CPCStringMultibuttonEditor()
 {
 	DestroyWindow();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CPCStringMultibuttonEditor, CEdit)
 	ON_WM_DESTROY()
 	ON_WM_SETFOCUS()
@@ -36,7 +36,7 @@ BEGIN_MESSAGE_MAP(CPCStringMultibuttonEditor, CEdit)
 	ON_CONTROL_REFLECT(EN_CHANGE, OnEnChange)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::OnDestroy() 
 {
 	for ( CPCEditorButtonList::iterator itPCEditorButton = buttonList.begin(); itPCEditorButton != buttonList.end(); ++itPCEditorButton )
@@ -52,7 +52,7 @@ void CPCStringMultibuttonEditor::OnDestroy()
 	CEdit::OnDestroy();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CPCStringMultibuttonEditor::PreTranslateMessage( MSG* pMsg ) 
 {
 	if ( pMsg->message == WM_KEYDOWN )	
@@ -82,7 +82,7 @@ BOOL CPCStringMultibuttonEditor::PreTranslateMessage( MSG* pMsg )
 	return CEdit::PreTranslateMessage( pMsg );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::OnSetFocus( CWnd* pOldWnd )
 {
 	CEdit::OnSetFocus( pOldWnd );
@@ -90,7 +90,7 @@ void CPCStringMultibuttonEditor::OnSetFocus( CWnd* pOldWnd )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::OnKillFocus( CWnd* pNewWnd ) 
 {	
 	CEdit::OnKillFocus( pNewWnd );
@@ -115,7 +115,7 @@ void CPCStringMultibuttonEditor::OnKillFocus( CWnd* pNewWnd )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags ) 
 {
 	if ( ( nChar == VK_ESCAPE ) || ( nChar == VK_RETURN ) )	
@@ -133,7 +133,7 @@ void CPCStringMultibuttonEditor::OnChar( UINT nChar, UINT nRepCnt, UINT nFlags )
 	CEdit::OnChar( nChar, nRepCnt, nFlags );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::OnEnChange()
 {
 	if ( !bCreateControls )
@@ -142,7 +142,7 @@ void CPCStringMultibuttonEditor::OnEnChange()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT CPCStringMultibuttonEditor::OnMessageEditorButtonChange( WPARAM wParam, LPARAM lParam )
 {
 	switch( LOWORD( wParam ) )
@@ -180,9 +180,9 @@ LRESULT CPCStringMultibuttonEditor::OnMessageEditorButtonChange( WPARAM wParam, 
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPCItemEditor
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringMultibuttonEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
@@ -242,7 +242,7 @@ bool CPCStringMultibuttonEditor::CreateEditor( const string &rszName, EPCIEType 
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringMultibuttonEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 {
 	CTRect<int> editRect( rPlaceRect );
@@ -265,7 +265,7 @@ bool CPCStringMultibuttonEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 	return true;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringMultibuttonEditor::ActivateEditor( CDialog *pwndActiveDialog )
 {
 	ShowWindow( SW_SHOW );
@@ -284,7 +284,7 @@ bool CPCStringMultibuttonEditor::ActivateEditor( CDialog *pwndActiveDialog )
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::SetValue( const CVariant &rValue )
 {
 	szDefaultValue = rValue.GetStringRecode();
@@ -294,7 +294,7 @@ void CPCStringMultibuttonEditor::SetValue( const CVariant &rValue )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::GetValue( CVariant *pValue )
 {
 	if ( !pValue )
@@ -307,7 +307,7 @@ void CPCStringMultibuttonEditor::GetValue( CVariant *pValue )
 	*pValue = string( strText );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPCStringMultibuttonEditor::SetDefaultValue()
 {
 	CPCItemEditor::SetDefaultValue();
@@ -316,7 +316,7 @@ void CPCStringMultibuttonEditor::SetDefaultValue()
 	bCreateControls = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -345,7 +345,7 @@ bool CPCStringMultibuttonEditor::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPCStringMultibuttonEditor::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCStringMultibuttonEditor::UpdateCommand(), pbEnable == 0" );
@@ -388,6 +388,6 @@ bool CPCStringMultibuttonEditor::UpdateCommand( UINT nCommandID, bool *pbEnable,
 			return false;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

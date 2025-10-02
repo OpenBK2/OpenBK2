@@ -2,12 +2,12 @@
 #include "Text.h"
 #include "FilePath.h"
 #include "VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NText
 {
 typedef hash_map<NFile::CFilePath, wstring> CUnicodeTextMap;
 static CUnicodeTextMap unicodeTextMap;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream )
 {
 	if ( pStream->IsOk() )
@@ -34,7 +34,7 @@ bool LoadUnicodeText( wstring *pwszRes, CDataStream *pStream )
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool LoadUnicodeText( wstring *pwszRes, const string &szFileName )
 {
 	if ( szFileName.empty() )
@@ -42,7 +42,7 @@ bool LoadUnicodeText( wstring *pwszRes, const string &szFileName )
 	CFileStream stream( NVFS::GetMainVFS(), szFileName );
 	return LoadUnicodeText( pwszRes, &stream );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring &GetText( const string &szTextFileName )
 {
 	const NFile::CFilePath filePath = szTextFileName;
@@ -58,7 +58,7 @@ const wstring &GetText( const string &szTextFileName )
 	//
 	return unicodeTextMap[filePath];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Reload( const string &szTextFileName )
 {
 	const NFile::CFilePath filePath = szTextFileName;
@@ -68,5 +68,5 @@ void Reload( const string &szTextFileName )
 	else
 		unicodeTextMap[filePath] = wszText;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

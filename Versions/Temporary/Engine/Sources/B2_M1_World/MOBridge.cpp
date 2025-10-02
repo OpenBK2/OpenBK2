@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "MOBridge.h"
 #include "../Misc/Win32Random.h"
 #include "../Stats_B2_M1/DBAnimB2.h"
 #include "../3Dmotor/GAnimation.hpp"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -43,7 +43,7 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 
   return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBridge::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	if ( CMapObj::Create(nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor) )
@@ -57,17 +57,17 @@ bool CMOBridge::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBridge::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMapObj::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SBridgeRPGStats::SElementRPGStats& CMOBridge::GetElement() const
 {
 	return nFrameIndex == 0 ? pStats->end : pStats->center;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOBridge::GetDamagedState( float fHP ) const 
 {
 	int nResult = -1;
@@ -84,7 +84,7 @@ int CMOBridge::GetDamagedState( float fHP ) const
 	}
 	return nResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj* CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
 {
 	*pnDamagedState = GetDamagedState( fHP );
@@ -98,7 +98,7 @@ const NDb::SVisObj* CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
 	}
 	return objects[nRandomSpan];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bInstant )
 {
 	CVec3 vPos, vScale;
@@ -135,7 +135,7 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 			AddAnimation( deathAnims[nRandomAnim], timeStart, pAnimator, false, bInstant ? FP_MAX_VALUE : 1.0f );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
@@ -195,7 +195,7 @@ IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &s
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBridge::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -209,7 +209,7 @@ void CMOBridge::GetActions( CUserActions *pActions, EActionsType eActions ) cons
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBridge::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -221,7 +221,7 @@ void CMOBridge::GetDisabledActions( CUserActions *pActions, EActionsType eAction
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
@@ -229,12 +229,12 @@ NDb::EUserAction CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CU
 		
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOBridge::IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const
 {
 	return eUserAction == NDb::USER_ACTION_MOVE || eUserAction == NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOBridge::FinalizeDeath( NDb::ESeason eSeason )
 {
 	nRandomSpan = -1;
@@ -242,7 +242,7 @@ void CMOBridge::FinalizeDeath( NDb::ESeason eSeason )
 	const NDb::SVisObj *pDeadVO = GetVisObjForHP( 0, &nDamagedState );
 	ChangeModelToDamaged( nDamagedState, GetModel( pDeadVO, eSeason ), eSeason );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOBridge::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, checked_cast<CMapObj*>(this) );
@@ -252,5 +252,5 @@ int CMOBridge::operator&( IBinSaver &saver )
 	saver.Add( 5, &bDestroyed );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7480, CMOBridge );

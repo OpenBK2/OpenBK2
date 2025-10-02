@@ -20,28 +20,28 @@
 #include "../System/Text.h"
 #include "../UI/SceneClassIDs.h"
 #include "..\3DMotor\ScreenShot.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;
 static int s_nExpandEffectDuration = 400;
 static int s_nWaitEffectDuration = 200;
 static float s_fTransitionEffectToPWLLength = 0.0f; //0.1f;
 static int s_nFrontLineAnimDuration = 5000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int TOP_PRIORITY = 500;
 const int PICTURE_BORDER_SIZE = 40; // (23 pixels for original size)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int SELECTION_OVER_DELTA_X = 0;
 const int SELECTION_OVER_DELTA_Y = 0;
 const int SELECTION_PUSHED_DELTA_X = 1;
 const int SELECTION_PUSHED_DELTA_Y = 2;
 const int SELECTION_SELECTED_DELTA_X = 1;
 const int SELECTION_SELECTED_DELTA_Y = 2;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float ROLLER_TIME = 2.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wchar_t* DYNAMIC_TAG_REINF_TYPE = L"reinf_type";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::CReactions::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "reaction_on_target_select" )
@@ -130,9 +130,9 @@ bool CInterfaceChapterMapMenu::CReactions::Execute( const string &szSender, cons
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceChapterMapMenu
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() : 
 	CInterfaceScreenBase( "ChapterMapMenu", "chapter_map_menu" ),
 	eUIState( EUIS_NORMAL ), eReinfDescState( ERDWS_NONE ), nDelay( 0 ), pChapter( 0 ),
@@ -143,19 +143,19 @@ CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() :
 
 	bonusButtons.resize( 4 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceChapterMapMenu::~CInterfaceChapterMapMenu()
 {
 	if ( pScreen ) 
 		Scene()->RemoveScreen( pScreen );
 	pReactions = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceChapterMapMenu::CReactions::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::Init()
 {
 	if ( CInterfaceScreenBase::Init() == false ) 
@@ -310,7 +310,7 @@ bool CInterfaceChapterMapMenu::Init()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::RegisterObservers()
 {
 	AddObserver( "menu_back", &CInterfaceChapterMapMenu::MsgBack );
@@ -320,7 +320,7 @@ void CInterfaceChapterMapMenu::RegisterObservers()
 	AddObserver( "complete_selected_mission", &CInterfaceChapterMapMenu::MsgCompleteSelectedMission );
 	AddObserver( "complete_chapter", &CInterfaceChapterMapMenu::MsgCompleteChapter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( bFocus );
@@ -333,13 +333,13 @@ void CInterfaceChapterMapMenu::OnGetFocus( bool bFocus )
 		Cursor()->Show( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgReenter( const SGameMessage &msg )
 {
 //	eExitDir = EED_RE_ENTER;
 //	bNeedToRunAnimation = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgCompleteSelectedMission( const SGameMessage &msg )
 {
   IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
@@ -350,7 +350,7 @@ void CInterfaceChapterMapMenu::MsgCompleteSelectedMission( const SGameMessage &m
 		NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgCompleteChapter( const SGameMessage &msg )
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
@@ -361,7 +361,7 @@ void CInterfaceChapterMapMenu::MsgCompleteChapter( const SGameMessage &msg )
 		NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnSaveGame()
 {
 	InterfaceState()->GetScreenShotTexture()->Generate( true );
@@ -369,23 +369,23 @@ bool CInterfaceChapterMapMenu::OnSaveGame()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgBack( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
 		InterfaceState()->GetTextEntry( "T_CHAPTER_MAP_QUESTION_BACK" ) ).c_str() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgMessageBoxOk( const SGameMessage &msg )
 {
 	EffectStart( EED_BACK );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgMessageBoxCancel( const SGameMessage &msg )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgPlay( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_MISSION_BRIEFING, "" );
@@ -399,28 +399,28 @@ void CInterfaceChapterMapMenu::MsgPlay( const SGameMessage &msg )
 
 	NInput::PostEvent( "unload_background_mission", 0, 0 );*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MsgContinuePlay( const SGameMessage &msg )
 {
 	Singleton<IScene>()->AddScreen( pScreen );
 
 	PlayMissionStartEffect();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnArmyManager()
 {
 //	EffectStart( EED_ARMY_MANAGER );
 	NMainLoop::Command( ML_COMMAND_ARMY_SCREEN, "" );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnPlayerStats()
 {
 //	EffectStart( EED_PLAYER_INFO );
 	NMainLoop::Command( ML_COMMAND_PLAYER_STATS, "" );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::PlayMissionStartEffect()
 {
 	GetScreen()->Enable( false );
@@ -428,7 +428,7 @@ void CInterfaceChapterMapMenu::PlayMissionStartEffect()
 	timeStartEffect = Singleton<IGameTimer>()->GetAbsTime();
 	eUIEffectState = EUIES_FADE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::PlayMissionStartMission()
 {
 	eUIState = EUIS_PLAY_MISSION_DONE;
@@ -450,7 +450,7 @@ void CInterfaceChapterMapMenu::PlayMissionStartMission()
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapToStart->GetDBID().ToString().c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::FadeMapElements( float fFade )
 {
 	for ( CTargets::iterator it = targets.begin(); it != targets.end(); ++it )
@@ -471,7 +471,7 @@ void CInterfaceChapterMapMenu::FadeMapElements( float fFade )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ExpandMap( float fProgress )
 {
 	CTRect<float> rcParent = GetScreen()->GetWindowRect();
@@ -483,12 +483,12 @@ void CInterfaceChapterMapMenu::ExpandMap( float fProgress )
 			rcInitialMapBounds.Height() + (rcParent.Height() + PICTURE_BORDER_SIZE * 2 - rcInitialMapBounds.Height()) * fProgress, EWPF_ALL );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::ProcessEvent( const SGameMessage &msg )
 {
 	return CInterfaceScreenBase::ProcessEvent( msg );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::AfterLoad()
 {
 	CInterfaceScreenBase::AfterLoad();
@@ -511,7 +511,7 @@ void CInterfaceChapterMapMenu::AfterLoad()
 		SelectTarget( nStoredIndex );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );												 
@@ -570,7 +570,7 @@ bool CInterfaceChapterMapMenu::StepLocal( bool bAppActive )
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::UpdateUIState()
 {
 	if ( eUIState == EUIS_PLAY_MISSION_START_EFFECT )
@@ -634,7 +634,7 @@ void CInterfaceChapterMapMenu::UpdateUIState()
 			eUIState = EUIS_PLAY_MISSION_START_TRANSIT_EFFECT;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::Draw( NGScene::CRTPtr *pTexture )
 {
 	UpdateUIState();
@@ -652,7 +652,7 @@ void CInterfaceChapterMapMenu::Draw( NGScene::CRTPtr *pTexture )
 		CInterfaceScreenBase::Draw( pTexture );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::SelectTarget( int nIndex )
 {
 	nSelectedMission = nIndex;
@@ -712,7 +712,7 @@ void CInterfaceChapterMapMenu::SelectTarget( int nIndex )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 {
 	if ( pMissionDescBtn )
@@ -824,7 +824,7 @@ void CInterfaceChapterMapMenu::MakeMissionInfo( int nIndex )
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::MakeChapterInfo()
 {
 	if ( pMissionDescBtn )
@@ -879,7 +879,7 @@ void CInterfaceChapterMapMenu::MakeChapterInfo()
 			reinfButtons[i].pIcon->SetTexture( reinfButtons[i].pDefaultTexture );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 {
 	int nAvailReinfs = 0; 
@@ -967,7 +967,7 @@ int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 
 	return nAvailReinfs;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::SwitchTargetState( int nTarget, bool bSelected )
 {
 	STarget &target = targets[nTarget];
@@ -1033,7 +1033,7 @@ void CInterfaceChapterMapMenu::SwitchTargetState( int nTarget, bool bSelected )
 
 	UpdateRecommendedButton( target, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STmpReinfEntry
 {
 	const NDb::SHPObjectRPGStats *pStats;
@@ -1045,7 +1045,7 @@ struct STmpReinfEntry
 		return bResult;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const wstring CInterfaceChapterMapMenu::MakeTooltip( const NDb::SReinforcement *pReinf )
 {
 	wstring wszTooltip = L"";
@@ -1099,7 +1099,7 @@ const wstring CInterfaceChapterMapMenu::MakeTooltip( const NDb::SReinforcement *
 
 	return wszTooltip;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnTargetSelect( const string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
@@ -1112,7 +1112,7 @@ void CInterfaceChapterMapMenu::OnTargetSelect( const string &szSender )
 	}
 //	SelectTarget( -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnTargetDblClick( const string &szSender )
 {
 	if ( nSelectedMission >= 0 && targets[nSelectedMission].pWindow->GetName() == szSender &&
@@ -1123,7 +1123,7 @@ bool CInterfaceChapterMapMenu::OnTargetDblClick( const string &szSender )
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::DoAutoSave()
 {
 	/*if ( !Singleton<IScenarioTracker>()->IsMissionWon() )
@@ -1144,7 +1144,7 @@ void CInterfaceChapterMapMenu::DoAutoSave()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::OnPopupClicked( const string &szSender )
 {
 	for( int i = 0; i < bonusButtons.size(); ++i )
@@ -1203,7 +1203,7 @@ void CInterfaceChapterMapMenu::OnPopupClicked( const string &szSender )
 
 	NI_ASSERT( false, "popup_clicked received from unknown item" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnFixBonus( const string &szSender )
 {
 	bool bFound = false;
@@ -1269,7 +1269,7 @@ bool CInterfaceChapterMapMenu::OnFixBonus( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ShowAllRewards( bool bShow )
 {
 	for ( int i = 0; i < targets.size(); ++i )
@@ -1287,7 +1287,7 @@ void CInterfaceChapterMapMenu::ShowAllRewards( bool bShow )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::HideChildren( IWindow *pParent )
 {
 	if ( !pParent )
@@ -1296,7 +1296,7 @@ void CInterfaceChapterMapMenu::HideChildren( IWindow *pParent )
 	for ( int j = 0; j < pParent->GetNumChildren(); ++j )
 		pParent->GetChild( j )->ShowWindow( false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::PlayReinfRollerAnim( int nStart, int nEnd )
 {
 	vector<IPlayer*> rollers;
@@ -1306,7 +1306,7 @@ void CInterfaceChapterMapMenu::PlayReinfRollerAnim( int nStart, int nEnd )
 	
 	NUIElementsHelper::PlayRollerAnim( rollers, nStart, nEnd, ROLLER_TIME );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::PlayMissionRollerAnim( int nStart, int nEnd )
 {
 	vector<IPlayer*> rollers;
@@ -1315,7 +1315,7 @@ void CInterfaceChapterMapMenu::PlayMissionRollerAnim( int nStart, int nEnd )
 	
 	NUIElementsHelper::PlayRollerAnim( rollers, nStart, nEnd, ROLLER_TIME );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnTargetOver( const string &szSender )
 {
 	return true;
@@ -1331,7 +1331,7 @@ bool CInterfaceChapterMapMenu::OnTargetOver( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnTargetPushed( const string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
@@ -1346,7 +1346,7 @@ bool CInterfaceChapterMapMenu::OnTargetPushed( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnTargetPushedBack( const string &szSender )
 {
 	for ( int i = 0; i < targets.size(); ++i )
@@ -1361,7 +1361,7 @@ bool CInterfaceChapterMapMenu::OnTargetPushedBack( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::UpdateRecommendedButton( STarget &target, bool bPushed )
 {
 	if ( target.pWindow->GetState() == 1 )
@@ -1383,21 +1383,21 @@ void CInterfaceChapterMapMenu::UpdateRecommendedButton( STarget &target, bool bP
 				target.nRecommendedY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnReinfUpgradeDialogClose( const string &szSender )
 {
 	pReinfUpgrade->Hide();
 	pReinfComposition->Hide();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnReinfUpgradeUnitBtn( const string &szSender )
 {
 	pReinfUpgrade->UnitBtnPressed( szSender );
 	pReinfComposition->UnitBtnPressed( szSender );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnChapterDescDlgClose( const string &szSender )
 {
 	pChapterDescDlg->Hide();
@@ -1407,13 +1407,13 @@ bool CInterfaceChapterMapMenu::OnChapterDescDlgClose( const string &szSender )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnMissionDescDlgClose( const string &szSender )
 {
 	pMissionDescDlg->Hide();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceChapterMapMenu::OnShowMissionDesc( const string &szSender )
 {
 	if ( nSelectedMission >= 0 )
@@ -1425,7 +1425,7 @@ bool CInterfaceChapterMapMenu::OnShowMissionDesc( const string &szSender )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::HideDialogs()
 {
 	if ( pReinfDesc )
@@ -1444,7 +1444,7 @@ void CInterfaceChapterMapMenu::HideDialogs()
 	pChapterDescDlg->Hide();
 	pMissionDescDlg->Hide();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceChapterMapMenu::ProceedInitialDialogs()
 {
 	if ( bInitialDialogVisible )
@@ -1465,25 +1465,25 @@ void CInterfaceChapterMapMenu::ProceedInitialDialogs()
 	if ( InterfaceState()->IsAutoShowCommanderScreen() )
 		NMainLoop::Command( ML_COMMAND_ARMY_SCREEN, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICChapterMapMenu
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _SINGLE_DEMO
 void CICChapterMapMenu::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICChapterMapMenu::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICChapterMapMenu::Configure( const char *pszConfig )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // _SINGLE_DEMO
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ChapterMapOutro( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
@@ -1491,12 +1491,12 @@ void ChapterMapOutro( const string &szID, const vector<wstring> &paramsSet, void
 //	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ChapterMap( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ChapterMapAutostartMission( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -1536,7 +1536,7 @@ void ChapterMapAutostartMission( const string &szID, const vector<wstring> &para
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ChapterMapAfterIntroMovie( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	// start chapter music
@@ -1544,7 +1544,7 @@ void ChapterMapAfterIntroMovie( const string &szID, const vector<wstring> &param
 	if ( pCampaign->pIntermissionMusic )
 		Singleton<IMusicSystem>()->Init( pCampaign->pIntermissionMusic, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #if !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
 START_REGISTER(ChapterMapCommands)
 REGISTER_CMD( "chapter_map_outro", ChapterMapOutro );
@@ -1560,9 +1560,9 @@ REGISTER_VAR_EX( "transition_effect_to_pwl_length", NGlobal::VarFloatHandler, &s
 REGISTER_VAR_EX( "front_line_move_duration", NGlobal::VarIntHandler, &s_nFrontLineAnimDuration, 5000, STORAGE_NONE );
 
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x170C1381, CInterfaceChapterMapMenu )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_CHAPTER_MAP_MENU, CICChapterMapMenu )
 REGISTER_SAVELOAD_CLASS_NM( 0x170C1382, CReactions, CInterfaceChapterMapMenu );
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

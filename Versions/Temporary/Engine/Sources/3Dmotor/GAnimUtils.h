@@ -5,7 +5,7 @@ struct granny_world_pose;
 namespace NAnimation
 {
 class CGrannyFileInfo;
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 // filter for additional bones
 class CAddBoneFilter : public CFuncBase<SFBTransform>
 {

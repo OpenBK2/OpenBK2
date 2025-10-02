@@ -3,9 +3,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // universal bilinear interpolation
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T, class TInterp> 
 inline typename TInterp::RET GetBilinear( const CArray2D<T> &data, float x, float y, const TInterp &interp )
 {
@@ -16,14 +16,14 @@ inline typename TInterp::RET GetBilinear( const CArray2D<T> &data, float x, floa
 	T b = interp( data[nY+1][nX], data[nY+1][nX+1], x - nX );
 	return interp( a, b, y - nY );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct TLinearInterpolate
 {
 	typedef float RET;
 	template<class T>
 		float operator()( T a, T b, float f ) const { return (1-f) * a + f * b; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct THermitInterpolate
 {
 	template <class TValue>
@@ -37,5 +37,5 @@ struct THermitInterpolate
 				return ( (2*p0 - 2*p1 + v0 + v1)*fCoeff*fCoeff*fCoeff + (-3*p0 + 3*p1 -2*v0 - v1)*fCoeff*fCoeff + v0*fCoeff + p0 );
 		}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

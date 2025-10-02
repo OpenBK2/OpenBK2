@@ -29,7 +29,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT };
@@ -39,7 +39,7 @@ const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_
 const int   CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_FORMAT[TABGDBB_TREE_COLUMN_COUNT] = { LVCFMT_LEFT };
 const int		CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_WIDTH [TABGDBB_TREE_COLUMN_COUNT] = { 150 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CALLBACK TreeGDBBrowserBaseCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort )
 {
 	HTREEITEM hItem0 = reinterpret_cast<HTREEITEM>( lParam0 );
@@ -54,7 +54,7 @@ int CALLBACK TreeGDBBrowserBaseCompareFunc( LPARAM lParam0, LPARAM lParam1, LPAR
 	return pTreeGDBBrowserBase->SortItemText( strText0, nType0, strText1, nType1 );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTreeGDBBrowserBase::SortItemText( const CString &rstrText0, EGDBOType nType0, const CString &rstrText1, EGDBOType nType1 )
 {
 	if ( nType0 != nType1 )
@@ -95,20 +95,20 @@ int CTreeGDBBrowserBase::SortItemText( const CString &rstrText0, EGDBOType nType
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase::CGDBOMnemonics::CGDBOMnemonics() : CMnemonicsCollector<int>( CTreeGDBBrowserBase::GDBO_UNKNOWN, "" )
 {
 	Insert( GDBO_OBJECT, "object" );
 	Insert( GDBO_FOLDER, "folder" );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::CGDBOMnemonics::Get( const string &rszGDBOMnemonic )
 {
 	return static_cast<EGDBOType>( GetValue( rszGDBOMnemonic ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CTreeGDBBrowserBase, CSortTreeControl)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
@@ -131,7 +131,7 @@ BEGIN_MESSAGE_MAP(CTreeGDBBrowserBase, CSortTreeControl)
 	ON_WM_KILLFOCUS()
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase::CTreeGDBBrowserBase( bool _bNeedTranslateAccelerators, bool _bModal, int _nGDBBrowserID )
 	: bNeedTranslateAccelerators( _bNeedTranslateAccelerators ),
 		bModal ( _bModal ),
@@ -147,12 +147,12 @@ CTreeGDBBrowserBase::CTreeGDBBrowserBase( bool _bNeedTranslateAccelerators, bool
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase::~CTreeGDBBrowserBase()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 LRESULT CTreeGDBBrowserBase::WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
 {
 	if ( IsNotEditLabel() )
@@ -168,7 +168,7 @@ LRESULT CTreeGDBBrowserBase::WindowProc( UINT message, WPARAM wParam, LPARAM lPa
 	return CSortTreeControl::WindowProc( message, wParam, lParam );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTreeGDBBrowserBase::OnCreate( LPCREATESTRUCT pCreateStruct )
 {
 	if ( CSortTreeControl::OnCreate( pCreateStruct ) == -1 )
@@ -188,7 +188,7 @@ int CTreeGDBBrowserBase::OnCreate( LPCREATESTRUCT pCreateStruct )
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnDestroy() 
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_OBJECT, this );
@@ -205,7 +205,7 @@ void CTreeGDBBrowserBase::OnDestroy()
 	CSortTreeControl::OnDestroy();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnTimer( UINT nIDEvent ) 
 {
   if ( nIDEvent == GetLabelEditSortTimerID() )
@@ -219,7 +219,7 @@ void CTreeGDBBrowserBase::OnTimer( UINT nIDEvent )
 	CSortTreeControl::OnTimer( nIDEvent );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SetLabelEditSortTimer()
 {
   KillLabelEditSortTimer();
@@ -230,7 +230,7 @@ void CTreeGDBBrowserBase::SetLabelEditSortTimer()
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::KillLabelEditSortTimer()
 {
   if ( nLabelEditSortTimer != 0 )
@@ -240,7 +240,7 @@ void CTreeGDBBrowserBase::KillLabelEditSortTimer()
   nLabelEditSortTimer = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnLabelEditSortTimer()
 {
 	KillLabelEditSortTimer();
@@ -251,7 +251,7 @@ void CTreeGDBBrowserBase::OnLabelEditSortTimer()
 	hLabelEditSortTimerItem = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SetCreateTreeTimer()
 {
   KillCreateTreeTimer();
@@ -263,7 +263,7 @@ void CTreeGDBBrowserBase::SetCreateTreeTimer()
 	//DebugTrace( "CTreeGDBBrowserBase::SetCreateTreeTimer(%d)", nCreateTreeTimer );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::KillCreateTreeTimer()
 {
   if ( nCreateTreeTimer != 0 )
@@ -273,7 +273,7 @@ void CTreeGDBBrowserBase::KillCreateTreeTimer()
   nCreateTreeTimer = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnMouseMove( UINT nFlags, CPoint point )
 {
 	CSortTreeControl::OnMouseMove( nFlags, point );
@@ -281,7 +281,7 @@ void CTreeGDBBrowserBase::OnMouseMove( UINT nFlags, CPoint point )
 	dragAndDropState.OnMouseMove( nFlags, CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnLButtonDown( UINT nFlags, CPoint point )
 {
 	CSortTreeControl::OnLButtonDown( nFlags, point );
@@ -289,7 +289,7 @@ void CTreeGDBBrowserBase::OnLButtonDown( UINT nFlags, CPoint point )
 	dragAndDropState.OnLButtonDown( nFlags, CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnLButtonUp( UINT nFlags, CPoint point )
 {
 	CSortTreeControl::OnLButtonUp( nFlags, point );
@@ -297,7 +297,7 @@ void CTreeGDBBrowserBase::OnLButtonUp( UINT nFlags, CPoint point )
 	dragAndDropState.OnLButtonUp( nFlags, CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnLButtonDblClk( UINT nFlags, CPoint point ) 
 {
 	CSortTreeControl::OnLButtonDblClk( nFlags, point );
@@ -305,7 +305,7 @@ void CTreeGDBBrowserBase::OnLButtonDblClk( UINT nFlags, CPoint point )
 	dragAndDropState.OnLButtonDblClk( nFlags, CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnRButtonDown( UINT nFlags, CPoint point )
 {
 	CSortTreeControl::OnRButtonDown( nFlags, point );
@@ -313,7 +313,7 @@ void CTreeGDBBrowserBase::OnRButtonDown( UINT nFlags, CPoint point )
 	dragAndDropState.OnRButtonDown( nFlags, CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CSortTreeControl::OnKeyDown( nChar, nRepCnt, nFlags );
@@ -321,7 +321,7 @@ void CTreeGDBBrowserBase::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 	dragAndDropState.OnKeyDown( nChar, nRepCnt, nFlags );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnContextMenu( CWnd *pwnd, CPoint point )
 {
 	CSortTreeControl::OnContextMenu( pwnd, point );
@@ -330,7 +330,7 @@ void CTreeGDBBrowserBase::OnContextMenu( CWnd *pwnd, CPoint point )
 	dragAndDropState.OnContextMenu( CTPoint<int>( point.x, point.y ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	CSortTreeControl::OnKeyUp( nChar, nRepCnt, nFlags );
@@ -338,7 +338,7 @@ void CTreeGDBBrowserBase::OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags )
 	dragAndDropState.OnKeyUp( nChar, nRepCnt, nFlags );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::ShowContextMenu( const CTPoint<int> &rPoint )
 {
 	CMenu mainPopupMenu;
@@ -361,7 +361,7 @@ void CTreeGDBBrowserBase::ShowContextMenu( const CTPoint<int> &rPoint )
 	mainPopupMenu.DestroyMenu();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnBeginLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResult )
 {
 	if ( IsEditEnabled() && szItemTextFromBeginLabelEdit.empty() )
@@ -377,7 +377,7 @@ void CTreeGDBBrowserBase::OnBeginLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResu
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnEndLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResult )
 {
 	//bool bRenamed = false;
@@ -429,20 +429,20 @@ void CTreeGDBBrowserBase::OnEndLabelEdit( NMHDR *pNotifyStruct, LRESULT *pResult
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnBeginLabelEditList( NMHDR *pNotifyStruct, LRESULT *pResult )
 {
 	( *pResult ) = 1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnEndLabelEditList( NMHDR *pNotifyStruct, LRESULT *pResult )
 {
 	( *pResult ) = 0;
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnSetFocus( CWnd* pOldWnd )
 {
 	CSortTreeControl::OnSetFocus( pOldWnd );
@@ -455,13 +455,13 @@ void CTreeGDBBrowserBase::OnSetFocus( CWnd* pOldWnd )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnKillFocus( CWnd* pNewWnd )
 {
 	CSortTreeControl::OnKillFocus( pNewWnd );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SaveHeaderWidthInternal()
 {
 	SaveHeaderWidth();
@@ -475,7 +475,7 @@ void CTreeGDBBrowserBase::SaveHeaderWidthInternal()
 	folderController.Redo( true, true, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::GetCurrentObjectSet( SObjectSet *pObjectSet )
 {
 	NI_ASSERT( pObjectSet != 0, "CTreeGDBBrowserBase::GetActiveObjectSet: pObjectSet == 0" );
@@ -504,7 +504,7 @@ bool CTreeGDBBrowserBase::GetCurrentObjectSet( SObjectSet *pObjectSet )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::GetCurrentSelectionSet( SSelectionSet *pSelectionSet )
 {
 	NI_ASSERT( pSelectionSet != 0, "CTreeGDBBrowserBase::GetActiveObjectSet: pSelectionSet == 0" );
@@ -532,7 +532,7 @@ bool CTreeGDBBrowserBase::GetCurrentSelectionSet( SSelectionSet *pSelectionSet )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 {
 	//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator()" );
@@ -569,7 +569,7 @@ void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult ) 
 {
 	if ( !GetObjectSet().szObjectTypeName.empty() )
@@ -609,7 +609,7 @@ void CTreeGDBBrowserBase::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult )
 	( *pResult ) = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnSelChanged( NMHDR *pNotifyStruct, LRESULT *pResult )
 {
 	if ( !bCreateControls )
@@ -640,7 +640,7 @@ void CTreeGDBBrowserBase::OnSelChanged( NMHDR *pNotifyStruct, LRESULT *pResult )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( UINT _nPCDialogCommandHandlerID, bool bUpdate )
 {
 	if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
@@ -659,7 +659,7 @@ void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( UINT _nPCDialogCommandHan
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::GetTreeItemType( HTREEITEM hItem )
 {
 	EGDBOType itemType = GDBO_UNKNOWN;
@@ -672,9 +672,9 @@ CTreeGDBBrowserBase::EGDBOType CTreeGDBBrowserBase::GetTreeItemType( HTREEITEM h
 	return itemType;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSortTreeControl
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const string &rszName )
 {
 	if ( rszName.empty() )
@@ -739,7 +739,7 @@ HTREEITEM CTreeGDBBrowserBase::GetTreeItem( const string &rszName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::GetTreeItemName( HTREEITEM hItem, string *pszName )
 {
 	if ( ( hItem == 0 ) || ( hItem == TVI_ROOT ) || ( hItem == TVI_FIRST ) || ( hItem == TVI_LAST ) )
@@ -766,7 +766,7 @@ bool CTreeGDBBrowserBase::GetTreeItemName( HTREEITEM hItem, string *pszName )
 	return GetTreeItemName( hParentItem, pszName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::GetCurrentTreeItemName( string *pszName )
 {
 	if ( GetSelectedCount() == 1 )
@@ -780,7 +780,7 @@ bool CTreeGDBBrowserBase::GetCurrentTreeItemName( string *pszName )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::SetCurrentTreeItemName( const string &rszName, bool bUpdateSelection )
 {
 	if ( bUpdateSelection )
@@ -804,7 +804,7 @@ bool CTreeGDBBrowserBase::SetCurrentTreeItemName( const string &rszName, bool bU
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::CreateTree()
 {
 	if ( !IsWindow( m_hWnd ) )
@@ -863,7 +863,7 @@ void CTreeGDBBrowserBase::CreateTree()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::OnCreateTreeTimer()
 {
 	KillCreateTreeTimer();
@@ -947,7 +947,7 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &rszAdditionalName, EGDBOType nType, const SIteratorDesc *pDesc )
 {
 	HTREEITEM hAddedItem = 0;
@@ -1030,7 +1030,7 @@ HTREEITEM CTreeGDBBrowserBase::AddTreeItem( HTREEITEM hRootItem, const string &r
 	return hAddedItem;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const string *pszName )
 {
 	if ( hItem != 0 )
@@ -1056,7 +1056,7 @@ void CTreeGDBBrowserBase::SetTreeItemView( HTREEITEM hItem, const string *pszNam
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, string *pszName )
 {
 	if ( pszName )
@@ -1081,7 +1081,7 @@ void CTreeGDBBrowserBase::GetUniqueName( HTREEITEM hParentItem, const string &rs
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CTreeGDBBrowserBase::FindName( HTREEITEM hParentItem, const string &rszName, EGDBOType nType, bool bCheckType, HTREEITEM hItemToSkip )
 {
 	HTREEITEM hItem = GetChildItem( hParentItem );
@@ -1115,7 +1115,7 @@ HTREEITEM CTreeGDBBrowserBase::FindName( HTREEITEM hParentItem, const string &rs
 	return 0;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CTreeGDBBrowserBase::FindPlaceToInsert( HTREEITEM hParentItem, const string &rszName, EGDBOType nType )
 {
 	CString strName = rszName.c_str();
@@ -1135,13 +1135,13 @@ HTREEITEM CTreeGDBBrowserBase::FindPlaceToInsert( HTREEITEM hParentItem, const s
 	return TVI_LAST;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::IsNotEditLabel()
 { 
 	return szItemTextFromBeginLabelEdit.empty();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::PickTextColors( LvPaintContext* pPC )
 {
 	if ( pPC )
@@ -1177,7 +1177,7 @@ void CTreeGDBBrowserBase::PickTextColors( LvPaintContext* pPC )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOperation )
 {
 	//bCreateControls = true;
@@ -1501,7 +1501,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperation( const STreeOperation &rTreeOpera
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::ExecuteTreeOperations( const CTreeOperationList &rTreeOperationList )
 {
 	//Singleton<IResourceManager>()->ResetCache();
@@ -1515,7 +1515,7 @@ bool CTreeGDBBrowserBase::ExecuteTreeOperations( const CTreeOperationList &rTree
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::NewFolder( HTREEITEM hParentItem )
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1553,7 +1553,7 @@ void CTreeGDBBrowserBase::NewFolder( HTREEITEM hParentItem )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 {
 	if ( !GetViewManipulator() )
@@ -1639,7 +1639,7 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::NewFolder()
 {
 	if ( !GetViewManipulator() )
@@ -1667,7 +1667,7 @@ void CTreeGDBBrowserBase::NewFolder()
 	NewFolder( hParentItem );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::New()
 {
 	if ( !GetViewManipulator() )
@@ -1695,19 +1695,19 @@ void CTreeGDBBrowserBase::New()
 	New( hParentItem );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::NewFolderAtRoot()
 {
 	NewFolder( TVI_ROOT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::NewAtRoot()
 {
 	New( TVI_ROOT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::CanNew()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1717,7 +1717,7 @@ bool CTreeGDBBrowserBase::CanNew()
 	return Singleton<IBuilderContainer>()->CanDefaultBuildObject( GetObjectSet().szObjectTypeName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Cut()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1732,7 +1732,7 @@ void CTreeGDBBrowserBase::Cut()
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Copy()
 {
 	if ( !GetViewManipulator() )
@@ -1743,7 +1743,7 @@ void CTreeGDBBrowserBase::Copy()
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Paste()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1791,7 +1791,7 @@ void CTreeGDBBrowserBase::Paste()
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Delete()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1828,7 +1828,7 @@ void CTreeGDBBrowserBase::Delete()
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Rename()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1845,7 +1845,7 @@ void CTreeGDBBrowserBase::Rename()
 	EditLabel( hFocusedItem );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Color()
 {
 	if ( nCreateTreeTimer != 0 )
@@ -1893,7 +1893,7 @@ void CTreeGDBBrowserBase::Color()
 	RedrawWindow();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM hStartItem )
 {
 	int nSearchSize = rszSearch.size();
@@ -1965,7 +1965,7 @@ HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const string &rszSearch, HTREEITEM
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Find()
 {
 	string szSearch = Singleton<IUserDataContainer>()->Get()->szLastSearchedText;
@@ -2013,12 +2013,12 @@ void CTreeGDBBrowserBase::Find()
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::GotoID()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::LookupReferences()
 {
 	CWaitCursor	wait;
@@ -2041,7 +2041,7 @@ void CTreeGDBBrowserBase::LookupReferences()
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Check( bool bCheckReferences )
 {
 	if ( !GetViewManipulator() )
@@ -2078,7 +2078,7 @@ void CTreeGDBBrowserBase::Check( bool bCheckReferences )
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Export( bool bForce, bool bExportReferences )
 {
 	if ( !GetViewManipulator() )
@@ -2117,7 +2117,7 @@ void CTreeGDBBrowserBase::Export( bool bForce, bool bExportReferences )
 	SetFocus();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::CanExport( bool bForce )
 {
 	if ( Singleton<IExporterContainer>()->CanExportObject( DEFAULT_EXPORTER_LABEL_TXT ) )
@@ -2127,7 +2127,7 @@ bool CTreeGDBBrowserBase::CanExport( bool bForce )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -2318,7 +2318,7 @@ bool CTreeGDBBrowserBase::HandleCommand( UINT nCommandID, DWORD dwData )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeGDBBrowserBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CTreeGDBBrowserBase::UpdateCommand(), pbEnable == 0" );
@@ -2482,7 +2482,7 @@ bool CTreeGDBBrowserBase::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::InternalUndo( IController* pController ) 
 {
 	bool bResult = true;
@@ -2526,7 +2526,7 @@ void CTreeGDBBrowserBase::InternalUndo( IController* pController )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::InternalRedo( IController* pController )
 {
 	bool bResult = true;
@@ -2670,14 +2670,14 @@ void CTreeGDBBrowserBase::InternalRedo( IController* pController )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel )
 {
 	KillCreateTreeTimer();
 	CDefaultView::SetViewManipulator( _pViewManipulator, rObjectSet, rszTemporaryLabel );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Undo( IController* pController ) 
 {
 	if ( ( GetViewManipulator() != 0 ) && ( nCreateTreeTimer == 0 ) )
@@ -2686,7 +2686,7 @@ void CTreeGDBBrowserBase::Undo( IController* pController )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeGDBBrowserBase::Redo( IController* pController )
 {
 	if ( ( GetViewManipulator() != 0 ) && ( nCreateTreeTimer == 0 ) )
@@ -2694,6 +2694,6 @@ void CTreeGDBBrowserBase::Redo( IController* pController )
 		InternalRedo( pController );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

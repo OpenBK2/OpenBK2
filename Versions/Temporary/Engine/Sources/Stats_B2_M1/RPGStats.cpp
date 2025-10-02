@@ -12,11 +12,11 @@
 #include "include_infantryrpgstats_cpp.h"
 #include "include_mechunitrpgstats_cpp.h"
 #include "include_unitbaserpgstats_cpp.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EUnitSpecialAbility eValue )
 {
 	switch ( eValue )
@@ -149,7 +149,7 @@ string EnumToString( NDb::EUnitSpecialAbility eValue )
 		return "ABILITY_NOT_ABILITY";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const string &szValue )
 {
 	if ( szValue == "ABILITY_NOT_ABILITY" )
@@ -278,7 +278,7 @@ NDb::EUnitSpecialAbility NDb::StringToEnum_NDb_EUnitSpecialAbility( const string
 		return NDb::_ABILITY_COUNT;
 	return NDb::ABILITY_NOT_ABILITY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
 {
 	switch ( eValue )
@@ -291,7 +291,7 @@ string EnumToString( NDb::EUnitSpecialAbilityGroup eValue )
 		return "ABILITY_GROUP_NOGROUP";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUnitSpecialAbilityGroup NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( const string &szValue )
 {
 	if ( szValue == "ABILITY_GROUP_NOGROUP" )
@@ -301,7 +301,7 @@ NDb::EUnitSpecialAbilityGroup NDb::StringToEnum_NDb_EUnitSpecialAbilityGroup( co
 	return NDb::ABILITY_GROUP_NOGROUP;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SUnitSpecialAblityDesc::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "UnitSpecialAblityDesc", typeID, sizeof(*this) );
@@ -321,7 +321,7 @@ void SUnitSpecialAblityDesc::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "LocalizedDescFileRef", (BYTE*)&szLocalizedDescFileRef - pThis, sizeof(szLocalizedDescFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitSpecialAblityDesc::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -340,7 +340,7 @@ int SUnitSpecialAblityDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitSpecialAblityDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eName );
@@ -358,7 +358,7 @@ int SUnitSpecialAblityDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitSpecialAblityDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -373,8 +373,8 @@ DWORD SUnitSpecialAblityDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EArmorDirection eValue )
 {
 	switch ( eValue )
@@ -395,7 +395,7 @@ string EnumToString( NDb::EArmorDirection eValue )
 		return "RPG_FRONT";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const string &szValue )
 {
 	if ( szValue == "RPG_FRONT" )
@@ -412,7 +412,7 @@ NDb::EArmorDirection NDb::StringToEnum_NDb_EArmorDirection( const string &szValu
 		return NDb::RPG_BOTTOM;
 	return NDb::RPG_FRONT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EObjGameType eValue )
 {
 	switch ( eValue )
@@ -461,7 +461,7 @@ string EnumToString( NDb::EObjGameType eValue )
 		return "SGVOGT_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const string &szValue )
 {
 	if ( szValue == "SGVOGT_UNKNOWN" )
@@ -506,7 +506,7 @@ NDb::EObjGameType NDb::StringToEnum_NDb_EObjGameType( const string &szValue )
 		return NDb::SGVOGT_FLORA;
 	return NDb::SGVOGT_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EObjectVisType eValue )
 {
 	switch ( eValue )
@@ -519,7 +519,7 @@ string EnumToString( NDb::EObjectVisType eValue )
 		return "SGVOT_MESH";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EObjectVisType NDb::StringToEnum_NDb_EObjectVisType( const string &szValue )
 {
 	if ( szValue == "SGVOT_MESH" )
@@ -529,7 +529,7 @@ NDb::EObjectVisType NDb::StringToEnum_NDb_EObjectVisType( const string &szValue 
 	return NDb::SGVOT_MESH;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SCommonRPGStats::ReportMetaInfo() const
 {
 	BYTE *pThis = (BYTE*)this;
@@ -539,7 +539,7 @@ void SCommonRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "VisType", (BYTE*)&eVisType - pThis, sizeof(eVisType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "GameType", (BYTE*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCommonRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "KeyName", &szKeyName );
@@ -550,7 +550,7 @@ int SCommonRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCommonRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szKeyName );
@@ -561,7 +561,7 @@ int SCommonRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCommonRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -576,9 +576,9 @@ DWORD SCommonRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SComplexEffect::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ComplexEffect", typeID, sizeof(*this) );
@@ -589,7 +589,7 @@ void SComplexEffect::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SoundEffect", (BYTE*)&pSoundEffect - pThis, sizeof(pSoundEffect), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexEffect::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -599,7 +599,7 @@ int SComplexEffect::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexEffect::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pSceneEffect );
@@ -608,15 +608,15 @@ int SComplexEffect::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SSeasonEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "SeasonToUse", (BYTE*)&eSeasonToUse - pThis, sizeof(eSeasonToUse), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "SceneEffect", (BYTE*)&pSceneEffect - pThis, sizeof(pSceneEffect), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSeasonEffect::operator&( IXmlSaver &saver )
 {
 	saver.Add( "SeasonToUse", &eSeasonToUse );
@@ -624,7 +624,7 @@ int SSeasonEffect::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSeasonEffect::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eSeasonToUse );
@@ -632,7 +632,7 @@ int SSeasonEffect::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSeasonEffect::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -647,9 +647,9 @@ DWORD SSeasonEffect::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SComplexSeasonedEffect::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ComplexSeasonedEffect", typeID, sizeof(*this) );
@@ -659,7 +659,7 @@ void SComplexSeasonedEffect::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Seasons", &seasons, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSeasonedEffect::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -668,7 +668,7 @@ int SComplexSeasonedEffect::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SComplexSeasonedEffect::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pSoundEffect );
@@ -676,9 +676,9 @@ int SComplexSeasonedEffect::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAckSetRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AckSetRPGStats", typeID, sizeof(*this) );
@@ -689,7 +689,7 @@ void SAckSetRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "VoiceNumber", (BYTE*)&nVoiceNumber - pThis, sizeof(nVoiceNumber), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckSetRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -699,7 +699,7 @@ int SAckSetRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAckSetRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SCommonRPGStats*)this );
@@ -708,8 +708,8 @@ int SAckSetRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::ESelectionType eValue )
 {
 	switch ( eValue )
@@ -728,7 +728,7 @@ string EnumToString( NDb::ESelectionType eValue )
 		return "SELECTION_TYPE_GROUND";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const string &szValue )
 {
 	if ( szValue == "SELECTION_TYPE_GROUND" )
@@ -744,7 +744,7 @@ NDb::ESelectionType NDb::StringToEnum_NDb_ESelectionType( const string &szValue 
 	return NDb::SELECTION_TYPE_GROUND;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SAttachedLightEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
@@ -763,7 +763,7 @@ void SAttachedLightEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis 
 	NMetaInfo::ReportMetaInfo( szAddName + "ConeTexture", (BYTE*)&pConeTexture - pThis, sizeof(pConeTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "FlareTexture", (BYTE*)&pFlareTexture - pThis, sizeof(pFlareTexture), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAttachedLightEffect::operator&( IXmlSaver &saver )
 {
 	saver.Add( "LocatorName", &szLocatorName );
@@ -784,7 +784,7 @@ int SAttachedLightEffect::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAttachedLightEffect::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szLocatorName );
@@ -805,7 +805,7 @@ int SAttachedLightEffect::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAttachedLightEffect::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -820,16 +820,16 @@ DWORD SAttachedLightEffect::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SIconsSetParams::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Custom", (BYTE*)&bCustom - pThis, sizeof(bCustom), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Raising", (BYTE*)&fRaising - pThis, sizeof(fRaising), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HPBarLen", (BYTE*)&fHPBarLen - pThis, sizeof(fHPBarLen), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSetParams::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Custom", &bCustom );
@@ -838,7 +838,7 @@ int SIconsSetParams::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSetParams::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &bCustom );
@@ -847,7 +847,7 @@ int SIconsSetParams::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SIconsSetParams::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -862,28 +862,28 @@ DWORD SIconsSetParams::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::SByteArray2::SByteArray1::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "data", &data, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SByteArray2::SByteArray1::operator&( IXmlSaver &saver )
 {
 	saver.Add( "data", &data );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SByteArray2::SByteArray1::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &data );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::SByteArray2::SByteArray1::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -898,28 +898,28 @@ DWORD SHPObjectRPGStats::SByteArray2::SByteArray1::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::SByteArray2::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "data", &data, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SByteArray2::operator&( IXmlSaver &saver )
 {
 	saver.Add( "data", &data );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SByteArray2::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &data );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::SByteArray2::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -934,16 +934,16 @@ DWORD SHPObjectRPGStats::SByteArray2::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::SDefenseRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ArmorMin", (BYTE*)&nArmorMin - pThis, sizeof(nArmorMin), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ArmorMax", (BYTE*)&nArmorMax - pThis, sizeof(nArmorMax), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Silhouette", (BYTE*)&fSilhouette - pThis, sizeof(fSilhouette), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SDefenseRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "ArmorMin", &nArmorMin );
@@ -952,7 +952,7 @@ int SHPObjectRPGStats::SDefenseRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SDefenseRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nArmorMin );
@@ -961,7 +961,7 @@ int SHPObjectRPGStats::SDefenseRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::SDefenseRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -976,9 +976,9 @@ DWORD SHPObjectRPGStats::SDefenseRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::SDamageLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
@@ -986,7 +986,7 @@ void SHPObjectRPGStats::SDamageLevel::ReportMetaInfo( const string &szAddName, B
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageEffectWindow", (BYTE*)&pDamageEffectWindow - pThis, sizeof(pDamageEffectWindow), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageEffectSmoke", (BYTE*)&pDamageEffectSmoke - pThis, sizeof(pDamageEffectSmoke), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SDamageLevel::operator&( IXmlSaver &saver )
 {
 	saver.Add( "DamageHP", &fDamageHP );
@@ -996,7 +996,7 @@ int SHPObjectRPGStats::SDamageLevel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SDamageLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fDamageHP );
@@ -1006,7 +1006,7 @@ int SHPObjectRPGStats::SDamageLevel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::SDamageLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1021,15 +1021,15 @@ DWORD SHPObjectRPGStats::SDamageLevel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::SModelSurfacePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Orient", &vOrient, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SModelSurfacePoint::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -1037,7 +1037,7 @@ int SHPObjectRPGStats::SModelSurfacePoint::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::SModelSurfacePoint::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -1045,7 +1045,7 @@ int SHPObjectRPGStats::SModelSurfacePoint::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::SModelSurfacePoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1060,9 +1060,9 @@ DWORD SHPObjectRPGStats::SModelSurfacePoint::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SHPObjectRPGStats::ReportMetaInfo() const
 {
 	SCommonRPGStats::ReportMetaInfo();
@@ -1084,7 +1084,7 @@ void SHPObjectRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "IconsSet", (BYTE*)&pIconsSet - pThis, sizeof(pIconsSet), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructMetaInfo( "IconsSetParams", &iconsSetParams, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SCommonRPGStats*)(this) );
@@ -1106,7 +1106,7 @@ int SHPObjectRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SHPObjectRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SCommonRPGStats*)this );
@@ -1128,7 +1128,7 @@ int SHPObjectRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SHPObjectRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1143,9 +1143,9 @@ DWORD SHPObjectRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBurningFuel::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "BurningFuel", typeID, sizeof(*this) );
@@ -1156,7 +1156,7 @@ void SBurningFuel::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "WeaponFireOnDesctruction", (BYTE*)&pWeaponFireOnDesctruction - pThis, sizeof(pWeaponFireOnDesctruction), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBurningFuel::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -1166,7 +1166,7 @@ int SBurningFuel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBurningFuel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nBurnTime );
@@ -1175,7 +1175,7 @@ int SBurningFuel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBurningFuel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1190,9 +1190,9 @@ DWORD SBurningFuel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SStaticObjectRPGStats::ReportMetaInfo() const
 {
 	SHPObjectRPGStats::ReportMetaInfo();
@@ -1207,7 +1207,7 @@ void SStaticObjectRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (BYTE*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "ShootOnDestruction", (BYTE*)&pShootOnDestruction - pThis, sizeof(pShootOnDestruction), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SStaticObjectRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SHPObjectRPGStats*)(this) );
@@ -1222,7 +1222,7 @@ int SStaticObjectRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SStaticObjectRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SHPObjectRPGStats*)this );
@@ -1237,7 +1237,7 @@ int SStaticObjectRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SStaticObjectRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1252,15 +1252,15 @@ DWORD SStaticObjectRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCraterSet::SSingleSeasonCraters::SCraterDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Scale", (BYTE*)&fScale - pThis, sizeof(fScale), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::SSingleSeasonCraters::SCraterDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Material", &pMaterial );
@@ -1268,7 +1268,7 @@ int SCraterSet::SSingleSeasonCraters::SCraterDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::SSingleSeasonCraters::SCraterDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pMaterial );
@@ -1276,7 +1276,7 @@ int SCraterSet::SSingleSeasonCraters::SCraterDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCraterSet::SSingleSeasonCraters::SCraterDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1291,15 +1291,15 @@ DWORD SCraterSet::SSingleSeasonCraters::SCraterDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCraterSet::SSingleSeasonCraters::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Craters", &craters, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::SSingleSeasonCraters::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Season", &eSeason );
@@ -1307,7 +1307,7 @@ int SCraterSet::SSingleSeasonCraters::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::SSingleSeasonCraters::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eSeason );
@@ -1315,7 +1315,7 @@ int SCraterSet::SSingleSeasonCraters::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SCraterSet::SSingleSeasonCraters::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1330,9 +1330,9 @@ DWORD SCraterSet::SSingleSeasonCraters::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SCraterSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "CraterSet", typeID, sizeof(*this) );
@@ -1341,7 +1341,7 @@ void SCraterSet::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Craters", &craters, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -1349,16 +1349,16 @@ int SCraterSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SCraterSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &craters );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SProjectile::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Projectile", typeID, sizeof(*this) );
@@ -1373,7 +1373,7 @@ void SProjectile::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "AttachedEffectLocator", (BYTE*)&szAttachedEffectLocator - pThis, sizeof(szAttachedEffectLocator), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SProjectile::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -1387,7 +1387,7 @@ int SProjectile::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SProjectile::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pModel );
@@ -1400,8 +1400,8 @@ int SProjectile::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 {
 	switch ( eValue )
@@ -1428,7 +1428,7 @@ string EnumToString( NDb::SWeaponRPGStats::SShell::ETrajectoryType eValue )
 		return "TRAJECTORY_LINE";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_ETrajectoryType( const string &szValue )
 {
 	if ( szValue == "TRAJECTORY_LINE" )
@@ -1451,7 +1451,7 @@ NDb::SWeaponRPGStats::SShell::ETrajectoryType NDb::StringToEnum_NDb_SWeaponRPGSt
 		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER;
 	return NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue )
 {
 	switch ( eValue )
@@ -1466,7 +1466,7 @@ string EnumToString( NDb::SWeaponRPGStats::SShell::EShellDamageType eValue )
 		return "DAMAGE_HEALTH";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGStats_SShell_EShellDamageType( const string &szValue )
 {
 	if ( szValue == "DAMAGE_HEALTH" )
@@ -1478,7 +1478,7 @@ NDb::SWeaponRPGStats::SShell::EShellDamageType NDb::StringToEnum_NDb_SWeaponRPGS
 	return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SWeaponRPGStats::SShell::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageType", (BYTE*)&eDamageType - pThis, sizeof(eDamageType), NTypeDef::TYPE_TYPE_ENUM );
@@ -1511,7 +1511,7 @@ void SWeaponRPGStats::SShell::ReportMetaInfo( const string &szAddName, BYTE *pTh
 	NMetaInfo::ReportMetaInfo( szAddName + "RelaxTime", (BYTE*)&fRelaxTime - pThis, sizeof(fRelaxTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "visProjectile", (BYTE*)&pvisProjectile - pThis, sizeof(pvisProjectile), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
 {
 	saver.Add( "DamageType", &eDamageType );
@@ -1546,7 +1546,7 @@ int SWeaponRPGStats::SShell::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eDamageType );
@@ -1581,7 +1581,7 @@ int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SWeaponRPGStats::SShell::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1596,8 +1596,8 @@ DWORD SWeaponRPGStats::SShell::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
 {
 	switch ( eValue )
@@ -1638,7 +1638,7 @@ string EnumToString( NDb::SWeaponRPGStats::EWeaponType eValue )
 		return "WEAPON_PISTOL";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SWeaponRPGStats::EWeaponType NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponType( const string &szValue )
 {
 	if ( szValue == "WEAPON_PISTOL" )
@@ -1676,7 +1676,7 @@ NDb::SWeaponRPGStats::EWeaponType NDb::StringToEnum_NDb_SWeaponRPGStats_EWeaponT
 	return NDb::SWeaponRPGStats::WEAPON_PISTOL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SWeaponRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "WeaponRPGStats", typeID, sizeof(*this) );
@@ -1698,7 +1698,7 @@ void SWeaponRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "LocalizedNameFileRef", (BYTE*)&szLocalizedNameFileRef - pThis, sizeof(szLocalizedNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWeaponRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -1719,7 +1719,7 @@ int SWeaponRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWeaponRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SCommonRPGStats*)this );
@@ -1739,7 +1739,7 @@ int SWeaponRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SWeaponRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1754,9 +1754,9 @@ DWORD SWeaponRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBaseGunRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Weapon", (BYTE*)&pWeapon - pThis, sizeof(pWeapon), NTypeDef::TYPE_TYPE_REF );
@@ -1771,7 +1771,7 @@ void SBaseGunRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) co
 	NMetaInfo::ReportMetaInfo( szAddName + "ReloadCost", (BYTE*)&fReloadCost - pThis, sizeof(fReloadCost), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "TargetAAOnly", (BYTE*)&bTargetAAOnly - pThis, sizeof(bTargetAAOnly), NTypeDef::TYPE_TYPE_BOOL );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBaseGunRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Weapon", &pWeapon );
@@ -1788,7 +1788,7 @@ int SBaseGunRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBaseGunRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pWeapon );
@@ -1805,7 +1805,7 @@ int SBaseGunRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBaseGunRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1820,16 +1820,16 @@ DWORD SBaseGunRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SDynamicDebrisSet::SDynamicDebrisDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Texture", (BYTE*)&pTexture - pThis, sizeof(pTexture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDynamicDebrisSet::SDynamicDebrisDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Texture", &pTexture );
@@ -1838,7 +1838,7 @@ int SDynamicDebrisSet::SDynamicDebrisDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDynamicDebrisSet::SDynamicDebrisDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pTexture );
@@ -1847,7 +1847,7 @@ int SDynamicDebrisSet::SDynamicDebrisDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SDynamicDebrisSet::SDynamicDebrisDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1862,9 +1862,9 @@ DWORD SDynamicDebrisSet::SDynamicDebrisDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SDynamicDebrisSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DynamicDebrisSet", typeID, sizeof(*this) );
@@ -1873,7 +1873,7 @@ void SDynamicDebrisSet::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Debris", &debris, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDynamicDebrisSet::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -1881,16 +1881,16 @@ int SDynamicDebrisSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDynamicDebrisSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &debris );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Material", (BYTE*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
@@ -1899,7 +1899,7 @@ void SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::ReportMetaInfo( cons
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Material", &pMaterial );
@@ -1910,7 +1910,7 @@ int SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::operator&( IXmlSaver 
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pMaterial );
@@ -1921,7 +1921,7 @@ int SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::operator&( IBinSaver 
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1936,15 +1936,15 @@ DWORD SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::CalcCheckSum() cons
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SObjectBaseRPGStats::SDynamicDebris::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Debris", (BYTE*)&pDebris - pThis, sizeof(pDebris), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Masks", &masks, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SDynamicDebris::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Debris", &pDebris );
@@ -1952,7 +1952,7 @@ int SObjectBaseRPGStats::SDynamicDebris::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SDynamicDebris::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pDebris );
@@ -1960,7 +1960,7 @@ int SObjectBaseRPGStats::SDynamicDebris::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SObjectBaseRPGStats::SDynamicDebris::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -1975,16 +1975,16 @@ DWORD SObjectBaseRPGStats::SDynamicDebris::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SObjectBaseRPGStats::SAmbientSound::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "SoundDesc", (BYTE*)&pSoundDesc - pThis, sizeof(pSoundDesc), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Season", (BYTE*)&eSeason - pThis, sizeof(eSeason), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "DayTime", (BYTE*)&nDayTime - pThis, sizeof(nDayTime), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SAmbientSound::operator&( IXmlSaver &saver )
 {
 	saver.Add( "SoundDesc", &pSoundDesc );
@@ -1993,7 +1993,7 @@ int SObjectBaseRPGStats::SAmbientSound::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::SAmbientSound::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pSoundDesc );
@@ -2002,7 +2002,7 @@ int SObjectBaseRPGStats::SAmbientSound::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SObjectBaseRPGStats::SAmbientSound::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2017,9 +2017,9 @@ DWORD SObjectBaseRPGStats::SAmbientSound::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SObjectBaseRPGStats::ReportMetaInfo() const
 {
 	SStaticObjectRPGStats::ReportMetaInfo();
@@ -2045,7 +2045,7 @@ void SObjectBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SeasonedEffectDeath", (BYTE*)&pSeasonedEffectDeath - pThis, sizeof(pSeasonedEffectDeath), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "SeasonedFallEffect", (BYTE*)&pSeasonedFallEffect - pThis, sizeof(pSeasonedFallEffect), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SStaticObjectRPGStats*)(this) );
@@ -2071,7 +2071,7 @@ int SObjectBaseRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectBaseRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SStaticObjectRPGStats*)this );
@@ -2097,7 +2097,7 @@ int SObjectBaseRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SObjectBaseRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2112,9 +2112,9 @@ DWORD SObjectBaseRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void STerraObjSetRPGStats::SSegment::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
@@ -2122,7 +2122,7 @@ void STerraObjSetRPGStats::SSegment::ReportMetaInfo( const string &szAddName, BY
 	NMetaInfo::ReportStructMetaInfo( szAddName + "visibility", &visibility, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerraObjSetRPGStats::SSegment::operator&( IXmlSaver &saver )
 {
 	saver.Add( "passability", &passability );
@@ -2132,7 +2132,7 @@ int STerraObjSetRPGStats::SSegment::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerraObjSetRPGStats::SSegment::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &passability );
@@ -2142,7 +2142,7 @@ int STerraObjSetRPGStats::SSegment::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD STerraObjSetRPGStats::SSegment::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2157,9 +2157,9 @@ DWORD STerraObjSetRPGStats::SSegment::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void STerraObjSetRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "TerraObjSetRPGStats", typeID, sizeof(*this) );
@@ -2171,7 +2171,7 @@ void STerraObjSetRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "backs", &backs, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerraObjSetRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -2182,7 +2182,7 @@ int STerraObjSetRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int STerraObjSetRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SStaticObjectRPGStats*)this );
@@ -2192,7 +2192,7 @@ int STerraObjSetRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD STerraObjSetRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2207,9 +2207,9 @@ DWORD STerraObjSetRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SObjectRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ObjectRPGStats", typeID, sizeof(*this) );
@@ -2220,7 +2220,7 @@ void SObjectRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "HideForPerformance", (BYTE*)&bHideForPerformance - pThis, sizeof(bHideForPerformance), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -2230,7 +2230,7 @@ int SObjectRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SObjectRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SObjectBaseRPGStats*)this );
@@ -2239,7 +2239,7 @@ int SObjectRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SObjectRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2254,8 +2254,8 @@ DWORD SObjectRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EBuildingType eValue )
 {
 	switch ( eValue )
@@ -2272,7 +2272,7 @@ string EnumToString( NDb::EBuildingType eValue )
 		return "TYPE_BULDING";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const string &szValue )
 {
 	if ( szValue == "TYPE_BULDING" )
@@ -2285,7 +2285,7 @@ NDb::EBuildingType NDb::StringToEnum_NDb_EBuildingType( const string &szValue )
 		return NDb::TYPE_DOT;
 	return NDb::TYPE_BULDING;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EDesignBuildingType eValue )
 {
 	switch ( eValue )
@@ -2302,7 +2302,7 @@ string EnumToString( NDb::EDesignBuildingType eValue )
 		return "BUILDING_TYPE_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const string &szValue )
 {
 	if ( szValue == "BUILDING_TYPE_UNKNOWN" )
@@ -2316,14 +2316,14 @@ NDb::EDesignBuildingType NDb::StringToEnum_NDb_EDesignBuildingType( const string
 	return NDb::BUILDING_TYPE_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSlotDamageLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageEffect", (BYTE*)&pDamageEffect - pThis, sizeof(pDamageEffect), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSlotDamageLevel::operator&( IXmlSaver &saver )
 {
 	saver.Add( "DamageHP", &fDamageHP );
@@ -2332,7 +2332,7 @@ int SSlotDamageLevel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSlotDamageLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fDamageHP );
@@ -2341,7 +2341,7 @@ int SSlotDamageLevel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSlotDamageLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2356,9 +2356,9 @@ DWORD SSlotDamageLevel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SWindowInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DayObj", (BYTE*)&pDayObj - pThis, sizeof(pDayObj), NTypeDef::TYPE_TYPE_REF );
@@ -2369,7 +2369,7 @@ void SWindowInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "NightDamageLevels", &nightDamageLevels, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "MaxHP", (BYTE*)&fMaxHP - pThis, sizeof(fMaxHP), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWindowInfo::operator&( IXmlSaver &saver )
 {
 	saver.Add( "DayObj", &pDayObj );
@@ -2382,7 +2382,7 @@ int SWindowInfo::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SWindowInfo::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pDayObj );
@@ -2395,7 +2395,7 @@ int SWindowInfo::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SWindowInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2410,16 +2410,16 @@ DWORD SWindowInfo::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBuildingRPGStats::SEntrance::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Stormable", (BYTE*)&bStormable - pThis, sizeof(bStormable), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (BYTE*)&nDir - pThis, sizeof(nDir), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SEntrance::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -2428,7 +2428,7 @@ int SBuildingRPGStats::SEntrance::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SEntrance::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -2437,7 +2437,7 @@ int SBuildingRPGStats::SEntrance::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBuildingRPGStats::SEntrance::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2452,9 +2452,9 @@ DWORD SBuildingRPGStats::SEntrance::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBuildingRPGStats::SSlot::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
@@ -2472,7 +2472,7 @@ void SBuildingRPGStats::SSlot::ReportMetaInfo( const string &szAddName, BYTE *pT
 	NMetaInfo::ReportMetaInfo( szAddName + "SoldierStatsModifier", (BYTE*)&pSoldierStatsModifier - pThis, sizeof(pSoldierStatsModifier), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "SightMultiplier", (BYTE*)&fSightMultiplier - pThis, sizeof(fSightMultiplier), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SSlot::operator&( IXmlSaver &saver )
 {
 	saver.Add( "LocatorName", &szLocatorName );
@@ -2492,7 +2492,7 @@ int SBuildingRPGStats::SSlot::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SSlot::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szLocatorName );
@@ -2512,7 +2512,7 @@ int SBuildingRPGStats::SSlot::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBuildingRPGStats::SSlot::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2527,9 +2527,9 @@ DWORD SBuildingRPGStats::SSlot::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBuildingRPGStats::SFirePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -2539,7 +2539,7 @@ void SBuildingRPGStats::SFirePoint::ReportMetaInfo( const string &szAddName, BYT
 	NMetaInfo::ReportMetaInfo( szAddName + "Coverage", (BYTE*)&fCoverage - pThis, sizeof(fCoverage), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SFirePoint::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -2551,7 +2551,7 @@ int SBuildingRPGStats::SFirePoint::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SFirePoint::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -2563,7 +2563,7 @@ int SBuildingRPGStats::SFirePoint::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBuildingRPGStats::SFirePoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2578,9 +2578,9 @@ DWORD SBuildingRPGStats::SFirePoint::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBuildingRPGStats::SDirectionExplosion::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -2588,7 +2588,7 @@ void SBuildingRPGStats::SDirectionExplosion::ReportMetaInfo( const string &szAdd
 	NMetaInfo::ReportMetaInfo( szAddName + "VerticalAngle", (BYTE*)&fVerticalAngle - pThis, sizeof(fVerticalAngle), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SDirectionExplosion::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -2598,7 +2598,7 @@ int SBuildingRPGStats::SDirectionExplosion::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::SDirectionExplosion::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -2608,7 +2608,7 @@ int SBuildingRPGStats::SDirectionExplosion::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBuildingRPGStats::SDirectionExplosion::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2623,9 +2623,9 @@ DWORD SBuildingRPGStats::SDirectionExplosion::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBuildingRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "BuildingRPGStats", typeID, sizeof(*this) );
@@ -2649,7 +2649,7 @@ void SBuildingRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DamageCoeff", (BYTE*)&fDamageCoeff - pThis, sizeof(fDamageCoeff), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -2672,7 +2672,7 @@ int SBuildingRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBuildingRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SObjectBaseRPGStats*)this );
@@ -2694,7 +2694,7 @@ int SBuildingRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBuildingRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2709,8 +2709,8 @@ DWORD SBuildingRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
 {
 	switch ( eValue )
@@ -2723,7 +2723,7 @@ string EnumToString( NDb::SBridgeRPGStats::EDirection eValue )
 		return "VERTICAL";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirection( const string &szValue )
 {
 	if ( szValue == "VERTICAL" )
@@ -2732,7 +2732,7 @@ NDb::SBridgeRPGStats::EDirection NDb::StringToEnum_NDb_SBridgeRPGStats_EDirectio
 		return NDb::SBridgeRPGStats::HORIZONTAL;
 	return NDb::SBridgeRPGStats::VERTICAL;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue )
 {
 	switch ( eValue )
@@ -2745,7 +2745,7 @@ string EnumToString( NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType eValue
 		return "SLAB";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBridgeRPGStats_SSegmentRPGStats_ESegmentType( const string &szValue )
 {
 	if ( szValue == "SLAB" )
@@ -2755,7 +2755,7 @@ NDb::SBridgeRPGStats::SSegmentRPGStats::ESegmentType NDb::StringToEnum_NDb_SBrid
 	return NDb::SBridgeRPGStats::SSegmentRPGStats::SLAB;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SBridgeRPGStats::SSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
@@ -2768,7 +2768,7 @@ void SBridgeRPGStats::SSegmentRPGStats::ReportMetaInfo( const string &szAddName,
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "FrameIndex", (BYTE*)&nFrameIndex - pThis, sizeof(nFrameIndex), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SSegmentRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -2783,7 +2783,7 @@ int SBridgeRPGStats::SSegmentRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SSegmentRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -2798,7 +2798,7 @@ int SBridgeRPGStats::SSegmentRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SSegmentRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2813,9 +2813,9 @@ DWORD SBridgeRPGStats::SSegmentRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SSpan::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Slab", (BYTE*)&nSlab - pThis, sizeof(nSlab), NTypeDef::TYPE_TYPE_INT );
@@ -2824,7 +2824,7 @@ void SBridgeRPGStats::SSpan::ReportMetaInfo( const string &szAddName, BYTE *pThi
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (BYTE*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Length", (BYTE*)&fLength - pThis, sizeof(fLength), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SSpan::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Slab", &nSlab );
@@ -2835,7 +2835,7 @@ int SBridgeRPGStats::SSpan::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SSpan::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nSlab );
@@ -2846,7 +2846,7 @@ int SBridgeRPGStats::SSpan::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SSpan::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2861,9 +2861,9 @@ DWORD SBridgeRPGStats::SSpan::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SDamageState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "spans", &spans, pThis );
@@ -2871,7 +2871,7 @@ void SBridgeRPGStats::SDamageState::ReportMetaInfo( const string &szAddName, BYT
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "lines", &lines, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "ends", &ends, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SDamageState::operator&( IXmlSaver &saver )
 {
 	saver.Add( "spans", &spans );
@@ -2881,7 +2881,7 @@ int SBridgeRPGStats::SDamageState::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SDamageState::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &spans );
@@ -2891,7 +2891,7 @@ int SBridgeRPGStats::SDamageState::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SDamageState::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2906,9 +2906,9 @@ DWORD SBridgeRPGStats::SDamageState::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SBridgeFirePoint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -2917,7 +2917,7 @@ void SBridgeRPGStats::SBridgeFirePoint::ReportMetaInfo( const string &szAddName,
 	NMetaInfo::ReportMetaInfo( szAddName + "FireEffect", (BYTE*)&szFireEffect - pThis, sizeof(szFireEffect), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SBridgeFirePoint::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -2928,7 +2928,7 @@ int SBridgeRPGStats::SBridgeFirePoint::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SBridgeFirePoint::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -2939,7 +2939,7 @@ int SBridgeRPGStats::SBridgeFirePoint::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SBridgeFirePoint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -2954,9 +2954,9 @@ DWORD SBridgeRPGStats::SBridgeFirePoint::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SBridgeDirectionExplosion::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
@@ -2965,7 +2965,7 @@ void SBridgeRPGStats::SBridgeDirectionExplosion::ReportMetaInfo( const string &s
 	NMetaInfo::ReportMetaInfo( szAddName + "FireEffect", (BYTE*)&szFireEffect - pThis, sizeof(szFireEffect), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "PicturePosition", &vPicturePosition, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -2976,7 +2976,7 @@ int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -2987,7 +2987,7 @@ int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SBridgeDirectionExplosion::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3002,16 +3002,16 @@ DWORD SBridgeRPGStats::SBridgeDirectionExplosion::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "DamageHP", (BYTE*)&fDamageHP - pThis, sizeof(fDamageHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisObjects", &visObjects, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "SmokeEffect", (BYTE*)&pSmokeEffect - pThis, sizeof(pSmokeEffect), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::operator&( IXmlSaver &saver )
 {
 	saver.Add( "DamageHP", &fDamageHP );
@@ -3020,7 +3020,7 @@ int SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::operator&( IXmlSaver 
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fDamageHP );
@@ -3029,7 +3029,7 @@ int SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::operator&( IBinSaver 
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3044,9 +3044,9 @@ DWORD SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::CalcCheckSum() cons
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::SElementRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Passability", &passability, pThis ); 
@@ -3055,7 +3055,7 @@ void SBridgeRPGStats::SElementRPGStats::ReportMetaInfo( const string &szAddName,
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "DamageStates", &damageStates, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisualObjects", &visualObjects, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SElementRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Passability", &passability );
@@ -3066,7 +3066,7 @@ int SBridgeRPGStats::SElementRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::SElementRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &passability );
@@ -3077,7 +3077,7 @@ int SBridgeRPGStats::SElementRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::SElementRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3092,9 +3092,9 @@ DWORD SBridgeRPGStats::SElementRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBridgeRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "BridgeRPGStats", typeID, sizeof(*this) );
@@ -3115,7 +3115,7 @@ void SBridgeRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SightMultiplier", (BYTE*)&fSightMultiplier - pThis, sizeof(fSightMultiplier), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -3135,7 +3135,7 @@ int SBridgeRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBridgeRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SStaticObjectRPGStats*)this );
@@ -3154,7 +3154,7 @@ int SBridgeRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBridgeRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3169,8 +3169,8 @@ DWORD SBridgeRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EEntrenchSegmType eValue )
 {
 	switch ( eValue )
@@ -3187,7 +3187,7 @@ string EnumToString( NDb::EEntrenchSegmType eValue )
 		return "EST_LINE";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const string &szValue )
 {
 	if ( szValue == "EST_LINE" )
@@ -3201,7 +3201,7 @@ NDb::EEntrenchSegmType NDb::StringToEnum_NDb_EEntrenchSegmType( const string &sz
 	return NDb::EST_LINE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "VisObj", (BYTE*)&pVisObj - pThis, sizeof(pVisObj), NTypeDef::TYPE_TYPE_REF );
@@ -3211,7 +3211,7 @@ void SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::ReportMetaInfo( const stri
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "fireplaces", &fireplaces, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "VisObj", &pVisObj );
@@ -3223,7 +3223,7 @@ int SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::operator&( IXmlSaver &saver
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pVisObj );
@@ -3235,7 +3235,7 @@ int SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::operator&( IBinSaver &saver
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3250,9 +3250,9 @@ DWORD SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SEntrenchmentRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "EntrenchmentRPGStats", typeID, sizeof(*this) );
@@ -3267,7 +3267,7 @@ void SEntrenchmentRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SEntrenchmentRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -3281,7 +3281,7 @@ int SEntrenchmentRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SEntrenchmentRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SHPObjectRPGStats*)this );
@@ -3294,7 +3294,7 @@ int SEntrenchmentRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SEntrenchmentRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3309,8 +3309,8 @@ DWORD SEntrenchmentRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EFenceDirection eValue )
 {
 	switch ( eValue )
@@ -3327,7 +3327,7 @@ string EnumToString( NDb::EFenceDirection eValue )
 		return "FENCE_DIRECTION_0";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const string &szValue )
 {
 	if ( szValue == "FENCE_DIRECTION_0" )
@@ -3340,7 +3340,7 @@ NDb::EFenceDirection NDb::StringToEnum_NDb_EFenceDirection( const string &szValu
 		return NDb::FENCE_DIRECTION_3;
 	return NDb::FENCE_DIRECTION_0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EFenceDamageType eValue )
 {
 	switch ( eValue )
@@ -3357,7 +3357,7 @@ string EnumToString( NDb::EFenceDamageType eValue )
 		return "FENCE_TYPE_NORMAL";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const string &szValue )
 {
 	if ( szValue == "FENCE_TYPE_NORMAL" )
@@ -3370,7 +3370,7 @@ NDb::EFenceDamageType NDb::StringToEnum_NDb_EFenceDamageType( const string &szVa
 		return NDb::FENCE_TYPE_CDAMAGE;
 	return NDb::FENCE_TYPE_NORMAL;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
 {
 	switch ( eValue )
@@ -3383,7 +3383,7 @@ string EnumToString( NDb::SFenceRPGStats::EFencePlacementMode eValue )
 		return "FENCE_PLACE_ON_TERRAIN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EFencePlacementMode( const string &szValue )
 {
 	if ( szValue == "FENCE_PLACE_ON_TERRAIN" )
@@ -3393,7 +3393,7 @@ NDb::SFenceRPGStats::EFencePlacementMode NDb::StringToEnum_NDb_SFenceRPGStats_EF
 	return NDb::SFenceRPGStats::FENCE_PLACE_ON_TERRAIN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SFenceRPGStats::SFenceSegmentRPGStats::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "passability", &passability, pThis ); 
@@ -3402,7 +3402,7 @@ void SFenceRPGStats::SFenceSegmentRPGStats::ReportMetaInfo( const string &szAddN
 	NMetaInfo::ReportStructMetaInfo( szAddName + "VisOrigin", &vVisOrigin, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "SpriteIndex", (BYTE*)&nSpriteIndex - pThis, sizeof(nSpriteIndex), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SFenceSegmentRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.Add( "passability", &passability );
@@ -3413,7 +3413,7 @@ int SFenceRPGStats::SFenceSegmentRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SFenceSegmentRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &passability );
@@ -3424,7 +3424,7 @@ int SFenceRPGStats::SFenceSegmentRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SFenceRPGStats::SFenceSegmentRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3439,9 +3439,9 @@ DWORD SFenceRPGStats::SFenceSegmentRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SFenceRPGStats::SDir::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "centers", &centers, pThis );
@@ -3449,7 +3449,7 @@ void SFenceRPGStats::SDir::ReportMetaInfo( const string &szAddName, BYTE *pThis 
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "rdamages", &rdamages, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "cdamages", &cdamages, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SDir::operator&( IXmlSaver &saver )
 {
 	saver.Add( "centers", &centers );
@@ -3459,7 +3459,7 @@ int SFenceRPGStats::SDir::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SDir::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &centers );
@@ -3469,7 +3469,7 @@ int SFenceRPGStats::SDir::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SFenceRPGStats::SDir::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3484,9 +3484,9 @@ DWORD SFenceRPGStats::SDir::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SFenceRPGStats::SSegments::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "VisObjes", &visObjes, pThis );
@@ -3495,7 +3495,7 @@ void SFenceRPGStats::SSegments::ReportMetaInfo( const string &szAddName, BYTE *p
 	NMetaInfo::ReportMetaInfo( szAddName + "UsePassabilityForVisibility", (BYTE*)&bUsePassabilityForVisibility - pThis, sizeof(bUsePassabilityForVisibility), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Origin", &vOrigin, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SSegments::operator&( IXmlSaver &saver )
 {
 	saver.Add( "VisObjes", &visObjes );
@@ -3506,7 +3506,7 @@ int SFenceRPGStats::SSegments::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::SSegments::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &visObjes );
@@ -3517,7 +3517,7 @@ int SFenceRPGStats::SSegments::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SFenceRPGStats::SSegments::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3532,9 +3532,9 @@ DWORD SFenceRPGStats::SSegments::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SFenceRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "FenceRPGStats", typeID, sizeof(*this) );
@@ -3551,7 +3551,7 @@ void SFenceRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "FenceHeight", (BYTE*)&fFenceHeight - pThis, sizeof(fFenceHeight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -3567,7 +3567,7 @@ int SFenceRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SFenceRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SStaticObjectRPGStats*)this );
@@ -3582,7 +3582,7 @@ int SFenceRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SFenceRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3597,8 +3597,8 @@ DWORD SFenceRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EMineType eValue )
 {
 	switch ( eValue )
@@ -3617,7 +3617,7 @@ string EnumToString( NDb::EMineType eValue )
 		return "MT_INFANTRY";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EMineType NDb::StringToEnum_NDb_EMineType( const string &szValue )
 {
 	if ( szValue == "MT_INFANTRY" )
@@ -3633,7 +3633,7 @@ NDb::EMineType NDb::StringToEnum_NDb_EMineType( const string &szValue )
 	return NDb::MT_INFANTRY;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SMineRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MineRPGStats", typeID, sizeof(*this) );
@@ -3648,7 +3648,7 @@ void SMineRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "RangeDetonator", (BYTE*)&bRangeDetonator - pThis, sizeof(bRangeDetonator), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMineRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -3662,7 +3662,7 @@ int SMineRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMineRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SObjectBaseRPGStats*)this );
@@ -3675,7 +3675,7 @@ int SMineRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMineRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3690,9 +3690,9 @@ DWORD SMineRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAnimDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Length", (BYTE*)&nLength - pThis, sizeof(nLength), NTypeDef::TYPE_TYPE_INT );
@@ -3702,7 +3702,7 @@ void SAnimDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 	NMetaInfo::ReportMetaInfo( szAddName + "AABB_D", (BYTE*)&nAABB_D - pThis, sizeof(nAABB_D), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Animation", (BYTE*)&pAnimation - pThis, sizeof(pAnimation), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAnimDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Length", &nLength );
@@ -3714,7 +3714,7 @@ int SAnimDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAnimDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nLength );
@@ -3726,7 +3726,7 @@ int SAnimDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAnimDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3741,28 +3741,28 @@ DWORD SAnimDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void Svector_AnimDescs::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "anims", &anims, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int Svector_AnimDescs::operator&( IXmlSaver &saver )
 {
 	saver.Add( "anims", &anims );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int Svector_AnimDescs::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &anims );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD Svector_AnimDescs::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3777,9 +3777,9 @@ DWORD Svector_AnimDescs::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SUnitActions::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "UnitActions", typeID, sizeof(*this) );
@@ -3792,7 +3792,7 @@ void SUnitActions::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "SpecialAbilities", &specialAbilities, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitActions::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -3804,7 +3804,7 @@ int SUnitActions::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitActions::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &availCommands );
@@ -3815,7 +3815,7 @@ int SUnitActions::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitActions::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -3830,8 +3830,8 @@ DWORD SUnitActions::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EDBUnitRPGType eValue )
 {
 	switch ( eValue )
@@ -3916,7 +3916,7 @@ string EnumToString( NDb::EDBUnitRPGType eValue )
 		return "DB_RPG_TYPE_SOLDIER";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const string &szValue )
 {
 	if ( szValue == "DB_RPG_TYPE_SOLDIER" )
@@ -3997,7 +3997,7 @@ NDb::EDBUnitRPGType NDb::StringToEnum_NDb_EDBUnitRPGType( const string &szValue 
 		return NDb::DB_RPG_TYPE_COUNT;
 	return NDb::DB_RPG_TYPE_SOLDIER;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EUnitPoliticalSide eValue )
 {
 	switch ( eValue )
@@ -4018,7 +4018,7 @@ string EnumToString( NDb::EUnitPoliticalSide eValue )
 		return "POLITICAL_SIDE_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const string &szValue )
 {
 	if ( szValue == "POLITICAL_SIDE_UNKNOWN" )
@@ -4035,7 +4035,7 @@ NDb::EUnitPoliticalSide NDb::StringToEnum_NDb_EUnitPoliticalSide( const string &
 		return NDb::POLITICAL_SIDE_USA;
 	return NDb::POLITICAL_SIDE_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
 {
 	switch ( eValue )
@@ -4060,7 +4060,7 @@ string EnumToString( NDb::EEncyclopediaFilterUnitType eValue )
 		return "EFUT_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitType( const string &szValue )
 {
 	if ( szValue == "EFUT_UNKNOWN" )
@@ -4082,13 +4082,13 @@ NDb::EEncyclopediaFilterUnitType NDb::StringToEnum_NDb_EEncyclopediaFilterUnitTy
 	return NDb::EFUT_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SBoundCircle::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (BYTE*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "IsRound", (BYTE*)&bIsRound - pThis, sizeof(bIsRound), NTypeDef::TYPE_TYPE_BOOL );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBoundCircle::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Radius", &fRadius );
@@ -4096,7 +4096,7 @@ int SBoundCircle::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBoundCircle::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fRadius );
@@ -4104,7 +4104,7 @@ int SBoundCircle::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBoundCircle::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4119,15 +4119,15 @@ DWORD SBoundCircle::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SUnitBaseRPGStats::SAABBDesc::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
 	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitBaseRPGStats::SAABBDesc::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Center", &vCenter );
@@ -4135,7 +4135,7 @@ int SUnitBaseRPGStats::SAABBDesc::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitBaseRPGStats::SAABBDesc::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vCenter );
@@ -4143,7 +4143,7 @@ int SUnitBaseRPGStats::SAABBDesc::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitBaseRPGStats::SAABBDesc::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4158,9 +4158,9 @@ DWORD SUnitBaseRPGStats::SAABBDesc::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SUnitBaseRPGStats::ReportMetaInfo() const
 {
 	SHPObjectRPGStats::ReportMetaInfo();
@@ -4200,7 +4200,7 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "ArmorPattern", (BYTE*)&pArmorPattern - pThis, sizeof(pArmorPattern), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "ExpPrice", (BYTE*)&fExpPrice - pThis, sizeof(fExpPrice), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SHPObjectRPGStats*)(this) );
@@ -4240,7 +4240,7 @@ int SUnitBaseRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SHPObjectRPGStats*)this );
@@ -4280,7 +4280,7 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitBaseRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4295,9 +4295,9 @@ DWORD SUnitBaseRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SArmorPatternPlacement::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ArmorPatternPlacement", typeID, sizeof(*this) );
@@ -4309,7 +4309,7 @@ void SArmorPatternPlacement::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "TopPos", &ptTopPos, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SArmorPatternPlacement::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -4320,7 +4320,7 @@ int SArmorPatternPlacement::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SArmorPatternPlacement::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &ptFrontPos );
@@ -4330,9 +4330,9 @@ int SArmorPatternPlacement::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SArmorPattern::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ArmorPattern", typeID, sizeof(*this) );
@@ -4342,7 +4342,7 @@ void SArmorPattern::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Placement", (BYTE*)&pPlacement - pThis, sizeof(pPlacement), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SArmorPattern::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -4351,7 +4351,7 @@ int SArmorPattern::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SArmorPattern::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pPicture );
@@ -4359,16 +4359,16 @@ int SArmorPattern::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SInfantryRPGStats::SInfantryGun::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	SBaseGunRPGStats::ReportMetaInfo( szAddName, pThis );
 
 	NMetaInfo::ReportMetaInfo( szAddName + "Fake", (BYTE*)&nFake - pThis, sizeof(nFake), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SInfantryRPGStats::SInfantryGun::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SBaseGunRPGStats*)(this) );
@@ -4376,7 +4376,7 @@ int SInfantryRPGStats::SInfantryGun::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SInfantryRPGStats::SInfantryGun::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SBaseGunRPGStats*)this );
@@ -4384,7 +4384,7 @@ int SInfantryRPGStats::SInfantryGun::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SInfantryRPGStats::SInfantryGun::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4399,9 +4399,9 @@ DWORD SInfantryRPGStats::SInfantryGun::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SInfantryRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "InfantryRPGStats", typeID, sizeof(*this) );
@@ -4418,7 +4418,7 @@ void SInfantryRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "GunBoneName", (BYTE*)&szGunBoneName - pThis, sizeof(szGunBoneName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SInfantryRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -4434,7 +4434,7 @@ int SInfantryRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SInfantryRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SUnitBaseRPGStats*)this );
@@ -4449,7 +4449,7 @@ int SInfantryRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SInfantryRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4464,15 +4464,15 @@ DWORD SInfantryRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SBoardedMechUnitPosition::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBoardedMechUnitPosition::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -4480,7 +4480,7 @@ int SBoardedMechUnitPosition::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SBoardedMechUnitPosition::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -4488,7 +4488,7 @@ int SBoardedMechUnitPosition::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SBoardedMechUnitPosition::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4503,28 +4503,28 @@ DWORD SBoardedMechUnitPosition::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SGunnersVector::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "gunners", &gunners, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SGunnersVector::operator&( IXmlSaver &saver )
 {
 	saver.Add( "gunners", &gunners );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SGunnersVector::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &gunners );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SGunnersVector::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4539,8 +4539,8 @@ DWORD SGunnersVector::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EDesignUnitType eValue )
 {
 	switch ( eValue )
@@ -4607,7 +4607,7 @@ string EnumToString( NDb::EDesignUnitType eValue )
 		return "UNIT_TYPE_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const string &szValue )
 {
 	if ( szValue == "UNIT_TYPE_UNKNOWN" )
@@ -4671,7 +4671,7 @@ NDb::EDesignUnitType NDb::StringToEnum_NDb_EDesignUnitType( const string &szValu
 	return NDb::UNIT_TYPE_UNKNOWN;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SMechUnitRPGStats::SMechUnitGun::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	SBaseGunRPGStats::ReportMetaInfo( szAddName, pThis );
@@ -4687,7 +4687,7 @@ void SMechUnitRPGStats::SMechUnitGun::ReportMetaInfo( const string &szAddName, B
 	NMetaInfo::ReportMetaInfo( szAddName + "RotatePoint", (BYTE*)&szRotatePoint - pThis, sizeof(szRotatePoint), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "ModelPart", (BYTE*)&nModelPart - pThis, sizeof(nModelPart), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SMechUnitGun::operator&( IXmlSaver &saver )
 {
 	saver.AddTypedSuper( (SBaseGunRPGStats*)(this) );
@@ -4704,7 +4704,7 @@ int SMechUnitRPGStats::SMechUnitGun::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SMechUnitGun::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SBaseGunRPGStats*)this );
@@ -4721,7 +4721,7 @@ int SMechUnitRPGStats::SMechUnitGun::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SMechUnitGun::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4736,15 +4736,15 @@ DWORD SMechUnitRPGStats::SMechUnitGun::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SConstraint::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SConstraint::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Min", &fMin );
@@ -4752,7 +4752,7 @@ int SMechUnitRPGStats::SConstraint::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SConstraint::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -4760,7 +4760,7 @@ int SMechUnitRPGStats::SConstraint::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SConstraint::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4775,9 +4775,9 @@ DWORD SMechUnitRPGStats::SConstraint::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SPlatform::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "RecoilShakeAngle", (BYTE*)&fRecoilShakeAngle - pThis, sizeof(fRecoilShakeAngle), NTypeDef::TYPE_TYPE_FLOAT );
@@ -4794,7 +4794,7 @@ void SMechUnitRPGStats::SPlatform::ReportMetaInfo( const string &szAddName, BYTE
 	NMetaInfo::ReportMetaInfo( szAddName + "ParentPlatform", (BYTE*)&nParentPlatform - pThis, sizeof(nParentPlatform), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "guns", &guns, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SPlatform::operator&( IXmlSaver &saver )
 {
 	saver.Add( "RecoilShakeAngle", &fRecoilShakeAngle );
@@ -4813,7 +4813,7 @@ int SMechUnitRPGStats::SPlatform::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SPlatform::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fRecoilShakeAngle );
@@ -4832,7 +4832,7 @@ int SMechUnitRPGStats::SPlatform::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SPlatform::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4847,15 +4847,15 @@ DWORD SMechUnitRPGStats::SPlatform::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SArmor::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (BYTE*)&fMin - pThis, sizeof(fMin), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (BYTE*)&fMax - pThis, sizeof(fMax), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SArmor::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Min", &fMin );
@@ -4863,7 +4863,7 @@ int SMechUnitRPGStats::SArmor::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SArmor::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fMin );
@@ -4871,7 +4871,7 @@ int SMechUnitRPGStats::SArmor::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SArmor::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4886,9 +4886,9 @@ DWORD SMechUnitRPGStats::SArmor::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SJoggingParams::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Period1", (BYTE*)&fPeriod1 - pThis, sizeof(fPeriod1), NTypeDef::TYPE_TYPE_FLOAT );
@@ -4898,7 +4898,7 @@ void SMechUnitRPGStats::SJoggingParams::ReportMetaInfo( const string &szAddName,
 	NMetaInfo::ReportMetaInfo( szAddName + "Phaze1", (BYTE*)&fPhaze1 - pThis, sizeof(fPhaze1), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Phaze2", (BYTE*)&fPhaze2 - pThis, sizeof(fPhaze2), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SJoggingParams::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Period1", &fPeriod1 );
@@ -4910,7 +4910,7 @@ int SMechUnitRPGStats::SJoggingParams::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SJoggingParams::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fPeriod1 );
@@ -4922,7 +4922,7 @@ int SMechUnitRPGStats::SJoggingParams::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SJoggingParams::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4937,15 +4937,15 @@ DWORD SMechUnitRPGStats::SJoggingParams::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SSlotInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedLocator", (BYTE*)&szAttachedLocator - pThis, sizeof(szAttachedLocator), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "AttachedVisObjects", &attachedVisObjects, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SSlotInfo::operator&( IXmlSaver &saver )
 {
 	saver.Add( "AttachedLocator", &szAttachedLocator );
@@ -4953,7 +4953,7 @@ int SMechUnitRPGStats::SSlotInfo::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SSlotInfo::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szAttachedLocator );
@@ -4961,7 +4961,7 @@ int SMechUnitRPGStats::SSlotInfo::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SSlotInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -4976,9 +4976,9 @@ DWORD SMechUnitRPGStats::SSlotInfo::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SShipEffects::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "BoardSideEffect", (BYTE*)&pBoardSideEffect - pThis, sizeof(pBoardSideEffect), NTypeDef::TYPE_TYPE_REF );
@@ -4986,7 +4986,7 @@ void SMechUnitRPGStats::SShipEffects::ReportMetaInfo( const string &szAddName, B
 	NMetaInfo::ReportMetaInfo( szAddName + "RastrumEffect", (BYTE*)&pRastrumEffect - pThis, sizeof(pRastrumEffect), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "RastrumLocators", &rastrumLocators, pThis );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SShipEffects::operator&( IXmlSaver &saver )
 {
 	saver.Add( "BoardSideEffect", &pBoardSideEffect );
@@ -4996,7 +4996,7 @@ int SMechUnitRPGStats::SShipEffects::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SShipEffects::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pBoardSideEffect );
@@ -5006,7 +5006,7 @@ int SMechUnitRPGStats::SShipEffects::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SShipEffects::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5021,16 +5021,16 @@ DWORD SMechUnitRPGStats::SShipEffects::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SSmokeTrailEffect::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "LocatorName", (BYTE*)&szLocatorName - pThis, sizeof(szLocatorName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "Interval", (BYTE*)&fInterval - pThis, sizeof(fInterval), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Effect", (BYTE*)&pEffect - pThis, sizeof(pEffect), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SSmokeTrailEffect::operator&( IXmlSaver &saver )
 {
 	saver.Add( "LocatorName", &szLocatorName );
@@ -5039,7 +5039,7 @@ int SMechUnitRPGStats::SSmokeTrailEffect::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SSmokeTrailEffect::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szLocatorName );
@@ -5048,7 +5048,7 @@ int SMechUnitRPGStats::SSmokeTrailEffect::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SSmokeTrailEffect::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5063,9 +5063,9 @@ DWORD SMechUnitRPGStats::SSmokeTrailEffect::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::SCameraPlacement::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis ); 
@@ -5074,7 +5074,7 @@ void SMechUnitRPGStats::SCameraPlacement::ReportMetaInfo( const string &szAddNam
 	NMetaInfo::ReportMetaInfo( szAddName + "Yaw", (BYTE*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Fov", (BYTE*)&fFov - pThis, sizeof(fFov), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SCameraPlacement::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Anchor", &vAnchor );
@@ -5085,7 +5085,7 @@ int SMechUnitRPGStats::SCameraPlacement::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::SCameraPlacement::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vAnchor );
@@ -5096,7 +5096,7 @@ int SMechUnitRPGStats::SCameraPlacement::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5111,9 +5111,9 @@ DWORD SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SMechUnitRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MechUnitRPGStats", typeID, sizeof(*this) );
@@ -5186,7 +5186,7 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (BYTE*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -5258,7 +5258,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SMechUnitRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SUnitBaseRPGStats*)this );
@@ -5329,7 +5329,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SMechUnitRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5344,8 +5344,8 @@ DWORD SMechUnitRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EEvent eValue )
 {
 	switch ( eValue )
@@ -5356,14 +5356,14 @@ string EnumToString( NDb::EEvent eValue )
 		return "HIT_NEAR";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EEvent NDb::StringToEnum_NDb_EEvent( const string &szValue )
 {
 	if ( szValue == "HIT_NEAR" )
 		return NDb::HIT_NEAR;
 	return NDb::HIT_NEAR;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EDesignSquadType eValue )
 {
 	switch ( eValue )
@@ -5386,7 +5386,7 @@ string EnumToString( NDb::EDesignSquadType eValue )
 		return "SQUAD_TYPE_UNKNOWN";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const string &szValue )
 {
 	if ( szValue == "SQUAD_TYPE_UNKNOWN" )
@@ -5405,7 +5405,7 @@ NDb::EDesignSquadType NDb::StringToEnum_NDb_EDesignSquadType( const string &szVa
 		return NDb::Single_Unit;
 	return NDb::SQUAD_TYPE_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
 {
 	switch ( eValue )
@@ -5432,7 +5432,7 @@ string EnumToString( NDb::SSquadRPGStats::ESquadType eValue )
 		return "RIFLEMANS";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType( const string &szValue )
 {
 	if ( szValue == "RIFLEMANS" )
@@ -5456,13 +5456,13 @@ NDb::SSquadRPGStats::ESquadType NDb::StringToEnum_NDb_SSquadRPGStats_ESquadType(
 	return NDb::SSquadRPGStats::RIFLEMANS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSquadRPGStats::SFormation::SEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (BYTE*)&fDir - pThis, sizeof(fDir), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::SFormation::SEntry::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Pos", &vPos );
@@ -5470,7 +5470,7 @@ int SSquadRPGStats::SFormation::SEntry::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::SFormation::SEntry::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPos );
@@ -5478,7 +5478,7 @@ int SSquadRPGStats::SFormation::SEntry::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSquadRPGStats::SFormation::SEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5493,8 +5493,8 @@ DWORD SSquadRPGStats::SFormation::SEntry::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue )
 {
 	switch ( eValue )
@@ -5513,7 +5513,7 @@ string EnumToString( NDb::SSquadRPGStats::SFormation::EFormationMoveType eValue 
 		return "DEFAULT";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquadRPGStats_SFormation_EFormationMoveType( const string &szValue )
 {
 	if ( szValue == "DEFAULT" )
@@ -5529,7 +5529,7 @@ NDb::SSquadRPGStats::SFormation::EFormationMoveType NDb::StringToEnum_NDb_SSquad
 	return NDb::SSquadRPGStats::SFormation::DEFAULT;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SSquadRPGStats::SFormation::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "type", (BYTE*)&etype - pThis, sizeof(etype), NTypeDef::TYPE_TYPE_ENUM );
@@ -5544,7 +5544,7 @@ void SSquadRPGStats::SFormation::ReportMetaInfo( const string &szAddName, BYTE *
 	NMetaInfo::ReportMetaInfo( szAddName + "CoverBonus", (BYTE*)&fCoverBonus - pThis, sizeof(fCoverBonus), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "VisibleBonus", (BYTE*)&fVisibleBonus - pThis, sizeof(fVisibleBonus), NTypeDef::TYPE_TYPE_FLOAT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::SFormation::operator&( IXmlSaver &saver )
 {
 	saver.Add( "type", &etype );
@@ -5561,7 +5561,7 @@ int SSquadRPGStats::SFormation::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::SFormation::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &etype );
@@ -5578,7 +5578,7 @@ int SSquadRPGStats::SFormation::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSquadRPGStats::SFormation::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5593,9 +5593,9 @@ DWORD SSquadRPGStats::SFormation::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SSquadRPGStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "SquadRPGStats", typeID, sizeof(*this) );
@@ -5615,7 +5615,7 @@ void SSquadRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "EntrenchCover", (BYTE*)&fEntrenchCover - pThis, sizeof(fEntrenchCover), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -5634,7 +5634,7 @@ int SSquadRPGStats::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SSquadRPGStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (SHPObjectRPGStats*)this );
@@ -5652,7 +5652,7 @@ int SSquadRPGStats::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SSquadRPGStats::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5667,8 +5667,8 @@ DWORD SSquadRPGStats::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::EReinforcementType eValue )
 {
 	switch ( eValue )
@@ -5721,7 +5721,7 @@ string EnumToString( NDb::EReinforcementType eValue )
 		return "RT_MAIN_INFANTRY";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const string &szValue )
 {
 	if ( szValue == "RT_MAIN_INFANTRY" )
@@ -5771,7 +5771,7 @@ NDb::EReinforcementType NDb::StringToEnum_NDb_EReinforcementType( const string &
 	return NDb::RT_MAIN_INFANTRY;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SReinforcementEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MechUnit", (BYTE*)&pMechUnit - pThis, sizeof(pMechUnit), NTypeDef::TYPE_TYPE_REF );
@@ -5779,7 +5779,7 @@ void SReinforcementEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis )
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkIndex", (BYTE*)&nLinkIndex - pThis, sizeof(nLinkIndex), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkWith", (BYTE*)&nLinkWith - pThis, sizeof(nLinkWith), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementEntry::operator&( IXmlSaver &saver )
 {
 	saver.Add( "MechUnit", &pMechUnit );
@@ -5789,7 +5789,7 @@ int SReinforcementEntry::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementEntry::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pMechUnit );
@@ -5799,7 +5799,7 @@ int SReinforcementEntry::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SReinforcementEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5814,15 +5814,15 @@ DWORD SReinforcementEntry::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SDeployTemplate::SDeployTemplateEntry::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (BYTE*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDeployTemplate::SDeployTemplateEntry::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Position", &vPosition );
@@ -5830,7 +5830,7 @@ int SDeployTemplate::SDeployTemplateEntry::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDeployTemplate::SDeployTemplateEntry::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &vPosition );
@@ -5838,7 +5838,7 @@ int SDeployTemplate::SDeployTemplateEntry::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SDeployTemplate::SDeployTemplateEntry::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5853,9 +5853,9 @@ DWORD SDeployTemplate::SDeployTemplateEntry::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SDeployTemplate::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "DeployTemplate", typeID, sizeof(*this) );
@@ -5866,7 +5866,7 @@ void SDeployTemplate::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "ReinforcementType", (BYTE*)&eReinforcementType - pThis, sizeof(eReinforcementType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDeployTemplate::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -5876,7 +5876,7 @@ int SDeployTemplate::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SDeployTemplate::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &entries );
@@ -5885,7 +5885,7 @@ int SDeployTemplate::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SDeployTemplate::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5900,9 +5900,9 @@ DWORD SDeployTemplate::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SReinforcement::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Reinforcement", typeID, sizeof(*this) );
@@ -5918,7 +5918,7 @@ void SReinforcement::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "TemplateOverride", (BYTE*)&pTemplateOverride - pThis, sizeof(pTemplateOverride), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcement::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -5933,7 +5933,7 @@ int SReinforcement::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcement::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -5947,7 +5947,7 @@ int SReinforcement::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SReinforcement::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -5962,9 +5962,9 @@ DWORD SReinforcement::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SPlayerRank::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "PlayerRank", typeID, sizeof(*this) );
@@ -5975,7 +5975,7 @@ void SPlayerRank::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Party", (BYTE*)&pParty - pThis, sizeof(pParty), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SPlayerRank::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -5985,7 +5985,7 @@ int SPlayerRank::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SPlayerRank::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szRankNameFileRef );
@@ -5994,7 +5994,7 @@ int SPlayerRank::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SPlayerRank::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6009,16 +6009,16 @@ DWORD SPlayerRank::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SReinforcementTypeInfo::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "TooltipFileRef", (BYTE*)&szTooltipFileRef - pThis, sizeof(szTooltipFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "UserAction", (BYTE*)&eUserAction - pThis, sizeof(eUserAction), NTypeDef::TYPE_TYPE_ENUM );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementTypeInfo::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -6027,7 +6027,7 @@ int SReinforcementTypeInfo::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementTypeInfo::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -6036,7 +6036,7 @@ int SReinforcementTypeInfo::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SReinforcementTypeInfo::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6051,9 +6051,9 @@ DWORD SReinforcementTypeInfo::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SReinforcementTypes::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ReinforcementTypes", typeID, sizeof(*this) );
@@ -6062,7 +6062,7 @@ void SReinforcementTypes::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "TypeInfo", &typeInfo, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementTypes::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -6070,14 +6070,14 @@ int SReinforcementTypes::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SReinforcementTypes::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &typeInfo );
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SReinforcementTypes::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6092,15 +6092,15 @@ DWORD SReinforcementTypes::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAIExpLevel::SLevel::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Experience", (BYTE*)&fExperience - pThis, sizeof(fExperience), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "StatsBonus", (BYTE*)&pStatsBonus - pThis, sizeof(pStatsBonus), NTypeDef::TYPE_TYPE_REF );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAIExpLevel::SLevel::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Experience", &fExperience );
@@ -6108,7 +6108,7 @@ int SAIExpLevel::SLevel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAIExpLevel::SLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fExperience );
@@ -6116,7 +6116,7 @@ int SAIExpLevel::SLevel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAIExpLevel::SLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6131,9 +6131,9 @@ DWORD SAIExpLevel::SLevel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SAIExpLevel::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AIExpLevel", typeID, sizeof(*this) );
@@ -6144,7 +6144,7 @@ void SAIExpLevel::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "levels", &levels, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAIExpLevel::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -6154,7 +6154,7 @@ int SAIExpLevel::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SAIExpLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szTypeName );
@@ -6163,7 +6163,7 @@ int SAIExpLevel::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SAIExpLevel::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6178,16 +6178,16 @@ DWORD SAIExpLevel::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SUnitStatsModifier::SParameterModifier::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AddBonus", (BYTE*)&fAddBonus - pThis, sizeof(fAddBonus), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "MultBonus", (BYTE*)&fMultBonus - pThis, sizeof(fMultBonus), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ZeroCount", (BYTE*)&nZeroCount - pThis, sizeof(nZeroCount), NTypeDef::TYPE_TYPE_INT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitStatsModifier::SParameterModifier::operator&( IXmlSaver &saver )
 {
 	saver.Add( "AddBonus", &fAddBonus );
@@ -6196,7 +6196,7 @@ int SUnitStatsModifier::SParameterModifier::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitStatsModifier::SParameterModifier::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &fAddBonus );
@@ -6205,7 +6205,7 @@ int SUnitStatsModifier::SParameterModifier::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitStatsModifier::SParameterModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6220,9 +6220,9 @@ DWORD SUnitStatsModifier::SParameterModifier::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SUnitStatsModifier::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "UnitStatsModifier", typeID, sizeof(*this) );
@@ -6247,7 +6247,7 @@ void SUnitStatsModifier::ReportMetaInfo() const
 	NMetaInfo::ReportStructMetaInfo( "Cover", &cover, pThis ); 
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitStatsModifier::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -6271,7 +6271,7 @@ int SUnitStatsModifier::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SUnitStatsModifier::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &durability );
@@ -6294,7 +6294,7 @@ int SUnitStatsModifier::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SUnitStatsModifier::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -6309,7 +6309,7 @@ DWORD SUnitStatsModifier::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x110832C0, SUnitSpecialAblityDesc ) 

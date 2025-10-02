@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MOFence.h"
 #include "../Common_RTS_AI/AIClasses.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOFence::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -21,7 +21,7 @@ bool CMOFence::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *p
 	SetModel( pModel );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOFence::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	if ( CMapObj::Create(nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor) )
@@ -31,19 +31,19 @@ bool CMOFence::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb:
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOFence::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMapObj::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOFence::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) 
 { 
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	CommonUpdateHP( fNewHP, stats, Scene(), eSeason );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOFence::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -53,7 +53,7 @@ void CMOFence::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		pActions->SetAction( NDb::USER_ACTION_ATTACK );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOFence::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -62,7 +62,7 @@ void CMOFence::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 			pActions->SetAction( NDb::USER_ACTION_ATTACK );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
@@ -94,12 +94,12 @@ NDb::EUserAction CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUs
 		
 	return eAction;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOFence::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CMapObj*)this );
 	saver.Add( 2, &nSceneID );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11121C01, CMOFence );

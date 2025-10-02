@@ -5,7 +5,7 @@
 
 REGISTER_SAVELOAD_CLASS( 0x11097AC0, CPathFractionComposite )
 
-/////////////////////////////////////////////////////////////////////////////
+
 void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) const
 {
 	pParams->p0 = p0;
@@ -33,7 +33,7 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 	pParams->vCur = vPos;
 	pParams->vSpeed = vSpeed;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CPathFractionComposite::CPathFractionComposite( interface IPlane *pPlane, interface IPathFraction *pPath )
 : vSpeed ( pPlane->GetSpeedB2() ),
 	vNormale( pPlane->GetNormalB2() ),
@@ -126,7 +126,7 @@ CPathFractionComposite::CPathFractionComposite( interface IPlane *pPlane, interf
 	}
 #endif
 }
-/////////////////////////////////////////////////////////////////////////////
+
 bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 {
 	if ( bFinished )

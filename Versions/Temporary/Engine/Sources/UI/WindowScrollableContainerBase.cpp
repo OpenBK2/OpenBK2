@@ -4,7 +4,7 @@
 #include "WindowScrollBar.h"
 #include "UIVisitor.h"
 #include "windowsimple.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowScrollableContainerBase::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CWindow*>( this ) );
@@ -21,14 +21,14 @@ int CWindowScrollableContainerBase::operator&( IBinSaver &saver )
 	saver.Add( 12, &pPreSelected );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::AfterLoad()
 {
 	CWindow::AfterLoad();
 	if ( pScrollBar )
 		pScrollBar->SetNotifySink( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Visit( interface IUIVisitor *pVisitor )
 {
 	CTRect<float> rc;
@@ -37,7 +37,7 @@ void CWindowScrollableContainerBase::Visit( interface IUIVisitor *pVisitor )
 	CClipStore s( pVisitor, rc );
 	CWindow::Visit( pVisitor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CWindow::InitByDesc( _pDesc );
@@ -71,7 +71,7 @@ void CWindowScrollableContainerBase::InitByDesc( const struct NDb::SUIDesc *_pDe
 
 	UpdateScrollBar();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Reposition( const CTRect<float> &parentRect )
 {
 	if ( !pBorder || !pContainer )
@@ -111,7 +111,7 @@ void CWindowScrollableContainerBase::Reposition( const CTRect<float> &parentRect
 
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBase::GetAfter( IWindow *pElement )
 {
 	CElements::iterator after = elements.begin();
@@ -122,7 +122,7 @@ CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBa
 	}
 	return after;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBase::GetBefore( CWindowScrollableContainerBase::CElements::iterator after )
 {
 	CElements::iterator before = after;
@@ -130,7 +130,7 @@ CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBa
 		++before;																// list insert before position, so we need ++after
 	return before;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::InsertAfter( IWindow *pElement, IWindow *pInsert, const bool bSelectable )
 {
 	CElements::iterator after = GetAfter( pElement );
@@ -139,7 +139,7 @@ void CWindowScrollableContainerBase::InsertAfter( IWindow *pElement, IWindow *pI
 	AddElement( dynamic_cast<CWindow*>( pInsert ), bSelectable, 0, pNegativeSelection );
 	elements.insert( before, SElement(  dynamic_cast<CWindow*>(pInsert), bSelectable, 0, pNegativeSelection ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::RemoveItems()
 {
 	for ( CElements::iterator el = elements.begin(); el != elements.end(); )
@@ -151,7 +151,7 @@ void CWindowScrollableContainerBase::RemoveItems()
 	}
 	Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Remove( IWindow * pRemove )
 {
 	for ( CElements::iterator el = elements.begin(); el != elements.end(); ++el )
@@ -164,14 +164,14 @@ void CWindowScrollableContainerBase::Remove( IWindow * pRemove )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWindowScrollableContainerBase::IsHorisontal() const
 {
 	if ( pScrollBar )
 		return pScrollBar->IsHorisontal();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Update()
 {
 	if ( !elements.empty() )
@@ -185,7 +185,7 @@ void CWindowScrollableContainerBase::Update()
 	}
 	UpdateScrollBar();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::UpdateItemCoordinates( CWindowScrollableContainerBase::CElements::iterator _from )
 {
 	int nPosSoFar = _from->nPos;
@@ -222,7 +222,7 @@ void CWindowScrollableContainerBase::UpdateItemCoordinates( CWindowScrollableCon
 	UpdateSelectionPosition( pSelection, pSelected );
 	UpdateSelectionPosition( pPreSelection, pPreSelected );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::RemoveElement( CWindow *pElement )
 {
 	CWindowScrollableContainerBase::CElements::iterator pos = GetAfter( pElement );
@@ -255,7 +255,7 @@ void CWindowScrollableContainerBase::RemoveElement( CWindow *pElement )
 			UpdateSelectionPosition( pPreSelection, pPreSelected );
 		}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::UpdateSelectionPosition( IWindow *_pSelection, IWindow *_pSelected )
 {
 	if ( !_pSelection ) 
@@ -272,7 +272,7 @@ void CWindowScrollableContainerBase::UpdateSelectionPosition( IWindow *_pSelecti
 		_pSelection->ShowWindow( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::EnsureElementVisible( IWindow *pElement )
 {
 	int nX, nY;
@@ -287,7 +287,7 @@ void CWindowScrollableContainerBase::EnsureElementVisible( IWindow *pElement )
 			pScrollBar->SetPos( nY );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::AddElement( CWindow *pElement, const bool _bSelectable, const int _nPosSize, CWindow *pNegativeSelection )
 {
 	pElement->SetName( StrFmt( "%i", elementIDs.Get()) );
@@ -302,7 +302,7 @@ void CWindowScrollableContainerBase::AddElement( CWindow *pElement, const bool _
 		pNegativeSelection->ShowWindow( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::PushBack( IWindow *_pElement, const bool bSelectable )
 {
 	CWindow *pElement = dynamic_cast<CWindow*>( _pElement );
@@ -339,7 +339,7 @@ void CWindowScrollableContainerBase::PushBack( IWindow *_pElement, const bool bS
 	UpdateSelectionPosition( pNegativeSelection, pElement );
 	UpdateScrollBar();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::UpdateScrollBar()
 {
 	int nBorderH, nBorderW;
@@ -359,7 +359,7 @@ void CWindowScrollableContainerBase::UpdateScrollBar()
 	}
 	RepositionChildren();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::SliderPosition( const float fPosition, class CWindow *pWho )
 {
 	if ( IsHorisontal() )
@@ -367,7 +367,7 @@ void CWindowScrollableContainerBase::SliderPosition( const float fPosition, clas
 	else
 		pContainer->SetPlacement(  0, -fPosition, 0, 0, EWPF_POS_Y );
 }
-//////////////////////////////////////////////////////////////////////
+
 bool CWindowScrollableContainerBase::OnMouseMove( const CVec2 &vPos, const int nButton )
 {
 	if ( pScrollBar )
@@ -379,7 +379,7 @@ bool CWindowScrollableContainerBase::OnMouseMove( const CVec2 &vPos, const int n
 	//pPreSelection
 	return CWindow::OnMouseMove( vPos, nButton );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Init()
 {
 	elements.clear();
@@ -389,12 +389,12 @@ void CWindowScrollableContainerBase::Init()
 	UpdateSelectionPosition( pPreSelection, pPreSelected );
 	UpdateSelectionPosition( pSelection, pSelected );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWindow* CWindowScrollableContainerBase::GetElement( const string &szName )
 {
 	return dynamic_cast<CWindow*>(pContainer->GetChild( szName, false ));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::SelectWithSelection( IWindow *pElement, IWindow *_pSelection )
 {
 	if ( !_pSelection ) 
@@ -414,13 +414,13 @@ void CWindowScrollableContainerBase::SelectWithSelection( IWindow *pElement, IWi
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::PreSelect( IWindow *pElement )
 {
 	pPreSelected = pElement;
 	SelectWithSelection( pElement, pPreSelection );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Select( IWindow *pElement )
 {
 	// move negative selection window from former selected to new selected
@@ -462,23 +462,23 @@ void CWindowScrollableContainerBase::Select( IWindow *pElement )
 		GetScreen()->RunAnimationSequienceForward( CUIFactory::GetConsts()->buttonClickSound, this );
 	//GetScreen()->RunAnimationSequienceForward( checked_cast<NDb::SWindowScrollableContainerBase*>(GetInstance())->onSelection, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::DoubleClicked( interface IWindow *pWho, int nButton )
 {
 	GetScreen()->RunAnimationSequienceForward( checked_cast<NDb::SWindowScrollableContainerBase*>(GetInstance())->onDoubleClick, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Clicked( interface IWindow *pWho, int nButton )
 {
 	if ( (MSTATE_BUTTON1 & nButton) )
 		Select( pWho );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow * CWindowScrollableContainerBase::GetItem( const string &szName ) 
 { 
 	return pContainer->GetChild( szName, false ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowScrollableContainerBase::GetItemNumber( IWindow *pElement )
 {
 	CWindow *pWnd = dynamic_cast<CWindow*>( pElement );
@@ -486,21 +486,21 @@ int CWindowScrollableContainerBase::GetItemNumber( IWindow *pElement )
 		return NStr::ToInt( pWnd->GetName() ) - 1;
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IWindow *CWindowScrollableContainerBase::GetItem( const int nItem )
 {
 	if ( elements.size() <= nItem ) 
 		return 0;
 	return GetItem( elements[nItem].szName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::Resort( IWindowSorter *pSorter )
 {
 	SSortPred pr( pSorter, pContainer );
 	sort( elements.begin(), elements.end(), pr );
 	Update();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWindowScrollableContainerBase::GetBaseHeight() const
 {
 	int nHeight;
@@ -510,13 +510,13 @@ int CWindowScrollableContainerBase::GetBaseHeight() const
 		pBorder->GetPlacement( 0, 0, 0, &nBorderH );
 	return nHeight - nBorderH;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::ResetScroller()
 {
 	if ( pScrollBar )
 		pScrollBar->SetPos( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWindowScrollableContainerBase::SetDiscreteScroll( int nVisibleSlots )
 {
 	if ( pScrollBar )
@@ -524,4 +524,4 @@ void CWindowScrollableContainerBase::SetDiscreteScroll( int nVisibleSlots )
 
 	UpdateScrollBar();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

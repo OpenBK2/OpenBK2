@@ -4,13 +4,13 @@
 #include "UIVisitor.h"
 #include "..\3dMotor\DBScene.h"
 #include "UIComponents.h"
-//////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS(0x11075B40,CBackgroundSimpleScallingTexture)
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+
+
 //CBackgroundSimpleScallingTexture
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void CBackgroundSimpleScallingTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CBackground::InitByDesc( _pDesc );
@@ -24,7 +24,7 @@ void CBackgroundSimpleScallingTexture::InitByDesc( const struct NDb::SUIDesc *_p
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_pDesc )
 {
 	if ( pTexture != 0 )
@@ -38,7 +38,7 @@ void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////
+
 void CBackgroundSimpleScallingTexture::Visit( interface IUIVisitor* pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats ) 
@@ -53,7 +53,7 @@ void CBackgroundSimpleScallingTexture::Visit( interface IUIVisitor* pVisitor )
 	VirtualToScreen( &rects );
 	pVisitor->VisitUIRect( pTexture, 3, rects );
 }
-//////////////////////////////////////////////////////////////////////
+
 int CBackgroundSimpleScallingTexture::operator&( interface IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CBackground*>( this ) );
@@ -62,4 +62,4 @@ int CBackgroundSimpleScallingTexture::operator&( interface IBinSaver &saver )
 	saver.Add( 4, &vSize );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

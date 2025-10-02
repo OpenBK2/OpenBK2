@@ -6,16 +6,16 @@
 #include "DBScene.h"
 namespace NAnimation
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CBasicShare<CDBPtr<NDb::SSkeleton>, CGrannySkeletonLoader, SDBPtrHash> shareGrannySkeletons(119);
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtrFuncBase<CGrannyFileInfo>* GetSkeletonFileInfo( const NDb::SSkeleton *pSkeleton )
 {
 	if ( !pSkeleton )
 		return 0;
 	return shareGrannySkeletons.Get( pSkeleton );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 granny_skeleton *GetSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile )
 {
 	granny_skeleton *pSkeleton = 0;
@@ -27,7 +27,7 @@ granny_skeleton *GetSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile
 	}
 	return pSkeleton;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile )
 {
 	if ( pGrannyFI && pGrannyFI->GetData() )
@@ -38,5 +38,5 @@ char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 };

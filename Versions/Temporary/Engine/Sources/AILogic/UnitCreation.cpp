@@ -25,7 +25,7 @@
 #include "DBAIConsts.h"
 #include "RailRoads.h"
 #include "GlobalWarFog.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CExecutorContainer theExecutorContainer;
 extern CWeather theWeather;
 extern CScripts *pScripts;
@@ -41,7 +41,7 @@ extern CGraveyard theGraveyard;
 extern CBalanceTest theBalanceTest;
 extern SRailRoadSystem theRailRoadSystem;
 extern CGlobalWarFog theWarFog;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLightPlaneCreation::CalcPositions( const int nMax, const CVec2 & box, const CVec2 & direction, vector<CVec2> * positions, CVec2 * offset, const bool bRandom )
 {
 	/* таким образом
@@ -78,7 +78,7 @@ void CLightPlaneCreation::CalcPositions( const int nMax, const CVec2 & box, cons
 
 	*offset = ( CVec2( resize * box.y, 0 ) * nMax / 2 )/*^direction*/;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const CVec2 &direction, vector<CVec2> *positions, CVec2 *offset, bool bRandom )
 {
 	/*
@@ -130,11 +130,11 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const
 		--iLimit;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //STankPitInfo
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const SMechUnitRPGStats * GetRandomTankPit( const STankPitInfo &info, const class CVec2 &vSize, const bool bCanDig, float *pfResize )
 {
 	const vector< CDBPtr<SMechUnitRPGStats> > * pPits = bCanDig ? &info.digTankPits : &info.sandBagTankPits;
@@ -158,7 +158,7 @@ const SMechUnitRPGStats * GetRandomTankPit( const STankPitInfo &info, const clas
 	NI_ASSERT( nBestIndex != -1, "cannot find any tankpit in tankpits.xml" );
 	return (*pPits)[nBestIndex];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUnitCreation::CUnitCreation()
 {
 	bInit = false;
@@ -168,36 +168,36 @@ CUnitCreation::CUnitCreation()
 	feedbacks.push_back( SFeedBack(EFB_BOMBERS_ENABLED,			EFB_BOMBERS_DISABLED) );
 	feedbacks.push_back( SFeedBack(EFB_SHTURMOVIKS_ENABLED,	EFB_SHTURMOVIKS_DISABLED) );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::Segment()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SLocalInGameUnitCreationInfo::Copy( const SMapPlayerInfo &playerInfo )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SLocalInGameUnitCreationInfo::SLocalInGameUnitCreationInfo( const SMapPlayerInfo &rSUnitCreation )
 {
 	Copy( rSUnitCreation  );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SLocalInGameUnitCreationInfo & SLocalInGameUnitCreationInfo::operator=( const SMapPlayerInfo &rSUnitCreation  )
 {
 	Copy( rSUnitCreation );
 	return *this;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::Init()
 {
 	bInit = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::SetConsts( const NDb::SAIGameConsts *_pConsts )
 {
 	pConsts = _pConsts;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::Init( const struct SMapInfo* pMapInfo, ICollisionsCollector *_pCollisionsCollector )
 {
 	inGameUnits.clear();
@@ -226,19 +226,19 @@ void CUnitCreation::Init( const struct SMapInfo* pMapInfo, ICollisionsCollector 
 
 	bInit = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::Clear()
 {
 	inGameUnits.clear();
 	pCollisionsCollector = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SPartyDependentInfo * CUnitCreation::GetPartyDependentInfo( const int nDipl ) const 
 {
 	NI_ASSERT( nDipl < partyDependentInfo.size(), StrFmt("Wrong party Number ( %i )", nDipl ) );
 	return partyDependentInfo[nDipl];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const class CVec3 &vPoint, const int nPlayer )
 {
 	NI_ASSERT( nPlayer < inGameUnits.size(), StrFmt( "no mines for player %d", nPlayer ) );
@@ -271,7 +271,7 @@ CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const 
 
 	return theStatObjs.AddNewMine( pMineStats, 1, vPoint, -1, nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::SendFormationToWorld( CFormation * pUnit, const bool bSelectable ) const
 {
 	updater.AddUpdate( 0, ACTION_NOTIFY_NEW_UNIT, pUnit, -1 );
@@ -285,7 +285,7 @@ void CUnitCreation::SendFormationToWorld( CFormation * pUnit, const bool bSelect
 	}
 	pUnit->SetSelectable( bSelectable, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPlane, const int nScriptID )const
 {
 	const int nDipl = pPlane->GetPlayer();
@@ -314,7 +314,7 @@ CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 
 	return formation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit )const
 {
 	NI_ASSERT( pWithUnit->GetPlayer() < inGameUnits.size(), StrFmt( "wrong player %d",pWithUnit->GetPlayer()) );
@@ -344,7 +344,7 @@ CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit 
 	}
 	return pFormation ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormation * CUnitCreation::CreateCrew( CArtillery *pUnit, const int nUnits, const CVec3 &vPos, const int _nPlayer, const bool bImmidiateAttach )const
 {
 	NI_ASSERT( (_nPlayer == -1 ? pUnit->GetPlayer() : _nPlayer ) < inGameUnits.size(), StrFmt( "wrong player GetPlayer = %d, nPlayer = %d", pUnit->GetPlayer(), _nPlayer ) );
@@ -388,7 +388,7 @@ CFormation * CUnitCreation::CreateCrew( CArtillery *pUnit, const int nUnits, con
 	pForm->SetSelectable( false, true );
 	return pForm;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::SWeaponRPGStats *pWeaponStats, const class CVec2 &vSource, const class CVec2 &vTarget )
 {
 	CPtr<CUnitTorpedo> pUnit = checked_cast<CUnitTorpedo*>( MakeObject<CAIUnit>( AI_TORPEDO ) );
@@ -424,7 +424,7 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::S
 
 	return pUnit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats, 
 															const float fHPFactor, const int x, const int y, const int z, const WORD dir,
 															const BYTE player, 
@@ -566,38 +566,38 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 	const int nRes = pUnit->GetUniqueId();
 	return nRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CUnitCreation::GetRandomAppearPoint( const int _nPlayer, const bool bLeave ) const
 {
 	return VNULL2;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SObjectBaseRPGStats*CUnitCreation::GetRandomAntitankObject() const 
 {
 	return pConsts == 0 ? 0 : pConsts->common.antitankObjects[0];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SEntrenchmentRPGStats* CUnitCreation::GetEntrenchment() const
 {
 	return pConsts == 0 ? 0 : pConsts->common.pEntrenchment;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SFenceRPGStats *CUnitCreation::GetWireFence() const 
 {
 	return pConsts == 0 ? 0 : pConsts->common.pAPFence;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SMechUnitRPGStats * CUnitCreation::GetFoxHole( const bool bCanDig ) const
 {
 	return pConsts == 0 ? 0 : pConsts->foxHoles[NRandom::Random( pConsts->foxHoles.size() )];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SMechUnitRPGStats * CUnitCreation::GetRandomTankPit( const class CVec2 &vSize, const bool bCanDig, float *pfResize ) const
 {
 	return ::GetRandomTankPit( pConsts->tankPits, vSize, bCanDig, pfResize );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const WORD wFormDir, const int nFormation, const int nUnits, list<CVec2> *pCenters ) const
 {
 	const SSquadRPGStats::SFormation &formation = pStats->formations[nFormation];
@@ -616,7 +616,7 @@ void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats,
 		pCenters->push_back( vUnitCenter );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const int _nFormation, const float fHP, const float x, const float y, const float z, const WORD wDir, const int nDiplomacy, bool bInitialization, bool bSendToWorld, const int nUnits, NDb::EReinforcementType eType ) const
 {
 	NI_ASSERT( _nFormation < pStats->formations.size(), "" );
@@ -715,7 +715,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	}
 	return pFormation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCommonUnit* CUnitCreation::CreateSingleUnitFormation( CSoldier *pSoldier ) const
 {
 	const SSquadRPGStats *pStats = GetSingleUnitFormation();
@@ -736,7 +736,7 @@ CCommonUnit* CUnitCreation::CreateSingleUnitFormation( CSoldier *pSoldier ) cons
 
 	return pFormation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUnitCreation::IsAntiTank( const SHPObjectRPGStats *pStats ) const
 {
 	for ( int i = 0; i < pConsts->common.antitankObjects.size(); ++i )
@@ -747,12 +747,12 @@ bool CUnitCreation::IsAntiTank( const SHPObjectRPGStats *pStats ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CUnitCreation::IsAPFence( const SHPObjectRPGStats *pStats ) const
 {
 	return pStats == pConsts->common.pAPFence;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SAIExpLevel * CUnitCreation::GetExpLevels( const enum EUnitRPGType eType )
 {
 	for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
@@ -763,7 +763,7 @@ const NDb::SAIExpLevel * CUnitCreation::GetExpLevels( const enum EUnitRPGType eT
 	NI_ASSERT( false, StrFmt( "cannot find expLevels for UnitRPGType %i", eType ) );
 	return pConsts->common.expLevels[0];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExistingObject* CUnitCreation::CreatePlayerFlag( int nPlayer, CStaticObject *pSample )
 {
 	if ( !pSample )
@@ -782,30 +782,30 @@ CExistingObject* CUnitCreation::CreatePlayerFlag( int nPlayer, CStaticObject *pS
 		return 0;
 	return checked_cast<CExistingObject*>( theStatObjs.AddNewStaticObject( partyDependentInfo[nPlayer]->pKeyBuildingFlag, 1.0f, pSample->GetCenter(), pSample->GetDir(), 0 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj *CUnitCreation::GetParatrooperVisObj( int nPlayer ) const 
 { 
 	return partyDependentInfo[nPlayer]->pParatrooperVisObj; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj *CUnitCreation::GetParachuteVisObj() const
 {
 	return pConsts->pParachute;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CUnitCreation::GetRemoveParachuteTime() const
 {
 	return pConsts->nRemoveParachuteTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUnitBaseRPGStats * CUnitCreation::GetMosinStats() const { return pConsts->common.pMosinStats; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SUnitBaseRPGStats * CUnitCreation::Get152mmML20Stats() const { return pConsts->common.pG152mmML20Stats; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SSquadRPGStats* CUnitCreation::GetSingleUnitFormation() const { return pConsts->common.pSingleUnitFormation; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SStaticObjectRPGStats *CUnitCreation::GetShellBox() const  { return pConsts->common.pShellBox; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CUnitCreation::ApplyWeatherModifier( const bool bForward )
 {
 	if ( bForward )
@@ -825,4 +825,4 @@ void CUnitCreation::ApplyWeatherModifier( const bool bForward )
 
 	units.ApplyModifierToAll( pConsts->common.pBadWeatherStatModifier, bForward );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

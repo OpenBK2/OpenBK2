@@ -5,17 +5,17 @@
 #include "../System/Commands.h"
 
 #include "TerraAIObserver.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bShowWater = false;
 static list<SObjTileInfo> steepTiles;
 static float s_fHeightsDiffToLock = 20.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerraAIObserver::CTerraAIObserver() : bShowPassability( false ), pMarkers( new CPassMarkersDraw() )
 {
 	steepTiles.clear();
 	bShowWater = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::AddVSO( const NDb::SVSOInstance *pInstance )
 {
 	list<SVector> tiles;
@@ -29,7 +29,7 @@ void CTerraAIObserver::AddVSO( const NDb::SVSOInstance *pInstance )
 	pTerrain->AddTiles( tiles, (EAIClasses)prop.nAIPassabilityClass, prop.fPassability, prop.nSoilType, prop.bCanEntrench );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::AddCrag( const NDb::SVSOInstance *pInstance )
 {
 	NDb::SVSOInstance putVSO( *pInstance );
@@ -40,18 +40,18 @@ void CTerraAIObserver::AddCrag( const NDb::SVSOInstance *pInstance )
 	AddVSO( pPutVSO );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::AddRoad( const NDb::SVSOInstance *pInstance )
 {
 	AddVSO( pInstance );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::AddRiver( const NDb::SVSOInstance *pInstance )
 {
 	AddVSO( pInstance );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const bool bIsLake )
 {
 	list<SVector> coastTiles;
@@ -69,7 +69,7 @@ void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const b
 														waterTiles, SVectorStripeObject::ESP_SPLASH );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, list<SVector> *pTiles, const SSingleSide &singleSide, bool bInverse )
 {
 	const float fTileSize = (float)(pAIMap->GetTileSize());
@@ -147,7 +147,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 	pAIMap->GetTilesCoveredByQuadrangle( v[0], v[1], v[2], v[3], pTiles );
 }
 
-//////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::SetTerraTypes( const vector<NDb::STerrainAIProperties> &params )
 {
 	if ( !pTerrain )
@@ -158,7 +158,7 @@ void CTerraAIObserver::SetTerraTypes( const vector<NDb::STerrainAIProperties> &p
 		pTerrain->SetTerraTypes( i, params[i].fPassability, params[i].nAIClass, params[i].nSoilType, !params[i].bCanEntrench );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
 																		const CArray2D<BYTE> &types )
 {
@@ -167,7 +167,7 @@ void CTerraAIObserver::UpdateTypes( const int nX1, const int nY1, const int nX2,
 	pTerrain->StartInitMode();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2,
 																			const CArray2D<float> &heights )
 {
@@ -176,55 +176,55 @@ void CTerraAIObserver::UpdateHeights( const int nX1, const int nY1, const int nX
 	pHeights->UpdateHeights( nX1, nY1, nX2, nY2, heights );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::UpdateZ( CVec3 *pvPos )
 {
 	pAIMap->GetHeights()->UpdateZ( pvPos );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraAIObserver::GetZ( float x, float y ) const
 {
 	return pHeights->GetZ( x, y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraAIObserver::GetTileHeight( int nX, int nY ) const
 {
 	return pHeights->GetTileHeight( nX, nY );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CTerraAIObserver::GetNormal( const CVec2 &vPoint ) const
 {
 	return pHeights->GetNormal( vPoint );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraAIObserver::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return pHeights->GetIntersectionWithTerrain( pvResult, vBegin, vEnd );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraAIObserver::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return pHeights->GetIntersectionWithTerrainForEditor( pvResult, vBegin, vEnd );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::InitHeights4Editor( int nSizeX, int nSizeY )
 {
 	pHeights->Init4Editor( nSizeX, nSizeY, 32 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::ClearPassMarkers()
 {
 	pMarkers->Clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::DrawPassabilities() const
 {
 	if ( bShowPassability && (pMarkers != 0) )
@@ -233,7 +233,7 @@ void CTerraAIObserver::DrawPassabilities() const
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::LockSteepTiles()
 {
 	if ( NGlobal::GetVar( "AI.Terrain.LockSteepTiles", 0 ) )
@@ -267,7 +267,7 @@ void CTerraAIObserver::LockSteepTiles()
 		pTerrain->FinishInitMode();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::ToggleShowPassability()
 {
 	ClearPassMarkers();
@@ -280,7 +280,7 @@ void CTerraAIObserver::ToggleShowPassability()
 	DebugInfoManager()->ShowAxes( bShowPassability );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius )
 {
 	if ( pMarkers != 0 )
@@ -288,12 +288,12 @@ void CTerraAIObserver::SetPassMarkers( const int color, const int aiClass, const
 		pMarkers->SetPassMarkers( (NDebugInfo::EColor)color, (EAIClasses)aiClass, (EFreeTileInfo)freeClass, nBoundTileRadius );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::DumpMaxes( const string &szFileName, const int aiClass )
 {
 	pTerrain->DumpMaxes( ELM_STATIC, (EAIClasses)aiClass, "debug_images\\" + szFileName + ".tga" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::FinalizeUpdates()
 {
 	if ( !bShowPassability && NGlobal::GetVar( "game_mode_editor" ) != 0 )
@@ -302,7 +302,7 @@ void CTerraAIObserver::FinalizeUpdates()
 	LockSteepTiles();
 	pTerrain->FinishInitMode();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraAIObserver::InitPassMarkers( CAIMap *_pAIMap )
 {
 	if ( pMarkers == 0 )
@@ -311,7 +311,7 @@ void CTerraAIObserver::InitPassMarkers( CAIMap *_pAIMap )
 	pMarkers->Init( pAIMap );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraAIObserver::IsBridge( const int nX, const int nY ) const
 {
 	NI_VERIFY( pTerrain, "pTerrain == NULL!", return false )
@@ -319,7 +319,7 @@ bool CTerraAIObserver::IsBridge( const int nX, const int nY ) const
 	return pTerrain->IsBridge( SVector(nX, nY) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTerraAIObserver::operator&( IBinSaver &f )
 {
 	f.Add( 2,&pAIMap );
@@ -336,7 +336,7 @@ int CTerraAIObserver::operator&( IBinSaver &f )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11097CC0, CTerraAIObserver )
 
 START_REGISTER( TerraAIObserverConsts )

@@ -11,16 +11,16 @@
 //#include "GMemBuilder.h"
 //#include "GMemFormat.h"
 //extern CGScene *pCurrentScene;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_OCCLUDE_BUFFER_WIDTH = 128;
 const int N_OCCLUDE_BUFFER_HEIGHT = 128;
 const float F_ZBUF_SCALE = 40000;
 const float F_ZBUF_SCALE_LOW = 10000;
 typedef unsigned short zbuf_type;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 vCamDirs[6] = 
 {
 	CVec3( 1, 0, 0 ),
@@ -31,7 +31,7 @@ static CVec3 vCamDirs[6] =
 	CVec3( 0, 0,-1 )
 };
 static vector< CObj<CObjectBase> > nodes;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const zbuf_type N_HZ_MAX = 65535;
 class CHZBuffer : public IHZBuffer
 {
@@ -216,9 +216,9 @@ fin:
 	}
 	void SetBaseZ( int x, int y, zbuf_type n ) { depthBuffer[0][y][x] = n; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Visible part generator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int __forceinline Float2IntScale( const float fpVar, const float fpScale )
 {
 	int nRet;
@@ -330,7 +330,7 @@ public:
 	CHZBuffer* GetHZBuffer() const { return pHZBuffer; }
 	friend class CRasterizer<CPartsRender>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CountParts( const list<SRenderPartSet> &l )
 {
 	int nRes = 0;
@@ -338,7 +338,7 @@ static int CountParts( const list<SRenderPartSet> &l )
 		nRes += i->pParts->size();
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SCompareRPS
 {
 	CVec3 vZ;
@@ -432,7 +432,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
 	list<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
 {
@@ -520,7 +520,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		//}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS, 
 	const SGroupSelect &_mask, const CVec2 &screenSize, CIgnorePartsHash *pIgnore,
 	CObj<IHZBuffer> *pHZBuffer )
@@ -565,7 +565,7 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS, 
 	const SGroupSelect &_mask, const CVec2 &screenSize, CIgnorePartsHash *pIgnore, 
 	CObj<IHZBuffer> *pHZBuffer )
@@ -610,9 +610,9 @@ void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Shadow volumes generator
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShadowVolumeBuilder
 {
 	enum EE
@@ -655,7 +655,7 @@ public:
 	void BuildResult();
 	float GetHullRadius() const { return fHullRadius; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CShadowVolumeBuilder::AddPoint( const CVec3 &a )
 {
 	CPointHash::iterator i = pointHash.find( a );
@@ -666,7 +666,7 @@ int CShadowVolumeBuilder::AddPoint( const CVec3 &a )
 	resPoints.push_back( a );
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CShadowVolumeBuilder::AddBackPoint( const CVec3 &a )
 {
 	CVec3 v = a - vCenter;
@@ -674,7 +674,7 @@ int CShadowVolumeBuilder::AddBackPoint( const CVec3 &a )
 	v = vCenter + v * ( fRadius * FP_SQRT_3 / fLeng );
 	return AddPoint( v );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcMiddle( CVec3 *pRes, const CVec3 &a, float fA, const CVec3 &b, float fB )
 {
 	float f1 = 1 / ( fB - fA );
@@ -684,7 +684,7 @@ static void CalcMiddle( CVec3 *pRes, const CVec3 &a, float fA, const CVec3 &b, f
 	pRes->y = ( a.y * fB - b.y * fA );
 	pRes->z = ( a.z * fB - b.z * fA );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowVolumeBuilder::AddEdge( int n1, int n2 )
 {
 	int nIndices[10];
@@ -716,7 +716,7 @@ void CShadowVolumeBuilder::AddEdge( int n1, int n2 )
 	for ( int k = 2; k < nSize + 2; ++k )
 		resTris.push_back( STriangle( nIndices[0], nIndices[k-1], nIndices[k] ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
 {
 	if ( nPlane == 3 )
@@ -771,7 +771,7 @@ void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
 	if ( !neg.IsEmpty() )
 		AddBackTriangle( nPlane + 1, neg );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEdge
 {
 	int nStart, nFinish;
@@ -784,7 +784,7 @@ struct SEdgeHash
 	int operator()( const SEdge &a ) const { return ( a.nStart << 10 ) ^ a.nFinish; }
 };
 typedef hash_map<SEdge, int, SEdgeHash> CEdgesHash;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEdgeTracker
 {
 	CEdgesHash edges;
@@ -805,7 +805,7 @@ struct SEdgeTracker
 			++i->second;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowVolumeBuilder::BuildResult()
 {
 	// add fronts
@@ -838,13 +838,13 @@ void CShadowVolumeBuilder::BuildResult()
 			AddEdge( i->first.nFinish, i->first.nStart );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CShadowVolumeBuilder::CalcPointNorm( const CVec3 &p1 )
 {
 	CVec3 v = p1 - vCenter;
 	return fabs(v.x) + fabs(v.y) + fabs(v.z);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 {
 	CVec3 vNormal( ( p2 - p1 ) ^ ( p3 - p1 ) );
@@ -865,8 +865,8 @@ void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const 
 	int n3 = AddPoint( p3 );
 	tris.push_back( STriangle( n1, n2, n3 ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCenter, 
 	float fRadius, vector<STriangle> *pTris, 
 	vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
@@ -933,7 +933,7 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 	shadowBuilder.BuildResult();
 	*pHullRadius = shadowBuilder.GetHullRadius();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 BASIC_REGISTER_CLASS( CHZBuffer )

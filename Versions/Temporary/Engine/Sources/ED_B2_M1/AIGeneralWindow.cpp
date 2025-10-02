@@ -12,13 +12,13 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //		AI GENERAL POINTS WINDOW
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP( CAIGeneralPointsWindow, CResizeDialog )
 	ON_WM_DESTROY()
 	ON_CBN_SELCHANGE(IDC_COMBO_PLAYER, OnChangePlayerCombo)
@@ -36,7 +36,7 @@ BEGIN_MESSAGE_MAP( CAIGeneralPointsWindow, CResizeDialog )
 	ON_NOTIFY(NM_DBLCLK, IDC_AIGEN_LIST_PARCELS, OnNMDblclkAigenListParcels)
 END_MESSAGE_MAP()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIGeneralPointsWindow::CAIGeneralPointsWindow( CWnd* pParentWindow )
 	: CResizeDialog( CAIGeneralPointsWindow::IDD, pParentWindow ),
 	bIsDataSetting( false )
@@ -60,13 +60,13 @@ CAIGeneralPointsWindow::CAIGeneralPointsWindow( CWnd* pParentWindow )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_AIGEN_POINTS_WINDOW, this );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAIGeneralPointsWindow::~CAIGeneralPointsWindow()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_AIGEN_POINTS_WINDOW );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::DoDataExchange( CDataExchange *pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -79,7 +79,7 @@ void CAIGeneralPointsWindow::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_COMBO_PLAYER, comboPlayer );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CAIGeneralPointsWindow::OnInitDialog()
 {
 	bIsDataSetting = true;
@@ -108,7 +108,7 @@ BOOL CAIGeneralPointsWindow::OnInitDialog()
 	return TRUE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	SAIGeneralPointsWindowData *pData = reinterpret_cast<SAIGeneralPointsWindowData*>( dwData );
@@ -136,7 +136,7 @@ bool CAIGeneralPointsWindow::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAIGeneralPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsWindow::UpdateCommand(), pbEnable == 0" );
@@ -156,7 +156,7 @@ bool CAIGeneralPointsWindow::UpdateCommand( UINT nCommandID, bool *pbEnable, boo
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::NotifyHandler()
 {
 	if ( bIsDataSetting )
@@ -167,7 +167,7 @@ void CAIGeneralPointsWindow::NotifyHandler()
 																												ID_AIGEN_POINTS_WINDOW_UI_EVENT, 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // useful NotifyHandler
 void CAIGeneralPointsWindow::NotifyHandler( SAIGeneralPointsWindowData::EAIGenPointsLastAction eAction )
 {
@@ -176,14 +176,14 @@ void CAIGeneralPointsWindow::NotifyHandler( SAIGeneralPointsWindowData::EAIGenPo
 	SetLastAction( SAIGeneralPointsWindowData::AIGP_NO_ACTIONS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnDestroy()
 {
 	SaveResizeDialogOptions();
 	CResizeDialog::OnDestroy();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::GetDialogData( SAIGeneralPointsWindowData *pData )
 {
 	pData->eLastAction = eLastAction;
@@ -223,7 +223,7 @@ void CAIGeneralPointsWindow::GetDialogData( SAIGeneralPointsWindowData *pData )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::SetDialogData( const SAIGeneralPointsWindowData *pData )
 {
 	if ( !pData )
@@ -270,13 +270,13 @@ void CAIGeneralPointsWindow::SetDialogData( const SAIGeneralPointsWindowData *pD
 	bIsDataSetting = false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnChangePlayerCombo()
 {
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_PLAYER_JUMP );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnLvnItemchangedListIDs( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	(*pResult) = 0;
@@ -293,7 +293,7 @@ void CAIGeneralPointsWindow::OnLvnItemchangedListIDs( NMHDR *pNMHDR, LRESULT *pR
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnLvnItemchangedListParcels( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>( pNMHDR );
@@ -307,31 +307,31 @@ void CAIGeneralPointsWindow::OnLvnItemchangedListParcels( NMHDR *pNMHDR, LRESULT
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnBnClickedAddID()
 {
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_ID_ADD );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnBnClickedDeleteID()
 {
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_ID_DEL );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnBnClickedAddParcel()
 {
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_PARCEL_ADD );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnBnClickedDeleteParcel()
 {
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_PARCEL_DEL );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnLvnKeydownAigenListParcels( NMHDR *pNMHDR, LRESULT *pResult )
 {
   LPNMLVKEYDOWN pLVKeyDown = reinterpret_cast<LPNMLVKEYDOWN>(pNMHDR);
@@ -349,7 +349,7 @@ void CAIGeneralPointsWindow::OnLvnKeydownAigenListParcels( NMHDR *pNMHDR, LRESUL
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnLvnKeydownAigenListIDs( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	LPNMLVKEYDOWN pLVKeyDown = reinterpret_cast<LPNMLVKEYDOWN>(pNMHDR);
@@ -367,11 +367,11 @@ void CAIGeneralPointsWindow::OnLvnKeydownAigenListIDs( NMHDR *pNMHDR, LRESULT *p
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAIGeneralPointsWindow::OnNMDblclkAigenListParcels(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	(*pResult) = 0;
 	NotifyHandler( SAIGeneralPointsWindowData::AIGP_PARCEL_EDIT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

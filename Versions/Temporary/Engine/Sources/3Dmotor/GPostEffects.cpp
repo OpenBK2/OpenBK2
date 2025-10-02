@@ -1,11 +1,11 @@
 #include "StdAfx.h"
 #include "GPostEffects.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGfx
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CMonochromeEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMonochromeEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	pRC->SetPixelShader( "Monochrome" );
@@ -13,9 +13,9 @@ void CMonochromeEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pT
 	pRC->SetVSConst( 16, CVec4( fScaleU, fScaleV, 0, 0 ) );
 	pRC->SetTexture( 0, pTex, FILTER_LINEAR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTwilightEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTwilightEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	float fTimeVal = ( Float2Int( GetTickCount() * fTime ) % 1000 ) / 500.0f ;
@@ -40,9 +40,9 @@ void CTwilightEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex
 //	pRC->SetPSConst( 2, CVec4( 1 - fCoeff, 1 - fCoeff, 1 - fCoeff, 1 - fCoeff ) );
 //	pRC->SetPSConst( 3, CVec4( 0, fTimeVal, 0, 0 ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGausianBlurEffect
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGausianBlurEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	pRC->SetPixelShader( "GausianBlur" );
@@ -51,7 +51,7 @@ void CGausianBlurEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *p
 	pRC->SetVSConst( 17, CVec4( bVert ? 0 :  0.001f, bVert ?  0.001f : 0, 0, 0 ) );
 	pRC->SetTexture( 0, pTex, FILTER_LINEAR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture* ApplyFiltersBase( NGfx::CTexture *pSrc, const CTRect<float> &srcRect, const CTRect<float> &rectRegDS, const vector<CPtr<I2DEffect> > &filters )
 {
 	CTRect<float> rectReg;
@@ -84,7 +84,7 @@ NGfx::CTexture* ApplyFiltersBase( NGfx::CTexture *pSrc, const CTRect<float> &src
 
 	return pSrc;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ApplyFilters( int nDownSample, const vector<CPtr<I2DEffect> > &filters )
 {
 	if ( filters.empty() )
@@ -103,7 +103,7 @@ void ApplyFilters( int nDownSample, const vector<CPtr<I2DEffect> > &filters )
 	rc.SetRegister( 0 );
 	NGfx::CopyTexture( rc, CVec2( rectReg.Width(), rectReg.Height() ), rectReg, pSrc, rectRegDS );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int nDownSample, const vector<CPtr<I2DEffect> > &filters )
 {
 	if ( filters.empty() )
@@ -117,6 +117,6 @@ void ApplyFilters( NGfx::CTexture *pTarget, const CTRect<float> &targetRect, int
 	rc.SetTextureRT( pTarget );
 	NGfx::CopyTexture( rc, CVec2( targetRect.Width(), targetRect.Height() ), targetRect, pSrc, rectRegDS );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // NAMESPACE
-////////////////////////////////////////////////////////////////////////////////////////////////////
+

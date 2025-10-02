@@ -5,11 +5,11 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "dbnotifications.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::ENotificationType eValue )
 {
 	switch ( eValue )
@@ -54,7 +54,7 @@ string EnumToString( NDb::ENotificationType eValue )
 		return "NTF_OBJECTIVE_RECEIVED";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const string &szValue )
 {
 	if ( szValue == "NTF_OBJECTIVE_RECEIVED" )
@@ -95,7 +95,7 @@ NDb::ENotificationType NDb::StringToEnum_NDb_ENotificationType( const string &sz
 		return NDb::NTF_COUNT;
 	return NDb::NTF_OBJECTIVE_RECEIVED;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string EnumToString( NDb::EMinimapFigureType eValue )
 {
 	switch ( eValue )
@@ -110,7 +110,7 @@ string EnumToString( NDb::EMinimapFigureType eValue )
 		return "MFT_TRIANGLE";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EMinimapFigureType NDb::StringToEnum_NDb_EMinimapFigureType( const string &szValue )
 {
 	if ( szValue == "MFT_TRIANGLE" )
@@ -122,7 +122,7 @@ NDb::EMinimapFigureType NDb::StringToEnum_NDb_EMinimapFigureType( const string &
 	return NDb::MFT_TRIANGLE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SNotification::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Notification", typeID, sizeof(*this) );
@@ -139,7 +139,7 @@ void SNotification::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DuplicateDelay", (BYTE*)&fDuplicateDelay - pThis, sizeof(fDuplicateDelay), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SNotification::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -155,7 +155,7 @@ int SNotification::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SNotification::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -170,8 +170,8 @@ int SNotification::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::ENotificationEventType eValue )
 {
 	switch ( eValue )
@@ -230,7 +230,7 @@ string EnumToString( NDb::ENotificationEventType eValue )
 		return "NEVT_OBJECTIVE_COMPLETED";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::ENotificationEventType NDb::StringToEnum_NDb_ENotificationEventType( const string &szValue )
 {
 	if ( szValue == "NEVT_OBJECTIVE_COMPLETED" )
@@ -286,7 +286,7 @@ NDb::ENotificationEventType NDb::StringToEnum_NDb_ENotificationEventType( const 
 	return NDb::NEVT_OBJECTIVE_COMPLETED;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SNotificationEvent::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "NotificationEvent", typeID, sizeof(*this) );
@@ -304,7 +304,7 @@ void SNotificationEvent::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "NoDupTime", (BYTE*)&fNoDupTime - pThis, sizeof(fNoDupTime), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SNotificationEvent::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -321,7 +321,7 @@ int SNotificationEvent::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SNotificationEvent::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -337,7 +337,7 @@ int SNotificationEvent::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x17135D40, SNotification ) 

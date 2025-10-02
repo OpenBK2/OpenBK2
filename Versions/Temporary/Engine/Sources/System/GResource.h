@@ -6,11 +6,11 @@
 
 #include "System_export.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "DG.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TKey>
 struct SResKey
 {
@@ -26,7 +26,7 @@ struct SResKey
 	bool operator==( const SResKey<TKey> &a ) const { return IsEqualGUID( uidKey, a.uidKey ) && tKey == a.tKey; }
 	int operator()( const SResKey<TKey> &k ) const { return k.tKey.nID; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TKey, class TValue>
 class CResourceLoader: public CHoldedPtrFuncBase<TValue>
 {
@@ -39,7 +39,7 @@ public:
 	void SetKey( const SResKey<TKey> &_key ) { key = _key; }
 	int operator&( IBinSaver &f ) { f.Add( 1, &key ); return 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileRequest;
 template <class TKey, class TValue>
 class CLazyResourceLoader : public CResourceLoader<TKey,TValue>
@@ -69,7 +69,7 @@ protected:
 	bool NeedUpdate() { TParent::NeedUpdate(); if ( !IsValid(pValue) && IsValid(pRequest) && pRequest->IsReady() ) return true; return false; }
 public:
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IPrecache : public CObjectBase
 {
 public:
@@ -77,7 +77,7 @@ public:
 	virtual void ForceUpdate() = 0;
 };
 //extern vector<CPtr<IPrecache> > precacheUpdateList;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CResourcePrecache : public IPrecache
 {
@@ -114,7 +114,7 @@ public:
 		}
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFileResource
 {
 	CFileStream f;
@@ -125,7 +125,7 @@ public:
 
 	bool IsOk() const { return f.IsOk(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for use in CResourceOpener
 class SYSTEM_EXPORT CResourceFileOpener
 {
@@ -139,7 +139,7 @@ public:
 
 	bool IsOk() const { return f.IsOk(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CResourceOpener
 {
 	CResourceFileOpener file;
@@ -154,7 +154,7 @@ public:
 
 	bool IsOk() const { return file.IsOk(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // if for some package CFileRequest scheme is used all access to that resource should be
 // through CFileRequest system
 class SYSTEM_EXPORT CFileRequest : public CObjectBase
@@ -179,7 +179,7 @@ public:
 inline CFileRequest* CreateFileRequiest( const char *pszResName, int nID, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, nID, bDelayedLoad ); }
 inline CFileRequest* CreateFileRequiest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayedLoad ); }
 //inline CFileRequest* CreateFileRequiest( const char *pszResName, const SPartKey &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayLoad ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT void AddToPrecachedUpdate( IPrecache *pAdd );
 //void AddResourceDir( const char *pszName );
 //void ClearResourceDirs();
@@ -191,7 +191,7 @@ SYSTEM_EXPORT bool HasFileRequestsInFly();
 SYSTEM_EXPORT int CountFileRequestsInFly();
 SYSTEM_EXPORT void LoadPrecached();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef NGScene::SResKey<int> SIntResKey;
 namespace nstl
 {
@@ -200,8 +200,8 @@ namespace nstl
 		size_t operator()(const SIntResKey &key ) const { return key.tKey; }
 	};
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 SIntResKey GetIntResKey( T *pResource ) { return SIntResKey( pResource->uid, pResource->GetRecordID() ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

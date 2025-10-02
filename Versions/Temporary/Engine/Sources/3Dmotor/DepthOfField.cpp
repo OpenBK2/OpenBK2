@@ -4,10 +4,10 @@
 #include "GRenderExecute.h"
 #include "GRenderFactor.h"
 #include "DepthOfField.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDepthOfFieldEffect: public NGfx::I2DEffect
 {
 	OBJECT_NOCOPY_METHODS(CDepthOfFieldEffect);
@@ -21,7 +21,7 @@ public:
 			pColor(_pColor), pDepth(_pDepth), nWidth(_nWidth), nHeight(_nHeight) {}
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDepthOfFieldEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV )
 {
 	const float dx = 1.0f / nWidth;
@@ -56,7 +56,7 @@ void CDepthOfFieldEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *
 	pRC->SetTexture( 0, pColor, NGfx::FILTER_POINT );
 	pRC->SetTexture( 1, pDepth, NGfx::FILTER_POINT );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pScene, const CTransformStack *pTS, IRender *pRender )
 {
 	if ( pDOF && ( NGfx::GetHardwareLevel() == NGfx::HL_R300 ) && NGfx::CopyScreenToRegister( 0 ) )
@@ -105,6 +105,6 @@ void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pSce
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace NGScene
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

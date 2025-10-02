@@ -3,7 +3,7 @@
 
 #pragma once
 #include "..\MapEditorLib\BuildDataBuilder.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapInfoBuilder : public CBuildDataBuilder
 {
 	static const int MIN_PLAYER_COUNT;
@@ -57,5 +57,5 @@ public:
 	static bool EnsureMinimapMaterialAndTexture( IManipulator *pObjectManipulator, const CDBID &dbid );
 	static bool MakeMinimapMaterialAndTexture( string *pszObjectName, const string &szFolder );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPINFO_BUILDER__)

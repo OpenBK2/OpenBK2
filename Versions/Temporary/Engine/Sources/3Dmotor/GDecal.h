@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "GDecalInfo.h"
 
 namespace NGScene
@@ -40,7 +40,7 @@ struct SSrcPosInfoHash
 {
 	int operator()( const SSrcPosInfo &p ) const { return (int)p.pUser.GetPtr() ^ p.nUserID ^ (int)p.pSource.GetPtr(); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class ISomePart;
 class CDecalTarget : public CObjectBase
 {
@@ -56,7 +56,7 @@ public:
 	CDecalTarget() {}
 	CDecalTarget( const SDecalMappingInfo &_mapInfo ) : mapInfo(_mapInfo) {};
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDecalsManager;
 class IDecalQuery;
 class IMaterial;
@@ -77,7 +77,7 @@ public:
 	void Walk();
 	vector<CMObj<CObjectBase> > &GetDecals() { return decals; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<CPtr<CObjectBase>, bool, SPtrHash> CObjectBaseSet;
 class IDecalQuery : virtual public CObjectBase
 {
@@ -85,7 +85,7 @@ public:
 	virtual CObjectBase* CreateDecal( ISomePart *pTarget, const vector<CVec3> &srcPositions, const SDecalMappingInfo &_info, IMaterial *pMaterial ) = 0;
 	virtual void GetPartsList( const SDecalMappingInfo &_info, const CObjectBaseSet &targets, vector<CPtr<ISomePart> > *pRes ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDecalsManager : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CDecalsManager);
@@ -108,5 +108,5 @@ public:
 	void Walk();
 };
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

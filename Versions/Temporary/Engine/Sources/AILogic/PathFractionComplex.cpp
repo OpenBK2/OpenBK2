@@ -5,11 +5,11 @@
 
 REGISTER_SAVELOAD_CLASS( 0x11097A80, CPathFractionComplex )
 
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	SPrevManuverParams
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 SPrevPathParams::SPrevPathParams( interface IPlane *pPlane )
 {
 	if ( pPlane->GetManuver() == 0 )
@@ -29,9 +29,9 @@ SPrevPathParams::SPrevPathParams( interface IPlane *pPlane )
 		pPlane->GetManuver()->GetManuverParams( this );
 }
 
-/////////////////////////////////////////////////////////////////////////////
+
 //	CPathFractionComplexBase
-/////////////////////////////////////////////////////////////////////////////
+
 CPathFractionComplexBase::CPathFractionComplexBase( const CPathList &pathList )
 {
 	for ( CPathList::const_iterator it = pathList.begin(); it != pathList.end(); ++it )
@@ -41,7 +41,7 @@ CPathFractionComplexBase::CPathFractionComplexBase( const CPathList &pathList )
 			substitute.push_back( pPathFraction );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CCurFraction CPathFractionComplexBase::GetCur( const float fDist ) const
 {
 	if ( !substitute.empty() )
@@ -62,7 +62,7 @@ CCurFraction CPathFractionComplexBase::GetCur( const float fDist ) const
 	}
 	return CCurFraction( 0, 0 );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 void CPathFractionComplexBase::AfterSubstitute()
 {
 	for( CSubstitutes::iterator it = substitute.begin(); it != substitute.end(); )
@@ -73,7 +73,7 @@ void CPathFractionComplexBase::AfterSubstitute()
 			++it;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////
+
 float CPathFractionComplexBase::GetLength() const
 {
 	float fDistSoFar = 0;
@@ -83,7 +83,7 @@ float CPathFractionComplexBase::GetLength() const
 	}
 	return fDistSoFar;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionComplexBase::GetPoint( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );
@@ -91,7 +91,7 @@ CVec3 CPathFractionComplexBase::GetPoint( const float fDist ) const
 		return fr.first->GetPoint( fDist - fr.second );
 	return VNULL3;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionComplexBase::GetTangent( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );
@@ -99,7 +99,7 @@ CVec3 CPathFractionComplexBase::GetTangent( const float fDist ) const
 		return fr.first->GetTangent( fDist - fr.second );
 	return VNULL3;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionComplexBase::GetNormale( const float fDist ) const
 {
 	CCurFraction fr = GetCur( fDist );

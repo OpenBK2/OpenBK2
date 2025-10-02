@@ -17,19 +17,19 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::CanBuildObject( const string &rszObjectTypeName )
 {
 	return NBuilderFactory::CanCreateBuilder( rszObjectTypeName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::CanDefaultBuildObject( const string &rszObjectTypeName )
 {
 	return NBuilderFactory::CanCreateBuilder( DEFAULT_BUILDER_LABEL_TXT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuilderContainer::Create( const string &rszObjectTypeName )
 {
 	CBuilderMap::iterator posBuilder = builderMap.find( rszObjectTypeName );
@@ -40,7 +40,7 @@ void CBuilderContainer::Create( const string &rszObjectTypeName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuilderContainer::Destroy( const string &rszObjectTypeName )
 {
 	CBuilderMap::iterator posBuilder = builderMap.find( rszObjectTypeName );
@@ -50,7 +50,7 @@ void CBuilderContainer::Destroy( const string &rszObjectTypeName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IBuilder* CBuilderContainer::GetBuilder( const string &rszObjectTypeName )
 {
 	string szBuilderType = CanBuildObject( rszObjectTypeName ) ? rszObjectTypeName : DEFAULT_BUILDER_LABEL_TXT;
@@ -67,7 +67,7 @@ IBuilder* CBuilderContainer::GetBuilder( const string &rszObjectTypeName )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::InsertObject( string *pszObjectTypeName,
 																			string *pszUniqueObjectName,
 																			bool bFromMainMenu,
@@ -82,7 +82,7 @@ bool CBuilderContainer::InsertObject( string *pszObjectTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::CopyObject( const string &rszObjectTypeName,
 																		const string &rszDestination,
 																		const string &rszSource )
@@ -94,7 +94,7 @@ bool CBuilderContainer::CopyObject( const string &rszObjectTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::RenameObject( const string &rszObjectTypeName,
 																			const string &rszDestination,
 																			const string &rszSource )
@@ -106,7 +106,7 @@ bool CBuilderContainer::RenameObject( const string &rszObjectTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::RemoveObject( const string &rszObjectTypeName,
 																			const string &rszObjectName )
 {
@@ -117,7 +117,7 @@ bool CBuilderContainer::RemoveObject( const string &rszObjectTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBuilderContainer::GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder )
 {
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
@@ -126,7 +126,7 @@ void CBuilderContainer::GetDefaultFolder( const string &rszObjectTypeName, strin
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::FillBuildData( string *pszBuildDataTypeName,
 																			 string *pszBuildDataName,
 																			 SBuildDataParams *pBuildDataParams,					
@@ -175,7 +175,7 @@ bool CBuilderContainer::FillBuildData( string *pszBuildDataTypeName,
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 {
 	if ( pBuildDataParams != 0 )
@@ -193,6 +193,6 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

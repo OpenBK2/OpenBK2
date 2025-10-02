@@ -15,7 +15,7 @@ namespace NDb
 {
 	struct SUIGameConsts;
 }
-//////////////////////////////////////////////////////////////////////
+
 class CVirtualScreenController : public IVirtualScreenController
 {
 	OBJECT_NOCOPY_METHODS( CVirtualScreenController )
@@ -40,7 +40,7 @@ namespace NUIFactory
 {
 EXTERNVAR CDBPtr<NDb::SUIGameConsts> pConsts;
 }
-//////////////////////////////////////////////////////////////////////
+
 class UI_EXPORT CUIFactory : public IUIInitialization
 {
 	OBJECT_BASIC_METHODS( CUIFactory )
@@ -91,4 +91,4 @@ public:
 	static void RegisterMessage( const string &szMessage );
 	static bool IsMessageRegistered( const SGameMessage &msg );
 };
-//////////////////////////////////////////////////////////////////////
+

@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Operation", &szOperation );
@@ -21,7 +21,7 @@ int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 	//
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::SObjectFilter::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Name", &szName );
@@ -29,7 +29,7 @@ int CObjectFilterCollector::SObjectFilter::operator&( IXmlSaver &saver )
 	saver.Add( "Separator", &bSeparator );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFileName )
 {
@@ -77,10 +77,10 @@ void CObjectCollector::LoadUnicodeText( CString *pstrText, const string &rszFile
 }
 /**/
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CObjectCollector::DEFAULT_DATA_EXTRACTOR_TYPE = "_DEFAULT_DATA_EXTRACTOR_TYPE_";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectFilterCollector::SObjectFilter::InsertObjectToCollection( CObjectCollection *pObjectCollection, const string &rszObjectTypeName, const string &rszObjectName ) const
 {
 	if ( pObjectCollection != 0 )
@@ -104,7 +104,7 @@ bool CObjectFilterCollector::SObjectFilter::InsertObjectToCollection( CObjectCol
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollection *pObjectCollection, const string &rszObjectTypeName ) const
 {
 	int nObjectsFound = 0;
@@ -136,7 +136,7 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 	return nObjectsFound;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObjectNameCollection *pObjectNameCollection, const SPart &rPart ) const
 {
 	if ( pObjectNameCollection != 0 )
@@ -176,7 +176,7 @@ void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObject
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pDestination, const CObjectNameCollection &rSource, const string &szOperationType ) const
 {
 	if ( pDestination != 0 )
@@ -213,7 +213,7 @@ void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pD
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollection *pObjectCollection ) const
 {
 	if ( bSeparator || partList.empty() )
@@ -266,13 +266,13 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 	return nObjectCollectionCount;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectFilterCollector::SObjectFilter::Match( const string &szObjectTypeName, const string &szObjectName ) const
 {
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CObjectFilterCollector::SObjectFilter* CObjectFilterCollector::LocateObjectFilter( const string &rszFilterType, const int nFilterIndex ) const
 {
 	CObjectFilterListMap::const_iterator posObjectFilterList = objectFilterListMap.find( rszFilterType );
@@ -286,7 +286,7 @@ const CObjectFilterCollector::SObjectFilter* CObjectFilterCollector::LocateObjec
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectFilterCollector::Load( CDataStream *pStream )
 {
 	try
@@ -302,7 +302,7 @@ bool CObjectFilterCollector::Load( CDataStream *pStream )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectFilterCollector::Save( CDataStream *pStream )
 {
 	try
@@ -318,7 +318,7 @@ bool CObjectFilterCollector::Save( CDataStream *pStream )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::GetFilterList( CFilterList* pFilterList, const string &rszFilterType ) const
 {
 	if ( pFilterList != 0 )
@@ -337,7 +337,7 @@ int CObjectFilterCollector::GetFilterList( CFilterList* pFilterList, const strin
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectFilterCollector::IsSeparator( const string &rszFilterType, const int nFilterIndex ) const
 {
 	if ( const SObjectFilter* pObjectFilter = LocateObjectFilter( rszFilterType, nFilterIndex ) )
@@ -347,25 +347,25 @@ bool CObjectFilterCollector::IsSeparator( const string &rszFilterType, const int
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const IObjectFilter* CObjectFilterCollector::Get( const string &rszFilterType, const int nFilterIndex ) const
 {
 	return LocateObjectFilter( rszFilterType, nFilterIndex );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::ShowFilterSelectionDialog( CWnd* pParentWindow, string *pszFilterType, int *pnFilterIndex )
 {
 	return IDCANCEL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectFilterCollector::ShowFilterCreationDialog( CWnd* pParentWindow, string *pszFilterType, int *pnFilterIndex )
 {
 	return IDCANCEL;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::CreateImageLists()
 {
 	const COLORREF zeroColor = RGB( 0, 0, 0 );
@@ -384,7 +384,7 @@ void CObjectCollector::CreateImageLists()
 	nDefaultImageIndex = nDefaultNormalImageIndex;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string& CObjectCollector::LocateExtractorType( const string &rszObjectTypeName ) const
 {
 	for ( CDataExtractorTypeMap::const_iterator itDataExtractorType = dataExtractorTypeMap.begin();
@@ -400,7 +400,7 @@ const string& CObjectCollector::LocateExtractorType( const string &rszObjectType
 	return DEFAULT_DATA_EXTRACTOR_TYPE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const IObjectCollector::SObjectParams* CObjectCollector::LocateObjectParams( const string &rszObjectTypeName, const string &rszObjectName ) const
 {
 	CObjectCollection::const_iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
@@ -415,7 +415,7 @@ const IObjectCollector::SObjectParams* CObjectCollector::LocateObjectParams( con
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const IObjectCollector::SObjectParams* CObjectCollector::GetObjectParams( const string &rszObjectTypeName, const string &rszObjectName, const string &rszDataExtractorType )
 {
 	const SObjectParams *pLocatedObjectParams = LocateObjectParams( rszObjectTypeName, rszObjectName );
@@ -427,7 +427,7 @@ const IObjectCollector::SObjectParams* CObjectCollector::GetObjectParams( const 
 	return pLocatedObjectParams;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const string &rszObjectTypeName, const string &rszObjectName, const string &rszDataExtractorType )
 {
 	if ( pObjectParams )
@@ -482,7 +482,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const str
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::InsertObjectToCollection( CObjectCollection *pObjectCollection, const string &rszObjectTypeName, const string &rszObjectName, const SObjectParams* pObjectParams ) const
 {
 	bool bResult = false;
@@ -511,7 +511,7 @@ bool CObjectCollector::InsertObjectToCollection( CObjectCollection *pObjectColle
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::InsertObjectToCollection( const string &rszObjectTypeName, const string &rszObjectName, const string &rszDataExtractorType )
 {
 	CObjectCollection::iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
@@ -537,7 +537,7 @@ bool CObjectCollector::InsertObjectToCollection( const string &rszObjectTypeName
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::RemoveObjectFromCollection( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	CObjectCollection::iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
@@ -559,7 +559,7 @@ bool CObjectCollector::RemoveObjectFromCollection( const string &rszObjectTypeNa
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::InsertObject( const string &rszObjectTypeName, const string &rszObjectName, const string &rszDataExtractorType )
 {
 	if ( InsertObjectToCollection( rszObjectTypeName, rszObjectName, rszDataExtractorType ) )
@@ -576,7 +576,7 @@ void CObjectCollector::InsertObject( const string &rszObjectTypeName, const stri
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
 {
 	if ( RemoveObjectFromCollection( rszObjectTypeName, rszObjectName ) )
@@ -593,7 +593,7 @@ void CObjectCollector::RemoveObject( const string &rszObjectTypeName, const stri
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::Load( CDataStream *pStream )
 {
 	try
@@ -609,7 +609,7 @@ bool CObjectCollector::Load( CDataStream *pStream )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::Save( CDataStream *pStream )
 {
 	try
@@ -625,13 +625,13 @@ bool CObjectCollector::Save( CDataStream *pStream )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::RegisterDataExtractor( IObjectDataExtractor *pDataExtractor )
 {
 	RegisterDataExtractor( DEFAULT_DATA_EXTRACTOR_TYPE, pDataExtractor );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::RegisterDataExtractor( const string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor )
 {
 	if ( dataExtractorMap.find( rszDataExtractorType ) != dataExtractorMap.end() )
@@ -645,7 +645,7 @@ void CObjectCollector::RegisterDataExtractor( const string &rszDataExtractorType
 	dataExtractorMap[rszDataExtractorType] = pDataExtractor;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::InsertCallback( IObjectCollectorCallback *pObjectCollectorCallback )
 {
 	if ( pObjectCollectorCallback != 0 )
@@ -654,7 +654,7 @@ void CObjectCollector::InsertCallback( IObjectCollectorCallback *pObjectCollecto
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback )
 {
 	if ( pObjectCollectorCallback != 0 )
@@ -667,13 +667,13 @@ void CObjectCollector::RemoveCallback( IObjectCollectorCallback *pObjectCollecto
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::ClearCallbackList()
 {
 	objectCollectorCallbackMap.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const string &rszObjectTypeName )
 {
 	int nObjectsFound = 0;
@@ -710,7 +710,7 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const s
 	return nObjectsFound;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter )
 {
 	int nObjectsFound = 0;
@@ -743,7 +743,7 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const I
 	return nObjectsFound;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const string &rszObjectTypeName, const string &rszObjectName )
 {
 	const SObjectParams *pLocatedObjectParams = GetObjectParams( rszObjectTypeName, rszObjectName, LocateExtractorType( rszObjectTypeName ) );
@@ -758,13 +758,13 @@ bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const stri
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CImageList* CObjectCollector::GetImageList( int nImageListType )
 {
 	return ( nImageListType == LVSIL_SMALL ) ? ( &smallImageList ) : ( &normalImageList );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectCollector::ClearCollection()
 {
 	objectCollection.clear();
@@ -780,6 +780,6 @@ void CObjectCollector::ClearCollection()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

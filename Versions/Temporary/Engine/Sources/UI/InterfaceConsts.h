@@ -1,6 +1,6 @@
 // SInterfaceConsts.h: interface for the SInterfaceConsts class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_SINTERFACECONSTS_H__87DEE1F5_7500_4647_9FA9_5216B18EE536__INCLUDED_)
 #define AFX_SINTERFACECONSTS_H__87DEE1F5_7500_4647_9FA9_5216B18EE536__INCLUDED_

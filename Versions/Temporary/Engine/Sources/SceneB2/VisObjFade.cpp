@@ -4,9 +4,9 @@
 #include "SceneInternal.h"
 #include "..\3DMotor\GPostProcessors.h"
 #include "..\3DMotor\GSceneUtils.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float FADE_VALUE_UNDER_CURSOR = 0.5f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetFadedObjects( const list<int> &objects )
 {
 	hash_map<int, bool> old_fade;
@@ -33,7 +33,7 @@ void CScene::SetFadedObjects( const list<int> &objects )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetFadedObjects( const list<int> &objects, float fFade )
 {
 	for ( list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
@@ -42,7 +42,7 @@ void CScene::SetFadedObjects( const list<int> &objects, float fFade )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::FadeObject( int nID, bool bFade )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -57,7 +57,7 @@ void CScene::FadeObject( int nID, bool bFade )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::FadeObject( int nID, float fFade )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
@@ -71,12 +71,12 @@ void CScene::FadeObject( int nID, float fFade )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ClearPostEffectObjects()
 {
 	data[eScene]->postEffects.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddPostEffectObjects( const list<int> &objects, const CVec4 &vColor )
 {
 	vector< CObjectBase* > filterObjects;
@@ -95,4 +95,4 @@ void CScene::AddPostEffectObjects( const list<int> &objects, const CVec4 &vColor
 	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter( filterObjects, 
 		new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -10,13 +10,13 @@
 #include "..\Stats_B2_M1\AIUpdates.h"
 #include "Entrenchment.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const static float fNearToNormale = 0.05f; 
 extern CStaticObjects theStatObjs;
 extern CUnitCreation theUnitCreation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D4AA, CEntrenchmentCreation );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 {
 	if ( saver.IsReading() ) 
@@ -27,20 +27,20 @@ void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 			nTermInd = pEntrenchmentStats->GetTerminatorIndex();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEntrenchmentCreation::CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification )
 : CLongObjectCreation( nPlayer, bAllowAIModification ), nStartIndex( 0 ), nCurIndex( -1 ), 
 	line( 0, 0, 0), wAngle( 0 ), bCannot( false ), bSayAck( false )
 {
 	InitConsts();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::InitConsts()
 {
 	pEntrenchmentStats = theUnitCreation.GetEntrenchment();
 	nTermInd = pEntrenchmentStats == 0 ? 0 : pEntrenchmentStats->GetTerminatorIndex();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::SearchTrenches( const CVec2 &vCenter, const SRect &rectToTest )
 {
 	const float fMaxSize = Max( rectToTest.lengthAhead, Max(rectToTest.lengthBack, rectToTest.width ) ) + 2 * SConsts::TILE_SIZE;
@@ -58,12 +58,12 @@ bool CEntrenchmentCreation::SearchTrenches( const CVec2 &vCenter, const SRect &r
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CEntrenchmentCreation::GetEntrenchmentID() const
 {
 	return pFullEntrenchment->GetUniqueId();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate )
 {
 	if ( vPoints.empty() )
@@ -105,13 +105,13 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * p
 	if ( !pUpdate->objects[0].bCanBuild )
 		pUpdate->bCanBuild = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanDigTile( const SVector &tile ) const
 {
 	return GetAIMap()->IsTileInside( tile ) && GetTerrain()->CanDigEntrenchment( tile.x, tile.y ) &&
 				 0 == (EAC_TERRAIN & GetTerrain()->GetTileLockInfo( tile ));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock )
 {
 	bCannot = false;
@@ -171,17 +171,17 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 	CalcTilesUnder();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CEntrenchmentCreation::GetMaxIndex() const
 {
 	return parts.size() - nStartIndex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CEntrenchmentCreation::GetCurIndex() const
 {
 	return nCurIndex - nStartIndex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CEntrenchmentCreation::GetNextPoint( const int nPlace, const int nMaxPlace ) const
 {
 	NI_ASSERT( nMaxPlace, "builders number = 0" );
@@ -192,7 +192,7 @@ const CVec2 CEntrenchmentCreation::GetNextPoint( const int nPlace, const int nMa
 	return CVec2(parts[nCurIndex]->GetCenter().x,parts[nCurIndex]->GetCenter().y) + vDir * ( rect.lengthAhead+rect.lengthBack) * (nPlace -nMaxPlace/2) / nMaxPlace;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CEntrenchmentCreation::GetBuildPointForIndex( const int nPlace, const int nMaxPlace, const int _nIndex ) const
 {
 	NI_ASSERT( nMaxPlace, "builders number = 0" );
@@ -206,12 +206,12 @@ const CVec2 CEntrenchmentCreation::GetBuildPointForIndex( const int nPlace, cons
 	return CVec2(parts[nIndex]->GetCenter().x,parts[nIndex]->GetCenter().y) + vDir * ( rect.lengthAhead+rect.lengthBack) * (nPlace -nMaxPlace/2) / nMaxPlace;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::LockCannotBuild()
 { 
 	bCannot = true; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::BuildNext()
 {
 	CLongObjectCreation::BuildNext();
@@ -251,7 +251,7 @@ void CEntrenchmentCreation::BuildNext()
 	if ( GetCurIndex() < GetMaxIndex() )
 		CalcTilesUnder();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::BuildAll( const int _nMinIndex, const int _nMaxIndex )
 {
   const int nMinIndex = _nMinIndex + nStartIndex;
@@ -293,19 +293,19 @@ void CEntrenchmentCreation::BuildAll( const int _nMinIndex, const int _nMaxIndex
 	pFullEntrenchment = checked_cast<CEntrenchment*>(theStatObjs.AddNewEntrencment( &vEntr[0], vEntr.size(), 0, false ));
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::CalcTilesUnder()
 {
 	GetTilesUnderForIndex( &tilesUnder, GetCurIndex() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::GetTilesUnderForIndex( list<SVector> *pTiles, const int _nIndex ) const
 {
 	const int nIndex = _nIndex + nStartIndex;
 	if ( parts[nIndex] )
 		parts[nIndex]->GetCoveredTiles( pTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::CreateNewEndTerminator()
 {
   CDBPtr<SEntrenchmentRPGStats> pRPG = theUnitCreation.GetEntrenchment();
@@ -317,12 +317,12 @@ void CEntrenchmentCreation::CreateNewEndTerminator()
 	else 
 		pNewEndTerminator = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::GetUnitsPreventing( list< CPtr<CAIUnit> > *units )
 {
 	return GetUnitsPreventingByIndex( units, GetCurIndex() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::GetUnitsPreventingByIndex( list< CPtr<CAIUnit> > *units, const int _nIndex )
 {
 	const int nIndex = _nIndex + nStartIndex;
@@ -345,12 +345,12 @@ void CEntrenchmentCreation::GetUnitsPreventingByIndex( list< CPtr<CAIUnit> > *un
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::IsAnyUnitPrevent() const
 {
 	return IsAnyUnitPreventByIndex( GetCurIndex() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 {
 	const int nIndex = _nIndex + nStartIndex;
@@ -375,7 +375,7 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 	return false;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanBuildNext() const
 {
 	if ( bCannot || !pNewEndTerminator ) 
@@ -383,7 +383,7 @@ bool CEntrenchmentCreation::CanBuildNext() const
 
 	return CanBuildNextInner();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanBuildByIndexSlow( const int _nIndex ) const
 {
 	if ( bCannot || !pNewEndTerminator ) 
@@ -391,7 +391,7 @@ bool CEntrenchmentCreation::CanBuildByIndexSlow( const int _nIndex ) const
 
 	return CanBuildNextInnerSlow( _nIndex + nStartIndex );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanBuildNextInner() const
 {
 	if ( !parts[nCurIndex] )
@@ -430,7 +430,7 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 {
 	if ( !parts[nIndex] )
@@ -472,12 +472,12 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CEntrenchmentCreation::GetPrice()
 {
 	return SConsts::ENTRENCHMENT_SEGMENT_RU_PRICE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEntrenchmentCreation::LockNext()
 {
 	parts[nCurIndex]->LockTiles();
@@ -485,7 +485,7 @@ void CEntrenchmentCreation::LockNext()
 	if ( nStartIndex == nCurIndex )
 		pBeginTerminator->LockTiles();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEntrenchmentPart * CEntrenchmentCreation::AddElement( const SEntrenchmentRPGStats *pRPG, const CVec3 &pt, WORD angle, int nFrameIndex, int nPlayer )
 {
 	//create entrenchments
@@ -496,7 +496,7 @@ CEntrenchmentPart * CEntrenchmentCreation::AddElement( const SEntrenchmentRPGSta
 	ptr->Init();
 	return ptr;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanDigBecauseOfOtherTrenches( const SRect &rect, const CVec2 &pt ) const
 {
 	if ( !GetAIMap()->IsRectInside( rect ) )
@@ -509,7 +509,7 @@ bool CEntrenchmentCreation::CanDigBecauseOfOtherTrenches( const SRect &rect, con
 
 	return !SearchTrenches( pt, rect );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVec2 &pt, WORD angle, int nFrameIndex )
 {
 	SRect rect = CEntrenchmentPart::CalcBoundRect( pt, angle, pRPG->segments[nFrameIndex] );
@@ -530,11 +530,11 @@ bool CEntrenchmentCreation::CanDig( const SEntrenchmentRPGStats *pRPG, const CVe
 
 	return bPossible;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												  CEntrenchmentCreation										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CEntrenchmentCreation::GetTrenchWidth( int nType )// 0 - секция , 1 - поворот
 {
 	const SEntrenchmentRPGStats *pRPG = theUnitCreation.GetEntrenchment();

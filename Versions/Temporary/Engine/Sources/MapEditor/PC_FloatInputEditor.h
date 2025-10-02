@@ -5,7 +5,7 @@
 #include "..\MapEditorLib\Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCFloatInputEditor : public CEdit, public CPCItemEditor, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CPCFloatInputEditor );
@@ -44,5 +44,5 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_FLOAT_INPUT__)

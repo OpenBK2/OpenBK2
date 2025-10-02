@@ -10,7 +10,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo )
 {
 	NI_ASSERT( ( rInputStateEventInfo.nEventType >= 0 ) && ( rInputStateEventInfo.nEventType < ISE_COUNT ),
@@ -63,6 +63,6 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 	eventInfoList[rInputStateEventInfo.nEventType].isValid = true;
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2, StrFmt( "(%g, %g), [%d, %d]", lastEventInfo.vTerrainPos.x, lastEventInfo.vTerrainPos.y, lastEventInfo.visTilePos.x, lastEventInfo.visTilePos.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

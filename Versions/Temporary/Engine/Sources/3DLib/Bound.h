@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 struct SGetSelf
 {
@@ -78,7 +78,7 @@ struct SBoundCalcer
 		}
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TRes, class TSet,class TGetPoint>
 inline void CalcBound( TRes *pRes, const TSet &a, TGetPoint GetPoint )
 {
@@ -86,7 +86,7 @@ inline void CalcBound( TRes *pRes, const TSet &a, TGetPoint GetPoint )
 	b.LookSet( a, GetPoint );
 	b.Make( pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // should not be mixed with fpu & mmx code from StartMMXBound to StoreMMXBoundResult
 #pragma warning( disable : 4799 )
 inline void StartMMXBound( CVec3 *pMin, CVec3 *pMax )
@@ -145,7 +145,7 @@ inline void StoreMMXBoundResult( CVec3 *pMin, CVec3 *pMax )
 	}
 }
 #pragma warning( default : 4799 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 {
 	CVec3 v( bv.s.ptCenter - s.ptCenter );
@@ -154,5 +154,5 @@ inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 		fabs(v.y) - s.fRadius < bv.ptHalfBox.y &&
 		fabs(v.z) - s.fRadius < bv.ptHalfBox.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

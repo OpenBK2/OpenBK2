@@ -35,10 +35,10 @@
 #include "..\Misc\nalgoritm.h"
 #include "FeedBackSystem.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D444, CTank );
 REGISTER_SAVELOAD_CLASS( 0x1108D445, CAITransportUnit );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
@@ -52,20 +52,20 @@ extern CDifficultyLevel theDifficultyLevel;
 
 extern NAI::CTimeCounter timeCounter;
 extern CExecutorContainer theExecutorContainer;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CMilitaryCar																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CMilitaryCar );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CMilitaryCar::IsIdle() const
 {
 	if ( GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
 		return false;
 	return CAIUnit::IsIdle();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
 {
 	bCanUnload = true;
@@ -87,7 +87,7 @@ void CMilitaryCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGSta
 		theExecutorContainer.Add( new CExecutorWatchForEnemyUnloadPassangers( this ) );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CMilitaryCar::CanBoard( CAIUnit *pUnit ) const
 {
 	if ( boarding.find( pUnit->GetUniqueId() ) != boarding.end() )
@@ -100,7 +100,7 @@ const bool CMilitaryCar::CanBoard( CAIUnit *pUnit ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CMilitaryCar::InitSupportAntiAircraftGuns()
 {
 	// dissalow to shoot from AA guns if there is non AA guns.
@@ -132,12 +132,12 @@ DWORD CMilitaryCar::InitSupportAntiAircraftGuns()
 	}
 	return dwDissalow;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::AddBoardingMechUnit( CAIUnit *pUnit )
 {
 	boarding[pUnit->GetUniqueId()] = pUnit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::SetOnBoard( CAIUnit *pUnit, const bool bOnBoard )
 {
 	//onBoard[pUnit->GetUniqueId()] = pUnit;
@@ -164,12 +164,12 @@ void CMilitaryCar::SetOnBoard( CAIUnit *pUnit, const bool bOnBoard )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::RemoveBoardingMechUnit( CAIUnit *pUnit )
 {
 	boarding.erase( pUnit->GetUniqueId() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	CAIUnit::GetPlacement( pPlacement, timeDiff );
@@ -190,7 +190,7 @@ void CMilitaryCar::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::S
 	}
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const WORD CMilitaryCar::GetBoardedDirection( CAIUnit *pUnit, const NTimer::STime timeDiff ) const
 {
 	CBoardOrder::const_iterator pos = boardOrder.find( pUnit->GetUniqueId() );
@@ -201,7 +201,7 @@ const WORD CMilitaryCar::GetBoardedDirection( CAIUnit *pUnit, const NTimer::STim
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CMilitaryCar::GetBoardedPosition( CAIUnit *pUnit, const NTimer::STime timeDiff ) const
 {
 	CBoardOrder::const_iterator pos = boardOrder.find( pUnit->GetUniqueId() );
@@ -222,7 +222,7 @@ const CVec3 CMilitaryCar::GetBoardedPosition( CAIUnit *pUnit, const NTimer::STim
 	else
 		return VNULL3;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::InitGuns()
 {
 	if ( pStats->GetPlatformsSize( GetUniqueId() ) > 1 )
@@ -250,12 +250,12 @@ void CMilitaryCar::InitGuns()
 
 	SetShootEstimator( new CTankShootEstimator( this ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CMilitaryCar::GetGunCenter( const int nGun ) const
 {
 	return GetCenterPlain();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CMilitaryCar::GetEntrancePoint() const
 {
 	const CVec2 vFrontDir = GetVectorByDirection( GetFrontDirection() );
@@ -278,7 +278,7 @@ const CVec2 CMilitaryCar::GetEntrancePoint() const
 
 	return vResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::AddPassenger( CSoldier *pUnit )
 {
 	if ( pass.empty() )
@@ -291,7 +291,7 @@ void CMilitaryCar::AddPassenger( CSoldier *pUnit )
 	updater.AddUpdate( 0, ACTION_NOTIFY_ENTRANCE_STATE, pUnit, -1 );
 	pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::PrepareToDelete()
 {
 	// всех сидящих внутри - убить.
@@ -305,7 +305,7 @@ void CMilitaryCar::PrepareToDelete()
 	}
 	CAIUnit::PrepareToDelete();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType )
 {
 	for ( list<CPtr<CSoldier> >::const_iterator iter = pass.begin(); iter != pass.end(); ++iter )
@@ -317,7 +317,7 @@ void CMilitaryCar::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinfo
 
 	theStatistics.UnitKilled( nPlayerOfShoot, GetPlayer(), GetStats()->fExpPrice, eKillerType, eDeadType, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CMilitaryCar::GetPassengerCoordinates( const int n )
 {
 	const int nPass = GetNPassengers();
@@ -337,7 +337,7 @@ const CVec2 CMilitaryCar::GetPassengerCoordinates( const int n )
 
 	return GetCenterPlain() + vShift;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::Segment()
 {
 	CAIUnit::Segment();
@@ -381,7 +381,7 @@ void CMilitaryCar::Segment()
 		bCanUnload = bNewCanUnload;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoldier* CMilitaryCar::GetPassenger( const int n )
 {
 	NI_ASSERT( n < pass.size(), "Wrong number of passenger" );
@@ -390,12 +390,12 @@ CSoldier* CMilitaryCar::GetPassenger( const int n )
 	advance( pos, n );
 	return *pos;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::ClearAllPassengers()
 {
 	pass.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::DelPassenger( const int n )
 {
 	CheckRange( pass, n );
@@ -410,7 +410,7 @@ void CMilitaryCar::DelPassenger( const int n )
 			GetTurret( i )->SetRotateTurretState( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::DelPassenger( CSoldier *pSoldier )
 {
 	NI_ASSERT( find( pass.begin(), pass.end(), pSoldier ) != pass.end(), "Intransport soldier not found" );
@@ -424,42 +424,42 @@ void CMilitaryCar::DelPassenger( CSoldier *pSoldier )
 			GetTurret( i )->SetRotateTurretState( true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CMilitaryCar::GetDistanceToLandPoint() const
 {
 	return GetStats()->vAABBHalfSize.y + SConsts::GOOD_LAND_DIST;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CMilitaryCar::GetMaxFireRange() const
 {
 	return pGuns->GetMaxFireRange( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::Lock( CFormation *_pLockingUnit ) 
 { 
 	NI_ASSERT( pLockingUnit == 0, "Transport is already locked" ); 
 	pLockingUnit = _pLockingUnit; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMilitaryCar::GetNGuns() const { return pGuns->GetNTotalGuns(); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CMilitaryCar::GetGun( const int n ) const { return pGuns->GetGun( n ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CMilitaryCar::ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) 
 { 
 	return pGuns->ChooseGunForStatObj( this, pObj, pTime ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CMilitaryCar::CanShootToPlanes() const 
 { 
 	return pGuns->CanShootToPlanes(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBasicGun* CMilitaryCar::GetFirstArtilleryGun() const
 {
 	return pGuns->GetFirstArtilleryGun(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::GetRangeArea( SShootAreas *pRangeArea ) const
 {
 	construct( pRangeArea );	
@@ -478,7 +478,7 @@ void CMilitaryCar::GetRangeArea( SShootAreas *pRangeArea ) const
 		area.wFinishAngle = 65535;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec3 CMilitaryCar::GetHookPoint3D() const
 {
 	const CVec3 vTraNormale = DWORDToVec3( GetNormale() );
@@ -494,13 +494,13 @@ const CVec3 CMilitaryCar::GetHookPoint3D() const
 
 	return vTraCenter3D + vTraDir3D * checked_cast<const SMechUnitRPGStats*>( GetStats() )->vTowPoint.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CMilitaryCar::GetHookPoint() const
 {
 	const CVec3 vHookPoint3D( GetHookPoint3D() );
 	return CVec2( vHookPoint3D.x, vHookPoint3D.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMilitaryCar::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun )
 {
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
@@ -515,16 +515,16 @@ void CMilitaryCar::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CMilitaryCar::CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															CTank																*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
 {
 	bTrackDamaged = false;
@@ -539,12 +539,12 @@ void CTank::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pSt
 
 	CMilitaryCar::Init( center, z, pStats, fHP, dir, player, pCollisionsCollector );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStatesFactory* CTank::GetStatesFactory() const
 { 
 	return CTankStatesFactory::Instance(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	if ( pShotUnit && pShotUnit->IsTargetingTrack() )
@@ -576,7 +576,7 @@ void CTank::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShe
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::RepairTrack() 
 {
 	if ( bTrackDamaged )
@@ -588,22 +588,22 @@ void CTank::RepairTrack()
 		updater.AddUpdate( CreateStatusUpdate( EUS_TRACK_DAMAGED, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTank::CanTurnToFrontDir( const WORD wDir )
 { 
 	return !bTrackDamaged && CAIUnit::CanTurnToFrontDir( wDir ) && !IsInTankPit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTank::CanMove() const
 {
 	return CMilitaryCar::CanMove() && !bTrackDamaged && !IsInTankPit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTank::CanMoveCritical() const
 {
 	return CMilitaryCar::CanMoveCritical() && !bTrackDamaged && !IsInTankPit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTank::CanRotate() const
 { 
 	return GetStats()->fSpeed != 0 && 
@@ -612,7 +612,7 @@ const bool CTank::CanRotate() const
 		!IsRestInside() &&
 		CMilitaryCar::CanRotate() && !bTrackDamaged && !IsInTankPit();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::ScanForDangerousDir()
 {
 	if ( nextTimeOfDangerousDirScan < curTime )
@@ -659,7 +659,7 @@ void CTank::ScanForDangerousDir()
 		nextTimeOfDangerousDirScan = curTime + 1000 + NRandom::Random( 0, 2000 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::Grazed( CAIUnit *pUnit )
 {
 	if ( IsValidObj( pUnit ) && !pUnit->GetStats()->IsAviation() )
@@ -672,30 +672,30 @@ void CTank::Grazed( CAIUnit *pUnit )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTank::Segment()
 {
 	CMilitaryCar::Segment();
 	ScanForDangerousDir();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTank::CanMoveAfterUserCommand() const
 {
 	return !IsTrackDamaged() && CAIUnit::CanMoveAfterUserCommand();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*														CAITransportUnit											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //BASIC_REGISTER_CLASS( CAITransportUnit );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
 {
 	CMilitaryCar::Init( center, z, _pStats, fHP, dir, player, pCollisionsCollector );
 	fResursUnits = SConsts::TRANSPORT_RU_CAPACITY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::SetResursUnitsLeft( float _fResursUnits ) 
 { 
 	if ( fResursUnits != _fResursUnits )
@@ -704,7 +704,7 @@ void CAITransportUnit::SetResursUnitsLeft( float _fResursUnits )
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::Segment()
 {
 	CMilitaryCar::Segment();
@@ -715,43 +715,43 @@ void CAITransportUnit::Segment()
 		pTowedArtillery = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::DecResursUnitsLeft( float dRU ) 
 {
 	theStatistics.ResourceUsed( GetPlayer(), dRU );
 	SetResursUnitsLeft( fResursUnits - dRU );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IStatesFactory* CAITransportUnit::GetStatesFactory() const 
 { 
 	return CTransportStatesFactory::Instance(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::HasTowedArtilleryCrew() const 
 { 
 	return IsValidObj( pTowedArtilleryCrew ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::SetTowedArtilleryCrew( class CFormation *pFormation ) 
 { 
 	pTowedArtilleryCrew = pFormation; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormation * CAITransportUnit::GetTowedArtilleryCrew() 
 { 
 	return pTowedArtilleryCrew; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::SetMustTow( class CAIUnit *_pUnit ) 
 { 
 	pMustTow = _pUnit; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::IsMustTow() const 
 { 
 	return IsValidObj( pMustTow );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	return	CMilitaryCar::CanCommandBeExecuted( pCommand ) &&
@@ -760,12 +760,12 @@ bool CAITransportUnit::CanCommandBeExecuted( CAICommand *pCommand )
 			pCommand->ToUnitCmd().nCmdType != ACTION_COMMAND_TAKE_ARTILLERY || 
 			pCommand->ToUnitCmd().nCmdType != ACTION_COMMAND_UNLOAD ) ;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::IsTowing() const 
 { 
 	return IsValidObj( pTowedArtillery );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::UpdateExternalLoaders()
 {
 	for ( CExternLoaders::iterator it = externLoaders.begin(); it != externLoaders.end(); )
@@ -777,7 +777,7 @@ bool CAITransportUnit::UpdateExternalLoaders()
 	}
 	return externLoaders.empty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::Die( const bool fromExplosion, const float fDamage )
 {
 	CMilitaryCar::Die( fromExplosion, fDamage );
@@ -787,14 +787,14 @@ void CAITransportUnit::Die( const bool fromExplosion, const float fDamage )
 		it = externLoaders.erase( it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 {
 	CMilitaryCar::GetRPGStats( pStats );
 	if ( GetNCommonGuns() == 0 )
 		pStats->nSupply = fResursUnits / SConsts::TRANSPORT_RU_CAPACITY * 1000.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::SetTowedArtillery( CArtillery * _pTowedArtillery) 
 { 
 	if ( IsValid( pTowedArtillery ) && !IsValid( _pTowedArtillery ) )
@@ -802,7 +802,7 @@ void CAITransportUnit::SetTowedArtillery( CArtillery * _pTowedArtillery)
 	pTowedArtillery = _pTowedArtillery; 
 	updater.AddUpdate( 0, ACTION_NOTIFY_STATE_CHANGED, this, GetUnitState() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAITransportUnit::GetUnitState() const
 {
 	if ( pTowedArtillery )
@@ -810,7 +810,7 @@ const int CAITransportUnit::GetUnitState() const
 	else
 		return ECS_UNHOOK_CANNON;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit * pTransport ) 
 {
 	//kill loaders in transport
@@ -841,7 +841,7 @@ void CAITransportUnit::FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit *
 	if ( pTransport && pTransport->IsRefValid() && pTransport->IsAlive() )
 		pTransport->Unlock();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::PrepareLoaders( CFormation *pLoaderSquad, CAITransportUnit * pTransport ) 
 {
 	NI_ASSERT( pTransport->IsRefValid() && pTransport->IsAlive(), " not valid transport passed" );
@@ -870,13 +870,13 @@ void CAITransportUnit::PrepareLoaders( CFormation *pLoaderSquad, CAITransportUni
 	}				
 	pLoaderSquad->SetSelectable( false, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::AddExternLoaders( CFormation *pLoaders )
 { 
 	if ( pLoaders && pLoaders->IsRefValid() && pLoaders->IsAlive() )
 		externLoaders.push_back( pLoaders );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::CanHookUnit( CAIUnit *pUnitToHook ) const
 {
 	if ( CanCommandBeExecutedByStats( ACTION_COMMAND_TAKE_ARTILLERY ) )
@@ -889,7 +889,7 @@ bool CAITransportUnit::CanHookUnit( CAIUnit *pUnitToHook ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAITransportUnit::GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake )
 {
 	float fMinDist = 0.0f;
@@ -922,7 +922,7 @@ const int CAITransportUnit::GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit
 	else
 		return pBestUnit->GetUniqueId();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAITransportUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
 {
 	if ( !bOnlyThisUnitCommand && pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_TAKE_ARTILLERY )
@@ -959,7 +959,7 @@ void CAITransportUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bo
 	else
 		CMilitaryCar::UnitCommand( pCommand, bPlaceInQueue, bOnlyThisUnitCommand );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAITransportUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const
 {
 	if ( pTowedArtillery )
@@ -972,7 +972,7 @@ const bool CAITransportUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDi
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAITransportUnit::CalculateUnitVisibility4Party( const BYTE party )
 {
 	if ( IsTowing() )
@@ -980,4 +980,4 @@ bool CAITransportUnit::CalculateUnitVisibility4Party( const BYTE party )
 	else
 		return CMilitaryCar::CalculateUnitVisibility4Party( party );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

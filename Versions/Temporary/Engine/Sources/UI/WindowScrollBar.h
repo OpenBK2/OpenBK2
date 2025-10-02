@@ -1,6 +1,6 @@
 // WindowScrollBar.h: interface for the CWindowScrollBar class.
 //
-//////////////////////////////////////////////////////////////////////
+
 
 #if !defined(AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_)
 #define AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_
@@ -12,12 +12,12 @@
 #include "Window.h"
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CWindowMSButton;
 class CWindowSlider;
 struct SWindowMSButton;
 struct SWindowSlider;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // contains 1 slider and 2 buttons (up & down)
 class CWindowScrollBar : public CWindow, public ISlider, public IButtonNotify, public ISliderNotify
 {
@@ -72,5 +72,5 @@ public:
 	void SetNSpecialPositions( int nPositions );
 	void SetSpecialPosition( int nPosition );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(AFX_WINDOWSCROLLBAR_H__46D0E093_95AF_4D78_9A5B_BB754D40FC3A__INCLUDED_)

@@ -9,10 +9,10 @@ class CString;	// без такой ботвы #include "../../MapEditorLib/Inte
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NFolderManipulator
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckedFileOperation( const string &szOperationDescription, bool bFileOperationResult )
 {
 	if ( !bFileOperationResult )
@@ -102,14 +102,14 @@ public:
 		}
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 static bool IsFolderName( const string &szName )
 {
 	return !szName.empty() && ( szName[szName.size() - 1] == '\\' || szName[szName.size() - 1] == '/' );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ReplaceEntriesInFile( const string &szFileName, const string &szNewFileName, const vector<SReplaceEntry> &entries, const vector<char> &buffer, const string &szStorageDir )
 {
 	NFile::CreatePath( NFile::GetFilePath(szStorageDir + szNewFileName) );
@@ -175,7 +175,7 @@ static bool ChangeReference( const string &szFileName, const string &_szOldObjNa
 
 	return ReplaceEntriesInFile( szFileName, szFileName, replaceEntries, buffer, szStorageDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ConvertToRelativeNameIfDownByDirs( const string &szSrcName, const string &szSearchName, string *pszRelativeName )
 {
 	list<string> searchPath;
@@ -208,7 +208,7 @@ static bool ConvertToRelativeNameIfDownByDirs( const string &szSrcName, const st
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool FixReferencingFile( const string &szFileName, const string &szName, const string &szNewName, const string &szStorageDir )
 {
 	string szNewRelativeName = szNewName;
@@ -229,7 +229,7 @@ static bool FixReferencingFile( const string &szFileName, const string &szName, 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool FixChangedFile( const string &szOldName, const string &szNewName, const string &szStorageDir )
 {
 	if ( NFile::GetFilePath( szOldName ) == NFile::GetFilePath( szNewName ) )
@@ -283,7 +283,7 @@ static bool FixChangedFile( const string &szOldName, const string &szNewName, co
 
 	return ReplaceEntriesInFile( szOldName, szNewName, replaceEntries, buffer, szStorageDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RenameNode2( const string &_szName, const string &_szNewName )
 {
 	vector<SReferencingObjInfo> referencingObjs;
@@ -356,7 +356,7 @@ bool RenameNode2( const string &_szName, const string &_szNewName )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RenameNode( const string &szOldName, const string &szNewName )
 {
 	bool bRes = true;
@@ -380,5 +380,5 @@ bool RenameNode( const string &szOldName, const string &szNewName )
 	//
 	return bRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

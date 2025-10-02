@@ -4,7 +4,7 @@
 #include "NoiseManager.h"
 #include "../Misc/StrProc.h"
 #include "../System/VFSOperations.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLoadNoise
 {
 	string szFileName;
@@ -20,7 +20,7 @@ struct SLoadNoise
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNoiseManager::CNoiseManager()
 {
 	// load information about noises
@@ -40,7 +40,7 @@ CNoiseManager::CNoiseManager()
 		noises[i].bLoaded = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNoiseAccessor CNoiseManager::GetNoise( unsigned int nNoiseNum )
 {
 	NI_ASSERT( nNoiseNum < noises.size(), StrFmt("Invalid noise number %d - available [0..]", nNoiseNum, noises.size() - 1) );
@@ -49,7 +49,7 @@ CNoiseAccessor CNoiseManager::GetNoise( unsigned int nNoiseNum )
 
 	return CNoiseAccessor( noises[nNoiseNum].noise );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNoiseAccessor CNoiseManager::GetNoise( const string &_szName )
 {
 	string szName;
@@ -62,7 +62,7 @@ CNoiseAccessor CNoiseManager::GetNoise( const string &_szName )
 	NI_ASSERT( false, StrFmt("Unknown noise \"%s\"", szName.c_str()) );
 	return GetNoise( 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNoiseManager::LoadNoise( unsigned int nNoiseNum )
 {
 	CFileStream stream( NVFS::GetMainVFS(), noises[nNoiseNum].szFileName );
@@ -76,4 +76,4 @@ void CNoiseManager::LoadNoise( unsigned int nNoiseNum )
 
 	noises[nNoiseNum].bLoaded = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

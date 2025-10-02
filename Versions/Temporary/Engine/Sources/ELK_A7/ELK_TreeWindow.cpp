@@ -14,17 +14,17 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CELKTreeWindow::CELKTreeWindow() : pwndFormWindow( 0 ), bCollapseDeselected( true ), bNextFilterChanged( true ), bPreviousFilterChanged( true ), cachedNextItem( 0 ), cachedPreviousItem( 0 ), bCachedNextItemExists( true ), bCachedPreviousItemExists( true )
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CELKTreeWindow::~CELKTreeWindow()
 {
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CELKTreeWindow, CTreeDockWindow)
 	ON_WM_CREATE()
 	ON_NOTIFY(TVN_SELCHANGED, IDC_EMBEDDED_CONTROL, OnSelChanged)
@@ -37,7 +37,7 @@ BEGIN_MESSAGE_MAP(CELKTreeWindow, CTreeDockWindow)
 END_MESSAGE_MAP()
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::OnCreate( LPCREATESTRUCT lpCreateStruct ) 
 {
 	if ( CTreeDockWindow::OnCreate( lpCreateStruct ) == -1 )
@@ -51,7 +51,7 @@ int CELKTreeWindow::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::InitImageList()
 {
 	CBitmap bmp;
@@ -65,7 +65,7 @@ void CELKTreeWindow::InitImageList()
 	bmp.DeleteObject();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::FillFolder( HTREEITEM parentItem, const string &rszFolderName, const string &rszInitialItemPath,  int nInitialELKElement, CProgressDialog *pwndProgressDialog )
 {
 	int nTextState = SELKTextProperty::STATE_APPROVED;
@@ -146,7 +146,7 @@ int CELKTreeWindow::FillFolder( HTREEITEM parentItem, const string &rszFolderNam
 	return nTextState;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::ClearTree()
 {
 	wndTree.DeleteAllItems();
@@ -155,7 +155,7 @@ void CELKTreeWindow::ClearTree()
 	rootNumberMap.clear();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Функтор для EnumerateFiles, вычисляет количество файлов
 class CGetFilesCount
 {
@@ -174,7 +174,7 @@ public:
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::FillTree( const class CELK &rELK, const string &rszInitialItemPath, int nInitialELKElement, CProgressDialog *pwndProgressDialog )
 {
 	for ( int nElementIndex = 0; nElementIndex < rELK.elementList.size(); ++nElementIndex )
@@ -219,7 +219,7 @@ void CELKTreeWindow::FillTree( const class CELK &rELK, const string &rszInitialI
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::GetItemPathInternal( HTREEITEM item, string *pszItemPath, bool bFull )
 {
 	NI_ASSERT( pszItemPath != 0, StrFmt( _T( "CELKTreeWindow::GetItemPath() wrong parameter: pszItemPath %x" ), pszItemPath ) );
@@ -245,7 +245,7 @@ void CELKTreeWindow::GetItemPathInternal( HTREEITEM item, string *pszItemPath, b
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::GetELKElementNumberInternal( HTREEITEM item )
 {
 	while ( HTREEITEM parentItem = wndTree.GetParentItem( item ) )
@@ -260,7 +260,7 @@ int CELKTreeWindow::GetELKElementNumberInternal( HTREEITEM item )
 	return ( -1 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::GetELKElementNameInternal( HTREEITEM item, string *pszName )
 {
 	NI_ASSERT( pszName != 0, StrFmt( _T( "CELKTreeWindow::GetELKElementNameInternal() wrong parameter: pszName %x" ), pszName ) );
@@ -279,7 +279,7 @@ void CELKTreeWindow::GetELKElementNameInternal( HTREEITEM item, string *pszName 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::GetELKElementPathInternal( HTREEITEM item, string *pszPath )
 {
 	NI_ASSERT( pszPath != 0, StrFmt( _T( "CELKTreeWindow::GetELKElementPathInternal() wrong parameter: pszPath %x" ), pszPath ) );
@@ -298,7 +298,7 @@ void CELKTreeWindow::GetELKElementPathInternal( HTREEITEM item, string *pszPath 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::GetXLSPathInternal( HTREEITEM item, string *pszItemPath )
 {
 	NI_ASSERT( pszItemPath != 0, StrFmt( _T( "CELKTreeWindow::GetXLSPathInternal() wrong parameter: pszItemPath %x" ), pszItemPath ) );
@@ -321,7 +321,7 @@ void CELKTreeWindow::GetXLSPathInternal( HTREEITEM item, string *pszItemPath )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::GetItemPath( string *pszItemPath, bool bFull )
 {
 	NI_ASSERT( pszItemPath != 0, StrFmt( _T( "CELKTreeWindow::GetItemPath() wrong parameter: pszItemPath %x" ), pszItemPath ) );
@@ -336,7 +336,7 @@ void CELKTreeWindow::GetItemPath( string *pszItemPath, bool bFull )
 }
 	
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::GetELKElementNumber()
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -349,7 +349,7 @@ int CELKTreeWindow::GetELKElementNumber()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::UpdateFolderState( HTREEITEM item )
 {
 	int nPreviousState = LOWORD( wndTree.GetItemData( item ) );
@@ -381,7 +381,7 @@ int CELKTreeWindow::UpdateFolderState( HTREEITEM item )
 	return nPreviousState;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnSelChanged( NMHDR* pNMHDR, LRESULT* pResult ) 
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -401,7 +401,7 @@ void CELKTreeWindow::OnSelChanged( NMHDR* pNMHDR, LRESULT* pResult )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 {
 	if ( pwndFormWindow )
@@ -440,7 +440,7 @@ void CELKTreeWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::SelectItem( HTREEITEM item )
 {
 	if ( item )
@@ -450,7 +450,7 @@ void CELKTreeWindow::SelectItem( HTREEITEM item )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::DeselectItem( HTREEITEM item )
 {
 	if ( item && bCollapseDeselected )
@@ -459,7 +459,7 @@ void CELKTreeWindow::DeselectItem( HTREEITEM item )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CELKTreeWindow::GetNextItemInternal( HTREEITEM item )
 {
 	if ( HTREEITEM nextItem = item )
@@ -495,7 +495,7 @@ HTREEITEM CELKTreeWindow::GetNextItemInternal( HTREEITEM item )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CELKTreeWindow::GetPreviousItemInternal( HTREEITEM item )
 {
 	if ( HTREEITEM nextItem = item )
@@ -535,7 +535,7 @@ HTREEITEM CELKTreeWindow::GetPreviousItemInternal( HTREEITEM item )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CELKTreeWindow::GetFirstItemInternal()
 {
 	HTREEITEM item = wndTree.GetRootItem( 0 );
@@ -550,7 +550,7 @@ HTREEITEM CELKTreeWindow::GetFirstItemInternal()
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HTREEITEM CELKTreeWindow::GetLastItemInternal()
 {
 	HTREEITEM item = wndTree.GetRootItem( 0 );
@@ -573,7 +573,7 @@ HTREEITEM CELKTreeWindow::GetLastItemInternal()
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::GetItemsCountInternal()
 {
 	int nItemsCount = 0;
@@ -589,7 +589,7 @@ int CELKTreeWindow::GetItemsCountInternal()
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::GetFirstItem( const SSimpleFilter *pELKFilter )
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -629,7 +629,7 @@ bool CELKTreeWindow::GetFirstItem( const SSimpleFilter *pELKFilter )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::GetLastItem( const SSimpleFilter *pELKFilter )
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -669,7 +669,7 @@ bool CELKTreeWindow::GetLastItem( const SSimpleFilter *pELKFilter )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::GetNextItem( const SSimpleFilter *pELKFilter )
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -703,7 +703,7 @@ bool CELKTreeWindow::GetNextItem( const SSimpleFilter *pELKFilter )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::GetPreviousItem( const SSimpleFilter *pELKFilter )
 {
 	if ( HTREEITEM item = wndTree.GetFirstSelectedItem() )
@@ -738,7 +738,7 @@ bool CELKTreeWindow::GetPreviousItem( const SSimpleFilter *pELKFilter )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::IsNextItemExists( const SSimpleFilter *pELKFilter )
 {
 	HTREEITEM item = wndTree.GetFirstSelectedItem();
@@ -774,7 +774,7 @@ bool CELKTreeWindow::IsNextItemExists( const SSimpleFilter *pELKFilter )
 	return bCachedNextItemExists;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::IsPreviousItemExists( const SSimpleFilter *pELKFilter )
 {
 	HTREEITEM item = wndTree.GetFirstSelectedItem();
@@ -810,7 +810,7 @@ bool CELKTreeWindow::IsPreviousItemExists( const SSimpleFilter *pELKFilter )
 	return bCachedPreviousItemExists;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CELKTreeWindow::GetItemsCount(  const SSimpleFilter *pELKFilter )
 {
 	int nItemsCount = 0;
@@ -855,14 +855,14 @@ int CELKTreeWindow::GetItemsCount(  const SSimpleFilter *pELKFilter )
 	return nItemsCount;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void CELKTreeWindow::SetCollapseItem( bool bCollapseItem )
 {
 	bCollapseDeselected = bCollapseItem;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::FindItem( const class CELK &rELK, SMainFrameParams::SSearchParam *pSearchParam, int nCodePage )
 {
 	if ( pSearchParam )
@@ -965,7 +965,7 @@ bool CELKTreeWindow::FindItem( const class CELK &rELK, SMainFrameParams::SSearch
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::UpdateSelectedText( CELK *pELK, int nState )
 {
 	if ( pELK )
@@ -991,7 +991,7 @@ void CELKTreeWindow::UpdateSelectedText( CELK *pELK, int nState )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CELKTreeWindow::IsItemParent( HTREEITEM item, HTREEITEM parentItem )
 {
 	if ( item != parentItem )
@@ -1008,7 +1008,7 @@ bool CELKTreeWindow::IsItemParent( HTREEITEM item, HTREEITEM parentItem )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::UpdateSelectedFolder( CELK *pELK, int nState )
 {
 	if ( pELK )
@@ -1041,7 +1041,7 @@ void CELKTreeWindow::UpdateSelectedFolder( CELK *pELK, int nState )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnBtState0() 
 {
 	if ( pwndMainFrame && ( pwndMainFrame->GetSafeHwnd() != 0 ) )
@@ -1050,7 +1050,7 @@ void CELKTreeWindow::OnBtState0()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnBtState1() 
 {
 	if ( pwndMainFrame && ( pwndMainFrame->GetSafeHwnd() != 0 ) )
@@ -1059,7 +1059,7 @@ void CELKTreeWindow::OnBtState1()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnBtState2() 
 {
 	if ( pwndMainFrame && ( pwndMainFrame->GetSafeHwnd() != 0 ) )
@@ -1068,7 +1068,7 @@ void CELKTreeWindow::OnBtState2()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnBtState3() 
 {
 	if ( pwndMainFrame && ( pwndMainFrame->GetSafeHwnd() != 0 ) )
@@ -1077,9 +1077,9 @@ void CELKTreeWindow::OnBtState3()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CELKTreeWindow::OnViewTreeStatistic()
 {
 	pwndMainFrame->SendMessage( WM_ELK_TREE_NOTIFY, ETN_SHOW_TREE_STATISTIC, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

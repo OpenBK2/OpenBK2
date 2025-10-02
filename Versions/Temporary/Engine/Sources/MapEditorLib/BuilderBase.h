@@ -4,7 +4,7 @@
 
 #include "Interface_Builder.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuilderBase : public IBuilder
 {
 public:
@@ -15,6 +15,6 @@ public:
 	virtual bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName );
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) { if ( pszDefaultFolder ) { pszDefaultFolder->clear(); } }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__BUILDER_BASE__)
 

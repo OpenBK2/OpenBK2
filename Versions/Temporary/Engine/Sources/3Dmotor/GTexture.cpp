@@ -7,7 +7,7 @@
 #include "..\System\Commands.h"
 #include "DBScene.h"
 #include "..\Image\DDS.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 {
 	if ( hdr.ddspf.dwFlags & DDS_FOURCC ) 
@@ -47,7 +47,7 @@ NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 	}
 	return NGfx::CF_A8R8G8B8;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool bDXTModeOn = true;
 static int GetRealTextureID( const NDb::STexture *pTex )
 {
@@ -58,12 +58,12 @@ static int GetRealTextureID( const NDb::STexture *pTex )
 		return nID | 0x01000000;
 	return nID;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 _3DMOTOR_EXPORT int nTextureUseMip = 0;
 bool bLowRAM = false;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 STextureKey GetKey( const NDb::STexture *pTex )
 {
 	int nFlags = 0;
@@ -77,9 +77,9 @@ STextureKey GetKey( const NDb::STexture *pTex )
 	}
 	return STextureKey( pTex, nFlags );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTextureLoader
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TPixel, class TStream>
 void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY, 
 	int _nLevels, TStream *pFile, int nCutMip, const TPixel *p = 0 )
@@ -104,7 +104,7 @@ void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, i
 			pFile->Read( &(lock[y][nX]), nSizeX * sizeof(TPixel) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::EFace loadFace;
 template <class TPixel, class TStream>
 void LoadTextureData( NGfx::CCubeTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY, 
@@ -130,7 +130,7 @@ void LoadTextureData( NGfx::CCubeTexture *pTexture, int _nX, int _nY, int _nSize
 			pFile->Read( &(lock[y][nX]), nSizeX * sizeof(TPixel) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TRes, class TStream>
 static bool RealLoadTexture( TRes *pTexture, TStream *pStream, const SDDSHeader &hdr,
 	int nX, int nY, int nSizeX, int nSizeY, int nLevels, int nCutMip )
@@ -151,7 +151,7 @@ static bool RealLoadTexture( TRes *pTexture, TStream *pStream, const SDDSHeader 
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::EPixelFormat SelectFormat( const vector<NGfx::SPixel8888> &data )
 {
 	vector<int> counts( 256, 0 );
@@ -163,11 +163,11 @@ static NGfx::EPixelFormat SelectFormat( const vector<NGfx::SPixel8888> &data )
 		return NGfx::CF_A1R5G5B5;
 	return NGfx::CF_A4R4G4B4;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::SPixel565 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel565 *p = 0 ) { return NGfx::SPixel565( src.r >> 3, src.g >> 2, src.b >> 3 ); }
 static NGfx::SPixel1555 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel1555 *p = 0 ) { return NGfx::SPixel1555( src.r >> 3, src.g >> 3, src.b >> 3, src.a >> 7 ); }
 static NGfx::SPixel4444 DoConvert( const NGfx::SPixel8888 &src, NGfx::SPixel4444 *p = 0 ) { return NGfx::SPixel4444( src.r >> 4, src.g >> 4, src.b >> 4, src.a >> 4 ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void ConvertTo16Bit( const vector<NGfx::SPixel8888> &data, NGfx::CTexture *pTexture, int nLevel, int nSizeX, int nSizeY, NGfx::EPixelFormat format )
 {
@@ -181,7 +181,7 @@ static void ConvertTo16Bit( const vector<NGfx::SPixel8888> &data, NGfx::CTexture
 			lock[y][x] = DoConvert( data[nBase + x], (T*)0 );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::CTexture* LoadConvertTo16Bit( CDataStream *pStream, const SDDSHeader &hdr, NGfx::ETextureUsage eUsage, NGfx::EWrap eWrap, int nCutMips,
 	int nSizeX, int nSizeY, int nLevels )
 {
@@ -225,9 +225,9 @@ static NGfx::CTexture* LoadConvertTo16Bit( CDataStream *pStream, const SDDSHeade
 	}
 	return pTexture.Extract();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFileTexture
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileTexture::CreateChecker()
 {
 	NGfx::SPixel8888 colors[2];
@@ -242,7 +242,7 @@ void CFileTexture::CreateChecker()
 			lock[y][x] = colors[ ( (x&4) == 0 ) & ( (y&4) == 0 ) ];
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static NGfx::CTexture* MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage eUsage, NGfx::EWrap eWrap, int nCutMips )
 {
 	NGfx::EPixelFormat ePixelFormat = GetPixelFormat( hdr );
@@ -251,7 +251,7 @@ static NGfx::CTexture* MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage e
 	return NGfx::MakeTexture( hdr.dwWidth >> nCutMips, hdr.dwHeight >> nCutMips, hdr.dwMipMapCount - nCutMips, 
 		ePixelFormat, eUsage, eWrap );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FixMips( SDDSHeader *pRes )
 {
 	if ( pRes->dwMipMapCount == 0 ) 
@@ -260,7 +260,7 @@ void FixMips( SDDSHeader *pRes )
 	int nMaxPossibleLevels = GetMSB( Min(pRes->dwWidth, pRes->dwHeight) ) - ( (format >= NGfx::CF_DXT1) && (format <= NGfx::CF_DXT5) ? 2 : 0 );
 	pRes->dwMipMapCount = Min( (int)pRes->dwMipMapCount, (int)nMaxPossibleLevels );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileTexture::Recalc()
 {
 	if ( IsValid(pRequest) && !pRequest->IsReady() && IsValid( pValue ) )
@@ -373,15 +373,15 @@ void CFileTexture::Recalc()
 	pRequest = 0;
 	ReleaseFileRequestHolder();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFileTexture::NeedUpdate()
 {
 	bool bRes = TParent::NeedUpdate();
 	return bIsFakeTexture || bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CFileCubeTexture
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string GetID( const NDb::STexture *p ) { if (p) return p->szDestName; return ""; }
 void CFileCubeTexture::Recalc()
 {
@@ -436,7 +436,7 @@ void CFileCubeTexture::Recalc()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFileCubeTexture::CreateChecker()
 {
 	NGfx::SPixel8888 colors[2];
@@ -454,9 +454,9 @@ void CFileCubeTexture::CreateChecker()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CColorTexture
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CColorTexture::Recalc()
 {
 	const int N_SIZE = 4;
@@ -469,13 +469,13 @@ void CColorTexture::Recalc()
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GTexture)
 	//REGISTER_VAR_EX( "gfx_texture_usedxt", NGlobal::VarBoolHandler, &bDXTModeOn, 1, STORAGE_USER )
 	REGISTER_VAR_EX( "gfx_texture_mip", NGlobal::VarIntHandler, &nTextureUseMip, 0, STORAGE_USER )
 	REGISTER_VAR_EX( "gfx_low_ram", NGlobal::VarBoolHandler, &bLowRAM, 0, STORAGE_NONE )
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x00821150, CFileTexture )

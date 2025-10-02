@@ -7,32 +7,32 @@
 #include "3DLib_export.h"
 
 #include "..\3Dmotor\GPixelFormat.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 const int N_MAX_TEX_WRAP = 8;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVertex
 {
 	CVec3 pos;
 	NGfx::SCompactVector normal, texU, texV;
 	CVec2 tex;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_VERTEX_TEX_SIZE = 2048;
 struct SUVInfo
 {
 	NGfx::SShortTextureUV tex, texLM;
 	NGfx::SCompactVector normal, texU, texV;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVertexWeight
 {
 	float fWeights[4];
 	BYTE cBoneIndices[4];
 	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SRealVertexWeight
 {
 	float fWeights[4];
@@ -40,7 +40,7 @@ struct SRealVertexWeight
 	BYTE cBoneIndices[4];
 	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma warning( disable: 4701 )
 inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 {
@@ -49,7 +49,7 @@ inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 	return res;
 }
 #pragma warning( default: 4701 )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DLIB_EXPORT CObjectInfo : public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CObjectInfo);
@@ -174,6 +174,6 @@ void FilterTrinagles( vector<STriangle> *pRes, const vector<WORD> &filter );
 void MergePositions( vector<WORD> *pMatches, vector<CVec3> *pPositions );
 _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

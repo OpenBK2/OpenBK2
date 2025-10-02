@@ -4,7 +4,7 @@
 #include "actioncommand.h"
 #include "ActionsRemap.h"
 #include "..\Misc\HashFuncs.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int actionCommandToUserAction[][2] = 
 {
 	{ ACTION_COMMAND_MOVE_TO						, NDb::USER_ACTION_MOVE },
@@ -146,44 +146,44 @@ static const int abilityToActionCommand[][2] =
 	{ ACTION_COMMAND_RADIO_CONTROLLED_MODE		, NDb::ABILITY_RADIO_CONTROLLED_MODE		},
 	{ -1, -1 },
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static hash_map< EActionCommand,					 NDb::EUnitSpecialAbility, SEnumHash > mapCommandToAbility;
 static hash_map< NDb::EUnitSpecialAbility, EActionCommand,           SEnumHash > mapAbilityToCommand;
 static hash_map< EActionCommand,           NDb::EUserAction,         SEnumHash > mapCommandToAction;
 static hash_map< NDb::EUserAction,				 EActionCommand,           SEnumHash > mapActionToCommand;
 static vector< NDb::EUserAction > mapAbilityToAction;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand )
 {
 	hash_map< EActionCommand, NDb::EUnitSpecialAbility, SEnumHash >::const_iterator pos = mapCommandToAbility.find( actionCommand );
 	return pos != mapCommandToAbility.end() ? pos->second : NDb::ABILITY_NOT_ABILITY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EActionCommand GetCommandByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
 	hash_map< NDb::EUnitSpecialAbility, EActionCommand, SEnumHash >::const_iterator pos = mapAbilityToCommand.find( specialAbility );
 	return pos != mapAbilityToCommand.end() ? pos->second : (EActionCommand)-1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EActionCommand GetCommandByAction( NDb::EUserAction action )
 {
 	hash_map< NDb::EUserAction, EActionCommand, SEnumHash >::const_iterator pos = mapActionToCommand.find( action );
 	return pos != mapActionToCommand.end() ? pos->second : (EActionCommand)-1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction GetActionByCommand( EActionCommand actionCommand )
 {
 	hash_map< EActionCommand, NDb::EUserAction, SEnumHash >::const_iterator pos = mapCommandToAction.find( actionCommand );
 	return pos != mapCommandToAction.end() ? pos->second : NDb::USER_ACTION_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
 	const int nIndex = (int)specialAbility;
 	NI_ASSERT( (nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT), StrFmt( "Unknown ability index: %d", nIndex ) );
 	return ( nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT ) ? mapAbilityToAction[nIndex] : NDb::USER_ACTION_UNKNOWN;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CActionsRemapAutomagic
 {
 public:
@@ -205,4 +205,4 @@ public:
 	}
 };
 static CActionsRemapAutomagic theActionsRemapAutomagic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -17,13 +17,13 @@
 #include "FullScreenFader.h"
 
 #define DEF_VIS_PATCH_SIZE ( AI2Vis(AI_TILES_IN_PATCH * AI_TILE_SIZE) )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NWeather
 {
 	static float s_fEffectsSpeedCoeff = 1.0f;
 	static float s_fWndAffectsCoeff = 0.05f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::CWeatherPart::Recalc()
 {
 	if ( pValue == 0 )
@@ -39,7 +39,7 @@ void CWeatherVisual::CWeatherPart::Recalc()
 	else
 		pValue->AssignFast( &(*pVisualData)[nNumPart] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *_pScreenFader, 
 							 CDBPtr<NDb::SAmbientLight> _pNormalWeatherLight, CDBPtr<NDb::SAmbientLight> _pBadWeatherLight )
 	: pDesc( _pWeatherDesc ),
@@ -53,7 +53,7 @@ CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBas
 {	
 	InitParts();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGScene::IGameView::SMeshInfo CWeatherVisual::MakeMeshInfo()
 {
 	NGScene::IGameView::SMeshInfo meshInfo;
@@ -75,7 +75,7 @@ NGScene::IGameView::SMeshInfo CWeatherVisual::MakeMeshInfo()
 	}
 	return meshInfo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::InitParts()
 {
 	if ( !IsValid(pLightningColor) )
@@ -138,7 +138,7 @@ void CWeatherVisual::InitParts()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::Recalc()
 {
 	if ( !pTimer )
@@ -500,7 +500,7 @@ void CWeatherVisual::Recalc()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::UpdateAreas()
 {
 	const NDb::STerrain *pTerraDesc = Scene()->GetTerraManager()->GetDesc();
@@ -541,9 +541,9 @@ void CWeatherVisual::UpdateAreas()
 	vBBMin.Set( Clamp((int)vBBMin.x, 0, pTerraDesc->nNumPatchesX), Clamp((int)vBBMin.y, 0, pTerraDesc->nNumPatchesY) );
 	vBBMax.Set( Clamp((int)vBBMax.x, 0, pTerraDesc->nNumPatchesX), Clamp((int)vBBMax.y, 0, pTerraDesc->nNumPatchesY) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static inline float Lerp( float fFactor, float fA, float fB ) { return fA*(1-fFactor) + fB*fFactor; }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::UpdateLights( float fFadeCoeff )
 {
 	if ( !pNormalWeatherLight || !pBadWeatherLight )
@@ -572,7 +572,7 @@ void CWeatherVisual::UpdateLights( float fFadeCoeff )
 
 	Scene()->GetGView()->SetAmbient( pCurrentWeatherLight );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::UpdateAmbientSound()
 {
 	if ( !pAbsTimer )
@@ -588,7 +588,7 @@ void CWeatherVisual::UpdateAmbientSound()
 	if ( fFadeCoeff > 0.9f && timeNextAmbientSound < pAbsTimer->GetValue() )
 		PlayAmbientSound();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::PlayAmbientSound()
 {
 	if ( !pAbsTimer )
@@ -607,7 +607,7 @@ void CWeatherVisual::PlayAmbientSound()
 
 	timeNextAmbientSound = pAbsTimer->GetValue() + pDesc->ambientSound[nSound].fSoundLength*1000;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec4 CWeatherVisual::GetParticlesColor()
 {
 	if ( pCurrentWeatherLight )
@@ -621,12 +621,12 @@ CVec4 CWeatherVisual::GetParticlesColor()
 
 	return CVec4( 1, 1, 1, 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::Update()
 {
 	UpdateLights( fFadeCoeff );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::SwitchOn( NTimer::STime _timeLength )
 {
 	timeLength = _timeLength;
@@ -641,7 +641,7 @@ void CWeatherVisual::SwitchOn( NTimer::STime _timeLength )
 	bActive = true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWeatherVisual::SwitchOff( NTimer::STime _timeLength )
 {
 	timeLength = _timeLength;
@@ -656,7 +656,7 @@ void CWeatherVisual::SwitchOff( NTimer::STime _timeLength )
 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CWeatherVisual::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &timeStart );
@@ -679,11 +679,11 @@ int CWeatherVisual::operator&( IBinSaver &saver )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( Weather )
 	REGISTER_VAR_EX( "weather_speed_coeff", NGlobal::VarFloatHandler, &NWeather::s_fEffectsSpeedCoeff, 1.0f, STORAGE_NONE )
 	REGISTER_VAR_EX( "weather_wnd_affects_coeff", NGlobal::VarFloatHandler, &NWeather::s_fWndAffectsCoeff, 0.05f, STORAGE_NONE )
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1B1A5C80, CWeatherVisual )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

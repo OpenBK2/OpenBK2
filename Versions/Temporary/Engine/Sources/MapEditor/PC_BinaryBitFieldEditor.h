@@ -4,7 +4,7 @@
 
 #include "PC_StringBrowseEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCBinaryBitFieldEditor : public CPCStringBrowseEditor
 {
 	OBJECT_NOCOPY_METHODS( CPCBinaryBitFieldEditor );
@@ -20,5 +20,5 @@ public:
 	static bool GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc );
 	static bool GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BINARY_BIT_FIELD__)

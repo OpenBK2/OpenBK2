@@ -2,11 +2,11 @@
 #define __COMMON_TOOLS__COLORS__
 #pragma once
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 COLORREF GetBGRColorFromARGBColor( TColor nColor ){ return RGB( 0xFF & ( ( nColor & 0xFF0000 ) >> 16 ), 0xFF & ( ( nColor & 0xFF00 ) >> 8 ), nColor & 0xFF ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void UpdateARGBColorFromBGRColor( COLORREF color, TColor *pColor )
 {
@@ -16,7 +16,7 @@ void UpdateARGBColorFromBGRColor( COLORREF color, TColor *pColor )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void MakeBGRColor( COLORREF *pnColor, TColor nRed, TColor nGreen, TColor nBlue )
 { 
@@ -43,7 +43,7 @@ inline DWORD GetARGBColorFromVec4( const CVec4 &vColor )
 		);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline COLORREF GetBGRFromVec4( const CVec4 &vColor )
 {
 	return (
@@ -53,7 +53,7 @@ inline COLORREF GetBGRFromVec4( const CVec4 &vColor )
 		);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void GetVec4FromBGRColor( CVec4 *pvColor, TColor nColor )
 {
@@ -70,7 +70,7 @@ void GetVec4FromBGRColor( CVec4 *pvColor, TColor nColor )
 
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void MakeARGBColor( TColor *pnColor, TColor nAlpha, TColor nRed, TColor nGreen, TColor nBlue )
 { 
@@ -96,7 +96,7 @@ void UpdateGreenARGBColor( TColor *pnColor, TColor nGreen ) { ( *pnColor ) = ( (
 template<class TColor>
 void UpdateBlueARGBColor( TColor *pnColor, TColor nBlue ) { ( *pnColor ) = ( ( nBlue & 0xFF ) + ( ( *pnColor ) & 0xFFFFFF00 ) ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 TColor MakeARGBColor( TColor nAlpha, TColor nRed, TColor nGreen, TColor nBlue )
 { 
@@ -122,7 +122,7 @@ TColor UpdateGreenARGBColor( TColor nColor, TColor nGreen ) { return ( ( ( nGree
 template<class TColor>
 TColor UpdateBlueARGBColor( TColor nColor, TColor nBlue ) { return ( ( nBlue & 0xFF ) + ( nColor & 0xFFFFFF00 ) ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 DWORD GetAlphaFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0xFF000000 ) >> 24 ) ); }
 template<class TColor>
@@ -132,12 +132,12 @@ DWORD GetGreenFromARGBColor( TColor nColor ) { return ( 0xFF & ( ( nColor & 0x00
 template<class TColor>
 DWORD GetBlueFromARGBColor( TColor nColor ) { return ( nColor & 0x000000FF ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline DWORD GetRedFromBGRColor( COLORREF color ) { return ( color & 0x0000FF ); }
 inline DWORD GetGreenFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0x00FF00 ) >> 8 ) ); }
 inline DWORD GetBlueFromBGRColor( COLORREF color ) { return ( 0xFF & ( ( color & 0xFF0000 ) >> 16 ) ); }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void GetVec3FromARGBColor( CVec3 *pvColor, TColor nColor )
 {
@@ -149,7 +149,7 @@ void GetVec3FromARGBColor( CVec3 *pvColor, TColor nColor )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TColor>
 void GetVec4FromARGBColor( CVec4 *pvColor, TColor nColor )
 {
@@ -179,5 +179,5 @@ TColor GetARGBColorGradient( TColor zeroColor, TColor fullColor, float fGradient
 												(TColor)(int)( nZeroGreen + ( nFullGreen - nZeroGreen ) * fGradient ),
 												(TColor)(int)( nZeroBlue + ( nFullBlue - nZeroBlue ) * fGradient ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // #if !defined(__COMMON_TOOLS__COLORS__)

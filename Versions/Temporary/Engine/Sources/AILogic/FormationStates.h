@@ -1,11 +1,11 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "StatesFactory.h"
 #include "CommonStates.h"
 #include "StaticObjects.h"
 #include "StatusUpdatesHelper.h"
 #include "..\Stats_B2_M1\ActionNotify.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuilding;
 class CEntrenchment;
 class CAIUnit;
@@ -24,12 +24,12 @@ namespace NDb
 	enum EUnitSpecialAbility;
 	enum EMineType;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IEngineerFormationState : public IUnitState
 {
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CFormationStatesFactory );
@@ -49,7 +49,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationRestState : public CCommonRestState
 {
  	OBJECT_BASIC_METHODS( CFormationRestState );
@@ -72,7 +72,7 @@ public:
 
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationMoveToState : public IUnitState
 {
   OBJECT_BASIC_METHODS( CFormationMoveToState );
@@ -104,7 +104,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationParaDropState : public IUnitState
 {
   OBJECT_BASIC_METHODS( CFormationParaDropState );
@@ -130,7 +130,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 	virtual EUnitStateNames GetName() { return EUSN_PARTROOP; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterBuildingState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEnterBuildingState );
@@ -162,7 +162,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_ENTER; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterEntrenchmentState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEnterEntrenchmentState );
@@ -193,7 +193,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_ENTER_ENTRENCHMENT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationIdleBuildingState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationIdleBuildingState );
@@ -217,7 +217,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationIdleEntrenchmentState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationIdleEntrenchmentState );
@@ -241,7 +241,7 @@ public:
 
 	class CEntrenchment* GetEntrenchment() const { return pEntrenchment; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationLeaveBuildingState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationLeaveBuildingState );
@@ -264,7 +264,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_GO_OUT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationLeaveEntrenchmentState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationLeaveEntrenchmentState );
@@ -288,7 +288,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_GO_OUT_ENTRENCHMENT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationPlaceMine : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationPlaceMine );
@@ -323,7 +323,7 @@ public:
 
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationClearMine : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationClearMine );
@@ -348,7 +348,7 @@ public:
 
 	virtual const CVec2 GetPurposePoint() const { return point; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationAttackUnitState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackUnitState );
@@ -383,7 +383,7 @@ public:
 	
 	virtual EUnitStateNames GetName();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationAttackCommonStatObjState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackCommonStatObjState );
@@ -415,7 +415,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_STAT_OBJECT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationRotateState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationRotateState );
@@ -435,7 +435,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEnterTransportState );
@@ -471,7 +471,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationIdleTransportState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationIdleTransportState );
@@ -494,7 +494,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterTransportNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterTransportNowState );
@@ -513,7 +513,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterTransportByCheatPathState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterTransportByCheatPathState );
@@ -532,7 +532,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // общий код для Repear, Resupply
 class CFormationServeUnitState: public IEngineerFormationState
 {
@@ -617,7 +617,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //доходит до юнита и запускает каждому члену отряда данную команду
 class CFormationRepairUnitState : public CFormationServeUnitState
 {
@@ -671,7 +671,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_UNIT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationResupplyUnitState : public CFormationServeUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationResupplyUnitState );
@@ -706,7 +706,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_RESUPPLY_UNIT; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // загрузка грузовичка ресурсами 
 // подходят к складу, делают Use, при этом в грузовик поступают ресурсы
 class CBuilding;
@@ -733,7 +733,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // бегут за транспортом и садятся на ходу.
 class CFormationCatchTransportState : public IUnitState
 {
@@ -769,7 +769,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // кладут противотанковый еж
 class CFormationPlaceAntitankState : public IEngineerFormationState
 {
@@ -809,9 +809,9 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vDesiredPoint; }
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLongObjectCreation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationBuildLongObjectState : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationBuildLongObjectState );
@@ -864,9 +864,9 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_LONGOBJECT; }
 	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEntrenchmentCreation;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationBuildEntrenchmentState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationBuildEntrenchmentState );
@@ -912,7 +912,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_ENTRENCHMENT; }
 	void SetEndPoint( const CVec2 &vPos );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // отдать себя в качестве обслуживающей команды
 class CFormationCaptureArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
@@ -945,7 +945,7 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_GUN_CAPTURE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // обслуживание пушек артиллеристами. эта команда отдается самой пушкой.
 class CFormationGunCrewState : public IUnitState
 {
@@ -1082,7 +1082,7 @@ public:
 	
 	CArtillery* GetArtillery() const { return pArtillery; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // 
 class CFormationInstallMortarState : public IUnitState
 {
@@ -1102,7 +1102,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2(-1,-1);}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationUseSpyglassState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationUseSpyglassState );
@@ -1123,7 +1123,7 @@ public:
 	
 	virtual EUnitStateNames GetName() { return EUSN_USE_SPYGLASS; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // для атаки взвода взводом
 class CFormationAttackFormationState : public IUnitAttackingState
 {
@@ -1149,7 +1149,7 @@ public:
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationParadeState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationParadeState );
@@ -1172,7 +1172,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_PARADE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationDisbandState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationDisbandState );
@@ -1191,7 +1191,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationFormState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationFormState );
@@ -1210,7 +1210,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationWaitToFormState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationWaitToFormState );
@@ -1238,7 +1238,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCatchFormationState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CCatchFormationState );
@@ -1280,7 +1280,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationSwarmState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationSwarmState );
@@ -1315,10 +1315,10 @@ public:
 	virtual bool IsAttacksUnit() const { return false; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFullBridge;
 class CBridgeSpan;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationRepairBridgeState : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationRepairBridgeState );
@@ -1360,7 +1360,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BRIDGE; }
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationRepairBuildingState : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationRepairBuildingState );
@@ -1406,7 +1406,7 @@ public:
 
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BUILDING; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterBuildingNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterBuildingNowState );
@@ -1425,7 +1425,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2(-1.0f,-1.0f); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEnterEntrenchmentNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterEntrenchmentNowState );
@@ -1444,7 +1444,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2(-1.0f,-1.0f); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationPlaceChargeState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationPlaceChargeState )
@@ -1480,7 +1480,7 @@ public:
 	virtual bool IsAttackingState() const { return true; }
 	virtual const CVec2 GetPurposePoint() const;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationDetonateChargeState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationDetonateChargeState )
@@ -1503,7 +1503,7 @@ public:
 	virtual bool IsAttackingState() const { return true; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2(-1.0f,-1.0f); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationThrowGrenadeState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationThrowGrenadeState )
@@ -1539,7 +1539,7 @@ public:
 
 	void AddTarget( CAIUnit *pEnemy, const CVec2 &vTarget, const int nParam );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationEntrenchSelfState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEntrenchSelfState )
@@ -1558,7 +1558,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationLeaveSelfEntrenchState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationLeaveSelfEntrenchState );
@@ -1575,7 +1575,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
 
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CFormationFirstAidState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationFirstAidState );
@@ -1628,4 +1628,4 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

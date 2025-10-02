@@ -2,7 +2,7 @@
 #include "ExecutorUnitBase.h"
 #include "AIUnit.h"
 #include "../Stats_B2_M1/StatusUpdates.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CExecutorUnitBonus
 //
 // Provides ability increases/decreases via UnitStatsModifier
@@ -11,7 +11,7 @@
 // Is registered on events: ACTIVATE, DEACTIVATE, ENABLE, DISABLE
 //
 // Can be used to derive another class (e.g. Ambush) with more complex functionality
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExecutorUnitBonus : public CExecutorUnitBase
 {
 	OBJECT_BASIC_METHODS( CExecutorUnitBonus );

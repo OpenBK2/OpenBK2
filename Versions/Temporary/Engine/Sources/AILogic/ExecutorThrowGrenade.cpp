@@ -6,9 +6,9 @@
 #include "../Stats_B2_M1/AbilityActions.h"
 
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1509C340, CExecutorThrowGrenade )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility ) 
 : CExecutor(TID_THROW_GRENADE, 1000/SConsts::AI_SEGMENT_DURATION), pUnit( _pUnit ), eAbility( _eAbility )
 {
@@ -22,7 +22,7 @@ CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecial
 	secondaryState.bAutocast = false;
 	UpdateState( state );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CExecutorThrowGrenade::HasGrenades()
 {
 	const int nGuns = pUnit->GetNGuns();
@@ -39,7 +39,7 @@ const bool CExecutorThrowGrenade::HasGrenades()
 	}
 	return bPresent;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CExecutorThrowGrenade::Segment()
 {
 	if ( !IsExecutorValid() )
@@ -64,7 +64,7 @@ int CExecutorThrowGrenade::Segment()
 	}
 	return GetNextTime();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorThrowGrenade::UpdateState( const SAbilitySwitchState &_state )
 {
 	CPtr< SAISpecialAbilityUpdate > pUpdate = new SAISpecialAbilityUpdate;
@@ -75,7 +75,7 @@ void CExecutorThrowGrenade::UpdateState( const SAbilitySwitchState &_state )
 
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pUnit, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExecutorThrowGrenade::NotifyEvent( const CExecutorEvent &event )
 {
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
@@ -125,7 +125,7 @@ bool CExecutorThrowGrenade::NotifyEvent( const CExecutorEvent &event )
 			return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExecutorThrowGrenade::RegisterOnEvents( IExecutorContainer *pContainer )
 {
 	SExecutorEventParam par;
@@ -143,4 +143,4 @@ void CExecutorThrowGrenade::RegisterOnEvents( IExecutorContainer *pContainer )
 	par.eEventID = EID_ABILITY_DISABLE;
 	pContainer->RegisterOnEvent( this, par );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

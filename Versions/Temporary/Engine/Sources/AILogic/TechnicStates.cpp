@@ -20,28 +20,28 @@
 #include "../Common_RTS_AI/StaticMapHeights.h"
 #include "../DebugTools/DebugInfoManager.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CDiplomacy theDipl;
 extern CStaticObjects theStatObjs;
 extern NTimer::STime curTime;
 extern CUnitCreation theUnitCreation;
 extern CGroupLogic theGroupLogic;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										CMechUnitEntrenchSelfState											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTankPitLeaveState::Instance( class CAIUnit *pTank )
 {
 	return new CTankPitLeaveState( pTank );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTankPitLeaveState::CTankPitLeaveState( class CAIUnit  *pTank )
 : eState( TLTPS_ESTIMATING ), pUnit( pTank ), timeStartLeave( curTime )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTankPitLeaveState::Segment()
 {
 	switch( eState )
@@ -70,21 +70,21 @@ void CTankPitLeaveState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTankPitLeaveState::TryInterruptState( class CAICommand *pCommand )
 {
 	return TSIR_YES_WAIT;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*										CMechUnitEntrenchSelfState*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CMechUnitEntrenchSelfState::Instance( class CAIUnit * pUnit )
 {
 	return new CMechUnitEntrenchSelfState( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit * _pUnit ) 
 : CStatusUpdatesHelper( EUS_ENTRENCH, _pUnit ), pUnit( _pUnit ), eState( ESHD_ESTIMATE ), timeStartBuild( 0 ), fOldProgress( 0.0f )
 {  
@@ -100,7 +100,7 @@ CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit * _pUnit )
 	else
 		pUnit->Stop();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitEntrenchSelfState::CheckInfantry( const CAIUnit * pUnit, const SRect &rect ) const
 {
 	const CFormation *pFormation = 0;
@@ -120,12 +120,12 @@ bool CMechUnitEntrenchSelfState::CheckInfantry( const CAIUnit * pUnit, const SRe
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitEntrenchSelfState::CheckTrenches( const CAIUnit * pUnit, const SRect &rectToTest ) const
 {
 	return !CEntrenchmentCreation::SearchTrenches( pUnit->GetCenterPlain(), rectToTest );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SVectorHash
 {
 	int operator()( const SVector & v) const
@@ -134,7 +134,7 @@ struct SVectorHash
 	}
 };
 typedef hash_map<SVector, bool, SVectorHash> CSVectorHash;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WORD wDirExclude )
 {
 	// криво! как-то нужно подумать и написать получше
@@ -174,7 +174,7 @@ void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const WO
 			++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitEntrenchSelfState::Segment()
 {
 	switch( eState )
@@ -328,7 +328,7 @@ void CMechUnitEntrenchSelfState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CMechUnitEntrenchSelfState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( eState != ESHD_ESTIMATE )		//  UNLOCK LoCKED TILES
@@ -348,18 +348,18 @@ ETryStateInterruptResult CMechUnitEntrenchSelfState::TryInterruptState( class CA
 
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CSoldierEnterHoldSectorState::Instance( class CAIUnit * pUnit )
 {
 	return new CSoldierEnterHoldSectorState( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSoldierEnterHoldSectorState::CSoldierEnterHoldSectorState( class CAIUnit *_pUnit ) 
 : pUnit( _pUnit )
 {
 	nTimeStart = curTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSoldierEnterHoldSectorState::Segment()
 {
 	if ( nTimeStart + SConsts::TIME_TO_ENTER_HOLD_SECTOR < curTime )
@@ -377,7 +377,7 @@ void CSoldierEnterHoldSectorState::Segment()
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pUnit, -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CSoldierEnterHoldSectorState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( pUnit->IsRefValid() && pUnit->IsAlive() )
@@ -386,7 +386,7 @@ ETryStateInterruptResult CSoldierEnterHoldSectorState::TryInterruptState( class 
 	}
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMechUnitInsideMechUnitState::CMechUnitInsideMechUnitState( class CAIUnit *_pUnit, class CMilitaryCar *_pTransport, const bool bImmidiate ) 
 : pUnit( _pUnit ), pTransport( _pTransport ), timeNextCheck( curTime ), vEntrancePoint( VNULL2 ), eState( EMEM_APPROACHING ),
 vDestination( VNULL2 )
@@ -412,7 +412,7 @@ vDestination( VNULL2 )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::BoardNow()
 {
 	eState = EMEM_REST_INSIDE;
@@ -424,7 +424,7 @@ void CMechUnitInsideMechUnitState::BoardNow()
 	pUnit->SetGoForward( true );
 	pTransport->RemoveBoardingMechUnit( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::SendToEntrance()
 {
 		vEntrancePoint = pTransport->GetEntrancePoint();
@@ -439,20 +439,20 @@ void CMechUnitInsideMechUnitState::SendToEntrance()
 			TryInterruptState( 0 );
 		}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::AttackTarget( CAIUnit * _pEnemy )
 {
 	eState = EMEM_ATTACKING;
 	pEnemy = _pEnemy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::Unload( const CVec2 &vPoint )
 {
 	eState = EMEM_EXITTING;
 	timeNextCheck = curTime;
 	vDestination = vPoint;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitInsideMechUnitState::WillUnitIntersectOtherUnits( CAIUnit * pUnit, const CVec2 &vCenter, const CVec2 &vDir )
 {
 	// check if unit rect intersect with any oter unit rect if being placed to vCenter with wDir
@@ -480,7 +480,7 @@ bool CMechUnitInsideMechUnitState::WillUnitIntersectOtherUnits( CAIUnit * pUnit,
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::Segment()
 {
 	if ( !IsValidObj( pTransport ) )
@@ -564,7 +564,7 @@ void CMechUnitInsideMechUnitState::Segment()
 	if ( pPath )
 		pPath->Advance();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::SendToDestination( const CVec2 &vDropPoint, const CVec2 &vDir )
 {
 	pTransport->SetOnBoard( pUnit, false );
@@ -583,7 +583,7 @@ void CMechUnitInsideMechUnitState::SendToDestination( const CVec2 &vDropPoint, c
 	//if ( vDestination == VNULL2 || fabs2( vDropPoint - vSendTo ) < fabs2( vDropPoint - vDestination ) )
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vSendTo ), pUnit, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitInsideMechUnitState::FindAllowedDropPoint( CAIUnit *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
@@ -626,7 +626,7 @@ bool CMechUnitInsideMechUnitState::FindAllowedDropPoint( CAIUnit *pUnit, CVec2 *
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CMechUnitInsideMechUnitState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( pCommand && pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_UNLOAD )
@@ -644,12 +644,12 @@ ETryStateInterruptResult CMechUnitInsideMechUnitState::TryInterruptState( class 
 		pTransport->RemoveBoardingMechUnit( pUnit );
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMechUnitInsideMechUnitState::OnSerialize( IBinSaver &saver )
 {
 	SerializeOwner( 2, &pUnit, &saver );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11123380, CMechUnitInsideMechUnitState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4E5, CMechUnitEntrenchSelfState );
 REGISTER_SAVELOAD_CLASS( 0x1108D4C2, CTankPitLeaveState );

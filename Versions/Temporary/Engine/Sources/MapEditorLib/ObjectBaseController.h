@@ -4,7 +4,7 @@
 
 #include "DefaultController.h"
 #include "ManipulatorManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // TYPE_INSERT:
 // szName					- имя массива
 // (int)newValue	- номер элемента куда вставлять, (-1) для вставки в конец массива
@@ -385,6 +385,6 @@ public:
 		return AddChangeArrayOperation<list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__OBJECT_BASE_CONTROLLER__)
 

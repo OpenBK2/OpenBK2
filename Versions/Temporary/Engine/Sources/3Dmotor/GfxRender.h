@@ -49,7 +49,7 @@ enum EVideoCard
 EVideoCard GetVideoCard();
 EHardwareLevel GetHardwareLevel();
 bool IsTnLDevice();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EAlphaCombineMode
 {
 	COMBINE_NONE,
@@ -151,7 +151,7 @@ struct SFogParams
 	SFogParams( const CVec3 &_vColor, float _fMinDist, float _fMaxDist, float _fMinZDis, float _fMaxZDis ) : vColor(_vColor), fMinDist(_fMinDist), fMaxDist(_fMaxDist), fMinZDis(_fMinZDis),  fMaxZDis(_fMaxZDis) {}
 	bool operator==( const SFogParams &m ) const { return vColor == m.vColor && fMinDist == m.fMinDist && fMaxDist == m.fMaxDist; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ETnLVS
 {
 	TNLVS_NONE = 1,
@@ -159,7 +159,7 @@ enum ETnLVS
 	TNLVS_VERTEX_COLOR_AND_ALPHA,
 	TNLVS_TEXTRANS
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTexture;
 class CCubeTexture;
 class CGeometry;
@@ -169,7 +169,7 @@ class CPixelShader;
 class CVertexShader;
 
 enum EFace;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IQuery : public CObjectBase
 {
 public:
@@ -178,7 +178,7 @@ public:
 	virtual int GetData() = 0;
 	virtual void Flush() = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DMOTOR_EXPORT CRenderContext
 {
 	enum ERenderTargetMode
@@ -277,7 +277,7 @@ public:
 	void Flush();
 	void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTexture* GetRegisterTexture( int nRegister );
 CTexture* GetDepthRegisterTexture();
 bool CopyScreenToRegister( int nRegister );
@@ -288,7 +288,7 @@ void GetRegisterSize( CTRect<float> *pRes );
 bool IsNVidiaNP2Bug();
 bool DoesSupportOcclusionQueries();
 void SetDithering( EDithering a );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

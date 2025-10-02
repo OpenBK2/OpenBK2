@@ -10,7 +10,7 @@
 #include "..\MapEditorLib\Interface_Builder.h"
 
 #define PC_BD_TREE_COLUMN_COUNT (3)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCBuildDataDialog : public CResizeDialog, public CPCBaseDialog
 {
 	static const UINT	PC_BD_TREE_COLUMN_NAME  [PC_BD_TREE_COLUMN_COUNT];
@@ -67,5 +67,5 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_BUILD_DATA_DIALOG__)

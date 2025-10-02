@@ -5,9 +5,9 @@
 #include "WindController.h"
 #include "../System/FastMath.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define TIME_COEFF 1
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const vector<string> &leafNames )
 {
 	vPos.x = _vPos3.x;
@@ -20,7 +20,7 @@ void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3,
 	for ( vector<string>::const_iterator it = leafNames.begin(); it != leafNames.end(); ++it )
 		leafBones.push_back( pGetBone->GetBoneIndex( it->c_str() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeWindMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
@@ -62,7 +62,7 @@ void CTreeWindMutator::MutateSkeletonPose( granny_local_pose *pPose )
 		TransformLeafBone( pTransform, qInverseRot * qRndRot );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeWindMutator::TransformRootBone( granny_transform *pTransform, const CQuat &qRot )
 {
 	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
@@ -81,7 +81,7 @@ void CTreeWindMutator::TransformRootBone( granny_transform *pTransform, const CQ
 	pTransform->Flags |= GrannyHasPosition;
 	pTransform->Flags |= GrannyHasOrientation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTreeWindMutator::TransformLeafBone( granny_transform *pTransform, const CQuat &qRot )
 {
 	if ( !pTransform )
@@ -95,7 +95,7 @@ void CTreeWindMutator::TransformLeafBone( granny_transform *pTransform, const CQ
 	pTransform->Orientation[3] = vBoneOrientation.w;
 	pTransform->Flags |= GrannyHasOrientation;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTreeWindMutator::NeedUpdate()
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
@@ -111,7 +111,7 @@ bool CTreeWindMutator::NeedUpdate()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CTreeWindMutator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &leafBones );	
@@ -121,6 +121,6 @@ int CTreeWindMutator::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x19132B40, CTreeWindMutator)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

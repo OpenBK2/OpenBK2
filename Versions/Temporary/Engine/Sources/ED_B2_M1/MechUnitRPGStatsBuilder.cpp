@@ -21,13 +21,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_BUILDER_IN_DLL( MechUnitRPGStats, CMechUnitRPGStatsBuilder )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CMechUnitRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "MechUnitRPGStatsBuilder";
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPropellerInfo
 {
 	string szLocatorName;
@@ -49,7 +49,7 @@ struct SPropellerInfo
 
 	const bool IsDefined() const { return bScaledDefined && bDynamicDefined; } 
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры
 static bool CopyModel( const string &szOldModelName, const string &szNewName, const string &szRootMesh, const int nStartFrame, const int nEndFrame, const float fSpeed )
 {
@@ -207,7 +207,7 @@ static bool CopyModel( const string &szOldModelName, const string &szNewName, co
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // создать новый VisObj на основе уже существующего, в новом объекте будут новые модели (изменены корневые кости)
 static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName, const string &szRootMesh, const int nStartFrame, const int nEndFrame, const float fSpeed )
 {
@@ -264,7 +264,7 @@ static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pManipulator, IManipulator* pSrcManipulator )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -409,7 +409,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMechUnitRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
@@ -457,7 +457,7 @@ bool CMechUnitRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMechUnitRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 																										 string *pszUniqueObjectName,
 																										 bool bFromMainMenu,
@@ -509,6 +509,6 @@ bool CMechUnitRPGStatsBuilder::InternalInsertObject( string *pszObjectTypeName,
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

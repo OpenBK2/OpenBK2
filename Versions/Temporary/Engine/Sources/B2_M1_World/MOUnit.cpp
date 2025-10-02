@@ -11,12 +11,12 @@
 #include "../Main/GameTimer.h"
 #include "../Stats_B2_M1/AbilityActions.h"
 #include "../SceneB2/AttachedObj.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "../System/Commands.h"
 #include "MOUnitInfantry.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float s_fPointerOffset = 3.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -44,7 +44,7 @@ bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pU
 	nOldAreasTime = 0;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 {
 	IMOUnit::GetStatus( pStatus );
@@ -55,7 +55,7 @@ void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 	if ( GetStatsLocal() )
 		pStatus->pArmorPattern = GetStatsLocal()->pArmorPattern;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
@@ -110,7 +110,7 @@ bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	bShowUnitRank = false;
 	return bCreated;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( GetStatsLocal() == 0 || GetStatsLocal()->GetActions() == 0 )
@@ -140,7 +140,7 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 			pActions->SetAction( NDb::USER_ACTION_DROP_BOMB );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::GetPossibleActions( CUserActions *pActions ) const
 {
 	if ( GetStatsLocal() == 0 || GetStatsLocal()->GetActions() == 0 )
@@ -157,11 +157,11 @@ void CMOUnit::GetPossibleActions( CUserActions *pActions ) const
 	if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 		pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	// Ammo
@@ -202,7 +202,7 @@ IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &sta
 	fFuel = stats.fFuel;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MIN_DIFFERENCE 0.1f
 bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
 {
@@ -222,7 +222,7 @@ bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &upda
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnit::GetAbilityTier( NDb::EUserAction eAction ) const
 {
 	if ( GetStatsLocal() && GetStatsLocal()->GetActions() )
@@ -236,7 +236,7 @@ int CMOUnit::GetAbilityTier( NDb::EUserAction eAction ) const
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 {
 	abilityList.clear();
@@ -247,7 +247,7 @@ void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 		abilityList[eAbility] = ability;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime startTime )
 {
 	if ( pAnimation == 0 ) 
@@ -265,14 +265,14 @@ void CMOUnit::SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime 
 		AddAnimation( pAnimation, startTime, pAnimator );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnit::GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const
 {
 	vector<SAmmo>::const_iterator iAmmo = find_if( ammos.begin(), ammos.end(), SAmmoCompare( pWeapon ) );
 	NI_VERIFY( iAmmo != ammos.end(), "Wrong weapon", return 0 );
 	return iAmmo->nAmmo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnit::GetWeaponAmmoTotal() const
 {
 	int nAmmo = 0;
@@ -283,7 +283,7 @@ int CMOUnit::GetWeaponAmmoTotal() const
 	}
 	return nAmmo;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	IMOUnit::FillIconsInfo( iconInfo );
@@ -321,18 +321,18 @@ void CMOUnit::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnit::NeedShowInterrior() const
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, interface IClientAckManager *pAckManager, const int nSet )
 {
 	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, nSet ), nSet, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, interface IClientAckManager *pAckManager )
 {
 	if ( ack.bPresent )
@@ -340,13 +340,13 @@ void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement
 	else
 		pAckManager->UnRegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, 0 ), 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
@@ -359,7 +359,7 @@ void CMOUnit::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESe
 	DisableIcons( true );
 	SetDeathState();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
@@ -367,7 +367,7 @@ void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface
 	DisableIcons( true );
 	SetDeathState();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 {
 	if ( pUpdate->nUpdateTime - nOldAreasTime < 1000 && !AreasChanged( pUpdate->info ) && !Singleton<IGameTimer>()->HasPause( 0 ) )
@@ -391,7 +391,7 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::CopyAreas( const vector<SShootAreas> &newAreas )
 {
 	oldAreas.resize( newAreas.size() );
@@ -402,7 +402,7 @@ void CMOUnit::CopyAreas( const vector<SShootAreas> &newAreas )
 			oldAreas[i].areas.push_back( *it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOUnit::AreasChanged( const vector<SShootAreas> &newAreas ) const
 {
 	if ( oldAreas.size() != newAreas.size() )
@@ -423,12 +423,12 @@ bool CMOUnit::AreasChanged( const vector<SShootAreas> &newAreas ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::AIUpdateModifyEntranceState( bool _bOpen )
 {
 	bOpen = _bOpen;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 {
 	nLevel = _nLevel;
@@ -438,12 +438,12 @@ void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 		nLevel = 3;
 #endif _FINALRELEASE
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::SetNewAbility( bool _bNewAbility )
 {
 	bNewAbility = _bNewAbility;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SChooseAttachedToDamaged : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToDamaged );
@@ -460,7 +460,7 @@ public:
 					 damageLevels[nDamageLevel].pVisObj : 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SChooseAttachedToAnimable : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToAnimable );
@@ -470,7 +470,7 @@ public:
 		return pAttachedVisObj->pAnimableModel;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SChooseAttachedToTransportable : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToTransportable );
@@ -480,40 +480,40 @@ public:
 		return pAttachedVisObj->pTransportableModel;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SVisObj* CMOUnit::SChooseAttachedByDefault::Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 {
 	return pAttachedVisObj->pvisualObject;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	IMOUnit::ChangeModelToDamaged( nDamaged, pNewModel, eSeason );
 	CPtr<IChooseAttached> pChooseFunc = new SChooseAttachedToDamaged( nDamaged );
 	InitAttached( eSeason, pChooseFunc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	IMOUnit::ChangeModelToUsual( pNewModel, eSeason );
 	CPtr<IChooseAttached> pChooseFunc = new SChooseAttachedByDefault();
 	InitAttached( eSeason, pChooseFunc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	IMOUnit::ChangeModelToAnimable( pNewModel, eSeason );
 	CPtr<IChooseAttached> pChooseFunc = new SChooseAttachedToAnimable();
 	InitAttached( eSeason, pChooseFunc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
 	IMOUnit::ChangeModelToTransportable( pNewModel, eSeason );
 	CPtr<IChooseAttached> pChooseFunc = new SChooseAttachedToTransportable();
 	InitAttached( eSeason, pChooseFunc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc, 
 														const NDb::ESeason eSeason, const string &szLocator, const ESceneSubObjType eType, const int nNumber )
 {
@@ -527,7 +527,7 @@ void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChoos
 			Scene()->AttachSubModel( GetID(), eType, szLocator, GetModel( pNewAttachObj, eSeason ), ESAT_NO_REPLACE, nNumber, true, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::SetPointer( const NDb::SModel *pModel )
 {
 	if ( bPointer && pModel )
@@ -566,7 +566,7 @@ void CMOUnit::SetPointer( const NDb::SModel *pModel )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOUnit::ClearPointer()
 {
 	if ( bPointer )
@@ -575,7 +575,7 @@ void CMOUnit::ClearPointer()
 		bPointer = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOUnit::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, checked_cast<IMOUnit*>(this) );
@@ -597,7 +597,7 @@ int CMOUnit::operator&( IBinSaver &saver )
 	saver.Add( 19, &bShowUnitRank );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( MOUnit )
 REGISTER_VAR_EX( "objective_dynamic_pointer_offset", NGlobal::VarFloatHandler, &s_fPointerOffset, 3.0f, STORAGE_NONE );
 FINISH_REGISTER

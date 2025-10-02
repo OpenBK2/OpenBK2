@@ -2,7 +2,7 @@
 #include "WinFrame2Input.h"
 #include "..\Input\GameMessage.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 void CWinToInputMessageConverter::ParseChars()
 {
@@ -15,7 +15,7 @@ void CWinToInputMessageConverter::ParseChars()
 	szCharBuffer = "";
 }
 /**/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWinToInputMessageConverter::Do()
 {
 	NWinFrame::SWindowsMsg wMsg;

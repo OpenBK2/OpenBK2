@@ -5,26 +5,26 @@
 #include "../stats_b2_m1/rpgstats.h"
 #include "../MapEditorLib/CommonExporterMethods.h"
 #include "../ED_Common/Tools_Granny.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SPassProfile;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define ANIMATIONS_ROOT_JOINT "Animations"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CreateObjectStaticDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius );
 bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, float fWidth );
 bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *pPassabilityArray, CVec2 *pvOrigin );
 bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
 void SavePassProfile( const NDb::SPassProfile &profile, const string &szPrefix, const string &szFieldName, IManipulator *pManipulator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Правильное расположение bounding box
 bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, const CVec3 &rvMin, const CVec3 &rvMax );
 // Правильные размеры bounding box
 bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //
@@ -34,7 +34,7 @@ bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin );
 //
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSkeletonLocatorInfo
 {
 	string szName;
@@ -106,9 +106,9 @@ bool FixLocators( const struct SObjectSet &objectSet, const string &szLocatorNam
 
 // Acquire attributes for a given model
 bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *pAttributeList );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IManipulator* CreateModelManipulatorFromVisObj( interface IManipulator *pVisObjectManipulator, string *pModelName );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TValue> 
 bool GetSeasonedValue( TValue *pData, interface IManipulator *pManipulator, const string &rszName, const string &rszSeasonArrayName, NDb::ESeason eSeason, string *pszDataPrefix )
 {
@@ -151,6 +151,6 @@ bool GetSeasonedValue( TValue *pData, interface IManipulator *pManipulator, cons
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ExportFilesList( const string &szFilesListFileName, bool bForce, const char *pszBase );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

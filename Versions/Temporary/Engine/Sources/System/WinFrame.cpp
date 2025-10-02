@@ -2,10 +2,10 @@
 #include "WinFrame.h"
 #include "../Misc/Win32Helper.h"
 #include "Commands.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NWinFrame;
 using namespace NWin32Helper;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static HWND hWnd = 0;                            // window handle
 static HWND hWndSplashScreen;
 static HINSTANCE hInstance = 0;                  // instance handle
@@ -18,12 +18,12 @@ static HCURSOR hCursor;
 static bool bManageCursor = true;
 static bool s_bMinimizeOnDeactivate = true;
 static bool bAppAlwaysActive = false;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSaveCursorClip
 {
 	~SSaveCursorClip() { ClipCursor(0); }
 } doSaveCursorClip;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Report( const char *pszText, int nVal = -0x7fffffff )
 {
 	const char *pszMsg;
@@ -33,7 +33,7 @@ static void Report( const char *pszText, int nVal = -0x7fffffff )
 		pszMsg = StrFmt( "%s\n", pszText );
 	OutputDebugString( pszMsg );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NWinFrame::GetMessage( SWindowsMsg *pRes )
 {
 	CCriticalSectionLock lock( msgs );
@@ -47,12 +47,12 @@ bool NWinFrame::GetMessage( SWindowsMsg *pRes )
 	NHPTimer::GetTime( &pRes->time );
 	return false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NWinFrame::IsAppActive()
 {
 	return bActive;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetActive( bool _bActive )
 {
  	if ( bAppAlwaysActive )
@@ -65,17 +65,17 @@ static void SetActive( bool _bActive )
 			ShowWindow( hWnd, SW_MINIMIZE );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NWinFrame::IsExit()
 {
 	return bExit;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::ResetExit()
 {
 	bExit = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::PumpMessages()
 {
   // Now we are ready to recieve and process Windows messages.
@@ -97,12 +97,12 @@ void NWinFrame::PumpMessages()
 			bExit = true;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 HWND NWinFrame::GetWnd()
 {
 	return hWnd;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NWinFrame
 {
 void SetEditorWnd( HWND _hWnd )
@@ -110,13 +110,13 @@ void SetEditorWnd( HWND _hWnd )
 	hWnd = _hWnd;
 }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::Exit()
 {
 	PostQuitMessage(0);
 	//bClientExitReq = true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, DWORD dwFlags )
 {
 	NHPTimer::STime time;
@@ -129,7 +129,7 @@ static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, DWORD dwFlags )
 	m.y = y;
 	m.dwFlags = dwFlags;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 bool __declspec(dllexport) SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
 {
@@ -165,7 +165,7 @@ bool __declspec(dllexport) SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsign
 
   return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetClipCursorRect( HWND _hWnd )
 {
 	RECT r;
@@ -181,7 +181,7 @@ static void SetClipCursorRect( HWND _hWnd )
 		SetCursorPos( p.x, p.y );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // did not know how to return NCHitTest
 static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
@@ -328,7 +328,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool __declspec(dllexport) NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance, const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
 {
 	int nXSize = 10000;
@@ -338,7 +338,7 @@ bool __declspec(dllexport) NWinFrame::SFLB1_InitApplication( HINSTANCE hInstance
 		return false;
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::SetCursor( HCURSOR _hCursor )
 {
 	if ( !bManageCursor )
@@ -349,7 +349,7 @@ void NWinFrame::SetCursor( HCURSOR _hCursor )
 	hCursor = _hCursor;
 	::SetCursor( hCursor );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::ShowCursor( bool bShow )
 {
 	if ( !bManageCursor )
@@ -366,12 +366,12 @@ void NWinFrame::ShowCursor( bool bShow )
 	else
 		::ShowCursor( FALSE );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NWinFrame::EnableCursorManagement( bool bEnable )
 {
 	bManageCursor = bEnable;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(WinFrame)
 REGISTER_VAR_EX( "minimize_on_deactivate", NGlobal::VarBoolHandler, &s_bMinimizeOnDeactivate, true, STORAGE_NONE );
 REGISTER_VAR_EX( "app_always_active", NGlobal::VarBoolHandler, &bAppAlwaysActive, false, STORAGE_USER );

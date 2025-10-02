@@ -2,7 +2,7 @@
 #include "SuperCollider.h"
 namespace NCollider
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
 	const CVec3 &ptCenter, float fR )
 {
@@ -79,21 +79,21 @@ bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
 		return ( tCA > 0 && tCA < 1 && fabs2( c - tCA * sideCA ) < fR2 ); // edge cylinder
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcAplusBC( CVec3 *pRes, const CVec3 &a, float b, const CVec3 &c )
 {
 	pRes->x = a.x + b * c.x;
 	pRes->y = a.y + b * c.y;
 	pRes->z = a.z + b * c.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcDif( CVec3 *pRes, const CVec3 &a, const CVec3 &b )
 {
 	pRes->x = a.x - b.x;
 	pRes->y = a.y - b.y;
 	pRes->z = a.z - b.z;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, const CVec3 &b, const CVec3 &ba )
 {
 	// a-b is the line, p the point in question
@@ -119,9 +119,9 @@ static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, 
 	}
 	CalcAplusBC( pRes, a, t/d, v );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSuperCollider
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // returns distance to collision and triangle point to collide (pIntersect)
 float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVelocity &velocity,
 	const SGlobalTriangle &tri, CVec3 *pIntersect )
@@ -188,12 +188,12 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVeloc
 	*pIntersect = *pTriPoint;
 	return fDistToSphere;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSuperCollider::DoesTriSphereIntersect( const CVec3 &ptCenter, float fR, const SGlobalTriangle &tri )
 {
 	return NCollider::DoesTriSphereIntersect( points[tri.n1], points[tri.n2], points[tri.n3], ptCenter, fR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSuperCollider::AddEntity( const SHMatrix &pos, const vector<CVec3> &_points, 
 	const vector<STriangle> &_tris, int nUserDataIndex )
 {
@@ -234,5 +234,5 @@ void CSuperCollider::AddEntity( const SHMatrix &pos, const vector<CVec3> &_point
 		volume.Add( bounds, nTri );			
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

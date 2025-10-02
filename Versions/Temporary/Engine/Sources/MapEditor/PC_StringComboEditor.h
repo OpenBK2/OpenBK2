@@ -5,7 +5,7 @@
 #include "..\MapEditorLib\Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCStringComboEditor : public CComboBox, public CPCItemEditor, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CPCStringComboEditor );
@@ -46,5 +46,5 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_COMBO__)

@@ -12,7 +12,7 @@ START_REGISTER(ObjectProfile)
 	REGISTER_VAR_EX( "thick_lock", NGlobal::VarBoolHandler, &g_bThickLock, false, STORAGE_NONE );
 FINISH_REGISTER
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STilesCollector
 {
 	hash_set<SVector, STilesHash> *pTilesUnder;
@@ -27,7 +27,7 @@ struct STilesCollector
 			pTilesUnder->insert( tile );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STilesArray2DCollector
 {
 	CArray2D<BYTE> *pTiles;
@@ -43,7 +43,7 @@ struct STilesArray2DCollector
 			(*pTiles)[y - vTile.y][x - vTile.x] = true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectProfile::AddCentersOfSmallPolygons()
 {
 	for ( int k = 0; k < profile.polygons.size(); ++k )
@@ -72,7 +72,7 @@ void CObjectProfile::AddCentersOfSmallPolygons()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCenter, const CVec2 &_vRotation, const bool bForceThickLock )
 {
 	profile = _profile;
@@ -168,14 +168,14 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 	for ( hash_set<SVector, STilesHash>::iterator iter = tilesUnder.begin(); iter != tilesUnder.end(); ++iter )
 		tilesUnderVector.push_back( *iter );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const WORD wDir, const bool bForceThickLock )
 {
 	// client calculates dir slightly different from AI
 	const float fAngle = float(wDir) / 65536 * FP_2PI;
 	Init( profile, CVec2( vCenter3D.x, vCenter3D.y ), CVec2( NMath::Cos(fAngle), NMath::Sin(fAngle) ), bForceThickLock );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectProfile::CObjectProfile( const SRect &unitRect, const bool bForceThickLock )
 {
 	NDb::SPassProfile profile;
@@ -190,9 +190,9 @@ CObjectProfile::CObjectProfile( const SRect &unitRect, const bool bForceThickLoc
 
 	Init( profile, unitRect.center, CVec2( 1, 0 ), bForceThickLock );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float fEps = 0.00001f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float SignEps( const float x )
 {
 	if ( fabs( x ) < fEps )
@@ -202,7 +202,7 @@ static const float SignEps( const float x )
 	else
 		return 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
@@ -212,7 +212,7 @@ static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CV
 		SignEps( vPoint.y - v1.y ) * SignEps( v2.y - vPoint.y ) >= 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 {
 	CVec2 vPoint = _vPoint - vCenter;
@@ -256,12 +256,12 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectProfile::IsTileInside( const SVector &tile ) const
 {
 	return tilesUnder.find( tile ) != tilesUnder.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 {
 	if ( IsPointInside( unitRect.v1 ) || IsPointInside( unitRect.v2 ) || IsPointInside( unitRect.v3 ) || IsPointInside( unitRect.v4 ) )
@@ -280,5 +280,5 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x30156B00, CObjectProfile )

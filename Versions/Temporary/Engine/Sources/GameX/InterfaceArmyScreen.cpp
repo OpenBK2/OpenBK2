@@ -11,14 +11,14 @@
 #include "DBWrapReinf.h"
 #include "../UISpecificB2/EffectorB2Move.h"
 #include "../System/Text.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int WAIT_TIME = 300; // msec
 const int STEP_WAIT_TIME = 50; // msec
 const float EXP_PROGRESS_STEP_FRACTION = 0.05f;
 const wchar_t* TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
 const wchar_t* DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
 const char* DYNAMIC_TAG_RANK_NAME_FORMAT = "rank%d_name";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CInterfaceArmyScreen::CReinfData : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CReinfData );
@@ -53,7 +53,7 @@ public:
 
 	void FillAbilities();
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CInterfaceArmyScreen::CLeaderInfo : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CLeaderInfo );
@@ -103,7 +103,7 @@ public:
 	NDb::EReinforcementType eType;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&pIcon); f.Add(4,&fExp); f.Add(6,&wszSpecialization); f.Add(7,&nKilled); f.Add(8,&nLost); f.Add(10,&bPermanent); f.Add(11,&undo); f.Add(12,&nRank); f.Add(13,&lastSeen); f.Add(14,&eType); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CInterfaceArmyScreen::CReinfViewer : public IDataViewer
 {
 	OBJECT_BASIC_METHODS( CReinfViewer );
@@ -112,9 +112,9 @@ public:
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	//}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceArmyScreen::CReinfData
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::CReinfData::FillAbilities()
 {
 	const NDb::SUnitBaseRPGStats *pDBUnit = 0;
@@ -164,9 +164,9 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReinfViewer
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *_pData ) const
 {
 	CDynamicCast<IWindow> pWnd = pWindow;
@@ -191,21 +191,21 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 			pUnassignedView->ShowWindow( pData->pLeader == 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CInterfaceArmyScreen
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceArmyScreen::CInterfaceArmyScreen() :
 	CInterfaceScreenBase( "ArmyScreen", "army_screen_menu" ),
 	timeAbs( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CInterfaceArmyScreen::~CInterfaceArmyScreen()
 {
 	pReinfViewer = 0;
 	reinforcements.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::Init()
 {
 	if ( !CInterfaceScreenBase::Init() )
@@ -221,7 +221,7 @@ bool CInterfaceArmyScreen::Init()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::GetElements()
 {
 	pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
@@ -290,7 +290,7 @@ void CInterfaceArmyScreen::GetElements()
 	pProfileUnitNameView = GetChildChecked<ITextView>( pReinfCurrentBlock, "ProfileUnitName", true );
 	pProfileUnitExpView = GetChildChecked<ITextView>( pReinfCurrentBlock, "ReinfCurrentExpView", true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::MakeInterior()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -421,7 +421,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	nAssignmentCount = 0;
 	UpdateSelectionInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTracker::SUndoLeaderInfo &undo )
 {
 	if ( !pReinf )
@@ -485,7 +485,7 @@ void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTr
 		pLeader->lastSeen.nWaitTime = WAIT_TIME;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLeader, bool bExist )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -539,7 +539,7 @@ void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLe
 
 	UpdateLeaderVisualInfo( pLeader );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *pReinf, const CLeaderInfo *pLeader )
 {
 	if ( !pReinf )
@@ -585,7 +585,7 @@ void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDBUnit
 {
 	int nCount;
@@ -596,7 +596,7 @@ struct SDBUnit
 		return pDBStats == _pDBStats;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::ShowReinfInfo( bool bEnabled, const CReinfData *pReinf )
 {
 	if ( !pReinf )
@@ -623,7 +623,7 @@ void CInterfaceArmyScreen::ShowReinfInfo( bool bEnabled, const CReinfData *pRein
 		pProfileUnitExpView->SetText( pProfileUnitExpView->GetDBText() + pReinf->wszProfileUnitRank );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::UpdateSelectionInfo()
 {
 	if ( !pSelection )
@@ -636,7 +636,7 @@ void CInterfaceArmyScreen::UpdateSelectionInfo()
 	ShowReinfInfo( pSelection->bEnabled, pSelection );
 	ShowReinfAbilities( pSelection->bEnabled, pSelection, pSelection->pLeader );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::Execute( const string &szSender, const string &szReaction )
 {
 	if ( szReaction == "menu_back" )
@@ -672,12 +672,12 @@ bool CInterfaceArmyScreen::Execute( const string &szSender, const string &szReac
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CInterfaceArmyScreen::Check( const string &szCheckName ) const
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::CheckAutoAssign()
 {
 	bool bAutoAssign = (Singleton<IScenarioTracker>()->GetAvailablePromotions() > 0);
@@ -701,14 +701,14 @@ bool CInterfaceArmyScreen::CheckAutoAssign()
 	}
 	return bAutoAssign;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnBack()
 {
 	Back();
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnSelect()
 {
 	pSelection = 0;
@@ -721,7 +721,7 @@ bool CInterfaceArmyScreen::OnSelect()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnSetLeader()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -738,7 +738,7 @@ bool CInterfaceArmyScreen::OnSetLeader()
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnAssignLeaderOk()
 {
 	if ( pSelection )
@@ -770,7 +770,7 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 		
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnAssignLeaderCancel()
 {
 	if ( pAssignLeaderDlg )
@@ -778,7 +778,7 @@ bool CInterfaceArmyScreen::OnAssignLeaderCancel()
 		
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::AutoAssignCommanders()
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
@@ -821,7 +821,7 @@ void CInterfaceArmyScreen::AutoAssignCommanders()
 	if ( pPromotionsView )
 		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( StrFmt( "%d", pST->GetAvailablePromotions() ) ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::Back()
 {
 	// save leaders' last seen info
@@ -852,7 +852,7 @@ void CInterfaceArmyScreen::Back()
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NInput::PostEvent( "menu_return_from_subscreen", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::ShowNoSelection()
 {
 	if ( pPromoteCommanderView )
@@ -882,7 +882,7 @@ void CInterfaceArmyScreen::ShowNoSelection()
 			visAbility.pWnd->ShowWindow( false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnMenuUndo()
 {
 	if ( pUndoAllPromotionsDlg )
@@ -890,7 +890,7 @@ bool CInterfaceArmyScreen::OnMenuUndo()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::UndoAllAssignCommander()
 {
 	if ( nAssignmentCount > 0 )
@@ -920,14 +920,14 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 			pUndoBtn->Enable( nAssignmentCount > 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnUndoAssignCommander()
 {
 	if ( pUndoPromotionsDlg )
 		pUndoPromotionsDlg->ShowWindow( true );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::UndoAssignCommander()
 {
 	if ( pSelection && pSelection->pLeader && !pSelection->pLeader->bPermanent )
@@ -949,7 +949,7 @@ void CInterfaceArmyScreen::UndoAssignCommander()
 			pUndoBtn->Enable( nAssignmentCount > 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnAutoAssignOk()
 {
 	if ( pAutoAssignDlg )
@@ -957,14 +957,14 @@ bool CInterfaceArmyScreen::OnAutoAssignOk()
 	AutoAssignCommanders();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnAutoAssignCancel()
 {
 	if ( pAutoAssignDlg )
 		pAutoAssignDlg->ShowWindow( false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnUndoPromotionsOk()
 {
 	if ( pUndoPromotionsDlg )
@@ -972,14 +972,14 @@ bool CInterfaceArmyScreen::OnUndoPromotionsOk()
 	UndoAssignCommander();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnUndoPromotionsCancel()
 {
 	if ( pUndoPromotionsDlg )
 		pUndoPromotionsDlg->ShowWindow( false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnUndoAllPromotionsOk()
 {
 	if ( pUndoAllPromotionsDlg )
@@ -987,14 +987,14 @@ bool CInterfaceArmyScreen::OnUndoAllPromotionsOk()
 	UndoAllAssignCommander();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::OnUndoAllPromotionsCancel()
 {
 	if ( pUndoAllPromotionsDlg )
 		pUndoAllPromotionsDlg->ShowWindow( false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
@@ -1071,7 +1071,7 @@ bool CInterfaceArmyScreen::StepLocal( bool bAppActive )
 	}
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::UpdateSelectedLeaderVisualInfo()
 {
 	if ( pSelection )
@@ -1079,7 +1079,7 @@ void CInterfaceArmyScreen::UpdateSelectedLeaderVisualInfo()
 		UpdateLeaderVisualInfo( pSelection->pLeader );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 {
 	if ( !pLeader )
@@ -1135,7 +1135,7 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	if ( pLeaderLostView )
 		pLeaderLostView->SetText( pLeaderLostView->GetDBText() + wszLost );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CInterfaceArmyScreen::IsMainScreenActive() const
 {
 	if ( pAutoAssignDlg && pAutoAssignDlg->IsVisible() ) 
@@ -1146,25 +1146,25 @@ bool CInterfaceArmyScreen::IsMainScreenActive() const
 		return false;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CICArmyScreen
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICArmyScreen::PreCreate()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICArmyScreen::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CICArmyScreen::Configure( const char *pszConfig )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x171BB441, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS( ML_COMMAND_ARMY_SCREEN, CICArmyScreen )
 REGISTER_SAVELOAD_CLASS_NM( 0x171C4C40, CReinfData, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS_NM( 0x171C4C41, CReinfViewer, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS_NM( 0x171C5440, CLeaderInfo, CInterfaceArmyScreen )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

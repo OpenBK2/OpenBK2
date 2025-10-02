@@ -1,5 +1,5 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DECLARE_FACTORY( TYPE )																													\
 interface I##TYPE;																																			\
 namespace N##TYPE##Factory																															\
@@ -10,7 +10,7 @@ namespace N##TYPE##Factory																															\
 	bool CanCreate##TYPE( const string &szName );																					\
 	void StartRegister##TYPE();																														\
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )															\
 	void StartRegisterHookRegisterMEObject##TYPE##name##classname() {}                    \
 static struct SRegister##TYPE##name##classname##AutoMagic																\
@@ -25,9 +25,9 @@ static struct SRegister##TYPE##name##classname##AutoMagic																\
 		N##TYPE##Factory::UnRegister##TYPE##Type( #name );																	\
 	}																																											\
 } aRegister##TYPE##name##classname##AutoMagic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RegisterMapEditorTypeDelayed( const string &szType, const string &szName, ObjectFactoryNewFunc pfnNewFunc );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_ME_OBJECT_IN_DLL( TYPE, name, classname ) REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )
 	/*
 #define REGISTER_ME_OBJECT_IN_DLL( TYPE, name, classname )										\
@@ -39,4 +39,4 @@ static struct SRegister##TYPE##name##classname##AutoMagicDelayed							\
 	}																																						\
 } aRegister##TYPE##name##classname##AutoMagicDelayed;
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -26,10 +26,10 @@ namespace NDb
 	const CDBID *GetDBID( const int nClassTypeID, const int nRecordID );
 	// CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CObjectBaseRPGStatsExporter )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetObjectHeight( IManipulator *pObjectBaseRPGStatsManipulator, granny_file_info *pInfo )
 {
 	CVec3 vMin = VNULL3;
@@ -43,7 +43,7 @@ static bool SetObjectHeight( IManipulator *pObjectBaseRPGStatsManipulator, grann
 	
 	return pObjectBaseRPGStatsManipulator->SetValue( "ObjectHeight", v );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulator, const string &szObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -170,7 +170,7 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																												const string &rszObjectTypeName,
 																												const string &rszObjectName,
@@ -339,6 +339,6 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	return ER_SUCCESS;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

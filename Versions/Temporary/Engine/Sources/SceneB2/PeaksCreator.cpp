@@ -2,7 +2,7 @@
 
 #include "../3DMotor/DBScene.h"
 #include "GenTerrain.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_PENDENT_WIDTH ( DEF_TILE_SIZE * 0.1125f )
 #define DEF_PENDENT_PART1_NUM 3
 #define DEF_PENDENT_PART2_NUM 2
@@ -12,13 +12,13 @@
 #define DEF_PEAK_PENDENT_MAX_ANGLE ( FP_PI4 )
 #define DEF_PENDENT_PART1_ANGLE_COEFF ( DEF_PEAK_PENDENT_MAX_ANGLE / ( DEF_PENDENT_PART1_NUM - 1 ) )
 #define DEF_PEAK_PATCH_SIZE 8
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CheckTileInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, const float x1, const float y1, const float x2, const float y2 )
 {
 	if ( (v.x > (x1 - DEF_EPS)) && (v.x < (x2 + DEF_EPS)) && (v.y > (y1 - DEF_EPS)) && (v.y < (y2 + DEF_EPS)) )
 		pInters->push_back( v );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CheckTrgInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
 {
 	CVec2 vBary;
@@ -26,7 +26,7 @@ inline void CheckTrgInsidingAndPush( vector<CVec3> *pInters, const CVec3 &v, con
 	if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
 		AddUnique( pInters, v );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CheckVerticalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
 																					 const float fY, const float fX1, const float fX2 )
 {
@@ -43,7 +43,7 @@ inline void CheckVerticalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CheckHorizontalIntersectAndPush( vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
 																						 const float fX, const float fY1, const float fY2 )
 {
@@ -60,23 +60,23 @@ inline void CheckHorizontalIntersectAndPush( vector<CVec3> *pInters, const CVec3
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InterpolateHeight( CVec3 *pV, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vTex )
 {
 	pV->z = ( v2.z - v1.z ) * vTex.x + ( v3.z - v1.z ) * vTex.y + v1.z;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InterpolateSecTexCoords( CVec2 *pSecTex, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec2 &vBary )
 {
 	pSecTex->x = ( vSecTex2.x - vSecTex1.x ) * vBary.x + ( vSecTex3.x - vSecTex1.x ) * vBary.y + vSecTex1.x;
 	pSecTex->y = ( vSecTex2.y - vSecTex1.y ) * vBary.x + ( vSecTex3.y - vSecTex1.y ) * vBary.y + vSecTex1.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InterpolateRealPos( CVec3 *pPos, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec2 &vBary )
 {
 	(*pPos) = ( vRealPos2 - vRealPos1 ) * vBary.x + ( vRealPos3 - vRealPos1 ) * vBary.y + vRealPos1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void InterpolateNorm( CVec3 *pNorm, const CVec3 &vNorm1, const CVec3 &vNorm2, const float t )
 {
 	(*pNorm) = vNorm1 + ( vNorm2 - vNorm1 ) * t;
@@ -85,7 +85,7 @@ inline void InterpolateNorm( CVec3 *pNorm, const CVec3 &vNorm1, const CVec3 &vNo
 	else
 		(*pNorm) = vNorm1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t )
 {
 	CVec3 n = n1 + ( n2 - n1 ) * t;
@@ -95,7 +95,7 @@ inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t
 		n = n1;
 	return n;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PeaksProjectTrgOnTiles( vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
 																	 const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3,
 																	 const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3,
@@ -209,13 +209,13 @@ void CTerraGen::PeaksProjectTrgOnTiles( vector<NMeshData::SMeshDataTex2> *pDataA
 		}
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float GetDist2( const CVec3 &v1, const CVec3fEx &v2 )
 {
 	//return fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y );
 	return fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) + fabs2( v1.z - v2.z );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3 &v, const CArray2D<STerrainInfo::STile> &tiles,
 																		const int x1, const int y1, const int x2, const int y2 )
 {
@@ -265,14 +265,14 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3 &v, const CArray2D<STerrainInfo::STile> &tiles )
 {
 	const int nx = Clamp( int( v.x * DEF_INV_TILE_SIZE ), 0, tiles.GetSizeX() - 1 );
 	const int ny = Clamp( int( v.y * DEF_INV_TILE_SIZE ), 0, tiles.GetSizeY() - 1 );
 	return FindNearestVertexInTile( pRes, pAddHeight, v, tiles, nx, ny, nx, ny );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *pInters, const CVec3 &v1, const CVec3 &v2 )
 {
 	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
@@ -375,14 +375,14 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( vector<SIntersectPoint> *pInters, co
 
 	firstArrPos.push_back( v2 );*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void RotateRealPos( CVec3 &pRealPos, const CVec3 &vSrcPos, const CVec3 &vSrcNorm, const float fCosAng, const float fSinAng, const float fWidth )
 {
 	pRealPos.x = vSrcPos.x + vSrcNorm.x * fCosAng * fWidth;
 	pRealPos.y = vSrcPos.y + vSrcNorm.y * fCosAng * fWidth;
 	pRealPos.z = vSrcPos.z - fSinAng * fWidth;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void ClearDataArr( vector<NMeshData::SMeshDataTex2> &pDataArr )
 {
 	for ( vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
@@ -393,7 +393,7 @@ inline void ClearDataArr( vector<NMeshData::SMeshDataTex2> &pDataArr )
 		it->attributes[0].data.resize( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void ReleaseUnusedAttribues( vector<NMeshData::SMeshDataTex2> &pDataArr )
 {
 	for ( vector<NMeshData::SMeshDataTex2>::iterator it = pDataArr.begin(); it != pDataArr.end(); ++it )
@@ -402,7 +402,7 @@ inline void ReleaseUnusedAttribues( vector<NMeshData::SMeshDataTex2> &pDataArr )
 			it->attributes.resize( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 {
 	if ( !(pDesc->pTerraSet) || (pDesc->pTerraSet->terraTypes.empty()) )
@@ -562,13 +562,13 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	if ( pGfxObserver )
 		pGfxObserver->AddPeak( &(terrainGfxInfo.peaks.back()) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::AddAllPeaks()
 {
 	for ( list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
 		AddPeak( *it );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemovePeakInfo( const int nVSOID )
 {
 	for ( list<STerrainInfo::SPeak>::iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
@@ -583,7 +583,7 @@ void CTerraGen::RemovePeakInfo( const int nVSOID )
 		//	++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::RemovePeakGfxInfo( const int nVSOID )
 {
 	for ( list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
@@ -598,7 +598,7 @@ void CTerraGen::RemovePeakGfxInfo( const int nVSOID )
 		//	++it;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateNeededPeaks()
 {
 	if ( vTexModMin.x < 0 )
@@ -618,4 +618,4 @@ void CTerraGen::UpdateNeededPeaks()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

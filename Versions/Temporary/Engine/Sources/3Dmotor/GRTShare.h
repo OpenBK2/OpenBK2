@@ -10,7 +10,7 @@ namespace NGfx
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DMOTOR_EXPORT CRTPtr
 {
 	CObj<NGfx::CTexture> pRes;
@@ -23,7 +23,7 @@ public:
 	void SetName( const string &_szName ) { szName = _szName; pRes = 0; }
 	NGfx::CTexture *GetTexture();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCubeRTPtr
 {
 	CObj<NGfx::CCubeTexture> pRes;
@@ -36,7 +36,7 @@ public:
 	void SetName( const string &_szName ) { szName = _szName; pRes = 0; }
 	NGfx::CCubeTexture *GetTexture();
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SUserRTInfo;
 void InitRTShare( const SUserRTInfo &rtInfo, NGfx::SRenderTargetsInfo *pRes );
 int GetDepthTexResolution();

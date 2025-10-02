@@ -6,15 +6,15 @@
 #include "..\Input\Bind.h"
 #include "..\Stats_B2_M1\IClientGameConsts.h"
 #include "..\Stats_B2_M1\ActionsRemap.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map< NDb::EDesignSquadType, SIconsSetInfo, SEnumHash > CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignSquadType eType )
 {
 	if ( !bIsInitializedByDB )
@@ -40,14 +40,14 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignSquadType eType )
 		return iconsSetDefault;
 	return it->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 } //namespace
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOSquad::CMOSquad()
 //	bCanCatchArtillery( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMOSquad::~CMOSquad(void)
 {
 	while ( !units.empty() ) 
@@ -57,13 +57,13 @@ CMOSquad::~CMOSquad(void)
 		pUnit->SetSquad( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::SendAcknowledgement( interface IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( !units.empty() )
 		(*units.begin())->SendAcknowledgement( pAckManager, eAck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
 {
 	bool bCumulativeRet = false;
@@ -75,7 +75,7 @@ bool CMOSquad::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &upd
 	}
 	return bCumulativeRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
@@ -96,7 +96,7 @@ bool CMOSquad::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb:
 
 	return CMapObj::Create( nUniqueID, pUpdate, eSeason, eDayTime, bInEditor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 {
 	static int nLevel = 0; // DEBUG
@@ -136,7 +136,7 @@ void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 	
 	--nLevel;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::IsInSquad( interface IMOUnit *pUnit )
 {
 	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
@@ -146,7 +146,7 @@ bool CMOSquad::IsInSquad( interface IMOUnit *pUnit )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
@@ -155,12 +155,12 @@ void CMOSquad::GetPassangers( vector<CMOSelectable*> *pBuffer ) const
 		pBuffer->push_back( *it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::NeedShowInterrior() const
 {
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -181,7 +181,7 @@ void CMOSquad::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 {
 	if ( !GetStats() )
@@ -217,7 +217,7 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 			pActions->SetAction( NDb::USER_ACTION_FORMATION_0 + pSt->formations[i].etype );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
@@ -250,12 +250,12 @@ void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetEnabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	return IMOSquad::GetEnabledActions( pActions, eActions );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::Select( bool bSelect )
 {
 	CMOSelectable::Select( bSelect );
@@ -265,7 +265,7 @@ void CMOSquad::Select( bool bSelect )
     (*it)->Select( bSelect );
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::SetSelectionGroup( int nSelectionGroup )
 {
 	CMOSelectable::SetSelectionGroup( nSelectionGroup );
@@ -275,7 +275,7 @@ void CMOSquad::SetSelectionGroup( int nSelectionGroup )
     (*it)->SetSelectionGroup( nSelectionGroup );
   }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interface ISoundScene *pSoundScene, 
 	IClientAckManager *pAckManager )
 {
@@ -293,7 +293,7 @@ void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, interfac
 	if ( IsValid( pTransport ) )
 		pTransport->LoadSquad( this, false );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::AIUpdateServedArtillery( IMOUnit *pMOUnit )
 {
 	UpdateServedGunCrew( true );
@@ -306,7 +306,7 @@ void CMOSquad::AIUpdateServedArtillery( IMOUnit *pMOUnit )
 		pUnit->UpdateIcons();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::AIUpdateAction( bool bEnable, EActionCommand eAction )
 {
 	NI_ASSERT( eAction == ACTION_COMMAND_CATCH_ARTILLERY, "Unknown update" );
@@ -315,7 +315,7 @@ bool CMOSquad::AIUpdateAction( bool bEnable, EActionCommand eAction )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 {
 	squadAbilities.clear();
@@ -332,7 +332,7 @@ void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 		CombineAbilities( &squadAbilities, unitAbilities );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 {
 	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -347,7 +347,7 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 	}
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::Load( interface IMOUnit *pUnit, const bool bEnter )
 {
 	if ( bEnter )
@@ -374,7 +374,7 @@ bool CMOSquad::Load( interface IMOUnit *pUnit, const bool bEnter )
 	UpdateSquadIcons();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CMOSquad::GetVisualHPFraction() const
 {
 	float fFraction = 0.0f;
@@ -387,7 +387,7 @@ float CMOSquad::GetVisualHPFraction() const
 	}
 	return fFraction;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CMOSquad::GetVisualHPFractionSmooth() const
 {
 	float fFraction = 0.0f;
@@ -405,7 +405,7 @@ float CMOSquad::GetVisualHPFractionSmooth() const
 	}
 	return fFraction;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOSquad::IsFirstUnit( const IMOUnit *_pUnit ) const
 {
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -419,7 +419,7 @@ bool CMOSquad::IsFirstUnit( const IMOUnit *_pUnit ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo )
 {
 	iconInfo.nHPBarBaseLength = GetIconsHPBarLen();
@@ -429,7 +429,7 @@ void CMOSquad::FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo )
 		iconInfo.fHPBarValue = GetVisualHPFractionSmooth();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::UpdateSquadIcons()
 {
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -440,11 +440,11 @@ void CMOSquad::UpdateSquadIcons()
 	if ( pContainer )
 		pContainer->UpdateIcons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::InitByDB()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 {
 	CDynamicCast<CMOUnitMechanical> pArtillery = pServedGun;
@@ -455,5 +455,5 @@ void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 	else
 		pArtillery->SetCrewSoldier( *units.begin() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7485, CMOSquad );

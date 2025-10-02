@@ -2,7 +2,7 @@
 
 #include "StaticMapHeights.h"
 #include "../DebugTools/DebugInfoManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *pv, float ptCtrls[] ) const
 {
 	int nTileX = vPoint.x / 2 / nTileSize;
@@ -24,7 +24,7 @@ void CStaticMapHeights::GetPoint4Spline( const CVec2 &vPoint, float *pu, float *
 		for ( int j = 0; j < 4; ++j )
 			ptCtrls[i * 4 + j] = heights[nTileY + i][nTileX + j] / ( 2.0f * nTileSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD CStaticMapHeights::GetNormal( const float x, const float y ) const
 {
 	if ( !(x >= 0 && x < nStaticMapSizeX*nTileSize && y >= 0 && y < nStaticMapSizeY*nTileSize) )
@@ -42,7 +42,7 @@ const DWORD CStaticMapHeights::GetNormal( const float x, const float y ) const
 		return Vec3ToDWORD( result );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CStaticMapHeights::GetVisZ( float x, float y ) const
 {
 	float u, v;
@@ -60,14 +60,14 @@ const float CStaticMapHeights::GetVisZ( float x, float y ) const
 	// умножается на fAITileZCoeff1, чтобы перевести в AI высоты
 	return betaSpline3D.Value( u, v, ptCtrls ) * 2.0f * nTileSize;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const void CStaticMapHeights::UpdateVisZ( CVec3 *pVec ) const
 {
 	NI_ASSERT( pVec != 0, "CStaticMapHeights::UpdateZ() Wrong parameter: pVec == 0" );
 	pVec->z = GetVisZ( pVec->x, pVec->y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY ) const 
 { 
 	const int inMapX = Min( Max( 0, nTileX ), nStaticMapSizeX - 1 );
@@ -76,7 +76,7 @@ const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY
 	return tileHeights[inMapY][inMapX];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
 const float CStaticMapHeights::GetVisHeight( const int nVisTileX, const int nVisTileY ) const
 {
@@ -88,7 +88,7 @@ const float CStaticMapHeights::GetVisHeight( const int nVisTileX, const int nVis
 }
 /**/
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::Init( const int nSizeXInTiles, const int nSizeYInTiles, const int _nTileSize )
 {
 	const int nSizeX = nSizeXInTiles / 2 + 1;
@@ -115,23 +115,23 @@ void CStaticMapHeights::Init( const int nSizeXInTiles, const int nSizeYInTiles, 
 	nLastHeightsID = 0;
 	oldHeightsMap.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStaticMapHeights::CStaticMapHeights( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize )
 : nStaticMapSizeX( -1 ), nStaticMapSizeY( -1 ), nLastHeightsID( -1 ), nTileSize( -1 )
 {
 	Init( nSizeXInTiles, nSizeYInTiles, nTileSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::Init4Editor( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize )
 {
 	Init( nSizeXInTiles, nSizeYInTiles, nTileSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::FinalizeUpdateHeights()
 {
 	FinalizeUpdateHeights( 0, 0, nStaticMapSizeX, nStaticMapSizeY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::FinalizeUpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	betaSpline3D.Init( 1.0f, -1.0f );
@@ -150,7 +150,7 @@ void CStaticMapHeights::FinalizeUpdateHeights( const int nX1, const int nY1, con
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &initHeights )
 {
 	if ( initHeights.IsEmpty() ) 
@@ -223,7 +223,7 @@ void CStaticMapHeights::UpdateHeights( const int nX1, const int nY1, const int n
 	//}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const CArray2D<bool> &bridge, const float fBridgeHeight )
 //int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const CArray2D<float> &initHeights )
 {
@@ -293,7 +293,7 @@ int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const C
 
 	return nLastHeightsID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::RestoreHeights( const int nID )
 {
 	CHeightsMap::iterator pos = oldHeightsMap.find( nID );
@@ -310,7 +310,7 @@ void CStaticMapHeights::RestoreHeights( const int nID )
 		oldHeightsMap.erase( pos );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStaticMapHeights::GetLocalHeightsInfo( SVector *pvTopLeft, SVector *pvBottomRight, const int nID ) const
 {
 	if ( pvTopLeft )
@@ -338,12 +338,12 @@ bool CStaticMapHeights::GetLocalHeightsInfo( SVector *pvTopLeft, SVector *pvBott
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticMapHeights::SetHeightForPatternApplying( const int nX, const int nY, const float fHeight )
 {
 	heights[heights.GetSizeY() - 2 - nY][nX + 1] += fHeight;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CStaticMapHeights::GetHeight( const int x, const int y ) const
 {
 	const int x1 = Clamp( x, 1, heights.GetSizeX()-3 );
@@ -351,7 +351,7 @@ const float CStaticMapHeights::GetHeight( const int x, const int y ) const
 
 	return heights[y1][x1];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	// все происходит в Vis координатах
@@ -484,7 +484,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	const float maxX = (heights.GetSizeX() - 4) * 2.0f * nTileSize;
@@ -599,5 +599,5 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3015A480, CStaticMapHeights )

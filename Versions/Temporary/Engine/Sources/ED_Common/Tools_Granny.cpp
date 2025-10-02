@@ -13,7 +13,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char *pName )
 {
 	int nOffset = 0;
@@ -29,7 +29,7 @@ int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char
 	return INVALID_GRANNY_TYPEDEF_OFFSET;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CalculateGrannyMemberArraySize( granny_data_type_definition *pType, const char *pName )
 {
 	while ( pType && ( pType->Type != GrannyEndMember ) )
@@ -42,7 +42,7 @@ int CalculateGrannyMemberArraySize( granny_data_type_definition *pType, const ch
 	}
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo )
 {
 	NI_ASSERT( pvMin != 0, "GetGrannyMeshBoundidngBox(): mMin == 0" );
@@ -87,7 +87,7 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 	}
 	return bResult;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetGrannyAnimationLength( granny_file_info *pInfo )
 {
 	if ( pInfo->AnimationCount == 0 )
@@ -95,7 +95,7 @@ int GetGrannyAnimationLength( granny_file_info *pInfo )
 	granny_animation *pAnimation = pInfo->Animations[0];
 	return int( pAnimation->Duration * 1000.0f );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo, const string &szMeshName )
 {
 	NI_ASSERT( pvMin != 0, "GetGrannyMeshBoundidngBox(): mMin == 0" );
@@ -143,7 +143,7 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 	}
 	return bResult;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetVerticesFromGrannyMesh( granny_mesh *pMesh, vector<CVec3> *pVertexList )
 {
 	NI_ASSERT( pMesh != 0, "GetVerticesFromGrannyMesh(): pMesh == 0" );
@@ -166,7 +166,7 @@ void GetVerticesFromGrannyMesh( granny_mesh *pMesh, vector<CVec3> *pVertexList )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, vector<STriangle> *pTriangleList )
 {
 	NI_ASSERT( pMesh != 0, "GetTrianglesFromGrannyMesh(): pMesh == 0" );
@@ -190,7 +190,7 @@ void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, vector<STriangle> *pTriangl
 		nGlobalIndex += 3;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const string &rszFileName, const string &rszDesiredSkeletonName, bool bFromRoot )
 {
 	granny_file *pFile = GrannyReadEntireFile( rszFileName.c_str() );
@@ -205,7 +205,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const string &rszFile
 	GrannyFreeFile( pFile );
 	return bRetVal;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pInfo, const string &rszDesiredSkeletonName, bool bFromRoot )
 {
 	NI_ASSERT( pBoneList != 0, "ReadAttributes() pBoneList == 0" );
@@ -285,7 +285,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, float *pfValue ) const
 {
 	SGrannyBoneAttributes::CAttributeMap::const_iterator posAttribute = attributeMap.find( rszAttributeName );
@@ -303,7 +303,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, float 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, int *pnValue ) const
 {
 	float fAttributeValue = 0.0f;
@@ -318,7 +318,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, int *p
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, bool *pbValue ) const
 {
 	float fAttributeValue = 0.0f;
@@ -333,7 +333,7 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, bool *
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** granny file info guard
@@ -341,18 +341,18 @@ bool SGrannyBoneAttributes::GetAttribute( const string &rszAttributeName, bool *
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGrannyFileInfoGuard::CGrannyFileInfoGuard( const string &szFileName )
 {
 	pFile = GrannyReadEntireFile( szFileName.c_str() );
 	pInfo = GrannyGetFileInfo( pFile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGrannyFileInfoGuard::~CGrannyFileInfoGuard()
 {
 	if ( pFile ) 
 		GrannyFreeFile( pFile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -2,7 +2,7 @@
 #include "..\zlib\zconf.h"
 #include "ZipArchieve.h"
 #include "..\zlib\zlib.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** single zip file
@@ -25,7 +25,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #pragma pack( 1 )
 struct CZipFile::SZipLocalFileHeader
 {
@@ -45,7 +45,7 @@ struct CZipFile::SZipLocalFileHeader
 	// here extra field follows (wExtraLen bytes)
 	bool IsDataDescriptorExist() const { return (flag & 4) != 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // NOTE: data descriptor exist only, if bit 3 of general purpose flag of the corresponding local file header is set
 // one can call IsDataDescriptorExist() to check this fact
 // if data descriptor exist, then one must get CRC32, CSize and USize from the data descriptor instead of from local file header
@@ -55,7 +55,7 @@ struct CZipFile::SZipDataDescriptor
 	DWORD dwCSize;												// compressed size
 	DWORD dwUSize;												// uncompressed size
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CZipFile::SZipCentralDirHeader
 {
 	enum { SIGNATURE = 0x06054b50 };
@@ -69,7 +69,7 @@ struct CZipFile::SZipCentralDirHeader
 	WORD  wCommentLen;										// zipfile comment length
 	// comment follows here (wCommentLen bytes)
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct CZipFile::SZipFileHeader
 {
 	enum { SIGNATURE = 0x02014b50, COMP_STORE = 0, COMP_DEFLAT = 8 };
@@ -127,11 +127,11 @@ struct CZipFile::SZipFileHeader
 // 8  - The file is Deflated  
 // 9  - Enhanced Deflating using Deflate64(tm) 
 // 10 - PKWARE Date Compression Library Imploding 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #pragma pack()
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 {
 	dwModDateTime = DWORD( (hdr.wModDate) << 16 ) | DWORD( hdr.wModTime );
@@ -143,7 +143,7 @@ void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 	memcpy( (void*)pszFileName, hdr.GetName(), hdr.wFileNameLen );
 	((char*)pszFileName)[hdr.wFileNameLen] = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 {
 	NI_ASSERT( pszName != 0, "NULL stream passed to zip file" );
@@ -212,33 +212,33 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CZipFile::~CZipFile()
 {
 	if ( ( GetVersion() & 0x80000000 ) == 0 )
 		mmf.UnmapFile();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CZipFile::GetFileName( int nIndex, string *pString ) const
 {
 	*pString = papDir[nIndex].pszFileName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CZipFile::GetFileLen( int nIndex ) const
 {
 	return papDir[nIndex].dwUSize;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CZipFile::GetFileAttribs( int nIndex ) const
 {
 	return papDir[nIndex].wExtAttr;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CZipFile::GetModDateTime( int nIndex ) const
 {
 	return papDir[nIndex].dwModDateTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 {
 	CMemoryMappedFileFragment fLocalHdr( &mmf, ghdr.dwHdrOffset, sizeof( SZipLocalFileHeader ) );
@@ -295,10 +295,10 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 	delete pDstStream;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDataStream *CZipFile::OpenFile( int nIndex )
 {
 	// Go to the actual file and read the local header.
 	return OpenFile( papDir[nIndex] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

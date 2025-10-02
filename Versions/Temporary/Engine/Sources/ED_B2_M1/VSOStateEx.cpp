@@ -19,13 +19,13 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOStateEx::CanEdit()
 {
 	return ( ( GetMapInfoEditor()->pMapInfo != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && ( GetParentState()->GetEditParameters() != 0 ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 {
 	NHPTimer::STime time = 0;
@@ -52,7 +52,7 @@ void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 	DebugTrace( "CVSOStateEx::PickVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOStateEx::CanInsertVSO()
 {
 	if ( CanEdit() )
@@ -72,7 +72,7 @@ bool CVSOStateEx::CanInsertVSO()
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SVSOInstance* CVSOStateEx::GetVSO( int nVSOID, int *pnVSOIndex )
 {
 	if ( CanEdit() )
@@ -93,7 +93,7 @@ NDb::SVSOInstance* CVSOStateEx::GetVSO( int nVSOID, int *pnVSOIndex )
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CVSOStateEx::GetFreeVSOID()
 {
 	int nFreeVSOID = INVALID_NODE_ID;
@@ -113,7 +113,7 @@ int CVSOStateEx::GetFreeVSOID()
 	return nFreeVSOID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, UINT nFlags )
 {
 	if ( CanEdit() )
@@ -185,7 +185,7 @@ void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 	EditorScene()->GetTerraManager()->GetAIObserver()->FinalizeUpdates();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CVSOStateEx::InsertVSO( const vector<CVec3> &rControlPointList )
 {
 	int nFreeVSOID = INVALID_NODE_ID;
@@ -246,7 +246,7 @@ int CVSOStateEx::InsertVSO( const vector<CVec3> &rControlPointList )
 	return nFreeVSOID;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVSOStateEx::RemoveVSO( int nVSOID )
 {
 	if ( CanEdit() )
@@ -281,7 +281,7 @@ void CVSOStateEx::RemoveVSO( int nVSOID )
 	EditorScene()->GetTerraManager()->GetAIObserver()->FinalizeUpdates();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
@@ -357,7 +357,7 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOStateEx::RemoveVSOFromBase( CObjectBaseController *pObjectController, int nVSOIndex )
 {
 	if ( CanEdit() )
@@ -376,7 +376,7 @@ bool CVSOStateEx::RemoveVSOFromBase( CObjectBaseController *pObjectController, i
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
@@ -392,6 +392,6 @@ bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

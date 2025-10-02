@@ -6,7 +6,7 @@
 #include "../Stats_B2_M1/Season.h"
 #include "../MapEditorLib/BuildDataBuilder.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 {
 	enum EResourceType
@@ -76,5 +76,5 @@ protected:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__VISOBJ_BUILDER__)

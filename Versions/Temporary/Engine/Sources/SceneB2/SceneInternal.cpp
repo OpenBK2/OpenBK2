@@ -38,33 +38,33 @@
 #include "../System/VFSOperations.h"
 
 #include "../Sound/MusicSystem.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CUIVisitor theUIVisitor;
 void TakeScreenShotMsg( const SGameMessage &msg );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float s_fCameraNearPlane = 5;
 static float s_fCameraFarPlane = 500;
 static bool s_bPerspectiveCamera = true;
 static float s_fMinStaticFPS = 25;
 static float s_fMinDynamicFPS = 1;
 static float s_fMinDynamicFPSMeasurePeriods = 3;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec4 vDefaultColor( 0.0f, 0.0f, 0.0f, 1.0f );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGamma
 {
 	static float s_fBrightness = 0.5f;
 	static float s_fContrast = 0.5f;
 	static float s_fGamma = 0.5f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IScene* CreateScene()
 {
 	return new CScene();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CScene
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScene::CScene()
 : eScene( ES_UNKNOWN ), vBackgroundColor( vDefaultColor ), timeBadWeatherLeft( 0 ), bGetSizesFromTarget( false )
 {
@@ -85,7 +85,7 @@ CScene::CScene()
 
 	bEditorMode = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CreateGScene()
 {
 	if ( eScene == ES_UNKNOWN )
@@ -142,7 +142,7 @@ void CScene::CreateGScene()
 
 	NGScene::SetLoadMode( NGScene::E_PURE_GRANNY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::Init()
 {
 	if ( eScene == ES_UNKNOWN )
@@ -150,7 +150,7 @@ void CScene::Init()
 	else
 		data[eScene]->Init();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts )
 {
 	if ( (data.size() <= eScene) && (eScene != ES_UNKNOWN) )
@@ -177,12 +177,12 @@ void CScene::SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SSceneConsts *CScene::GetSceneConsts()
 {
 	return data[eScene]->pSceneConsts;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::SetupMode( ESceneMode eMode, bool _bEditorMode )
 {
 	bEditorMode = _bEditorMode;
@@ -212,7 +212,7 @@ bool CScene::SetupMode( ESceneMode eMode, bool _bEditorMode )
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ClearScene( const EScene eScene2Clear )
 {
 	if ( eScene2Clear >= data.size() )
@@ -232,12 +232,12 @@ void CScene::ClearScene( const EScene eScene2Clear )
 	SwitchScene( eSceneOld );
 	data[eScene2Clear]->screensData = oldScreenData;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CScene::~CScene()
 {
 	ClearSceneHoldQueue();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SwitchScene( const EScene _eScene )
 {
 	if ( eScene != _eScene )
@@ -260,7 +260,7 @@ void CScene::SwitchScene( const EScene _eScene )
 		Singleton<IUIInitialization>()->Set2DGameView( data[eScene]->p2DView );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ToggleShow( ESceneShow eShow )
 {
 	data[eScene]->showModes[eShow] = !data[eScene]->showModes[eShow];
@@ -348,7 +348,7 @@ bool CScene::ToggleShow( ESceneShow eShow )
 
 	return data[eScene]->showModes[eShow];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::IsShowOn( ESceneShow eShow )
 {
 	switch ( eShow ) 
@@ -379,19 +379,19 @@ bool CScene::IsShowOn( ESceneShow eShow )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OutputStat( const char *pszName, const int nValue, DWORD dwColor, IStatSystem *pSS )
 {
 	const string szValue = StrFmt( "%d", nValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OutputStat( const char *pszName, const float fValue, DWORD dwColor, IStatSystem *pSS )
 {
 	const string szValue = StrFmt( "%g", fValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 {
 	DWORD dwColor = 0xff00ff00;
@@ -403,13 +403,13 @@ static void OutputStat( const char *pszName, bool bValue, IStatSystem *pSS )
 	}
 	pSS->UpdateEntry( pszName, pszValue, dwColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OutputStat( const char *pszName, const CVec3 &vValue, DWORD dwColor, IStatSystem *pSS )
 {
 	const string szValue = StrFmt( "%g %g %g", vValue.x, vValue.y, vValue.z );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcOrthographicScreenSize( float *pfSizeX, float *pfSizeY, float fScreenSizeX, float fScreenSizeY )
 {
 	float fDist, fYaw, fPitch;
@@ -418,7 +418,7 @@ static void CalcOrthographicScreenSize( float *pfSizeX, float *pfSizeY, float fS
 	*pfSizeX = 2.0f * fDist * tan( ToRadian(fFOV) * 0.5f );
 	*pfSizeY = fScreenSizeY / fScreenSizeX * (*pfSizeX);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // brightness, contrast and gamma are in range [-1..1]
 static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, float fContrast, float fGamma )
 {
@@ -448,7 +448,7 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 		pRamp[i].b = fResult * 255.0f;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcGammaRamp2( NGfx::SPixel8888 *pRamp, float fBrightness, float fContrast, float fGamma )
 {
 //	fBrightness = Clamp( fBrightness, -1.0f, 1.0f ) * 0.5f; // to avoid complete dark and complete white values
@@ -457,7 +457,7 @@ inline void CalcGammaRamp2( NGfx::SPixel8888 *pRamp, float fBrightness, float fC
 	//
 	CalcGammaRamp2Bounded( pRamp, fBrightness, fContrast, fGamma );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fContrast, float fGamma )
 {
 	static const float s_fBoundFactor = 0.5f;
@@ -465,7 +465,7 @@ inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fCo
 												 (fContrast - 0.5f)*2.0f * s_fBoundFactor, 
 												 (fGamma - 0.5f)*2.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define MEASURE_BREAKS
 
 #ifdef MEASURE_BREAKS
@@ -473,7 +473,7 @@ inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fCo
 #pragma comment( lib, "vtuneapi.lib" )
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MeasureBreakes( const float fFPS )
 {
 #ifdef MEASURE_BREAKS
@@ -496,7 +496,7 @@ static void MeasureBreakes( const float fFPS )
 	}
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 {
 	static float s_fLastGamma = NGamma::s_fGamma;
@@ -792,42 +792,42 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 	//
 	StepSceneHoldQueue( data[eScene]->pGameTimer->GetValue() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const EScene CScene::GetCurrentScene() const
 {
 	return eScene;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGScene::I2DGameView* CScene::GetG2DView()
 { 
 	return  data[eScene]->p2DView;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGScene::IGameView *CScene::GetGView()
 {
 	return data[eScene]->GetGScene();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGScene::IGameView *CScene::GetInterfaceView()
 {
 	return data[eScene]->pInterfaceView;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCSTime *CScene::GetAbsTimer()
 {
 	return data[eScene]->pAbsTimer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IFullScreenFader *CScene::GetScreenFader()
 {
 	return data[eScene]->pScreenFader;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCSTime *CScene::GetGameTimer()
 {
 	return data[eScene]->pGameTimer;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::ResetTimer( const NTimer::STime &time )
 {
 	GameTimer()->Reset( time );
@@ -837,7 +837,7 @@ void CScene::ResetTimer( const NTimer::STime &time )
 
 	Singleton<IMusicSystem>()->OnResetTimer();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddScreen( interface IWindow *_pScreen )
 {
 	CObj<IWindow> pScreen( _pScreen );
@@ -846,28 +846,28 @@ void CScene::AddScreen( interface IWindow *_pScreen )
 	SSceneData::SScreenData &screenData = data[eScene]->screensData.back();
 	screenData.SetSceneConsts( data[eScene]->pSceneConsts );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveScreen( interface IWindow *pScreen )
 {
 	data[eScene]->screensData.remove( SSceneData::SScreenData( pScreen ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::RemoveAllScreens()
 {
 	data[eScene]->screensData.clear();
 	Singleton<IDebugSingleton>()->Clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CScene::GetScreenRect()
 {
 	return NGfx::GetScreenRect();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::OnSerialize( IBinSaver &saver )
 {
 	SerializeSceneHoldQueue( 127, saver );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcBigRect( CTRect<float> *pRect, float fCameraYaw, float fMapSizeX, float fMapSizeY )
 {
 	const float fAngle = -ToRadian( fCameraYaw );
@@ -895,7 +895,7 @@ static void CalcBigRect( CTRect<float> *pRect, float fCameraYaw, float fMapSizeX
 	pRect->maxx = vMax.x;
 	pRect->maxy = vMax.y;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcIterationParams( CVec3 *pvStart, CVec3 *pvStepX, CVec3 *pvStepY, 
 													float fCameraYaw, float fMapSizeX, float fMapSizeY, const CTRect<float> &rcRect )
 {
@@ -910,7 +910,7 @@ static void CalcIterationParams( CVec3 *pvStart, CVec3 *pvStepX, CVec3 *pvStepY,
 	pvStepX->Set(	vAxisX.x,	vAxisY.x, 0 );
 	pvStepY->Set( -vAxisX.y, -vAxisY.y, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCameraPlacementGuard
 {
 	CVec3 vAnchor;
@@ -931,7 +931,7 @@ public:
 		Camera()->SetAnchorLimits( CTRect<float>(0, 0, fLimitsX, fLimitsY) );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::MakeMapShot( const SGameMessage &msg )
 {
 	ICamera *pCamera = Camera();
@@ -1042,7 +1042,7 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ToggleAIGeometryMode()
 {
 	int nMode = data[eScene]->eAIGeomMode;
@@ -1055,7 +1055,7 @@ bool CScene::ToggleAIGeometryMode()
 	UpdateAIGeometry();
 	return ( nMode == SSceneData::EAI_GEOM_OVER );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::CycleAIGeometryModes()
 {
 	int nMode = data[eScene]->eAIGeomMode + 1;
@@ -1065,7 +1065,7 @@ void CScene::CycleAIGeometryModes()
 	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = (nMode != SSceneData::EAI_GEOM_NONE);
 	UpdateAIGeometry();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UpdateAIGeometry()
 {
 	data[eScene]->vAIMapMeshes.clear();
@@ -1097,7 +1097,7 @@ void CScene::UpdateAIGeometry()
 		data[eScene]->vAIMapMeshes.push_back( data[eScene]->GetGScene()->CreateMesh( mesh, idPos, 0, 0 ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::AddShotTrace( const CVec3 &_vStart, const CVec3 &_vEnd, NTimer::STime _timeStart, const NDb::SWeaponRPGStats::SShell *pShell )
 {
 	const NDb::SMaterial *pShotTraceMaterial = pShell->pTraceMaterial ? pShell->pTraceMaterial : data[eScene]->pSceneConsts->pShotTraceMaterial;
@@ -1115,7 +1115,7 @@ void CScene::AddShotTrace( const CVec3 &_vStart, const CVec3 &_vEnd, NTimer::STi
 		SetToSceneHoldQueue( pObj, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 {
 	if ( data[eScene]->pTerraManager == 0 || data[eScene]->pTerraManager->GetDesc() == 0 )
@@ -1163,72 +1163,72 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 			data[eScene]->pTerraManager->SetRainyWaters( 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScene::GetZ( float x, float y ) const
 {
 	return data[eScene]->pTerraManager->GetZ( x, y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CScene::GetNormal( const CVec2 &vPoint ) const
 {
 	return data[eScene]->pTerraManager->GetNormal( vPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return data[eScene]->pTerraManager->GetIntersectionWithTerrain( pvResult, vBegin, vEnd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return data[eScene]->pTerraManager->GetIntersectionWithTerrainForEditor( pvResult, vBegin, vEnd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::InitHeights4Editor( int nSizeX, int nSizeY )
 {
 	return data[eScene]->pTerraManager->InitHeights4Editor( nSizeY, nSizeY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::UpdateZ( CVec3 *pvPos )
 {
 	data[eScene]->pTerraManager->UpdateZ( pvPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CScene::GetTileHeight( int nX, int nY ) const
 {
 	return data[eScene]->pTerraManager->GetTileHeight( nX, nY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSyncSrc<IVisObj>* CScene::GetSyncSrc() const
 { 
 	return data[eScene]->pSyncSrc; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::SetGSceneInternal( bool bIsInternal )
 {
 	return data[eScene]->SetGSceneInternal( bIsInternal );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CScene::SetBackgroundColor( const CVec3 &rvBackgroundColor )
 {
 	vBackgroundColor = CVec4( rvBackgroundColor, 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec4 CScene::SetBackgroundColor( const CVec4 &rvBackgroundColor )
 {
 	CVec4 vPrevColor = vBackgroundColor; 
 	vBackgroundColor = rvBackgroundColor;
 	return vPrevColor;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CScene::ToggleGetSizeFromTarget( bool _bGetSizesFromTarget )
 {
 	bool bPrev = bGetSizesFromTarget;
 	bGetSizesFromTarget = _bGetSizesFromTarget;
 	return bPrev;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // special script function to position camera for pwl-mapshot 
 static void CmdSetPWLMapshotCamera( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
@@ -1253,14 +1253,14 @@ static void CmdSetPWLMapshotCamera( const string &szID, const vector<wstring> &p
 	Camera()->GetPlacement( &fOldDist, &fOldPitch, &fOldYaw );
 	Camera()->SetPlacement( fOldDist, fPitch, fYaw );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CmdPreparePWL( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	CmdSetPWLMapshotCamera( "pwlmapshot_set_camera", paramsSet, pContext );
 	WriteToPipe( PIPE_SCRIPT_CMDS, "RemoveAllUnitsTmp()" );
 	NGlobal::ProcessCommand( L"camera_perspective 0" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( CameraInternalVars )
 REGISTER_VAR_EX( "camera_near_plane", NGlobal::VarFloatHandler, &s_fCameraNearPlane, 5.0f, STORAGE_SAVE );
 REGISTER_VAR_EX( "camera_far_plane", NGlobal::VarFloatHandler, &s_fCameraFarPlane, 500.0f, STORAGE_SAVE );
@@ -1276,11 +1276,11 @@ REGISTER_VAR_EX( "scene_gamma", NGlobal::VarFloatHandler, &NGamma::s_fGamma, 0.5
 REGISTER_CMD( "pwlmapshot_set_camera", CmdSetPWLMapshotCamera );
 REGISTER_CMD( "pwl_prepare", CmdPreparePWL );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x10073C40, CScene );
 REGISTER_SAVELOAD_CLASS( 0x1009DCC1, CSceneSyncSrc );
 REGISTER_SAVELOAD_CLASS( 0x110B6B42, CAIMapVisitor );
 REGISTER_SAVELOAD_CLASS( 0x1311F302, CSceneIconInfo );
 REGISTER_SAVELOAD_CLASS( 0x13121380, CIconSceneSyncSrc );
 REGISTER_SAVELOAD_CLASS( 0x13121381, CIconAIMapVisitor );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

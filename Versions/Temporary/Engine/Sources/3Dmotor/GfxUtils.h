@@ -13,7 +13,7 @@ namespace NGfx
 {
 class CTexture;
 class CRenderContext;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct S2DRectInfoLock;
 enum EDepth
 {
@@ -37,7 +37,7 @@ class I2DEffect : public CObjectBase
 public:
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class _3DMOTOR_EXPORT C2DQuadsRenderer: INew2DTexAllocCallback
 {
 public:
@@ -71,7 +71,7 @@ private:
 	void FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, 
 		float fXAdd, float fYAdd, float fZ, CTexture *pContainer, const STexturePlaceInfo &region );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShowAlphaEffect : public I2DEffect
 {
 	OBJECT_NOCOPY_METHODS(CShowAlphaEffect);
@@ -110,7 +110,7 @@ public:
 	CCLAmbientMulDiffuseEffect( int _nReg, const CVec3 &_vAmbient ) : nReg(_nReg), vAmbient(_vAmbient) {}
 	virtual void SetEffect( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, float fScaleU, float fScaleV );
 };*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ShowTexture( NGfx::CTexture *pTex, float fpMag = 1 );
 void ShowTexture( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, const CVec2 &vScreenSize );
 // direct transofrm should be setup
@@ -124,5 +124,5 @@ const int N_MAX_RECTANGLES = 16000;
 void MakeQuadTriList( int nRects, STriangleList *pRes );
 //void CopyRegister( int nDst, int nSrc );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

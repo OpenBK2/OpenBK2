@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "ImageInternal.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** pixel format conversion functions
@@ -8,7 +8,7 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SPixelConvertInfo::InitMaskInfo( DWORD dwABitMask, DWORD dwRBitMask, DWORD dwGBitMask, DWORD dwBBitMask )
 {
 	DWORD dwMask, dwBitShift, dwBitCount;
@@ -69,7 +69,7 @@ bool SPixelConvertInfo::InitMaskInfo( DWORD dwABitMask, DWORD dwRBitMask, DWORD 
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // convert color from (ARGB = 8888) format to specified by this pci
 DWORD SPixelConvertInfo::ComposeColor( DWORD dwColor ) const
 {
@@ -92,7 +92,7 @@ DWORD SPixelConvertInfo::ComposeColor( DWORD dwColor ) const
 	// Return converted color
 	return (r | g | b | a);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // more precise convert color from (ARGB = 8888) format to specified by this pci
 DWORD SPixelConvertInfo::ComposeColorSlow( DWORD dwColor ) const
 {
@@ -107,7 +107,7 @@ DWORD SPixelConvertInfo::ComposeColorSlow( DWORD dwColor ) const
 	// Return converted color
 	return (r | g | b | a);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // convert color from current (specified by this pci) to (ARGB = 8888) format
 DWORD SPixelConvertInfo::DecompColor( DWORD dwColor ) const
 {
@@ -129,4 +129,4 @@ DWORD SPixelConvertInfo::DecompColor( DWORD dwColor ) const
 	// Return converted color
 	return (r | g | b | a);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

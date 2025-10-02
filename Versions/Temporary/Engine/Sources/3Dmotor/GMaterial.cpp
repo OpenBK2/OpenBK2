@@ -19,17 +19,17 @@ static float s_fTestHorse = 0;
 namespace NGScene
 {
 static bool bFPB = true;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool bNewShadows = false;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern bool bNoDepthRender;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool IsUseG5()
 {
 	int nShadowsQuality = GetShadowsQuality();
 	return ( nShadowsQuality >= SQ_PRE_BEST ) && ( NGfx::GetHardwareLevel() == NGfx::HL_R300 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int GetAlphaMode( bool bAdd, bool bFogEnabled, int *pnFog )
 {
 	if ( pnFog )
@@ -44,7 +44,7 @@ inline int GetAlphaMode( bool bAdd, bool bFogEnabled, int *pnFog )
 		return ABM_ALPHA_BLEND | FOG_NORMAL;
 	return ABM_ALPHA_BLEND | FOG_NONE;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 inline void AssignTex( T **pTex, CDGPtr<CPtrFuncBase<T> > &p )
 {
@@ -69,7 +69,7 @@ inline void AssignTexWhiteDefault( NGfx::CTexture **pTex, CDGPtr<CPtrFuncBase<NG
 }
 template<class T>
 inline void Refresh( CDGPtr<T> *p ) { if ( *p ) { p->Refresh(); (*p)->GetValue(); } }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetupPShadows( NGfx::CRenderContext *pRC, const SFastGf3RenderInfo *pFastInfo, const SLightInfo &lightInfo )
 {
 	SetupNLShadowsProjection( pRC, *pFastInfo->pPersp );
@@ -83,7 +83,7 @@ static void SetupPShadows( NGfx::CRenderContext *pRC, const SFastGf3RenderInfo *
 	else
 		pRC->SetVSConst( 35, lightInfo.vLightPos );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AddCommonCustomOperation( CDGPtr<CPtrFuncBase<NGfx::CTexture> > &pMatTex, COpGenContext *pOp,
 																		 const ERenderOperation &op, unsigned char nPass, int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
@@ -94,10 +94,10 @@ inline void AddCommonCustomOperation( CDGPtr<CPtrFuncBase<NGfx::CTexture> > &pMa
 
 	pOp->AddOperation( op, 0, nSBM, nDestRegister, pTex, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float fShadSamp = 0.001f;
 const float fShadSampDiag = fShadSamp * FP_SQRT_2 * 0.5f;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetG5Props( NGfx::CRenderContext *pRC )
 {
 	pRC->SetPSConst( 7, CVec4(4, 2, 1, 5/256.0f) );
@@ -111,9 +111,9 @@ static void SetG5Props( NGfx::CRenderContext *pRC )
 	pRC->SetPSConst( 16, CVec4(fShadSampDiag,-fShadSampDiag,0,0) );
 	pRC->SetPSConst( 17, CVec4(-fShadSampDiag,-fShadSampDiag,0,0) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGenericMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CGenericMaterial::GetExactDecal()
 {
 	if ( IsValid( pExactDecal ) )
@@ -126,9 +126,9 @@ IMaterial* CGenericMaterial::GetExactDecal()
 	pExactDecal->SetMT( EXACT_DECAL );
 	return pExactDecal;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGenericMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CGenericMaterial::GetWindAffected()
 {
 	if ( IsValid( pWindAffected ) )
@@ -139,9 +139,9 @@ IMaterial* CGenericMaterial::GetWindAffected()
 	pWindAffected->bWindAffected = true;
 	return pWindAffected;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGenericMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CGenericMaterial::GetNoReceiveShadows()
 {
 	if ( IsValid( pNoReceiveShadows ) )
@@ -152,7 +152,7 @@ IMaterial* CGenericMaterial::GetNoReceiveShadows()
 	pNoReceiveShadows->bReceiveShadows = false;
 	return pNoReceiveShadows;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::SetReflectionInfo( CPtrFuncBase<NGfx::CCubeTexture> *_pSky, CPtrFuncBase<NGfx::CTexture> *_pMirrorTex,
 	float _fDielMirror, float _fMetalMirror )
 {
@@ -168,7 +168,7 @@ void CGenericMaterial::SetReflectionInfo( CPtrFuncBase<NGfx::CCubeTexture> *_pSk
 	}
 	vMirrorParam = CVec4( 0, 0, _fDielMirror, _fMetalMirror );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture *CGenericMaterial::GetAlphaTestTex()
 {
 	if ( !pDiffuseTex )
@@ -185,7 +185,7 @@ NGfx::CTexture *CGenericMaterial::GetAlphaTestTex()
 	pDiffuseTex.Refresh();
 	return pDiffuseTex->GetValue();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::AddATOperations( COpGenContext *p, const SPerspDirectionalDepthInfo *pDepthInfo )
 {
 	if ( bAlphaTest )
@@ -198,7 +198,7 @@ void CGenericMaterial::AddATOperations( COpGenContext *p, const SPerspDirectiona
 			p->AddOperation( RO_TEXTURE_AT, 0, 0, 0, pDiffuseTex->GetValue(), p->GetCurFragment()->vars.fFade );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::Precache()
 {
 	Refresh( &pDiffuseColor );
@@ -209,7 +209,7 @@ void CGenericMaterial::Precache()
 	Refresh( &pMirrorTex );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	//ASSERT( bWindAffected );
@@ -495,7 +495,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::SetTransparentRenderMode( NGfx::CRenderContext *pRC, const SPerPartVariables &vars, 
 	const SLightInfo &lightInfo, SRenderPathContext *pRPC ) 
 {
@@ -584,7 +584,7 @@ void CGenericMaterial::SetTransparentRenderMode( NGfx::CRenderContext *pRC, cons
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	//return;
@@ -763,21 +763,21 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGenericMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pDiffuseTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CWaterMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterMaterial::Precache()
 {
 	Refresh( &pTex );
 	Refresh( &pSecondTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	const bool bUseG5 = IsUseG5();
@@ -806,7 +806,7 @@ bool CWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo 
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pTex = 0, *pSecondTex = 0;
@@ -851,15 +851,15 @@ void CWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC
 		pOp->AddOperation( RO_G3_DIFFUSE_TEX, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWaterMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CAnimWaterMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAnimWaterMaterial::CAnimWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex, CPtrFuncBase<NGfx::CTexture> *_pSecondTex, int _nPriority,
 		 CFuncBase<STime> *_pTime, bool _bProjectOnTerrain, int _nNumFramesX, int _nNumFramesY, bool _bApplyFog, bool _bAddPlaced, bool _bDrawHorses ) :
 	pTex(_pTex), pSecondTex(_pSecondTex), nPriority(_nPriority), pTime(_pTime), bProjectOnTerrain(_bProjectOnTerrain), nNumFramesX(_nNumFramesX), nNumFramesY(_nNumFramesY), bApplyFog(_bApplyFog), bAddPlaced(_bAddPlaced), bDrawHorses(_bDrawHorses)
@@ -867,13 +867,13 @@ CAnimWaterMaterial::CAnimWaterMaterial( CPtrFuncBase<NGfx::CTexture> *_pTex, CPt
 	fTexScaleX = 1.0f / nNumFramesX;
 	fTexScaleY = 1.0f / nNumFramesY;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAnimWaterMaterial::Precache()
 {
 	Refresh( &pTex );
 	Refresh( &pSecondTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {	
 	const float F_RADIUS = 0.1f;
@@ -936,7 +936,7 @@ bool CAnimWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightI
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAnimWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pTex = 0, *pSecondTex = 0;
@@ -1037,21 +1037,21 @@ void CAnimWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *
 	pOp->AddOperation( RO_USER, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
 */
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAnimWaterMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSurfMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSurfMaterial::Precache()
 {
 	Refresh( &pTex );
 	Refresh( &pSecondTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSurfMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	/*
@@ -1079,7 +1079,7 @@ bool CSurfMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &
 	pRC->SetAlphaRef( p1.pFastInfo->nAlphaTest );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSurfMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	if ( pRPC->bTnL )
@@ -1113,15 +1113,15 @@ void CSurfMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC 
 	pInfo->tTime = tTime;
 	pOp->AddOperation( RO_USER, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSurfMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CReflectWaterMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflectWaterMaterial::Precache()
 {
 	Refresh( &pTex );
@@ -1132,7 +1132,7 @@ extern float s_fWaterAmplitude;
 extern float s_fWaterWaveLength;
 extern float s_fWaterWaveFrequence;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	const bool bUseG5 = IsUseG5();
@@ -1223,7 +1223,7 @@ bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLig
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflectWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pTex = 0, *pSecondTex = 0;
@@ -1269,20 +1269,20 @@ void CReflectWaterMaterial::AddOperations( COpGenContext *pOp, SRenderPathContex
 		pOp->AddOperation( RO_WITHOUT_REFLECTION, 31 + nPriority, DPM_TESTONLY | nAlphaMode, 0, this, pInfo );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReflectWaterMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																				int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTracksMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksMaterial::Precache()
 {
 	Refresh( &pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTracksMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	if ( NGfx::IsTnLDevice() )
@@ -1298,7 +1298,7 @@ bool CTracksMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo
 	pRC->SetTexture( 0, p1.pTex, NGfx::FILTER_BEST );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pTex = 0;
@@ -1307,21 +1307,21 @@ void CTracksMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRP
 	// works for both TnL & normal
 	pOp->AddOperation( RO_USER, 31 + nPriority, DPM_TESTONLY | ABM_MUL | nDisableFog, 0, this, pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTracksMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTerrainMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainMaterial::Precache()
 {
 	Refresh( &pTex );
 	Refresh( &pMask );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerrainMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	const bool bUseG5 = IsUseG5();
@@ -1374,7 +1374,7 @@ bool CTerrainMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 	}
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pTex = 0, *pMask = 0;
@@ -1406,27 +1406,27 @@ void CTerrainMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 	pInfo->vColor = CVec4(1,1,1,1);
 	pOp->AddOperation( RO_TERRAIN, 11 + nPriority, DPM_NORMAL | nAlphaMode, 0, this, pInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerrainMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CCloudsH5Material
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCloudsH5Material::Precache()
 {
 	Refresh( &pClouds );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CCloudsH5Material::CalcShift()
 {
 	float fShift = GetTickCount() / ( 1024.0f ) * fWrapsPerSecond;
 	fShift = fShift - floor( fShift );
 	return CVec3( 0, fShift, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCloudsH5Material::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	CVec3 vShift = CalcShift();
@@ -1438,7 +1438,7 @@ bool CCloudsH5Material::SetRenderMode( NGfx::CRenderContext *pRC, const SLightIn
 	pRC->SetTexture( 0, p1.pTex, NGfx::FILTER_BEST );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCloudsH5Material::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	float fFade = pOp->GetCurFragment()->vars.fFade;
@@ -1459,20 +1459,20 @@ void CCloudsH5Material::AddOperations( COpGenContext *pOp, SRenderPathContext *p
 	}
 	pOp->AddOperation( RO_USER, 31 + nPriority, nAlphaMode | DPM_TESTONLY, 0, this, pClouds, fFade );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCloudsH5Material::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pClouds, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSimpleSkyMaterial
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleSkyMaterial::Precache()
 {
 	Refresh( &pTex );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleSkyMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
 {
 	const float _fFOVZoom = ( fFOVZoom > EPS_VALUE ) ? fFOVZoom : 1.0f;
@@ -1484,7 +1484,7 @@ bool CSimpleSkyMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightI
 	pRC->SetTexture( 0, p1.pTex, NGfx::FILTER_BEST );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleSkyMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pRPC )
 {
 	NGfx::CTexture *pClouds = 0;
@@ -1499,20 +1499,20 @@ void CSimpleSkyMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *
 	}
 	pOp->AddOperation( RO_USER, 0, nAlphaMode|nZBufferMode, 0, this, pClouds );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleSkyMaterial::AddCustomOperation( COpGenContext *pOp, const ERenderOperation &op, unsigned char nPass,
 																					 int nSBM, char nDestRegister, CRenderCmdList::UParameter p )
 {
 	AddCommonCustomOperation( pTex, pOp, op, nPass, nSBM, nDestRegister, p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* GetExactDecal( IMaterial *_p )
 {
 	if ( CDynamicCast<CGenericMaterial> p = _p )
 		return p->GetExactDecal();
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CreateMaterial( const SMaterialCreateInfo &m )
 {
 	CObj<CObjectBase> pHold1(m.pBump), pHold3(m.pMirrorTexture);
@@ -1593,7 +1593,7 @@ IMaterial* CreateMaterial( const SMaterialCreateInfo &m )
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor )
 {
 	CDynamicCast<CGenericMaterial> pMat( pSrc );
@@ -1603,7 +1603,7 @@ IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor )
 	pRes->SetDiffuseColor( pColor );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 
 START_REGISTER(GfxMaterials)

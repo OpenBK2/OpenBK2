@@ -8,9 +8,9 @@
 #include "ScenarioTracker.h"
 
 #include "../SceneB2/Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CSinglePlayerTransceiver
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSinglePlayerTransceiver::CSinglePlayerTransceiver()
 : bCommandsFromHistory( false )
 {
@@ -19,7 +19,7 @@ CSinglePlayerTransceiver::CSinglePlayerTransceiver()
 	nStartCountingTime = 0;
 	nFrames = 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSinglePlayerTransceiver::CSinglePlayerTransceiver( ICommandsHistory *_pCommandHistory, IAILogic *_pAI )
 : bCommandsFromHistory( false )
 {
@@ -30,7 +30,7 @@ CSinglePlayerTransceiver::CSinglePlayerTransceiver( ICommandsHistory *_pCommandH
 	nStartCountingTime = Singleton<IGameTimer>()->GetAbsTime();
 	nFrames = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSinglePlayerTransceiver::StartMission( const NDb::SMapInfo *_pMap, IAILogic *_pAI )
 {
 	pAI = _pAI;
@@ -48,7 +48,7 @@ void CSinglePlayerTransceiver::StartMission( const NDb::SMapInfo *_pMap, IAILogi
 
 	pCmdsHistory->StartNewGame( _pMap );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSinglePlayerTransceiver::AdjustGameSpeed( const int nDelta )
 {
 	IGameTimer *pTimer = Singleton<IGameTimer>();
@@ -57,7 +57,7 @@ void CSinglePlayerTransceiver::AdjustGameSpeed( const int nDelta )
 	pTimer->SetSpeed( nAdjustedGameSpeed );
 	nAdjustedGameSpeed = pTimer->GetSpeed();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // perform segments for AI
 void CSinglePlayerTransceiver::DoSegments()
 {
@@ -125,7 +125,7 @@ void CSinglePlayerTransceiver::DoSegments()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSinglePlayerTransceiver::SendCommand( IAILogicCommandB2 *pCmd )
 {
 	pCmdsHistory->AddCommand( nCommonSegment, pCmd );
@@ -133,27 +133,27 @@ void CSinglePlayerTransceiver::SendCommand( IAILogicCommandB2 *pCmd )
 	if ( NGlobal::GetVar( "History.Playing", 0 ) == 0 || bCommandsFromHistory )
 		pCmd->Execute();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSinglePlayerTransceiver::CommandClientTogglePause() 
 { 
 	NInput::PostEvent( "toggle_pause", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSinglePlayerTransceiver::CommandClientSpeed( const int nChange ) 
 { 
 	NInput::PostEvent( "game_speed", nChange, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMapInfo *CSinglePlayerTransceiver::GetMap() const 
 {
 	return pCmdsHistory->GetMap(); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI )
 {
 	ICommandsHistory *pHistory = CreateCommandsHistory( replay );
 	return new CSinglePlayerTransceiver( pHistory, pAI );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IAILogicCommandB2 )
 REGISTER_SAVELOAD_CLASS( 0x1007AB40, CSinglePlayerTransceiver )

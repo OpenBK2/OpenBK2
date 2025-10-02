@@ -3,7 +3,7 @@
 #include "DBConstructorProfile.h"
 #include "ConstructorInfo.h"
 #include "../Misc/nalgoritm.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const vector<SUnitPlatform> **pPlatforms )
 {
 	hash_map<int, vector<SUnitPlatform> >::iterator posUnits = units.find( nUniqueID );
@@ -13,7 +13,7 @@ bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const vector<SUnit
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void ConstructPlatforms( vector<CConstructorInfo::SUnitPlatform> *pPlatforms, const T *pProfile )
 {
@@ -46,13 +46,13 @@ static void ConstructPlatforms( vector<CConstructorInfo::SUnitPlatform> *pPlatfo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConstructorInfo::ClearProfile( const int nUniqueID )
 {
 	units[nUniqueID].clear();
 	slots[nUniqueID].clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConstructorInfo::ApplyProfile( const int nUniqueID, const NDb::SDBConstructorProfile *pProfile )
 {
 	NI_VERIFY( nUniqueID != -1, "id -1 is reserved for internal use", return );
@@ -73,17 +73,17 @@ void CConstructorInfo::ApplyProfile( const int nUniqueID, const NDb::SDBConstruc
 		slots[nUniqueID].erase( iter, slots[nUniqueID].end() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CConstructorInfo::SetPlayerUnit( const int nUniqueID, CObjectBase *pPlayerUnit )
 {
 	playerUnits[nUniqueID] = pPlayerUnit;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CConstructorInfo::GetPlayerUnit( const int nUniqueID )
 {
 	return playerUnits[nUniqueID];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 {
 	hash_map<int, vector<int> >::const_iterator pos = slots.find( nUniqueID );
@@ -92,7 +92,7 @@ int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 	else
 		return pos->second.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) const
 {
 	hash_map<int, vector<int> >::const_iterator pos = slots.find( nUniqueID );
@@ -103,10 +103,10 @@ int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) cons
 	else
 		return pos->second[nSlot];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConstructorInfo* CreateConstructorInfo()
 {
 	return new CConstructorInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3013EC01, CConstructorInfo );

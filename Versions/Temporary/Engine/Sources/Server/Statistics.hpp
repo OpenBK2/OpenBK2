@@ -2,7 +2,7 @@
 #include "Statistics.h"
 #include "../Misc/Time64.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CStatisticsCollector : public IStatisticsCollector
 {
 	OBJECT_NOCOPY_METHODS( CStatisticsCollector )
@@ -42,7 +42,7 @@ public:
 	static string DumpToString();
 	static void DumpToNameValueVectors( vector<string> *pNames, vector<float> *pValues );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAverageTimeBetweenEvents : public IStatisticsData
 {
 	OBJECT_NOCOPY_METHODS( CAverageTimeBetweenEvents )
@@ -54,7 +54,7 @@ public:
 	virtual void Add( const float& fValue );
 	virtual void Reset() { nStartTime = 0ULL; nEvents = 0ULL; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAverageValuePerTime : public IStatisticsData
 {
 	OBJECT_NOCOPY_METHODS( CAverageValuePerTime )
@@ -67,7 +67,7 @@ public:
 	virtual void Add( const float& fValue );
 	virtual void Reset() { fEventsSum = 0.0f; nStartTime = 0ULL; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAverageValue : public IStatisticsData
 {
 	OBJECT_NOCOPY_METHODS( CAverageValue )
@@ -79,7 +79,7 @@ public:
 	virtual void Add( const float& fValue ) { fSum += fValue; ++nEvents; }
 	virtual void Reset() { fSum = 0.0f; nEvents = 0U; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEventsCount : public IStatisticsData
 {
 	OBJECT_NOCOPY_METHODS( CEventsCount )
@@ -90,7 +90,7 @@ public:
 	virtual void Add( const float& fValue ) { nEvents += fValue; }
 	virtual void Reset() { nEvents = 0U; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NStatistics
 {
 	IStatisticsCollector* CreateCollector( const string &szCollectorName ) { return new CStatisticsCollector( szCollectorName ); }
@@ -104,6 +104,6 @@ namespace NStatistics
 	string DumpToString() { return CStatisticsCollector::DumpToString(); }
 	void DumpToNameValueVectors( vector<string> *pNames, vector<float> *pValues ) { CStatisticsCollector::DumpToNameValueVectors( pNames, pValues ); }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+

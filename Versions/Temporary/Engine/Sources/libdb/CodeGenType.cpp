@@ -8,10 +8,10 @@
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
 #include "../Parser/LangNodesDefinitions.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCodeGen
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pComplexTypeNode );
@@ -23,7 +23,7 @@ CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, con
 	bTerminal = pTermTypesDesc->IsTerminalType( pType );
 	pNamespace = new CNamespace( pComplexTypeNode->GetNamespace(), nodes2TypeDefs, pTermTypesDesc );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTypeDefinition::CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2TypeDefs &nodes2TypeDefs )
 : bTerminal( false )
 {
@@ -32,7 +32,7 @@ CTypeDefinition::CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2Type
 	pType = GetRealType( iter->second );
 	NI_ASSERT( !pType->GetTypeName().empty(), "type with empty name" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *pEnum, const string &szTabs, const string &szQualifiedName )
 {
 	pCode->h << endl;
@@ -115,7 +115,7 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	pCode->cpp << tab << "return " << szQualifiedName << "::" << pEnum->entries[0].szName << ";" << endl;
 	pCode->cpp << "}" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EStructType
 {
 	EST_ERROR,
@@ -197,7 +197,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 
 	pCode->cpp << "}" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const string &szFullQualifiedName )
 {
 	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
@@ -224,7 +224,7 @@ static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 
 	pCode->cpp << "}" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SFieldSort
 {
 	bool operator()( const NDb::NTypeDef::STypeClass::SField &field1, NDb::NTypeDef::STypeClass::SField &field2 ) const
@@ -260,12 +260,12 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 
 	pCode->cpp << "}" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsNoCheckSum( NDb::NTypeDef::SAttributes *pAttr )
 {
 	return pAttr && pAttr->attributes.find( "no_checksum" ) != pAttr->attributes.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 {
 	if ( !pType )
@@ -290,7 +290,7 @@ static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const string &szFullQualifiedName )
 {
 	const string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
@@ -352,7 +352,7 @@ static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 
 	pCode->cpp << "}" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, EStructType eType, const string &szFullQualifiedName )
 {
 	pCode->cpp << endl;
@@ -374,7 +374,7 @@ static void GenerateBaseStructCPPFile( ICode::SCodeStreams *pCode, NDb::NTypeDef
 
 	pCode->cpp << separator;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static hash_map<string, string> defaultValues;
 struct SSetDefaultValues
 {
@@ -390,7 +390,7 @@ struct SSetDefaultValues
 	}
 
 } setDefaultValues;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const string &szTabs )
 {
 	pCode->h << szTabs << tab << NHungarian::GetTypeNameInCode( pStructBase, 0 ) << "() ";
@@ -483,7 +483,7 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttributes *pAttr, const string &szTabs )
 {
 	if ( pAttr == 0 )
@@ -500,7 +500,7 @@ static void GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttri
 	for ( int i = 0; i < typedefs.size() - 1; i += 2 )
 		pCode->h << szTabs << "typedef " << typedefs[i] << " " << typedefs[i+1] << ";" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const string &szTabs, ICode *pNamespace, const string &szQualifiedName )
 {
 	pCode->h << endl;
@@ -537,14 +537,14 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 
 	pCode->h << szTabs << "};" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateStruct( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStruct *pStruct, const string &szTabs, ICode *pNamespace, const string &szQualifiedName )
 {
 	const string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pStruct, 0 ) );
 	GenerateStructHFileAndNestedTypes( pCode, pStruct, szTabs, pNamespace, szNewQualifiedName );
 	GenerateBaseStructCPPFile( pCode, pStruct, EST_STRUCT, szNewQualifiedName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const string &szTabs, ICode *pNamespace, const bool bTerminal, const string &szQualifiedName )
 {
 	pCode->h << endl;
@@ -596,7 +596,7 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 
 	pCode->h << szTabs << "};" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass *pClass, const string &szTabs, ICode *pNamespace, const bool bTerminal, const string &szQualifiedName )
 {
 	const string szNewQualifiedName( szQualifiedName + "::" + NHungarian::GetTypeNameInCode( pClass, 0 ) );
@@ -608,7 +608,7 @@ static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass
 	else
 		pCode->cppEOF << "BASIC_REGISTER_DATABASE_CLASS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
@@ -629,8 +629,8 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const string &szTabs, N
 	else
 		NI_ASSERT( false, StrFmt( "can't generate type definition of type %s", typeid( *pType ).name() ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D02, CTypeDefinition );

@@ -16,7 +16,7 @@ extern SRailRoadSystem theRailRoadSystem;
 extern CGroupLogic theGroupLogic;				
 extern CGraveyard theGraveyard;
 extern CEventUpdater updater;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
 {
 	CSegment segm;
@@ -30,9 +30,9 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 	segm.dir = segm.p2 - segm.p1;
 	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	CTrainCarStatesFactory
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPtr<CTrainCarStatesFactory> CTrainCarStatesFactory::pFactory = 0;
 
 IStatesFactory* CTrainCarStatesFactory::Instance()
@@ -42,7 +42,7 @@ IStatesFactory* CTrainCarStatesFactory::Instance()
 
 	return pFactory;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTrainCarStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
@@ -65,7 +65,7 @@ bool CTrainCarStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		cmdType == ACTION_COMMAND_ART_BOMBARDMENT
 		);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
 {
 	NI_ASSERT( dynamic_cast<CTrainCar*>( pObj ) != 0, "Wrong unit type (not Train Car)" );
@@ -172,18 +172,18 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 	}
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTrainCarStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
 	NI_ASSERT( dynamic_cast<CTrainCar*>( pUnit ) != 0, "Wrong unit type" );	
 	CTrainCar * pLoc = checked_cast<CTrainCar*>( pUnit );
 	return CMechUnitRestState::Instance( pLoc, pLoc->GetCenterPlain(), pLoc->GetDirection(), false, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 //	CTrainCar
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const WORD dir, const BYTE player, ICollisionsCollector *pCollisionsCollector )
 {
 	CMilitaryCar::Init( center, z, pStats, fHP, dir, player, pCollisionsCollector );
@@ -262,7 +262,7 @@ void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::SetToTrackPos( float fPos )
 {
 	if ( nTrack < 0 )
@@ -316,12 +316,12 @@ void CTrainCar::SetToTrackPos( float fPos )
 	vPos.Lerp( fFrontOffset / ( fFrontOffset + fBackOffset ), vFrontPos, vBackPos );
 	SetCenter( vPos );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	CMilitaryCar::TakeDamage( fDamage, pShell, nPlayerOfShoot, pShotUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::Die( const bool fromExplosion, const float fDamage )
 {
 	CMilitaryCar::Die( fromExplosion, fDamage );
@@ -331,7 +331,7 @@ void CTrainCar::Die( const bool fromExplosion, const float fDamage )
 		theGraveyard.AddToSoonBeDead( this, fDamage );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 {
 	CTrainCar *pLinkToCar = dynamic_cast<CTrainCar*>( pLinkTo );
@@ -354,7 +354,7 @@ void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 			NI_ASSERT( 0, StrFmt( "Wrong link for train car (not another car or locomotive), link ID %d ", GetLink() ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::LinkToLocomotive( CTrainLocomotive *pLinkTo )
 {
 	if ( !pLinkTo )
@@ -374,18 +374,18 @@ void CTrainCar::LinkToLocomotive( CTrainLocomotive *pLinkTo )
 	SetCenter( GetCenter(), false );
 	CallUpdatePlacement();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::Segment()
 {
 	CMilitaryCar::Segment();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCar::SetCollision( ICollision *pCollision, IPath *pPath )
 {
 	if ( pCollision->GetName() != NCollision::ECN_GIVE_PLACE )
 		CMilitaryCar::SetCollision( pCollision, pPath );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
 {
 	if ( CTrainCar *pTrainCar = dynamic_cast<CTrainCar *>( pUnit ) )
@@ -400,9 +400,9 @@ const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
 	}
 	return ECT_ALL;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	CTrainCarPath
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTrainCarPath::Init( CBasePathUnit *_pUnit, CLocomotivePath *pOwnerPath )
 {
 	pUnit = dynamic_cast<CTrainCar*>( _pUnit );
@@ -418,9 +418,9 @@ bool CTrainCarPath::Init( CBasePathUnit *_pUnit, CLocomotivePath *pOwnerPath )
 
 	return ( pUnit != 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	CTrainCarMoveToState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
 {
 	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
@@ -430,14 +430,14 @@ IUnitState* CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTrainCarMoveToState::CTrainCarMoveToState( CTrainCar *_pUnit ) :
 CFreeFireManager( _pUnit ), pUnit( _pUnit ), bWaiting( true ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCarMoveToState::Segment()
 {
 	if ( bWaiting )
@@ -464,7 +464,7 @@ void CTrainCarMoveToState::Segment()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTrainCarMoveToState::TryInterruptState( class CAICommand *pCommand )
 {
 	pUnit->Stop();
@@ -473,9 +473,9 @@ ETryStateInterruptResult CTrainCarMoveToState::TryInterruptState( class CAIComma
 
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	CTrainCarAttackUnitState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarget )
 {
 	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
@@ -485,14 +485,14 @@ IUnitState* CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarg
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTrainCarAttackUnitState::CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget ) :
 pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCarAttackUnitState::Segment()
 {
 	switch( eState ) 
@@ -561,7 +561,7 @@ void CTrainCarAttackUnitState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTrainCarAttackUnitState::TryFiring()
 {
 	bool bResult = false;
@@ -583,7 +583,7 @@ const bool CTrainCarAttackUnitState::TryFiring()
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTrainCarAttackUnitState::TryInterruptState( class CAICommand *pCommand )
 {
 	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
@@ -595,9 +595,9 @@ ETryStateInterruptResult CTrainCarAttackUnitState::TryInterruptState( class CAIC
 
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //	CTrainCarAttackObjectState
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IUnitState* CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject *_pTarget )
 {
 	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
@@ -607,14 +607,14 @@ IUnitState* CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTrainCarAttackObjectState::CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget ) :
 pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTrainCarAttackObjectState::Segment()
 {
 	switch( eState ) 
@@ -683,7 +683,7 @@ void CTrainCarAttackObjectState::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CTrainCarAttackObjectState::TryFiring()
 {
 	bool bResult = false;
@@ -709,7 +709,7 @@ const bool CTrainCarAttackObjectState::TryFiring()
 
 	return bResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETryStateInterruptResult CTrainCarAttackObjectState::TryInterruptState( class CAICommand *pCommand )
 {
 	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
@@ -721,7 +721,7 @@ ETryStateInterruptResult CTrainCarAttackObjectState::TryInterruptState( class CA
 
 	return TSIR_YES_IMMIDIATELY;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x191992C1, CTrainCar );
 REGISTER_SAVELOAD_CLASS( 0x191992C0, CTrainCarStatesFactory );
 REGISTER_SAVELOAD_CLASS( 0x19199340, CTrainCarPath );

@@ -21,8 +21,8 @@
 extern bool g_bNewLock;
 
 extern CFeedBackSystem theFeedBackSystem;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 class CTerrainAccess
 {
 public:
@@ -39,37 +39,37 @@ public:
 		return GetTerrain()->GetTileLockInfo( tile );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXTERNVAR CExecutorContainer theExecutorContainer;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int ConvertToNAngle( const WORD _wAngle ) 
 {
 	return int( float(_wAngle) / 16384 + 0.5f) % 4;
 }
 
 int CExistingObjectModifyAI::bProhibited = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D44F, CSimpleStaticObject );
 REGISTER_SAVELOAD_CLASS( 0x110B8BC0, CTerraMeshStaticObject );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CGlobalWarFog theWarFog;
 extern CEventUpdater updater;
 extern CStaticObjects theStatObjs;
 extern CDiplomacy theDipl;
 extern SCheats theCheats;
 extern NTimer::STime curTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												  CStaticObject														*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CStaticObject );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const BYTE CStaticObject::GetPlayer() const 
 { 
 	return theDipl.GetNeutralPlayer();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CStaticObject::IsVisible( const BYTE cParty ) const
 {
 	CTilesSet tiles;
@@ -83,14 +83,14 @@ const bool CStaticObject::IsVisible( const BYTE cParty ) const
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStaticObject::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
 	SRect rect;
 	GetBoundRect( &rect );
 	GetAIMap()->GetTilesCoveredByRectSides( rect, pTiles );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return
@@ -102,15 +102,15 @@ bool CStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 			//eAction == ACTION_NOTIFY_DELETED_ST_OBJ ||
 			eAction == ACTION_NOTIFY_SILENT_DEATH );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												  CExistingObject													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CExistingObject );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned long CExistingObject::globalMark = 0;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //DEBUG{
 #ifndef _FINALRELEASE
 extern bool bShowUnderConstruction ;
@@ -122,13 +122,13 @@ void CExistingObject::UpdateGlobalMark()
 	if ( !CExistingObjectModifyAI::IsProhibited() )
 		++globalMark; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::SetGlobalUpdated()
 { 
 	if ( !CExistingObjectModifyAI::IsProhibited() )
 		mark = globalMark; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	pPlacement->nObjUniqueID = GetUniqueId();
@@ -138,7 +138,7 @@ void CExistingObject::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer
 	pPlacement->fSpeed = 0;
 	pPlacement->dwNormal = GetHeights()->GetNormal( -1, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 {
 	GetPlacement( pNewUnitInfo, 0 );
@@ -150,7 +150,7 @@ void CExistingObject::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->fResize = 1.0f;
 	pNewUnitInfo->nPlayer = GetPlayer();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::SetNewPlacement( const CVec3 &center, const WORD dir )	
 { 
 	UnlockTiles();	
@@ -160,7 +160,7 @@ void CExistingObject::SetNewPlacement( const CVec3 &center, const WORD dir )
 
 	LockTiles();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::Delete()
 {
 	if ( !IsTrampled() )
@@ -177,7 +177,7 @@ void CExistingObject::Delete()
 		theExecutorContainer.Add( new CExecutorBurningFuel( GetHeights()->Get3DPoint( CVec2( vCen.x, vCen.y ) ), pSStats->pShootOnDestruction ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CExistingObject::GetRandArmorByDir( const int nArmorDir, const WORD wAttackDir )
 {
 	switch ( nArmorDir )
@@ -195,7 +195,7 @@ const int CExistingObject::GetRandArmorByDir( const int nArmorDir, const WORD wA
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExistingObject::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, const bool bFromExpl )
 {
 	const CVec3 vExpl( pExpl->GetExplCoordinates() );
@@ -222,7 +222,7 @@ bool CExistingObject::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmor
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CExistingObject::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	if ( !ProcessCumulativeExpl( pExpl, nArmorDir, true ) )
@@ -233,7 +233,7 @@ bool CExistingObject::ProcessBurstExpl( CExplosion *pExpl, const int nArmorDir, 
 	else
 		return IsPointInside( CVec2( pExpl->GetExplCoordinates().x, pExpl->GetExplCoordinates().y )  );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::BurnSegment()
 {
 	const float fDamage = GetStats()->fMaxHP * SConsts::BURNING_SPEED * 0.01f * SConsts::AI_SEGMENT_DURATION;
@@ -247,7 +247,7 @@ void CExistingObject::BurnSegment()
 	if ( curTime >= burningEnd )
 		theStatObjs.EndBurning( this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExistingObject::WasHit()
 {
 	if ( checked_cast<const SStaticObjectRPGStats*>(GetStats())->bBurn && fHP <= GetStats()->fMaxHP / 2.0f )
@@ -256,11 +256,11 @@ void CExistingObject::WasHit()
 		theStatObjs.StartBurning( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												 CGivenPassabilityStObject								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pStats, const CVec2 &vPos, const WORD wDir, const int nFrameIndex )
 {
 	if ( g_bNewLock == 0 )
@@ -292,7 +292,7 @@ bool CGivenPassabilityStObject::CheckStaticObject( const SObjectBaseRPGStats *pS
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::RotateFence( const CVec3 &vNewCenter )
 {
 	center = vNewCenter;
@@ -300,7 +300,7 @@ void CGivenPassabilityStObject::RotateFence( const CVec3 &vNewCenter )
 }
 //DEBUG{
 //DEBUG}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGivenPassabilityStObject::CGivenPassabilityStObject( const CVec3 &_center, const float _fHP,
 																										  const WORD _wAngle, const int nFrameIndex )
 : CExistingObject( nFrameIndex, _fHP ), center( _center ), bTransparencySet( false ), wDir( _wAngle )
@@ -308,7 +308,7 @@ CGivenPassabilityStObject::CGivenPassabilityStObject( const CVec3 &_center, cons
 	// unitialized hunt
 	boundRect.InitRect( VNULL2, V2_AXIS_X, 0, 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::Init()
 {
 	const CVec3 vCenter( GetCenter() );
@@ -325,21 +325,21 @@ void CGivenPassabilityStObject::Init()
 	pPassProfile = new CObjectProfile( pStats->GetPassProfile( GetFrameIndex() ), GetCenter(), wDir, bForceThickLock );
 	pVisProfile = new CObjectProfile( pStats->GetVisProfile( GetFrameIndex() ), GetCenter(), wDir, bForceThickLock );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::GetVisibility( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
 {
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 	const CVec3 vCenter( GetCenter() );
 	visibility->Init( pStats->GetVisibility( GetFrameIndex() ), wDir, pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::GetPassability( CSmoothRotatedArray2D<BYTE, const SHPObjectRPGStats::SByteArray2 > *passability ) const
 {
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 	const CVec3 vCenter( GetCenter() );
 	passability->Init( pStats->GetPassability( GetFrameIndex() ), wDir, pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGivenPassabilityStObject::GetHeight() const
 {
 	if ( const SObjectBaseRPGStats* pStats = dynamic_cast<const SObjectBaseRPGStats*>( GetStats() ) ) 
@@ -352,14 +352,14 @@ const EAIClasses CGivenPassabilityStObject::GetPassabilityClass() const
 	const SStaticObjectRPGStats* pStats = checked_cast<const SStaticObjectRPGStats*>( GetStats() );	
 	return (EAIClasses)pStats->nAIPassabilityClass;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::GetRPGStats( SAINotifyRPGStats *pStats ) 
 { 
 	pStats->nObjUniqueID = GetUniqueId();
 	pStats->fHitPoints = fHP;
 	pStats->time = curTime;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::CreateLockedTilesInfo( list<SObjTileInfo> *pTiles )
 {
 	vector<NLock::SEntranceData> entrances;
@@ -383,7 +383,7 @@ void CGivenPassabilityStObject::CreateLockedTilesInfo( list<SObjTileInfo> *pTile
 
 	NLock::CreateStaticObjectLockedTilesInfo( pTiles, entrances, GetPassabilityClass(), info, access );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::LockTiles()
 {
 	list<SObjTileInfo> tiles;
@@ -395,7 +395,7 @@ void CGivenPassabilityStObject::LockTiles()
 	NAIVisInfo::AddProfile( GetUniqueId(), GetCenter(), GetDir(), pStats->GetPassProfile( GetFrameIndex() ) );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::UnlockTiles() 
 {
 	if ( g_bNewLock == 0 )
@@ -434,7 +434,7 @@ void CGivenPassabilityStObject::UnlockTiles()
 	NAIVisInfo::RemoveProfile( GetUniqueId() );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 {
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID && GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
@@ -460,7 +460,7 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 	
 	bTransparencySet = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 {
 	if ( !GetStats() || GetStats()->GetTypeID() != NDb::SBuildingRPGStats::typeID && GetStats()->GetTypeID() != NDb::SBridgeRPGStats::typeID )
@@ -493,13 +493,13 @@ void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 	CExecutorEventAddToRestoreTransparencyQueue event( param, GetUniqueId() );
 	theExecutorContainer.RaiseEvent( event );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::RestoreTransparenciesImmidiately()
 {
 	if ( bTransparencySet )
 		SetTransparencies();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 {
 	if ( boundRect.IsPointInside( point ) )
@@ -538,7 +538,7 @@ bool CGivenPassabilityStObject::IsPointInside( const CVec2 &point ) const
 		return false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGivenPassabilityStObject::GetCoveredTiles( list<SVector> *pTiles ) const
 {
 	if ( g_bNewLock == 0 || GetPassProfile() == 0 )
@@ -569,7 +569,7 @@ void CGivenPassabilityStObject::GetCoveredTiles( list<SVector> *pTiles ) const
 		pTiles->assign( tiles.begin(), tiles.end() );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) const
 {
 	list<SVector> tiles;
@@ -607,20 +607,20 @@ const CVec2 CGivenPassabilityStObject::GetAttackCenter( const CVec2 &vPoint ) co
 
 	return vBestPoint;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												 CCommonStaticObject											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CCommonStaticObject );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticObject::Die( const float fDamage )
 {
 	fHP = 0;
 	SetAlive( GetHitPoints() > 0.0f );
 	Delete();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticObject::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
 {
 	if ( bFromExplosion && IsAlive() && fHP > 0 )
@@ -639,7 +639,7 @@ void CCommonStaticObject::TakeDamage( const float fDamage, const bool bFromExplo
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CCommonStaticObject::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
 {
 	if ( bFallen )
@@ -658,7 +658,7 @@ bool CCommonStaticObject::ProcessAreaDamage( const class CExplosion *pExpl, cons
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommonStaticObject::AnimateFalling( const CVec2 &vFallTo )
 {
 	NI_ASSERT( CanFall(), "This object cannot fall!" );
@@ -683,16 +683,16 @@ void CCommonStaticObject::AnimateFalling( const CVec2 &vFallTo )
 	pUpdate->vDir = vFallTo;
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_TREE_BROKEN, this, -1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CSimpleStaticObject													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleStaticObject::CanUnitGoThrough( const EAIClasses &eClass ) const
 {
 	return ( pStats->nAIPassabilityClass & eClass ) == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return 
@@ -700,7 +700,7 @@ bool CSimpleStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) co
 		eAction == ACTION_NOTIFY_TREE_BROKEN ||
 		eAction == ACTION_NOTIFY_NEW_ST_OBJ && bDelayedUpdate );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleStaticObject::CanFall()
 {
 	if ( const SObjectBaseRPGStats *pLocalStats = dynamic_cast_ptr<const SObjectBaseRPGStats*>(pStats) ) 
@@ -708,28 +708,28 @@ bool CSimpleStaticObject::CanFall()
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CTerraMeshStaticObject											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraMeshStaticObject::CanUnitGoThrough( const EAIClasses &eClass ) const
 {
 	return ( pStats->nAIPassabilityClass & eClass ) == 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraMeshStaticObject::SetNewPlacement( const CVec3 &center, const WORD dir )
 {
 	CCommonStaticObject::SetNewPlacement( center, dir );
 	wDir = dir;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraMeshStaticObject::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	CCommonStaticObject::GetPlacement( pPlacement, timeDiff );
 	pPlacement->dir = GetDir();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CTerraMeshStaticObject::CanFall()
 {
 	if ( const SObjectBaseRPGStats *pLocalStats = dynamic_cast_ptr<const SObjectBaseRPGStats*>(pStats) ) 
@@ -737,4 +737,4 @@ bool CTerraMeshStaticObject::CanFall()
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

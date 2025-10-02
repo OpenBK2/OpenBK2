@@ -22,7 +22,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const char CHeightWindowV3::FILTER_TYPE[] = "TILE";
 const char CHeightWindowV3::EXTRACTOR_TYPE[] = "TILE";
 const char CHeightWindowV3::TILE_TYPE_NAME[] = "TGTerraType";
@@ -47,7 +47,7 @@ const char CHeightWindowV3::TILE_TYPE_NAME[] = "TGTerraType";
 #define TMITH_BRUSH_SIZE_R4	16
 #define TMITH_COUNT					17
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CHeightWindowV3::CHeightWindowV3( CWnd* pParent )
 	: CResizeDialog( CHeightWindowV3::IDD, pParent ), bCreateControls( true ), nLastIndex( -1 )
 {
@@ -78,14 +78,14 @@ CHeightWindowV3::CHeightWindowV3( CWnd* pParent )
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_LIST, ID_MITHV3_PROPERTIES );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CHeightWindowV3::~CHeightWindowV3()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::DoDataExchange( CDataExchange* pDX )
 {
 	CResizeDialog::DoDataExchange( pDX );
@@ -103,7 +103,7 @@ void CHeightWindowV3::DoDataExchange( CDataExchange* pDX )
 	DDX_Control( pDX, IDC_TMITHV3_BRUSH_TYPE_SQUARE, wndBrushTypeSquareButton );
 	DDX_Control( pDX, IDC_TMITHV3_TILE_LIST, wndTileList );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CHeightWindowV3, CResizeDialog)
 	ON_WM_TIMER()
 	ON_WM_SIZE()
@@ -124,7 +124,7 @@ BEGIN_MESSAGE_MAP(CHeightWindowV3, CResizeDialog)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_TMITHV3_TILE_LIST, OnItemchangedTileList)
 END_MESSAGE_MAP()
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CHeightWindowV3::OnInitDialog() 
 {
 	CResizeDialog::OnInitDialog();
@@ -155,7 +155,7 @@ BOOL CHeightWindowV3::OnInitDialog()
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::UpdateSizeButtons( CHeightStateV3::SEditParameters::EBrushType eBrushType )
 {
 	if ( eBrushType == CHeightStateV3::SEditParameters::BT_CIRCLE )
@@ -176,7 +176,7 @@ void CHeightWindowV3::UpdateSizeButtons( CHeightStateV3::SEditParameters::EBrush
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightWindowV3::GetEditParameters( CHeightStateV3::SEditParameters *pEditParameters )
 {
 	NI_ASSERT( pEditParameters != 0, "CHeightWindowV3::GetEditParameters(), pEditParameters == 0" );
@@ -214,7 +214,7 @@ bool CHeightWindowV3::GetEditParameters( CHeightStateV3::SEditParameters *pEditP
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightWindowV3::SetEditParameters( const CHeightStateV3::SEditParameters &rEditParameters )
 {
 	bCreateControls = true;
@@ -264,7 +264,7 @@ bool CHeightWindowV3::SetEditParameters( const CHeightStateV3::SEditParameters &
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::UpdateTileListStyle()
 {
 	if ( ::IsWindow( wndTileList.m_hWnd ) )
@@ -278,14 +278,14 @@ void CHeightWindowV3::UpdateTileListStyle()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::SetTileListStyle( int _nStyle )
 {
 	nStyle = _nStyle;
 	UpdateTileListStyle();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnSize( UINT nType, int cx, int cy )
 {
 	CResizeDialog::OnSize( nType, cx, cy );
@@ -293,7 +293,7 @@ void CHeightWindowV3::OnSize( UINT nType, int cx, int cy )
 	UpdateTileListStyle();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnContextMenu( CWnd *pwnd, CPoint point )
 {
 	CResizeDialog::OnContextMenu( pwnd, point );
@@ -314,7 +314,7 @@ void CHeightWindowV3::OnContextMenu( CWnd *pwnd, CPoint point )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnBrushRadio()
 {
 	if ( !bCreateControls )
@@ -333,7 +333,7 @@ void CHeightWindowV3::OnBrushRadio()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnBrushSizeRadio()
 {
 	if ( !bCreateControls )
@@ -342,7 +342,7 @@ void CHeightWindowV3::OnBrushSizeRadio()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnBrushTypeRadio()
 {
 	if ( !bCreateControls )
@@ -353,7 +353,7 @@ void CHeightWindowV3::OnBrushTypeRadio()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnUpdateHeights()
 {
 	if ( !bCreateControls )
@@ -362,7 +362,7 @@ void CHeightWindowV3::OnUpdateHeights()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	if ( !bCreateControls )
@@ -372,7 +372,7 @@ void CHeightWindowV3::OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnTimer( UINT nIDEvent ) 
 {
   if ( nIDEvent == GetHeightID() )
@@ -382,14 +382,14 @@ void CHeightWindowV3::OnTimer( UINT nIDEvent )
 	CResizeDialog::OnTimer( nIDEvent );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::SetHeightTimer()
 {
   KillHeightTimer();
   nHeightTimer = SetTimer( GetHeightID(), GetHeightTimerInterval(), 0 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::KillHeightTimer()
 {
   if ( nHeightTimer != 0 )
@@ -399,13 +399,13 @@ void CHeightWindowV3::KillHeightTimer()
   nHeightTimer = 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CHeightWindowV3::OnHeightTimer()
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3, ID_MITHV3_ON_TIMER, dwHeightData );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightWindowV3::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -480,7 +480,7 @@ bool CHeightWindowV3::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CHeightWindowV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CHeightWindowV3::UpdateCommand(), pbEnable == 0" );
@@ -515,6 +515,6 @@ bool CHeightWindowV3::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCh
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

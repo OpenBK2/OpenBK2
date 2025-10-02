@@ -500,7 +500,7 @@ void CP2PTracker::KickClient( const UCID addr, bool bIsBroadcast )
 	}
 	CheckCorpses();
 }
-/////////////////////////////////////////////////////////////////////////////////////
+
 void CP2PTracker::SendRemoveClient( UCID destAddr, const UCID whom )
 {
 #ifdef LOG
@@ -511,7 +511,7 @@ void CP2PTracker::SendRemoveClient( UCID destAddr, const UCID whom )
 	pkt << whom;
 	packets.push_back( SPacket( destAddr, pkt ) );
 }
-/////////////////////////////////////////////////////////////////////////////////////
+
 void CP2PTracker::SendAddClient( const UCID dest, const UCID whom, PEER_ID id, CMemoryStream &addrInfo )
 {
 #ifdef LOG
@@ -526,7 +526,7 @@ void CP2PTracker::SendAddClient( const UCID dest, const UCID whom, PEER_ID id, C
 	pkt.Write( addrInfo.GetBuffer(), nSize );
 	packets.push_back( SPacket( dest, pkt ) );
 }
-/////////////////////////////////////////////////////////////////////////////////////
+
 void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 {
 #ifdef LOG

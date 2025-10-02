@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NImage
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*template<class T>
 void MakeE( CArray2D<T> *pMatrix )
 {
@@ -10,7 +10,7 @@ void MakeE( CArray2D<T> *pMatrix )
 	for ( int x = 0; x < Min( pMatrix->GetSizeX(), pMatrix->GetSizeY() ); ++x )
 		(*pMatrix)[x][x] = 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 	bool InvertRobust( CArray2D<T> *pMatrix )
 {
@@ -109,7 +109,7 @@ template<class T>
 	*pMatrix = right;
 	return true;
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSquare
 {
 	float a[2][2];
@@ -138,7 +138,7 @@ static float CalcIntegral( const SSquare &a, const SSquare & b )
 		);
 	return fRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float Multiply( const CArray2D<float> &a, const CArray2D<float> &b )
 {
 	ASSERT( a.GetSizeX() == b.GetSizeX() && a.GetSizeY() == b.GetSizeY() );
@@ -161,7 +161,7 @@ static float Multiply( const CArray2D<float> &a, const CArray2D<float> &b )
 	}
 	return fSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*static void NormalizeArr( CArray2D<float> *_p )
 {
 	CArray2D<float> &p = *_p;
@@ -175,7 +175,7 @@ static float Multiply( const CArray2D<float> &a, const CArray2D<float> &b )
 		}
 	}
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 static void ShiftMatrix( const CArray2D<float> &src, CArray2D<float> *p, int nDX, int nDY )
 {
@@ -192,7 +192,7 @@ static void ShiftMatrix( const CArray2D<float> &src, CArray2D<float> *p, int nDX
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Add( CArray2D<float> &dst, const CArray2D<float> &a, float f )
 {
 	ASSERT( dst.GetSizeX() == a.GetSizeX() && dst.GetSizeY() == a.GetSizeY() );
@@ -203,7 +203,7 @@ static void Add( CArray2D<float> &dst, const CArray2D<float> &a, float f )
 	}
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 void EnlargeImage( CArray2D<T> &r, const CArray2D<T> &src, int nMargin, bool bWrapX, bool bWrapY )
 {
@@ -232,7 +232,7 @@ void EnlargeImage( CArray2D<T> &r, const CArray2D<T> &src, int nMargin, bool bWr
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *pRes, const CVec4 &conv, 
 	int nMargin, bool bWrapX, bool bWrapY )
 {
@@ -285,7 +285,7 @@ static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // create pyramid function, basis of linear interpolation
 static void CreateReferenceBasisFunc( CArray2D<float> *pRes, int nHalfSize )
 {
@@ -303,7 +303,7 @@ static void CreateReferenceBasisFunc( CArray2D<float> *pRes, int nHalfSize )
 	}
 	//Normalize( &p );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 static void CreateFinalResolveMatrix( CArray2D<double> *pRes, int nSize )
 {
@@ -323,7 +323,7 @@ static void CreateFinalResolveMatrix( CArray2D<double> *pRes, int nSize )
 	ASSERT( bRes );
 }
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*static void Mul( vector<float> *pRes, const CArray2D<double> &m, const vector<float> &s )
 {
 	vector<float> &r = *pRes;
@@ -337,7 +337,7 @@ static void CreateFinalResolveMatrix( CArray2D<double> *pRes, int nSize )
 		r[y] = fRes;
 	}
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static double fResolveCoef[15] = { -0.000114508, 0.00042735, -0.00159489, 0.00595222, -0.022214, 0.0829038, -0.309401, 1.1547, -0.309401, 0.0829038, -0.022214, 0.00595222, -0.00159489, 0.00042735, -0.000114508 };
 static void MulResolve( vector<float> *pRes, const vector<float> &s )
 {
@@ -352,7 +352,7 @@ static void MulResolve( vector<float> *pRes, const vector<float> &s )
 		r[y] = fRes;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 {
 	CArray2D<float> t, &r = *pRes;
@@ -389,7 +389,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 			r[y][x] *= 0.0625;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int N_HALF_REFERENCE = 4;//8;
 const int N_MARGIN = 6; // in source texels
 const int N_FINAL_MARGIN = 8;
@@ -425,7 +425,7 @@ static void CalcChannel( CArray2D<float> *pRes, const CArray2D<CVec4> &src, cons
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GenerateMipLevel( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src, bool bWrapX, bool bWrapY )
 {
 	if ( src.GetSizeX() <= 1 || src.GetSizeY() <= 1 )
@@ -454,7 +454,7 @@ bool GenerateMipLevel( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src, bool b
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GenerateMipLevelPoint( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src )
 {
 	if ( src.GetSizeX() <= 1 || src.GetSizeY() <= 1 )
@@ -471,7 +471,7 @@ bool GenerateMipLevelPoint( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GenerateNormals( CArray2D<CVec4> *pData, const CVec4 &conv, float fMappingSize, bool bWrapX, bool bWrapY )
 {
 	CArray2D<float> f, fSrc;
@@ -501,5 +501,5 @@ void GenerateNormals( CArray2D<CVec4> *pData, const CVec4 &conv, float fMappingS
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

@@ -18,7 +18,7 @@ namespace NMapInfoEditor
 }
 class CMapInfoEditor;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -50,7 +50,7 @@ class CMapObjectSelectState : public CDefaultInputState
 	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -81,7 +81,7 @@ class CMapObjectEditState : public CDefaultInputState
 	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -119,7 +119,7 @@ class CMapObjectAddState : public CDefaultInputState
 	void OnKeyUp					( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectPasteState : public CDefaultInputState
 {
 	friend class CMultiInputState;
@@ -147,7 +147,7 @@ class CMapObjectPasteState : public CDefaultInputState
 	void OnKeyDown			( UINT nChar, UINT nRepCnt, UINT nFlags );
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapObjectState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMapObjectStoreInputState;
@@ -306,6 +306,6 @@ public:
 	virtual bool HandleCommand( UINT nCommandID, DWORD dwData );
 	virtual bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPOBJECT_STATE__)
 

@@ -7,11 +7,11 @@
 //
 interface IManipulator;
 interface IView;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEFAULT_BUILDER_LABEL __DEFAULT__BUILDER__
 #define DEFAULT_BUILDER_LABEL_TXT "__DEFAULT__BUILDER__"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // BDF = build data flag
 #define BDF_EXPORT_CHECK_BOX	0x00000001
 #define BDF_EDIT_CHECK_BOX		0x00000002
@@ -19,7 +19,7 @@ interface IView;
 #define BDF_CHECK_FILE_NAME		0x00000010
 #define BDF_CHECK_PROPERTIES	0x00000020
 #define BDF_ALL								0xFFFFFFFF
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SBuildDataParams
 {
 	UINT nFlags;										// Параметры редактрования
@@ -48,13 +48,13 @@ struct SBuildDataParams
 	inline bool DoesNameEmpty() { return szObjectName.empty(); }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CRAP{ HASH_SET
 typedef hash_map<string, DWORD> CTableSet;
 typedef hash_map<int, CTableSet> CTableSetMap;
 // CRAP} HASH_SET
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IBuildDataCallback
 {
 	// проверить данные на правильность заполнения, если данные не верны вернуть краткое описание ошибки
@@ -64,7 +64,7 @@ interface IBuildDataCallback
 	virtual bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName ) = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
 
 // При создании компоновщика
@@ -101,7 +101,7 @@ interface IBuilder : public CObjectBase
 	//
 	virtual void GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IBuilderContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C3 };
@@ -135,6 +135,6 @@ interface IBuilderContainer : public CObjectBase
 															IBuildDataCallback *pBuildDataCallback ) = 0;
 	virtual bool FillNewObjectName( SBuildDataParams *pBuildDataParams ) = 0;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__INTERFACE__BUILDER__)
 

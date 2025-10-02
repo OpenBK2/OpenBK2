@@ -6,7 +6,7 @@
 
 #include "../AILogic/B2AI.h"
 #include "../Misc/2Darray.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CControlSumCheckCommand
@@ -14,27 +14,27 @@
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 vector< list<unsigned long> > CControlSumCheckCommand::checkSums;
 WORD CControlSumCheckCommand::wMask;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumCheckCommand::Execute()
 {
 	checkSums[nPlayer].push_back( ulCheckSum );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumCheckCommand::Init( const WORD _wMask )
 {
 	checkSums.clear();
 	checkSums.resize( 16 );
 	wMask = _wMask;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumCheckCommand::SetMask( const WORD _wMask )
 {
 	wMask = _wMask;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumCheckCommand::Check( const int nOurNumber, IAILogic *pAI )
 {
 	/*bool bFinished = false;
@@ -108,7 +108,7 @@ void CControlSumCheckCommand::Check( const int nOurNumber, IAILogic *pAI )
 		}
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CControlSumCheckCommand::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nPlayer );
@@ -127,7 +127,7 @@ int CControlSumCheckCommand::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CControlSumHistoryCommand
@@ -135,35 +135,35 @@ int CControlSumCheckCommand::operator&( IBinSaver &saver )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CArray2D<unsigned long> CControlSumHistoryCommand::checkSums;
 WORD CControlSumHistoryCommand::wMask;
 
 static const int nHistoryLength = 20;
 static const int nHistoryTolerance = 5;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumHistoryCommand::Execute()
 {
 	checkSums[nPlayer][nSegment % nHistoryLength] = ulCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumHistoryCommand::Init( const WORD _wMask )
 {
 	checkSums.Clear();
 	checkSums.SetSizes( nHistoryLength, 16 );
 	wMask = _wMask;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumHistoryCommand::SetMask( const WORD _wMask )
 {
 	wMask = _wMask;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 unsigned long CControlSumHistoryCommand::GetValue( const int _nPlayer, const int _nSegment )
 {
 	return checkSums[_nPlayer][_nSegment % nHistoryLength];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSegment, IAILogic *pAI )
 {
 	NGlobal::SetVar( "out_of_sync", 0 );
@@ -246,7 +246,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 5, "MP OK", 0xffff0000 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CControlSumHistoryCommand::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nPlayer );
@@ -255,7 +255,7 @@ int CControlSumHistoryCommand::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** CDropPlayerCommand
@@ -263,12 +263,12 @@ int CControlSumHistoryCommand::operator&( IBinSaver &saver )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDropPlayerCommand::Execute()
 {
 	Singleton<IAILogic>()->NeutralizePlayer( nPlayerToDrop );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300A73C5, CControlSumCheckCommand )
 REGISTER_SAVELOAD_CLASS( 0x19191B40, CControlSumHistoryCommand )
 REGISTER_SAVELOAD_CLASS( 0x300A73C6, CDropPlayerCommand )

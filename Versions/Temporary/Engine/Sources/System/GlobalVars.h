@@ -2,7 +2,7 @@
 
 #include "System_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // func is called on var set or cmd call
 #define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
 #define REGISTER_VAR( var, func, defval, save ) NGlobal::RegisterVar( var, func, 0, defval, save );
@@ -16,10 +16,10 @@ enum EStorageClass
 	STORAGE_USER = 2,
 	STORAGE_SAVE = 3,
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGlobal
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CValue
 {
 	ZDATA
@@ -50,24 +50,24 @@ public:
 	operator float() const { return fVal; }
 	operator wstring() const { return szVal; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef void (*VarHandler)( const string &szID, const CValue &sValue, void *pContext );
 typedef void (*CmdHandler)( const string &szID, const vector<wstring> &paramsSet, void *pContext );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT int RegisterCmd( const string &szID, CmdHandler pHandler, void *pContext );
 SYSTEM_EXPORT int RegisterVar( const string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
 void UnregisterCmd( const string &szID, int nID );
 void UnregisterVar( const string &szID, int nID );
 SYSTEM_EXPORT void RemoveVar( const string &szID );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT const CValue &GetVar( const string &szName, const CValue &sDefault = CValue() );
 SYSTEM_EXPORT void SetVar( const string &szName, const CValue &sValue, EStorageClass storage = STORAGE_DONT_CARE );
 SYSTEM_EXPORT void GetIDList( vector<string> *pList );
 SYSTEM_EXPORT void GetVarsByClass( vector< pair<string, CValue> > *pList, EStorageClass eStorageClass );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SYSTEM_EXPORT void ProcessCommand( const wstring &szCmd );
 SYSTEM_EXPORT void LoadConfig( const string &szFileName, EStorageClass _newVarStorage = STORAGE_DONT_CARE );
 SYSTEM_EXPORT void ResetVarsToDefault( EStorageClass storage );
 SYSTEM_EXPORT void SaveAllVars( const string &szGlobalName, const string &szUserName );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

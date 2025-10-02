@@ -3,11 +3,11 @@
 #include "ReinfPointsTypedDlg.h"
 #include "../MapEditorLib/Interface_MainFrame.h"
 #include "ReinfPointsTypedTemplateAddDlg.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	CReinfPointsTypedDlg dialog
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMPLEMENT_DYNAMIC( CReinfPointsTypedDlg, CResizeDialog )
 CReinfPointsTypedDlg::CReinfPointsTypedDlg( CWnd *pParentWindow, CReinfPointsState::CTypedTemplateType *_pTypedTemplateDlgData, 	CMapInfoEditor *_pMapInfoEditor, int _nCurrentPlayer, int _nCurrentReinfPt )
 	: CResizeDialog( CReinfPointsTypedDlg::IDD, pParentWindow ),
@@ -17,13 +17,13 @@ CReinfPointsTypedDlg::CReinfPointsTypedDlg( CWnd *pParentWindow, CReinfPointsSta
 	nCurrentReinfPt( _nCurrentReinfPt )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CResizeDialog::DoDataExchange(pDX);
 	DDX_Control( pDX, IDC_LIST_REINF_POINTS_TYPED_TEMPLATE, lcTypedTempl );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CReinfPointsTypedDlg::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
@@ -41,14 +41,14 @@ BOOL CReinfPointsTypedDlg::OnInitDialog()
 	SetDialogData();
 	return TRUE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BEGIN_MESSAGE_MAP(CReinfPointsTypedDlg, CResizeDialog)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_REINF_POINTS_TYPED_TEMPLATE, OnNMClickListReinfPointsTypedTemplate)
 	ON_BN_CLICKED(IDOK, OnBnClickedOk)
 	ON_BN_CLICKED(IDC_REINF_TYPED_ADD, OnBnClickedTypedAdd)
 	ON_BN_CLICKED(IDC_TYPED_REMOVE, OnBnClickedTypedRemove)
 END_MESSAGE_MAP()
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 {
 	// create new node in DB
@@ -96,7 +96,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::SetDialogData()
 {
 	lcTypedTempl.DeleteAllItems();
@@ -119,14 +119,14 @@ void CReinfPointsTypedDlg::SetDialogData()
 		pWnd->EnableWindow( nSelectedTemplate != -1 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::OnBnClickedOk()
 {
 	GetDialogData();
 	//
 	OnOK();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::OnBnClickedTypedRemove()
 {
 	CString strMessage;
@@ -145,7 +145,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedRemove()
 		SetDialogData();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::OnNMClickListReinfPointsTypedTemplate( NMHDR *pNMHDR, LRESULT *pResult )
 {
 	CWaitCursor wcur;
@@ -158,7 +158,7 @@ void CReinfPointsTypedDlg::OnNMClickListReinfPointsTypedTemplate( NMHDR *pNMHDR,
 	//
 	*pResult = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::GetDialogData()
 {
 	pTypedTemplateDlgData->clear();
@@ -172,7 +172,7 @@ void CReinfPointsTypedDlg::GetDialogData()
 		it->szTemplate = lcTypedTempl.GetItemText( i, 2 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CReinfPointsTypedDlg::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 {
 	switch ( nChar )
@@ -185,4 +185,4 @@ void CReinfPointsTypedDlg::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

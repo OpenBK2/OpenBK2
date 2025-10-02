@@ -4,7 +4,7 @@
 
 #include "PC_StringNewBrowseEditor.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPCStringNewRefEditor : public CPCStringNewBrowseEditor
 {
 	OBJECT_NOCOPY_METHODS( CPCStringNewRefEditor );
@@ -22,5 +22,5 @@ private:
 	void SetWindowTextByTypeAndName( const string &szObjectTypeName, const string &szObjectName );
 	//void GetUniqueName( const string &szObjectTypeName, string *pszObjectName );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__COMMON_CONTROLS__PROPERTY_CONTROL_STRING_NEW_REF__)

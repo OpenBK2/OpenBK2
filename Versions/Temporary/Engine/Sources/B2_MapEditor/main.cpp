@@ -31,7 +31,7 @@ static char THIS_FILE[] = __FILE__;
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGameX
 {
 	bool Initialize();
@@ -42,14 +42,14 @@ IEditorModule* GetEditorModule1();
 IEditorModule* GetEditorModule2();
 IEditorModule* GetEditorModule3();
 IEditorModule* GetEditorModule4();
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 BEGIN_BUTTON_MAP(COMMON_BUTTON_MAP)
 #include "..\MapEditor\ToolBarButtonsMap.h"
 #include "ToolBarButtonsMapSpecific.h"
 END_BUTTON_MAP()
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CEditorAppSpecific : public CEditorApp
 {
 	vector<IEditorModule*> extModules;
@@ -71,7 +71,7 @@ public:
 	void CreateMenus( IMainFrame *pMainFrame ) const;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorAppSpecific::LoadMapEditorModule( const string &szModuleName ) // "c:\\b2\\system\\b2.dle"
 {
 	if ( IEditorModule *pModule = GetEditorModule0() )
@@ -96,13 +96,13 @@ void CEditorAppSpecific::LoadMapEditorModule( const string &szModuleName ) // "c
 	DebugTrace( "EditorApp() ModuleStartup(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const vector<IEditorModule*>& CEditorAppSpecific::GetEditorModules()
 {
 	return extModules;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorAppSpecific::UnloadMapEditorModule()
 {
 	NHPTimer::STime time = 0;
@@ -116,7 +116,7 @@ void CEditorAppSpecific::UnloadMapEditorModule()
 	DebugTrace( "EditorApp() ModuleShutdown(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BOOL CEditorAppSpecific::InitInstance()
 {
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
@@ -126,7 +126,7 @@ BOOL CEditorAppSpecific::InitInstance()
 	return CEditorApp::InitInstance();
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomToolBarInfoList ) const
 {
 	AfxSetResourceHandle( theEDB2M1Instance );
@@ -151,7 +151,7 @@ void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomT
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 {
 	AfxSetResourceHandle( theEDB2M1Instance );
@@ -162,5 +162,5 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 	pMainFrame->AddMenuResources( nIDs );
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CEditorAppSpecific theApp;

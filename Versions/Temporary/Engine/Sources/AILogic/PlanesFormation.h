@@ -5,7 +5,7 @@
 #include "PlanePreferences.h"
 
 #include "..\Common_RTS_AI\BasePathUnit.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneManuverHistory
 {
 	typedef hash_map<CVec3, SFormationMemberInfo, SVec3Hash> CMemberCache;
@@ -24,9 +24,9 @@ public:
 	const SFormationMemberInfo &GetValues( const CVec3 &vOffset );
 	void Advance( const NTimer::STime timeDiff );
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // class to extend if unit to go by CPlaneSmoothPath
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUnit
 {
 	OBJECT_NOCOPY_METHODS( CPlanesFormation );
@@ -215,4 +215,4 @@ public:
 	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const { return false; }
 	const bool IsStaticUnit() const { return false; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

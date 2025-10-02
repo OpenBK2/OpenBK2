@@ -7,15 +7,15 @@
 #include "UnitsIterators.h"
 #include "AIUnit.h"
 #include "DBAIConsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 CStatistics theStatistics;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::Init()
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStatistics::GetUnitLevel( const NDb::EReinforcementType eType, const int nPlayer ) const
 {
 	if ( !GetScenarioTracker() )
@@ -27,7 +27,7 @@ int CStatistics::GetUnitLevel( const NDb::EReinforcementType eType, const int nP
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CStatistics::GetValue( const int nValue, const int nPlayer ) const
 {
 	/*
@@ -37,13 +37,13 @@ float CStatistics::GetValue( const int nValue, const int nPlayer ) const
 		*/
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::UnitCaptured( const int nPlayer )
 {
 	//if ( pScenarioTracker )
 		//pScenarioTracker->GetPlayer( nPlayer )->GetMissionStats()->AddValue( STMT_ENEMY_MACHINERY_CAPTURED, 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, const float fTotalAIPrice,
 															const EReinforcementType eKillerType, const EReinforcementType eDeadType, const bool bInfantry )
 {
@@ -134,7 +134,7 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CStatistics::GetXPLevel( const int nPlayer, const NDb::EReinforcementType eType )
 {
 	if ( !GetScenarioTracker() )
@@ -148,7 +148,7 @@ const int CStatistics::GetXPLevel( const int nPlayer, const NDb::EReinforcementT
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CStatistics::GetAbilityLevel( const int nPlayer, const NDb::EReinforcementType eType )
 {
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
@@ -161,7 +161,7 @@ const int CStatistics::GetAbilityLevel( const int nPlayer, const NDb::EReinforce
 
 	return ( nLeaderLevel < 0 ) ? 0 : Min ( nXPLevel, nLeaderLevel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::ObjectDestroyed( const int nPlayer )
 {
 	/*
@@ -172,7 +172,7 @@ void CStatistics::ObjectDestroyed( const int nPlayer )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::AviationCalled( const int nPlayer )
 {
 	/*
@@ -183,7 +183,7 @@ void CStatistics::AviationCalled( const int nPlayer )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::ReinforcementUsed( const int nPlayer )
 {
 	/*
@@ -194,7 +194,7 @@ void CStatistics::ReinforcementUsed( const int nPlayer )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::ResourceUsed( const int nPlayer, const float fResources )
 {
 	/*
@@ -205,7 +205,7 @@ void CStatistics::ResourceUsed( const int nPlayer, const float fResources )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::UnitDead( CCommonUnit *pUnit )
 {
 	/*
@@ -220,7 +220,7 @@ void CStatistics::UnitDead( CCommonUnit *pUnit )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::IncreasePlayerExperience( const int nPlayer, const NDb::EReinforcementType eType, const float fPrice )
 {
 /*	IMissionStatistics * pStats = GetMissionStats( nPlayer );
@@ -230,7 +230,7 @@ void CStatistics::IncreasePlayerExperience( const int nPlayer, const NDb::EReinf
 		pStats->UpdateValue( STMT_PLAYER_EXPERIENCE, fPrice );
 	}*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::SetFlagPoints( const int nParty, const float fPoints )
 {
 	/*
@@ -245,7 +245,7 @@ void CStatistics::SetFlagPoints( const int nParty, const float fPoints )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CStatistics::SetCapturedFlags( const int nParty, const int nFlags )
 {
 	/*
@@ -260,11 +260,11 @@ void CStatistics::SetCapturedFlags( const int nParty, const int nFlags )
 	}
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CStatistics::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &bEnablePlayerExp );
 //SKIP	saver.Add( 4, &playerMisisons );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

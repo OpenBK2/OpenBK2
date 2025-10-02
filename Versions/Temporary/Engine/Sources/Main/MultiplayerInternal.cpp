@@ -16,17 +16,17 @@ const int nNetTimeout = 60;				// As in SNetDriverConsts default constructor.
 const int N_PACKET_SIZE = 32768;	// Must be equal with buffer size from Net/NetStream.h
 //const int N_PACKET_SIZE = 128000;	// Must be equal with buffer size from Net/NetStream.h
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds ) 
 	: pConsts(_pConsts), pCmdsSerialize(pCmds) 
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMultiplayerInternal::GetPort() const
 {
 	return pConsts ? pConsts->nPort : 8888;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMultiplayerInternal::CreateAsHost()
 {
 	pNetDriver = NNet::CreateNetDriver( NNet::SNetDriverConsts( nNetTimeout ) );
@@ -36,7 +36,7 @@ void CMultiplayerInternal::CreateAsHost()
 	pNetDriver->StartGame();
 	pNetDriver->StartNewPlayerAccept();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMultiplayerInternal::CreateAsClient( const char *pszIPAddress )
 {
 	pNetDriver = NNet::CreateNetDriver( NNet::SNetDriverConsts( nNetTimeout ) );
@@ -56,7 +56,7 @@ bool CMultiplayerInternal::CreateAsClient( const char *pszIPAddress )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMultiplayerInternal::SendAICommand( CObjectBase *pCommand )
 {
 	CPtr<CObjectBase> pHold = pCommand;
@@ -72,7 +72,7 @@ void CMultiplayerInternal::SendAICommand( CObjectBase *pCommand )
 
 	ASSERT( pktOutgoing.GetSize() < N_PACKET_SIZE - 1000 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 {
 	CPtr<CObjectBase> pHold = pCommand;
@@ -90,19 +90,19 @@ void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 
 	pNetDriver->SendDirect( nPlayer, pkt );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMultiplayerInternal::FinishSegment()
 {
 	pktOutgoing << BYTE(NGM_ID_SEGMENT);
 	pNetDriver->SendBroadcast( pktOutgoing );
 	pktOutgoing.SetSizeDiscard( 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMultiplayerInternal::GetSelfPlayerNum()
 {
 	return pNetDriver->GetSelfClientID();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMultiplayerInternal::EConnectionState CMultiplayerInternal::GetState()
 {
 	switch ( pNetDriver->GetState() )
@@ -119,12 +119,12 @@ CMultiplayerInternal::EConnectionState CMultiplayerInternal::GetState()
 	}
 	return INACTIVE;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CMultiplayerInternal::GetPing( int nPlayer )
 {
 	return pNetDriver->GetPing( nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMultiplayerCommand* CMultiplayerInternal::GetCommand()
 {
 	if ( !CheckConnection() )
@@ -163,12 +163,12 @@ CMultiplayerCommand* CMultiplayerInternal::GetCommand()
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMultiplayerInternal::CheckConnection()
 {
 	return GetState() != INACTIVE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, CMemoryStream *pPkt )
 {
 	CMemoryStream &pkt = *pPkt;
@@ -202,14 +202,14 @@ CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, C
 //	else
 //		pInGameNetDriver->Kick( nClientID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMultiplayerInternal::SendRecv()
 {
 	pNetDriver->Step();
 //	else
 //		NI_ASSERT( false, "Can't establish connection!" );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts )
 {
 	CMultiplayerInternal *pRes = new CMultiplayerInternal( pConsts, pCmds );
@@ -223,5 +223,5 @@ IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetG
 		return pRes.Extract();
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x300A7540, CMultiplayerInternal )

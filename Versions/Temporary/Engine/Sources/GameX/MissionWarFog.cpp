@@ -5,7 +5,7 @@
 #include "..\stats_b2_m1\iconsset.h"
 #include "MissionWarFog.h"
 //#include "..\SceneB2\PerlinNoise.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int CLOUDS_NOISE_OCTS_NUM = 2;
 static float CLOUDS_NOISE_PERS = 1.0f;
 static float CLOUDS_NOISE_SCALE = 0.04f;
@@ -18,7 +18,7 @@ static float CLOUDS_NOISE_DENSITY = 0.5f;
 static float CLOUDS_NOISE_SPEED_X = 2.0f;
 static float CLOUDS_NOISE_SPEED_Y = 1.0f;
 /*
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SInterfaceMissionWarFogInfo::SInterfaceMissionWarFogInfo()
 {
 	bIsWarFogOn = false;
@@ -37,7 +37,7 @@ SInterfaceMissionWarFogInfo::SInterfaceMissionWarFogInfo()
 		cloudDensities[i] = 1.0f - pow( fSharpness, c );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::Reset( const int _nSizeX, const int _nSizeY, const float _fScale )
 {
 	nSizeX = _nSizeX;
@@ -47,7 +47,7 @@ void SInterfaceMissionWarFogInfo::Reset( const int _nSizeX, const int _nSizeY, c
 	bIsNoise = false;
 	bIsNoiseOn = NGlobal::GetVar( "clouds_shadow", 0 ) != 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::SetWarFog( const CArray2D<BYTE> &warFog, float _fScale, NTimer::STime nGameTime )
 {
 	if ( !bIsWarFog )
@@ -82,7 +82,7 @@ void SInterfaceMissionWarFogInfo::SetWarFog( const CArray2D<BYTE> &warFog, float
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::Update( NTimer::STime nGameTime )
 {
 	if ( !bIsWarFog && !bIsNoise )
@@ -135,7 +135,7 @@ void SInterfaceMissionWarFogInfo::Update( NTimer::STime nGameTime )
 
 	SceneSetFarFog( fog );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void Convert2BYTE( CArray2D<BYTE> *pDst, const CArray2D<float> &src )
 {
 	pDst->SetSizes( src.GetSizeX(), src.GetSizeY() );
@@ -147,7 +147,7 @@ inline void Convert2BYTE( CArray2D<BYTE> *pDst, const CArray2D<float> &src )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::GetNoise( CArray2D<float> *pNoise, NTimer::STime time )
 {
 	if ( !bIsNoise || time > baseNoiseTime2 + CLOUDS_NOISE_KEYS_TIME * 1000 )
@@ -188,7 +188,7 @@ void SInterfaceMissionWarFogInfo::GetNoise( CArray2D<float> *pNoise, NTimer::STi
 	ApplyCloudDensity( &noise );
 	Blur( pNoise, noise );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::Blend( CArray2D<float> *pDst, 
 																				const CArray2D<float> &src1, const CArray2D<float> &src2, float fDelta )
 {
@@ -201,7 +201,7 @@ void SInterfaceMissionWarFogInfo::Blend( CArray2D<float> *pDst,
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::CycleMove( CArray2D<float> *pDst, const CArray2D<float> &src, const CVec2 &_vPos )
 {
 	CVec2 vPos = _vPos;
@@ -250,7 +250,7 @@ void SInterfaceMissionWarFogInfo::CycleMove( CArray2D<float> *pDst, const CArray
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::SceneSetFarFog( const CArray2D<float> &src )
 {
 	CArray2D<BYTE> sceneWarFog;
@@ -258,7 +258,7 @@ void SInterfaceMissionWarFogInfo::SceneSetFarFog( const CArray2D<float> &src )
 	Scene()->SetWarFog( sceneWarFog, fScale );
 	//	Scene()->SetWarFogBlend( 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::ApplyCloudDensity( CArray2D<float> *pNoise )
 {
 	if ( CLOUDS_NOISE_SHARPNESS == 0.0f )
@@ -272,7 +272,7 @@ void SInterfaceMissionWarFogInfo::ApplyCloudDensity( CArray2D<float> *pNoise )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SInterfaceMissionWarFogInfo::Blur( CArray2D<float> *pDst, const CArray2D<float> &src )
 {
 	const int n = 1;
@@ -300,7 +300,7 @@ void SInterfaceMissionWarFogInfo::Blur( CArray2D<float> *pDst, const CArray2D<fl
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(MissionWarFogVars)
 REGISTER_VAR_EX( "clouds_shadow_octs_num", NGlobal::VarIntHandler, &CLOUDS_NOISE_OCTS_NUM, 2, STORAGE_NONE );
 REGISTER_VAR_EX( "clouds_shadow_pers", NGlobal::VarFloatHandler, &CLOUDS_NOISE_PERS, 1.0f, STORAGE_NONE );

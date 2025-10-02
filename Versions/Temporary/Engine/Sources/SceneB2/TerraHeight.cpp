@@ -3,13 +3,13 @@
 #include "GenTerrain.h"
 #include "TerraHeight.h"
 #include "VersionInfo.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeightWOWaters( const int nx, const int ny ) const
 {
 	return terrainInfo.heights[ny][nx];
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeightWORivers( const int nx, const int ny ) const
 {
 	// TODO: new wateraplha
@@ -20,7 +20,7 @@ float CTerraGen::GetTerraHeightWORivers( const int nx, const int ny ) const
 	return GetTerraHeightWOWaters(nx, ny) * fWaterCoeff + terrainInfo.waterAddHeights[ny][nx] * ( 1.0f - 2.0f * fWaterCoeff );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeight( const int nx, const int ny ) const
 {
 
@@ -31,7 +31,7 @@ float CTerraGen::GetTerraHeight( const int nx, const int ny ) const
 #endif
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeight( const float x, const float y, const int nTileX, const int nTileY ) const
 {
 	const float fDx = Clamp( (x - (float)nTileX * DEF_TILE_SIZE) * DEF_INV_TILE_SIZE, 0.0f, 1.0f );
@@ -42,7 +42,7 @@ float CTerraGen::GetTerraHeight( const float x, const float y, const int nTileX,
 	const float h4 = GetTerraHeight( nTileX + 1, nTileY + 1 );
 	return ( (h1 + (h2 - h1) * fDx) * (1.0f - fDy) + (h3 + (h4 - h3) * fDx) * fDy );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeight( const float x, const float y ) const
 {
 	const int nTileX = Clamp( int(x * DEF_INV_TILE_SIZE), 0, terrainInfo.heights.GetSizeX() - 2 );
@@ -55,19 +55,19 @@ float CTerraGen::GetTerraHeight( const float x, const float y ) const
 	const float h4 = GetTerraHeight( nTileX + 1, nTileY + 1 );
 	return ( h1 + (h2 - h1) * fDx ) * ( 1.0f - fDy ) + ( h3 + (h4 - h3) * fDx ) * fDy;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeightFast( const int nTileX, const int nTileY ) const
 {
 	const int nx = Clamp( nTileX, 0, terrainInfo.heights.GetSizeX() - 1 );
 	const int ny = Clamp( nTileY, 0, terrainInfo.heights.GetSizeY() - 1 );
 	return GetFullTerraHeight( nx, ny );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetFullTerraHeight( const int nx, const int ny ) const
 {
 	return GetTerraHeight( nx, ny ) + terrainInfo.addHeights[ny][nx];
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetFullTerraHeight( const float x, const float y, const int nTileX, const int nTileY ) const
 {
 	const float fDx = Clamp( (x - (float)nTileX * DEF_TILE_SIZE) * DEF_INV_TILE_SIZE, 0.0f, 1.0f );
@@ -79,7 +79,7 @@ float CTerraGen::GetFullTerraHeight( const float x, const float y, const int nTi
 	return ( (fHeight1 + (fHeight2 - fHeight1) * fDx) * (1.0f - fDy) +
 		(fHeight4 + (fHeight3 - fHeight4) * fDx) * fDy );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetFullTerraHeight( const float x, const float y ) const
 {
 	const int nTileX = Clamp( int(x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 2 );
@@ -94,7 +94,7 @@ float CTerraGen::GetFullTerraHeight( const float x, const float y ) const
 					 (fHeight4 + (fHeight3 - fHeight4) * fDx) * fDy );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetRealTerraHeight( const float x, const float y ) const
 {
 	float fHeight;
@@ -102,7 +102,7 @@ float CTerraGen::GetRealTerraHeight( const float x, const float y ) const
 	return GetTerraHeight( x, y ) + fHeight;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetRealTerraHeightFast( const int nTileX, const int nTileY ) const
 {
 	const int nx = Clamp( nTileX, 0, terrainInfo.heights.GetSizeX() - 1 );
@@ -110,7 +110,7 @@ float CTerraGen::GetRealTerraHeightFast( const int nTileX, const int nTileY ) co
 	return terrainInfo.heights[ny][nx];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetTerraHeightNative( const float x, const float y ) const
 {
 	const int nTileX = Clamp( int(x * DEF_INV_TILE_SIZE), 0, terrainInfo.heights.GetSizeX() - 2 );
@@ -124,9 +124,9 @@ float CTerraGen::GetTerraHeightNative( const float x, const float y ) const
 	return ( h1 + (h2 - h1) * fDx ) * (1.0f - fDy) + ( h3 + (h4 - h3) * fDx ) * fDy;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_PICK_OFFSET (DEF_TILE_SIZE * 1.0f)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetUpperHeight( const STerrainInfo::SVSOPoint &rPoint ) const
 {
 	const CVec3 vPick1( rPoint.vPos - rPoint.vNorm * DEF_PICK_OFFSET );
@@ -139,7 +139,7 @@ float CTerraGen::GetUpperHeight( const STerrainInfo::SVSOPoint &rPoint ) const
 	//return max( fPickHeight, GetLowerHeight(rPoint) + DEF_CRAG_HEIGHT );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CTerraGen::GetLowerHeight( const STerrainInfo::SVSOPoint &rPoint ) const
 {
 	const CVec3 vPick1( rPoint.vPos + rPoint.vNorm * DEF_PICK_OFFSET );
@@ -152,7 +152,7 @@ float CTerraGen::GetLowerHeight( const STerrainInfo::SVSOPoint &rPoint ) const
 	//return min( fPickHeight1, fPickHeight2 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 CTerraGen::FindNormalInVertex( const CVec3 &vVert, const int nTileX, const int nTileY ) const
 {
 	CVec3 vResNorm( VNULL3 );
@@ -191,7 +191,7 @@ inline CVec3 CTerraGen::FindNormalInVertex( const CVec3 &vVert, const int nTileX
 	return vResNorm;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CTerraGen::GetTerraNorm( const CVec3 &vPos ) const
 {
 	const int nTileX = Clamp( int(vPos.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
@@ -222,7 +222,7 @@ CVec3 CTerraGen::GetTerraNorm( const CVec3 &vPos ) const
 	return V3_AXIS_Z;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec3 CTerraGen::GetTerraNormFast( const float x, const float y, const int nTileX, const int nTileY ) const
 {
 	const float fDx = Clamp( (x - (float)nTileX * DEF_TILE_SIZE) * DEF_INV_TILE_SIZE, 0.0f, 1.0f );
@@ -231,14 +231,14 @@ CVec3 CTerraGen::GetTerraNormFast( const float x, const float y, const int nTile
 				 ( terrainNorms[nTileY+1][nTileX] + (terrainNorms[nTileY+1][nTileX+1] - terrainNorms[nTileY+1][nTileX]) * fDx ) * fDy;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::CreateNormals()
 {
 	terrainNorms.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	UpdateNormals( 0, 0, terrainInfo.heights.GetSizeX()-1, terrainInfo.heights.GetSizeY()-1 );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	CVec3 vNorm, vDNorm;
@@ -309,4 +309,4 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "..\MapEditorLib\Interface_Builder.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CBuilderContainer : public IBuilderContainer
 {
 	OBJECT_NOCOPY_METHODS( CBuilderContainer );
@@ -45,6 +45,6 @@ public:
 											IBuildDataCallback *pBuildDataCallback );
 	bool FillNewObjectName( SBuildDataParams *pBuildDataParams );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__BUILDER__CONTAINER__)
 

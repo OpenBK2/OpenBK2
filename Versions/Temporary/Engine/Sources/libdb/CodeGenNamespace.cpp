@@ -6,10 +6,10 @@
 #include "CodeGenType.h"
 #include "StrStream.h"
 #include "../Parser/LangNodesDefinitions.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NCodeGen
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNamespace::CNamespace( NLang::CNamespace *pNM, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	for ( NLang::CNamespace::TDefsListIter iter = pNM->DefsListBegin(); iter != pNM->DefsListEnd(); ++iter )
@@ -32,7 +32,7 @@ CNamespace::CNamespace( NLang::CNamespace *pNM, const CNodes2TypeDefs &nodes2Typ
 
 	badIncludes = pNM->GetBadIncludes();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CNamespace::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const string &szQualifiedName )
 {
 	for ( list< CObj<ICode> >::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
@@ -45,8 +45,8 @@ void CNamespace::GenerateCode( SCodeStreams *pCode, const string &szTabs, NDb::N
 			pCode->h << szTabs << tab << "#include " << qcomma << *iter << qcomma << endl;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( 0x301B6D01, CNamespace );

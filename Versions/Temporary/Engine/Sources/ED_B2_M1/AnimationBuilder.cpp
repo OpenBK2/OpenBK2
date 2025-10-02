@@ -27,24 +27,24 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_BUILDER_IN_DLL( AnimB2, CAnimationBuilder )
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAnimationBuilder::CAnimationBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ANIMATION_BUILDER, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_ANIMATION_BUILDER, ID_TOOLS_CREATE_INF_ANIMS, ID_TOOLS_CREATE_INF_ANIMS );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAnimationBuilder::~CAnimationBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_ANIMATION_BUILDER );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ANIMATION_BUILDER );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //CRAP{ PLAIN_TEXT
 bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
 {
@@ -73,13 +73,13 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 }
 //CRAP} PLAIN_TEXT
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimationBuilder::IsUniqueObjectName( const string &szObjectType, const string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -341,7 +341,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 	return bResult;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimationBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID )
@@ -367,7 +367,7 @@ bool CAnimationBuilder::HandleCommand( UINT nCommandID, DWORD dwData )
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
@@ -397,7 +397,7 @@ bool CAnimationBuilder::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pb
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) const
 {
 	DWORD dwWeaponBits = 0;
@@ -414,6 +414,6 @@ DWORD CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) cons
 	return dwWeaponBits;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

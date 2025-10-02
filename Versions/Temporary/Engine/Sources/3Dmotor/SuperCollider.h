@@ -8,7 +8,7 @@ namespace NCollider
 {
 bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
 	const CVec3 &ptCenter, float fR );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // направленная прямая в пространстве Плюкера
 struct SSegment
 {
@@ -30,13 +30,13 @@ struct SSegment
 		fC5 = q.y-p.y;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float SegmentDotProduct( const SSegment &a, const SSegment &b )
 {
 	//return a.fC3*b.fC2+a.fC1*b.fC5+a.fC0*b.fC4;
   return a.fC0*b.fC4+a.fC1*b.fC5+a.fC2*b.fC3+a.fC3*b.fC2+a.fC4*b.fC0+a.fC5*b.fC1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSuperCollider
 {
 protected:
@@ -68,7 +68,7 @@ protected:
 	void AddEntity( const SHMatrix &pos, const vector<CVec3> &_points, const vector<STriangle> &tris, int nUserDataIndex );
 public:
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TUserData>
 class CUserCollider: public CSuperCollider
 {

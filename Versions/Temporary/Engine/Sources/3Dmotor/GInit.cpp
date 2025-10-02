@@ -16,7 +16,7 @@ static bool bCanCalcLM;
 static int nShadowsQuality = SQ_SIMPLE;
 static bool bFrameTransition = true;
 static bool b16bitShadows = false, bIsUsing16bitShadows = false;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int GetDepthTexResolution() { return nDepthTexResolution; }
 int GetShadowsQuality() { return nShadowsQuality; }
 bool IsUsing16bitShadows() { return bIsUsing16bitShadows; }
@@ -35,7 +35,7 @@ bool CanCalcLM()
 //	for ( int k = 0; k < r.tex.size(); ++k )
 //		AddTex( r.tex[k].nResolution, r.tex[k].szName );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // DXT textures support is required
 bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 {
@@ -193,7 +193,7 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CommandGfxUpdate( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	SetModeFromConfig( false, lastUserRTInfo );
@@ -202,7 +202,7 @@ void CommandGfxRecreate( const string &szID, const vector<wstring> &paramsSet, v
 {
 	SetModeFromConfig( true, lastUserRTInfo );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GInit)
 	REGISTER_CMD( "gfx_update", CommandGfxUpdate )
 	REGISTER_CMD( "gfx_recreate", CommandGfxRecreate )
@@ -221,5 +221,5 @@ START_REGISTER(GInit)
 	REGISTER_VAR_EX( "gfx_frame_transition", NGlobal::VarBoolHandler, &bFrameTransition, 1, STORAGE_USER )
 	REGISTER_VAR_EX( "gfx_16bit_shadows", NGlobal::VarBoolHandler, &b16bitShadows, 0, STORAGE_USER )
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

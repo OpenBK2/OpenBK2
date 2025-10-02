@@ -8,11 +8,11 @@
 #include "../Server_Client_Common/CommonPackets.h"
 #include "../Server_Client_Common/Net.h"
 #include "../Server_Client_Common/NetLogger.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CPacketsConvertor                            *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPacketsConvertor : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CPacketsConvertor );
@@ -22,12 +22,12 @@ public:
 	virtual bool Segment() { return true; }
 	bool ProcessDirectClientPacket( CDirectPacketToClient *pPacket );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPacketsConvertor::CPacketsConvertor()
 {
 	REGISTER_PACKET_PROCESSOR( &CPacketsConvertor::ProcessDirectClientPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CPacketsConvertor::ProcessDirectClientPacket( CDirectPacketToClient *pFromServerPacket )
 {
 	CPtr<CDirectPacketToClient> pDelete = pFromServerPacket;
@@ -38,16 +38,16 @@ bool CPacketsConvertor::ProcessDirectClientPacket( CDirectPacketToClient *pFromS
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CServerClient                              *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::PushPacket( CNetPacket *pPacket )
 {
 	packets.push_back( pPacket );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CServerClient::CServerClient( const char* pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int _nTimeOut )
 : bDebugPaused( false ), nTimeOut( _nTimeOut )
 {
@@ -72,12 +72,12 @@ CServerClient::CServerClient( const char* pServerIPAddress, const int nNetGameVe
 
 	GetNetLogger()->OpenLogFile( "client" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CServerClient::~CServerClient()
 {
 	GetNetLogger()->CloseLogFile( "client" );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CNetPacket* CServerClient::GetPacket()
 {
 	if ( bDebugPaused )
@@ -98,7 +98,7 @@ CNetPacket* CServerClient::GetPacket()
 		return pPacket;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::GetPacketsFromNet()
 {
 	if ( bDebugPaused )
@@ -121,7 +121,7 @@ void CServerClient::GetPacketsFromNet()
 			PushPacket( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 {
 	if ( bDebugPaused )
@@ -156,7 +156,7 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 			pNet->SendPacket( pPacket );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::Segment()
 {
 	if ( bDebugPaused )
@@ -180,7 +180,7 @@ void CServerClient::Segment()
 			++iter;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 {
 	if ( bDebugPaused )
@@ -194,25 +194,25 @@ void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 	GetNetLogger()->Log( "client", StrFmt("send game %s, broadcast %d", GetPacketInfo( pPacket ), int(bBroadcast)) );
 	pPlayGameProcessor->SendGamePacket( pPacket, bBroadcast );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::TogglePauseServerConnection( bool bPause )
 {
 	if ( pNet )
 		pNet->DebugTogglePause( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::TogglePauseAcceptGamers( bool bPause )
 {
 	if ( pPlayGameProcessor )
 		pPlayGameProcessor->TogglePauseAcceptGamersNet( bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::TogglePauseConnectGamer( const int nGamer, bool bPause )
 {
 	if ( pPlayGameProcessor )
 		pPlayGameProcessor->TogglePauseConnectGamer( nGamer, bPause );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CServerClient::TogglePause( bool bPause )
 {
 	bDebugPaused = bPause;
@@ -227,10 +227,10 @@ void CServerClient::TogglePause( bool bPause )
 		pausedGamePackets.clear();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IServerClient* IServerClient::Create( const char* pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int nTimeOut )
 {
 	return new CServerClient( pServerIPAddress, nNetGameVersion, nServerPort, nTimeOut );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( IServerClient );

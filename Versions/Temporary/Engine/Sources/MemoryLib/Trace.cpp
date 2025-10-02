@@ -7,7 +7,7 @@
 #include "SymAccess.h"
 #include "../Misc/nhash_map.h"
 #include "../Misc/tools.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bInternal = false;
 struct SAlloc
 {
@@ -23,12 +23,12 @@ static nstl::hash_map<DWORD, bool> *pIgnored = 0;
 static nstl::hash_map<DWORD, DWORD> *pBuf2Address = 0;
 static CRITICAL_SECTION block;
 static bool bHasCreatedBlock;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline bool CharCompare( const char c1, const char c2 )
 {
 	return ::CharLower( (LPTSTR)c1 ) == ::CharLower( (LPTSTR)c2 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int FindPattern( const char *pszString, const char *pszPattern )
 {
 	const int nStringSize = strlen( pszString );
@@ -43,7 +43,7 @@ static int FindPattern( const char *pszString, const char *pszPattern )
 	}
 	return -1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool AddressFits( DWORD dwAddress )
 {
 	nstl::hash_map<DWORD, bool>::iterator i = pIgnored->find( dwAddress );
@@ -68,7 +68,7 @@ static bool AddressFits( DWORD dwAddress )
 	}
 	return i->second;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 #include <vtuneapi.h>
 #pragma comment( lib, "vtuneapi.lib" )
@@ -127,7 +127,7 @@ void DebugRegister( size_t n, void *pRes )
 	bInternal = false;
 	LeaveCriticalSection( &block );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DebugFree( void *p )
 {
 	if ( p == 0 )
@@ -158,7 +158,7 @@ void DebugFree( void *p )
 	LeaveCriticalSection( &block );
 }
 #pragma optimize( "", on )
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAllocStats
 {
 	DWORD dwAddress;
@@ -245,7 +245,7 @@ MEMORYLIB_EXPORT void DumpMemoryStats()
 	bInternal = false;
 	DumpMemoryBlockUtilization();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
 static struct SLeaksWatcher
 {

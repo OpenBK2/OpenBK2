@@ -7,14 +7,14 @@
 #include "../Server_Client_Common/CommonPackets.h"
 #include "../Server_Client_Common/GamePackets.h"
 #include "../Server_Client_Common/Net.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CSimpleClientEffort );
 BASIC_REGISTER_CLASS( CSimpleServerEffort );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CSimpleClientEffort                         *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nClientServerID,
 	CNet *_pNet, const string &szServerIP, const int nServerPort, const int _nGameNetVersion, const int _nTimeOut )
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), nGameNetVersion( _nGameNetVersion ),
@@ -36,13 +36,13 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nCl
 	pConnectServerProcessor = new CConnectServerProcessor( pConnet2PlayersNet, false );
 	fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IConnection* CSimpleClientEffort::CreateConnection() const
 {
 	return 
 		eState == ES_SUCCESS ? new CSimpleConnection( pConnet2PlayersNet, true, nClientServerID, 0, nMyServerID ) : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleClientEffort::Segment()
 {
 	if ( eState == ES_CONNECTING )
@@ -77,7 +77,7 @@ bool CSimpleClientEffort::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleClientEffort::ProcessClientAccepted( CGameConnectingClientAccepted *pPacket )
 {
 	if ( pPacket->nConnection == nClientServerID )
@@ -90,7 +90,7 @@ bool CSimpleClientEffort::ProcessClientAccepted( CGameConnectingClientAccepted *
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPacket )
 {
 	if ( pPacket->nClient2Connect == nClientServerID )
@@ -123,7 +123,7 @@ bool CSimpleClientEffort::ProcessClientConnectInfo( CClientGameConnectInfo *pPac
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPacket )
 {
 	if ( pPacket->eConnectionState == CConnectServerPacket::ECS_FAILED )
@@ -142,7 +142,7 @@ void CSimpleClientEffort::ProcessConnectServerPacket( CConnectServerPacket *pPac
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleClientEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 {
 	if ( pPacket->nServerID == nClientServerID )
@@ -153,16 +153,16 @@ bool CSimpleClientEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConnectionEffort* CSimpleClientEffort::CreateNextEffort( const int nOurGameID )
 {
 	return new CThroughServerEffort( nClientServerID, nMyServerID, nOurGameID, pNet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CSimpleServerEffort                         *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nClientServerID, const string &_szClientIP, const int _nClientPort, CNet *_pNet, CNet *_pAcceptGamersNet )
 : nMyServerID( _nMyServerID ), nClientServerID( _nClientServerID ), pNet( _pNet ), eState( ES_CONNECTING ),
 	szClientIP( _szClientIP ), nClientPort( _nClientPort ), pAcceptGamersNet( _pAcceptGamersNet )
@@ -172,7 +172,7 @@ CSimpleServerEffort::CSimpleServerEffort( const int _nMyServerID, const int _nCl
 	SendBreakThroughPacket( szClientIP, nClientPort );
 	fPredBreakThroughSend = fStartConnectClientTime = GetTickCount();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleServerEffort::Segment()
 {
 	if ( eState != ES_SUCCESS && eState != ES_FAILED )
@@ -189,7 +189,7 @@ bool CSimpleServerEffort::Segment()
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CSimpleServerEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 {
 	if ( pPacket->nServerID == nClientServerID )
@@ -205,29 +205,29 @@ bool CSimpleServerEffort::ProcessClientIdentity( CIndentityPacket *pPacket )
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IConnection* CSimpleServerEffort::CreateConnection() const
 {
 	return eState == ES_SUCCESS ? new CSimpleConnection( pAcceptGamersNet, false, nClientServerID, nClientLocalID, nMyServerID ) : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CConnectionEffort* CSimpleServerEffort::CreateNextEffort( const int nOurGameID )
 {
 	return new CThroughServerEffort( nClientServerID, nMyServerID, nOurGameID, pNet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     CThroughServerEffort                         *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CThroughServerEffort::CThroughServerEffort( const int _nClientServerID, const int _nMyServerID, const int _nOurGameID, CNet *_pNet )
 : nClientServerID( _nClientServerID ), nMyServerID( _nMyServerID ), nOurGameID( _nOurGameID ), pNet( _pNet )
 {
 	pNet->SendPacket( new CThroughServerConnectionPacket( 0, nClientServerID, nOurGameID ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IConnection* CThroughServerEffort::CreateConnection() const
 {
 	return new CThroughServerConnection( nClientServerID, pNet );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

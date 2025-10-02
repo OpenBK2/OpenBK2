@@ -12,7 +12,7 @@
 	LWindow					slots												CVec3 slots[i].Pos
 	----------------------------------------------------------------------------------------------------------------
 */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "StdAfx.h"
 #include "..\misc\2darray.h"
 #include "..\zlib\zconf.h"
@@ -26,15 +26,15 @@
 #include "../Misc/StrProc.h"
 #include "../MapEditorLib/StringManager.h"
 #include "../MapEditorLib/Interface_MOD.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //
@@ -43,11 +43,11 @@ REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )
 //
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	генерить пыль при разрушении (по периметру с шагом в 1 тайл)
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool Passable( const CArray2D<BYTE> &rPassability, int nX, int nY )
 {
 	if ( (nX >= 0 && nX < rPassability.GetSizeX()) &&
@@ -57,7 +57,7 @@ static bool Passable( const CArray2D<BYTE> &rPassability, int nX, int nY )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum ESmoke
 {
 	ESD_NONE = 0,
@@ -71,12 +71,12 @@ enum ESmoke
 	ESD_270 =	(1<<6),	
 	ESD_315 =	(1<<7)	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool RemoveSmokePoints( IManipulator *pBuildingRPGStatsManipulator )
 {
 	return pBuildingRPGStatsManipulator->RemoveNode( "smokePoints", NODE_REMOVEALL_INDEX );	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddSmokePoint( IManipulator *pBuildingRPGStatsManipulator, int nOx, int nOy, float fDirAngle )
 {
 	CVec3 vAICoord = VNULL3;
@@ -97,7 +97,7 @@ static void AddSmokePoint( IManipulator *pBuildingRPGStatsManipulator, int nOx, 
 	sprintf( pszDBADirection, "smokePoints.[%d].Direction", nElemIdx );
 	pBuildingRPGStatsManipulator->SetValue( pszDBADirection, fDirAngle );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipulator )
 {
 	CArray2D<BYTE> passability;
@@ -234,9 +234,9 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Complex solution for all entrances and slots
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SLocalDoorInfo
 {
 	CVec3 vPos;
@@ -295,7 +295,7 @@ float QuatToDirection( const CQuat &qRot )
 
 	return fDir;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // обновить анимации для объекта
 const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, const string &szRefName, const vector<SAnimationInfo> &frames, const int nStage )
 {
@@ -384,7 +384,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры
 const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, const string &szNewName, const string &szRoot )
 {
@@ -438,7 +438,7 @@ const bool CBuildingRPGStatsExporter::CopyModel( const string &szOldModelName, c
 	pModel->RemoveNode( "Materials", NODE_REMOVEALL_INDEX );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // создать новый VisObj на основе уже существующего
 const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, const string &szObjectName, const string &szRoot )
 {
@@ -496,7 +496,7 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, 
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBuildingRPGStatsExporter::ProcessVisObj( IManipulator *pManipulator, const string &szRefName, const string &szNewName, const string &szRoot, const vector<SAnimationInfo> &frames, const int nStage )
 {
 	string szVisObjName = "";
@@ -509,7 +509,7 @@ const bool CBuildingRPGStatsExporter::ProcessVisObj( IManipulator *pManipulator,
 	}
 	return UpdateVisObj( pManipulator, szRefName, frames, nStage );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pManipulator, const string &szObjectName )
 {
 	CVec3 vPos, vRot3, vAIPos;
@@ -794,7 +794,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBuildingRPGStatsExporter::CreateTexture( const string &szTextureName, const string &szFileName )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -822,7 +822,7 @@ const bool CBuildingRPGStatsExporter::CreateTexture( const string &szTextureName
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const string CBuildingRPGStatsExporter::GetMaterial( const string &szModelName, const string &szModelPath, const int nMaterial, const bool bTransparent, const bool bReflective )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -879,10 +879,10 @@ const string CBuildingRPGStatsExporter::GetMaterial( const string &szModelName, 
 	else
 		return pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int MAT_TRANSPARENT = 0x00000001;
 const int MAT_REFLECTIVE  = 0x00000002;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, const string &szRefName, const string &szObjectName, const int nMaterial )
 {
 	CPtr<IManipulator> pVisObj = CManipulatorManager::CreateManipulatorFromReference( szRefName, pManipulator, 0, 0, 0 ); 
@@ -961,7 +961,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CBuildingRPGStatsExporter::UpdateSectionMaterials( IManipulator *pManipulator, const string &szObjectName )
 {
 	int nSlotsCount = 0;
@@ -988,7 +988,7 @@ const bool CBuildingRPGStatsExporter::UpdateSectionMaterials( IManipulator *pMan
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																											const string &rszObjectTypeName,
 																											const string &rszObjectName,
@@ -1009,4 +1009,4 @@ EXPORT_RESULT CBuildingRPGStatsExporter::ExportObject( IManipulator* pManipulato
 	
 	return ER_SUCCESS;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

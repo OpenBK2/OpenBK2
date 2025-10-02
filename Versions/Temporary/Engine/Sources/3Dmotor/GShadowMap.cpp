@@ -2,28 +2,28 @@
 #include "GShadowMap.h"
 #include "..\3Dlib\Transform.h"
 #include "4dCalcs.h"
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGeometry
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPolygon
 {
 	vector<CVec4> vertices;
 	CVec4 vPlane;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SPolyhedron
 {
 	vector<SPolygon> facets;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SEdge
 {
 	CVec4 vStart, vEnd;
 	SEdge() {}
 	SEdge( const CVec4 &_s, const CVec4 &_e ) : vStart(_s), vEnd(_e) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &_b, float fb )
 {
 	CVec4 a(_a), b(_b);
@@ -60,7 +60,7 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 	*p = a * (fb*f1) - b * (fa*f1);
 	Normalize( p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Split( SPolyhedron *pRes, const SPlane &p )
 {
 	SPolyhedron src = *pRes;
@@ -150,7 +150,7 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 		pRes->facets.push_back( onPlane );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetPlane( SPolygon *pRes, const CVec4 &a, const CVec4 &b, const CVec4 &c )
 {
 	CVec3 ab = Get3DDir( b, a ), ac = Get3DDir( c, a );
@@ -163,7 +163,7 @@ static void SetPlane( SPolygon *pRes, const CVec4 &a, const CVec4 &b, const CVec
 	pRes->vPlane.Set( vNormal * fabs(a.w), fDist );
 	Normalize( &pRes->vPlane );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SPolygon GetTriangle( const CVec4 &a, const CVec4 &b, const CVec4 &c )
 {
 	SPolygon r;
@@ -173,7 +173,7 @@ static SPolygon GetTriangle( const CVec4 &a, const CVec4 &b, const CVec4 &c )
 	SetPlane( &r, a, b, c );
 	return r;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SPolygon GetQuad( const CVec4 &a, const CVec4 &b, const CVec4 &c, const CVec4 &d )
 {
 	SPolygon r;
@@ -184,8 +184,8 @@ static SPolygon GetQuad( const CVec4 &a, const CVec4 &b, const CVec4 &c, const C
 	SetPlane( &r, a, b, c );
 	return r;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 struct SHashedHedron
 {
 	vector<CVec4> pts;
@@ -203,7 +203,7 @@ struct SHashedHedron
 	vector<SEdge> edges;
 	vector<SPolygon> polys;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int AddPoint( SHashedHedron *pRes, const CVec4 &v )
 {
 	for ( int k = 0; k < pRes->pts.size(); ++k )
@@ -214,7 +214,7 @@ static int AddPoint( SHashedHedron *pRes, const CVec4 &v )
 	pRes->pts.push_back( v );
 	return pRes->pts.size() - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int AddEdge( SHashedHedron *pRes, int nStart, int nEnd )
 {
 	for ( int k = 0; k < pRes->edges.size(); ++k )
@@ -228,7 +228,7 @@ static int AddEdge( SHashedHedron *pRes, int nStart, int nEnd )
 	pRes->edges.push_back( SHashedHedron::SEdge( nStart, nEnd ) );
 	return pRes->edges.size() - 1;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Assign( SHashedHedron *pRes, const SPolyhedron &src )
 {
 	pRes->polys.resize( src.facets.size() );
@@ -245,7 +245,7 @@ static void Assign( SHashedHedron *pRes, const SPolyhedron &src )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool IsClosed( const SHashedHedron &src )
 {
 	vector<int> count;
@@ -266,7 +266,7 @@ static bool IsClosed( const SHashedHedron &src )
 		bRes &= count[i] == 0;
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 {
 	pRes->facets.resize( src.polys.size() );
@@ -285,11 +285,11 @@ static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeometry::SPolyhedron &src, const CVec3 &ptDir )
 {
 	NGeometry::SHashedHedron h;
@@ -339,7 +339,7 @@ static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeomet
 	NGeometry::Assign( &hTest, *pRes );
 	//ASSERT( NGeometry::IsClosed( hTest ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float Discr( float f, float fStep )
 {
 	int n = Float2Int( f / fStep );
@@ -350,9 +350,9 @@ static CVec3 Discr( const CVec3 &v, float fStep )
 	CVec3 vRes( Discr( v.x, fStep ), Discr( v.y, fStep ), Discr( v.z, fStep ) );
 	return vRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float Dot4( const CVec4 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float SetBits( float f, int nBits, int nBitVal )
 {
 	int nMask = ( 1 << nBits ) - 1;
@@ -361,7 +361,7 @@ static float SetBits( float f, int nBits, int nBitVal )
 	nRes = ( nRes & ~nMask ) | nVal;
 	return *(float*)&nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static float CalcNLP( float f )
 {
 	float fR = 7 + f * f;
@@ -379,7 +379,7 @@ static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
 	float fShift = Discr( - *pfA * a + fShiftStep / 2, fShiftStep );
 	*pfB = fShift;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcMinMax( const vector<CVec3> &points, const CVec4 &vDir, float *pfMin, float *pfMax )
 {
 	float fMin = 1e38f, fMax = -1e38f;
@@ -398,13 +398,13 @@ static float CalcRange( const vector<CVec3> &points, const CVec4 &vDir )
 	CalcMinMax( points, vDir, &fMin, &fMax );
 	return fMax - fMin;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DefaultShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS )
 {
 	*pRes = SNLProjectionInfo();
 	pShadowGeomTS->MakeParallel( 1, 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAreaCalcInfo
 {
 	vector<CVec3> points;
@@ -433,7 +433,7 @@ static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *
 
 	return CalcRange( info.points, vTestX ) * CalcRange( info.points, vTestY );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, float fMinimalSize,
 	const CTransformStack &ts, const CVec3 &vLightDir, float fMaxHeight, const SBound &_sceneBound,
 	float fSceneHeight, SShadowMatrixAlign *pOldAlign )
@@ -693,7 +693,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		pShadowGeomTS->AddClipPlane( CVec4( -vPlane.x / f, -vPlane.y / f, -vPlane.z / f, vPlane.w / f ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //void MakeSceneGeometryBound( SBound *pRes, const CTransformStack &ts, float fMaxHeight )
 //{
 //	CVec4 vC, v00, v01, v10, v11, vC1;
@@ -720,5 +720,5 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 //	}
 //	bc.Make( pRes );
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

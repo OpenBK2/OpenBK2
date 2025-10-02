@@ -8,17 +8,17 @@
 //#include "CallStack.h"
 //#include "DialogFunctions.h"
 //#include "WndUtils.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NBSU
 {
 static int  nSplitter = -1;
 static bool isMore = false;
 static bool needSaveLog = true;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam );
 static bool ReportAssertionDlgProcCommand( HWND hwndDlg, WORD wCtrlID, WORD wNotifCode, LPARAM lParam );
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SAssertionDlgParams
 {
 	const char *pszFileName;
@@ -36,7 +36,7 @@ struct SAssertionDlgParams
 		szCondition( pszNewCondition ), szDescription( pszNewDescription ), 
 		entries(_entries), ignores( newIgnores ), pszExtInfo( szExtInfo ) {  }
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszFileName, int nLineNumber,
 																		const char *_pszCondition, const char *_pszDescription, 
@@ -74,12 +74,12 @@ EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 		return BSU_DEBUG;
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline SAssertionDlgParams *GetParams( LPARAM lParam )
 {
 	return reinterpret_cast<SAssertionDlgParams*>(lParam);
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam ) 
 { 
 	switch (message)
@@ -161,7 +161,7 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, UINT message, WPARAM 
 	} 
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ReportAssertionDlgProcCommand( HWND hwndDlg, WORD wCtrlID, WORD wNotifCode, LPARAM lParam )
 {
 	switch(wCtrlID)
@@ -241,5 +241,5 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, WORD wCtrlID, WORD wNotifCode,
 	}
 	return false;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

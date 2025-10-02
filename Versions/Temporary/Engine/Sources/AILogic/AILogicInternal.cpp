@@ -64,11 +64,11 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "../Misc/Win32Helper.h"
 #include "../Input/Bind.h"
 #include "GlobalWarFog.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //#define FPS_TEST
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1108D441, CAILogic );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CFeedBackSystem theFeedBackSystem;
 extern CPlayerReinforcementArray theReinfArray;
 extern CBridgeHeightRemover theBridgeHeightsRemover;
@@ -111,7 +111,7 @@ static int nTickStartFrame = 0;
 #include <VTuneAPI.h>
 #pragma comment( lib, "vtuneapi.lib" )
 #endif
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBalanceTest theBalanceTest;
 
 IAIScenarioTracker *GetScenarioTracker()
@@ -123,11 +123,11 @@ IAIScenarioTracker *GetScenarioTracker()
 	return Singleton<IAIScenarioTracker>();
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*		 								   CAILogic																		*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::PickedObj( const int nObjID )
 {
 	if ( CLinkObject::IsLinkObjectExists( nObjID ) )
@@ -145,7 +145,7 @@ void CAILogic::PickedObj( const int nObjID )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::PickEmpty()
 {
 	IDebugSingleton *pDebug = Singleton<IDebugSingleton>();
@@ -156,19 +156,19 @@ void CAILogic::PickEmpty()
 			pStatsSystemWindow->UpdateEntry( L"Pick", L"none", 0xff00ff00 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAILogic::CAILogic()
 : timeLocalPlayerUnitCheck( 0 ), bLocalPlayerUnitsPresent( false ), timeLastMiniMapUpdateUnits( 0 ), bNeedNewGroupNumber( true )
 {
 	CScripts::RegisterScriptForSaveLoad();
 	bMissionLoaded = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAILogic::~CAILogic()
 {
 	ClearAI();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ITerraAIObserver* CAILogic::CreateTerraAIObserver( const int nSizeX, const int nSizeY )
 {
 	pAIMap = new CAIMap( nSizeX, nSizeY, SAIConsts::TILE_SIZE, SConsts::MAX_UNIT_TILE_RADIUS, SAIConsts::MAX_MAP_SIZE );
@@ -176,12 +176,12 @@ ITerraAIObserver* CAILogic::CreateTerraAIObserver( const int nSizeX, const int n
 
 	return new CTerraAIObserverInGame( nSizeX, nSizeY );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::ToggleWarFog( const bool bWarFog )
 {
 	theCheats.SetTurnOffWarFog( !bWarFog );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::ClearAI()
 {
 	CQueueUnit::Clear();
@@ -196,7 +196,7 @@ void CAILogic::ClearAI()
 	CExistingObjectModifyAI::Clear();
 	ConstructorInfo() = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *linksInfo, const SMechUnitRPGStats **pNewStats ) const
 {
 	if ( !theDipl.IsNetGame() )
@@ -247,7 +247,7 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *li
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType eAck )
 {
 	if ( pObj && pObj->IsRefValid() )
@@ -256,7 +256,7 @@ void CAILogic::SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType 
 		pUnit->SendAcknowledgement( eAck, true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &object, LinkInfo *linksInfo, bool bInitialization, const SHPObjectRPGStats *pPassedStats, EReinforcementType eType )
 {
 	CUpdatableObj *pResult = 0;
@@ -509,7 +509,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 {
 	list<int> transports;
@@ -575,7 +575,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 	}
 		
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LinkArtilleryWithTransport( CArtillery * pArtillery, CAITransportUnit *pTransport )
 {
 	// переместить артиллерию к пушке
@@ -604,7 +604,7 @@ void CAILogic::LinkArtilleryWithTransport( CArtillery * pArtillery, CAITransport
 
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_BEING_TOWED, pTransport->GetUniqueId() ), pArtillery, false );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AdvanceSegments( CCommonUnit *pUnit )
 {
 
@@ -625,7 +625,7 @@ void AdvanceSegments( CCommonUnit *pUnit )
 		pUnit->Segment();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitLinks( LinkInfo &linksInfo )
 {
 	for ( LinkInfo::iterator iter = linksInfo.begin(); iter != linksInfo.end(); ++iter )
@@ -786,7 +786,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 		}
 	}
 } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments )
 {
 	// по окопам
@@ -812,7 +812,7 @@ void CAILogic::LoadEntrenchments( const vector<SEntrenchmentInfo> &entrenchments
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LoadBridges( const vector< NDb::SIntArray > &bridgesInfo )
 {
 	// по мостам
@@ -838,7 +838,7 @@ void CAILogic::LoadBridges( const vector< NDb::SIntArray > &bridgesInfo )
 		bridges.push_back( bridge );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectBase **pUnitsBuffer, const int nSize )
 {
 	SAIUnitCmd cmd;
@@ -854,7 +854,7 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 	theGroupLogic.GroupCommand( cmd, wGroup, true );
 	theGroupLogic.UnregisterGroup( wGroup );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitStartCommands()
 {
 	for ( vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
@@ -870,7 +870,7 @@ void CAILogic::InitStartCommands()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitStartCommands( const LinkInfo &linksInfo, hash_map<int, int> &old2NewLinks )
 {
 	for ( vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
@@ -896,7 +896,7 @@ void CAILogic::InitStartCommands( const LinkInfo &linksInfo, hash_map<int, int> 
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitReservePositions()
 {
 	for ( vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
@@ -918,7 +918,7 @@ void CAILogic::InitReservePositions()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitReservePositions( hash_map<int, int> &old2NewLinks )
 {
 	for ( vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
@@ -947,7 +947,7 @@ void CAILogic::InitReservePositions( hash_map<int, int> &old2NewLinks )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::CommonInit( const NDb::STerrain *pTerrainInfo )
 {
 	theCheats.Init();
@@ -987,19 +987,19 @@ void CAILogic::CommonInit( const NDb::STerrain *pTerrainInfo )
 	theExecutorContainer.Add( pEx );
 	pEx->RegisterOnEvents( &theExecutorContainer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetProgressHook( IProgressHook *_pProgress )
 {
 	pProgress = _pProgress;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::LogCheckSum( ICheckSumLog *_pCheckSumLog )
 { 
 	uLong tmpCheckSum = adler32( 0L, Z_NULL, 0 );	
 	CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &tmpCheckSum, _pCheckSumLog, curTime );
 	this->operator&( *pCheckSumSaver );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, const NDb::SAIGameConsts *_pConsts, IAIScenarioTracker *_pScenarioTracker )
 {
 	// set control word for FP co-processor
@@ -1031,7 +1031,7 @@ void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, cons
 	theCheats.SetWarFog( ( NGlobal::GetVar( "warfog", "" ) ).GetString().empty() );
 	theCheats.SetLoadObjects( ( NGlobal::GetVar( "noobjects", "" ) ).GetString().empty() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::UpdateUnitsOnBridges()
 {
 	for ( CGlobalIter it( 0, ANY_PARTY ); !it.IsFinished(); it.Iterate() )	
@@ -1041,7 +1041,7 @@ void CAILogic::UpdateUnitsOnBridges()
 			pUnit->SetCenter( CVec3( pUnit->GetCenterPlain(), GetHeights()->GetZ( pUnit->GetCenterPlain() ) ), true );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 {
 	NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
@@ -1122,7 +1122,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	CPtr<CTerraAIObserverInGame> pOb = new CTerraAIObserverInGame( true );
 	pOb->InitInGame();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::PostMapLoad()
 {
 	CPtr<ICheckSumLog> pTmpChecksum = pCheckSumLog;
@@ -1137,7 +1137,7 @@ void CAILogic::PostMapLoad()
 	pCheckSumLog = pTmpChecksum;
 	bMissionLoaded = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::UpdateCheckSum( bool bSend )
 {
 	if ( !IsValid( pCheckSumLog ) && curTime < NGlobal::GetVar( "start_replay_time", 0 ) * 1000 )
@@ -1190,7 +1190,7 @@ void CAILogic::UpdateCheckSum( bool bSend )
 		//CONSOLE_BUFFER_LOG2( PIPE_A7_MULTIPLAYER_CHECK, StrFmt( "%ul", checkSum ), 0, false );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::Segment()
 {
 	// set control word for FP co-processor
@@ -1304,7 +1304,7 @@ void CAILogic::Segment()
 
 //	CheckAIObjectBase();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int nPlayer )
 {
 	curTime = CAITimer::GetSegmentTime();
@@ -1326,42 +1326,42 @@ void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const WORD wGroupID, const int
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAILogic::GenerateGroupNumber()
 {
 	return theGroupLogic.GenerateGroupNumber();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::RegisterGroup( const vector<int> &vIDs, const int nGroup )
 {
 	theGroupLogic.RegisterGroup( vIDs, nGroup );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const WORD wGroup )
 {
 	theGroupLogic.RegisterGroup( pUnitsBuffer, nLen, wGroup );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::UnregisterGroup( const int nGroup )
 {
 	theGroupLogic.UnregisterGroup( nGroup );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::GroupCommand( SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue )
 {
 	theGroupLogic.GroupCommand( *pCommand, wGroup, bPlaceInQueue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::CallScriptFunction( const char *pszCommand )
 {
 	scripts.CallScriptFunction( pszCommand );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::CanShowVisibilities() const
 {
 	return curTime >= SConsts::AI_SEGMENT_DURATION * SConsts::SHOW_ALL_TIME_COEFF;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAILogic::GetMiniMapUnitsInfo( vector< SMiniMapUnitInfo > &vUnits )
 {
 	if ( curTime >= timeLastMiniMapUpdateUnits && ( !theDipl.IsNetGame() || bNetGameStarted ) )
@@ -1394,7 +1394,7 @@ const bool CAILogic::GetMiniMapUnitsInfo( vector< SMiniMapUnitInfo > &vUnits )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTime )
 {
 	if ( CanShowVisibilities() && ( !theDipl.IsNetGame() || bNetGameStarted ) )
@@ -1402,17 +1402,17 @@ bool CAILogic::GetMiniMapWarForInfo( CArray2D<BYTE> **pWarFogInfo, bool bFirstTi
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAILogic::GetMiniMapWarFogSizeX() const
 {
 	return theWarFog.GetSizeX();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAILogic::GetMiniMapWarFogSizeY() const
 {
 	return theWarFog.GetSizeY();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::ShowAreas( const vector<int> &units, EActionNotify &eType, bool bShow )
 {
 	if ( bShow && units.size() > 0 )
@@ -1426,7 +1426,7 @@ void CAILogic::ShowAreas( const vector<int> &units, EActionNotify &eType, bool b
 	else
 		updater.UpdateAreasGroup( false, ACTION_NOTIFY_NONE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 {
 	SShootAreas unitAreas;
@@ -1456,34 +1456,34 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished )
 {
 	theUnderConstructionObject.ShowUnderConstruction( eBuildCommand, vStart, vEnd, bFinished, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::IsCombatSituation()
 {
 	return theCombatEstimator.IsCombatSituation();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::ToGarbage( CCommonUnit *pUnit )
 {
 	garbage.push_back( pUnit );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAILogic::GetUniqueIDOfObject( CObjectBase *pObj )
 {
 	NI_ASSERT( dynamic_cast<CLinkObject*>(pObj) != 0, StrFmt("Wrong object of type \"%s\" - CLinkObject expected", typeid(*pObj).name()) );
 
 	return checked_cast<CLinkObject*>(pObj)->GetUniqueId();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CAILogic::GetObjByUniqueID( const int id )
 {
 	return GetObjectByUniqueIdSafe<CObjectBase>( id );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetMyDiplomacyInfo( const int nParty, const int nNumber )
 {
 	if ( nNumber != -1 )
@@ -1496,17 +1496,17 @@ void CAILogic::SetMyDiplomacyInfo( const int nParty, const int nNumber )
 	if ( nParty != -1 )
 		theCheats.SetNPartyForWarFog( nParty, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetNPlayers( const int nPlayers )
 {
 	theDipl.SetNPlayers( nPlayers );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetNetGame( const bool bNetGame )
 {
 	theDipl.SetNetGame( bNetGame );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::SubstituteUniqueIDs( const vector<int> &vIDs )
 {
 	typedef CObjectBase* LPObjectBase;
@@ -1517,7 +1517,7 @@ bool CAILogic::SubstituteUniqueIDs( const vector<int> &vIDs )
 	delete[] objects;
 	return result;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::SubstituteUniqueIDs( CObjectBase **pUnitsBuffer, const int nLen )
 {
 	bool bCorrect = true;
@@ -1543,65 +1543,65 @@ bool CAILogic::SubstituteUniqueIDs( CObjectBase **pUnitsBuffer, const int nLen )
 
 	return bCorrect;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::UpdateAcknowledgment( SAIAcknowledgment &pAck )
 {
 	return theAckManager.UpdateAcknowledgment( pAck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 {
 	return theAckManager.UpdateAcknowledgment( pAck );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CAILogic::GetZ( const CVec2 &vPoint ) const
 {
 	return GetHeights()->GetVisZ( vPoint.x, vPoint.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const DWORD CAILogic::GetNormal( const CVec2 &vPoint ) const
 {
 	return GetHeights()->GetNormal( vPoint.x, vPoint.y );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAILogic::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return GetHeights()->GetIntersectionWithTerrain( pvResult, vBegin, vEnd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::ToggleShow( const int nShowType )
 {
 	theCheats.SetTurnOffWarFog( !theCheats.GetTurnOffWarFog() );
 	return theCheats.GetTurnOffWarFog();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetDifficultyLevel( const int nLevel )
 {
 	if ( !theDipl.IsNetGame() )
 		theDifficultyLevel.SetLevel( nLevel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetCheatDifficultyLevel( const int nCheatLevel )
 {
 	if ( !theDipl.IsNetGame() )
 		theDifficultyLevel.SetCheatLevel( nCheatLevel );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::NetGameStarted()
 {
 	bNetGameStarted = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::IsNetGameStarted() const
 {
 	return bNetGameStarted;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CDifficultyLevel* CAILogic::GetDifficultyLevel() const
 {
 	return &theDifficultyLevel;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::NeutralizePlayer( const int nPlayer )
 {
 	if ( theDipl.IsPlayerExist( nPlayer ) )
@@ -1643,7 +1643,7 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 	 		updater.AddUpdate( EFB_TROOPS_PASSED, MAKELONG( nPlayer, nBestPlayer ) );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CAILogic::GetUnitState( CObjectBase *pObj )
 {
 	if ( CQueueUnit *pUnit = dynamic_cast<CQueueUnit*>(pObj) )
@@ -1651,7 +1651,7 @@ CObjectBase* CAILogic::GetUnitState( CObjectBase *pObj )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::IsFrozen( CObjectBase *pObj ) const
 {
 	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(pObj) )
@@ -1659,7 +1659,7 @@ bool CAILogic::IsFrozen( CObjectBase *pObj ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAILogic::IsFrozenByState( CObjectBase *pObj ) const
 {
 	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(pObj) )
@@ -1667,7 +1667,7 @@ bool CAILogic::IsFrozenByState( CObjectBase *pObj ) const
 	else
 		return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCenter, CVec2 **pCoord, int *pnLen )
 {
 	CGrid grid( vGridCenter, nGroup, CVec2( 1.0f, 0.0f ) );
@@ -1677,17 +1677,17 @@ void CAILogic::GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCent
 	for ( int i = 0; i < *pnLen; ++i )
 		(*pCoord)[i] = grid.GetUnitCenter( i ) - vGridCenter;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::Suspend() 
 { 
 	bSuspended = true; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::Resume() 
 { 
 	bSuspended = false; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CPtr<SAIBasicUpdate> pUpdate = 0;
 
 CObjectBase* CAILogic::GetUpdate()
@@ -1695,27 +1695,27 @@ CObjectBase* CAILogic::GetUpdate()
 	pUpdate = updater.GetUpdate();
 	return pUpdate;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::PrepareUpdates()
 {
 	updater.PrepareUpdates();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::SetGlobeScriptHandler( IGlobeScriptHandler *pHandler )
 {
 	scripts.SetGlobeScriptHandler( pHandler );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAILogic::WAR_FOG_FULL_UPDATE() const
 { 
 	return SAIConsts::WAR_FOG_FULL_UPDATE; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAILogic::VIS_POWER() const
 { 
 	return SAIConsts::VIS_POWER; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CAILogic::GetUniqueID( CObjectBase *pObj ) 
 { 
 	if ( CLinkObject *pLinkObj = dynamic_cast<CLinkObject*>(pObj) ) 
@@ -1723,17 +1723,17 @@ int CAILogic::GetUniqueID( CObjectBase *pObj )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CStaticMapHeights* CAILogic::GetHeights() const
 {
 	return ::GetHeights();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAILogic::GetPlayerDiplomacy( const int nPlayer ) const
 {
 	return theDipl.GetNParty( nPlayer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CAILogic::GetUnitCount( const int nPlayer ) const
 {
 	int cnt = 0;
@@ -1747,7 +1747,7 @@ const int CAILogic::GetUnitCount( const int nPlayer ) const
 	}
 	return cnt;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const bool CAILogic::HasPlayerNoUnits( const int nPlayer ) const
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < theReinfArray.size(), "Index out of range", return false ); // CRAP - dont't use AILogic directly at Client
@@ -1766,7 +1766,7 @@ const bool CAILogic::HasPlayerNoUnits( const int nPlayer ) const
 
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool ConverWStingToInt( int *pValue, const wstring &wszString, const int nMin, const int nMax )
 {
 	string szParam;
@@ -1785,7 +1785,7 @@ static bool ConverWStingToInt( int *pValue, const wstring &wszString, const int 
 	}
 	return true;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void PathfinderTest( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	const int nMaxX = GetAIMap()->GetSizeX();
@@ -1812,7 +1812,7 @@ static void PathfinderTest( const string &szID, const vector<wstring> &paramsSet
 		}
 	}
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CommandCheckPath( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 7 )
@@ -1902,7 +1902,7 @@ static void CommandCheckPath( const string &szID, const vector<wstring> &paramsS
 	NStr::ToLowerASCII( &szParam );
 	GetAIMap()->GetTerrain()->DumpMaxes( ELM_STATIC, aiClass, "debug_images\\" + szParam + ".tga", realPath, smoothPath, true );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DumpWarFogHeights( const string &szID, const vector<wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.size() != 5 )
@@ -1934,7 +1934,7 @@ static void DumpWarFogHeights( const string &szID, const vector<wstring> &params
 	NStr::ToLowerASCII( &szParam );
 	//theWarFog.DebugTraceRay( "debug_images\\warfog\\" + szParam + ".tga", vStartPoint, vFinishPoint );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CAILogic::DumpAfterAssinc() const
 {
 	GetTerrain()->DumpMaxes( ELM_ALL, EAC_WHELL, "EAC_WHELL.tga" );
@@ -1949,7 +1949,7 @@ void CAILogic::DumpAfterAssinc() const
 
 	//GetTerrain()->DumpLockInfo();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( AICheckers )
 
 REGISTER_CMD( "check_path", CommandCheckPath )

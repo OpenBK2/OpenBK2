@@ -5,27 +5,27 @@
 #include "GenTerrain.h"
 #include "TerraHeight.h"
 #include "Scene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DEF_HEIGHTS_SMOOTH_RADIUS 3
 #define DEF_SMOOTH_DIST ( DEF_TILE_SIZE * 7.0f )
 #define DEF_SMOOTH_SLEEKNESS ( DEF_TILE_SIZE * FP_SQRT_2 / DEF_SMOOTH_DIST )
 #define DEF_SMOOTH_SLEEKNESS_COEFF ( 1.0f / ( 1.0f - DEF_SMOOTH_SLEEKNESS ) )
 #define DEF_SEA_OUTSIDE_MAP	0.1f
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AI2VisTiles( CVec2i *pRes, const CVec3 &vPos )
 {
 	pRes->x = vPos.x * AI_TO_VIS * DEF_INV_TILE_SIZE;
 	pRes->y = vPos.y * AI_TO_VIS * DEF_INV_TILE_SIZE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void AI2VisTiles( CVec2i *pRes, const CVec2 &vPos )
 {
 	pRes->x = vPos.x * AI_TO_VIS * DEF_INV_TILE_SIZE;
 	pRes->y = vPos.y * AI_TO_VIS * DEF_INV_TILE_SIZE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SWaterSmoothProfile
 {
 	float operator()( const float x ) const
@@ -39,7 +39,7 @@ struct SWaterSmoothProfile
 	}
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, const NDb::SWater &water )
 {
 	int nInd = -1;
@@ -62,7 +62,7 @@ inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, c
 	return nInd + 1;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //static void FillSeaArea( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples, const CVec3 &_vMidPoint, CArray2D<BYTE> *pMask )
 //{
 //	vector<CVec2i> points( samples.size() );
@@ -107,7 +107,7 @@ inline int GetWaterFillIndex( vector<NWaterStuff::SWaterParams> *pWaterParams, c
 //	}
 //}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, CArray2D<BYTE> *pMask, const BYTE cFillMask,
 													 const vector<NDb::SVSOPoint> &samples )
 {
@@ -161,7 +161,7 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
@@ -207,7 +207,7 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const vector<ND
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define AREA_HASH_ELEMS_NUM 12
 #define AREA_BOTTOM_LEFT 0
 #define AREA_BOTTOM_RIGHT 1
@@ -228,16 +228,16 @@ const int defAreaHash[AREA_HASH_ELEMS_NUM][5] =
 	{ 20, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, -1, -1 },
 	{ 34, AREA_TOP_LEFT, AREA_TOP_RIGHT, -1, -1 }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define AREA_BOTTOM_SIDE 1
 #define AREA_RIGHT_SIDE 2
 #define AREA_TOP_SIDE 3
 #define AREA_LEFT_SIDE 4
 #define AREA_NONE_SIDE 7
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<int, vector<int> > CAreaCornersHash;
 static CAreaCornersHash areaCornersHash;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void InitCornersHash()
 {
 	int k;
@@ -252,7 +252,7 @@ static void InitCornersHash()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int GetPointIndOnRect( const NDb::SVSOPoint &p, const CVec2 &p1, const CVec2 &p2 )
 {
 	if ( fabs(p1.y - p.vPos.y) < DEF_EPS )
@@ -266,7 +266,7 @@ static int GetPointIndOnRect( const NDb::SVSOPoint &p, const CVec2 &p1, const CV
 	return AREA_NONE_SIDE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void GetCornerFromInd( NDb::SVSOPoint *pPoint, const int nInd, const CVec2 &p1, const CVec2 &p2 )
 {
 	switch ( nInd )
@@ -294,7 +294,7 @@ inline void GetCornerFromInd( NDb::SVSOPoint *pPoint, const int nInd, const CVec
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, const NDb::SVSOPoint &vso2, const CVec2 &p1, const CVec2 &p2 )
 {
 	const CVec3 &po1 = vso1.vPos;
@@ -384,7 +384,7 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 	return bFlag;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetSeaAreas( vector< vector<NDb::SVSOPoint> > *pRes, const vector<NDb::SVSOPoint> &samples, const CVec2 &p1, const CVec2 &p2 )
 {
 	if ( samples.size() < 2 )
@@ -438,7 +438,7 @@ static void GetSeaAreas( vector< vector<NDb::SVSOPoint> > *pRes, const vector<ND
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ClampArrayLower( CArray2D<float> *pArray, float fValidLowerValue )
 {
 	// clamp to over or equal to zero
@@ -453,7 +453,7 @@ static void ClampArrayLower( CArray2D<float> *pArray, float fValidLowerValue )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SetMinOfTwoArrays( CArray2D<float> *pDst, const CArray2D<float> &src )
 {
 	for ( int g = 0; g < pDst->GetSizeY(); ++g )
@@ -466,7 +466,7 @@ static void SetMinOfTwoArrays( CArray2D<float> *pDst, const CArray2D<float> &src
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::ReCreateAllWaterZones()
 {
 	waterParams.resize( 0 );
@@ -598,7 +598,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::UpdateWater()
 {
 	CArray2D<BYTE> prevMask = terrainInfo.seaMask;
@@ -648,7 +648,7 @@ void CTerraGen::UpdateWater()
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::InitWater()
 {
 	TIME_STAT_START( CTerraGen__InitWater )
@@ -720,7 +720,7 @@ void CTerraGen::InitWater()
 	TIME_STAT_FINISH( CTerraGen__InitWater )
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 {
 	if ( !pWater )
@@ -807,4 +807,3 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 	TIME_STAT_FINISH( CTerraGen__InitRainyWater )
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

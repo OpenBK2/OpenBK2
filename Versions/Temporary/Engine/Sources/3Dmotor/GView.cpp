@@ -42,7 +42,7 @@
 //{
 	//extern CBasicShare<SIntResKey, CGrannySkeletonLoader> shareGrannySkeletons;
 //}
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGScene
 {
 extern bool bFreeze;
@@ -52,7 +52,7 @@ extern bool bLowRAM;
 #ifdef FADE_TEST
 static vector<CPtr<CObjectBase> > fadeTestObjects;
 #endif
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // share objects
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTextureBasicShare;
 _3DMOTOR_EXPORT CTextureBasicShare shareTextures(103);
@@ -68,7 +68,7 @@ static ESceneRenderMode defaultRenderMode = SRM_BEST;//SRM_FASTEST;
 static EHSRMode defaultHSRMode = HSR_NONE;
 static ESceneRenderMode defaultRenderMode = SRM_BEST;
 #endif
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CParticleTexture : public CHoldedPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_BASIC_METHODS(CParticleTexture);
@@ -98,9 +98,9 @@ public:
 	}
 	void SetColor( CFuncBase<CVec3> *_pColor ) { if ( pColor != _pColor ) pColor = _pColor; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CBasicShare<CDBPtr<NDb::STexture>, CParticleTexture, SDBPtrHash > shareParticleTextures(231);
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CParticleTexture::NeedUpdate()
 {
 	bool bRes = TParent::NeedUpdate();
@@ -116,7 +116,7 @@ bool CParticleTexture::NeedUpdate()
 
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CParticleTexture::Recalc()
 {
 	pSWTexture.Refresh();
@@ -206,7 +206,7 @@ void CParticleTexture::Recalc()
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CRenderNode;
 class CGameView: public IGameView
 {
@@ -319,12 +319,12 @@ public:
 	virtual void SetTwilight(bool _bIsTwilight ) { bIsTwilight = _bIsTwilight;}
 	virtual void SetFreezeMode( bool mode ){ NGScene::bFreeze = mode; };
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SGroupInfo GetGroupInfo( const SRoomInfo &r, bool bCastShadows = true, bool bParticles = false )
 {
 	return SGroupInfo( r.nLightFlags, GetFloorBit( r.nFloor, bCastShadows, bParticles, r.nLODFlags ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static SFullGroupInfo GetGroupInfo( const SFullRoomInfo &r, int nPart, bool bCastShadows = true, bool bParticles = false )
 {
 	ASSERT( N_USERID_MASK == ( (1<<24) - 1 ) );
@@ -342,9 +342,9 @@ static SFullRoomInfo GetRoomInfo( const SFullGroupInfo &g )
 	res.nUserID = g.nUserID;
 	return res;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CGameView
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGameView::CGameView()
 {
 	pScene = CreateScene();
@@ -363,37 +363,37 @@ CGameView::CGameView()
 	bWaitLoading = true;
 	bIsTwilight = false;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CGameView::CreateMaterialShared( const NDb::SMaterial *p )
 {
 	IMaterial *pRes = pMaterials->CreateMaterial( p );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::CreateMaterialInfo( const NDb::SMaterial *pMaterial, SMaterialCreateInfo *pRes )
 {
 	pMaterials->FillCreateMaterialInfo( pMaterial, pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial* CGameView::CreateSubstituteMaterial()
 {
 	return colorMaterials.CreateMaterial( CVec3(0.8f, 0.f, 0.f) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CRenderNode* CGameView::NewRenderNode()
 {
 	CRenderNode *pRes = new CRenderNode;
 	nodes.push_back( pRes );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IMaterial *CGameView::CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow ) 
 { 
 	if ( vColor.a == 1 )
 		return colorMaterials.CreateMaterial( CVec3( vColor.x, vColor.y, vColor.z ) );
 	return transparentMaterials.CreateMaterial( vColor, bDoesCastShadow ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool bWholeAnimated, int nPlayer, bool bIsLightMapped )
 {
 	pRes->parts.resize(0);
@@ -506,7 +506,7 @@ void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool
 	//	ASSERT( 0 && "pGeometry->nNumMeshes doesn't match pGeometry->materialQuantities.size()" );
 	//}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateDynamicMesh( const SMeshInfo &meshInfo, CFuncBase<SFBTransform> *pPlacement, CFuncBase<SBound> *pBound, const SBound &hintBV, const SFullRoomInfo &_g, IFader *pFader )
 {
 	CRenderNode *pRes = NewRenderNode();
@@ -533,33 +533,33 @@ CObjectBase* CGameView::CreateDynamicMesh( const SMeshInfo &meshInfo, CFuncBase<
 	}
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecalTarget* CGameView::CreateDecalTarget( const vector<CObjectBase*> &targets, const SDecalMappingInfo &_info )
 {
 	return pScene->CreateDecalTarget( targets, _info );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial )
 {
 	return pScene->AddDecal( pTarget, pMaterials->CreateMaterial( pMaterial ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecalFader* CGameView::AddDecal( NGScene::CDecalTarget *pTarget, const NDb::SMaterial *pMaterial, STime tFadeInStart,
 								 STime tFadeInEnd, STime tFadeOutStart, STime tFadeOutEnd, CFuncBase<STime> *pTime )
 {
 	return new CDecalFader( AddDecal( pTarget, pMaterial ), tFadeInStart,  tFadeInEnd,  tFadeOutStart, tFadeOutEnd, pTime );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::SetWarFogBlend( float fBlend )
 {
 	pScene->SetWarFogBlend( fBlend );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::SetWarFog( const CArray2D<unsigned char> &fog, float fScale )
 {
 	pScene->SetWarFog( fog, fScale );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCreateMeshBound::CCreateMeshBound( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, const NDb::SModel *pModel )
 {
 	pBounder = 0;
@@ -567,7 +567,7 @@ CCreateMeshBound::CCreateMeshBound( CFuncBase<NAnimation::SGrannySkeletonPose> *
 	hintBV = MakeLargeHintBound();
 	Create( pAnimation, pModel );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCreateMeshBound::Create( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, const NDb::SModel *pModel )
 {
 	if ( pAnimation && pModel && pModel->pGeometry )
@@ -578,7 +578,7 @@ void CCreateMeshBound::Create( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnim
 		hintBV = MakeLargeHintBound();
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateMesh( const SMeshInfo &meshInfo, const CCreateMeshTransform &meshTransform,
 	const CCreateMeshBound &_meshBound, const CMeshAnimStuff &animStuff, const SFullRoomInfo &_g, IFader *pFader )
 {
@@ -659,7 +659,7 @@ CObjectBase* CGameView::CreateMesh( const SMeshInfo &meshInfo, const CCreateMesh
 
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateParticles( bool bIsDynamic, int nPFlags, bool bCastShadows, bool bCrown, CPtrFuncBase<CParticleEffect> *pEffect, 
 	CFuncBase<SFBTransform> *pPlacement, const SBound &bound, const SRoomInfo &_r, IFader *pFader )
 {
@@ -669,7 +669,7 @@ CObjectBase* CGameView::CreateParticles( bool bIsDynamic, int nPFlags, bool bCas
 	else
 		return pScene->CreateParticles( pEffect, pPlacement, bound, hintBV, GetGroupInfo( _r, bCastShadows, bCrown ), nPFlags );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void InitParticleTextures( T *pAnimator, const NDb::SParticleInstance *pInstance, CFuncBase<CVec3> *pColor = 0 )
 {
@@ -693,7 +693,7 @@ static void InitParticleTextures( T *pAnimator, const NDb::SParticleInstance *pI
 	}
 	pAnimator->textureIDs.resize( nLast + 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffect *pEffect, STime stBeginTime, 
 	CFuncBase<STime> *pTime, CFuncBase<SFBTransform> *pPlacement, const SRoomInfo &_g, IFader *pFader,
 	CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim, NAnimation::SGrannySkeletonHandle *pSkeletonH, IParticleFilter *pFilter )
@@ -911,20 +911,20 @@ CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffec
 
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, 
 	CFuncBase<STime> *pTime, CFuncBase<SFBTransform> *pPlacement, const SRoomInfo &_r, IFader *pFader,
 	CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim, NAnimation::SGrannySkeletonHandle *pSkeletonH, IParticleFilter *pFilter )
 {
 	return TrueCreateParticles( true, pEffect, stBeginTime, pTime, pPlacement, _r, pFader, pScAnim, pSkeletonH, pFilter );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime, 
 	const SFBTransform &place, const SRoomInfo &_g, IFader *pFader, IParticleFilter *pFilter )
 {
 	return TrueCreateParticles( false, pEffect, stBeginTime, pTime, new CCFBTransform( place ), _g, pFader, 0, 0, pFilter );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::CreateRain( const NDb::SParticleInstance *pInstance, CFuncBase<STime> *pTime, IParticleFilter *pFilter, const SRoomInfo &_g )
 {
 	const NDb::SParticle *pParticle = pInstance->pParticle;
@@ -942,16 +942,16 @@ CObjectBase* CGameView::CreateRain( const NDb::SParticleInstance *pInstance, CFu
 	particleBound.BoxInit( CVec3(0,0,0), CVec3(1000, 1000, 50 ) );
 	return CreateParticles( true, nPFlags, pInstance->bDoesCastShadow, pInstance->bIsCrown, pAnimator, pIdentityTransform, particleBound, _g, 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPolyline* CGameView::CreatePolyline( const vector<CVec3> &points, const vector<unsigned short> &indices, 
 	const CVec4 &color, bool bDepthTest )
 {
 	return pScene->CreatePolyline( new CMemGeometry( points ), indices, color, bDepthTest );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 inline CResourcePrecache<T>* MakePrecache( T *p ) { return new NGScene::CResourcePrecache<T>( p ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::Precache( const NDb::SModel *pModel )
 {
 	SMeshInfo meshInfo;
@@ -975,7 +975,7 @@ CObjectBase* CGameView::Precache( const NDb::SModel *pModel )
 	precacheObjects.push_back( pRes );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::Precache( const NDb::SEffect *pEffect )
 {
 	CRenderNode *pRes = new CRenderNode;
@@ -1013,7 +1013,7 @@ void CGameView::Precache( const NDb::SEffect *pEffect )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::TouchPrecached()
 {
 	for ( list<CPtr<CRenderNode> >::iterator i = precacheObjects.begin(); i != precacheObjects.end(); )
@@ -1035,7 +1035,7 @@ void CGameView::TouchPrecached()
 			++i;
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CCountCalcTerrain : public ILoadingCounter
 {
 	OBJECT_NOCOPY_METHODS(CCountCalcTerrain);
@@ -1095,7 +1095,7 @@ void CGameView::LoadEverythingInt()
 
 	pScene->LoadEverything();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::LoadFogColors( const NDb::SAmbientLight *pAmbientLight )
 {
 	if ( pAmbientLight && 
@@ -1113,7 +1113,7 @@ void CGameView::LoadFogColors( const NDb::SAmbientLight *pAmbientLight )
 		fogColors.Clear();
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, const SRTClearParams &rtClear, 
 	ERenderPath rp, int nLightOptions )
 {
@@ -1184,7 +1184,7 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 	pScene->SetTwilight( bIsTwilight );
 	pScene->Draw( pTS, pClipTS, pRC, mask, rp, rtClear, hsrMode, trMode, pSky, pDepthOfField, nLightOptions );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::MakeTargetRect( CTRect<float> *pRes, const SDrawInfo &drawInfo )
 {
 	CTRect<float> &rFullScreen = *pRes;
@@ -1194,7 +1194,7 @@ void CGameView::MakeTargetRect( CTRect<float> *pRes, const SDrawInfo &drawInfo )
 	rFullScreen.y1 = vSize.y * drawInfo.vOrigin.y; 
 	rFullScreen.y2 = rFullScreen.y1 + vSize.y * drawInfo.vSize.y;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static ERenderPath GetRenderPath( ESceneRenderMode rm, bool bForceFastest )
 {
 	if ( NGfx::IsTnLDevice() )
@@ -1209,12 +1209,12 @@ static ERenderPath GetRenderPath( ESceneRenderMode rm, bool bForceFastest )
 	ASSERT(0);
 	return RP_GF3_FAST;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ERenderPath CGameView::GetRenderPath() const
 {
 	return NGScene::GetRenderPath( renderMode, bForceFastest );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void DrawHaze( NGfx::CTexture *pTex, NGfx::CRenderContext &rc )
 {
 	rc.SetAlphaCombine( NGfx::COMBINE_SMART_ALPHA );
@@ -1231,14 +1231,14 @@ static void DrawHaze( NGfx::CTexture *pTex, NGfx::CRenderContext &rc )
 	quadsRender.SetTarget( rc, vScrSize, NGfx::QRM_DEPTH_NONE );
 	quadsRender.AddRect( rDst, pTex, hazeRect );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline CVec3 GetCameraPosition( CTransformStack *pTS )
 {
 	CVec4 vCamPos4;
 	pTS->Get().backward.RotateHVector( &vCamPos4, CVec4(0,0,0,1) );
 	return CVec3( vCamPos4.x / vCamPos4.w, vCamPos4.y / vCamPos4.w, vCamPos4.z / vCamPos4.w );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::Draw( const SDrawInfo &drawInfo )
 {
   if ( pSkyDome && drawInfo.pTS )
@@ -1306,7 +1306,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 		DrawHaze( pHaze->GetValue(), rc );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel8888> *pRes )
 {
 	ERenderPath renderPath = GetRenderPath();
@@ -1370,12 +1370,12 @@ void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel888
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CGameView::GetScreenRect()
 {
 	return pScene->GetScreenRect();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime )
 {
 	if ( !pEffect || pEffect->lights.empty() )
@@ -1399,19 +1399,19 @@ void CGameView::SetAmbientEffect( const NDb::SEffect *pEffect, STime stBeginTime
 
 	pScene->SetAmbientAnimation( pAnimator );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddPointLight( const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
 	if ( fR <= 0 )
 		return 0;
 	return pScene->AddPointLight( ptColor, ptOrigin, fR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddPointLight( CPtrFuncBase<CAnimLight> *pLight )
 {
 	return pScene->AddPointLight( pLight );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddFlare( CFuncBase<CVec3> *pOrigin, CFuncBase<STime> *pTime, int nFloor, float fFlareRadius, const NDb::STexture *pFlareTexture, float fOnTime, float fOffTime )
 {
 	//fFlareRadius = 1;
@@ -1433,7 +1433,7 @@ CObjectBase* CGameView::AddFlare( CFuncBase<CVec3> *pOrigin, CFuncBase<STime> *p
 		new CMNode( pIdentityTransform, pOrigin ), bound, 
 		SRoomInfo( 0, nFloor, 0 ), 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, const CVec2 &sSize, const NDb::STexture *pTexture, int nFloor )
 {
 	if ( ( fabs( sSize ) < FP_EPSILON ) || !pTexture )
@@ -1441,7 +1441,7 @@ CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *p
 
 	return AddDirFlare( pPos, pDir, new CCVec2( sSize ), sSize, pTexture, nFloor );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *pDir, CFuncBase<CVec2> *pSize, const CVec2 &vMaxSize, const NDb::STexture *pTexture, int nFloor )
 {
 	////
@@ -1459,7 +1459,7 @@ CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *p
 		new CMNode( pIdentityTransform, pPos ), sBound, 
 		SRoomInfo( 0, nFloor, 0 ), 0 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetParts( vector<CObjectBase*> *pRes, const vector<CObjectBase*> &target )
 {
 	for ( int k = 0; k < target.size(); ++k )
@@ -1475,7 +1475,7 @@ static void GetParts( vector<CObjectBase*> *pRes, const vector<CObjectBase*> &ta
 			pRes->push_back( pNode->parts[nTemp] );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddPostFilter( const vector<CObjectBase*> &target, IPostProcess *pEffect )
 {
 	CPtr<IPostProcess> pHold(pEffect);
@@ -1490,7 +1490,7 @@ CObjectBase* CGameView::AddPostFilter( const vector<CObjectBase*> &target, IPost
 	}
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CGameView::AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, 
 	float fRadius, const NDb::STexture *pMask, bool bLightmapOnly )
 {
@@ -1498,7 +1498,7 @@ CObjectBase* CGameView::AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigi
 		return pScene->AddSpotLight( new CCVec3(ptColor), ptOrigin, ptDir, fFOV, fRadius, shareTextures.Get( (STextureKey)pMask ), bLightmapOnly );
 	return pScene->AddSpotLight( new CCVec3(ptColor), ptOrigin, ptDir, fFOV, fRadius, 0, bLightmapOnly );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static CVec3 GetLightDir( float fPitch, float fYaw )
 {
 	CVec3 vLightDir;
@@ -1625,19 +1625,19 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 	if ( pLight->pSkyDome )
 		pSkyDome = CreateSkyDome( this, pLight->pSkyDome );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::SetRenderMode( ESceneRenderMode mode )
 {
 	renderMode = mode;
 	if ( pPrevLight )
 		SetAmbient( pPrevLight, pPrevLightTime );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ESceneRenderMode CGameView::GetRenderMode() const
 {
 	return renderMode;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGameView::TraceScene( const CRay &r, float *pfT, CVec3 *pNormal, EScenePartsSet ps, SFullRoomInfo *pRoomInfo, CObjectBase **ppPart, bool bOpaqueOnly )
 {
 	int nReq = bOpaqueOnly ? N_MASK_CAST_SHADOW : 0;
@@ -1648,19 +1648,19 @@ bool CGameView::TraceScene( const CRay &r, float *pfT, CVec3 *pNormal, EScenePar
 		*pRoomInfo = GetRoomInfo( gg );
 	return bRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGameView::GetCutFloor()
 {
 	return nCutFloor;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGameView::SetCutFloor( int _nFloor )
 {
 	nCutFloor = Clamp( _nFloor, N_MIN_FLOOR, N_MAX_FLOOR );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // standalone functions
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void PerPartFunc( CObjectBase *_p, T f )
 {
@@ -1674,7 +1674,7 @@ static void PerPartFunc( CObjectBase *_p, T f )
 	else
 		f( _p );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSetFade
 { 
 	float f;
@@ -1686,7 +1686,7 @@ void SetFade( CObjectBase *_p, float _f )
 	float f = Clamp( _f, 0.0f, 1.0f );
 	PerPartFunc( _p, SSetFade( f ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSetPriority
 {
 	int n;
@@ -1697,7 +1697,7 @@ void SetPriority( CObjectBase *_p, int _nPriority )
 {
 	PerPartFunc( _p, SSetPriority( _nPriority ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SStopParticlesGeneration
 {
 	STime tTime;
@@ -1715,7 +1715,7 @@ void StopParticlesGeneration( CObjectBase *_p, STime tStop )
 {
 	PerPartFunc( _p, SStopParticlesGeneration( tStop ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SStopDynamicLighting
 {
 	void operator()( CObjectBase *_p ) const 
@@ -1730,7 +1730,7 @@ void StopDynamicLighting( CObjectBase *_p )
 {
 	PerPartFunc( _p, SStopDynamicLighting() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 static void SetShadowsMode( IGameView *p, T take )
 {
@@ -1768,7 +1768,7 @@ void SetNextHSRMode( IGameView *p )
 		r = HSR_NONE;
 	p->SetHSRMode( r );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ReloadTexture( const NDb::STexture *p )
 {
 	const CTextureBasicShare::CDataHash &data = shareTextures.GetAll();
@@ -1789,7 +1789,7 @@ void ReloadTexture( const NDb::STexture *p )
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLightmapsHolder *CalcLightmaps( IGameView *_p, CObjectBase *pUser, int nUserID, const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder )
 {
 	if ( IsValid(_p) )
@@ -1799,7 +1799,7 @@ CLightmapsHolder *CalcLightmaps( IGameView *_p, CObjectBase *pUser, int nUserID,
 	}
 	return 0;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ApplyLightmaps( IGameView *_p, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader *pLD )
 {
 	if ( IsValid(_p) )
@@ -1808,7 +1808,7 @@ void ApplyLightmaps( IGameView *_p, CObjectBase *pUser, CLightmapsHolder *pLight
 		ApplyLightmaps( p->GetGScene(), pUser, pLightmaps, pLD );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CTransparencyToOpacityFunc
 {
 public:
@@ -1817,7 +1817,7 @@ public:
 		return (1.f - ClampFast(fValue, 0.f, 1.f));
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResult,
 		const IGameView::SMeshInfo &meshInfo, const NDb::SModel *pModel,
 		NAnimation::ISkeletonAnimator *pAnimator )
@@ -1836,27 +1836,27 @@ void CreateAnimatedTransparencyChannels( vector<CPtr<CFuncBase<float> > > *pResu
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDGPtr <CGrannyMeshLoader> GetMeshLoader( const SPartAndSkeletonKey & key )
 {
 	return shareGrannyMeshes.Get( key );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CollectAllParts( vector<CObjectBase*> *pRes, IGameView *_pView )
 {
 	CDynamicCast<CGameView> pView( _pView );
 	IGScene *pScene = pView->GetGScene();
 	pScene->CollectAllParts( pRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // main create routine
 IGameView* CreateNewView()
 {
 	return new CGameView;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Commands/Vars
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void VarSetHSR( const string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	defaultHSRMode = HSR_NONE;
@@ -1870,7 +1870,7 @@ static void VarSetHSR( const string &szID, const NGlobal::CValue &sValue, void *
 float s_fWaterAmplitude = 0.03f;
 float s_fWaterWaveLength = 5.13f;
 float s_fWaterWaveFrequence = 4000.0f;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(GView)
 	REGISTER_VAR( "gfx_hsr", VarSetHSR, 0, STORAGE_USER )
 	REGISTER_VAR( "gfx_hqshot_mag", 0, 4, STORAGE_NONE )
@@ -1881,7 +1881,7 @@ START_REGISTER(GView)
 	REGISTER_VAR_EX( "gfx_water_frequence", NGlobal::VarFloatHandler, &s_fWaterWaveFrequence, 4000.0f, STORAGE_USER )
 
 FINISH_REGISTER
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x01741140, CGameView )

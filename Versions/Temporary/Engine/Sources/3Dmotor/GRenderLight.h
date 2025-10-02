@@ -9,7 +9,7 @@
 #include "GLightPerVertex.h"
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class ILight: public CVersioningBase
 {
 public:
@@ -17,7 +17,7 @@ public:
 	virtual bool CheckCulling( CTransformStack *pTS ) { return true; }
 	virtual void AddToState( 	SPerVertexLightState *pRes ) = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CDirectionalLight: public ILight
 {
 	OBJECT_BASIC_METHODS(CDirectionalLight);
@@ -63,7 +63,7 @@ public:
 	void CalcCloudProjection( SHMatrix *pRes );
 	float GetShadowsMDLength() const { return fShadowsMaxDetailLength; }
 }; 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPointLight: public ILight
 {
 	OBJECT_BASIC_METHODS(CPointLight);
@@ -81,7 +81,7 @@ public:
 	virtual bool CheckCulling( CTransformStack *pTS );
 	void AddToState( SPerVertexLightState *pRes );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAnimLight;
 class CDynamicPointLight : public ILight
 {
@@ -98,7 +98,7 @@ public:
 	void AddToState( SPerVertexLightState *pRes );
 	void SwitchLight( bool bMode ) { bIsOn = bMode; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLightStateNode : public CFuncBase<SPerVertexLightState>
 {
 	OBJECT_BASIC_METHODS(CLightStateNode);
@@ -126,6 +126,6 @@ public:
 	CDirectionalLight* GetDirectional() const { return pDirectionalLight; }
 	void SetClipTS( const CTransformStack &_ts );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 #endif

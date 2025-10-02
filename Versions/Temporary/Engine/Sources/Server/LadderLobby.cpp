@@ -8,13 +8,13 @@
 //#define LADDER_TEST
 
 extern int MAX_NUMBER_OF_REINFORCEMENTS;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define STEP_LENGTH_TIME 200
 #define GAME_DEATH_TIMEOUT 3000
 
 const int MAX_TECHLEVELS = 100;
 const int MAX_MAPS = 500;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NLadder{
 	void DropFromListByLevel( const hash_map< int, CPtr<CLadderClient> > &players, list<int> *pWaitingOrder,
 		const int nLevel, const int nDeltaPlus, const int nDeltaMinus );
@@ -29,7 +29,7 @@ namespace NLadder{
 	void DropWeakestExcept( const hash_map< int, CPtr<CLadderClient> > &players, list<int> *pList, const int nException );
 	void DropStrongestExcept( const hash_map< int, CPtr<CLadderClient> > &players, list<int> *pList, const int nException );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderExperience
 {
 public:
@@ -48,7 +48,7 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLadderConsts : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CLadderConsts )
@@ -84,19 +84,19 @@ public:
 		return 0;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLadderCacheLocker::CLadderCacheLocker( CClients* _pClients, const string &_szNick ) : pClients( _pClients ), szNick( _szNick )
 {
 	pClients->LockLadderInfo( szNick );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLadderCacheLocker::~CLadderCacheLocker()
 {
 	pClients->UnlockLadderInfo( szNick );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 BASIC_REGISTER_CLASS( CLadderConsts )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::Initialize( const string &_szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessLadderInfoPacket );
@@ -123,7 +123,7 @@ void CLadderLobby::Initialize( const string &_szCfgFile )
 	pStatisticsCollector->SetSpecific( "TotalPlayersEntered", NStatistics::CreateEventsCounter() );
 	pStatisticsCollector->SetSpecific( "GamesAverage", NStatistics::CreateAverageValueCounter() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::ReloadConfig()
 {
 	{
@@ -136,7 +136,7 @@ void CLadderLobby::ReloadConfig()
 	CGameLobby::ReloadConfig();
 	NUMBER_OF_RACES_IN_LADDER = pConsts->nRaces;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::Segment()
 {
 	UINT64 nTime = GetLongTickCount();
@@ -158,7 +158,7 @@ bool CLadderLobby::Segment()
 	CGameLobby::Segment();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::UpdateGames()
 {
 	const UINT64 nTime = GetLongTickCount();
@@ -177,7 +177,7 @@ void CLadderLobby::UpdateGames()
 		games.erase( *it );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 {
 	if ( games.find( nGameID ) == games.end() )
@@ -245,7 +245,7 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayerID, SLadderDBInfo *pClientInfo, const bool bWin )
 {
 	if ( pGameInfo->updatedPlayers.find( nPlayerID ) != pGameInfo->updatedPlayers.end() )
@@ -288,7 +288,7 @@ void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayer
 	}
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::CalcResults( const int nGameID )
 {
 #ifdef LADDER_TEST
@@ -408,7 +408,7 @@ void CLadderLobby::CalcResults( const int nGameID )
 	pClients->DBLogGameResult( &gameInfo );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLastGame, const int nUnitsLostInLastGame )
 {
 	bool bNewMedals = false;
@@ -459,7 +459,7 @@ bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLa
 	}
 	return bNewMedals;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -481,7 +481,7 @@ bool CLadderLobby::ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::MatchMakingStep()
 {
 	if ( waitingList.empty() )
@@ -626,7 +626,7 @@ bool CLadderLobby::MatchMakingStep()
 	waitingList.push_back( nFirstPlayerID );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 {
 	(*pStatisticsCollector)[ "GamesTotal" ]->Add( 1.0f );
@@ -696,7 +696,7 @@ void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 		gameInfo.nTechLevel, gameInfo.nMapID );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::ClientEnterToLobby( const int nClientID )
 {
 	string szNick;
@@ -704,14 +704,14 @@ void CLadderLobby::ClientEnterToLobby( const int nClientID )
 	nickByID[ nClientID ] = szNick;
 	(*pStatisticsCollector)[ "TotalPlayersEntered" ]->Add( 1.0f );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::ClientLeaveLobby( const int nClientID )
 {
 	ladderClients.erase( nClientID );
 	waitingList.remove( nClientID );
 	nickByID.erase( nClientID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 {
 	if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -764,7 +764,7 @@ bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::ProcessLadderGameResultPacket( CLadderGameResultPacket *pPacket )
 {
   if ( !IsLobbyClient( pPacket->nClientID ) )
@@ -817,13 +817,13 @@ bool CLadderLobby::ProcessLadderGameResultPacket( CLadderGameResultPacket *pPack
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderLobby::ProcessLadderStatisticsRequestPacket( CLadderStatisticsRequestPacket *pPacket )
 {
 	SendLadderInfoToPlayer( pPacket->nClientID, pPacket->szNick, pPacket->bSendFullStatistics );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::SendLadderInfoToPlayer( const int nClientID, const string& szClientNick, const bool bFullStatistics )
 {
 	if ( bFullStatistics )
@@ -855,7 +855,7 @@ void CLadderLobby::SendLadderInfoToPlayer( const int nClientID, const string& sz
 		PushPacket( pPacketToSend );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLadderLobby::GameDead( const int nGameID )
 {
 	games[nGameID].bIsDead = true;
@@ -864,9 +864,9 @@ void CLadderLobby::GameDead( const int nGameID )
 	DebugTrace( "LADDER_TEST: Game %d is dead. Waiting for game results", nGameID );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //   CLadderClient
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLadderClient::CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pConsts )
 {
 	int nErrorLevel = 0;
@@ -883,9 +883,9 @@ bool CLadderClient::CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pC
 		return true;
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //   Helpful functions
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NLadder{
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void DropFromListByLevel( const hash_map< int, CPtr<CLadderClient> > &players, list<int> *pWaitingOrder,
@@ -1014,7 +1014,7 @@ namespace NLadder{
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #undef STEP_LENGTH_TIME
 
 BASIC_REGISTER_CLASS( CLadderClient ) 

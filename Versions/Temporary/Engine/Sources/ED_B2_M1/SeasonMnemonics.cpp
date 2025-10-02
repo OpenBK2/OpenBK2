@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "../Stats_B2_M1/Season.h"
 #include "SeasonMnemonics.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER, "SEASON_WINTER" );
@@ -18,7 +18,7 @@ CSeasonMnemonics::CSeasonMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEA
 	Insert( NDb::SEASON_ASIA,   "SEASON_ASIA"   );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSeasonFilePostfixMnemonics::CSeasonFilePostfixMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_FILE_POSTFIX_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER,	"w" );
@@ -29,7 +29,7 @@ CSeasonFilePostfixMnemonics::CSeasonFilePostfixMnemonics() : CMnemonicsCollector
 	Insert( NDb::SEASON_ASIA,		"i" );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSeasonFolderPostfixMnemonics::CSeasonFolderPostfixMnemonics() : CMnemonicsCollector<int>( NDB_DEFAULT_SEASON, NDB_DEFAULT_SEASON_OBJECT_POSTFIX_MNEMONIC )
 {
 	Insert( NDb::SEASON_WINTER,	"Winter" );
@@ -40,8 +40,8 @@ CSeasonFolderPostfixMnemonics::CSeasonFolderPostfixMnemonics() : CMnemonicsColle
 	Insert( NDb::SEASON_ASIA,		"Asia" );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CSeasonMnemonics typeSeasonMnemonics;
 CSeasonFilePostfixMnemonics typeSeasonFilePostfixMnemonics;
 CSeasonFolderPostfixMnemonics typeSeasonFolderPostfixMnemonics;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

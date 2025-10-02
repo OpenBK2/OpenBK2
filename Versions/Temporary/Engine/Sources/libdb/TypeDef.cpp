@@ -1,17 +1,17 @@
 #include "StdAfx.h"
 #include "TypeDef.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CRAPTooSmartCompiler_DBTools_TypeDef()
 {
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 namespace NTypeDef
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** string <=> variant convertors
@@ -19,7 +19,7 @@ namespace NTypeDef
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeInt::ToString( string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%d", (int)value );
@@ -28,7 +28,7 @@ void STypeInt::FromString( CVariant *pRes, const string &szValue ) const
 {
 	*pRes = NStr::ToInt( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeFloat::ToString( string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%g", (float)value );
@@ -37,7 +37,7 @@ void STypeFloat::FromString( CVariant *pRes, const string &szValue ) const
 {
 	*pRes = NStr::ToFloat( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeBool::ToString( string *pRes, const CVariant &value ) const
 {
 	*pRes = (bool)value == false ? "false" : "true";
@@ -54,7 +54,7 @@ void STypeBool::FromString( CVariant *pRes, const string &szValue ) const
 		*pRes = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeString::ToString( string *pRes, const CVariant &value ) const
 {
 	*pRes = value.GetStr();
@@ -63,7 +63,7 @@ void STypeString::FromString( CVariant *pRes, const string &szValue ) const
 {
 	*pRes = szValue;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeWString::ToString( string *pRes, const CVariant &value ) const
 {
 	NStr::UnicodeToUTF8( pRes, value.GetWStr() );
@@ -74,7 +74,7 @@ void STypeWString::FromString( CVariant *pRes, const string &szValue ) const
 	NStr::UTF8ToUnicode( &wszRes, szValue );
 	*pRes = wszRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeGUID::ToString( string *pRes, const CVariant &value ) const
 {
 	NStr::GUID2String( pRes, *((GUID*)value.GetPtr()) );
@@ -85,7 +85,7 @@ void STypeGUID::FromString( CVariant *pRes, const string &szValue ) const
 	NStr::String2GUID( szValue, &guid );
 	*pRes = CVariant( &guid, sizeof(guid) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeBinary::ToString( string *pRes, const CVariant &value ) const
 {
 	NI_ASSERT( value.GetBlobSize() == nBinaryObjectSize, "Wrong binary object size" );
@@ -102,7 +102,7 @@ void STypeBinary::FromString( CVariant *pRes, const string &szValue ) const
 	*pRes = CVariant( pData, nSize );
 	delete []pData;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeEnum::ToString( string *pRes, const CVariant &value ) const
 {
 	if ( value.GetType() == CVariant::VT_STR )
@@ -136,7 +136,7 @@ void STypeEnum::FromString( CVariant *pRes, const string &szValue ) const
 	}
 	*pRes = entries.empty() ? CVariant() : entries[0].nVal;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeArray::ToString( string *pRes, const CVariant &value ) const
 {
 	*pRes = StrFmt( "%d", (int)value );
@@ -145,7 +145,7 @@ void STypeArray::FromString( CVariant *pRes, const string &szValue ) const
 {
 	*pRes = NStr::ToInt( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeRef::ToString( string *pRes, const CVariant &value ) const
 {
 	NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL, StrFmt("Can't convert type %d to DBID", value.GetType()), return );
@@ -172,7 +172,7 @@ void STypeRef::GetRefTypesList( vector<const STypeClass *> *pTypesList ) const
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool STypeRef::CheckRefType( const int nClassTypeID ) const
 {
 	if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>(pRefType) )
@@ -191,7 +191,7 @@ bool STypeRef::CheckRefType( const int nClassTypeID ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -199,14 +199,14 @@ bool STypeRef::CheckRefType( const int nClassTypeID ) const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVariant STypeGUID::GetDefaultValue() const 
 { 
 	GUID guid;
 	CoCreateGuid( &guid );
 	return guid;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVariant STypeBinary::GetDefaultValue() const 
 { 
 	vector<BYTE> buffer( nBinaryObjectSize );
@@ -214,7 +214,7 @@ CVariant STypeBinary::GetDefaultValue() const
 	CVariant var( &(buffer[0]), nBinaryObjectSize );
 	return var; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -222,7 +222,7 @@ CVariant STypeBinary::GetDefaultValue() const
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeStructBase::AddField( STypeDef *pType, 
 																const string &szName, 
 																const int nChunkID, 
@@ -240,7 +240,7 @@ void STypeStructBase::AddField( STypeDef *pType,
 	posField->pAttributes = pAttributes;
 	posField->defaultValue = _vtDefVal;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool STypeStructBase::SField::CheckValueCorrect( const CVariant &value ) const
 { 
 	for ( int i = 0; i < constraints.size(); ++i )
@@ -250,7 +250,7 @@ bool STypeStructBase::SField::CheckValueCorrect( const CVariant &value ) const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 EEditorType STypeStructBase::SField::GetEditorType() const
 {
 	return pType->GetDefaultEditorType();
@@ -261,7 +261,7 @@ EEditorType STypeStructBase::SField::GetEditorType() const
 		return pType->GetDefaultEditorType();
 	*/
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVariant STypeStructBase::SField::GetDefaultValue() const
 {
 	if ( defaultValue.GetType() != CVariant::VT_NULL || !pType->IsSimpleType() )
@@ -269,7 +269,7 @@ CVariant STypeStructBase::SField::GetDefaultValue() const
 	else
 		return checked_cast_ptr<STypeSimple *>(pType)->GetDefaultValue();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool STypeStructBase::SField::HasAttribute( const string &szName ) const 
 {
 	// check field's attribs
@@ -290,7 +290,7 @@ bool STypeStructBase::SField::HasAttribute( const string &szName ) const
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVariant *STypeStructBase::SField::GetAttribute( const string &szName ) const
 {
 	// check field's attribs
@@ -323,7 +323,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const string &szName ) co
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void STypeClass::RegisterTerminalType( STypeClass *pClass )
 {
 	if ( nClassTypeID == -1 )
@@ -342,10 +342,10 @@ void STypeClass::RegisterTerminalType( STypeClass *pClass )
 			pBaseClass->RegisterTerminalType( this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NDb::NTypeDef;
 REGISTER_SAVELOAD_CLASS( 0x1018DAC7, SAttributes );
 
@@ -371,4 +371,4 @@ REGISTER_SAVELOAD_TEMPL_CLASS( 0x1018D403, SConstraintsValuesListFloat, SConstra
 REGISTER_SAVELOAD_CLASS( 0x1018D404, SConstraintsArrayMinMax );
 REGISTER_SAVELOAD_CLASS( 0x1018D405, SConstraintsString );
 REGISTER_SAVELOAD_CLASS( 0x10191A80, SConstraintsTypeRef );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

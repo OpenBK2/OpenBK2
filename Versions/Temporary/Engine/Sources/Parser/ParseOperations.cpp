@@ -9,7 +9,7 @@
 #include "../System/FileUtils.h"
 #include "../System/FilePath.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int yyparse( void );
 
 extern int yydebug;			/*  nonzero means print parse trace	*/
@@ -20,17 +20,17 @@ extern int nyyLineNumber;
 bool byySuccess;
 bool bInTestMode;
 bool bNoTrace;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int yyReadData( char *pBuf, int nMaxSize )
 {
 	return NLang::ReadData( pBuf, nMaxSize );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 namespace NLang
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddFile( const NFile::CFileIterator &iter )
 {
 	if ( !iter.IsDirectory() )
@@ -43,13 +43,13 @@ void AddFile( const NFile::CFileIterator &iter )
 		yyparse();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static string szBaseFileName;
 const string GetBaseFileName()
 {
 	return szBaseFileName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Parse( const string &_szDir, const string &szFileMask, bool _bInTestMode )
 {
 	bInTestMode = _bInTestMode;
@@ -94,7 +94,7 @@ bool Parse( const string &_szDir, const string &szFileMask, bool _bInTestMode )
 
 	return byySuccess;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool Parse( const vector<string> &files, const string &_szBaseFileName )
 {
 	NLang::NullStep();
@@ -127,23 +127,23 @@ bool Parse( const vector<string> &files, const string &_szBaseFileName )
 
 	return byySuccess;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int nStep = 0;
 int GetStep()
 {
 	return nStep;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NextStep()
 {
 	++nStep;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NullStep()
 {
 	nStep = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CheckEnumEntryNotExist( const string &szEnumEntryName )
 {
 	CFileNode *pFile = GetCurFileNode();
@@ -156,11 +156,11 @@ bool CheckEnumEntryNotExist( const string &szEnumEntryName )
 
 	return true;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												Variables                                 *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetTypeToVars( CLangNode *pRawVarListNode, const string &szTypeName )
 {
 	CHECK_TYPE( CNodesList<CVariable>, pRawVarListNode, return );
@@ -231,7 +231,7 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const string &szTypeName )
 		pVar->SetType( pType );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ConstructRndType( const string &szRefType, const string &szFlagType, const string &szCodeTypeName )
 {
 	CPtr<CLangNode> pTypeNode = CreateComplexTypeNode( szCodeTypeName, false );
@@ -285,7 +285,7 @@ void ConstructRndType( const string &szRefType, const string &szFlagType, const 
 
 	AddDef( pTypeNode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetRndTypeToVars( CLangNode *pVarListNode, const string &szTypeName )
 {
 	const int nPos = szTypeName.find( "$" );
@@ -319,7 +319,7 @@ void SetRndTypeToVars( CLangNode *pVarListNode, const string &szTypeName )
 		SetTypeToVars( pVarListNode, szCodeTypeName );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetAttrToVars( CLangNode *pRawVarListNode, CLangNode *pRawAttrListNode )
 {
 	if ( pRawAttrListNode == 0 )
@@ -338,7 +338,7 @@ void SetAttrToVars( CLangNode *pRawVarListNode, CLangNode *pRawAttrListNode )
 		pNode->SetAttrList( pAttrListNode );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddVarToVarListNode( CLangNode *pRawVarListNode, CLangNode *pRawVar )
 {
 	if ( pRawVar == 0 )
@@ -352,7 +352,7 @@ void AddVarToVarListNode( CLangNode *pRawVarListNode, CLangNode *pRawVar )
 
 	pVarListNode->AddNode( pVar );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateVarListNode( CLangNode *pVar )
 {
 	CNodesList<CVariable> *pVarList = new CNodesList<CVariable>();
@@ -360,7 +360,7 @@ CLangNode* CreateVarListNode( CLangNode *pVar )
 
 	return pVarList;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetVarToPointer( CLangNode *pRawVar )
 {
 	CHECK_TYPE( CVariable, pRawVar, return );
@@ -368,7 +368,7 @@ void SetVarToPointer( CLangNode *pRawVar )
 
 	pVar->SetVarToPointer();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetDefValueToVarNode( CLangNode *pRawVarNode, const string &szValue, bool bStringValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
@@ -376,7 +376,7 @@ void SetDefValueToVarNode( CLangNode *pRawVarNode, const string &szValue, bool b
 
 	pVarNode->SetDefault( szValue, bStringValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetComplexDefaultValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
@@ -384,7 +384,7 @@ void SetComplexDefaultValueToVarNode( CLangNode *pRawVarNode, const string &szVa
 
 	pVarNode->SetComplexDefault( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetDefWStrValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
@@ -392,7 +392,7 @@ void SetDefWStrValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 
 	pVarNode->SetDefaultWStr( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetEnumValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 {
 	CHECK_TYPE( CVariable, pRawVarNode, return );
@@ -400,12 +400,12 @@ void SetEnumValueToVarNode( CLangNode *pRawVarNode, const string &szValue )
 
 	pVarNode->SetDefaultEnum( szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateVarNode( const string &szVarName )
 {
 	return new CVariableNode( szVarName, GetParsingFileName(), nyyLineNumber );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateVectorNode( const string &szVectorName, const string &szMinAmount, const string &szMaxAmount )
 {
 	int nMinAmount = NStr::ToInt( szMinAmount );
@@ -423,17 +423,17 @@ CLangNode* CreateVectorNode( const string &szVectorName, const string &szMinAmou
 
 	return new CVectorNode( szVectorName, nMinAmount, nMaxAmount, GetParsingFileName(), nyyLineNumber );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateVar( const string &szVarName, const string &szMinAmount, const string &szMaxAmount )
 {
 	CheckEnumEntryNotExist( szVarName );
 	return szMinAmount == "" ? CreateVarNode( szVarName ) : CreateVectorNode( szVarName, szMinAmount, szMaxAmount);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     Namespace                                   *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddTypeToNamespace( CLangNode *pRawNamespace, CLangNode *pType )
 {
 	CHECK_TYPE( CNamespace, pRawNamespace, return );
@@ -441,7 +441,7 @@ void AddTypeToNamespace( CLangNode *pRawNamespace, CLangNode *pType )
 
 	pNamespace->AddInsideDef( pType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddVarListToNamespace( CLangNode *pRawNamespace, CLangNode *pRawVarList )
 {
 	CHECK_TYPE( CNamespace, pRawNamespace, return );
@@ -457,24 +457,24 @@ void AddVarListToNamespace( CLangNode *pRawNamespace, CLangNode *pRawVarList )
 		pNamespace->AddInsideDef( pNode );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddBadIncludeToNamespace( CLangNode *pRawNamespace, const string &szInclude )
 {
 	CHECK_TYPE( CNamespace, pRawNamespace, return );
 	CDynamicCast<CNamespace> pNamespace = pRawNamespace;
 	pNamespace->AddBadInclude( szInclude );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* GetCurrentNamespace()
 {
 	CFileNode *pFile = GetCurFileNode();
 	return pFile->GetNamespace();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     Complex Type                                *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddParentToParentsList( CLangNode *pRawComplexTypeList, const string &szTypeName )
 {
 	CHECK_TYPE( CNodesList<CComplexTypeNode>, pRawComplexTypeList, return );
@@ -503,14 +503,14 @@ void AddParentToParentsList( CLangNode *pRawComplexTypeList, const string &szTyp
 
 	pComplexTypeList->AddNode( pTypeNode.GetPtr() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateParentsList( const string &szFirstTypeName )
 {
 	CNodesList<CComplexTypeNode> *pList = new CNodesList<CComplexTypeNode>();
 	AddParentToParentsList( pList, szFirstTypeName );
 	return pList;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void OpenNewNamespace( CLangNode *pRawVisibleTypes )
 {
 	CFileNode *pFileNode = GetCurFileNode();
@@ -523,13 +523,13 @@ void OpenNewNamespace( CLangNode *pRawVisibleTypes )
 		pFileNode->OpenNewNamespace( pVisibleTypes );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CloseNamespace()
 {
 	CFileNode *pFileNode = GetCurFileNode();
 	pFileNode->CloseNamespace( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddNamespaceToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawNamespace )
 {
 	if ( pRawNamespace == 0 || pRawNode == 0 )
@@ -543,7 +543,7 @@ void AddNamespaceToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawNamespac
 
 	pNode->AddNamespace( pNamespace );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddAttrToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawAttrList )
 {
 	if ( pRawAttrList == 0 )
@@ -557,7 +557,7 @@ void AddAttrToComplexTypeNode( CLangNode *pRawNode, CLangNode *pRawAttrList )
 
 	pNode->AddAttributes( pAttrList );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddParentsOfComplexType( CLangNode *pRawNode, CLangNode *pRawParentsList )
 {
 	CHECK_TYPE( CComplexTypeNode, pRawNode, return );
@@ -576,7 +576,7 @@ void AddParentsOfComplexType( CLangNode *pRawNode, CLangNode *pRawParentsList )
 
 	pNode->AddParents( pParentsList );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateComplexTypeNode( const string &szTypeName, bool bClass )
 {
 	CheckEnumEntryNotExist( szTypeName );
@@ -592,7 +592,7 @@ CLangNode* CreateComplexTypeNode( const string &szTypeName, bool bClass )
 
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass )
 {
 	CFileNode *pFile = GetCurFileNode();
@@ -610,11 +610,11 @@ CLangNode* CreateForwardComplexType( const string &szTypeName, bool bIsClass )
 	
 	return pResult;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*													TypeDef																	*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szReferencedTypeName, const string &szTypeName, bool bPointer )
 {
 	if ( pRawAttrListNode )
@@ -675,11 +675,11 @@ CLangNode* CreateTypeDefNode( CLangNode *pRawAttrListNode, const string &szRefer
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     Attributes                                  *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MergeAttrList( CLangNode *pRawAttrListNode1, CLangNode *pRawAttrListNode2 )
 {
 	CPtr<CLangNode> pNode = pRawAttrListNode2;
@@ -698,7 +698,7 @@ void MergeAttrList( CLangNode *pRawAttrListNode1, CLangNode *pRawAttrListNode2 )
 			pAttrListNode1->AddNode( pNode );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddAttrEntry( CLangNode *pRawAttrListNode, CLangNode *pRawAttrNode )
 {
 	if ( pRawAttrListNode == 0 || pRawAttrNode == 0 )
@@ -713,7 +713,7 @@ void AddAttrEntry( CLangNode *pRawAttrListNode, CLangNode *pRawAttrNode )
 	if ( find( pAttrListNode->GetNodes().begin(), pAttrListNode->GetNodes().end(), pAttrNode ) == pAttrListNode->GetNodes().end() )
 		pAttrListNode->AddNode( pAttrNode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateAttrListNode( CLangNode *pRawAttrNode )
 {
 	CNodesList<CAttributeNode> *pListNode = new CNodesList<CAttributeNode>();
@@ -727,7 +727,7 @@ CLangNode* CreateAttrListNode( CLangNode *pRawAttrNode )
 
 	return pListNode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateAttrDef( const string &szAttrName, const string &szRawAttrValue, bool bStringValue )
 {
 	CFileNode *pCurFileNode = GetCurFileNode();
@@ -754,11 +754,11 @@ CLangNode* CreateAttrDef( const string &szAttrName, const string &szRawAttrValue
 
 	return pNode;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     Enums                                       *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateForwardEnumNode( const string &szEnumName )
 {
 	CFileNode *pFile = GetCurFileNode();
@@ -778,14 +778,14 @@ CLangNode* CreateForwardEnumNode( const string &szEnumName )
 	
 	return new CEnumNode( szEnumName, true, GetParsingFileName(), nyyLineNumber );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetNameToEnumNode( CLangNode *pRawEnumNode, const string &szName )
 {
 	CHECK_TYPE( CEnumNode, pRawEnumNode, return );
 	CDynamicCast<CEnumNode> pNode = pRawEnumNode;
 	pNode->SetName( szName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateEnumNode( CLangNode *pEnumEntryNode )
 {
 	CEnumNode *pNode = new CEnumNode( GetParsingFileName(), nyyLineNumber );
@@ -795,7 +795,7 @@ CLangNode* CreateEnumNode( CLangNode *pEnumEntryNode )
 	
 	return pNode;	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddEnumEntry( CLangNode *pRawEnumNode, CLangNode *pRawEnumEntryNode )
 {
 	CHECK_TYPE( CEnumNode, pRawEnumNode, return );
@@ -832,7 +832,7 @@ void AddEnumEntry( CLangNode *pRawEnumNode, CLangNode *pRawEnumEntryNode )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddAttrToEnumNode( CLangNode *pRawEnumNode, CLangNode *pRawAttrList )
 {
 	if ( pRawAttrList == 0 )
@@ -846,7 +846,7 @@ void AddAttrToEnumNode( CLangNode *pRawEnumNode, CLangNode *pRawAttrList )
 
 	pEnumNode->AddAttributes( pAttrList );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefaultValue, bool bDefaultValueNumber )
 {
 	if ( szDefaultValue == "" )
@@ -874,25 +874,25 @@ CLangNode* CreateEnumEntryNode( const string &szEntryName, const string &szDefau
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     BaseType                                    *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateBaseTypeNode( const string &szTypeName, bool bIsClass )
 { 
 	return new CBaseTypeNode( szTypeName, bIsClass, GetParsingFileName(), nyyLineNumber );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     Attribute Def                               *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLangNode* CreateAttributeDefNode( ESimpleType eType )
 {
 	return new CAttributeDefNode( eType, GetParsingFileName(), nyyLineNumber );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetNameToAttrDef( CLangNode *pRawNode, const string &szName )
 {
 	CHECK_TYPE( CAttributeDefNode, pRawNode, return );
@@ -900,11 +900,11 @@ void SetNameToAttrDef( CLangNode *pRawNode, const string &szName )
 	CDynamicCast<CAttributeDefNode> pNode = pRawNode;
 	pNode->SetName( szName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*                     AddType                                     *
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsEqualDefs( CLangNode *pNode1, CLangNode *pNode2 )
 {
 	if ( typeid( *pNode1 ) != typeid( *pNode2 ) )
@@ -922,7 +922,7 @@ bool IsEqualDefs( CLangNode *pNode1, CLangNode *pNode2 )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void AddAttrDef( CAttributeDefNode *pAttrDefNode )
 {
 	CFileNode *pFile = GetCurFileNode();
@@ -935,7 +935,7 @@ static void AddAttrDef( CAttributeDefNode *pAttrDefNode )
 	else
 		pFile->AddAttrDef( pAttrDefNode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AddDef( CLangNode *pRawNode )
 {
 	if ( pRawNode == 0 )
@@ -974,6 +974,6 @@ void AddDef( CLangNode *pRawNode )
 		pFile->AddDef( pTypeNode );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

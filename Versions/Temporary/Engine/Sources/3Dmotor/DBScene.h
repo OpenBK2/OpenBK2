@@ -1,14 +1,14 @@
 #pragma once
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // automatically generated file, don't change manually!
 
 #include "3dmotor_export.h"
 
 #include "../misc/geom.h"
 #include "../system/filepath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 interface IXmlSaver;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	struct SAnimBase;
@@ -876,13 +876,13 @@ namespace NDb
 		DWORD CalcCheckSum() const { return 0; }
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EConvertionType eValue );
 	EConvertionType StringToEnum_NDb_EConvertionType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EConvertionType>
 {
@@ -890,13 +890,13 @@ struct SKnownEnum<NDb::EConvertionType>
 	static string ToString( NDb::EConvertionType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EConvertionType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EConvertionType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::STexture::EType eValue );
 	STexture::EType StringToEnum_NDb_STexture_EType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::STexture::EType>
 {
@@ -904,13 +904,13 @@ struct SKnownEnum<NDb::STexture::EType>
 	static string ToString( NDb::STexture::EType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::STexture::EType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::STexture::EAddrType eValue );
 	STexture::EAddrType StringToEnum_NDb_STexture_EAddrType( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::STexture::EAddrType>
 {
@@ -918,13 +918,13 @@ struct SKnownEnum<NDb::STexture::EAddrType>
 	static string ToString( NDb::STexture::EAddrType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::STexture::EAddrType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EAddrType( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::STexture::EFormat eValue );
 	STexture::EFormat StringToEnum_NDb_STexture_EFormat( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::STexture::EFormat>
 {
@@ -932,13 +932,13 @@ struct SKnownEnum<NDb::STexture::EFormat>
 	static string ToString( NDb::STexture::EFormat eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::STexture::EFormat ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_STexture_EFormat( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SParticleInstance::ELight eValue );
 	SParticleInstance::ELight StringToEnum_NDb_SParticleInstance_ELight( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SParticleInstance::ELight>
 {
@@ -946,13 +946,13 @@ struct SKnownEnum<NDb::SParticleInstance::ELight>
 	static string ToString( NDb::SParticleInstance::ELight eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SParticleInstance::ELight ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_ELight( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SParticleInstance::EStatic eValue );
 	SParticleInstance::EStatic StringToEnum_NDb_SParticleInstance_EStatic( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SParticleInstance::EStatic>
 {
@@ -960,13 +960,13 @@ struct SKnownEnum<NDb::SParticleInstance::EStatic>
 	static string ToString( NDb::SParticleInstance::EStatic eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SParticleInstance::EStatic ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SParticleInstance_EStatic( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SFont::EPitch eValue );
 	SFont::EPitch StringToEnum_NDb_SFont_EPitch( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SFont::EPitch>
 {
@@ -974,13 +974,13 @@ struct SKnownEnum<NDb::SFont::EPitch>
 	static string ToString( NDb::SFont::EPitch eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SFont::EPitch ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFont_EPitch( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SFont::ECharset eValue );
 	SFont::ECharset StringToEnum_NDb_SFont_ECharset( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SFont::ECharset>
 {
@@ -988,13 +988,13 @@ struct SKnownEnum<NDb::SFont::ECharset>
 	static string ToString( NDb::SFont::ECharset eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SFont::ECharset ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SFont_ECharset( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::EAddressMode eValue );
 	EAddressMode StringToEnum_NDb_EAddressMode( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::EAddressMode>
 {
@@ -1002,13 +1002,13 @@ struct SKnownEnum<NDb::EAddressMode>
 	static string ToString( NDb::EAddressMode eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EAddressMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_EAddressMode( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SMaterial::ELightingMode eValue );
 	SMaterial::ELightingMode StringToEnum_NDb_SMaterial_ELightingMode( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SMaterial::ELightingMode>
 {
@@ -1016,13 +1016,13 @@ struct SKnownEnum<NDb::SMaterial::ELightingMode>
 	static string ToString( NDb::SMaterial::ELightingMode eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SMaterial::ELightingMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_ELightingMode( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SMaterial::EEffect eValue );
 	SMaterial::EEffect StringToEnum_NDb_SMaterial_EEffect( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SMaterial::EEffect>
 {
@@ -1030,13 +1030,13 @@ struct SKnownEnum<NDb::SMaterial::EEffect>
 	static string ToString( NDb::SMaterial::EEffect eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SMaterial::EEffect ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EEffect( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SMaterial::EAlphaMode eValue );
 	SMaterial::EAlphaMode StringToEnum_NDb_SMaterial_EAlphaMode( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SMaterial::EAlphaMode>
 {
@@ -1044,13 +1044,13 @@ struct SKnownEnum<NDb::SMaterial::EAlphaMode>
 	static string ToString( NDb::SMaterial::EAlphaMode eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SMaterial::EAlphaMode ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SMaterial_EAlphaMode( szValue ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	string EnumToString( NDb::SMaterial::EDynamicMode eValue );
 	SMaterial::EDynamicMode StringToEnum_NDb_SMaterial_EDynamicMode( const string &szValue );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <>
 struct SKnownEnum<NDb::SMaterial::EDynamicMode>
 {

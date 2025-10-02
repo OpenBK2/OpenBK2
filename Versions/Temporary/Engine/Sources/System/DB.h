@@ -4,7 +4,7 @@
 
 #include "System_export.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // database object identification
 class CDBID
 {
@@ -92,7 +92,7 @@ public:
 	inline bool IsEmpty() const { return szKeyName.empty(); }
 	inline void Clear() { szKeyName.clear(); dwHashKey = 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace nstl
 {
 	template<> struct hash<CDBID>
@@ -100,7 +100,7 @@ namespace nstl
 		size_t operator()( const CDBID &dbid ) const { return dbid.GetHashKey(); }
 	};
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 	enum EDBMode
@@ -168,19 +168,19 @@ namespace NDb
 	}
 	inline const char *GetResName( const CResource *pRes ) { return pRes->GetDBID().ToString().c_str(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define BASIC_REGISTER_DATABASE_CLASS(classname) \
 BASIC_REGISTER_CLASS(classname)	\
 template<> __declspec(dllexport) const NDb::CResource* CastToDBResourceImpl<classname >( const classname *p, const void* ) { return p; }  \
 template<> __declspec(dllexport) const classname* CastToDBUserObjectImpl<classname >( const NDb::CResource *p, const classname*, const void* ) { return dynamic_cast<const classname*>( p ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TUserObj> __declspec(dllimport) const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const void* );
 template<class TUserObj> const NDb::CResource* CastToDBResourceImpl( const TUserObj *p, const NDb::CResource* ) { return p; }
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const void * );
 template<class TUserObj> const TUserObj* CastToDBUserObjectImpl( const NDb::CResource *p, const TUserObj*, const NDb::CResource* ) { return dynamic_cast<const TUserObj*>( p ); }
 template<class TUserObj> inline const NDb::CResource* CastToDBResource( const TUserObj *p ) { return CastToDBResourceImpl( p, p ); }
 template<class TUserObj> inline const TUserObj* CastToDBUserObject( const NDb::CResource *p, const TUserObj *pu ) { return CastToDBUserObjectImpl( p, pu, pu ); }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // NDb::Get helper functions series
 namespace NDb
 {
@@ -193,7 +193,7 @@ namespace NDb
 // **
 // **
 // ************************************************************************************************************************ //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template <class TUserObj, typename TPtr = CPtr<TUserObj> >
 class CDBPtr
 {
@@ -263,13 +263,13 @@ public:
 
 	DWORD CalcCheckSum() const;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SDBPtrHash
 {
 	template <class T>
 		int operator()( const T &a ) const { return a.GetPtr() ? a.GetPtr()->GetDBID().GetHashKey() : 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define REGISTER_DATABASE_CLASS( N, name )  \
 	BASIC_REGISTER_DATABASE_CLASS( name ) \
 	static struct name##Register##N { name##Register##N() {  \
@@ -277,4 +277,4 @@ struct SDBPtrHash
 	CPtr<name> pTemp = new name;	\
 	pTemp->ReportMetaInfo();			\
 	} } init##name##N;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

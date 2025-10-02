@@ -31,7 +31,7 @@ static char THIS_FILE[] = __FILE__;
 
 #pragma comment(lib, "granny2.lib")
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IManipulator* CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipulator, string *pModelName )
 {
 	int nModelCount = 0;
@@ -52,7 +52,7 @@ IManipulator* CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipula
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, const CVec3 &rvMin, const CVec3 &rvMax )
 {
 	NI_ASSERT( pvOrigin != 0, "NormalizePassabilityOrigin() pvOrigin == 0" );
@@ -66,7 +66,7 @@ bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, con
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin )
 {
 	NI_ASSERT( pDestination != 0, "NormalizePassabilityArray() pDestination == 0" );
@@ -138,7 +138,7 @@ bool NormalizePassabilityArray( CArray2D<BYTE> *pDestination, CVec2 *pvOrigin )
 	return true;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CreateObjectStaticDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius )
 {
 	NI_ASSERT( pvOrigin != 0, "CreateObjectPassability() pvOrigin = 0" );
@@ -153,7 +153,7 @@ bool CreateObjectStaticDebris( const string &rszGrannyFileName, const string &rs
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &rszImageFileName, CVec2 *pvOrigin, float fWidth )
 {
 	NI_ASSERT( pvOrigin != 0, "CreateObjectPassability() pvOrigin = 0" );
@@ -179,7 +179,7 @@ bool CreateObjectDynamicDebris( const string &rszGrannyFileName, const string &r
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *pPassabilityArray, CVec2 *pvOrigin )
 {
 	NI_ASSERT( pPassabilityArray != 0, "CreateObjectPassability() pPassabilityArray = 0" );
@@ -193,7 +193,7 @@ bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *p
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //
@@ -203,7 +203,7 @@ bool CreateObjectPassability( const string &rszGrannyFileName, CArray2D<BYTE> *p
 //
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetModelLocators(	vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 											IManipulator* pRPGStatsManipulator, 
 											const char *pszModelSrcField )
@@ -226,7 +226,7 @@ void GetModelLocators(	vector<SSkeletonLocatorInfo> *pLocatorsInfo,
 
 	GetSkeletonLocatorsInfo( pLocatorsInfo, pSkelManinpulator->GetDBID() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const CDBID &dbidSkeleton )
 {
 	const char SKELETONS_BIN_PATH[] = "bin\\Skeletons\\";
@@ -321,7 +321,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 
 	GrannyFreeFile( pFile );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int PatMat(const char *raw,const char *pat)
 {
 	//
@@ -353,7 +353,7 @@ int PatMat(const char *raw,const char *pat)
 	}
 	return( 0 ) ;                       
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern )
 {
 	if ( !PatMat( pszName, pszPattern ) )	
@@ -384,7 +384,7 @@ bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern
 	*pQIdx = -1;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SearchLocators(	vector<SLocatorQInfo> *pQLocInfo, 
 										const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 										const char *pszLocatorNamePattern )
@@ -406,7 +406,7 @@ void SearchLocators(	vector<SLocatorQInfo> *pQLocInfo,
 
 	sort( pQLocInfo->begin(), pQLocInfo->end() ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
 									 const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 									 const char *pszLocatorName )
@@ -421,7 +421,7 @@ bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointValueForVec2Field(	IManipulator* pManipulator, 
 															 const char *pszLocatorName,
 															 const char *pszFieldName,
@@ -434,7 +434,7 @@ void SetPointValueForVec2Field(	IManipulator* pManipulator,
 		CManipulatorManager::SetVec2( vPoint, pManipulator, pszFieldName ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointValueForStringField(	IManipulator* pManipulator, 
 																 const char *pszLocatorName,
 																 const char *pszFieldName,
@@ -444,7 +444,7 @@ void SetPointValueForStringField(	IManipulator* pManipulator,
 	if ( SearchLocator( &inf, rLocatorsInfo, pszLocatorName ) )
 		pManipulator->SetValue( pszFieldName, inf.szName );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointsValuesForVec2Array(	IManipulator* pManipulator, 
 																 const char *pszLocatorNamePattern,
 																 const char *pszFieldName,
@@ -467,7 +467,7 @@ void SetPointsValuesForVec2Array(	IManipulator* pManipulator,
 		CManipulatorManager::SetVec2( vPoint, pManipulator, pszAddr ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointsValuesForStringArray(	IManipulator* pManipulator, 
 																	 const char *pszLocatorNamePattern,
 																	 const char *pszFieldName,
@@ -489,7 +489,7 @@ void SetPointsValuesForStringArray(	IManipulator* pManipulator,
 		pManipulator->SetValue( pszAddr, i->inf.szName );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator, 
 																			 const char *pszLocatorNamePattern,
 																			 const char *pszArrayName,
@@ -519,7 +519,7 @@ void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 		CManipulatorManager::SetVec2( vPoint, pManipulator, pszDBA ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator, 
 																			 const char *pszLocatorNamePattern,
 																			 const char *pszArrayName,
@@ -559,7 +559,7 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 		CManipulatorManager::SetVec3( i->inf.vPos, pManipulator, pszDBA ); 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetPassability( CArray2D<BYTE> *pPassability, IManipulator *pBuildingRPGStatsManipulator )
 {
 	CVariant v;
@@ -610,7 +610,7 @@ void GetPassability( CArray2D<BYTE> *pPassability, IManipulator *pBuildingRPGSta
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int FindLocator( vector<SLocatorQInfo> &lc, const string &szName )
 {
 	for ( int i = 0; i < lc.size(); ++i )
@@ -621,7 +621,7 @@ static const int FindLocator( vector<SLocatorQInfo> &lc, const string &szName )
 
 	return -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void FixLocators( IManipulator *pManipulator, const string &szLocatorNamePattern, const string &szArrayName, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	vector<SLocatorQInfo> lc;
@@ -687,7 +687,7 @@ static void FixLocators( IManipulator *pManipulator, const string &szLocatorName
 		return;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool FixLocators( const SObjectSet &objectSet, const string &szLocatorNamePattern, const string &szArrayName )
 {
 	for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
@@ -711,7 +711,7 @@ bool FixLocators( const SObjectSet &objectSet, const string &szLocatorNamePatter
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadian )
 {
 	float fDirection = 0.0f;
@@ -750,13 +750,13 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 
 	return fDirection;			
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Acquire attributes for a given model
 bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *pAttributeList )
 {
 	return ReadAttributes( pAttributeList, NMEGeomAttribs::GetAttribsByGeometry(pGeomMan), "", true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NExportFilesList
 {
 	struct SEntry
@@ -787,7 +787,7 @@ namespace NExportFilesList
 		return true;
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ExportFilesList( const string &szFilesListFileName, bool bForce, const char *pszBase )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -831,4 +831,4 @@ bool ExportFilesList( const string &szFilesListFileName, bool bForce, const char
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -3,7 +3,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T> class CSyncSrc;
 template<class T> class CSyncDst;
 template<class T>
@@ -22,7 +22,7 @@ public:
 	void Unlink() { if ( IsValid( pSync ) ) pSync->Remove( nID ); pSync = 0; }
 	void Update() { if ( IsValid( pSync ) ) pSync->Update( nID ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CSyncSrc: public CObjectBase
 {
@@ -102,7 +102,7 @@ public:
 	friend class CSyncDst<T>;
 	friend class CSyncSrcBind<T>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CSyncDst
 {
@@ -132,7 +132,7 @@ public:
 	CSyncDst( CSyncSrc<T> *_pSrc = 0 ): pSource(_pSrc), nVersion(-1) {}
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc ) { pSource = _pSrc; nVersion = -1; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class IVisitorBase
 {
 	vector<CObj<CObjectBase> > *pStuff;
@@ -159,7 +159,7 @@ struct SVisitorBaseAccess
 		p->StartNewObject( _pStuff, _pCurrentObject );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T,class TVisitor>
 class COrdinarySyncDst: public CSyncDst<T>
 {
@@ -196,7 +196,7 @@ public:
 	virtual void SetNewSource( CSyncSrc<T> *_pSrc, TVisitor *_pVisitor ) { TSyncParent::SetNewSource(_pSrc); view.clear(); pVisitor = _pVisitor; }
 	TVisitor *GetVisitor() const { return pVisitor; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CSetSyncSrc: public CSyncSrc<T>
 {
@@ -234,7 +234,7 @@ public:
 			stuff[p] = Add( p );
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // utility class for CBoolSyncSrc<T>
 template<class T, class TUplink>
 class CBoolSyncDstUtil: public CSyncDst<T>
@@ -270,7 +270,7 @@ public:
 	CBoolSyncDstUtil() {}
 	CBoolSyncDstUtil( CSyncSrc<T> *pSrc, TUplink *p, int _nMask ): CSyncDst<T>(pSrc), pRes(p), nMask(_nMask) {}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T, class TFunc>
 class CBoolSyncSrc: public CSyncSrc<T>
 {
@@ -343,23 +343,23 @@ public:
 
 	friend class CBoolSyncDstUtil<T,TThis>;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CUnionFunc
 {
 public:
 	static bool GetResult( int nMask ) { return nMask != 0; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CIntersectionFunc
 {
 public:
 	static bool GetResult( int nMask ) { return nMask == 3; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CSubtractFunc
 {
 public:
 	static bool GetResult( int nMask ) { return nMask == 1; }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif

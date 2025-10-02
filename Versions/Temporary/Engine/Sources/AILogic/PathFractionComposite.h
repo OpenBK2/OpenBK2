@@ -2,7 +2,7 @@
 
 #include "PathFractionComplex.h"
 #include "PlanePathMath.h"
-/////////////////////////////////////////////////////////////////////////////
+
 // to manage path list as ordinary complex path
 class CPathFractionComposite : public CPathFractionComplexBase
 {
@@ -58,4 +58,4 @@ public:
 	}
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const;
 };
-/////////////////////////////////////////////////////////////////////////////
+

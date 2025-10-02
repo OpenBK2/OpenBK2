@@ -3,7 +3,7 @@
 #pragma once
 
 #include "..\MapEditorLib\StoreInputState.h"
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapInfoStoreInputState : public CStoreInputState
 {
 	struct SEventInfo : public SInputStateEventInfo
@@ -48,5 +48,5 @@ public:
 	CMapInfoStoreInputState() : bFixInvalidPos( false ), visSize( 0, 0 ) {}
 	inline void SetSizes( const CTPoint<int> &rVisSize, bool _bFixInvalidPos ) { visSize = rVisSize; bFixInvalidPos = _bFixInvalidPos; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__STORE_INPUT_STATE_TEMPLATE__)

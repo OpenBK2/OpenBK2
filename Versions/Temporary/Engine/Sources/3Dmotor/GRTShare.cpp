@@ -11,9 +11,9 @@
 
 namespace NGScene
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CTexShare
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T> void CreateTex( CObj<T> *pRes, int nSize, int nPixelFormatID ) { ASSERT(0); }
 template<>
 static void CreateTex<NGfx::CTexture>( CObj<NGfx::CTexture> *pRes, int nSize, int nPixelFormatID )
@@ -25,7 +25,7 @@ static void CreateTex<NGfx::CCubeTexture>( CObj<NGfx::CCubeTexture> *pRes, int n
 {
 	*pRes = NGfx::MakeCubeTexture( nSize, 1, nPixelFormatID, NGfx::TARGET );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class T>
 class CTexShare
 {
@@ -80,7 +80,7 @@ public:
 };
 static CTexShare<NGfx::CTexture> texShare;
 static CTexShare<NGfx::CCubeTexture> texCubeShare;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CTexture *CRTPtr::GetTexture()
 {
 	if ( IsValid(pRes) )
@@ -88,7 +88,7 @@ NGfx::CTexture *CRTPtr::GetTexture()
 	pRes = texShare.GetTexture( szName );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NGfx::CCubeTexture *CCubeRTPtr::GetTexture()
 {
 	if ( IsValid(pRes) )
@@ -96,7 +96,7 @@ NGfx::CCubeTexture *CCubeRTPtr::GetTexture()
 	pRes = texCubeShare.GetTexture( szName );
 	return pRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void InitRTShare( const SUserRTInfo &rtInfo, NGfx::SRenderTargetsInfo *pRes )
 {
 	texShare.Init( rtInfo.tex, &pRes->targets );

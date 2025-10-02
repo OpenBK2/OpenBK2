@@ -7,12 +7,12 @@
 #include "../System/XmlReader.h"
 #include "../System/XmlUtils.h"
 #include "../System/FilePath.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
 namespace NBind
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** XML file loading with meta-information
@@ -20,7 +20,7 @@ namespace NBind
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool LoadRefFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, const CDBID &dbidParent )
 {
 	if ( const NXml::SXmlAttribute *pAttribute = pNode->GetHRefAttribute() )
@@ -37,7 +37,7 @@ static bool LoadRefFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, const 
 	*pRes = CVariant();
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, const CDBID &dbidParent )
 {
 	if ( const NXml::SXmlAttribute *pAttribute = pNode->GetHRefAttribute() )
@@ -59,7 +59,7 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 		*pRes = szTemp;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, 
 														  const NTypeDef::STypeStructBase::SField &field, 
 															const string &szFullFieldName, IObjMan *pParent )
@@ -79,7 +79,7 @@ bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode,
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pBaseNode, IObjMan *pParent )
 {
 	if ( pType->pBaseType )
@@ -179,7 +179,7 @@ bool SBindProcessor::LoadXML( const string &szAddName, NTypeDef::STypeStructBase
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const CDBID &dbidParent )
 {
 	string szRelPath;
@@ -199,7 +199,7 @@ static bool SaveRefToNode( NLXML::CXMLNode *pNode, const CVariant &value, const 
 	checked_cast<NLXML::CXMLElement*>(pNode)->SetAttribute( "href", szRelPath );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void SaveFilePathToNode( NLXML::CXMLNode *pNode, const CVariant &value, const CDBID &dbidParent )
 {
 	string szRelPath, szTemp;
@@ -208,7 +208,7 @@ static void SaveFilePathToNode( NLXML::CXMLNode *pNode, const CVariant &value, c
 	NFile::NormalizePath( &szRelPath );
 	checked_cast<NLXML::CXMLElement*>(pNode)->SetAttribute( "href", szRelPath );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SaveSimpleValueToNode( const CVariant &value, NLXML::CXMLElement *pElement, 
 													  const NTypeDef::STypeStructBase::SField &field, IObjMan *pParent )
 {
@@ -224,7 +224,7 @@ bool SaveSimpleValueToNode( const CVariant &value, NLXML::CXMLElement *pElement,
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SBindProcessor::SaveXML( const string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pBaseNode, IObjMan *pParent )
 {
 	if ( pType->pBaseType )
@@ -298,7 +298,7 @@ bool SBindProcessor::SaveXML( const string &szAddName, NTypeDef::STypeStructBase
 	//
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SBindProcessor::SetDefault( const string &szAddName, NTypeDef::STypeStructBase *pType )
 {
 	if ( pType->pBaseType )
@@ -335,6 +335,6 @@ bool SBindProcessor::SetDefault( const string &szAddName, NTypeDef::STypeStructB
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }

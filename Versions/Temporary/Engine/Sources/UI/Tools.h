@@ -1,6 +1,6 @@
 #pragma once
 
-//////////////////////////////////////////////////////////////////////
+
 namespace NUITools
 {
 	void ApplyWindowAlign( NDb::EPositionAllign eAlign, float fParentPos, float fParentSize,
@@ -17,4 +17,4 @@ namespace NUITools
 	void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float> &parentRect, 
 		CTRect<float> *pRect );
 }
-//////////////////////////////////////////////////////////////////////
+

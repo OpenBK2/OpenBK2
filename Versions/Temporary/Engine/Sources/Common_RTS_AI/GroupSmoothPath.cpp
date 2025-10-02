@@ -4,9 +4,9 @@
 #include "HungarianMethod.h"
 #include "..\System\Commands.h"
 #include "../DebugTools/DebugInfoManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bShowGroupMarker = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit ) const
 {
 	CUnitsMap::const_iterator posUnit = units.find( pUnit->GetUniqueID() );
@@ -26,7 +26,7 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 
   return posCell->second[nCell].vUnitShift;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *pUnit ) const
 {
 	CUnitsMap::const_iterator posUnit = units.find( pUnit->GetUniqueID() );
@@ -43,7 +43,7 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 
 	return posCell->second[nCell].fUnitProjShift;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 {
 	//! больше нет мест в формации
@@ -63,7 +63,7 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 	RecalcCells();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupSmoothPath::DeleteUnit( CBasePathUnit *pUnit )
 {	
 	CUnitsMap::iterator pos = units.find( pUnit->GetUniqueID() );
@@ -76,7 +76,7 @@ bool CGroupSmoothPath::DeleteUnit( CBasePathUnit *pUnit )
 	RecalcCells();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupSmoothPath::RecalcCells()
 {
 	if ( GetPath() != 0 )
@@ -88,7 +88,7 @@ void CGroupSmoothPath::RecalcCells()
 	else
 		RecalcCells( GetUnit()->GetCenterPlain(), GetUnit()->GetDirectionVector() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirection )
 {
 	vector<SUnitInfo> unitsList;
@@ -152,7 +152,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 			pos->second.nCell = it->nCell;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupSmoothPath::AddGeometry( const vector<SGeometryCellInfo> &cells )
 {
 	const CVec2 vDir1( 0, 1 );
@@ -188,7 +188,7 @@ void CGroupSmoothPath::AddGeometry( const vector<SGeometryCellInfo> &cells )
 	}
 	geometries.push_back( SGeometry( priorityCells, fMaxProjection, fRadius ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupSmoothPath::AlignGeometriesToCenter()
 {
 	const CVec2 vDir1( 0, 1 );
@@ -228,7 +228,7 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 
 	RecalcCells();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( fMaxPathShift > 0.0f )
@@ -250,12 +250,12 @@ void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 	GetUnit()->SetSpeed( fSpeedHere/fSpeedCoeff );
 	fMaxPathShift = -1.0f;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CGroupSmoothPath::GetValidUnitCenter( const CBasePathUnit *pUnit ) const
 {
 	return GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(), GetCenter(), GetUnitCenter( pUnit ), pUnit->GetAIPassabilityClass(), false, GetAIMap() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGroupSmoothPath::Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 {
 	if ( CStandartSmoothPathBasis::Init( pUnit, pPath, bSmoothTurn, bCheckTurn, pAIMap ) )
@@ -265,10 +265,10 @@ bool CGroupSmoothPath::Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTur
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( GroupSmoothPathVars )
 REGISTER_VAR_EX( "show_group_marker", NGlobal::VarBoolHandler, &s_bShowGroupMarker, false, STORAGE_NONE );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x310C9B00, CGroupSmoothPath );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -5,11 +5,11 @@
 #include "../Common_RTS_AI/PathFinder.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1508D49E, CBridgeCreation );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												  CBridgeCreation*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBridgeCreation::SBridgeSpanSort::operator()( const CObj<CBridgeSpan> &s1, const CObj<CBridgeSpan> &s2 )
 {
 	const CVec2 v1 = CVec2(s1->GetCenter().x,s1->GetCenter().y);
@@ -20,7 +20,7 @@ bool CBridgeCreation::SBridgeSpanSort::operator()( const CObj<CBridgeSpan> &s1, 
 	else
 		return v1.x > v2.x;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVec2 CBridgeCreation::SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, class CCommonUnit *pUnit )
 {
 	if ( 1 >= spans->size() ) return VNULL2;
@@ -71,12 +71,12 @@ CVec2 CBridgeCreation::SortBridgeSpans( vector< CObj<CBridgeSpan> > *spans, clas
 	else 
 		return VNULL2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CBridgeCreation::IsFirstSegmentBuilt() const
 {
 	return spans[0]->GetHitPoints() >= 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBridgeCreation::CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit *pUnit, const bool bAllowAIModification )
 : pFullBridge( pBridge ),
 CLongObjectCreation( pUnit->GetPlayer(), bAllowAIModification )
@@ -101,27 +101,27 @@ CLongObjectCreation( pUnit->GetPlayer(), bAllowAIModification )
 	spans[0]->GetBoundRect( &r0 );
 	wDir = GetDirectionByVector( r1.center - r0.center );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 & CBridgeCreation::GetStartPoint() const
 {
 	return vStartPoint;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLine2 CBridgeCreation::GetCurLine() 
 { 
 	return line; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CBridgeCreation::GetMaxIndex() const
 {
 	return spans.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CBridgeCreation::GetCurIndex() const
 {
 	return nCurIndex;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const CVec2 CBridgeCreation::GetNextPoint( const int nPlace, const int nMaxPlace ) const
 {
 	SRect rect;
@@ -145,7 +145,7 @@ const CVec2 CBridgeCreation::GetNextPoint( const int nPlace, const int nMaxPlace
 	const CVec2 vOffset( (vertexes[0] - vertexes[1])/2 );
 	return (vertexes[0] + vertexes[1])/2 + vOffset * ( 1.0f * nPlace / nMaxPlace ) - SConsts::TILE_SIZE * GetVectorByDirection( wDir );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBridgeCreation::BuildNext()
 {
 	CLongObjectCreation::BuildNext();
@@ -187,10 +187,10 @@ void CBridgeCreation::BuildNext()
 		pFullBridge->UnlockAllSpans();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CBridgeCreation::GetPrice()
 {
 	const SHPObjectRPGStats *pStats = spans[nCurIndex]->GetStats();
 	return pStats->fMaxHP * pStats->fRepairCost * SConsts::REPAIR_COST_ADJUST/ pFullBridge->GetNSpans();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

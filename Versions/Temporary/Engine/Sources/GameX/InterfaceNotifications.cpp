@@ -18,34 +18,34 @@
 #include "InterfaceArmyBranchDlg.h"
 #include "SaveLoadHelper.h"
 #include "../System/Commands.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool s_bAutosaveObjectiveComplete = false;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float FADE_DELTA_TIME = 1.0f;
 const float NEW_REINFORCEMENT_TIME = 10.0f;
 const float NEW_REINFORCEMENT_TIME_STEP = 1.0f;
 const float OBJECTIVES_NOTIFY_REPEAT = 60 * 1000; // (msec)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const float TEXTURE_POINT_X = 4.0f; 
 const float TEXTURE_POINT_Y = 7.0f;
 const float KEY_OBJECT_TEXTURE_POINT_X = 8.0f; 
 const float KEY_OBJECT_TEXTURE_POINT_Y = 6.0f;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int EVENT_ITEMS_INTERVAL = 5;
 const char* EVENT_NAME_PREFIX = "Btn";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const int CLIENT_UNIQUE_ID_MAP_POINTER = -10000; // look for other CLIENT_UNIQUE_ID_xxx (криво, но менять поздно)
 
 #define MP_MARKER_POINTER_ID 1000
 #define MP_MARKER_EXPIRE 120000
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisualNotifications::SMapPointer
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisualNotifications::SMapPointer::~SMapPointer()
 {
 	Remove();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::SMapPointer::Init( int _nUniqueID, const CVec3 &_vPos )
 {
 	nUniqueID = _nUniqueID;
@@ -79,7 +79,7 @@ void CVisualNotifications::SMapPointer::Init( int _nUniqueID, const CVec3 &_vPos
 	}
 	bPlaced = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::SMapPointer::Remove()
 {
 	if ( bPlaced )
@@ -88,7 +88,7 @@ void CVisualNotifications::SMapPointer::Remove()
 		bPlaced = false;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::SMapPointer::Move( const CVec3 &vPos )
 {
 	if ( bPlaced )
@@ -98,14 +98,14 @@ void CVisualNotifications::SMapPointer::Move( const CVec3 &vPos )
 		Scene()->MoveObject( nUniqueID, vPos, q );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CVisualNotifications
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisualNotifications::CVisualNotifications()
 {
 	InitPrivate();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisualNotifications::CVisualNotifications( IWindow *pParent, IMiniMap *_pMiniMap, const CVec2 &_vMapSize, IAILogic *_pAI )
 {
 	InitPrivate();
@@ -139,7 +139,7 @@ CVisualNotifications::CVisualNotifications( IWindow *pParent, IMiniMap *_pMiniMa
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::InitPrivate()
 {
 	textMessageTimes.resize( NDb::NTF_COUNT, 0 );
@@ -150,7 +150,7 @@ void CVisualNotifications::InitPrivate()
 	nLastFreeID = CLIENT_UNIQUE_ID_MAP_POINTER;
 	bShowMPMarker = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::Notify( EVisualNotification eType, int nID, const CVec2 &vPos )
 {
 	switch ( eType )
@@ -214,7 +214,7 @@ bool CVisualNotifications::Notify( EVisualNotification eType, int nID, const CVe
 	};
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::Notify( EVisualNotification eType, CMapObj *pMO )
 {
 	switch ( eType )
@@ -225,7 +225,7 @@ bool CVisualNotifications::Notify( EVisualNotification eType, CMapObj *pMO )
 
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::Step( const NTimer::STime nDeltaGameTime, bool bAppActive )
 {
 	NTimer::STime nAbsCurrTime = Singleton<IGameTimer>()->GetAbsTime();
@@ -249,7 +249,7 @@ void CVisualNotifications::Step( const NTimer::STime nDeltaGameTime, bool bAppAc
 	}
 	bEventTimerStopped = !bEventTimerActive;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 {
 	vector< IMiniMap::SFigure > figures;
@@ -297,14 +297,14 @@ void CVisualNotifications::StepAbs( float fDeltaTime, bool bAppActive )
 
 	UpdateMarkers();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddNotification( int nID, const CVec2 &vPos, NDb::ENotificationType eType )
 {
 	static wstring wszEmpty;
 	AddNotificationMain( nID, vPos, eType, wszEmpty );
 	AddNotificationMinimap( nID, vPos, eType );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddNotificationMain( int nID, const CVec2 &vPos, NDb::ENotificationType eType, 
 	const wstring &wszCustomText )
 {
@@ -329,7 +329,7 @@ void CVisualNotifications::AddNotificationMain( int nID, const CVec2 &vPos, NDb:
 		}
 	}
 }		
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddNotificationMinimap( int nID, const CVec2 &vPos, NDb::ENotificationType eType )
 {
 	CEntries::const_iterator it = entries.find( eType );
@@ -350,7 +350,7 @@ void CVisualNotifications::AddNotificationMinimap( int nID, const CVec2 &vPos, N
 	notification.fSpeed = ( ( pEntry->fRotationSpeed > 0 ) ? 1 : -1 ) * pEntry->fSize * (vMapSize.x + vMapSize.y) * 0.5f / notification.fTimeRemain;
 	notification.fRotationSpeed = ToRadian( pEntry->fRotationSpeed );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddObjectivePointers( int nID )
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
@@ -366,7 +366,7 @@ void CVisualNotifications::AddObjectivePointers( int nID )
 
 	AddPointerModels( nID, places );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddPointerModels( int nID, const vector<CVec3> &places )
 {
 	hash_map<int,SMapPointers>::iterator it = pointers.find( nID );
@@ -394,7 +394,7 @@ void CVisualNotifications::AddPointerModels( int nID, const vector<CVec3> &place
 		pointer.Init( nUniqueID, places[i] );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::RemoveObjectivePointers( int nID )
 {
 	hash_map<int,SMapPointers>::iterator it = pointers.find( nID );
@@ -410,7 +410,7 @@ void CVisualNotifications::RemoveObjectivePointers( int nID )
 	}
 	pointers.erase( it );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::UpdateObjectivePointers( int nID )
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
@@ -445,7 +445,7 @@ void CVisualNotifications::UpdateObjectivePointers( int nID )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddObjectiveNotification( int nID, NDb::ENotificationType eType )
 {
 	const NDb::SMissionObjective *pObjective = GetObjective( nID );
@@ -464,12 +464,12 @@ void CVisualNotifications::AddObjectiveNotification( int nID, NDb::ENotification
 		AddNotificationMinimap( nID, *it, eType );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::NewObjective( bool bChecked )
 {
 	bNewObjective = bChecked;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnCaptureKeyObject( int nID, const CVec2 &vPos )
 {
 	AddNotification( nID, vPos, NDb::NTF_KEY_OBJECT_CAPTURED );
@@ -484,7 +484,7 @@ bool CVisualNotifications::OnCaptureKeyObject( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnArtillerySeen( int nID, const CVec2 &vPos )
 {
 	AddNotification( nID, vPos, NDb::NTF_ENEMY_ARTILLERY );
@@ -497,7 +497,7 @@ bool CVisualNotifications::OnArtillerySeen( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnAASeen( int nID, const CVec2 &vPos )
 {
 	AddNotification( nID, vPos, NDb::NTF_ENEMY_AA_FIRE );
@@ -510,7 +510,7 @@ bool CVisualNotifications::OnAASeen( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnReinforcementAvailable( int nID, const CVec2 &vPos )
 {
 	if ( const NDb::SComplexSoundDesc *pSound = InterfaceState()->GetSoundEntry( "SOUND_REINF_AVAILABLE" ) )
@@ -518,14 +518,14 @@ bool CVisualNotifications::OnReinforcementAvailable( int nID, const CVec2 &vPos 
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnReinforcementArrived( int nID, const CVec2 &vPos )
 {
 	AddNotification( nID, vPos, NDb::NTF_REINFORCEMENT_ARRIVED );
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnUnitsGiven( int nID, const CVec2 &vPos )
 {
 	//AddNotification( nID, vPos, NDb::NTF_UNITS_GIVEN );
@@ -538,14 +538,14 @@ bool CVisualNotifications::OnUnitsGiven( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnSelectKeyPoint( int nID )
 {
 	nSelectedKeyObject = nID;
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnLossKeyObject( int nID, const CVec2 &vPos )
 {
 	AddNotification( nID, vPos, NDb::NTF_KEY_OBJECT_LOSED );
@@ -560,13 +560,13 @@ bool CVisualNotifications::OnLossKeyObject( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnKeyObjectState( CMapObj *pMO )
 {
 	keyObjects[pMO->GetID()] = pMO;
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnReceiveObjective( int nID, const CVec2 &vPos )
 {
 //	AddNewObjectiveNotify( nID );
@@ -587,7 +587,7 @@ bool CVisualNotifications::OnReceiveObjective( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnCompleteObjective( int nID, const CVec2 &vPos )
 {
 	AddObjectiveNotification( nID, NDb::NTF_OBJECTIVE_COMPLETED );
@@ -608,7 +608,7 @@ bool CVisualNotifications::OnCompleteObjective( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnFailObjective( int nID, const CVec2 &vPos )
 {
 	AddObjectiveNotification( nID, NDb::NTF_OBJECTIVE_FAILED );
@@ -626,7 +626,7 @@ bool CVisualNotifications::OnFailObjective( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnRemoveObjective( int nID, const CVec2 &vPos )
 {
 	RemoveObjectivePointers( nID );
@@ -637,20 +637,20 @@ bool CVisualNotifications::OnRemoveObjective( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnSelectObjective( int nID, const CVec2 &vPos )
 {
 	nSelectedID = nID;
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnCheckObjectives( int nID, const CVec2 &vPos )
 {
 	NewObjective( false );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnShowObjectives( int nID, const CVec2 &vPos )
 {
 	bShowObjectives = true;
@@ -658,7 +658,7 @@ bool CVisualNotifications::OnShowObjectives( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnHideObjectives( int nID, const CVec2 &vPos )
 {
 	bShowObjectives = false;
@@ -666,7 +666,7 @@ bool CVisualNotifications::OnHideObjectives( int nID, const CVec2 &vPos )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::UpdateMarkers()
 {
 	if ( !Singleton<IScenarioTracker>() )
@@ -781,7 +781,7 @@ void CVisualNotifications::UpdateMarkers()
 
 	pMiniMap->SetMarkers( markers );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::OnBtn( const string &szSender, bool bRightBtn )
 {
 	for ( list< CObj<SEvent> >::iterator it = events.begin(); it != events.end(); ++it )
@@ -814,7 +814,7 @@ void CVisualNotifications::OnBtn( const string &szSender, bool bRightBtn )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::InitEvents( IWindow *_pParent )
 {
 	nFreeEvent = 0;
@@ -855,7 +855,7 @@ void CVisualNotifications::InitEvents( IWindow *_pParent )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CVisualNotifications::SEvent* CVisualNotifications::CreateEventItem( const SEventParams &params )
 {
 	const NDb::SNotificationEvent *pDBEvent = GetEvent( params.eEventType ); 
@@ -876,7 +876,7 @@ CVisualNotifications::SEvent* CVisualNotifications::CreateEventItem( const SEven
 
 	return pEvent;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 {
 	const NDb::SNotificationEvent *pDBEvent = pEvent->pDBEvent;
@@ -905,7 +905,7 @@ void CVisualNotifications::CreateEventItemView( SEvent *pEvent )
 	if ( pEvent->pDBEvent->pSound )
 		SoundScene()->AddSound( pEvent->pDBEvent->pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 2 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::UpdateEvents( float fDeltaTime )
 {
 	int nCount = 0;
@@ -948,7 +948,7 @@ void CVisualNotifications::UpdateEvents( float fDeltaTime )
 
 	RearrangeEvents();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::RearrangeEvents()
 {
 	int nPos = nEventBottom - nEventItemHeight;
@@ -968,7 +968,7 @@ void CVisualNotifications::RearrangeEvents()
 		nPos -= nEventItemHeight + EVENT_ITEMS_INTERVAL;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 {
 	*pErase = (pEvent->pDBEvent->fAutoRemoveTime > 0.0f);
@@ -1108,13 +1108,13 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SNotificationEvent* CVisualNotifications::GetEvent( NDb::ENotificationEventType eEventType ) const
 {
 	NI_VERIFY( 0 <= eEventType && eEventType < dbEvents.size(), "Index out of range", return 0 );
 	return dbEvents[eEventType];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::AddEvent( const SEventParams &params )
 {
 	SEvent *pEvent = CreateEventItem( params );
@@ -1176,7 +1176,7 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 
 	RearrangeEvents();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::RemoveEvent( NDb::ENotificationEventType eEventType, int nID )
 {
 	bool bRemove = false;
@@ -1199,14 +1199,14 @@ void CVisualNotifications::RemoveEvent( NDb::ENotificationEventType eEventType, 
 	if ( bRemove )
 		RearrangeEvents();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::MoveCamera( const CVec2 &vPos )
 {
 	CVec2 vPosVis;
 	AI2Vis( &vPosVis, vPos );
 	Camera()->SetAnchor( CVec3( vPosVis.x, vPosVis.y, 0.0f ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const NDb::SMissionObjective* CVisualNotifications::GetObjective( int nID )
 {
 	if ( nID < 0 )
@@ -1223,7 +1223,7 @@ const NDb::SMissionObjective* CVisualNotifications::GetObjective( int nID )
 
 	return pObjective;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::OnEvent( const SEventParams &params )
 {
 	switch ( params.eEventType )
@@ -1237,12 +1237,12 @@ void CVisualNotifications::OnEvent( const SEventParams &params )
 	
 	AddEvent( params );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID )
 {
 	RemoveEvent( eEventType, nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) const
 {
 	CVec3 vCameraPos;
@@ -1292,25 +1292,25 @@ bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) cons
 	
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnCameraBack()
 {
 	Camera()->SetAnchor( vLastCameraPos );
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVisualNotifications::OnUpdateObjective( int nID )
 {
 	UpdateObjectivePointers( nID );
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::ObjectiveMove( int nID )
 {
 	UpdateObjectivePointers( nID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CVisualNotifications::PlaceMarker( const CVec2 &vPos )
 {
 	bShowMPMarker = true;
@@ -1325,11 +1325,11 @@ void CVisualNotifications::PlaceMarker( const CVec2 &vPos )
 
 	timeMarkerExpire = GameTimer()->GetAbsTime() + MP_MARKER_EXPIRE;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x11135C01, CVisualNotifications )
 REGISTER_SAVELOAD_CLASS_NM( 0x171BD2C0, SEvent, CVisualNotifications )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER( InterfaceNotifications )
 REGISTER_VAR_EX( "autosave_objective_complete", NGlobal::VarBoolHandler, &s_bAutosaveObjectiveComplete, false, STORAGE_USER );
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

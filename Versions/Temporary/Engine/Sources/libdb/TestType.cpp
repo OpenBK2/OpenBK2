@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "TypeDef.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 using namespace NDb::NTypeDef;
 namespace NTest
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef hash_map<string, CObj<STypeDef> > CSimpleTypesMap;
 static CSimpleTypesMap simpleTypes;
 struct SSimpleTypesAutoMagic
@@ -40,7 +40,7 @@ STypeDef* GetSimpleType( const string &szName )
 	NI_ASSERT( pos != simpleTypes.end(), StrFmt("Unknown type \"%s\"", szName.c_str()) );
 	return pos != simpleTypes.end() ? pos->second : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 {
 	//
@@ -222,5 +222,5 @@ void CreateTestTypes( vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes )
 	//
 	pMapInfo->AddField( new STypeArray(pMapObject), "Objects", 7, L"Список всех объектов на карте", 0, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

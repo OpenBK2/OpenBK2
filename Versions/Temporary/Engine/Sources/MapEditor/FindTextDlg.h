@@ -9,7 +9,7 @@ public:
 	virtual void ReplaceAll( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase ) {};
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CLuaEditor;
 class CFindNext: public IFindNextEvent
 {

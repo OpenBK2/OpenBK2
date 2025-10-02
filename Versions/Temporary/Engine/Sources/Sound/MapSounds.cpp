@@ -2,11 +2,11 @@
 #include "mapsounds.h"
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															CMapSounds
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::CMapSoundCell::AddSound( const WORD wSoundID, const CVec3 &vPos, const CMapSounds::RegisteredSounds &registeredSounds, const WORD wInstanceID, const bool bLooped )
 {
 	if ( bLooped )
@@ -20,7 +20,7 @@ void CMapSounds::CMapSoundCell::AddSound( const WORD wSoundID, const CVec3 &vPos
 		++cellSounds[wSoundID].nCount;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, interface ISoundScene * pScene )
 {
 	// if removed sound is playing - remove it from sound scene
@@ -42,7 +42,7 @@ void CMapSounds::CMapSoundCell::RemoveSound( const WORD wInstanceID, interface I
 	RemoveSound( &cellSounds, wInstanceID );
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSounds *pCellSounds, const WORD wInstanceID )
 {
 	// remove this sound from types list
@@ -62,7 +62,7 @@ void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSoun
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::CMapSoundCell::Update( interface ISoundScene * pScene, const CMapSounds::RegisteredSounds &registeredSounds )
 {
 	if ( timeNextRun < CSoundScene2D::GetCurTime() )
@@ -123,16 +123,16 @@ void CMapSounds::CMapSoundCell::Update( interface ISoundScene * pScene, const CM
 		timeNextRun = CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_MAP_SOUND_PERIOND + rand() * SSoundSceneConsts::SS_MAP_SOUND_PERIOND_RANDOM / RAND_MAX;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*															CMapSounds
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::SetSoundScene( struct ISoundScene *_pSoundScene )
 {
 	pSoundScene = _pSoundScene;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 {
 	// новое
@@ -140,7 +140,7 @@ void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 	mapCells.SetSizes( nSizeX / SSoundSceneConsts::MAP_SOUND_CELL + 1, nSizeY / SSoundSceneConsts::MAP_SOUND_CELL + 1 );
 	cells.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::RemoveSound( const WORD wInstanceID )
 {
 	if ( 0 == wInstanceID ) return ;
@@ -153,7 +153,7 @@ void CMapSounds::RemoveSound( const WORD wInstanceID )
 	instanceIDs.Return( wInstanceID );
 	cells.erase( wInstanceID );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 WORD CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pStats )
 {
 	// определить к какой клетке он относится.
@@ -178,7 +178,7 @@ WORD CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pSta
 	cells[wInstanceID] = vCellPos;
 	return wInstanceID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::Clear()
 {
 	soundIDs.Clear();
@@ -187,7 +187,7 @@ void CMapSounds::Clear()
 	registeredSounds.Clear();
 	instanceIDs.Clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMapSounds::Update( const CVec3 &vListener, const float fViewRadius )
 {
 	if ( timeNextUpdate < CSoundScene2D::GetCurTime() )

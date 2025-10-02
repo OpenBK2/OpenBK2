@@ -6,14 +6,14 @@
 #include "Transceiver.h"
 #include "../Main/MainLoop.h"
 #include "ScenarioTracker.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef _FINALRELEASE
 static int AUTOSAVE_ID = 0;
 #endif
 
 const int MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS = 300;
 const int MIN_TIME_BETWEEN_DIFFERENT_COMMANDS = 1000;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -1 )  
 {
 	pTransciver = _pTransciver;
@@ -22,7 +22,7 @@ CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -
 	bGroupChanged = true;
 	bLastCommandSkipped = false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // register group of units to AI
 int CCommandsSender::CommandRegisterGroup( const vector<int> &_vIDs )
 {
@@ -48,14 +48,14 @@ int CCommandsSender::CommandRegisterGroup( const vector<int> &_vIDs )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // unregister group 
 void CCommandsSender::CommandUnregisterGroup( const WORD wGroup )
 {
 //	if ( !bHistoryPlaying )
 //		pTransciver->SendCommand( new CUnregisterGroupCommand( wGroup ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // send command to group of units
 void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const WORD wGroup, bool bPlaceInQueue, const int nCommandSaveID )
 {
@@ -93,7 +93,7 @@ void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const WOR
 		pTransciver->SendCommand( pAICmd );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // set single command to call planes, reinforcements, etc. returns group number, which was created
 int CCommandsSender::CommandUnitCommand( const SAIUnitCmd *pCommand )
 {
@@ -111,7 +111,7 @@ int CCommandsSender::CommandUnitCommand( const SAIUnitCmd *pCommand )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandsSender::CommandGeneralCommand( const SAIUnitCmd *pCommand )
 {
 	if ( !bHistoryPlaying )
@@ -123,10 +123,10 @@ void CCommandsSender::CommandGeneralCommand( const SAIUnitCmd *pCommand )
 		pTransciver->SendCommand( pAICmd );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CCommandsSender::SendCommand( IAILogicCommandB2 *pCmd )
 {
 	pTransciver->SendCommand( pCmd );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3009E581, CCommandsSender );

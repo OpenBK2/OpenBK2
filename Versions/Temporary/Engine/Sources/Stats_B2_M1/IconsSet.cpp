@@ -5,11 +5,11 @@
 #include "../libdb/Checksum.h"
 #include "../System/XmlSaver.h"
 #include "iconsset.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
 {
 	switch ( eValue )
@@ -46,7 +46,7 @@ string EnumToString( NDb::SIconsSet::SIconType::EIconTypeEnum eValue )
 		return "ICONTYPE_NONE";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconType_EIconTypeEnum( const string &szValue )
 {
 	if ( szValue == "ICONTYPE_NONE" )
@@ -80,13 +80,13 @@ NDb::SIconsSet::SIconType::EIconTypeEnum NDb::StringToEnum_NDb_SIconsSet_SIconTy
 	return NDb::SIconsSet::SIconType::ICONTYPE_NONE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SIconsSet::SIconType::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSet::SIconType::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -94,7 +94,7 @@ int SIconsSet::SIconType::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSet::SIconType::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -102,7 +102,7 @@ int SIconsSet::SIconType::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SIconsSet::SIconType::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -117,9 +117,9 @@ DWORD SIconsSet::SIconType::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SIconsSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "IconsSet", typeID, sizeof(*this) );
@@ -130,7 +130,7 @@ void SIconsSet::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "icons", &icons, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSet::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -140,7 +140,7 @@ int SIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pMaterialZCheck );
@@ -149,8 +149,8 @@ int SIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue )
 {
 	switch ( eValue )
@@ -209,7 +209,7 @@ string EnumToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue )
 		return "VOIT_NONE";
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( const string &szValue )
 {
 	if ( szValue == "VOIT_NONE" )
@@ -265,14 +265,14 @@ NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType NDb::StringToEnum_NDb_SVisObj
 	return NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const string &szAddName, BYTE *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (BYTE*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (BYTE*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "texCoords", &rctexCoords, pThis ); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVisObjIconsSet::SVisObjIcon::operator&( IXmlSaver &saver )
 {
 	saver.Add( "Type", &eType );
@@ -281,7 +281,7 @@ int SVisObjIconsSet::SVisObjIcon::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVisObjIconsSet::SVisObjIcon::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &eType );
@@ -290,7 +290,7 @@ int SVisObjIconsSet::SVisObjIcon::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DWORD SVisObjIconsSet::SVisObjIcon::CalcCheckSum() const
 {
 	if ( __dwCheckSum != 0 )
@@ -305,9 +305,9 @@ DWORD SVisObjIconsSet::SVisObjIcon::CalcCheckSum() const
 
 	return __dwCheckSum;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 void SVisObjIconsSet::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "VisObjIconsSet", typeID, sizeof(*this) );
@@ -320,7 +320,7 @@ void SVisObjIconsSet::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "hpBarRanges", &hpBarRanges, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVisObjIconsSet::operator&( IXmlSaver &saver )
 {
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
@@ -332,7 +332,7 @@ int SVisObjIconsSet::operator&( IXmlSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int SVisObjIconsSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pTexture );
@@ -343,7 +343,7 @@ int SVisObjIconsSet::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( 0x1311B302, SIconsSet ) 

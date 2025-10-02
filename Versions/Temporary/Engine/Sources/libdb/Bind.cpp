@@ -4,7 +4,7 @@
 #include "BindArray.h"
 #include "../System/LightXML.h"
 #include "Database.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NDb
 {
   //
@@ -13,7 +13,7 @@ namespace NDb
 //
 namespace NBind
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** bind struct
@@ -21,7 +21,7 @@ namespace NBind
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo )
 : pStruct( _pStruct ), pMetaInfo( _pMetaInfo ), ownValues( _pMetaInfo->nNumOwnValues ),
   bindProcessor( (BYTE*)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &(ownValues[0]), _pMetaInfo ),
@@ -31,19 +31,19 @@ CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMet
 		pMetaInfo->ConstructStruct( (BYTE*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
 	bool bSuccess = pMetaInfo->fields.find( "flags" ) != pMetaInfo->fields.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CBindStruct::~CBindStruct()
 {
 	if ( pMetaInfo && pMetaInfo->nNumOwnValues > 0 )
 		pMetaInfo->DestructStruct( (BYTE*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBindStruct::SetDBID( const CDBID &_dbid ) 
 { 
 	dbidMain = _dbid; 
 	CResourceHelper::SetDBID( pStruct.GetPtr(), _dbid );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBindStruct::SetChanged() 
 { 
 	if ( IsLoaded() )
@@ -52,7 +52,7 @@ void CBindStruct::SetChanged()
 		SetDatabaseDataChanged( dbidMain );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring CBindStruct::GetAttribute( const string &szName ) const
 {
 	for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
@@ -62,7 +62,7 @@ wstring CBindStruct::GetAttribute( const string &szName ) const
 	}
 	return L"";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CBindStruct::SetAttribute( const string &szName, const wstring &szValue )
 {
 	// first, try to find existing attribute
@@ -77,7 +77,7 @@ void CBindStruct::SetAttribute( const string &szName, const wstring &szValue )
 	// add new one
 	attributes.push_back( pair<string, wstring>(szName, szValue) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** struct iterator
@@ -85,7 +85,7 @@ void CBindStruct::SetAttribute( const string &szName, const wstring &szValue )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructIterator::GotoNextFieldInLevels()
 {
 	while ( ++levels.back().nCurrField >= levels.back().pTypeStruct->fields.size() )
@@ -99,7 +99,7 @@ bool CStructIterator::GotoNextFieldInLevels()
 		return GotoNextFieldInLevels();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructIterator::AddLevel( const string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct )
 {
 	list<SLevel>::iterator pos = levels.insert( levels.end(), SLevel() );
@@ -116,7 +116,7 @@ bool CStructIterator::AddLevel( const string &_szAddName, NTypeDef::STypeStructB
 		return GotoNextFieldInLevels();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CStructIterator::Next()
 {
 	if ( levels.empty() )
@@ -167,7 +167,7 @@ bool CStructIterator::Next()
 	else
 		return GotoNextFieldInLevels();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

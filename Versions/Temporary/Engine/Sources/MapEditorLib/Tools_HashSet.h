@@ -2,7 +2,7 @@
 #define __HASH_SET_INSERT_FUNCTION__
 #pragma once
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 {
@@ -13,7 +13,7 @@ void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer> 
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
@@ -27,7 +27,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 	pList->push_back( nIndex );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
@@ -41,7 +41,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 	pList->push_back( TElement( nIndex ) );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 {
@@ -63,7 +63,7 @@ void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TContainerIterator> 
 TContainerIterator FindIndex( TContainer &rList, int nIndex )
 {
@@ -77,14 +77,14 @@ TContainerIterator FindIndex( TContainer &rList, int nIndex )
 	return rList.end();
 }
 /**
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 void AddListElement( TContainer *pList, const TElement &rElement )
 {
 	pList->push_back( rElement );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 void AddUniqueElementToList( TContainer *pList, const TElement &rElement )
 {
@@ -97,12 +97,12 @@ void AddUniqueElementToList( TContainer *pList, const TElement &rElement )
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 template<class TContainer, class TElement> 
 bool IsElementExistsInList( const TContainer &rList, const TElement &rElement )
 {
 	return ( find( rList.begin(), rList.end(), rElement ) != rList.end() );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**/
 #endif // !defined(__HASH_SET_INSERT_FUNCTION__)

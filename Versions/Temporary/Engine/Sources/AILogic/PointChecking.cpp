@@ -18,11 +18,11 @@ bool CheckObstacles( const bool bIgnoreObstacles, const SVector &curTile, const 
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CAttackPointChecking												*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAttackPointChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
@@ -34,20 +34,20 @@ bool CAttackPointChecking::IsGoodTile( const SVector &curTile ) const
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*												CGoToDistance															*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGoToDistance::IsGoodTile( const SVector &curTile ) const
 {
 	return SquareOfDistance( curTile, targetTile ) <= tileDistance2;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CAttackSideChecking													*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
@@ -63,16 +63,16 @@ bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 	
 	return bRet;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CAttackStObjectChecking											*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CAttackStObjectChecking::CAttackStObjectChecking( const float _fRangeMin, const float _fRangeMax, CStaticObject *_pObj, const bool _bIgnoreObstacles  )
 : fRangeMin( _fRangeMin ), fRangeMax( _fRangeMax ), pObj( _pObj ), bIgnoreObstacles( _bIgnoreObstacles )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 {
 	if ( !pObj->IsAlive() )
@@ -88,4 +88,4 @@ bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

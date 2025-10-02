@@ -2,7 +2,7 @@
 
 #include "../vendor/Granny/include/granny.h"
 #include "WingScaleMutator.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const string &szScaledWingPrefix, const string &szStaticWingName )
 {
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -21,7 +21,7 @@ bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const string &szSca
 	}
 	return !scaledWings.empty() && nStaticWing != -1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
 {
 	for ( vector<int>::const_iterator it = scaledWings.begin(); it != scaledWings.end(); ++it )
@@ -47,6 +47,6 @@ void CWingScaleMutator::MutateSkeletonPose( granny_local_pose *pPose )
 		pRootTransform->Flags |= GrannyHasScaleShear;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x3119AB00, CWingScaleMutator );
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

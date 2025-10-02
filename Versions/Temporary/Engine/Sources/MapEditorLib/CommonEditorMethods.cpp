@@ -10,14 +10,14 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool SetGetEditParameters( DWORD pEditParameters, UINT nCommandHandlerType, int nCmdID )
 {
 	NI_ASSERT( pEditParameters != 0, "CObjectState::GetEditParameters(): pEditParameters == 0" );
 	return Singleton<ICommandHandlerContainer>()->HandleCommand( nCommandHandlerType, nCmdID, pEditParameters );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreateRefKey( string *pszKey, const SPropertyDesc *pPropertyDesc )
 {
 	if ( ( pszKey != 0 ) && ( pPropertyDesc != 0 ) )
@@ -42,4 +42,4 @@ void CreateRefKey( string *pszKey, const SPropertyDesc *pPropertyDesc )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -17,7 +17,7 @@
 #include "UnitStates.h"
 #include "B2AI.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 extern CSupremeBeing theSupremeBeing;
 extern CStaticObjects theStaticObjects;
 extern NTimer::STime curTime;
@@ -26,23 +26,23 @@ extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
 const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x1508D489, CGeneralSwarmWaitForReady );
 REGISTER_SAVELOAD_CLASS( 0x1508D48A, CGeneralTaskToSwarmToPoint );
 REGISTER_SAVELOAD_CLASS( 0x1508D499, CGeneralTaskRecaptureStorage );
 REGISTER_SAVELOAD_CLASS( 0x1508D4B1, CGeneralTaskToHoldReinforcement );
 REGISTER_SAVELOAD_CLASS( 0x1508D4B2, CGeneralTaskToDefendPatch );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CGeneralTaskToDefendPatch										*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToDefendPatch::CGeneralTaskToDefendPatch() 
 : nCurReinforcePoint( 0 ), pOwner( 0 ), bFinished( false ), bResistanceRemoved( false )
 {  
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 {
 	const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
@@ -58,13 +58,13 @@ void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 	if ( !patchInfo.reinforcePoints.empty() )
 		nCurReinforcePoint %= patchInfo.reinforcePoints.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::InitInfantryInTrenches( class CCommonUnit *pUnit )
 {
 	const CVec2 vSpyGlassPoint( patchInfo.vCenter + GetVectorByDirection( patchInfo.GetDir() ) * 1000 );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_USE_SPYGLASS, vSpyGlassPoint), pUnit, true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, CGeneral *_pOwner )
 {
 	pOwner = _pOwner;
@@ -113,12 +113,12 @@ void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, C
 #endif	
 	pOwner->AddResistance( patchInfo.vCenter, patchInfo.fRadius );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ETaskName CGeneralTaskToDefendPatch::GetName() const 
 { 
 	return ETN_DEFEND_PATCH; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit )
 {
 	if ( bInit )
@@ -137,7 +137,7 @@ void CGeneralTaskToDefendPatch::AskForWorker( ICommander *pManager, const float 
 			pManager->EnumWorkers( FT_MOBILE_TANKS, this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::ReleaseWorker( ICommander *pManager, const float _fMinSeverity )
 {
 	if ( !bFinished )
@@ -176,17 +176,17 @@ void CGeneralTaskToDefendPatch::ReleaseWorker( ICommander *pManager, const float
 		CancelTask( pManager );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToDefendPatch::GetSeverity() const 
 { 
 	return fSeverity;	
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendPatch::IsFinished() const 
 { 
 	return bFinished; 
 } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bool bFriendlyUpdated )
 {
 	if ( bEnemyUpdated )
@@ -211,7 +211,7 @@ void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bo
 	// Add importance
 	fSeverity = fFriendlyForce + fFriendlyMobileForce  - fabs( patchInfo.fImportance ) - SGeneralConsts::PLAYER_FORCE_COEFFICIENT * fEnemyForce;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::CancelTask( ICommander *pManager )
 {
 	theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->RemoveResistance( patchInfo.vCenter );
@@ -229,7 +229,7 @@ void CGeneralTaskToDefendPatch::CancelTask( ICommander *pManager )
 
 	bFinished = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToDefendPatch::Segment()
 {
 	const int x = patchInfo.vCenter.x;
@@ -282,12 +282,12 @@ void CGeneralTaskToDefendPatch::Segment()
 		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->AddResistance( patchInfo.vCenter, patchInfo.fRadius );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralTaskToDefendPatch::GetWorkerCount()
 {
 	return tanksMobile.size() + newTanks.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendPatch::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
 		// give orders to the worker
@@ -359,7 +359,7 @@ bool CGeneralTaskToDefendPatch::EnumWorker( class CCommonUnit *pUnit, const enum
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendPatch::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
 	switch( eType )
@@ -389,7 +389,7 @@ bool CGeneralTaskToDefendPatch::EvaluateWorker( CCommonUnit *pUnit, const enum E
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 {
 
@@ -411,16 +411,16 @@ bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CGeneralTaskToHoldReinforcement							*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement()
 : fSeverity( 0 ), nCurReinforcePoint( 0 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToHoldReinforcement::Init( const NDb::SAIGeneralParcel &_patchInfo )
 {
 	patchInfo = _patchInfo;
@@ -434,7 +434,7 @@ void CGeneralTaskToHoldReinforcement::Init( const NDb::SAIGeneralParcel &_patchI
 	}
 	fSeverity = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToHoldReinforcement::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit )
 {
 	if ( !bInit && fMaxSeverity >= 0.0f )
@@ -444,7 +444,7 @@ void CGeneralTaskToHoldReinforcement::AskForWorker( ICommander *pManager, const 
 		pManager->EnumWorkers( FT_MOBILE_TANKS, this );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToHoldReinforcement::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
 {
 	// отдать все танки генералу, пусть выберет лучший для своей цели
@@ -459,18 +459,18 @@ void CGeneralTaskToHoldReinforcement::ReleaseWorker( ICommander *pManager, const
 			pManager->Give( pTank );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToHoldReinforcement::CancelTask( ICommander *pManager )
 {
 	for ( CommonUnits::iterator it = tanksFree.begin(); tanksFree.end() != it; ++it )
 		pManager->Give( *it );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralTaskToHoldReinforcement::GetWorkerCount()
 {
 	return tanksFree.size();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToHoldReinforcement::Segment()
 {
 	if ( SGeneralHelper::RemoveDead( &tanksFree ) )
@@ -487,7 +487,7 @@ void CGeneralTaskToHoldReinforcement::Segment()
 	pr1 = for_each( tanksFree.begin(), tanksFree.end(), pr1 );
 	fSeverity = pr1.fCount;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
 	// послать танк на место сбора подкрепления
@@ -517,14 +517,14 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 	}
 	return false; // take 1 worker at a time
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToHoldReinforcement::GetSeverity() const 
 { 
 	//CRAP{ for test
 	return /*fSeverity*/0.0f; 
 	//CRAP}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToHoldReinforcement::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
 	if ( FT_MOBILE_TANKS == eType && pUnit->GetFirstArtilleryGun() == 0 )
@@ -533,24 +533,24 @@ bool CGeneralTaskToHoldReinforcement::EvaluateWorker( CCommonUnit *pUnit, const 
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CGeneralTaskRecaptureStorage								*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 & vReinforcePoint )
 : vReinforcePoint( vReinforcePoint ), 
 	fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER ),
 	bFinished( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskRecaptureStorage::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit )
 {
 	if ( !bInit && fMaxSeverity > fSeverity )
 		pManager->EnumWorkers( FT_MOBILE_TANKS, this );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskRecaptureStorage::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
 {
 	if ( bFinished )
@@ -562,18 +562,18 @@ void CGeneralTaskRecaptureStorage::ReleaseWorker( ICommander *pManager, const fl
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskRecaptureStorage::IsFinished() const 
 {
 	return bFinished;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskRecaptureStorage::CancelTask( ICommander *pManager )
 {
 	bFinished = true;
 	ReleaseWorker( pManager, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskRecaptureStorage::Segment()
 {
 	SGeneralHelper::RemoveDead( &tanksFree );
@@ -581,7 +581,7 @@ void CGeneralTaskRecaptureStorage::Segment()
 	if ( 0 == fSeverity && tanksFree.empty() )
 		bFinished = true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskRecaptureStorage::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
 	if ( FT_MOBILE_TANKS == eType )
@@ -593,16 +593,16 @@ bool CGeneralTaskRecaptureStorage::EnumWorker( class CCommonUnit *pUnit, const e
 	NI_ASSERT( false, "wrong type of worker given" );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskRecaptureStorage::EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const
 {
 	return fabs2( pUnit->GetCenterPlain() - vReinforcePoint ) < sqr(SGeneralConsts::RECAPTURE_STORAGE_MAX_DISTANCE);
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //*******************************************************************
 //*											CGeneralTaskToSwarmToPoint									*
 //*******************************************************************
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint( CGeneral *_pOwner )
 : nAdditionalIterations( 0 ), fSeverity( 0 ), bFinished( false ), 
 	bReleaseWorkers( false ), timeNextCheck( 0 ), 
@@ -610,11 +610,11 @@ CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint( CGeneral *_pOwner )
 {
 	ClearResistanceToAcceptNewTask();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint() : pOwner( 0 ), bResistanesBusyByUs( false )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 {
 	// wait for some time, not forever.
@@ -629,12 +629,12 @@ bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CGeneralTaskToSwarmToPoint::GetWorkerCount() 
 { 
 	return swarmingTanks.size(); 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::Run()
 {
 	if ( !swarmingTanks.empty() )
@@ -668,7 +668,7 @@ void CGeneralTaskToSwarmToPoint::Run()
 
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit )
 {
 	if ( !bInit && eState == ESS_REST && curResistanceToAttack.IsInitted() && fSeverity < 0 && swarmingTanks.empty() )
@@ -678,7 +678,7 @@ void CGeneralTaskToSwarmToPoint::AskForWorker( ICommander *pManager, const float
 		SendToGroupPoint();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 {
 	if ( !swarmingTanks.empty() )
@@ -712,7 +712,7 @@ void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
 {
 	if ( (!curResistanceToAttack.IsInitted() || bReleaseWorkers ) && !swarmingTanks.empty() )
@@ -722,23 +722,23 @@ void CGeneralTaskToSwarmToPoint::ReleaseWorker( ICommander *pManager, const floa
 		swarmingTanks.clear();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToSwarmToPoint::GetSeverity() const 
 { 
 	return fSeverity; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToSwarmToPoint::IsFinished() const
 {
 	return bFinished;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::CancelTask( ICommander *pManager )
 {
 	bFinished = true;
 	ReleaseWorker( pManager, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::Segment()
 {
 	SGeneralHelper::SDeadPredicate pr;
@@ -840,7 +840,7 @@ void CGeneralTaskToSwarmToPoint::Segment()
 		break;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CGeneralTaskToSwarmToPoint::ClearResistanceToAcceptNewTask()
 {
 	if ( bResistanesBusyByUs )
@@ -865,7 +865,7 @@ void CGeneralTaskToSwarmToPoint::ClearResistanceToAcceptNewTask()
 	if ( nAlive )
 		vTanksPosition /= nAlive;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToSwarmToPoint::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
 	NI_ASSERT( curResistanceToAttack.GetWeight() != -1, "wrong weight" );
@@ -873,13 +873,13 @@ bool CGeneralTaskToSwarmToPoint::EnumWorker( class CCommonUnit *pUnit, const enu
 	fSeverity += pUnit->GetPriceMax();
 	return fSeverity < fMaxSeverity;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 float CGeneralTaskToSwarmToPoint::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const
 {
 	const CVec2 vFinishPoint( curResistanceToAttack.GetResistanceCellCenter() );
 	return 1.0f / ( fabs2( vFinishPoint - pUnit->GetCenterPlain() ) + 1 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToSwarmToPoint::EnumResistances( const SResistance &resistance )
 {
 	if ( resistance.GetWeight() > SGeneralConsts::MIN_WEIGHT_TO_SEND_SWARM )
@@ -902,7 +902,7 @@ bool CGeneralTaskToSwarmToPoint::EnumResistances( const SResistance &resistance 
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CGeneralTaskToSwarmToPoint::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
 	if ( pUnit->GetFirstArtilleryGun() != 0 )
@@ -910,4 +910,4 @@ bool CGeneralTaskToSwarmToPoint::EvaluateWorker( CCommonUnit *pUnit, const enum 
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

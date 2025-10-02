@@ -2,7 +2,7 @@
 
 #include "VSODataExtractor.h"
 #include "..\MapEditorLib\ManipulatorManager.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CVSODataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	// получаем материал
@@ -51,4 +51,4 @@ bool CVSODataExtractor::GetImages( CArray2D<DWORD> *pSmallImage, CArray2D<DWORD>
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

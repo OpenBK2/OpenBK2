@@ -3,11 +3,11 @@
 
 
 REGISTER_SAVELOAD_CLASS(0x11095C40, CPathFractionArc)
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 //	CPathFractionArc
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+
+
 void CPathFractionArc::Init( const CDirectedCircle &_circle, const CVec2 &_x0, const CVec2 &_x1, const float _fZ )
 {
 	fZ = _fZ;
@@ -16,7 +16,7 @@ void CPathFractionArc::Init( const CDirectedCircle &_circle, const CVec2 &_x0, c
 	x1 = _x1;
 	fLength = 1.0f * ( DirectedDirsDifference(x0 - circle.center, x1 - circle.center, circle.nDir) ) * 2* PI * circle.r / 65535;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionArc::GetNormale( const float fDist ) const
 {
 	const CVec3 vPoint( GetPoint( fDist ) );
@@ -24,7 +24,7 @@ CVec3 CPathFractionArc::GetNormale( const float fDist ) const
 	Normalize( &vNormale );
 	return vNormale;
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionArc::GetPoint( const float fDist ) const
 {
 	//CRAP{ WILL OPTIMIZE 
@@ -39,7 +39,7 @@ CVec3 CPathFractionArc::GetPoint( const float fDist ) const
 
 	return CVec3( circle.center + vToR, fZ );
 }
-/////////////////////////////////////////////////////////////////////////////
+
 CVec3 CPathFractionArc::GetTangent( const float fDist ) const
 {
 	//CRAP{ WILL OPTIMIZE

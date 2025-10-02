@@ -6,7 +6,7 @@
 
 class CMainFrameLoggerSink;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMainFrameContainer : public IMainFrameContainer
 {
 	OBJECT_NOCOPY_METHODS( CMainFrameContainer );
@@ -22,6 +22,6 @@ public:
 	IMainFrame* Get() { return checked_cast<IMainFrame*>( pMainFrame ); }
 	SECWorkbook* GetSECWorkbook() { return checked_cast<SECWorkbook*>( pMainFrame ); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAIN_FRAME__CONTAINER__)
 

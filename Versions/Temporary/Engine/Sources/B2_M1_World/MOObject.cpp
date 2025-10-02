@@ -7,16 +7,16 @@
 #include "../SceneB2/AnimMutators.h"
 #include "../SceneB2/WindController.h"
 #include "../Sound/SoundScene.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool bDrawGrass = true;
 static bool bAnimateTrees = true;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void RemoveAttachedSound( WORD *pwSound )
 {
 	Singleton<ISoundScene>()->RemoveSoundFromMap( *pwSound );
 	*pwSound = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
@@ -67,7 +67,7 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 	
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CMOObject::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
 {
 	if ( CMapObj::Create(nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor) )
@@ -104,12 +104,12 @@ bool CMOObject::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOObject::GetStatus( SObjectStatus *pStatus ) const
 {
 	CMapObj::GetStatus( pStatus );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats, interface IClientAckManager *pAckManager, NDb::ESeason eSeason ) 
 { 
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
@@ -122,7 +122,7 @@ IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &s
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 {
 	Scene()->RemoveAllAttached( GetID(), ESSOT_LIGHT );
@@ -163,7 +163,7 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOObject::GetActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -171,7 +171,7 @@ void CMOObject::GetActions( CUserActions *pActions, EActionsType eActions ) cons
 		pActions->SetAction( NDb::USER_ACTION_ATTACK );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CMOObject::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
 {
 	if ( eActions == ACTIONS_WITH || eActions == ACTIONS_ALL )
@@ -180,7 +180,7 @@ void CMOObject::GetDisabledActions( CUserActions *pActions, EActionsType eAction
 			pActions->SetAction( NDb::USER_ACTION_ATTACK );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CMOObject::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CMapObj*)this );
@@ -192,10 +192,10 @@ int CMOObject::operator&( IBinSaver &saver )
 
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(CMOObject)
 REGISTER_VAR_EX( "misc_draw_grass", NGlobal::VarBoolHandler, &bDrawGrass, true, STORAGE_USER )
 REGISTER_VAR_EX( "misc_animations_trees", NGlobal::VarBoolHandler, &bAnimateTrees, true, STORAGE_USER )
 FINISH_REGISTER
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 REGISTER_SAVELOAD_CLASS( 0x100A7484, CMOObject );

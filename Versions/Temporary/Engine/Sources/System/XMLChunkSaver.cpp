@@ -5,10 +5,10 @@
 #include "XmlReader.h"
 #include "XmlUtils.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 typedef IXmlSaver::chunk_id chunk_id;
 static const int START_CHUNK_LEVELS = 50;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode )
 {
 	if ( ( mode == SAVER_MODE_READ ) && ( pStream == 0 || pStream->GetSize() == 0 ) )
@@ -17,7 +17,7 @@ IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode )
 		return 0;
 	return new CXMLChunkSaver( pStream, mode == SAVER_MODE_READ );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::PushReadChunkLevel( const NXml::CXmlNode *pNode )
 {
 	++nCurChunkLevel;
@@ -100,7 +100,7 @@ void CXMLChunkSaver::Start( CDataStream *pStream, bool bRead )
 		document.AddChild( pCurrNode );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::Finish()
 {
 	if ( IsReading() ) 
@@ -140,7 +140,7 @@ void CXMLChunkSaver::Finish()
 	}
 	pDstStream = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 {
 	if ( IsReading() ) 
@@ -198,7 +198,7 @@ bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::FinishChunk()
 {
 	if ( IsReading() )
@@ -222,7 +222,7 @@ void CXMLChunkSaver::FinishChunk()
 			pCurrNode = 0;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CXMLChunkSaver::CountChunks()
 {
 	if ( IsReading() )
@@ -230,7 +230,7 @@ int CXMLChunkSaver::CountChunks()
 	else
 		return pCurrNode != 0 ? pCurrNode->CountChildren() : 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const int ReadInt( const char *p, const int nSize )
 {
 /*	
@@ -277,7 +277,7 @@ static const int ReadInt( const char *p, const int nSize )
 
 	return n * nSign;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static const float ReadFloat( const char *p, const int nSize )
 {
 	const char *pEnd = p + nSize;
@@ -336,7 +336,7 @@ static const float ReadFloat( const char *p, const int nSize )
 
 	return f * nSign;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber )
 {
 	if ( IsReading() ) 
@@ -379,7 +379,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber )
 {
 	if ( IsReading() ) 
@@ -426,7 +426,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChun
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool String2Bool( const char *pszStr )
 {
 	switch ( *pszStr )
@@ -444,7 +444,7 @@ static bool String2Bool( const char *pszStr )
 	NI_ASSERT( false, StrFmt("Can't convert value to bool" ) );
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber )
 {
 	if ( IsReading() ) 
@@ -498,7 +498,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 {
 	if ( idChunk != 0 && StartChunk(idChunk, nChunkNumber) == false )
@@ -527,7 +527,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 		FinishChunk();
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, GUID *pgData, int nChunkNumber )
 {
 	if ( idChunk != 0 && StartChunk(idChunk, nChunkNumber) == false )
@@ -551,7 +551,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, GUID *pgData, int nChunk
 	FinishChunk();
 	return bRetVal;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunkDBID( CDBID *pDBID )
 {
 	if ( IsReading() )
@@ -590,7 +590,7 @@ bool CXMLChunkSaver::DataChunkDBID( CDBID *pDBID )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 {
 	if ( IsReading() )
@@ -634,7 +634,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunkString( string &data )
 {
 	if ( IsReading() ) 
@@ -654,7 +654,7 @@ bool CXMLChunkSaver::DataChunkString( string &data )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::DataChunkString( wstring &data )
 {
 	if ( IsReading() ) 
@@ -676,7 +676,7 @@ bool CXMLChunkSaver::DataChunkString( wstring &data )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject )
@@ -692,7 +692,7 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 	void *pServerPtr = pObject;
 	DataChunk( 0, &pServerPtr, 4, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid ) 
 { 
 	string szFileName = NDb::GetFileName( dbid ); 
@@ -702,7 +702,7 @@ void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid )
 	objectNamesStack.push_back( szObjectPath );
 	szCurrObjectPath = szObjectPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::PushCurrentObject( const CDBID &dbid )
 {
 	string szFileName = NDb::GetFileName( dbid ); 
@@ -711,14 +711,14 @@ void CXMLChunkSaver::PushCurrentObject( const CDBID &dbid )
 	objectNamesStack.push_back( szObjectPath );
 	szCurrObjectPath = szObjectPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CXMLChunkSaver::PopCurrentObject() 
 { 
 	NI_VERIFY( !objectNamesStack.empty(), "Poping from empty stack!", return ); 
 	objectNamesStack.pop_back(); 
 	szCurrObjectPath = objectNamesStack.empty() ? "" : objectNamesStack.back();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase* CXMLChunkSaver::LoadObject()
 {
 	void *pServerPtr = 0;
@@ -734,7 +734,7 @@ CObjectBase* CXMLChunkSaver::LoadObject()
 	}
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, bool *pData )
 {
 	if ( IsReading() )
@@ -758,7 +758,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, bool *pData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, int *pData )
 {
 	if ( IsReading() )
@@ -782,7 +782,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, int *pData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, float *pData )
 {
 	if ( IsReading() )
@@ -806,7 +806,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, float *pData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
 {
 	if ( IsReading() )
@@ -853,7 +853,7 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, string *pData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, wstring *pData )
 {
 	if ( IsReading() )
@@ -878,4 +878,4 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, wstring *pData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

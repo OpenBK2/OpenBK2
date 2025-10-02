@@ -3,7 +3,7 @@
 
 #pragma once
 #include "..\MapEditorLib\BuildDataBuilder.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CWindowMSButtonSharedBuilder : public CBuildDataBuilder
 {
 	static const char WINDOW_MSBUTTON_SHARED_TYPE_NAME[];
@@ -35,5 +35,5 @@ private:
 	bool CreateVisualState( const string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index );
 	bool CreateButtonState( const string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index, const char * szSuffixName, bool bNormalState );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__WINDOW_MSBUTTON_SHARED_BUILDER__)

@@ -2,17 +2,17 @@
 #define __PLANE_STATES_H__
 
 #pragma ONCE
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include "StatesFactory.h"
 #include "UnitStates.h"
 #include "DamageToEnemyUpdater.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CAIUnit;
 class CBuilding;
 class CAviation;
 class CFormation;
 class CPlaneShturmovikShootEstimator;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CPlaneStatesFactory );
@@ -34,7 +34,7 @@ public:
 	friend class CStaticMembers;
 };
 class CPlaneDeffensiveFireShootEstimator;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // стрельба из бортовых стрелковых установок
 class CPlaneDeffensiveFire
 {
@@ -52,7 +52,7 @@ public:
 	CPlaneDeffensiveFire() : pOwner( 0 ), timeLastBSUUpdate( 0 ) {  }
 	CPlaneDeffensiveFire( class CAviation *pPlane );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // переход из точти в точку
 class CPlanePatrolState : public IUnitAttackingState
 {
@@ -141,7 +141,7 @@ public:
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
 	virtual EUnitStateNames GetName() { return EUSN_PLANE_PATROL; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneRestState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneRestState )
@@ -162,7 +162,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_REST; }
 	virtual bool IsRestState() const { return true; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneSwarmToState )
@@ -190,7 +190,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
 	virtual EUnitStateNames GetName() { return EUSN_SWARM; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneBombState );
@@ -230,7 +230,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
 	virtual EUnitStateNames GetName() { return EUSN_BOMBING; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for drop paratroopers in specific point
 class CPlaneParaDropState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
@@ -271,7 +271,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // state for fighters. Duties:
 // 1) fight incoming enemie bombers
 class CPlaneFighterPatrolState : public CPlanePatrolState, public CPlaneDeffensiveFire
@@ -326,7 +326,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneShturmovikPatrolState : public CPlanePatrolState, public CPlaneDeffensiveFire 
 {
 	OBJECT_BASIC_METHODS( CPlaneShturmovikPatrolState );
@@ -402,7 +402,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPlaneScoutState : public CPlanePatrolState, public CPlaneDeffensiveFire
 {
 	OBJECT_BASIC_METHODS( CPlaneScoutState );
@@ -426,7 +426,7 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return GetPoint(); }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //ACTION_MOVE_PLANE_LEAVE
 //plane must leave the map trough the some point
 class CPlaneLeaveState : public CPlanePatrolState, public CPlaneDeffensiveFire
@@ -460,7 +460,7 @@ public:
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // смерть самолета.
 class CPlaneFlyDeadState : public CPlanePatrolState
 {
@@ -508,7 +508,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const ;
 	virtual EUnitStateNames GetName() { return EUSN_FLY_DEAD; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // самолет самоубийца (V-2)
 class CPlaneSuicideState : public IUnitState
 {
@@ -540,5 +540,5 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vTarget; }
 	virtual EUnitStateNames GetName() { return EUSN_PLANE_SUICIDE; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // __PLANE_STATES_H__

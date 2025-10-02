@@ -9,7 +9,7 @@ const int INPUT_BUFFER_SIZE = 255;
 static NWin32Helper::CCriticalSection csClientSocketReading;
 static NWin32Helper::CCriticalSection csClientSocketWriting;
 CObj<CTerminal> pTheTerminal;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 {
 	CTerminal* pTerminal = reinterpret_cast<CTerminal*>(lpParameter);
@@ -20,7 +20,7 @@ static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 	}
 	return 0;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
 {
 	pTheTerminal = this;
@@ -69,7 +69,7 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 
 	hReadingThread = CreateThread( 0, 1024*1024, TheTerminalThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerminal::Segment()
 {
 	if ( !readCache.empty() )
@@ -85,7 +85,7 @@ void CTerminal::Segment()
 		WriteMSG( "%s", szError.c_str() );
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerminal::MTSegment()
 {
 	if ( !bClientIsOK )
@@ -109,7 +109,7 @@ void CTerminal::MTSegment()
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerminal::OutString( const string &szString )
 {
 	NWin32Helper::CCriticalSectionLock lock( csClientSocketWriting );
@@ -128,7 +128,7 @@ void CTerminal::OutString( const string &szString )
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CTerminal::ReadToCache()
 {
 	static vector<char> buffer( INPUT_BUFFER_SIZE + 1 );
@@ -149,12 +149,12 @@ void CTerminal::ReadToCache()
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CTerminal::~CTerminal()
 {
 	WSACleanup();
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void WriteMSG( const char* pszFormat, ... )
 {
 	if ( !pTheTerminal ) return;
@@ -170,4 +170,4 @@ void WriteMSG( const char* pszFormat, ... )
 	pTheTerminal->OutString( buff );
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

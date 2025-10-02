@@ -23,7 +23,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const CVec3 &rvPos, 
 														  NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {
@@ -56,7 +56,7 @@ static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const C
 	return true;
 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMemberIdx, 
 														  NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {
@@ -88,7 +88,7 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 {
 	//
@@ -160,11 +160,11 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	возвращает кол-во людей во взводе
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int GetMembersNum( IManipulator *pSquadManip )
 {
 	string szDBA = StrFmt( "members" );
@@ -173,11 +173,11 @@ static int GetMembersNum( IManipulator *pSquadManip )
 		return (int)v;
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //	возвращает список моделей взвода
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip )
 {
 	pModels->clear();
@@ -209,7 +209,7 @@ static void GetMembersModels( vector<string> *pModels, IManipulator *pSquadManip
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSquadManip )
 {
 	pData->squadFormations.clear();
@@ -234,13 +234,13 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 		pData->squadFormations.push_back(eType);
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //
 //
 //			FORMATIONS STATE
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CFormationsState::CFormationsState( CSquadEditor *_pSquadEditor )
 	:	pSquadEditor( _pSquadEditor ),
 	pMaskManipulator( 0 )
@@ -248,7 +248,7 @@ CFormationsState::CFormationsState( CSquadEditor *_pSquadEditor )
 	NI_ASSERT( pSquadEditor != 0, "CFormationsState(): Invalid parameter: pSquadEditor == 0" );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::Enter()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SQUAD_FORMATIONS_STATE, this );
@@ -268,13 +268,13 @@ void CFormationsState::Enter()
 	pSquadEditor->ShowAxis();
 	RefreshState( true );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::Leave()
 {
 	pSquadEditor->HideAxis();
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SQUAD_FORMATIONS_STATE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationsState::HandleCommand( UINT nCommandID, DWORD dwData )
 {
 	switch( nCommandID ) 
@@ -288,7 +288,7 @@ bool CFormationsState::HandleCommand( UINT nCommandID, DWORD dwData )
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationsState::GetFormationWindowDialogData( SFormationWindowDialogData *pData )
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FORMATION_LIST_DIALOG, 
@@ -297,7 +297,7 @@ bool CFormationsState::GetFormationWindowDialogData( SFormationWindowDialogData 
 
 	return bRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationsState::SetFormationWindowDialogData( SFormationWindowDialogData *pData )
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FORMATION_LIST_DIALOG, 
@@ -306,7 +306,7 @@ bool CFormationsState::SetFormationWindowDialogData( SFormationWindowDialogData 
 
 	return bRes;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::RefreshState( bool bForce )
 {
 	SFormationWindowDialogData data;
@@ -331,7 +331,7 @@ void CFormationsState::RefreshState( bool bForce )
 		currDialogData = data;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CFormationsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFormationsState::UpdateCommand(), pbEnable == 0" );
@@ -347,7 +347,7 @@ bool CFormationsState::UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbC
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 {
 	int nOldBkMode = pPaintDC->SetBkMode( TRANSPARENT );
@@ -368,7 +368,7 @@ void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 	pPaintDC->SetTextColor( oldColor ); 
 	pPaintDC->SetBkMode( nOldBkMode );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
@@ -384,7 +384,7 @@ void CFormationsState::OnLButtonDown( UINT nFlags, const CTPoint<int> &rMousePoi
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON )
@@ -415,7 +415,7 @@ void CFormationsState::OnLButtonUp( UINT nFlags, const CTPoint<int> &rMousePoint
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_UPDATE_VALUES, 0 );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( nFlags & MK_RBUTTON ) 
@@ -433,7 +433,7 @@ void CFormationsState::OnMouseMove( UINT nFlags, const CTPoint<int> &rMousePoint
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {
 	pSquadEditor->RemoveAllModels();
@@ -473,7 +473,7 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 		++nMemberIndex;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation )
 {
 	if ( pMaskManipulator != 0 )
@@ -540,7 +540,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CFormationsState::ClearMaskManipulator()
 {
 	if ( pMaskManipulator != 0 )
@@ -559,4 +559,4 @@ void CFormationsState::ClearMaskManipulator()
 		pMaskManipulator = 0;	
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

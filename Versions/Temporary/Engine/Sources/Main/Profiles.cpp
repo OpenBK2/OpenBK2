@@ -13,7 +13,7 @@ static string GetProfileRootDir()
 {
 	return NMainLoop::GetBaseDir() + "Profiles\\";
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // directory name with default profile settings
 // these settings are loaded in LoadProfile() if no data for specified in global.cfg profile is found 
 // these settings are also loaded when ResetToDefault() is called
@@ -27,7 +27,7 @@ static bool IsDefaultProfileName( const string &szName )
 	NStr::ToLower( &szLowName, szName );
 	return szLowName == szDefaultProfileName;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static wstring GetProfileName( const string &szDir, const string &_szDirName )
 {
 	CFileStream stream( szDir + "\\" + _szDirName + "\\name.txt", CFileStream::WIN_READ_ONLY );
@@ -47,13 +47,13 @@ static wstring GetProfileName( const string &szDir, const string &_szDirName )
 	}
 	return NStr::ToUnicode( _szDirName );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetDefaultProfileDir()
 {
 	string szDefaultDir = GetProfileRootDir() + szDefaultProfileName + "\\";
 	return szDefaultDir;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // if such profile dir does not exist it will be created
 static string GetProfileDir( const wstring &szName )
 {
@@ -100,13 +100,13 @@ static string GetProfileDir( const wstring &szName )
 	::CopyFile( (GetDefaultProfileDir() + "input.cfg").c_str(), (szResDir + "input.cfg").c_str(), false );
 	return szResDir;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void OnProfileChange()
 {
 	// if it happens to be project dependent we could separate this into special .cfg
 	NGlobal::ProcessCommand( L"autodetect" ); 
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void LoadUserConfig( const string &szProfileDir )
 {
 	NInput::SetSection( "" );
@@ -115,7 +115,7 @@ static void LoadUserConfig( const string &szProfileDir )
 	NGlobal::LoadConfig( szProfileDir + "input.cfg" );
 	NGlobal::ProcessCommand( L"bind_update" );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void LoadProfile()
 {
 	NGlobal::LoadConfig( GetProfileRootDir() + "global.cfg", STORAGE_GLOBAL );
@@ -126,20 +126,20 @@ void LoadProfile()
 	else
 		LoadUserConfig( GetDefaultProfileDir() );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void SaveProfile()
 {
 	string szGlobalCfg = GetProfileRootDir() + "global.cfg";
 	string szUserCfg = GetProfileDir( GetCurrentProfileName() ) + "user.cfg";
 	NGlobal::SaveAllVars( szGlobalCfg, szUserCfg );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool AddProfile( const wstring &szName )
 {
 	GetProfileDir( szName );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ChangeProfile( const wstring &szProfile )
 {
 	SaveProfile();
@@ -148,14 +148,14 @@ void ChangeProfile( const wstring &szProfile )
 	OnProfileChange();
 	LoadUserConfig( GetProfileDir( GetCurrentProfileName() ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool RemoveProfile( const wstring &szProfile )
 {
 	string szDir = GetProfileDir( szProfile );
 	NFile::DeleteDirectory( szDir );
 	return true;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ResetToDefault()
 {
 	NGlobal::ResetVarsToDefault( STORAGE_USER );
@@ -163,7 +163,7 @@ void ResetToDefault()
 	LoadUserConfig( GetDefaultProfileDir() );
 	SaveProfile();
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetAllProfiles( vector<wstring> *pRes )
 {
 	string szRoot = GetProfileRootDir();
@@ -177,17 +177,17 @@ void GetAllProfiles( vector<wstring> *pRes )
 		pRes->push_back( GetProfileName( szRoot, it.GetFileName() ) );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wstring GetCurrentProfileName()
 {
 	return NGlobal::GetVar( "profile_name", "default" );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetCurrentProfileDir()
 {
 	return GetProfileDir( GetCurrentProfileName() );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void RemoveProfile( const string &szID, const vector<wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
@@ -195,7 +195,7 @@ static void RemoveProfile( const string &szID, const vector<wstring> &szParams, 
 	else
 		csSystem << "Usage : remove_profile <user name>" << endl;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void ChangeProfile( const string &szID, const vector<wstring> &szParams, void *pContext )
 {
 	if ( szParams.size() == 1 )
@@ -203,7 +203,7 @@ static void ChangeProfile( const string &szID, const vector<wstring> &szParams, 
 	else
 		csSystem << "Usage: change_profile <user name>" << endl;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 START_REGISTER(Profiles)
 REGISTER_CMD( "remove_profile", RemoveProfile );
 REGISTER_CMD( "change_profile", ChangeProfile );

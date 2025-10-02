@@ -7,19 +7,19 @@
 #include "../System/Text.h"
 #include "../Misc/StrProc.h"
 #include "../libdb/Db.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define MOD_ATTACH_COMMAND 0x10268440
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NGameX
 {
 	void PostStorageInitialize();
 	void InitDataDependentSingletons();
 	void UnInitDataDependentSingletons();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NMOD
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void ReadMODInfo( SMOD *pMOD, const string &_szFullFolderName )
 {
 	string szFullFolderName = _szFullFolderName;
@@ -39,7 +39,7 @@ void ReadMODInfo( SMOD *pMOD, const string &_szFullFolderName )
 		NText::LoadUnicodeText( &pMOD->wszDesc, &stream );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void GetAllMODs( vector<SMOD> *pMODs )
 {
 	const string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
@@ -56,7 +56,7 @@ void GetAllMODs( vector<SMOD> *pMODs )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile::CFilePath &szMODPath, NDb::EDatabaseMode eMode )
 {
 	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
@@ -97,7 +97,7 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile:
 	NGlobal::SetVar( "MOD.Name", mod.wszName, STORAGE_SAVE );
 	NGlobal::SetVar( "MOD.Desc", mod.wszDesc, STORAGE_SAVE );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CICAttachMOD : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICAttachMOD );
@@ -125,7 +125,7 @@ public:
 		AttachMODInternal( NMainLoop::GetBaseDir() + "Data\\", szFullFolderPath, eMode );
 	}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode )
 {
 	const char *pszMODMode = _eMode == NDb::DATABASE_MODE_GAME ? MOD_MODE_GAME : MOD_MODE_EDITOR;
@@ -147,7 +147,7 @@ void InstantAttachMOD( const NFile::CFilePath &path, NDb::EDatabaseMode _eMode )
 		pPostSetupCmd->Exec();
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 {
 	if ( path.empty() )
@@ -160,34 +160,34 @@ NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 	NormalizePath( &pathAbsolute, pathAbsolute );
 	return pathAbsolute;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AttachMOD( const NFile::CFilePath &_path )
 {
 	NMainLoop::Command( MOD_PRE_SHUTDOWN, MOD_MODE_GAME );
 	NMainLoop::Command( MOD_ATTACH_COMMAND, GetAbsolutePath(_path).c_str() );
 	NMainLoop::Command( MOD_POST_SETUP, MOD_MODE_GAME );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DetachAllMODs()
 {
 	NMainLoop::Command( MOD_PRE_SHUTDOWN, MOD_MODE_GAME );
 	NMainLoop::Command( MOD_ATTACH_COMMAND, "" );
 	NMainLoop::Command( MOD_POST_SETUP, MOD_MODE_GAME );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool DoesMODAttached( const NFile::CFilePath &_path )
 {
 	NFile::CFilePath path = GetAbsolutePath( _path );
 	const NFile::CFilePath szCurrentMODFullPath = NStr::ToMBCS( NGlobal::GetVar( "MOD.FullPath", "" ).GetString() );
 	return szCurrentMODFullPath == path;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool DoesAnyMODAttached()
 {
 	NVFS::ICombinerVFS *pMainVFS = dynamic_cast<NVFS::ICombinerVFS *>( NVFS::GetMainVFS() );
 	return pMainVFS != 0 && pMainVFS->GetVFSList().size() > 1;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool GetAttachedMOD( SMOD *pMOD )
 {
 	pMOD->szRelativePath = NStr::ToMBCS( NGlobal::GetVar( "MOD.RelativePath", "" ).GetString() );
@@ -196,7 +196,7 @@ bool GetAttachedMOD( SMOD *pMOD )
 	pMOD->wszDesc = NGlobal::GetVar( "MOD.Desc", "" ).GetString();
 	return !pMOD->szFullFolderPath.empty();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NMOD;
 REGISTER_SAVELOAD_CLASS( MOD_ATTACH_COMMAND, CICAttachMOD );

@@ -1,6 +1,6 @@
 #pragma once
 #include "NetPacket.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /** Send/receive chat and lobby broadcast*/
 class CChatPacket : public CNetPacket
 {
@@ -20,7 +20,7 @@ public:
 	CChatPacket( const int nClientID, const wstring &_wszMessage, const string &_szNick, const int _nID, bool _bIsBroadcast )
 		: CNetPacket( nClientID ), wszMessage( _wszMessage ), szNick( _szNick ), nID( _nID ), bIsBroadcast( _bIsBroadcast ) { }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /** set don't receive lobby chat */
 class CChatAFKPacket : public CNetPacket
 {
@@ -32,7 +32,7 @@ public:
 	CChatAFKPacket() { }
 	CChatAFKPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatAFKResponsePacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatAFKResponsePacket )
@@ -44,7 +44,7 @@ public:
 	CChatAFKResponsePacket() {}
 	CChatAFKResponsePacket( const int nClientID, const string& _szAFKNick ) : CNetPacket( nClientID ), szAFKNick( _szAFKNick ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //  Select chat channel, create if not exist
 class CChatChannelPacket : public CNetPacket
 {
@@ -58,9 +58,9 @@ public:
 	CChatChannelPacket( const int nClientID, const string &_szChannelName ) 
 		: CNetPacket( nClientID ), szChannelName( _szChannelName ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //  Chat channel clients list ( for just-joined clients )
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SIDNickPair
 {
 	ZDATA
@@ -68,7 +68,7 @@ struct SIDNickPair
 		string szNick;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&szNick); return 0; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatChannelClientsListPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatChannelClientsListPacket )
@@ -81,7 +81,7 @@ public:
 	CChatChannelClientsListPacket( const int nClientID, const list<SIDNickPair> &_clientsList ) 
 		:	CNetPacket( nClientID ), clientsList( _clientsList ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //  client joined/left notification
 class CChatClientListChangeNotifyPacket : public CNetPacket
 {
@@ -97,7 +97,7 @@ public:
 	CChatClientListChangeNotifyPacket( const int nClientID, const int _nID, const string &_szNick, bool _bJoined )
 		:	CNetPacket( nClientID ), nID( _nID ), szNick( _szNick ), bJoined( _bJoined ) {}	
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatChannelsListRequestPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatChannelsListRequestPacket )
@@ -110,7 +110,7 @@ public:
 	CChatChannelsListRequestPacket( const int nClientID, const DWORD _dwVersion )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatChannelsListPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatChannelsListPacket )
@@ -127,7 +127,7 @@ public:
 		const list<string> &_removed, bool _bIsFullUpdate )
 		: CNetPacket( nClientID ), dwVersion( _dwVersion ), added( _added ), removed( _removed ), bIsFullUpdate( _bIsFullUpdate ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Add 'nSender' to ignore list
 class CChatModifyIgnoreFriendListPacket : public CNetPacket
 {
@@ -149,7 +149,7 @@ public:
 	CChatModifyIgnoreFriendListPacket( const int nClientID, const string &_szPlayer, const EFriendIgnore _eChange )
 		: CNetPacket( nClientID ), szPlayer( _szPlayer ), eChange( _eChange ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatIgnoreFriendListPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatIgnoreFriendListPacket )
@@ -163,7 +163,7 @@ public:
 	CChatIgnoreFriendListPacket( const int nClientID, const list<string> & _ignoreList, const list<string> & _friendList ) 
 		: CNetPacket( nClientID ), ignoreList( _ignoreList ), friendList( _friendList ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatGetIgnoreFriendListPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatGetIgnoreFriendListPacket )
@@ -174,14 +174,14 @@ public:
 	CChatGetIgnoreFriendListPacket() {}
 	CChatGetIgnoreFriendListPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 enum EChatStatus
 {
 	OFFLINE = 0,
 	ONLINE = 1,
 	AFK = 2,
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatFriendNotifyPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatFriendNotifyPacket )
@@ -195,7 +195,7 @@ public:
 	CChatFriendNotifyPacket( const int nClientID, const string &_szNick, const char _cStatus )
 		: CNetPacket( nClientID ), szNick( _szNick ), cChatStatus( _cStatus ) {}
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CChatChannelByNickPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CChatChannelByNickPacket )
@@ -208,4 +208,4 @@ public:
 	CChatChannelByNickPacket( const int nClientID, const string &_szNick, const string &_szChannel )
 		: CNetPacket( nClientID ), szNick( _szNick ), szChannel( _szChannel ) {}
 } ;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

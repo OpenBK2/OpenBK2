@@ -8,7 +8,7 @@ union ULuaParams;
 //
 namespace NScript
 {
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define DECLARE_SCRIPT_COMMAND( Name )											\
 int lua##Name( lua_State* pState );
 #define BEGIN_SCRIPT_COMMAND( Name, Params )								\
@@ -23,7 +23,7 @@ int lua##Name( lua_State* pState )																			\
 		return 0;																														
 #define END_SCRIPT_COMMAND }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 DECLARE_SCRIPT_COMMAND( Out );
 DECLARE_SCRIPT_COMMAND( Random );
 DECLARE_SCRIPT_COMMAND( IsRealTime );
@@ -31,7 +31,7 @@ DECLARE_SCRIPT_COMMAND( IsEqual );
 DECLARE_SCRIPT_COMMAND( GetGlobalVar );
 DECLARE_SCRIPT_COMMAND( SetGlobalVar );
 DECLARE_SCRIPT_COMMAND( LuaTest );
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool luaGetBool( const Script::Object &o );
 void luaPushBool( lua_State *pState, bool bValue );
 void ScriptWarning( const string &message );

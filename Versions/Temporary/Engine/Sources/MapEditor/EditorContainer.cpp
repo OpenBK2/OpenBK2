@@ -18,7 +18,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CEditorContainer::GetBaseObjectType( const string &rszExtendObjectTypeName )
 {
 	CExtendTypeMap::iterator posExtendType = extendTypeMap.find( rszExtendObjectTypeName );
@@ -32,13 +32,13 @@ string CEditorContainer::GetBaseObjectType( const string &rszExtendObjectTypeNam
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorContainer::CanCreate( const string &rszObjectTypeName )
 {
 	return NEditorFactory::CanCreateEditor( GetBaseObjectType( rszObjectTypeName ) );
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::Create( const string &rszObjectTypeName )
 {
 	const string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
@@ -50,13 +50,13 @@ void CEditorContainer::Create( const string &rszObjectTypeName )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::AddExtendObjectType( const string &rszBaseObjectTypeName, const string &rszExtendObjectTypeName )
 {
 	extendTypeMap[rszExtendObjectTypeName] = rszBaseObjectTypeName;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::Destroy( const string &rszObjectTypeName, bool bDestroyChildFrame )
 {
 	//	
@@ -75,7 +75,7 @@ void CEditorContainer::Destroy( const string &rszObjectTypeName, bool bDestroyCh
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::DestroyActiveEditor( const string &rszNewEditorTypeName, const string &rszNewChildFrameTypeName, bool bDestroyChildFrame )
 {
 	if ( !szActiveTypeName.empty() )
@@ -127,7 +127,7 @@ void CEditorContainer::DestroyActiveEditor( const string &rszNewEditorTypeName, 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const string &rszNewChildFrameTypeName )
 {
 	if ( !CanCreate( rObjectSet.szObjectTypeName ) )
@@ -192,7 +192,7 @@ void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObje
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet &rObjectSet )
 {
 	NProgress::Create( true );
@@ -244,7 +244,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 {
 	NProgress::Create( true );
@@ -258,7 +258,7 @@ void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 	NProgress::Destroy();	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 {
 	if ( !szActiveTypeName.empty() )
@@ -317,7 +317,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 	NProgress::Destroy();	
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IEditor* CEditorContainer::GetActiveEditor()
 {
 	if ( !szActiveTypeName.empty() )
@@ -332,7 +332,7 @@ IEditor* CEditorContainer::GetActiveEditor()
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 IInputState* CEditorContainer::GetActiveInputState()
 {
 	if ( !szActiveTypeName.empty() )
@@ -350,7 +350,7 @@ IInputState* CEditorContainer::GetActiveInputState()
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::CreateControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -359,7 +359,7 @@ void CEditorContainer::CreateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::PostCreateControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -368,7 +368,7 @@ void CEditorContainer::PostCreateControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::PreDestroyControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -377,7 +377,7 @@ void CEditorContainer::PreDestroyControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::DestroyControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -386,7 +386,7 @@ void CEditorContainer::DestroyControls()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CEditorContainer::Save( bool bSaveChanges )
 {
 	if ( !szActiveTypeName.empty() )
@@ -403,7 +403,7 @@ void CEditorContainer::Save( bool bSaveChanges )
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CEditorContainer::IsModified()
 {
 	if ( !szActiveTypeName.empty() )
@@ -420,6 +420,6 @@ bool CEditorContainer::IsModified()
 	}
 	return false;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // basement storage  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

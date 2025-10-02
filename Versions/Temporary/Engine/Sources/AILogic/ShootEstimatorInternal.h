@@ -204,7 +204,7 @@ public:
 	virtual bool AddObstacle( IObstacle *pObstacle );
 	virtual interface IObstacle * GetBest() const;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShootEstimatorSupportAAGun : public IShootEstimator
 {
 	OBJECT_BASIC_METHODS( CShootEstimatorSupportAAGun )
@@ -228,5 +228,5 @@ public:
 	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;} 
 	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;} 
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif __SHOOT_ESTIMATOR_INTERNAL_H__

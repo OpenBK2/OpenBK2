@@ -2,17 +2,17 @@
 
 #include "FilePath.h"
 #include "../Misc/StrProc.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace NFile
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 __forceinline char ConvertFolderSeparator( const char chr )
 {
 	const char temp = chr - '\\';
 	const char mask = (temp >> 7) | ((-temp) >> 7);
 	return (chr & mask) | ('/' & (~mask));
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 __forceinline char ConvertChar( const char chr )
 {
 	const char temp = chr - '\\';
@@ -20,7 +20,7 @@ __forceinline char ConvertChar( const char chr )
 	const char chr1 = (chr & mask) | ('/' & (~mask));
 	return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int FindLastSlash( const string &szFullFilePath )
 {
 	int i = szFullFilePath.size();
@@ -31,7 +31,7 @@ static int FindLastSlash( const string &szFullFilePath )
 	}
 	return string::npos;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** path splitting functions
@@ -39,33 +39,33 @@ static int FindLastSlash( const string &szFullFilePath )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetFilePath( const string &szFullFilePath )
 {
 	const int nPos = FindLastSlash( szFullFilePath );
 	return nPos != string::npos ? szFullFilePath.substr( 0, nPos + 1 ) : "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetFileName( const string &szFullFilePath )
 {
 	const int nPos = FindLastSlash( szFullFilePath );
 	return nPos != string::npos ? szFullFilePath.substr( nPos + 1 ) : szFullFilePath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetFileTitle( const string &szFullFilePath )
 {
 	const string szFileName = GetFileName( szFullFilePath );
 	const int nPos = szFileName.rfind( '.' );
 	return nPos != string::npos ? szFileName.substr( 0, nPos ) : szFileName;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string GetFileExt( const string &szFullFilePath )
 {
 	const string szFileName = GetFileName( szFullFilePath );
 	const int nPos = szFileName.rfind( '.' );
 	return nPos != string::npos ? szFileName.substr( nPos ) : "";
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 string CutFileExt( const string &szFullFilePath, const char *pszExt )
 {
 	if ( szFullFilePath.empty() )
@@ -90,7 +90,7 @@ string CutFileExt( const string &szFullFilePath, const char *pszExt )
 		return  szFullFilePath;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static int FindNextSlash( const string &szFullFilePath, const int nStartPos )
 {
 	for ( int i = nStartPos; i < szFullFilePath.size(); ++i )
@@ -110,7 +110,7 @@ void SplitPath( list<string> *pRes, const string &szFullFilePath )
 		nLastPos = nPos + 1;
 	} while( nLastPos != (string::npos + 1) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** comparison functions
@@ -118,7 +118,7 @@ void SplitPath( list<string> *pRes, const string &szFullFilePath )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 __forceinline char ConvertCharASCII( const char chr )
 {
 	const char temp = chr - '\\';
@@ -126,7 +126,7 @@ __forceinline char ConvertCharASCII( const char chr )
 	const char chr1 = (chr & mask) | ('/' & (~mask));
 	return chr1 - ( ('A' - 'a') & ( (('A' - chr1 - 1) & (chr1 - 'Z' - 1)) >> 7 ) );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ComparePathEq( const int nStart1, const int nLength1, const string &szPath1, 
 									  const int nStart2, const int nLength2, const string &szPath2 )
 {
@@ -146,7 +146,7 @@ bool ComparePathEq( const int nStart1, const int nLength1, const string &szPath1
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool ComparePathLt( const int nStart1, const int nLength1, const string &szPath1, 
 									 const int nStart2, const int nLength2, const string &szPath2 )
 {
@@ -167,12 +167,12 @@ bool ComparePathLt( const int nStart1, const int nLength1, const string &szPath1
 	}
 	return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool IsPathRelative( const string &szPath )
 {
 	return !IsFolderSeparator(szPath[0]) && (szPath[1] != ':');
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeRelativePath( string *pRes, const string &szFullPath, const string &szParentPath )
 {
 	if ( szFullPath.empty() )
@@ -187,7 +187,7 @@ void MakeRelativePath( string *pRes, const string &szFullPath, const string &szP
 	else
 		*pRes = '/' + szFullPath;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void MakeFullPath( string *pRes, const string &szRelativePath, const string &szParentPath )
 {
 	if ( szRelativePath.empty() )
@@ -212,7 +212,7 @@ void MakeFullPath( string *pRes, const string &szRelativePath, const string &szP
 			*pRes = szRelativePath;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void NormalizePath( string *pRes, const string &szFilePath )
 {
 	const int nSize = szFilePath.size();
@@ -220,7 +220,7 @@ void NormalizePath( string *pRes, const string &szFilePath )
 	for ( int i = 0; i < nSize; ++i )
 		(*pRes)[i] = ConvertFolderSeparator( szFilePath[i] );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void AppendSlash( string *pFilePath, const char cSlash )
 {
 	if ( !pFilePath->empty() && !IsFolderSeparator((*pFilePath)[pFilePath->size() - 1]) ) 
@@ -239,7 +239,7 @@ void ConvertSlashes( string *pFilePath, const char cFrom, const char cTo )
 			*it = cTo;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CreatePath( const string &_szFullPath )
 {	
 	static char buffer[1024];
@@ -263,7 +263,7 @@ void CreatePath( const string &_szFullPath )
 	// restore old current directory
 	SetCurrentDirectory( buffer );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // ************************************************************************************************************************ //
 // **
 // ** 
@@ -271,7 +271,7 @@ void CreatePath( const string &_szFullPath )
 // **
 // **
 // ************************************************************************************************************************ //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFilePath::MakeHashKey() const
 {
 	unsigned int uHashKey = 0; 
@@ -279,11 +279,11 @@ int CFilePath::MakeHashKey() const
 		uHashKey = 5*uHashKey + ConvertChar( *it );
 	return uHashKey;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int CFilePath::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (string*)this );
 	return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }

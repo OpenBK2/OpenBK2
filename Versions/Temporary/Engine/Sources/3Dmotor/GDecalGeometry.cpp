@@ -5,7 +5,7 @@
 namespace NGScene
 {
 const float F_SHIFT = 0.004f;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct STriangleCreator
 {
 	vector<STriangle> *pDst;
@@ -28,7 +28,7 @@ struct STriangleCreator
 		nPrev = n;
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SQuadProjection
 {
 	// projection info
@@ -76,18 +76,18 @@ struct SQuadProjection
 	}
 	CVec2 Project( const CVec3 &v ) { return CVec2( fU0 + v * vVecU, fV0 + v * vVecV ); }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SSPoint
 {
 	CVec3 point, normal;
 	CVec2 uv;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 struct SShadowPoly
 {
 	vector<SSPoint> points;
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CShadowBuilder
 {
 	CObjectInfo::SData info;
@@ -115,19 +115,19 @@ public:
 	void Setup( const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift );
 	void AddObject( const CObjectInfo &info, const SDiscretePos &_srcPos );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline float mixedMult( const CVec3 &a, const CVec3 &b, const CVec3 &c )
 {
 	return a.x*b.y*c.z + a.y*b.z*c.x + a.z*b.x*c.y - a.z*b.y*c.x - a.y*b.x*c.z - a.x*b.z*c.y;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void CalcWeighted( CVec3 *pRes, const CVec3 &a, float fA, const CVec3 &b, float fB )
 {
 	pRes->x = ( a.x * fB - b.x * fA );
 	pRes->y = ( a.y * fB - b.y * fA );
 	pRes->z = ( a.z * fB - b.z * fA );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // мощная работа по наложению тени ( no welding yet )
 // calc average point
 static void CalcMiddlePoint( const SSPoint &a, const SSPoint &b, SSPoint *pRes, float fA, float fB )
@@ -141,7 +141,7 @@ static void CalcMiddlePoint( const SSPoint &a, const SSPoint &b, SSPoint *pRes, 
 	pRes->uv[0] = a.uv[0] * fB - b.uv[0] * fA;
 	pRes->uv[1] = a.uv[1] * fB - b.uv[1] * fA;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static void Split( SShadowPoly *pRes, const SShadowPoly &src, const vector<float> &f )
 {
 	ASSERT( src.points.size() == f.size() );
@@ -170,7 +170,7 @@ static void Split( SShadowPoly *pRes, const SShadowPoly &src, const vector<float
 	}
 	pRes->points.resize( nRes );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 static vector<float> fPlaneOffsets;
 static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV )
 {
@@ -180,7 +180,7 @@ static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV
 	Split( pRes, src, fPlaneOffsets );
 	return pRes->points.size() > 2;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 inline void ProjectNormalized( NGfx::SCompactVector *pRes, const CVec3 &src, const CVec3 &vNormal )
 {
 	CVec3 vRes;
@@ -201,7 +201,7 @@ WORD CShadowBuilder::AddPoint( SSPoint &pnt )
 	ProjectNormalized( &v.texV, projection.vVecV, pnt.normal );
 	return nRes;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // clip by planes
 float fClipPlanes[4][3] = { {1,0,0}, {0,1,0}, {-1,0,1}, {0,-1, 1} };
 static SShadowPoly tBuf;
@@ -222,7 +222,7 @@ void CShadowBuilder::AddShadowTriangle( SShadowPoly *pTri )
 	for ( int k = 0; k < pTSrc->points.size(); ++k )
 		tc.AddVertex( AddPoint( pTSrc->points[k] ) );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_srcPos )
 {
 	SShadowPoly tri;
@@ -293,15 +293,15 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 	}
 	//DebugTrace( "%d src polygons, %d res polygons\n", infoPolys.size() - 1, CShadowBuilder::info.geometry.polys.size() - 1 );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CShadowBuilder::Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
 {
 	projection.Setup( _vOrigin, _vNormal, vSize, fRotation, _vShift );
 	vShift = projection.vProjectDirection * F_SHIFT;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CDecalGeometry
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CDecalGeometry::CDecalGeometry( CPtrFuncBase<CObjectInfo> *p, const SDiscretePos &_srcPos,
 	const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fR, const CVec2 &_vShift,
 	float _fNormalEdge, float _fDepthMargin )
@@ -309,7 +309,7 @@ CDecalGeometry::CDecalGeometry( CPtrFuncBase<CObjectInfo> *p, const SDiscretePos
 	fNormalEdge(_fNormalEdge), fDepthMargin(_fDepthMargin)
 {
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CDecalGeometry::Recalc()
 {
 	pSource.Refresh();
@@ -320,14 +320,14 @@ void CDecalGeometry::Recalc()
 	sb.Setup( vOrigin, vNormal, vSize, fRotation, vShift );
 	sb.AddObject( *pSource->GetValue(), srcPos );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPerPolyDecal
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const vector<CVec3> &_srcPositions ) : pPart(_pPart), srcPositions(_srcPositions)
 {
 	data.geometry.resize(0);
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerPolyDecal::Recalc()
 {
 	if ( !IsValid(pPart) )
@@ -356,9 +356,9 @@ void CPerPolyDecal::Recalc()
 	pValue = new CObjectInfo;
 	pValue->Assign( data, false );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CExplosionDecalGeometry
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CObjectInfoProcessor
 {
 	CObjectInfo::SData &info;
@@ -431,14 +431,14 @@ public:
 		}
 	}
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CExplosionShadowBuilder : CObjectInfoProcessor
 {
 public:
 	CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &positions,
 		const CVec3 &_vOrigin, float _fSize, float _fRotation );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &xformed,
 	const CVec3 &vOrigin, float fSize, float _fRotation )
 : CObjectInfoProcessor( pInfo, src )
@@ -508,14 +508,14 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 		AddPolygon( poly );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions )
 {
 	CExplosionShadowBuilder sb( pRes, info, positions, vOrigin, fSize, fRotation );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // CPerPolyDecalGeometry
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CPerPolyDecalBuilder : CObjectInfoProcessor
 {
 	SQuadProjection projection;
@@ -523,7 +523,7 @@ public:
 	CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &positions,
 		const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const vector<CVec3> &xformed,
 	const CVec3 &vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift )
 	: CObjectInfoProcessor( pInfo, src )
@@ -583,12 +583,12 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const COb
 		AddPolygon( poly );
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const vector<CVec3> &positions )
 {
 	CPerPolyDecalBuilder ppb( pRes, info, positions, vOrigin, vNormal, vSize, fRotation, vShift );
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( 0x00442130, CDecalGeometry )

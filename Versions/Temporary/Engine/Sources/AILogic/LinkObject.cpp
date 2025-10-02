@@ -2,13 +2,13 @@
 
 #include "LinkObject.h"
 #include "../Stats_B2_M1/AIUnitCmd.h"
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 SLinkObjData * SLinkObjDataAutoMagic::pLinkObjData = 0;
 SLinkObjDataAutoMagic magic;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 extern NTimer::STime curTime;
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CObjectBase * GetObjectByCmd( const SAIUnitCmd &cmd )
 {
 	if ( cmd.nObjectID )
@@ -16,12 +16,12 @@ CObjectBase * GetObjectByCmd( const SAIUnitCmd &cmd )
 	else
 		return 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLinkObject::CLinkObject()
 : nLink( -1 ), nUniqueID( -1 )
 {
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLinkObject::~CLinkObject()
 {
 	if ( GetLink() > 0 && SLinkObjDataAutoMagic::pLinkObjData && !SLinkObjDataAutoMagic::pLinkObjData->link2object.empty() )
@@ -33,17 +33,17 @@ CLinkObject::~CLinkObject()
 		SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.push_back( nUniqueID );
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::SetUniqueIdForObjects()
 {
 	nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::SetUniqueIdForUnits( const int _nUniqueID )
 {
 	nUniqueID = _nUniqueID;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::SetLink( const int _nLink )
 {
 	nLink = _nLink;
@@ -59,13 +59,13 @@ void CLinkObject::SetLink( const int _nLink )
 		SLinkObjDataAutoMagic::pLinkObjData->link2object[nLink] = this;
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::Mem2UniqueIdObjs()
 { 
 	NI_ASSERT( nUniqueID > 0, "Unique id isn't set" );
 	SLinkObjDataAutoMagic::pLinkObjData->unitsID2object[nUniqueID] = this;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLinkObject* CLinkObject::GetObjectByLink( const int nLink )
 {
 	if ( nLink >= SLinkObjDataAutoMagic::pLinkObjData->link2object.size() || nLink <= 0 )
@@ -73,7 +73,7 @@ CLinkObject* CLinkObject::GetObjectByLink( const int nLink )
 	else
 		return SLinkObjDataAutoMagic::pLinkObjData->link2object[nLink];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::Segment()
 {
 	for ( list<int>::iterator iter = SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.begin(); iter != SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.end(); ++iter )
@@ -86,7 +86,7 @@ void CLinkObject::Segment()
 	}
 	SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::Clear()
 {
 	for ( int i = 0; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size(); ++i )
@@ -102,7 +102,7 @@ void CLinkObject::Clear()
 
 	SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID = 0;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::ClearLinks()
 {
 	for ( int i = 0; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size(); ++i )
@@ -113,7 +113,7 @@ void CLinkObject::ClearLinks()
 	
 	SLinkObjDataAutoMagic::pLinkObjData->link2object.clear();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
 { 
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
@@ -121,7 +121,7 @@ CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
 	hash_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );
 	return pos == SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end() ? 0 : pos->second;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void CLinkObject::GetFreeLinks( list<int> *pLinks, const int nSize )
 {
 	pLinks->clear();
@@ -141,7 +141,7 @@ void CLinkObject::GetFreeLinks( list<int> *pLinks, const int nSize )
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 CLinkObject* CLinkObject::GetObjectByUniqueIdSafe( const int nUniqueID )
 {
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
@@ -150,9 +150,9 @@ CLinkObject* CLinkObject::GetObjectByUniqueIdSafe( const int nUniqueID )
 	else
 		return SLinkObjDataAutoMagic::pLinkObjData->unitsID2object[nUniqueID];
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 bool CLinkObject::IsLinkObjectExists( const int nUniqueID )
 {
 	return SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

@@ -6,7 +6,7 @@
 #include "../MapEditorLib/MaskManipulator.h"
 #include "../MapEditorLib/Interface_CommandHandler.h"
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 class CMapInfoEditor;
 class CMapInfoState : public CMultiInputState, public ICommandHandler
 {
@@ -104,6 +104,6 @@ public:
 	bool HandleCommand( UINT nCommandID, DWORD dwData );
 	bool UpdateCommand( UINT nCommandID, bool *pbEnable, bool *pbCheck );
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #endif // !defined(__MAPINFO_STATE__)
 
