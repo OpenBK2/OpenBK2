@@ -119,7 +119,7 @@
       <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
 cd $(ProjectDir)
 cd $(IntDir)
-n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+$(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
 if errorlevel 1 goto checklib
 :BuildImportLib
 lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
@@ -168,7 +168,7 @@ dir&gt;nul</Command>
       <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
 cd $(ProjectDir)
 cd $(IntDir)
-n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+$(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
 if errorlevel 1 goto checklib
 :BuildImportLib
 lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
@@ -222,7 +222,7 @@ dir&gt;nul</Command>
       <Command>set LIB=$(SolutionDir)vendor\MySQL\lib%3b$(SolutionDir)vendor\Granny\lib%3b$(SolutionDir)vendor\Bink%3b$(SolutionDir)vendor\FMOD\api\lib%3b$(SolutionDir)vendor\S3TC%3b$(SolutionDir)vendor\Stingray\lib%3b$(SolutionDir)vendor\libintl\lib%3b$(SolutionDir)vendor\libsvn\lib%3b%25LIB%25
 cd $(ProjectDir)
 cd $(IntDir)
-n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
+$(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName).def
 if errorlevel 1 goto checklib
 :BuildImportLib
 lib /NOLOGO *.obj /def:$(ProjectName).def /MACHINE:X86 /out:$(OutDir)$(ProjectName).lib
@@ -274,7 +274,7 @@ dir&gt;nul</Command>
     <PreLinkEvent>
       <Command>cd $(ProjectDir)
 cd $(IntDir)
-n:\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook29
+$(SolutionDir)\..\Disk_N\Dev\Soft\Utils\DefBuild.exe $(ProjectName)UniqueName.obj _ReferenceModuleHook29
 "$(VCInstallDir)bin\lib" /NOLOGO /OUT:$(OutDir)$(ProjectName).lib *.obj</Command>
     </PreLinkEvent>
     <ResourceCompile>
