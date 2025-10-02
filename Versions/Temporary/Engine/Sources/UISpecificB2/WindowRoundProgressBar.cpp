@@ -4,9 +4,10 @@
 #include "../ui/ui.h"
 #include "../input/gamemessage.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../system/dg.h"
 #include "WindowRoundProgressBar.h"
+
+#include <zconf.h>
 
 // CWindowRoundProgressBar
 

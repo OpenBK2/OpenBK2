@@ -7,7 +7,6 @@
 #include "../input/gamemessage.h"
 #include "../ui/ui.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../ui/uifactory.h"
 #include "InterfaceEncyclopedia.h"
 #include "GameXClassIDs.h"
@@ -16,6 +15,8 @@
 #include "DBGameRoot.h"
 #include "../UISpecificB2/EffectorB2Move.h"
 #include "../System/Text.h"
+
+#include <zconf.h>
 
 #ifdef _PROFILER
 #include <VTuneAPI.h>

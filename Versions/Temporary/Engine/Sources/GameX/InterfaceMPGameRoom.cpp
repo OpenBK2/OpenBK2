@@ -4,7 +4,6 @@
 #include "../input/gamemessage.h"
 #include "../ui/ui.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../ui/uifactory.h"
 #include "InterfaceMPGameRoom.h"
@@ -21,6 +20,8 @@
 #include "../Misc/Win32Random.h"
 #include "../System/Text.h"
 #include "InterfaceMisc.h"
+
+#include <zconf.h>
 
 static bool s_bMPAllowStartGame;
 

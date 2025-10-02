@@ -4,7 +4,6 @@
 #include "../ui/ui.h"
 #include "../input/gamemessage.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../3dmotor/rectlayout.h"
 #include "Window3DControl.h"
@@ -12,6 +11,8 @@
 #include "../UI/UIVisitor.h"
 #include "../3DMotor/GAnimation.hpp"
 #include "../Main/GameTimer.h"
+
+#include <zconf.h>
 
 // CWindow3DControl
 

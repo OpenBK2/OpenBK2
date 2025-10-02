@@ -4,7 +4,6 @@
 #include "../ui/ui.h"
 #include "../input/gamemessage.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/rectlayout.h"
 #include "WindowPotentialLines.h"
 #include "../UI/UIVisitor.h"
@@ -14,6 +13,8 @@
 #include "../GameX/DBGameRoot.h"
 #include "../System/Commands.h"
 #include "../System/VFSOperations.h"
+
+#include <zconf.h>
 
 static float s_fWeightMainStrike = 0.007f;
 static float s_fWeightMaskNoise = 0.00001f;

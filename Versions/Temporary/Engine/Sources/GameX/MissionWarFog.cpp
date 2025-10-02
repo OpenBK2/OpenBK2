@@ -1,10 +1,11 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "MissionWarFog.h"
 //#include "..\SceneB2\PerlinNoise.h"
+
+#include <zconf.h>
 
 static int CLOUDS_NOISE_OCTS_NUM = 2;
 static float CLOUDS_NOISE_PERS = 1.0f;

@@ -4,7 +4,6 @@
 
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/actioncommand.h"
 #include "../stats_b2_m1/specialabilities.h"
 #include "../stats_b2_m1/iconsset.h"
@@ -15,6 +14,8 @@
 #include "../SceneB2/Scene.h"
 #include "../Stats_B2_M1/AIUpdates.h"
 #include "../Misc/HashFuncs.h"
+
+#include <zconf.h>
 
 const int ARMOR_FRONT				= 0;
 const int ARMOR_SIDE_1			= 1;

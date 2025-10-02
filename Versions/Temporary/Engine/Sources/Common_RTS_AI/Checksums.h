@@ -2,8 +2,7 @@
 
 #include "Common_RTS_AI_export.h"
 
-
-#include "../zlib/zlib.h"
+#include <zlib.h>
 
 namespace NCheckSums
 {

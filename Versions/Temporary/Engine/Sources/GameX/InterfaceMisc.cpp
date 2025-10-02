@@ -2,7 +2,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "InterfaceMisc.h"
 #include "GameXClassIDs.h"
@@ -10,6 +9,8 @@
 #include "../SceneB2/Scene.h"
 #include "../Misc/STrProc.h"
 #include "InterfaceState.h"
+
+#include <zconf.h>
 
 // Интерфейс MessageBox
 //

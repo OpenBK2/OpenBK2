@@ -1,12 +1,13 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/dbscene.h"
 #include "MOProjectile.h"
 #include "../Main/GameTimer.h"
 #include "../Sound/DBSound.h"
 #include "../System/Commands.h"
+
+#include <zconf.h>
 
 int g_nProjectileFallSoundMaxTime = 2000;
 START_REGISTER(ProjectileConsts)

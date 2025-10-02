@@ -1,12 +1,13 @@
 #include "StdAfx.h"
 #include "../misc/2darray.h"
 #include "../System/Commands.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/dbscene.h"
 #include "MOObject.h"
 #include "../SceneB2/AnimMutators.h"
 #include "../SceneB2/WindController.h"
 #include "../Sound/SoundScene.h"
+
+#include <zconf.h>
 
 static bool bDrawGrass = true;
 static bool bAnimateTrees = true;

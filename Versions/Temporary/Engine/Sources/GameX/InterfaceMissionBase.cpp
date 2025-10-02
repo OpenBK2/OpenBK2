@@ -3,7 +3,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../Stats_B2_M1/DBClientConsts.h"
 #include "../Stats_B2_M1/DBCameraConsts.h"
 #include "InterfaceMissionBase.h"
@@ -16,6 +15,8 @@
 #include "../Sound/MusicSystem.h"
 #include "GetConsts.h"
 #include "ScenarioTracker.h"
+
+#include <zconf.h>
 
 class CVisualNotificationsEmpty : public IVisualNotifications
 {

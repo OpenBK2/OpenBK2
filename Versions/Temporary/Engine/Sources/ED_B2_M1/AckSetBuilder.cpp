@@ -3,7 +3,6 @@
 #include "../mapeditorlib/resourcedefines.h"
 #include "../MapEditorLib/Interface_MOD.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 
@@ -22,6 +21,7 @@
 #include "../libdb/EditorDb.h"
 #include "../libdb/ObjMan.h"
 
+#include <zconf.h>
 
 #define ACK_SET_TYPE_NAME "AckSetRPGStats"
 #define COMPLEX_SOUND_DESC_TYPE_NAME "ComplexSoundDesc"

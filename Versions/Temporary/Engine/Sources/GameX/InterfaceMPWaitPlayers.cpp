@@ -2,13 +2,13 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "InterfaceMPWaitPlayers.h"
 #include "GameXClassIDs.h"
 #include "MultiplayerCommandManager.h"
 #include "../Misc/StrProc.h"
 
+#include <zconf.h>
 
 // CInterfaceMPWaitPlayers
 

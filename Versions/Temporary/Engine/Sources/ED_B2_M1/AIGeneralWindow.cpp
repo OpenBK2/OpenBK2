@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "commandhandlerdefines.h"
 #include "stringresources.h"
 #include "aigeneraltypes.h"
 #include "AIGeneralWindow.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

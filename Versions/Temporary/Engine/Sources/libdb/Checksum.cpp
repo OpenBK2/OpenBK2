@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
 #include "Checksum.h"
-#include "../zlib/zlib.h"
+
+#include <zlib.h>
 
 namespace NDb
 {

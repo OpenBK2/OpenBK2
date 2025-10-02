@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../zlib/zconf.h"
 #include "../Main/CommandsHistory.hpp"
 #include "../System/Commands.h"
 #include "MPInterfaceData.h"
+
+#include <zconf.h>
 
 struct IAILogicCommandB2;
 struct IRandomSeed;

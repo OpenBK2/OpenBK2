@@ -4,7 +4,6 @@
 #include "../mapeditorlib/commoneditormethods.h"
 #include "resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "commandhandlerdefines.h"
 #include "../SceneB2/Camera.h"
@@ -14,6 +13,8 @@
 #include "SquadState.h"
 #include "SquadEditor.h"
 #include "FormationsState.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

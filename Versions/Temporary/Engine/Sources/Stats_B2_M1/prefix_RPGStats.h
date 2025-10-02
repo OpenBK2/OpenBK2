@@ -4,9 +4,10 @@
 
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "Vis2AI.h"
 #include "../System/RandomGen.h"
+
+#include <zconf.h>
 
 namespace NDb
 {

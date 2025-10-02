@@ -4149,9 +4149,11 @@ void ReplayHistory( const string &szID, const vector<wstring> &paramsSet, void *
 #ifndef _FINALRELEASE
 #include "../System/CheckSumLog.h"
 #include "../GameX/SaveLoadHelper.h"
-#include "../zlib/zlib.h"
 #include "../Common_RTS_AI/Checksums.h"
 #include "../Main/Profiles.h"
+
+#include <zlib.h>
+
 class CSimpleChecksumLog : public ICheckSumLog
 { 
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );

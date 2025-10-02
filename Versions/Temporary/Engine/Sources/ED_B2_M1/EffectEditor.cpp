@@ -4,7 +4,6 @@
 #include "../mapeditorlib/interface_commandhandler.h"
 #include "../mapeditorlib/commoneditormethods.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 
 #include "../MapEditorLib/EditorFactory.h"
@@ -19,6 +18,8 @@
 
 #include "EditorOptions.h"
 #include "../stats_b2_m1/DBMapInfo.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "../misc/2darray.h"
 #include "../misc/strproc.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/dbscene.h"
 #include "../vendor/Granny/include/granny.h"
 
@@ -13,6 +12,7 @@
 #include "ExporterMethods.h"
 #include "FenceRPGStatsExporter.h"
 
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

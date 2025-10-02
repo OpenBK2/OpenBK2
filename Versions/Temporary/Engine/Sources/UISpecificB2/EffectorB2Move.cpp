@@ -5,9 +5,10 @@
 #include "../input/gamemessage.h"
 #include "../ui/uifactory.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "EffectorB2Move.h"
 #include "DBUISpecificB2.h"
+
+#include <zconf.h>
 
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const string &szAnimatedWindow )
 { 

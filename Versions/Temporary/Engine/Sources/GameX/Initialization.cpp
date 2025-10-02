@@ -4,7 +4,6 @@
 #include "../Main/Main_export.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "dbmpconsts.h"
 #include "../ui/commandparam.h"
@@ -33,6 +32,8 @@
 #include "GetConsts.h"
 #include "../DebugTools/DebugInfoManager.h"
 #include "../Misc/StrProc.h"
+
+#include <zconf.h>
 
 namespace NMain
 {

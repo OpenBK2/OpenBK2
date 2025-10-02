@@ -4,7 +4,6 @@
 #include "../ui/ui.h"
 #include "../input/gamemessage.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/rectlayout.h"
 #include "../system/time.h"
 #include "WindowFrameSequence.h"
@@ -12,6 +11,8 @@
 #include "../Main/GameTimer.h"
 #include "../UI/Background.h"
 #include "../Misc/Win32Random.h"
+
+#include <zconf.h>
 
 // CWindowFrameSequence
 

@@ -2,7 +2,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "InterfaceChapterMapMenu.h"
 #include "InterfaceState.h"
 #include "../UISpecificB2/DBUISpecificB2.h"
@@ -12,6 +11,8 @@
 #include "ScenarioTracker.h"
 #include "InterfaceEncyclopedia.h"
 #include "../System/Text.h"
+
+#include <zconf.h>
 
 // CInterfaceChapterMapMenu -- ReinfDesc window
 

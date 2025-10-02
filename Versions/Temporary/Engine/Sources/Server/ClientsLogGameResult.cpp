@@ -4,8 +4,9 @@
 #include "../vendor/MySQL/include/mysql.h"
 #include "../Misc/StrProc.h"
 #include "Statistics.h"
-#include "../zlib/zlib.h"
 #include "HashMapConvertor.h"
+
+#include <zlib.h>
 
 #define CHECK_TABLE_STRUCTURE
 #ifndef _FINALRELEASE

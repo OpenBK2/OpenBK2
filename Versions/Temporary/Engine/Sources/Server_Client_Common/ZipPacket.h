@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../Server_Client_Common/NetPacket.h"
-#include "../zlib/zlib.h"
+
+#include <zlib.h>
 
 class CZipPacket : public CNetPacket
 {

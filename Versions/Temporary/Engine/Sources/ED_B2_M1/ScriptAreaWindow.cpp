@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "commandhandlerdefines.h"
 #include "StringResources.h"
 #include "ScriptAreaWindow.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

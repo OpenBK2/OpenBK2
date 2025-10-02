@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/dbscene.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../mapeditorlib/resourcedefines.h"
@@ -17,6 +16,8 @@
 #include "FormationMnemonics.h"
 #include "SquadEditor.h"
 #include "FormationsState.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

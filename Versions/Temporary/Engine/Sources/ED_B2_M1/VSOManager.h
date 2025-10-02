@@ -1,12 +1,12 @@
 #pragma once
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../MapEditorLib/Tools_Geometry.h"
 #include "EditorScene.h"
 #include "Tools_SceneDraw.h"
 
+#include <zconf.h>
 
 typedef vector<NDb::SVSOPoint> CVSOPointList;
 //

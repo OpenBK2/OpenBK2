@@ -1,12 +1,13 @@
 #include "StdAfx.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../sceneb2/scene.h"
 #include "../libdb/resourcemanager.h"
 #include "../main/gametimer.h"
 #include "EntrenchmentInfoData.h"
 #include <float.h>
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -4,11 +4,12 @@
 #include "../input/gamemessage.h"
 #include "../ui/ui.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../ui/uifactory.h"
 #include "GameRoomData.h"
 #include "../Misc/StrProc.h"
 #include "InterfaceMPLobby.h"
+
+#include <zconf.h>
 
 void CClientListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
 {	

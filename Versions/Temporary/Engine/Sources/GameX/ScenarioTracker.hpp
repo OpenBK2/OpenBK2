@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "dbmpconsts.h"
 #include "ScenarioTracker.h"
 #include "../Misc/HashFuncs.h"
+
+#include <zconf.h>
 
 struct IScriptWrapper;
 

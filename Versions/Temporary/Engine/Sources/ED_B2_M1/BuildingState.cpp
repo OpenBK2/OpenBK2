@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "seasonmnemonics.h"
@@ -13,6 +12,8 @@
 #include "../MapEditorLib/CommonEditorMethods.h"
 
 #include "BuildingState.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

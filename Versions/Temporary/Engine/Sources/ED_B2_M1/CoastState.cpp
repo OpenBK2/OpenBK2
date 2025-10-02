@@ -2,7 +2,6 @@
 #include "../mapeditorlib/resourcedefines.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../sceneb2/scene.h"
 
@@ -12,6 +11,8 @@
 
 #include "../libdb/ResourceManager.h"
 #include "../Stats_B2_M1/TerraAIObserver.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #undef THIS_FILE

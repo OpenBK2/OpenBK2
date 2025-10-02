@@ -15,7 +15,6 @@
 
 #include "StdAfx.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../3dmotor/dbscene.h"
 #include "../libdb/ResourceManager.h"
 #include "../MapEditorLib/ExporterFactory.h"
@@ -26,6 +25,8 @@
 #include "../Misc/StrProc.h"
 #include "../MapEditorLib/StringManager.h"
 #include "../MapEditorLib/Interface_MOD.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

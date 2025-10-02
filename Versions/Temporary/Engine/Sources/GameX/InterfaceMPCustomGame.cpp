@@ -2,7 +2,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "InterfaceMPCustomGame.h"
 #include "GameXClassIDs.h"
@@ -15,6 +14,9 @@
 #include "DBMPConsts.h"
 #include "GetConsts.h"
 #include "../ui/ListControlSorters.h"
+
+#include <zconf.h>
+
 const int nMAX_PLAYERS = 8;
 
 // CInterfaceMPCustomGame

@@ -3,7 +3,6 @@
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../MapEditorLib/Interface_MainFrame.h"
 #include "../MapEditorLib/MultiManipulator.h"
@@ -12,6 +11,8 @@
 #include "../libdb/ResourceManager.h"
 #include "ED_B2_M1Dll.h"
 #include "VSOWindow.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

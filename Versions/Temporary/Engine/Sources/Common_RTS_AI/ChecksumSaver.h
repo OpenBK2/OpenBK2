@@ -1,5 +1,6 @@
 #pragma once
-#include "../zlib/zconf.h"
+
+#include <zconf.h>
 
 
 struct ICheckSumLog;

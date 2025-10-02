@@ -2,7 +2,6 @@
 
 #include "../misc/strproc.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "MechUnitRPGStatsBuilder.h"
 #include "../MapEditorLib/BuilderFactory.h"
 //
@@ -14,6 +13,8 @@
 #include "ExporterMethods.h"
 #include "../ED_Common/TempAttributesTool.h"
 #include "../MapEditorLib/StringManager.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

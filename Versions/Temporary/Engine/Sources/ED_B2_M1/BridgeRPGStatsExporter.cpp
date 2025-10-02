@@ -2,7 +2,6 @@
 
 #include "../misc/strproc.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../libdb/ResourceManager.h"
 #include "BridgeRPGStatsExporter.h"
 #include "../MapEditorLib/ExporterFactory.h"
@@ -11,6 +10,8 @@
 #include "ExporterMethods.h"
 #include "../System/FilePath.h"
 #include "../System/FileUtils.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

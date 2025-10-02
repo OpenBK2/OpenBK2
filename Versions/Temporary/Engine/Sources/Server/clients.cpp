@@ -5,11 +5,12 @@
 #include "../vendor/MySQL/include/mysql.h"
 #include "../Misc/StrProc.h"
 #include "Statistics.h"
-#include "../zlib/zlib.h"
 #include "HashMapConvertor.h"
 #include "LadderStats.h"
 #include "../Misc/Time64.h"
 #include "../System/RandomGen.h"
+
+#include <zlib.h>
 
 int NUMBER_OF_RACES_IN_LADDER = 4;
 int MAX_NUMBER_OF_REINFORCEMENTS = 30;

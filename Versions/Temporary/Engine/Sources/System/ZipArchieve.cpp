@@ -1,7 +1,9 @@
 #include "StdAfx.h"
-#include "../zlib/zconf.h"
+
 #include "ZipArchieve.h"
-#include "../zlib/zlib.h"
+
+#include <zconf.h>
+#include <zlib.h>
 
 // ************************************************************************************************************************ //
 // **

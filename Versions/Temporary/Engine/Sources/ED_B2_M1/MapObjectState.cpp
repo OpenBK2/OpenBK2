@@ -2,7 +2,6 @@
 #include "../mapeditorlib/resourcedefines.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../mapeditorlib/tools_hashset.h"
 #include "../sceneb2/scene.h"
@@ -14,6 +13,8 @@
 #include "MapObjectState.h"
 #include "ED_B2_M1Dll.h"
 #include "MapInfoEditor.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

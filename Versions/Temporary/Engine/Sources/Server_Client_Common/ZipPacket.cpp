@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
 #include "ZipPacket.h"
-#include "../zlib/zlib.h"
+
+#include <zlib.h>
 
 const int COMPRESSION_LEVEL = ( Z_BEST_SPEED + Z_BEST_COMPRESSION ) / 2;
 

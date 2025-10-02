@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/dbmapinfo.h"
 #include "../ui/commandparam.h"
 #include "ScenarioTracker.hpp"
@@ -12,6 +11,8 @@
 #include "../AILogic/DBAIConsts.h"
 #include "../Stats_B2_M1/RPGStats.h"
 #include "../AILogic/B2AI.h"
+
+#include <zconf.h>
 
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp
 const int NEUTRAL_COLOR_INDEX	= 3;

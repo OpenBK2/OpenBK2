@@ -2,7 +2,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "./interfacecredits.h"
 #include "../SceneB2/Scene.h"
@@ -10,6 +9,7 @@
 #include "../UI/SceneClassIDs.h"
 #include "InterfaceState.h"
 
+#include <zconf.h>
 
 bool CInterfaceCredits::CReactions::Execute( const string &szSender, const string &szReaction )
 {

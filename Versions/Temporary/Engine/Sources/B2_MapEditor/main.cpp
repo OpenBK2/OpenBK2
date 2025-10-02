@@ -2,7 +2,6 @@
 #include "revision.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../sceneb2/scene.h"
 #include "../ED_B2_M1/ED_B2_M1DLL.h"
@@ -16,7 +15,7 @@
 #include "VFSDbObserver.h"
 #include "../libdb/EditorDb.h"
 
-
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

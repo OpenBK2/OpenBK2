@@ -1,12 +1,13 @@
 #include "StdAfx.h"
 #include "../ui/commandparam.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "UIScene.hpp"
 #include "../ED_Common/UIVisitor.hpp"
 
 #include "EditorScene.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

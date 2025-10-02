@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../misc/planegeometry.h"
 #include "../sceneb2/visobjdesc.h"
 #include "../mapeditorlib/resourcedefines.h"
@@ -13,6 +12,8 @@
 #include "../Main/GameTimer.h"
 
 #include "PointsListState.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

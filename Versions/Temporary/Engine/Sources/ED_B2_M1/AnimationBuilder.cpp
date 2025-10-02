@@ -2,7 +2,6 @@
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 
@@ -20,6 +19,8 @@
 #include "../System/FileUtils.h"
 #include "../Misc/StrProc.h"
 #include "../libdb/ResourceManager.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -3,7 +3,6 @@
 #include "../mapeditorlib/resourcedefines.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "seasonmnemonics.h"
 #include "../mapeditorlib/defaulttabwindow.h"
 #include "pointlistdialog.h"
@@ -22,6 +21,8 @@
 
 #include "BuildingState.h"
 #include "BuildingEditor.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

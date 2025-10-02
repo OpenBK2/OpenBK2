@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
 //#include "..\misc\2darray.h"
-//#include "..\zlib\zconf.h"
 #include "CommandHandlerDefines.h"
 #include "FormationMnemonics.h"
 #include "StringResources.h"
 #include "FormationWindow.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

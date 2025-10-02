@@ -2,7 +2,6 @@
 #include "../ui/commandparam.h"
 #include "../ui/dbuserinterface.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../system/time.h"
 #include "BackgroundFrameSequence.h"
 #include "../UI/UIVisitor.h"
@@ -10,6 +9,8 @@
 #include "../UI/UIComponents.h"
 #include "../Main/GameTimer.h"
 #include "../Misc/Win32Random.h"
+
+#include <zconf.h>
 
 // CBackgroundFrameSequence
 

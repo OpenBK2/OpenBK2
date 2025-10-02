@@ -4,7 +4,6 @@
 #include "../mapeditorlib/commoneditormethods.h"
 #include "../misc/2darray.h"
 #include "../image/targa.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../system/time.h"
 #include "ResourceDefines.h"
@@ -17,6 +16,8 @@
 #include "EditorScene.h"
 #include "../Misc/Win32Helper.h"
 #include "../System/VFSOperations.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

@@ -5,11 +5,12 @@
 #include "../input/gamemessage.h"
 #include "../ui/uifactory.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../ui/window.h"
 #include "UISpecificB2.h"
 #include "../UI/Background.h"
 #include "DBUISpecificB2.h"
+
+#include <zconf.h>
 
 
 class CWindowSelection : public CWindow, public ISelection

@@ -6,10 +6,11 @@
 #include "../input/gamemessage.h"
 #include "../ui/uifactory.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../UI/Window.h"
 #include "DBUISpecificB2.h"
 #include "UISpecificB2.h"
+
+#include <zconf.h>
 
 class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 {

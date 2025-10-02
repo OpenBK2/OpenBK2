@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "commandhandlerdefines.h"
 #include "../MapEditorLib/DefaultInputState.h"
 #include "../MapEditorLib/MaskManipulator.h"
@@ -10,6 +9,7 @@
 #include "MarkerSet.h"
 #include "BuildingEditor.h"
 
+#include <zconf.h>
 
 class CPointsListState : public CDefaultInputState, public ICommandHandler
 {

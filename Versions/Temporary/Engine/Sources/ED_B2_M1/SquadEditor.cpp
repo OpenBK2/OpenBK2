@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "commandhandlerdefines.h"
@@ -19,6 +18,8 @@
 #include "Tools_SceneGeometry.h"
 #include "../Stats_B2_M1/SceneModes.h"
 #include "../Stats_B2_M1/AnimModes.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

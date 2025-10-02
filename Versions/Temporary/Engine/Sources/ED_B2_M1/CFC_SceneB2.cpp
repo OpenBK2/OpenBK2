@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "../mapeditorlib/resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
@@ -25,6 +24,8 @@
 
 #include "DrawToolsDC.h"
 #include "../System/GResource.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

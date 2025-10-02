@@ -4,7 +4,6 @@
 #include "../input/gamemessage.h"
 #include "../ui/ui.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../ui/uifactory.h"
 #include "GameRoomData.h"
 #include "../UISpecificB2/DBUISpecificB2.h"
@@ -17,6 +16,8 @@
 #include "DBConsts.h"
 #include "DBGameRoot.h"
 #include "DBMPConsts.h"
+
+#include <zconf.h>
 
 static vector<DWORD> colors;
 static vector<wstring> sides;

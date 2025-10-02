@@ -2,7 +2,6 @@
 
 #include "../mapeditorlib/resourcedefines.h"
 #include "../misc/2darray.h"
-#include "../zlib/zconf.h"
 #include "../stats_b2_m1/iconsset.h"
 #include "../mapeditorlib/commandhandlerdefines.h"
 #include "aigeneraltypes.h"
@@ -11,6 +10,8 @@
 #include "aigenmobileiddlg.h"
 #include "AIGeneralState.h"
 #include "../MapEditorLib/Interface_MainFrame.h"
+
+#include <zconf.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
