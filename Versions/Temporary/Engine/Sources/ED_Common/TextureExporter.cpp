@@ -82,7 +82,6 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	float fGain = 0.0f;
 	float fMSize = 0.0f;
 	bool bFlipY = false;
-	bool bUseS3TC = false;
 	CManipulatorManager::GetValue( &szUsageType, pManipulator, "Type" );
 	CManipulatorManager::GetValue( &szType, pManipulator, "ConversionType" );
 	CManipulatorManager::GetValue( &szAddrType, pManipulator, "AddrType" );
@@ -91,10 +90,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	CManipulatorManager::GetValue( &fGain, pManipulator, "BumpGain" );
 	CManipulatorManager::GetValue( &fMSize, pManipulator, "MappingSize" );
 	CManipulatorManager::GetValue( &bFlipY, pManipulator, "FlipY" );
-	CManipulatorManager::GetValue( &bUseS3TC, pManipulator, "UseS3TC" );
 	fMSize = fMSize / ( fGain > FP_EPSILON ? fGain : FP_EPSILON );
 	//
-	if ( !bUseS3TC && ( NGfx::pDevice == 0 ) )
+	if ( NGfx::pDevice == nullptr )
 	{
 		NLog::Log( LT_ERROR, "Can't perform texture conversion - empty D3D device\n" );
 		return ER_FAIL;
@@ -224,14 +222,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 
 				if ( bFlipY ) 
 					NImage::FlipY( image );
-				if ( bUseS3TC )
-				{
-					CFileStream stream( szDestination, CFileStream::WIN_CREATE );
-					if ( stream.IsOk() )
-						NImage::ConvertAndSaveAsDDS( &stream, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
-				}
-				else
-					NImage::ConvertAndSaveAsDDSWithDX( NGfx::pDevice, szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
+				NImage::ConvertAndSaveAsDDSWithDX( NGfx::pDevice, szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
 				bResult = true;
 			}
 			else
