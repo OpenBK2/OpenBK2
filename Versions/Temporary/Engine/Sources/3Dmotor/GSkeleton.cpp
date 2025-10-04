@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "vendor/Granny/include/granny.h"
+#include "stdafx.h"
+#include "vendor/granny/include/granny.h"
 #include "GAnimFormat.h"
 #include "System/BasicShare.h"
 #include "GSkeleton.h"

@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GScene.h"
 #include "GParticleInfo.h"
-#include "4dcalcs.h"
+#include "4dCalcs.h"
 
 #include "GSprite.h"
 

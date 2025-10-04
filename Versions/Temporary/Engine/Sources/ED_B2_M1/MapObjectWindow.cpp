@@ -2,9 +2,9 @@
 
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/resourcedefines.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
-#include "sceneb2/scene.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
+#include "SceneB2/Scene.h"
 #include "libdb/resourcemanager.h"
 #include "mapeditorlib/multimanipulator.h"
 #include "MapEditorLib/Interface_MainFrame.h"

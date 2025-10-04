@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "3DMotor/Gfx.h"
+#include "3Dmotor/Gfx.h"
 #include "3DLib/Transform.h"
 #include "Camera.h"
 #include "VisObjDesc.h"

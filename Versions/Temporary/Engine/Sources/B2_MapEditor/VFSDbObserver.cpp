@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "libdb/DBObserver.h"
 #include "System/VFSOperations.h"
 

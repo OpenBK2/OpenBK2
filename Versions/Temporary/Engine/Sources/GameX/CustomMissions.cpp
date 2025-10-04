@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "System/FilePath.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"

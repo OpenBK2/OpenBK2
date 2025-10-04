@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "unitssegments.h"
-#include "system/time.h"
+#include "System/Time.h"
 #include "GroupLogic.h"
 #include "Commands.h"
 #include "Soldier.h"

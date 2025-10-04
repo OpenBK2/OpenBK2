@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "LoadImage.h"
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Image/Targa.h"
 
 using namespace NImage;

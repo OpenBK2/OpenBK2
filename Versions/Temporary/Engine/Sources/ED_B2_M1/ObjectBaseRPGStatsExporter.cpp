@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/strproc.h"
-#include "misc/2darray.h"
-#include "3dmotor/dbscene.h"
+#include "Misc/StrProc.h"
+#include "Misc/2Darray.h"
+#include "3Dmotor/DBScene.h"
 #include "ObjectBaseRPGStatsExporter.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/StringManager.h"

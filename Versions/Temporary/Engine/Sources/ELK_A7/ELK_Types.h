@@ -2,7 +2,7 @@
 #pragma once
 #include "MapEditorLib/Tools_Resources.h"
 #include "MapEditorLib/Tools_Registry.h"
-#include "3dMotor/DBscene.h"
+#include "3Dmotor/DBScene.h"
 //#include "..\Formats\fmtFont.h"
 
 typedef hash_map<WORD, DWORD> CSymbolSet;

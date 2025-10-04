@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "selector.h"
+#include "Selector.h"
 #include "GameXClassIDs.h"
 
 #include "B2_M1_World/ClientAckManager.h"

@@ -2,7 +2,7 @@
 
 #include "AnimMutators.h"
 #include "Main/GameTimer.h"
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 
 using namespace NAnimation;
 

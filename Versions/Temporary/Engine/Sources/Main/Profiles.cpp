@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Profiles.h"
 #include "Misc/StrProc.h"
 #include "MainLoop.h"

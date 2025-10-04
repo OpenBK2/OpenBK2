@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "4dCalcs.h"
 
 CVec3 Get3DDir( const CVec4 &_v1, const CVec4 &_v2 )

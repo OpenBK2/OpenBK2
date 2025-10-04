@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "net/netaddress.h"
+#include "Net/netaddress.h"
 #include "CommonPackets.h"
 #include "Net.h"
 #include "NetSaver.h"

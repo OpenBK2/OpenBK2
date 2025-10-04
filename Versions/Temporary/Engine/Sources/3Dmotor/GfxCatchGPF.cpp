@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GfxCatchGPF.h"
 
 // flipcode COTD: x86 decoder

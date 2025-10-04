@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "XMLExport.h"
 #include "libdb/ResourceManager.h"
 #include "Misc/StrProc.h"

@@ -69,7 +69,7 @@ namespace NTimer
 #include "System/ConsoleBuffer.h"
 #include "System/LogStream.h"
 #include "System/DB.h"
-#include "System/DG.h"
+#include "System/Dg.h"
 // in the file 'Specific.h' one can define ow n project-specific includes
 #include "Specific.h"
 

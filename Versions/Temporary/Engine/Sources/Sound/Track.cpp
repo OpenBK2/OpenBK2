@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "DBMusicSystem.h"
 #include "MusicSystem.hpp"
 #include "Track.h"

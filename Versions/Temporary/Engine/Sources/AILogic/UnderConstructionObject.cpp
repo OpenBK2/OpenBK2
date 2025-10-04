@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./underconstructionobject.h"
 #include "NewUpdater.h"
 #include "EntrenchmentCreation.h"

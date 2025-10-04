@@ -1,4 +1,4 @@
-#include "stdAfx.h"
+#include "stdafx.h"
 #include "EffectorDirectRunReaction.h"
 
 REGISTER_SAVELOAD_CLASS(0x210C5AC0,CEffectorDirectRunReaction)

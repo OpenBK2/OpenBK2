@@ -1,7 +1,7 @@
 #pragma once
 
-#include "3DMotor/G2DView.h"
-#include "3DMotor/RectLayout.h"
+#include "3Dmotor/G2DView.h"
+#include "3Dmotor/RectLayout.h"
 #include "UI/UIVisitor.h"
 #include "UI/UIML.h"
 

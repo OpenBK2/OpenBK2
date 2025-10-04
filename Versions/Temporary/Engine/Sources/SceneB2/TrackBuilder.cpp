@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "GenTerrain.h"
 #include "B2_M1_Terrain/TracksManager.h"

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Clients.h"
+#include "clients.h"
 #include "LadderLobby.h"
 #include "vendor/MySQL/include/mysql.h"
 #include "Misc/StrProc.h"

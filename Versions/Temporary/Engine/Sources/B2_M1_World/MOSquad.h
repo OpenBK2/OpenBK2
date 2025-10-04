@@ -1,5 +1,5 @@
 #pragma once
-#include "mapobj.h"
+#include "MapObj.h"
 
 class CMOSquad : public IMOSquad
 {

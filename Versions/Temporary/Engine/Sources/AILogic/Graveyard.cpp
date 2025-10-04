@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
-#include "system/time.h"
+#include "Misc/bresenham.h"
+#include "System/Time.h"
 #include "Graveyard.h"
 #include "NewUpdater.h"
 #include "AIUnit.h"

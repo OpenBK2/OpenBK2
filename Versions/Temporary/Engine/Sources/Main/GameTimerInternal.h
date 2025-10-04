@@ -1,5 +1,5 @@
 #pragma once
-#include "System/DG.h"
+#include "System/Dg.h"
 #include "System/Time.h"
 
 namespace NGameTimer

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <crtdbg.h>
 #include "libdb/ObjMan.h"
 #include "libdb/ObjManIterator.h"

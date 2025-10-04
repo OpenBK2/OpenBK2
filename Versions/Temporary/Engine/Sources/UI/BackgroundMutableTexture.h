@@ -4,8 +4,8 @@
 
 #include "background.h"
 #include "Misc/2Darray.h"
-#include "3DMotor/GFXBuffers.h"
-#include "System/DG.h"
+#include "3Dmotor/GFXBuffers.h"
+#include "System/Dg.h"
 
 
 // Can be modified during runtime

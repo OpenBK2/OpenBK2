@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include <crtdbg.h>
 #include "MeasureTimer.h"
-#include "TestType.h"
+#include "testtype.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "System/FileUtils.h"

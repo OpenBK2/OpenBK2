@@ -2,11 +2,11 @@
 
 // automatically generated file, don't change manually!
 
-#include "acktypes.h"
+#include "AckTypes.h"
 #include "m1actions.h"
-#include "rpgstats.h"
+#include "RPGStats.h"
 #include "useractions.h"
-#include "system/filepath.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

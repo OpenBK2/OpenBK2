@@ -1,6 +1,6 @@
 
 #pragma once
-#include "Misc/2dArray.h"
+#include "Misc/2Darray.h"
 #include "IntPair.h"
 
 

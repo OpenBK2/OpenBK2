@@ -5,7 +5,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "rpgstats.h"
+#include "RPGStats.h"
 #include "AnimationType.h"
 #include "DBAnimB2.h"
 #include "DBVisObj.h"

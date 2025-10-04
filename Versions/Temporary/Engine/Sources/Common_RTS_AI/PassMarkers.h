@@ -5,7 +5,7 @@
 #include "DebugTools/DebugInfoManager.h"
 #include "AIClasses.h"
 #include "Terrain.h"
-#include "aiMap.h"
+#include "AIMap.h"
 
 
 #define MARKERS_COLORS_COUNT	3

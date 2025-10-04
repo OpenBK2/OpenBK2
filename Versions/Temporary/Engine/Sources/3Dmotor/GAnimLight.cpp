@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GAnimLight.h"
 #include "DBScene.h"
 #include "GScene.h"

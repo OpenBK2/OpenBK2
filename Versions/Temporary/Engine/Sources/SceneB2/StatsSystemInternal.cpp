@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 #include "./statssysteminternal.h"
 #include "UI/UI.h"
 #include "Misc/StrProc.h"

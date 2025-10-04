@@ -4,7 +4,7 @@
 
 
 #include "Misc/Spline.h"
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 
 class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 {

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "DebugTools/DebugInfoManagerInternal.h"
 #include "Misc/HashFuncs.h"

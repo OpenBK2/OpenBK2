@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "wmdefines.h"
 #include "tree_gdbbrowserbase_constants.h"
 #include "ResourceDefines.h"

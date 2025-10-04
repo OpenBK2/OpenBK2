@@ -1,8 +1,8 @@
-#include "StdAfx.h"
-#include "misc/strproc.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
-#include "sceneb2/scene.h"
+#include "stdafx.h"
+#include "Misc/StrProc.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
+#include "SceneB2/Scene.h"
 #include "libdb/resourcemanager.h"
 
 #include "MapInfoEditor.h"
@@ -16,7 +16,7 @@
 
 
 //#include "MiniMap_Addons.h"
-#include "B2_M1_Terrain/fmtvso.h"
+#include "B2_M1_Terrain/fmtVSO.h"
 #include "Image/Targa.h"
 #include "MinimapImage.h"
 #include "SeasonMnemonics.h"

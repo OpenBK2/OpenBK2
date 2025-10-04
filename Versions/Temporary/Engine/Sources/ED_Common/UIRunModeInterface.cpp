@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
-#include "ui/ui.h"
-#include "input/gamemessage.h"
-#include "ui/uifactory.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
+#include "UI/UI.h"
+#include "Input/gamemessage.h"
+#include "UI/uifactory.h"
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 

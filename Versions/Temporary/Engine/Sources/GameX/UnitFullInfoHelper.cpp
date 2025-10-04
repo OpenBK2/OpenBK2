@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "UnitFullInfoHelper.h"
 #include "Stats_B2_M1/RPGStats.h"
 #include "Stats_B2_M1/AnimationType.h"

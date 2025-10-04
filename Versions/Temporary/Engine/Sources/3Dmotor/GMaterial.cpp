@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GMaterial.hpp"
 #include "GMaterial.h"
 #include "GfxRender.h"

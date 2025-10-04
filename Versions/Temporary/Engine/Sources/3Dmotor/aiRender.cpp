@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "aiRender.h"
 #include "aiObject.h"
 

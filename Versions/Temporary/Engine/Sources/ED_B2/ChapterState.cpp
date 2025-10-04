@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ChapterState.h"
 #include "mapeditorlib/interface_commandhandler.h"
 #include "mapeditorlib/commandhandlerdefines.h"
@@ -9,12 +9,12 @@
 #include "ED_Common/UIScene.h"
 #include "libdb/ResourceManager.h"
 #include "GameX/DBScenario.h"
-#include "ui/ui.h"
-#include "ui/dbuserinterface.h"
+#include "UI/UI.h"
+#include "UI/dbuserinterface.h"
 #include "UISpecificB2/UISpecificB2.h"
 #include "UISpecificB2/DBUISpecificB2.h"
-#include "LibDB/EditorDB.h"
-#include "LibDB/ObjMan.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ObjMan.h"
 #include "mapeditorlib/MaskManipulator.h"
 
 // CChapterState

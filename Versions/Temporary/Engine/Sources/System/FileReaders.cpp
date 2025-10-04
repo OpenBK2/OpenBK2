@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "FileReaders.h"
 #include "Misc/Win32Helper.h"
 

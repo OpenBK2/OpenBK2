@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "3DLib/GGeometry.h"
 #include "DBScene.h"
 #include "GRenderModes.h"

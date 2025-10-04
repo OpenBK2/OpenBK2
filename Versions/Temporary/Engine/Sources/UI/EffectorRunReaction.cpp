@@ -1,4 +1,4 @@
-#include "stdAfx.h"
+#include "stdafx.h"
 #include "EffectorRunReaction.h"
 
 REGISTER_SAVELOAD_CLASS(0x11075C04,CEffectorRunReaction)

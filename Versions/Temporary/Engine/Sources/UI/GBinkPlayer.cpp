@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GBinkPlayer.h"
 #include "System/Basic.h"
 

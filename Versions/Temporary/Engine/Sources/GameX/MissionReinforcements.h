@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "misc/2darray.h"
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "Misc/2Darray.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 #include "WorldClient.h"
 #include "UI/UI.h"
 

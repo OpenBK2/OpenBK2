@@ -1,6 +1,6 @@
 #pragma once
 #include "System/GResource.h"
-#include "dbscene.h"
+#include "DBScene.h"
 
 namespace NGfx
 {

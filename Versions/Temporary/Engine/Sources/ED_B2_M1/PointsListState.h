@@ -1,6 +1,6 @@
 #pragma once
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "commandhandlerdefines.h"
 #include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/MaskManipulator.h"

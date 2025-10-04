@@ -6,7 +6,7 @@
 // automatically generated file, don't change manually!
 
 #include "commandparam.h"
-#include "system/filepath.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

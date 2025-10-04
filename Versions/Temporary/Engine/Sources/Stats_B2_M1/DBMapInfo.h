@@ -7,10 +7,10 @@
 #include "b2_m1_terrain/dbterrain.h"
 #include "dbconstructorprofile.h"
 #include "dbreinforcements.h"
-#include "rpgstats.h"
-#include "season.h"
+#include "RPGStats.h"
+#include "Season.h"
 #include "prefix_dbmapinfo.h"
-#include "system/filepath.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

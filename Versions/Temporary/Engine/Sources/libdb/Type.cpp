@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Type.h"
 
 NDb::NTypeDef::ETypeType StringToEnum_NDb_NTypeDef_ETypeType( const string &szName )

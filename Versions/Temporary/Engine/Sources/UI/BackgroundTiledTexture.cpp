@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "backgroundtiledtexture.h"
 #include "UIVisitor.h"
 #include "UIComponents.h"

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "sceneb2/scene.h"
+#include "SceneB2/Scene.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "EditorOptions.h"

@@ -3,8 +3,8 @@
 // automatically generated file, don't change manually!
 
 #include "dbterrainspot.h"
-#include "dbvso.h"
-#include "system/filepath.h"
+#include "DBVSO.h"
+#include "System/FilePath.h"
 
 #include "B2_M1_Terrain_export.h"
 

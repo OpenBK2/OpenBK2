@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "MapObj.h"

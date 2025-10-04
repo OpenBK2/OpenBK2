@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GRects.h"
 #include "2DScene.h"
 #include "GfxUtils.h"

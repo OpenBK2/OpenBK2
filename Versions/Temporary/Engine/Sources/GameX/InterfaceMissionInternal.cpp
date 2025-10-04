@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MemoryLib/MemoryLib_export.h"
 
-#include "ui/ui.h"
-#include "misc/strproc.h"
+#include "UI/UI.h"
+#include "Misc/StrProc.h"
 #include "stats_b2_m1/rpgstatsautomagic.h"
 #include "Stats_B2_M1/DBClientConsts.h"
 #include "InterfaceMissionInternal.h"
@@ -21,7 +21,7 @@
 #include "Transceiver.h"
 #include "SceneB2/Cursor.h"
 #include "Sound/SoundScene.h"
-#include "sound/musicsystem.h"
+#include "Sound/musicsystem.h"
 #include "System/Commands.h"
 #include "UI/SceneClassIDs.h"
 #include "UISpecificB2/DBUISpecificB2.h"
@@ -31,7 +31,7 @@
 #include "SceneB2/FullScreenFader.h"
 
 #include "Main/MainLoopCommands.h"
-#include "3DMotor/LoadingCounter.h"
+#include "3Dmotor/LoadingCounter.h"
 #include "InterfaceNotifications.h"
 #include "MultiplayerCommandManager.h"
 #include "MissionReinforcements.h"

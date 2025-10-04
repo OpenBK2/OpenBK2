@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ParticleExporter.h"
 #include "MapEditorLib/ExporterFactory.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GParticles.h"
 #include "GParticleFormat.h"
 #include "GParticleInfo.h"

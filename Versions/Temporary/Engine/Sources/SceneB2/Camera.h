@@ -2,7 +2,7 @@
 
 #include "SceneB2_export.h"
 
-#include "System/DG.h"
+#include "System/Dg.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
 #define DEF_YAW 0.0f

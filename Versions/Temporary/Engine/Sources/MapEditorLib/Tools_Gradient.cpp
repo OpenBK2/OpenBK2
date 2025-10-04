@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "Tools_Gradient.h"
 #include "Image/ImageColor.h"
 

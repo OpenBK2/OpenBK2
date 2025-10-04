@@ -1,4 +1,4 @@
-#include "StdAfx.h" 
+#include "stdafx.h"
 #include "GRenderClouds.h"
 #include "GfxRender.h"
 #include "GfxBuffers.h"

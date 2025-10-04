@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "objectprofile.h"
-#include "system/time.h"
+#include "System/Time.h"
 #include "AIUnit.h"
 #include "AllowFakeObjToCrushExecutor.h"
 #include "Diplomacy.h"

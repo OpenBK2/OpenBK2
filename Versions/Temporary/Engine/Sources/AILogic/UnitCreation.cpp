@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "UnitCreation.h"
 #include "GroupLogic.h"
@@ -11,7 +11,7 @@
 #include "StaticObjects.h"
 #include "Weather.h"
 #include "Aviation.h"
-#include "scripts.h"
+#include "Scripts.h"
 #include "ScenarioTracker.h"
 #include "Graveyard.h"
 #include "Common_RTS_AI/StaticMapHeights.h"

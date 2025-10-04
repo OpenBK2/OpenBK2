@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "EditorOptions.h"
 
 #include "MapEditorLib/Interface_UserData.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Stats_B2_M1/AIUnitCmd.h"
 #include "GroupMoveExecutor.h"

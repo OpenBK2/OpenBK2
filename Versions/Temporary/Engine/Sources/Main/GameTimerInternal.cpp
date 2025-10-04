@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "GameTimerInternal.h"
 #include "Misc/StrProc.h"

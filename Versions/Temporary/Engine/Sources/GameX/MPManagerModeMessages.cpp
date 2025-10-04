@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MPManagerMode.h"
 #include "Server_Client_Common/ChatPackets.h"

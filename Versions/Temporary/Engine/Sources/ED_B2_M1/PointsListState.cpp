@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "misc/planegeometry.h"
-#include "sceneb2/visobjdesc.h"
+#include "Misc/2Darray.h"
+#include "Misc/planegeometry.h"
+#include "SceneB2/visobjdesc.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "seasonmnemonics.h"

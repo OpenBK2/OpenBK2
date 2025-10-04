@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "system/time.h"
-#include "misc/bresenham.h"
+#include "System/Time.h"
+#include "Misc/bresenham.h"
 #include "StaticObject.h"
 #include "NewUpdater.h"
 #include "Diplomacy.h"

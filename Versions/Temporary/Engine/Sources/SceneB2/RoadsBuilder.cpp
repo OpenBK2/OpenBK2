@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "3DMotor/DBScene.h"
+#include "3Dmotor/DBScene.h"
 #include "GenTerrain.h"
 
 #define DEF_ROAD_HEIGHT 0.1f

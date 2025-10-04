@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GLMGeometry.h"
 #include "RectPacker.h"
-#include "3dmotor/GfxBuffers.h"
+#include "3Dmotor/GfxBuffers.h"
 
 namespace NGScene
 {

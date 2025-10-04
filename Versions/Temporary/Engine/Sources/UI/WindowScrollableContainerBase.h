@@ -1,5 +1,5 @@
 #pragma once
-#include "window.h"
+#include "Window.h"
 #include "System/FreeIDs.h"
 
 struct SWindowScrollBar;

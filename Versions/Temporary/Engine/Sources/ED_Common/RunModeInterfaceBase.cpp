@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "RunModeInterfaceBase.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/ResourceDefines.h"

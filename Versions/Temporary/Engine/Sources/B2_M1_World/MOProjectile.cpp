@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "3dmotor/dbscene.h"
+#include "Misc/2Darray.h"
+#include "3Dmotor/DBScene.h"
 #include "MOProjectile.h"
 #include "Main/GameTimer.h"
 #include "Sound/DBSound.h"

@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Stats_B2_M1/DBClientConsts.h"
-#include "b2_m1_world/mapobj.h"
-#include "misc/strproc.h"
+#include "b2_m1_world/MapObj.h"
+#include "Misc/StrProc.h"
 #include "WorldClient.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
 
@@ -2936,7 +2936,7 @@ REGISTER_SAVELOAD_CLASS( 0x10078340, CWorldClient );
 
 
 #include "DebugTools/DebugInfoManagerInternal.h"
-#include "misc/strproc.h"
+#include "Misc/StrProc.h"
 #include "Common_RTS_AI/AIClasses.h"
 #include "Common_RTS_AI/Terrain.h"
 #include "Common_RTS_AI/TerraAIObserver.h"

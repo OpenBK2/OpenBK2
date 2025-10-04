@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceChapterMapMenuDialogs.h"
 #include "Stats_B2_M1/RPGStats.h"
 #include "Misc/StrProc.h"

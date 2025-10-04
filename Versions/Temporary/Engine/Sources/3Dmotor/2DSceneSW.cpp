@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GfxBuffers.h"
 #include "2DSceneSW.h"
 #include "SWTexture.h"

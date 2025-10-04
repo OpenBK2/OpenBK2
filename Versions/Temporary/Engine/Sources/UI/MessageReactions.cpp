@@ -3,7 +3,7 @@
 
 
 #include "stdafx.h"
-#include "script/script.h"
+#include "Script/Script.h"
 #include "MessageReactions.h"
 #include "System/VFSOperations.h"
 

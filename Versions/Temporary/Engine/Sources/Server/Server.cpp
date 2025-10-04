@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Clients.h"
+#include "clients.h"
 #include "ControlLobby.h"
 #include "InternalPackets.h"
 #include "Server.h"

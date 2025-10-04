@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "VisObjDesc.h"
 #include "SceneInternal.h"
-#include "3DMotor/GPostProcessors.h"
-#include "3DMotor/GSceneUtils.h"
+#include "3Dmotor/GPostProcessors.h"
+#include "3Dmotor/GSceneUtils.h"
 
 const float FADE_VALUE_UNDER_CURSOR = 0.5f;
 

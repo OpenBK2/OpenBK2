@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BinaryResources.h"
 #include "GResource.h"
 #include "VFSOperations.h"

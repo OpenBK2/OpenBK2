@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./pathfractionarclinearc3d.h"
 #include "PathFractionArcLine3D.h"
 #include "PathFractionArc3D.h"
 #include "DebugTools/DebugInfoManager.h"
-#include "misc/StrProc.h"
+#include "Misc/StrProc.h"
 
 REGISTER_SAVELOAD_CLASS(0x11095C81, CPahtFractionArcLineArc3D)
 

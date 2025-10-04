@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <limits>
 #include "GText.h"
 #include "Misc/StrProc.h"

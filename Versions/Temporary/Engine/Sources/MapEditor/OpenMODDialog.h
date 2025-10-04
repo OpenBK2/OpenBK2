@@ -3,7 +3,7 @@
 #include "ResourceDefines.h"
 
 #include "MapEditorLib/ResizeDialog.h"
-#include "Main/Mods.h"
+#include "Main/MODs.h"
 
 
 class COpenMODDialog : public CResizeDialog

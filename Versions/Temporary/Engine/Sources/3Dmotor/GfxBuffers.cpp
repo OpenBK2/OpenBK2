@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <D3D9.h>
 #include "GfxBuffers.h"
 #include "Cache.h"

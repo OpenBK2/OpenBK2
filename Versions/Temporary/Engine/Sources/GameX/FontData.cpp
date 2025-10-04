@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "FontInfo.h"
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Image/ImageConvertor.h"
 #include "3Dmotor/FontFormat.h"
 

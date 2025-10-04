@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ParatrooperAnimation.h"
 #include "MOUnitInfantry.h"
 #include "3Dmotor/GAnimation.hpp"

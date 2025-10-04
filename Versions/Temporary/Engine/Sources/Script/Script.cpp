@@ -6,7 +6,7 @@
 // The code presented in this file may be freely used and modified for all
 // non-commercial and commercial purposes.
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Script.h"
 #ifdef WIN32
 	#include <windows.h>

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "CampaignSelectionMenu.h"
 #include "DBGameRoot.h"
 #include "GameXClassIDs.h"

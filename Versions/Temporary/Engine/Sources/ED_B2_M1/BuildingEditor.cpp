@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "seasonmnemonics.h"
 #include "mapeditorlib/defaulttabwindow.h"
 #include "pointlistdialog.h"

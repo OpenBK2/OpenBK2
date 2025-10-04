@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/bresenham.h"
+#include "Misc/bresenham.h"
 #include "EntrenchmentCreation.h"
 #include "UnitsIterators2.h"
 #include "AIUnit.h"

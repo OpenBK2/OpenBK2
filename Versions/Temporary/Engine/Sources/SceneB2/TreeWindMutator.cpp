@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "system/time.h"
+#include "System/Time.h"
 #include "TreeWindMutator.h"
 #include "WindController.h"
 #include "System/FastMath.h"

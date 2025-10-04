@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "EditorScene.h"
 #include "MarkerSet.h"
 #include "Stats_B2_M1/Vis2AI.h"

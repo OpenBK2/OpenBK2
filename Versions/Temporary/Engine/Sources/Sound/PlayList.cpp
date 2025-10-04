@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "./playlist.h"
+#include "stdafx.h"
+#include "PlayList.h"
 
 #include "DBMusicSystem.h"
 #include "MusicSystem.hpp"

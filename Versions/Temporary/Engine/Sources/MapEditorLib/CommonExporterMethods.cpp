@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "interface_commandhandler.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceSelectTutorial.h"
 #include "GameXClassIDs.h"
 #include "UISpecificB2/UISpecificB2.h"

@@ -1,8 +1,8 @@
 #pragma once
-#include "UI/window.h"
+#include "UI/Window.h"
 #include "UISpecificB2/DBUISpecificB2.h"
-#include "3DMotor/GfxBuffers.h"
-#include "System/DG.h"
+#include "3Dmotor/GfxBuffers.h"
+#include "System/Dg.h"
 #include "Misc/BitData.h"
 #include "UISpecificB2.h"
 

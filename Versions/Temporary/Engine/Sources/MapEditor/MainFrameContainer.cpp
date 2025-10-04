@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MainFrameContainer.h"
 #include "MapEditorLib/Interface_Logger.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./Complexobstaclecreation.h"
 #include "FenceCreation.h"
 #include "Stats_b2_M1/AIUpdates.h"

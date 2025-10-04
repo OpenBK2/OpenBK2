@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "HeightContainer.h"
 #include "Misc/Bresenham.h"
 #include "Image/Targa.h"

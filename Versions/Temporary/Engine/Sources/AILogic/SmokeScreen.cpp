@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
+#include "Misc/bresenham.h"
 #include "SmokeScreen.h"
 #include "StaticObjectsIters.h"
 #include "Common_RTS_AI/AIMap.h"

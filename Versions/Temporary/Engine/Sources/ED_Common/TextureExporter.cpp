@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "TextureExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_Logger.h"

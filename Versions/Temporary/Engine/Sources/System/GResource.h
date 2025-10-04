@@ -2,7 +2,7 @@
 #include "System_export.h"
 
 
-#include "DG.h"
+#include "Dg.h"
 namespace NGScene
 {
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GMatShare.h"
 #include "GMaterial.hpp"
 #include "DBScene.h"

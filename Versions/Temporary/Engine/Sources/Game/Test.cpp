@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Script/Script.h"
 #include "System/Commands.h"

@@ -1,13 +1,13 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 #include "SoundEngine.h"
 
 #include "Misc/Win32Helper.h"
 #include "Sound2D.h"
 #include "Misc/StrProc.h"
-#include "UI/ui.h"
+#include "UI/UI.h"
 #include "System/Commands.h"
 #include "System/BasicShare.h"
 #include "Sound/DBSoundDesc.h"

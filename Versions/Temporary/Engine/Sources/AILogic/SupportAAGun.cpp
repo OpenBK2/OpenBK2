@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./supportaagun.h"
 #include "UnitsIterators.h"
 #include "Aviation.h"

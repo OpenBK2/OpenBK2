@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "DBObserverContainer.h"
 #include "DBObserver.h"
 

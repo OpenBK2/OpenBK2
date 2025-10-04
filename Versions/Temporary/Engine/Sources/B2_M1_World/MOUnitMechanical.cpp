@@ -1,11 +1,11 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "Stats_B2_M1/DBAttachedModelVisObj.h"
 #include "IdleMechProcess.h"
 #include "MOProjectile.h"
 #include "MOUnitMechanical.h"
-#include "B2_M1_Terrain/fmtvso.h"
+#include "B2_M1_Terrain/fmtVSO.h"
 
 #include "Input/Bind.h"
 #include "Main/GameTimer.h"

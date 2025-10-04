@@ -1,6 +1,6 @@
 #pragma once
-#include "System/DG.h"
-#include "Misc/2dArray.h"
+#include "System/Dg.h"
+#include "Misc/2Darray.h"
 #include "GPixelFormat.h"
 #include "GLightmapLoader.h"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "SWTexture.h"
 #include "DBScene.h"
 #include "Image/DDS.h"

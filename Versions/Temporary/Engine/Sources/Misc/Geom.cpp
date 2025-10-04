@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "geom.h"
+#include "Geom.h"
 
 void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 {

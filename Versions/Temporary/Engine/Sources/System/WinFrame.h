@@ -2,7 +2,7 @@
 #include "System_export.h"
 
 
-#include "misc/HPTimer.h"
+#include "Misc/HPTimer.h"
 //
 namespace NWinFrame
 {

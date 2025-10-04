@@ -11,7 +11,7 @@
 #include "WindowMessageHandle.h"
 #include "Misc/HashFuncs.h"
 #include "Misc/Heap.h"
-#include "ui/uifactory.h"
+#include "UI/uifactory.h"
 
 class CForegroundTextString;
 class CWindow;

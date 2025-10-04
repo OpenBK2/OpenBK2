@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "system/time.h"
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "System/Time.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 
 #include "AILogicInternal.h"
 #include "Commands.h"

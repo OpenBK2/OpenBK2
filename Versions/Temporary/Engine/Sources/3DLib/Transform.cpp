@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Transform.h"
 
 SFBTransform MakeTransform( const CVec3 &ptPos )

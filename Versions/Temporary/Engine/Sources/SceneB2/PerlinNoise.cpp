@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Misc/Win32Random.h"
 #include "PerlinNoise.h"

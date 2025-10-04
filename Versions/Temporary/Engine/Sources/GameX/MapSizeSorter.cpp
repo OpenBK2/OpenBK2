@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapSizeSorter.h"
 #include "Misc/StrProc.h"

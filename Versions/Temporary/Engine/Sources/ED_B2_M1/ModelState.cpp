@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 
 #include "mapeditorlib/commoneditormethods.h"
 #include "modelstate.h"
@@ -20,7 +20,7 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "libdb/ResourceManager.h"
 #include "Misc/PlaneGeometry.h"
-#include "3DMotor/GAnimation.hpp"
+#include "3Dmotor/GAnimation.hpp"
 
 #include "EditorMethods.h"
 
@@ -33,7 +33,7 @@
 #include "Stats_B2_M1/AnimModes.h"
 #include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "Stats_B2_M1/dbvisobj.h"
+#include "Stats_B2_M1/DBVisObj.h"
 
 #include <zconf.h>
 

@@ -3,10 +3,10 @@
 #include "UISpecificB2_export.h"
 
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 #include "UI/UI.h"
-#include "3DMotor/Gfx.h"
+#include "3Dmotor/Gfx.h"
 #include "Stats_B2_M1/DBNotifications.h"
 #include "Stats_B2_M1/AITypes.h"
 #include "Stats_B2_M1/DBAnimB2.h"

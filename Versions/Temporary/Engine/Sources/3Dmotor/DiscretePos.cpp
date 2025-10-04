@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "DiscretePos.h"
 #include "3DLib/Transform.h"
 

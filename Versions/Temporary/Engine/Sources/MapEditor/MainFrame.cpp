@@ -29,7 +29,7 @@
 #include "MapEditorSingleton.h"
 #include "Main/MODs.h"
 
-#include "libdb/DB.h"
+#include "libdb/Db.h"
 
 IMPLEMENT_DYNAMIC(CMainFrame, SECWorkbook)
 

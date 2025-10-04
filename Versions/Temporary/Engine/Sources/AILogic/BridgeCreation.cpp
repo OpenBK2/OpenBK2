@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./bridgecreation.h"
 #include "Bridge.h"
 #include "CommonUnit.h"

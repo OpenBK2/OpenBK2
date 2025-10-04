@@ -3,7 +3,7 @@
 
 
 #include "stdafx.h"
-#include "3dmotor/rectlayout.h"
+#include "3Dmotor/rectlayout.h"
 #include "WindowEditLine.h"
 
 #include "UIVisitor.h"

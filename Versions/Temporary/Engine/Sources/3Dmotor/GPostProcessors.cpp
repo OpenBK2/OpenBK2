@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GPostProcessors.h"
 #include "GfxEffects.h"
 #include "GfxRender.h"

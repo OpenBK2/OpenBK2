@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "DefaultView.h"
 #include "Interface_FolderCallback.h"

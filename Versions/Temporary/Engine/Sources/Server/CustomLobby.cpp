@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Clients.h"
+#include "clients.h"
 #include "CustomLobby.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/CustomLobbyPackets.h"

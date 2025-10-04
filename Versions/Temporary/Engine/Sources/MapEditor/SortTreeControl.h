@@ -1,6 +1,6 @@
 #pragma once
 
-#include "misc/HashFuncs.h"
+#include "Misc/HashFuncs.h"
 
 
 // Нельзя использовать GetItemData() и SetItemData() !

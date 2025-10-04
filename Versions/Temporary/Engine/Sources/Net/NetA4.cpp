@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/win32helper.h"
-#include "system/time.h"
+#include "Misc/win32helper.h"
+#include "System/Time.h"
 #include "NetA4.h"
 
 

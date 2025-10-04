@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./manuverstatedesc.h"
 #include "IPlane.h"
 #include "PlanePreferences.h"

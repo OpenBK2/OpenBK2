@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "TestType.h"
+#include "stdafx.h"
+#include "testtype.h"
 #include "MeasureTimer.h"
 #include "libdb/ObjMan.h"
 

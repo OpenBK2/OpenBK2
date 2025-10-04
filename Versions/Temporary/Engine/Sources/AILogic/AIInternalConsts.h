@@ -1,5 +1,5 @@
 #pragma once
-#include "AIConsts.h"
+#include "aiconsts.h"
 #include "Misc/HashFuncs.h"
 
 

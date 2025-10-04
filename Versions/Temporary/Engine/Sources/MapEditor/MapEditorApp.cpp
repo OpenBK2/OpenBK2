@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/resourcedefines.h"
-#include "scintilla/platform.h"
+#include "scintilla/Platform.h"
 
 #include <crtdbg.h>
 #include <Shlwapi.h>
@@ -10,11 +10,11 @@
 #include "libdb/ResourceManager.h"
 #include "libdb/Logger.h"
 #include "Misc/StrProc.h"
-#include "Misc/HPtimer.h"
+#include "Misc/HPTimer.h"
 #include "System/FileUtils.h"
 #include "Main/MainLoop.h"
 #include "MapEditorLib/Tools_Registry.h"
-#include "Main/Mods.h"
+#include "Main/MODs.h"
 
 #include "System/SplashScreen.h"
 

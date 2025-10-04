@@ -2,8 +2,8 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/rpgstats.h"
-#include "stats_b2_m1/season.h"
+#include "stats_b2_m1/RPGStats.h"
+#include "stats_b2_m1/Season.h"
 
 struct IXmlSaver;
 

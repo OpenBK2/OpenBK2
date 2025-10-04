@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Tools_Resources.h"
 #include "Misc/StrProc.h"

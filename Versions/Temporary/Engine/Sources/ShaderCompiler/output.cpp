@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "output.h"
 #include "Data.h"
 #include "parser.h"

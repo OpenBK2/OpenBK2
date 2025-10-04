@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GParticlesRain.h"
 #include "GParticleFilter.h"
 #include "4dCalcs.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TextureEditor.h"
 
 #include "MapEditorLib/EditorFactory.h"

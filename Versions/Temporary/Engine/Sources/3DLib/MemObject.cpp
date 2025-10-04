@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MemObject.h"
 #include "Bound.h"
 #include "Transform.h"

@@ -2,7 +2,7 @@
 #include "revision.h"
 #include "FontFormat.h"
 #include "Image/Targa.h"
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "Misc/nalgoritm.h"
 #include "System/FileUtils.h"

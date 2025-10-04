@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./executorburningfuel.h"
 #include "Shell.h"
 

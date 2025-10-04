@@ -1,6 +1,6 @@
 #pragma once
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "Common_RTS_AI/TerraAIObserver.h"
 

@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "uistates.h"
+#include "stdafx.h"
+#include "UIStates.h"
 #include "UIScreen.h"
 
 

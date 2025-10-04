@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "3DMotor/GView.h"
+#include "3Dmotor/GView.h"
 #include "ExplosionsManager.h"
 
 void CExplosionObjInfo::Recalc()

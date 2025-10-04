@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "terraaiobserver.h"
 #include "EditorAI.h"

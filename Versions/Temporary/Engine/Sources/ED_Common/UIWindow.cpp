@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "UIWindow.h"
 #include "UIVisitor.hpp"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BalanceTest.h"
 
 #include "UnitsIterators.h"
@@ -7,7 +7,7 @@
 #include "Cheats.h"
 #include "Main/GameTimer.h"
 #include "System/Text.h"
-#include "system/time.h"
+#include "System/Time.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Misc/StrProc.h"
 #include "B2AI.h"

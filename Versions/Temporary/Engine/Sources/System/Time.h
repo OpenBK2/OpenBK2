@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DG.h"
-#include "Time.hpp"
+#include "Dg.h"
+#include "time.hpp"
 
 DEFINE_DG_CONSTANT_NODE( CCTime, STime );
 #ifdef STUPID_VISUAL_ASSIST

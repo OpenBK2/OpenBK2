@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "./fade.h"
+#include "stdafx.h"
+#include "Fade.h"
 
 #include "MusicSystem.hpp"
 #include "DBMusicSystem.h"

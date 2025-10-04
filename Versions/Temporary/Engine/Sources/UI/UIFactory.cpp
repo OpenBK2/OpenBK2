@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "uifactory.h"
 
 #include "IMessageReaction.h"

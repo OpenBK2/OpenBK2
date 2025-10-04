@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
+#include "Misc/bresenham.h"
 #include "Terrain.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Image/Image.h"

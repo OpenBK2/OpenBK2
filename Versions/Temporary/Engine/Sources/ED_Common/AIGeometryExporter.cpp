@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "AIGeometryExporter.h"
 #include "3Dmotor/aiObject.h"

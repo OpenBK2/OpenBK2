@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
-#include "ui/ui.h"
-#include "input/gamemessage.h"
-#include "ui/uifactory.h"
-#include "misc/2darray.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
+#include "UI/UI.h"
+#include "Input/gamemessage.h"
+#include "UI/uifactory.h"
+#include "Misc/2Darray.h"
 #include "UI/Window.h"
 #include "DBUISpecificB2.h"
 #include "UISpecificB2.h"

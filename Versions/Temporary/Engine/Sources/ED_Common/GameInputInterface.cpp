@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GameInputInterface.h"
 
 bool CGameInputInterface::ProcessEvent( const struct SGameMessage &msg )

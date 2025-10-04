@@ -2,8 +2,8 @@
 
 // automatically generated file, don't change manually!
 
-#include "stats_b2_m1/season.h"
-#include "system/filepath.h"
+#include "stats_b2_m1/Season.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

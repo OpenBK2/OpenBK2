@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MemoryLib_export.h"
 
@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "SymAccess.h"
 #include "Misc/nhash_map.h"
-#include "Misc/tools.h"
+#include "Misc/Tools.h"
 
 static bool bInternal = false;
 struct SAlloc

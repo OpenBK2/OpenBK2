@@ -4,7 +4,7 @@
 #include "libdb/ReportMetaInfo.h"
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
-#include "iconsset.h"
+#include "IconsSet.h"
 
 namespace NDb
 {

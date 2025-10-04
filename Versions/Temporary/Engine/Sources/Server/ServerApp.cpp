@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <crtdbg.h>
 
-#include "Console.h"
+#include "console.h"
 #include "CustomLobby.h"
 #include "LadderLobby.h"
 #include "ServerApp.h"

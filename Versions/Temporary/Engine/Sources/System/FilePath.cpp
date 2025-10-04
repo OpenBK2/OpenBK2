@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "FilePath.h"
 #include "Misc/StrProc.h"

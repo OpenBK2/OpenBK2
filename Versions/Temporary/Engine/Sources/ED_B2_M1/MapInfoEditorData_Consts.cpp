@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapInfoEditorData_Consts.h"
 #include "Stats_B2_M1/Vis2AI.h"

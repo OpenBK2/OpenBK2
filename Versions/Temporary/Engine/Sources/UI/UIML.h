@@ -3,7 +3,7 @@
 #include "UI_export.h"
 
 
-#include "3dmotor/GPixelFormat.h"
+#include "3Dmotor/GPixelFormat.h"
 #include "3Dmotor/GLocale.h"
 
 struct IML;

@@ -4,12 +4,12 @@
 
 #include "stats_b2_m1/dbmapinfo.h"
 #include "stats_b2_m1/m1actions.h"
-#include "stats_b2_m1/rpgstats.h"
-#include "stats_b2_m1/season.h"
+#include "stats_b2_m1/RPGStats.h"
+#include "stats_b2_m1/Season.h"
 #include "stats_b2_m1/useractions.h"
-#include "ui/dbuiconsts.h"
-#include "ui/dbuserinterface.h"
-#include "system/filepath.h"
+#include "UI/dbuiconsts.h"
+#include "UI/dbuserinterface.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

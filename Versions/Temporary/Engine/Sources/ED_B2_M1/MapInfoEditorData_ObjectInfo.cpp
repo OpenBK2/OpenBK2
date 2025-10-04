@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapInfoEditorData_ObjectInfo.h"
 #include "MapInfoEditorData_ObjectInfoCollector.h"

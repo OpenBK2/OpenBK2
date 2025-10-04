@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceLoadingSingle.h"
 #include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"
@@ -8,7 +8,7 @@
 #include "SceneB2/Cursor.h"
 #include "SceneB2/SceneUIVisitor.h"
 #include "SaveLoadHelper.h"
-#include "3DMotor/FrameTransition.h"
+#include "3Dmotor/FrameTransition.h"
 #include "System/Commands.h"
 #include "UISpecificB2/EffectorB2Move.h"
 

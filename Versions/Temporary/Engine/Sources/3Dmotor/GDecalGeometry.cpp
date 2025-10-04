@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GDecalGeometry.h"
-#include "3Dlib/Transform.h"
+#include "3DLib/Transform.h"
 #include "GCombiner.h"
 namespace NGScene
 {

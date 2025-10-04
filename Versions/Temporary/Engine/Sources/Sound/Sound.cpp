@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "sound.h"
+#include "stdafx.h"
+#include "Sound.h"
 #include "SubstSound.h"
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"

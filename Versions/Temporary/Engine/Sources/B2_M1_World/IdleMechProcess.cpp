@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "IdleMechProcess.h"
 #include "SceneB2/Scene.h"
 #include "Misc/Win32Random.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BindProcessor.h"
 #include "BindArray.h"
 #include "Bind.h"

@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "tooltips.h"
+#include "stdafx.h"
+#include "Tooltips.h"
 #include "WindowTooltip.h"
 #include "UIScreen.h"
 #include "DBUIConsts.h"

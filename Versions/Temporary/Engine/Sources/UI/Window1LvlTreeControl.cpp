@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "window1lvltreecontrol.h"
 #include "WindowMSButton.h"
 

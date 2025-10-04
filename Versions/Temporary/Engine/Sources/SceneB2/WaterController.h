@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Misc/2DArray.h"
-#include "System/DG.h"
+#include "Misc/2Darray.h"
+#include "System/Dg.h"
 #include "B2_M1_Terrain/PatchHolder.h"
 #include "WaterStuff.h"
 #include "B2_M1_Terrain/TerrUtils.h"

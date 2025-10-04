@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "misc/strproc.h"
+#include "stdafx.h"
+#include "Misc/StrProc.h"
 #include "MissionUnitFullInfo.h"
 #include "InterfaceMissionInternal.h"
 #include "ScenarioTracker.h"

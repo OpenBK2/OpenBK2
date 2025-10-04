@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapEditorLib/Tools_HashSet.h"
 #include "ViewContainer.h"

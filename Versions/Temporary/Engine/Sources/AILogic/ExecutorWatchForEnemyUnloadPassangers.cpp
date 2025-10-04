@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./executorwatchforenemyunloadpassangers.h"
 #include "GroupLogic.h"
 #include "Technics.h"

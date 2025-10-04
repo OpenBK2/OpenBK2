@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "UI.h"
-#include "3dMotor/RectLayout.h"
+#include "3Dmotor/RectLayout.h"
 
 CVec2 vScreenRect( 1024, 768 );
 CVec2 vScreenOrg( VNULL2 );	// origin of virtual screen

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GRTShare.h"
 //#include "GfxUtils.h"
 #include "GfxBuffers.h"

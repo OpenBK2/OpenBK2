@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "executor.h"
+#include "stdafx.h"
+#include "Executor.h"
 
 extern IExecutorContainer *pTheExecutorsContainer;
 

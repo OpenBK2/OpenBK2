@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "3dlib/ggeometry.h"
+#include "3DLib/ggeometry.h"
 #include "WeatherVisual.h"
 #include "Scene.h"
 #include "TerraGen.h"
@@ -8,11 +8,11 @@
 #include "System/FastMath.h"
 #include "System/Commands.h"
 #include "Sound/SoundScene.h"
-#include "System/db.h"
-#include "3DMotor/Gfx.h"
-#include "3DMotor/GAnimLight.h"
-#include "3DMotor/GScene.h"
-#include "3DMotor/GSceneUtils.h"
+#include "System/DB.h"
+#include "3Dmotor/Gfx.h"
+#include "3Dmotor/GAnimLight.h"
+#include "3Dmotor/GScene.h"
+#include "3Dmotor/GSceneUtils.h"
 
 #include "FullScreenFader.h"
 

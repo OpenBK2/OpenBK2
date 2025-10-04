@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Misc/BitData.h"
 #include "B2_M1_Terrain/TerrUtils.h"
 

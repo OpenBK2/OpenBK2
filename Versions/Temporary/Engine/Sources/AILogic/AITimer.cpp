@@ -1,6 +1,6 @@
-#include "StdAfx.h"
-#include "system/time.h"
-#include "./aitimer.h"
+#include "stdafx.h"
+#include "System/Time.h"
+#include "AITimer.h"
 #include "Main/GameTimer.h"
 
 

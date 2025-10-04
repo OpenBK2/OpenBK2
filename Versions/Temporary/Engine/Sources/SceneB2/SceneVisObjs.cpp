@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "3DLib/Transform.h"
-#include "3DMotor/GMaterial.hpp"
-#include "3DMotor/GfxBuffers.h"
+#include "3Dmotor/GMaterial.hpp"
+#include "3Dmotor/GfxBuffers.h"
 #include "Main/GameTimer.h"
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "VisObjDesc.h"

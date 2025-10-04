@@ -13,9 +13,9 @@
 	----------------------------------------------------------------------------------------------------------------
 */
 
-#include "StdAfx.h"
-#include "misc/2darray.h"
-#include "3dmotor/dbscene.h"
+#include "stdafx.h"
+#include "Misc/2Darray.h"
+#include "3Dmotor/DBScene.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"

@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
-#include "misc/2darray.h"
-#include "misc/planegeometry.h"
+#include "Misc/2Darray.h"
+#include "Misc/planegeometry.h"
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "PolygonState.h"

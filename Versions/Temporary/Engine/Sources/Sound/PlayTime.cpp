@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "playtime.h"
+#include "stdafx.h"
+#include "PlayTime.h"
 
 #include "DBMusicSystem.h"
 #include "Misc/Win32Random.h"

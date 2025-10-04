@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/nheap.h"
-#include "system/time.h"
+#include "Misc/nheap.h"
+#include "System/Time.h"
 #include "Shell.h"
 #include "AIUnit.h"
 #include "Randomize.h"

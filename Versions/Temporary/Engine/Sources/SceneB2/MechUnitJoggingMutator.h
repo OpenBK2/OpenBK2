@@ -2,7 +2,7 @@
 
 #include "AnimMutators.h"
 #include "System/FastMath.h"
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 
 using namespace NAnimation;
 

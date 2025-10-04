@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/strproc.h"
+#include "Misc/StrProc.h"
 #include "EditorMethods.h"
 
 #include "EditorOptions.h"

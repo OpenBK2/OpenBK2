@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"

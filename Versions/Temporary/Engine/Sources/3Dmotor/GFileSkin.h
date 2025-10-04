@@ -1,5 +1,5 @@
 #pragma once
-#include "3Dlib/GGeometry.h"
+#include "3DLib/GGeometry.h"
 
 namespace NGScene
 {

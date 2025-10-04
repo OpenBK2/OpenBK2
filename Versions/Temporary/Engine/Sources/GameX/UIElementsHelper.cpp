@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "UIElementsHelper.h"
 #include "UI/UI.h"
 #include "DBScenario.h"

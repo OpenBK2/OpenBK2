@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "terrainsounds.h"
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"

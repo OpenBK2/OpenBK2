@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./pathfractionline.h"
 
 REGISTER_SAVELOAD_CLASS(0x11095C00, CPathFractionLine )

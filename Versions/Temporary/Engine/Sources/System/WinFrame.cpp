@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "WinFrame.h"
 #include "Misc/Win32Helper.h"
 #include "Commands.h"

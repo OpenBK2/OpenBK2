@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MapEditorLib/DefaultInputState.h"
-#include "3DMotor/DBScene.h"
+#include "3Dmotor/DBScene.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
 //Mapinfo height state edit parameters

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GRenderPathOverdraw.h"
 #include "GRenderExecute.h"
 #include "GfxUtils.h"

@@ -2,7 +2,7 @@
 
 #include "Misc/TypeConvertor.h"
 #include "System/FreeIDs.h"
-#include "Misc/2dArray.h"
+#include "Misc/2Darray.h"
 #include "IntPair.h"
 #include "Misc/HashFuncs.h"
 

@@ -4,7 +4,7 @@
 
 #include "GSkeleton.h"
 #include "GChannelAnimator.h"
-#include "System/Time.hpp"
+#include "System/time.hpp"
 
 
 namespace NDb

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MOEntrenchment.h"
 #include "SceneB2/TerraGen.h"

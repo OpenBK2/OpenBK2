@@ -1,7 +1,7 @@
-#include "StdAfx.h"
-#include "vendor/Granny/include/granny.h"
+#include "stdafx.h"
+#include "vendor/granny/include/granny.h"
 #include "GBind.h"
-#include "3dlib/Transform.h"
+#include "3DLib/Transform.h"
 
 namespace NGScene
 {

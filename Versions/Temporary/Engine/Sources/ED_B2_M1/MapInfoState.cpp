@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/commoneditormethods.h"
-#include "sceneb2/scene.h"
+#include "SceneB2/Scene.h"
 #include "mapeditorlib/objectcontroller.h"
 #include "simpleobjectinfodata.h"
 
@@ -16,7 +16,7 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_Progress.h"
 #include "MapEditorLib/StringManager.h"
-#include "libdb/editorDB.h"
+#include "libdb/EditorDb.h"
 
 #include "ScriptAreaState.h"
 #include "CameraPositionState.h"

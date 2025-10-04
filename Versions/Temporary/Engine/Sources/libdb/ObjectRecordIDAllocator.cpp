@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ObjectRecordIDAllocator.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"

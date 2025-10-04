@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "Resource.h"
+#include "stdafx.h"
+#include "resource.h"
 #include "MemoryLib/SymAccess.h"
 #include "BSUtil.h"
 #include "BSDialogFunctions.h"

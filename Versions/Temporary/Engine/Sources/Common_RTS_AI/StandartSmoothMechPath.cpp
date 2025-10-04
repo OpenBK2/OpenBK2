@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "misc/bresenham.h"
+#include "Misc/bresenham.h"
 #include "StandartSmoothMechPath.h"
 #include "Terrain.h"
 #include "System/RandomGen.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TypeDef.h"
 
 using namespace NDb::NTypeDef;

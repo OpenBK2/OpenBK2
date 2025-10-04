@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ObjectFilter.h"
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"

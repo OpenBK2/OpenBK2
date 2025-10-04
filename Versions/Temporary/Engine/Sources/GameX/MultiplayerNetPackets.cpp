@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MultiplayerNetPackets.h"
 
 REGISTER_SAVELOAD_CLASS( 101, CB2SlotInfoPacket );

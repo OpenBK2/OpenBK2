@@ -3,7 +3,7 @@
 
 
 #include "FontFormat.h"
-#include "System/DG.h"
+#include "System/Dg.h"
 
 namespace NDb
 {

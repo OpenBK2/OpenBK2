@@ -1,12 +1,12 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "CommandHandlerDefines.h"
 
 #include "ED_B2_M1Dll.h"
-#include "Misc/HPtimer.h"
+#include "Misc/HPTimer.h"
 
 #include "MapEditorLib/EditorFactory.h"
 

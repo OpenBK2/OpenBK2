@@ -2,9 +2,9 @@
 
 #include "Misc_export.h"
 
+#include "Tools.h"
 
-#include <math.h>
-#include "tools.h"
+#include <cmath>
 
 #pragma pack( push, 4 )
 

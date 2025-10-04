@@ -23,9 +23,9 @@
 #define NI_ASSERT(a,b) ASSERT( (a) && (b) )
 
 #include <string.h>
-#include "misc/nvector.h"
-#include "misc/nlist.h"
-#include "misc/nstring.h"
+#include "Misc/nvector.h"
+#include "Misc/nlist.h"
+#include "Misc/nstring.h"
 
 #pragma component( mintypeinfo, on )
 #include "Misc/nhash_map.h"

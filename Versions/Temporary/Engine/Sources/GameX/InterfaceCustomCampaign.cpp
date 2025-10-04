@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceCustomCampaign.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"

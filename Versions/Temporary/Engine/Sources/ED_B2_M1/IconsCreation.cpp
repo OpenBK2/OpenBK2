@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ModelEditor.h"
 #include "EditorScene.h"
@@ -8,19 +8,19 @@
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-#include "libdb/objman.h"
-#include "libdb/editordb.h"
+#include "libdb/ObjMan.h"
+#include "libdb/EditorDb.h"
 
 #include "libdb/ResourceManager.h"
 
-#include "3DMotor/GRTShare.h"
-#include "3DMotor/FrameTransition.h"
-#include "3DMotor/GfxBuffers.h"
+#include "3Dmotor/GRTShare.h"
+#include "3Dmotor/FrameTransition.h"
+#include "3Dmotor/GfxBuffers.h"
 
 #include "Image/ImageTGA.h"
 
 #include "stats_b2_m1/RPGStats.h"
-#include "stats_b2_m1/dbvisobj.h"
+#include "stats_b2_m1/DBVisObj.h"
 
 #include "SceneB2/Camera.h"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ExecutorPlaceCharge.h"
 #include "NewUpdater.h"
 #include "Stats_B2_M1/AbilityActions.h"

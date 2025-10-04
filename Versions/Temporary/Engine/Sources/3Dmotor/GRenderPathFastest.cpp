@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GRenderPathFastest.h"
 #include "GfxUtils.h"
 #include "GRenderFactor.h"

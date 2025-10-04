@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GLMLightState.h"
 #include "RandomGen.h"
 #include "GScene.h"

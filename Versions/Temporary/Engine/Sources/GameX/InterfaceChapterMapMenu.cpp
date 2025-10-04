@@ -1,13 +1,13 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceChapterMapMenu.h"
 #include "GameXClassIDs.h"
-#include "Misc/STrProc.h"
+#include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
 #include "SceneB2/Cursor.h"
 #include "Sound/MusicSystem.h"
 #include "SaveLoadHelper.h"
 #include "Misc/nalgoritm.h"
-#include "3DMotor/FrameTransition.h"
+#include "3Dmotor/FrameTransition.h"
 #include "System/Commands.h"
 #include "InterfaceState.h"
 #include "UISpecificB2/DBUISpecificB2.h"
@@ -19,7 +19,7 @@
 #include "InterfaceChapterMapMenuDialogs.h"
 #include "System/Text.h"
 #include "UI/SceneClassIDs.h"
-#include "3DMotor/ScreenShot.h"
+#include "3Dmotor/ScreenShot.h"
 
 static int s_nTransitionEffectToPWLDuration = 700;
 static int s_nFadeEffectDuration = 400;

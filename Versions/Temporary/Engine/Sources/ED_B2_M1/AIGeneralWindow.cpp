@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "commandhandlerdefines.h"
 #include "stringresources.h"
 #include "aigeneraltypes.h"

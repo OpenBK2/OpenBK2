@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MissionReinforcements.h"
 #include "InterfaceState.h"
 #include "UISpecificB2/DBUISpecificB2.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "B2_M1_Terrain/PatchHolder.h"
-#include "3DMotor/GView.h"
+#include "3Dmotor/GView.h"
 
 class CVisDynamicDebrisPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 {

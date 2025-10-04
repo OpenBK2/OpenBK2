@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/resourcedefines.h"
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 

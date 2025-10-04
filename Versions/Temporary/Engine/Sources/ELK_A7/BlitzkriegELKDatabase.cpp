@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "elk.h"
+#include "ELK.h"
 
 #include <afxdb.h> 
 #include <odbcinst.h> 

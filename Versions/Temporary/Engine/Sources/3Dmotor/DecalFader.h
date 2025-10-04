@@ -1,7 +1,7 @@
 #pragma once
 
-#include "System/DG.h"
-#include "System/Time.hpp"
+#include "System/Dg.h"
+#include "System/time.hpp"
 
 namespace NGScene
 {

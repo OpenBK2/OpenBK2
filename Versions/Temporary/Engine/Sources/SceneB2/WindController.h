@@ -2,7 +2,7 @@
 
 #include "SceneB2_export.h"
 
-#include "system/time.h"
+#include "System/Time.h"
 #include "Main/GameTimer.h"
 
 //

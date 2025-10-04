@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "3dmotor/rectlayout.h"
+#include "3Dmotor/rectlayout.h"
 #include "uivisitor.h"
 #include "WindowPlayer.h"
 #include "System/VFSOperations.h"

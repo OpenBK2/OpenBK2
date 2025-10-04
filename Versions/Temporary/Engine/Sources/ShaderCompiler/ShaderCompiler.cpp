@@ -1,6 +1,6 @@
 #include "stdafx.h"
 //#include "Optimizer.h"
-#include "streams.h"
+#include "Streams.h"
 #include "parser.h"
 #include "Data.h"
 #include "output.h"

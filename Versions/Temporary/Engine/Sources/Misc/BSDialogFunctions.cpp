@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BSDialogFunctions.h"
 #include "MemoryLib/SymAccess.h"
 #include <CommCtrl.h>

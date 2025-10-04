@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ForegroundTextString.h"
 
 #include "UIVisitor.h"

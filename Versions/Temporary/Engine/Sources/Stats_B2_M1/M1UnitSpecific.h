@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "rpgstats.h"
+#include "RPGStats.h"
 
 struct IXmlSaver;
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceMissionBackground.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"

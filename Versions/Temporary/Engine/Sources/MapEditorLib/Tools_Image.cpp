@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Tools_Image.h"
 
 void NImage::Copy( CArray2D<DWORD> *pDestination, const CArray2D<DWORD> &rSource, const CTPoint<int> &rStartPoint )

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 
 #define INVALID_GRANNY_TYPEDEF_OFFSET (-1)
 

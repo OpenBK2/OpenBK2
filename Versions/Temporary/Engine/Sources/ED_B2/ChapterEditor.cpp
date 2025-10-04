@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ChapterEditor.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "mapeditorlib/interface_commandhandler.h"

@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "B2_M1_Terrain/DBPreLight.h"
-#include "3DMotor/GMaterial.hpp"
-#include "3DMotor/GMaterial.h"
-#include "3DMotor/GfxRender.h"
+#include "3Dmotor/GMaterial.hpp"
+#include "3Dmotor/GMaterial.h"
+#include "3Dmotor/GfxRender.h"
 #include "Misc/Win32Random.h"
 #include "System/FastMath.h"
 #include "Image/Targa.h"

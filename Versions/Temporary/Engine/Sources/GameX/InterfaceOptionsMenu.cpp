@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "ui/ui.h"
+#include "stdafx.h"
+#include "UI/UI.h"
 #include "InterfaceOptionsMenu.h"
 #include "GameXClassIDs.h"
 #include "DBGameRoot.h"
@@ -14,8 +14,8 @@
 #include "System/Text.h"
 #include "System/Commands.h"
 
-#include "3DMotor/GAutoDetect.h"
-#include "3DMotor/GfxBenchmark.h"
+#include "3Dmotor/GAutoDetect.h"
+#include "3Dmotor/GfxBenchmark.h"
 
 
 const int ITEM_DELTA_X = 3;

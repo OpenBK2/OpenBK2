@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "misc/strproc.h"
+#include "Misc/StrProc.h"
 #include <float.h>
 #include "ED_Common/Tools_Granny.h"
 #include "MapEditorLib/CommonExporterMethods.h"

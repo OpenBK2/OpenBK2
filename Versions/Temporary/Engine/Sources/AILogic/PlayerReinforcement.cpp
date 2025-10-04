@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./playerreinforcement.h"
 #include "SingleReinforcement.h"
 #include "NewUpdater.h"

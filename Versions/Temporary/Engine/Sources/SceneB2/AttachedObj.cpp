@@ -3,8 +3,8 @@
 #include "dbsceneconsts.h"
 #include "AttachedObj.hpp"
 #include "SceneHoldQueue.h"
-#include "3DMotor/AIVisitor.h"
-#include "3DMotor/GScene.h"
+#include "3Dmotor/AIVisitor.h"
+#include "3Dmotor/GScene.h"
 
 #include "Sound/SoundScene.h"
 #include "Sound/DBSound.h"

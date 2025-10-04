@@ -1,5 +1,5 @@
 #pragma once
-#include "mapobj.h"
+#include "MapObj.h"
 
 
 class CMOFence : public CMapObj

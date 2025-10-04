@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./fencecreation.h"
 #include "StaticObjects.h"
 #include "Fence.h"

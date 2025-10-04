@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "actioncommand.h"
 #include "ActionsRemap.h"
 

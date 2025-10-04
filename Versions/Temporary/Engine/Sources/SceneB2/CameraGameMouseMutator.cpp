@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "CameraGameMouseMutator.h"
 #include "System/Commands.h"

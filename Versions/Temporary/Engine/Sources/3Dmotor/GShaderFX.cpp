@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <D3D9.h>
 #include <D3DX9.h>
 #include "GfxInternal.h"

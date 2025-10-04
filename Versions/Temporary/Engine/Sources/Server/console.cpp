@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "scintilla/scintilla.h"
-#include "Console.h"
+#include "console.h"
 #include "CommandsInterface.h"
 
 #include "Scintilla/SciLexer.h"

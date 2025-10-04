@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "DefaultUIBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "executorformationfirstaid.h"
 #include "GroupLogic.h"

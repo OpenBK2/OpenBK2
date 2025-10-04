@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceNotifications.h"
 #include "ScenarioTracker.h"
 #include "InterfaceState.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "XMLSAXParser.h"
 #include "Misc/StrProc.h"
 

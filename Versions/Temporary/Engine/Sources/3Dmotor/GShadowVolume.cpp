@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "3Dlib/Transform.h"
+#include "stdafx.h"
+#include "3DLib/Transform.h"
 #include "GCombiner.h"
 #include "GShadowVolume.h"
 #include "Render.h"

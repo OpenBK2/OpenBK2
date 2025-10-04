@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "revision.h"
 #include "libdb/EditorDb.h"

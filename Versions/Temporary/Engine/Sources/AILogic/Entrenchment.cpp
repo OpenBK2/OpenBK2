@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
-#include "system/time.h"
+#include "Misc/bresenham.h"
+#include "System/Time.h"
 #include "Entrenchment.h"
 #include "Soldier.h"
 #include "NewUpdater.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./pathfractioncomposite.h"
 #include "IPlane.h"
 #include "DebugTools/DebugInfoManager.h"

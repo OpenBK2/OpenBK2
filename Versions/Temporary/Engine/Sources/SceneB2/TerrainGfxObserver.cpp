@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "b2_m1_terrain/dbterrain.h"
 #include "terraingfxinfo.h"

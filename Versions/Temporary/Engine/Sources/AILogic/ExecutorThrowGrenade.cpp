@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ExecutorThrowGrenade.h"
 #include "Soldier.h"
 #include "Guns.h"

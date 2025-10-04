@@ -1,8 +1,8 @@
-#include "StdAfx.h"
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "stdafx.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "InterfaceMPCustomGame.h"
 #include "GameXClassIDs.h"
 #include "InterfaceState.h"
@@ -13,7 +13,7 @@
 #include "System/Text.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "ui/ListControlSorters.h"
+#include "UI/ListControlSorters.h"
 
 #include <zconf.h>
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceMPLadderGame.h"
 #include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"

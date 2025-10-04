@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 //#include "Commands.h"
 #include "LogStream.h"
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MOUnitInfantry.h"
 #include "Sound/SoundScene.h"

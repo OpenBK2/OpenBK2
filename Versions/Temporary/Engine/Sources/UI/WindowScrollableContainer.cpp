@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "windowscrollablecontainer.h"
 
 REGISTER_SAVELOAD_CLASS(0x170AF301, CWindowScrollableContainer)

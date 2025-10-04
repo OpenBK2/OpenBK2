@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "system/fastmath.h"
-#include "system/time.h"
-#include "misc/bresenham.h"
+#include "System/FastMath.h"
+#include "System/Time.h"
+#include "Misc/bresenham.h"
 #include "Bridge.h"
 #include "NewUpdater.h"
 #include "UnitsIterators2.h"

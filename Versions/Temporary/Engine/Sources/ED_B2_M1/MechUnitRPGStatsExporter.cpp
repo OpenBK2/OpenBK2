@@ -93,7 +93,7 @@
 	--------------------------------------------------------------------------------------------------------------
 
 */
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"

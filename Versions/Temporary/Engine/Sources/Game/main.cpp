@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include <crtdbg.h>
 #include "resource.h"
 #include "revision.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 
 #include "Misc/StrProc.h"
 #include "System/FileUtils.h"

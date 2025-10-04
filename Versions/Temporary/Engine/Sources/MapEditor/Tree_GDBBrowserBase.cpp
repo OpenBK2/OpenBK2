@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "wmdefines.h"
@@ -21,7 +21,7 @@
 #include "RefListWaitDialog.h"
 #include "Misc/StrProc.h"
 #include "System/FilePath.h"
-#include "LibDB/DB.h"
+#include "libdb/Db.h"
 
 /**
 const	UINT  CTreeGDBBrowserBase::TABGDBB_TREE_COLUMN_NAME  [TABGDBB_TREE_COLUMN_COUNT] = { IDS_TABGDBB_PROPERTY_THN_0, IDS_TABGDBB_PROPERTY_THN_1 };

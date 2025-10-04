@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./cameramovement.h"
 #include "SceneB2/Camera.h"
 

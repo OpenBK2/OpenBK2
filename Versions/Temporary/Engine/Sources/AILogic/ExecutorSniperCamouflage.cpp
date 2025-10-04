@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./executorsnipercamouflage.h"
 #include "Soldier.h"
 #include "UnitsIterators2.h"

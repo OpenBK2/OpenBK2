@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "System/FastMath.h"
 #include "TerrUtils.h"
 

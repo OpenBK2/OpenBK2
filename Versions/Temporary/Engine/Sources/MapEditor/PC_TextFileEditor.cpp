@@ -16,7 +16,7 @@
 #include "MapEditorLib/Interface_MOD.h"
 #include "TextEditorDialog.h"
 #include "Scripteditor.h"
-#include "System/text.h"
+#include "System/Text.h"
 
 // CPCItemEditor
 

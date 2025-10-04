@@ -2,9 +2,9 @@
 #include "3Dmotor_export.h"
 
 
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "aiInterval.h"
-#include "3dLib/Transform.h"
+#include "3DLib/Transform.h"
 #include "Render.h"
 #include "Misc/Pool.h"
 

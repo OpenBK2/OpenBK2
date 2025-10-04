@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "stats_b2_m1/actioncommand.h"
 #include "InterfaceArmyScreen.h"
 #include "GameXClassIDs.h"

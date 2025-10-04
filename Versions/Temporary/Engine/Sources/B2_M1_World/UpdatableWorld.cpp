@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "AllAnimationsPlayer.h"
 #include "ClientAckManager.h"
@@ -30,7 +30,7 @@
 
 #include "3DLib/GMemBuilder.h"
 #include "3DLib/MemObject.h"
-#include "system/FastMath.h"
+#include "System/FastMath.h"
 #include "SceneB2/LaserMark.h"
 
 #include "Sound/DBMusicSystem.h"

@@ -4,8 +4,8 @@
 
 #include "3dmotor_export.h"
 
-#include "misc/geom.h"
-#include "system/filepath.h"
+#include "Misc/Geom.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

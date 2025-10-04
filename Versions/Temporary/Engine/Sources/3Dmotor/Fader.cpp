@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Fader.h"
 #include "3DLib/ExpFader.h"
 

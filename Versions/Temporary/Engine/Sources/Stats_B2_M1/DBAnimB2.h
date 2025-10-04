@@ -2,7 +2,7 @@
 
 // automatically generated file, don't change manually!
 
-#include "3dmotor/dbscene.h"
+#include "3Dmotor/DBScene.h"
 #include "animationtype.h"
 
 struct IXmlSaver;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "hlsl.h"
 #include "parser.h"
 #include "Data.h"

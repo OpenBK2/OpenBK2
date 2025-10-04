@@ -1,13 +1,13 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "GameX_export.h"
 #include "Main/Main_export.h"
 
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "dbmpconsts.h"
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
 #include "B2_M1_World/ClientAckManager.h"
 #include "DBConsts.h"
 #include "DBGameRoot.h"

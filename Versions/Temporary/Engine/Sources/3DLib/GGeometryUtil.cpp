@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GGeometryUtil.h"
 
 /*#include <d3dx8.h>

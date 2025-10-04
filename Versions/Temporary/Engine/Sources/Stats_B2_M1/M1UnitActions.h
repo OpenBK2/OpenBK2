@@ -3,7 +3,7 @@
 // automatically generated file, don't change manually!
 
 #include "m1actions.h"
-#include "rpgstats.h"
+#include "RPGStats.h"
 #include "commands_actions.h"
 
 struct IXmlSaver;

@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/strproc.h"
+#include "Misc/StrProc.h"
 #include "XMLExport.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"

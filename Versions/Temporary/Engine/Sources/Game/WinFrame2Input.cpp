@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "WinFrame2Input.h"
 #include "Input/GameMessage.h"
 

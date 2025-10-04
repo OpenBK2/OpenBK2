@@ -1,9 +1,9 @@
-#include "StdAfx.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
-#include "sceneb2/scene.h"
+#include "stdafx.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
+#include "SceneB2/Scene.h"
 #include "libdb/resourcemanager.h"
-#include "main/gametimer.h"
+#include "Main/gametimer.h"
 #include "EntrenchmentInfoData.h"
 #include <float.h>
 

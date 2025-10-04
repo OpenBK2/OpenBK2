@@ -1,5 +1,5 @@
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Aviation.h"
 #include "Guns.h"
 #include "GroupLogic.h"

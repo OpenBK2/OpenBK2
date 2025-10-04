@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ExecutorUnitBase.h"
 #include "NewUpdater.h"

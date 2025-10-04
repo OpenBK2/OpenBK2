@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "groupmoveexecutor.h"
-#include "system/time.h"
+#include "System/Time.h"
 #include "CommonStates.h"
 #include "Building.h"
 #include "Entrenchment.h"

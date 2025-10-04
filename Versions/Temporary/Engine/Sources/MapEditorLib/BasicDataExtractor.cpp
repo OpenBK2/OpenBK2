@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "BasicDataExtractor.h"
 #include "libdb/ResourceManager.h"
 #include "Interface_UserData.h"
 #include "Tools_Image.h"
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
 #include "Image/ImageScale.h"

@@ -1,8 +1,8 @@
 
 #pragma once
-#include "window.h"
+#include "Window.h"
 #include "GBinkPlayer.h"
-#include "System/DG.h"
+#include "System/Dg.h"
 
 
 class CWindowPlayer : public CWindow, public IPlayer

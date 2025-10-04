@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "FilePath.h"
 #include "FileTime.h"
 #include "FileUtils.h"

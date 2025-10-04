@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ResourceDefines.h"
 
 #include "MapEditorLib/Tools_Registry.h"

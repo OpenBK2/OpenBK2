@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Water.h"
 #include "B2_M1_Terrain/DBPreLight.h"

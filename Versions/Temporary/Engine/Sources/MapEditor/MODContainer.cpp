@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MODContainer.h"
 #include "CreateMODDialog.h"
 #include "OpenMODDialog.h"
-#include "Main/Mods.h"
-#include "libdb/db.h"
+#include "Main/MODs.h"
+#include "libdb/Db.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Progress.h"

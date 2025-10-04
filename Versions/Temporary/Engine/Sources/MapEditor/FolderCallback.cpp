@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "libdb/ResourceManager.h"
-#include "libdb/DB.h"
+#include "libdb/Db.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/FolderController.h"
 #include "MapEditorLib/Interface_Logger.h"

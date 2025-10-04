@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./planesformation.h"
 #include "ManuverBuilder.h"
 

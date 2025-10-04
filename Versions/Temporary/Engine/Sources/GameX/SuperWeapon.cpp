@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "SuperWeapon.hpp"
 #include "Stats_B2_M1/UserActions.h"
 #include "Input/Bind.h"

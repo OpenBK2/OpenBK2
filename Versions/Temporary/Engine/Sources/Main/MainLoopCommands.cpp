@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MainLoopCommands.h"
 #include "Profiles.h"
 #include "System/WinVFS.h"

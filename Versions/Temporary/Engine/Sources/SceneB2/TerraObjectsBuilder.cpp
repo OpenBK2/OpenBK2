@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 //#include "..\Image\Targa.h"
 //#include "..\Misc\GeomMisc.h"

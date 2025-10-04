@@ -6,7 +6,7 @@
 #include "ExporterMethods.h"
 #include "TraceModel.h"
 #include "System/FileUtils.h"
-#include "3DMotor/GPixelFormat.h"
+#include "3Dmotor/GPixelFormat.h"
 
 static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SModelSurfacePoint> &rPoints )
 {

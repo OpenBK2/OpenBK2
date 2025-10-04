@@ -1,11 +1,11 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "InterfaceScreenBase.h"
 
 #include "AILogic/B2AI.h"
 #include "Misc/StrProc.h"
 #include "Sound/SoundScene.h"
-#include "sound/MusicSystem.h"
+#include "Sound/MusicSystem.h"
 #include "SceneB2/Camera.h"
 #include "SceneB2/Cursor.h"
 #include "SceneB2/Scene.h"

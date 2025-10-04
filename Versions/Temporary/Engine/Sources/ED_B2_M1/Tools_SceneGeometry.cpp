@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "Tools_SceneGeometry.h"
 #include "MapEditorLib/Tools_Geometry.h"
 #include "SceneB2/Camera.h"

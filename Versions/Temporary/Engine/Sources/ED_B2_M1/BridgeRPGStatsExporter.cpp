@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/strproc.h"
-#include "misc/2darray.h"
+#include "Misc/StrProc.h"
+#include "Misc/2Darray.h"
 #include "libdb/ResourceManager.h"
 #include "BridgeRPGStatsExporter.h"
 #include "MapEditorLib/ExporterFactory.h"

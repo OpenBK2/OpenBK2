@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BSExceptionDialog.h"
 #include "MemoryLib/SymAccess.h"
 #include "BSDialogFunctions.h"
-#include "Resource.h"
+#include "resource.h"
 
 namespace NBSU
 {

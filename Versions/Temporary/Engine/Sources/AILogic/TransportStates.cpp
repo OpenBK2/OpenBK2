@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
-#include "system/time.h"
+#include "Misc/bresenham.h"
+#include "System/Time.h"
 #include <float.h>
 #include "Common_RTS_AI/PathFinder.h"
 #include "TransportStates.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BSAssertDialog.h"
 #include "BSExceptionDialog.h"
 #include "MemoryLib/SymAccess.h"

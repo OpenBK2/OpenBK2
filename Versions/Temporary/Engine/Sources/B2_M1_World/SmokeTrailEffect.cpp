@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "SmokeTrailEffect.h"
 #include "3Dmotor/GAnimation.hpp"
 #include "MapObj.h"

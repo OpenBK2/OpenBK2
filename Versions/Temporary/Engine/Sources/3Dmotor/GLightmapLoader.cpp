@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GLightmapLoader.h"
 
 using namespace NGScene;

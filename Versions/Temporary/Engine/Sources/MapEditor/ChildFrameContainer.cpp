@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapEditorLib/ChildFrameFactory.h"
 #include "ChildFrameContainer.h"

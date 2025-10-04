@@ -1,8 +1,8 @@
-#include "StdAfx.h"
-#include "misc/2darray.h"
-#include "misc/strproc.h"
-#include "3dmotor/dbscene.h"
-#include "vendor/Granny/include/granny.h"
+#include "stdafx.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "3Dmotor/DBScene.h"
+#include "vendor/granny/include/granny.h"
 
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"

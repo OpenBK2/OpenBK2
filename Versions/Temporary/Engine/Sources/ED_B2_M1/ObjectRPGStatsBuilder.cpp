@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ObjectRPGStatsBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "mapeditorlib/resourcedefines.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 
@@ -16,7 +16,7 @@
 #include "Main/MainLoop.h"
 #include "Input/GameMessage.h"
 #include "MapEditorLib/Interface_Logger.h"
-#include "3DMotor/GSceneUtils.h"
+#include "3Dmotor/GSceneUtils.h"
 #include "Stats_B2_M1/SceneModes.h"
 #include "SceneB2/TerraGen.h"
 #include "SceneB2/TerrainInfo.h"

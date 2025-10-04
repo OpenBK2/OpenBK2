@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ED_B2_M1Dll.h"
 #include "MapInfoAIMarkersSelectDlg.h"
 

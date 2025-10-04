@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 #include "WingScaleMutator.h"
 
 bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator, const string &szScaledWingPrefix, const string &szStaticWingName )

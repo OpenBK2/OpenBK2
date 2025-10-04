@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "stats_b2_m1/rpgstats.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/RPGStats.h"
 #include "WeaponMnemonics.h"
 
 #include <zconf.h>

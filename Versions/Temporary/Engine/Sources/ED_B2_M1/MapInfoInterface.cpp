@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MapInfoInterface.h"
 #include "MapInfoState.h"
 

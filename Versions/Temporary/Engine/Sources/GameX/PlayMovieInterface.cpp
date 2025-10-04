@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "PlayMovieInterface.h"
 #include "Misc/StrProc.h"
 #include "GameXClassIDs.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "InterfaceSaveLoadMenu.h"
 #include "InterfaceMisc.h"
 #include "InterfaceState.h"
@@ -8,7 +8,7 @@
 #include "System/FileUtils.h"
 #include "ScenarioTracker.h"
 #include "System/Text.h"
-#include "3DMotor/ScreenShot.h"
+#include "3Dmotor/ScreenShot.h"
 
 // CInterfaceSaveLoadMenu::CReactions
 

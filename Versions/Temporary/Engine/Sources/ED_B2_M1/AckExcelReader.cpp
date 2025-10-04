@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <afxdb.h> 
 #include <odbcinst.h> 
 #include "AckExcelReader.h"

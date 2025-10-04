@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Misc/Win32Random.h"
 #include "System/FastMath.h"
-#include "3DMotor/DBScene.h"
+#include "3Dmotor/DBScene.h"
 #include "GenTerrain.h"
 #include "VersionInfo.h"
 

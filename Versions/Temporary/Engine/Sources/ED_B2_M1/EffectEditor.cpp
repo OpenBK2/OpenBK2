@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/interface_commandhandler.h"
 #include "mapeditorlib/commoneditormethods.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_UserData.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "SpotDataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"

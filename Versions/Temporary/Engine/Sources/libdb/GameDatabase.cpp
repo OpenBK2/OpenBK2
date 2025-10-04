@@ -1,6 +1,6 @@
 #include <libdb_export.h>
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "Database.h"
 #include "Index.h"
 #include "libdb/TypeDef.h"

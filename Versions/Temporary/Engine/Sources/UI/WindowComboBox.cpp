@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "WindowComboBox.h"
 #include "WindowMSButton.h"
 #include "WindowListCtrl.h"

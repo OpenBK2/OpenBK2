@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "wmdefines.h"

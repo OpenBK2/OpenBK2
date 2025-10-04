@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "misc/2darray.h"
-#include "3dmotor/dbscene.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "3Dmotor/DBScene.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "Misc/GeomMisc.h"
 #include "Image/Targa.h"
 #include "Image/ImageTGA.h"

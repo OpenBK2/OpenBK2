@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./pathfractioncomplex.h"
 #include "IPlane.h"
 #include "Manuver.h"

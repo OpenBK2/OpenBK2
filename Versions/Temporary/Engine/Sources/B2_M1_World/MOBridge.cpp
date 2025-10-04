@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MOBridge.h"
 #include "Misc/Win32Random.h"

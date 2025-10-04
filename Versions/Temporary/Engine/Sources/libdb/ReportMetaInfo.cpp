@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "StructMetaInfo.h"
 #include "ReportMetaInfo.h"
 #include "System/XmlSaver.h"

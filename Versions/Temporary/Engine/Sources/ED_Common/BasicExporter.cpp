@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "BasicExporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"

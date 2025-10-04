@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "NetLogin.h"
 #include "Misc/HPTimer.h"
 

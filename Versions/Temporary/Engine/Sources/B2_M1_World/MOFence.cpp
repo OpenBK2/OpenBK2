@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MOFence.h"
 #include "Common_RTS_AI/AIClasses.h"
 

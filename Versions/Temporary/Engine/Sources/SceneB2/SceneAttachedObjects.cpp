@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "AttachedObj.h"
 #include "SceneInternal.h"

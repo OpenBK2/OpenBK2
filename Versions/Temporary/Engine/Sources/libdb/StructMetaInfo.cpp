@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "StructMetaInfo.h"
 #include "Variant.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 //#include "CallStack.h"
 #include <commctrl.h>
 

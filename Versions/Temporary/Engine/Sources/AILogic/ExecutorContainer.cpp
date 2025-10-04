@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "executorcontainer.h"
 #include "ExecutorSimpleEvent.h"
 

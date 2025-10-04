@@ -1,12 +1,12 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "aiObjectLoader.h"
-#include "3Dlib/MemObject.h"
+#include "3DLib/MemObject.h"
 #include "System/BasicShare.h"
 //#include "GFileSkin.h"
 //#include "PrecalcSpheres.h"
 #include "aiGeometryFormat.h"
 #include "GAnimFormat.h"
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 #include "DBScene.h"
 
 namespace NAI

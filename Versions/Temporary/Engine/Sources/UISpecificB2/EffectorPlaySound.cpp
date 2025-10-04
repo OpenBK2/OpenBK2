@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "System/Dg.h"
 #include "effectorplaysound.h"
 #include "Sound/SoundScene.h"

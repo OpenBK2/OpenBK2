@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "system/fastmath.h"
-#include "system/time.h"
-#include "fence.h"
+#include "System/FastMath.h"
+#include "System/Time.h"
+#include "Fence.h"
 #include "NewUpdater.h"
 #include "Diplomacy.h"
 #include "TimeCounter.h"

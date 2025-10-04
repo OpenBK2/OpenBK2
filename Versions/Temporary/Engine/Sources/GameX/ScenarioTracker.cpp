@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ScenarioTracker.hpp"
 #include "B2_M1_World/MissionObjectiveStates.h"

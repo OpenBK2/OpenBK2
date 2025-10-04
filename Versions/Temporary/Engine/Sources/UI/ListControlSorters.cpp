@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "listcontrolsorters.h"
 
 REGISTER_SAVELOAD_CLASS(SCRNE_UI_LIST_SORTER_ALPHABET, CListControlSorterAlphabet)

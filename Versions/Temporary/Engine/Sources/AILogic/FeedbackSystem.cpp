@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./feedbacksystem.h"
 #include "NewUpdater.h"
 

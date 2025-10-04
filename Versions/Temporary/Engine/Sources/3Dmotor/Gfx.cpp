@@ -1,11 +1,11 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "3DLib/3DLib_export.h"
 
 #include <D3D9.h>
 #include <ddraw.h>
 #include <dxerr.h>
-#include "Misc/2DArray.h"
+#include "Misc/2Darray.h"
 #include "System/Commands.h"
 #include "Gfx.h"
 #include "GfxInternal.h"

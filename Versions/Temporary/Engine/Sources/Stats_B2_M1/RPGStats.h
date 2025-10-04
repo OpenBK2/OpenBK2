@@ -4,19 +4,19 @@
 
 #include "Stats_B2_M1_export.h"
 
-#include "3dmotor/dbscene.h"
-#include "acktypes.h"
+#include "3Dmotor/DBScene.h"
+#include "AckTypes.h"
 #include "dbpassprofile.h"
 #include "dbplanemanuvers.h"
-#include "season.h"
+#include "Season.h"
 #include "useractions.h"
-#include "3dmotor/dbscene.h"
+#include "3Dmotor/DBScene.h"
 #include "commands_actions.h"
 #include "constructorinfo.h"
-#include "iconsset.h"
+#include "IconsSet.h"
 #include "prefix_rpgstats.h"
 #include "unittypes.h"
-#include "system/filepath.h"
+#include "System/FilePath.h"
 
 struct IXmlSaver;
 

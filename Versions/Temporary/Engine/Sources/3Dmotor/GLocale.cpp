@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GLocale.h"
 #include "GFont.h"
 #include "GTexture.h"

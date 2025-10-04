@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "executortransporthealinfantry.h"
 #include "UnitsIterators2.h"
 #include "AIUnit.h"

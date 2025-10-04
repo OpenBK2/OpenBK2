@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "DummyInterface.h"
 #include "GameXClassIDs.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "DynamicDebrisSetBuilder.h"
 #include "libdb/ResourceManager.h"

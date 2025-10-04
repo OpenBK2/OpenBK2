@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./musictrackexporter.h"
 
 #include "stdafx.h"

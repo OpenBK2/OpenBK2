@@ -1,6 +1,6 @@
 #pragma once
 
-#include "aiMap.h"
+#include "AIMap.h"
 #include "Misc/Bresenham.h"
 
 inline bool operator < ( const SVector &cell1, const SVector &cell2 );

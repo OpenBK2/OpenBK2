@@ -2,7 +2,7 @@
 #include "GScene.h"
 #include "OcTree.h"
 #include "GCombiner.h"
-#include "3Dlib/Transform.h"
+#include "3DLib/Transform.h"
 namespace NGScene
 {
 

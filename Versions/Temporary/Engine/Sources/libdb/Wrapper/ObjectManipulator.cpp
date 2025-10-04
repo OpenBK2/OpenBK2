@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ObjectManipulator.h"
 #include "Misc/HashFuncs.h"

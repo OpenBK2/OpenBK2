@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "WindowMSButtonSharedBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"

@@ -1,7 +1,7 @@
 #pragma once
 //
 
-#include "misc/nalgoritm.h"
+#include "Misc/nalgoritm.h"
 
 //#define _SECDLL
 #include <toolkit/ot_dockingwindows.h>		// Objective Toolkit Docking Windows

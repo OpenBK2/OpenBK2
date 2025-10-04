@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "WindController.h"
 #include "System/FastMath.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MultiplayerCommandProcessor.h"
 #include "MultiplayerCommandManager.h"
 

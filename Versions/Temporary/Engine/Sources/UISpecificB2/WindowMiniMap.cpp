@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "WindowMiniMap.h"
-#include "3DMotor/RectLayout.h"
+#include "3Dmotor/RectLayout.h"
 #include "Misc/Bresenham.h"
 #include "Misc/GeomMisc.h"
 #include "System/FastMath.h"

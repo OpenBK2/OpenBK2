@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Clients.h"
+#include "clients.h"
 #include "Server_Client_Common/NetLogger.h"
 #include "LadderLobby.h"
 #include "vendor/MySQL/include/mysql.h"

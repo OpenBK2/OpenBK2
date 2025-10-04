@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "misc/2darray.h"
+#include "Misc/2Darray.h"
 #include "stats_b2_m1/dbmapinfo.h"
-#include "ui/commandparam.h"
+#include "UI/commandparam.h"
 #include "ScenarioTracker.hpp"
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "GetConsts.h"

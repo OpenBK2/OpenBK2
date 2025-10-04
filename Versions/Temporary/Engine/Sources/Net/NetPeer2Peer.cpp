@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "NetPeer2Peer.h"
 //#define LOG
 #ifdef LOG

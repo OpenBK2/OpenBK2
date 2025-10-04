@@ -1,13 +1,13 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
-#include "misc/2darray.h"
-#include "stats_b2_m1/iconsset.h"
+#include "Misc/2Darray.h"
+#include "stats_b2_m1/IconsSet.h"
 #include "mapeditorlib/interface_commandhandler.h"
 
 #include "EditorScene.h"
 #include "SceneB2/Camera.h"
-#include "3DMotor/DBScene.h"
+#include "3Dmotor/DBScene.h"
 #include "Main/GameTimer.h"
 
 

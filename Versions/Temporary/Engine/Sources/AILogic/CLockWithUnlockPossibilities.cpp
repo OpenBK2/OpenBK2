@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "misc/bresenham.h"
+#include "Misc/bresenham.h"
 #include "CLockWithUnlockPossibilities.h"
 #include "AIUnit.h"
 #include "UnitsIterators2.h"

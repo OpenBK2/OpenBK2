@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ui/commandparam.h"
-#include "ui/dbuserinterface.h"
-#include "ui/ui.h"
+#include "UI/commandparam.h"
+#include "UI/dbuserinterface.h"
+#include "UI/UI.h"
 #include "UI/BackGroundMutableTexture.h"
 #include "CommandsHistory.h"
 

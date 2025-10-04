@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "DG.h"
+#include "stdafx.h"
+#include "Dg.h"
 #include "Misc/Pool.h"
 
 #ifdef _MAPEDIT 

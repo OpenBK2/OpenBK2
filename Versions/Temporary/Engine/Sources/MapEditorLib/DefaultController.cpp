@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Interface_View.h"
 #include "DefaultController.h"

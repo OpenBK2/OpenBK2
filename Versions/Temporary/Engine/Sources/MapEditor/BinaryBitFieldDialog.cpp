@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "BinaryBitFieldDialog.h"
 #include "BinaryBitFieldDialog.h"
 #include "System/VFSOperations.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ClientGameConstsExporter.h"
 #include "MapEditorLib/ExporterFactory.h"

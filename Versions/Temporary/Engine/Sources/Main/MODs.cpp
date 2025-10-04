@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MODs.h"
 #include "Main/MainLoop.h"
 #include "System/FileUtils.h"

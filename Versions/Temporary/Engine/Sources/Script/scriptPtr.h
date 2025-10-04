@@ -1,6 +1,6 @@
 #pragma once
 
-#include "script.h"
+#include "Script.h"
 //
 //class CDBRecord;
 //

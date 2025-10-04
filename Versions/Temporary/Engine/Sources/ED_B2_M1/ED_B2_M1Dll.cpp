@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 //
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/MapEditorModule.h"

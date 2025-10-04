@@ -9,12 +9,12 @@
 #include "UIScreen.h"
 #include "Window.h"
 #include "uiinternal.h"
-#include "window.h"
+#include "Window.h"
 #include "WindowTooltip.h"
 #include "Misc/PlaneGeometry.h"
 #include "System/Commands.h"
 #include "System/Text.h"
-#include "3DMotor/DBScene.h"
+#include "3Dmotor/DBScene.h"
 
 
 int CHECK_DUPLICATE_CHILDREN;

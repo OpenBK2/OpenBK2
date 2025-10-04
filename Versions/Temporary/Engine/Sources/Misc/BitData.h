@@ -1,5 +1,5 @@
 #pragma once
-#include "2DArray.h"
+#include "2Darray.h"
 #include "System/XmlSaver.h"
 
 template<class T> class CBitArray2DRLEWrapper;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "InGroupPath.h"
 #include "StandartPath2.h"

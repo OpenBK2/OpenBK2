@@ -1,6 +1,6 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 #include "MechUnitJoggingMutator.h"
 #include "Main/GameTimer.h"
 #include "System/Commands.h"

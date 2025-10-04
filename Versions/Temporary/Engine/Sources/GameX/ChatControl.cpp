@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "ChatControl.h"
 #include "UISpecificB2/UISpecificB2.h"

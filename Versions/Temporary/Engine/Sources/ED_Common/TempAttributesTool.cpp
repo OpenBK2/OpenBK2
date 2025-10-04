@@ -1,8 +1,8 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "TempAttributesTool.h"
 
-#include "vendor/Granny/include/granny.h"
+#include "vendor/granny/include/granny.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"

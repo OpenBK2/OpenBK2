@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GInit.h"
 #include "Gfx.h"
 #include "GfxRender.h"

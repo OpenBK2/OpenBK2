@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "GlobalVars.h"
 #include "FilePath.h"

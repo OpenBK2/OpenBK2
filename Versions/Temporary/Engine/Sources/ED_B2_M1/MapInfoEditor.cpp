@@ -1,10 +1,10 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "mapeditorlib/resourcedefines.h"
 #include "mapeditorlib/commandhandlerdefines.h"
 #include "mapeditorlib/objectcontroller.h"
 #include "simpleobjectinfodata.h"
-#include "ui/commandparam.h"
+#include "UI/commandparam.h"
 #include "mapinfoeditor.h"
 
 #include "MapInfoEditor.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "GeometryExporter.h"
 #include "MapEditorLib/ExporterFactory.h"

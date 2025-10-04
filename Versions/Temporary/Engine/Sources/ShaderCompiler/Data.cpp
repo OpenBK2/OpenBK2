@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "data.h"
+#include "stdafx.h"
+#include "Data.h"
 
 vector<SVShader> vertexShaders;
 vector<SPShader> pixelShaders;

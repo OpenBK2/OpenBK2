@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MultiplayerTestNet.h"
 #include "Server_Client_Common/LoginPackets.h"
 #include "Server_Client_Common/CommonPackets.h"

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "./windowtabcontrol.h"
 #include "WindowMSButton.h"
 #include "WindowScrollableContainer.h"

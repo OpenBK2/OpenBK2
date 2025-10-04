@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "TracksManager.h"
 
 #define DEF_MAX_TRACK_BUFFERS 128

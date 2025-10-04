@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "MapEditorLib/ExporterFactory.h"
 #include "EntrenchmentExporter.h"

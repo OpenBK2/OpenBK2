@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ProfileManagerMenu.h"
 #include "InterfaceMisc.h"
 #include "GameXClassIDs.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "system/time.h"
+#include "System/Time.h"
 #include "UpdatableObject.h"
 
 #include "Misc/2Darray.h"
