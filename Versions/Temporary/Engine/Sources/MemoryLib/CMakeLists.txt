@@ -1,6 +1,5 @@
 project(MemoryLib)
 set(SOURCES
-    DumbPow2Alloc.cpp
     stdafx.cpp
     SymAccess.cpp
     Trace.cpp

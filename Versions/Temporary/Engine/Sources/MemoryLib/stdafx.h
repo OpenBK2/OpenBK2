@@ -12,9 +12,6 @@
 #undef _NSTL_HELP_DEBUG
 #endif
 
-// fake new.h
-#include "DumbPow2Alloc.h"
-
 // normal stdafx.h
 
 #include <windows.h>
@@ -31,7 +28,3 @@
 #else
 #  define ASSERT( a ) ((void)0)
 #endif
-
-void __cdecl DebugTraceMMgr( const char *pszFormat, ... );
-
-
