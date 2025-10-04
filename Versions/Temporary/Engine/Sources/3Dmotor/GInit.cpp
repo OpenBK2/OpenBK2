@@ -75,7 +75,7 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	}
 
 	NGfx::EFS fullScreen = NGfx::WINDOWED;
-	sValue = NGlobal::GetVar( "gfx_fullscreen", 1 );
+	sValue = NGlobal::GetVar( "gfx_fullscreen", 0 );
 	// should not happen in MapEditor
 	if ( sValue.GetFloat() == 1 )
 		fullScreen = NGfx::FULL_SCREEN;
@@ -207,7 +207,7 @@ START_REGISTER(GInit)
 	REGISTER_CMD( "gfx_update", CommandGfxUpdate )
 	REGISTER_CMD( "gfx_recreate", CommandGfxRecreate )
 	REGISTER_VAR( "gfx_resolution", 0, "1024x768", STORAGE_USER )
-	REGISTER_VAR( "gfx_fullscreen", 0, 1, STORAGE_USER )
+	REGISTER_VAR( "gfx_fullscreen", 0, 0, STORAGE_USER )
 //	REGISTER_VAR( "gfx_refreshlimit", 0, 1000, true )
 	REGISTER_VAR( "gfx_depth_tex_resolution", 0, 512, STORAGE_USER )
 //	REGISTER_VAR( "gfx_cl_sky_textures", 0, 0, true )
