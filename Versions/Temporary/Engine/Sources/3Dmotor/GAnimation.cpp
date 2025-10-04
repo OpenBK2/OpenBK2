@@ -257,7 +257,7 @@ void CSkeletonAnimator::RecalcScalarChannels()
 				const STrackChannelBinding &channelBinding = holder.scalarTracks[trackId];
 				SScalarChannel &channel = scalarChannels[channelBinding.nChannelIndex];
 
-				GrannyEvaluateCurveAtT( 1, false, &channelBinding.pTrack->ValueCurve, fLocalTime, &fValue );
+				GrannyEvaluateCurveAtT( 1, false, false, &channelBinding.pTrack->ValueCurve, false, fLocalTime, 0, &fValue, nullptr );
 				channel.fValue += fValue * fWeight;
 				channel.fWeight += fWeight;
 			}

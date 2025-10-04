@@ -28,7 +28,7 @@ granny_skeleton *GetSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile
 	return pSkeleton;
 }
 
-char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile )
+const char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile )
 {
 	if ( pGrannyFI && pGrannyFI->GetData() )
 	{

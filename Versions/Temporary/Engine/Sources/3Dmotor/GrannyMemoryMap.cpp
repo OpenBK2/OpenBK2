@@ -48,12 +48,12 @@ static granny_allocate_callback *AllocateCallback;
 static granny_deallocate_callback *DeallocateCallback;
 static TGrannyMemoryMap *pGrannyMemoryMap; // do not initialize!
 
-static GRANNY_CALLBACK(void *) GrannyReplacementAlloc( char const *pszFile, granny_int32x nLine, granny_int32x nAlignment, granny_int32x nSize )
+static GRANNY_CALLBACK(void *) GrannyReplacementAlloc( char const *pszFile, granny_int32x nLine, granny_uintaddrx nAlignment, granny_uintaddrx nSize, granny_int32x nAllocationIntent )
 {
 	if ( pGrannyMemoryMap == 0 )
 		pGrannyMemoryMap = new hash_map<void *, SMemoryInfo, SSimplePointerHash >;
 
-	void *pMemory = (*AllocateCallback)(pszFile,nLine,nAlignment,nSize);
+	void *pMemory = (*AllocateCallback)(pszFile,nLine,nAlignment,nSize,nAllocationIntent);
 	pGrannyMemoryMap->insert( pair <void *, SMemoryInfo>( pMemory, SMemoryInfo(pszFile,nLine,nAlignment,nSize) ) );
 	return pMemory;
 }

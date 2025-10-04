@@ -1,7 +1,11 @@
 #pragma once
 #include "GSkeleton.h"
 
-struct granny_world_pose;
+namespace granny {
+	struct world_pose;
+}
+typedef granny::world_pose granny_world_pose;
+
 namespace NAnimation
 {
 class CGrannyFileInfo;

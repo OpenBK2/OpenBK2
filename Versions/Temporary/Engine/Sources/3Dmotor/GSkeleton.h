@@ -3,9 +3,15 @@
 
 // typedefs required for animation etc
 
-struct granny_local_pose;
+namespace granny {
+	struct local_pose;
+
+	struct file;
+}
+
 struct granny_skeleton;
-struct granny_file;
+
+typedef granny::local_pose granny_local_pose;
 
 namespace NDb
 {
@@ -40,7 +46,7 @@ struct SGrannySkeletonHandle
 
 class CGrannyFileInfo;
 granny_skeleton *GetSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile );
-char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile );
+const char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModelInFile );
 CPtrFuncBase<CGrannyFileInfo> *GetSkeletonFileInfo( const NDb::SSkeleton *pSkeleton );
 
 struct IGetBone
